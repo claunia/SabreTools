@@ -1,4 +1,5 @@
 using System;
+using System.Text.RegularExpressions;
 using SabreTools.Models.Internal;
 
 namespace SabreTools.Filter
@@ -11,7 +12,7 @@ namespace SabreTools.Filter
         /// <summary>
         /// Key name for the filter
         /// </summary>
-        public string Key { get; init; }
+        public string[] Key { get; init; }
 
         /// <summary>
         /// Value to match in the filter
@@ -23,47 +24,40 @@ namespace SabreTools.Filter
         /// </summary>
         public Operation Operation { get; init; }
 
-        public FilterObject(string keyValue, string? operation)
+        public FilterObject(string filterString)
         {
-            (string? itemName, string? fieldName) = FilterParser.ParseFilterId(keyValue);
-            if (itemName == null)
-                throw new ArgumentOutOfRangeException(nameof(keyValue));
+            (string? keyItem, Operation operation, string? value) = SplitFilterString(filterString);
+            if (keyItem == null)
+                throw new ArgumentOutOfRangeException(nameof(filterString));
 
-            this.Key = itemName;
-            this.Value = fieldName;
-            this.Operation = GetOperation(operation);
-        }
+            (string? itemName, string? fieldName) = FilterParser.ParseFilterId(keyItem);
+            if (itemName == null || fieldName == null)
+                throw new ArgumentOutOfRangeException(nameof(filterString));
 
-        public FilterObject(string keyValue, Operation operation)
-        {
-            (string? itemName, string? fieldName) = FilterParser.ParseFilterId(keyValue);
-            if (itemName == null)
-                throw new ArgumentOutOfRangeException(nameof(keyValue));
-
-            this.Key = itemName;
-            this.Value = fieldName;
+            this.Key = new string[] { itemName, fieldName };
+            this.Value = value;
             this.Operation = operation;
         }
 
-        public FilterObject(string key, string? value, string? operation)
+        public FilterObject(string itemField, string? value, string? operation)
         {
-            (string? itemName, string? fieldName) = FilterParser.ParseFilterId(key, value);
-            if (itemName == null)
-                throw new ArgumentOutOfRangeException(nameof(fieldName));
+            (string? itemName, string? fieldName) = FilterParser.ParseFilterId(itemField);
+            if (itemName == null || fieldName == null)
+                throw new ArgumentOutOfRangeException(nameof(value));
 
-            this.Key = itemName;
-            this.Value = fieldName;
+            this.Key = new string[] { itemName, fieldName };
+            this.Value = value;
             this.Operation = GetOperation(operation);
         }
 
-        public FilterObject(string key, string? value, Operation operation)
+        public FilterObject(string itemField, string? value, Operation operation)
         {
-            (string? itemName, string? fieldName) = FilterParser.ParseFilterId(key, value);
-            if (itemName == null)
-                throw new ArgumentOutOfRangeException(nameof(fieldName));
+            (string? itemName, string? fieldName) = FilterParser.ParseFilterId(itemField);
+            if (itemName == null || fieldName == null)
+                throw new ArgumentOutOfRangeException(nameof(value));
 
-            this.Key = itemName;
-            this.Value = fieldName;
+            this.Key = new string[] { itemName, fieldName };
+            this.Value = value;
             this.Operation = operation;
         }
 
@@ -93,6 +87,26 @@ namespace SabreTools.Filter
             };
         }
 
+        /// <summary>
+        /// Derive a key, operation, and value from the input string, if possible
+        /// </summary>
+        private static (string?, Operation, string?) SplitFilterString(string? filterString)
+        {
+            if (filterString == null)
+                return (null, Operation.NONE, null);
+
+            // Split the string using regex
+            var match = Regex.Match(filterString, @"^(?<itemField>[a-zA-Z.]+)(?<operation>[=!:><]{1,2})(?<value>.*)$");
+            if (!match.Success)
+                return (null, Operation.NONE, null);
+
+            string itemField = match.Groups["itemField"].Value;
+            Operation operation = GetOperation(match.Groups["operation"].Value);
+            string value = match.Groups["value"].Value;
+
+            return (itemField, operation, value);
+        }
+
         #region Matching
 
         /// <summary>
@@ -100,6 +114,7 @@ namespace SabreTools.Filter
         /// </summary>
         public bool Matches(DictionaryBase dictionaryBase)
         {
+            // TODO: Add validation of dictionary base type from this.Key[0]
             return this.Operation switch
             {
                 Operation.Equals => MatchesEqual(dictionaryBase),
@@ -118,10 +133,10 @@ namespace SabreTools.Filter
         /// <remarks>TODO: Add regex matching to this method</remarks>
         private bool MatchesEqual(DictionaryBase dictionaryBase)
         {
-            if (!dictionaryBase.ContainsKey(this.Key))
+            if (!dictionaryBase.ContainsKey(this.Key[1]))
                 return this.Value == null;
 
-            string? checkValue = dictionaryBase.ReadString(this.Key);
+            string? checkValue = dictionaryBase.ReadString(this.Key[1]);
             return checkValue == this.Value;
         }
 
@@ -131,10 +146,10 @@ namespace SabreTools.Filter
         /// <remarks>TODO: Add regex matching to this method</remarks>
         private bool MatchesNotEqual(DictionaryBase dictionaryBase)
         {
-            if (!dictionaryBase.ContainsKey(this.Key))
+            if (!dictionaryBase.ContainsKey(this.Key[1]))
                 return this.Value != null;
 
-            string? checkValue = dictionaryBase.ReadString(this.Key);
+            string? checkValue = dictionaryBase.ReadString(this.Key[1]);
             return checkValue != this.Value;
         }
 
@@ -143,10 +158,10 @@ namespace SabreTools.Filter
         /// </summary>
         private bool MatchesGreaterThan(DictionaryBase dictionaryBase)
         {
-            if (!dictionaryBase.ContainsKey(this.Key))
+            if (!dictionaryBase.ContainsKey(this.Key[1]))
                 return false;
 
-            long? checkLongValue = dictionaryBase.ReadLong(this.Key);
+            long? checkLongValue = dictionaryBase.ReadLong(this.Key[1]);
             if (checkLongValue != null)
             {
                 if (!long.TryParse(this.Value, out long matchValue))
@@ -155,7 +170,7 @@ namespace SabreTools.Filter
                 return checkLongValue > matchValue;
             }
 
-            double? checkDoubleValue = dictionaryBase.ReadDouble(this.Key);
+            double? checkDoubleValue = dictionaryBase.ReadDouble(this.Key[1]);
             if (checkDoubleValue != null)
             {
                 if (!double.TryParse(this.Value, out double matchValue))
@@ -172,10 +187,10 @@ namespace SabreTools.Filter
         /// </summary>
         private bool MatchesGreaterThanOrEqual(DictionaryBase dictionaryBase)
         {
-            if (!dictionaryBase.ContainsKey(this.Key))
+            if (!dictionaryBase.ContainsKey(this.Key[1]))
                 return false;
 
-            long? checkLongValue = dictionaryBase.ReadLong(this.Key);
+            long? checkLongValue = dictionaryBase.ReadLong(this.Key[1]);
             if (checkLongValue != null)
             {
                 if (!long.TryParse(this.Value, out long matchValue))
@@ -184,7 +199,7 @@ namespace SabreTools.Filter
                 return checkLongValue >= matchValue;
             }
 
-            double? checkDoubleValue = dictionaryBase.ReadDouble(this.Key);
+            double? checkDoubleValue = dictionaryBase.ReadDouble(this.Key[1]);
             if (checkDoubleValue != null)
             {
                 if (!double.TryParse(this.Value, out double matchValue))
@@ -195,16 +210,16 @@ namespace SabreTools.Filter
 
             return false;
         }
-    
+
         /// <summary>
         /// Determines if a value is strictly less than
         /// </summary>
         private bool MatchesLessThan(DictionaryBase dictionaryBase)
         {
-            if (!dictionaryBase.ContainsKey(this.Key))
+            if (!dictionaryBase.ContainsKey(this.Key[1]))
                 return false;
 
-            long? checkLongValue = dictionaryBase.ReadLong(this.Key);
+            long? checkLongValue = dictionaryBase.ReadLong(this.Key[1]);
             if (checkLongValue != null)
             {
                 if (!long.TryParse(this.Value, out long matchValue))
@@ -213,7 +228,7 @@ namespace SabreTools.Filter
                 return checkLongValue < matchValue;
             }
 
-            double? checkDoubleValue = dictionaryBase.ReadDouble(this.Key);
+            double? checkDoubleValue = dictionaryBase.ReadDouble(this.Key[1]);
             if (checkDoubleValue != null)
             {
                 if (!double.TryParse(this.Value, out double matchValue))
@@ -230,10 +245,10 @@ namespace SabreTools.Filter
         /// </summary>
         private bool MatchesLessThanOrEqual(DictionaryBase dictionaryBase)
         {
-            if (!dictionaryBase.ContainsKey(this.Key))
+            if (!dictionaryBase.ContainsKey(this.Key[1]))
                 return false;
 
-            long? checkLongValue = dictionaryBase.ReadLong(this.Key);
+            long? checkLongValue = dictionaryBase.ReadLong(this.Key[1]);
             if (checkLongValue != null)
             {
                 if (!long.TryParse(this.Value, out long matchValue))
@@ -242,7 +257,7 @@ namespace SabreTools.Filter
                 return checkLongValue <= matchValue;
             }
 
-            double? checkDoubleValue = dictionaryBase.ReadDouble(this.Key);
+            double? checkDoubleValue = dictionaryBase.ReadDouble(this.Key[1]);
             if (checkDoubleValue != null)
             {
                 if (!double.TryParse(this.Value, out double matchValue))
@@ -253,7 +268,7 @@ namespace SabreTools.Filter
 
             return false;
         }
-    
+
         #endregion
     }
 }
