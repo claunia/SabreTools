@@ -107,7 +107,7 @@ namespace SabreTools.DatItems
         #endregion // Metadata information
 
         #endregion
-        
+
         #region Logging
 
         /// <summary>
@@ -242,6 +242,9 @@ namespace SabreTools.DatItems
         /// <param name="item">Existing item to copy information from</param>
         public void CopyMachineInformation(DatItem item)
         {
+            if (item?.Machine == null)
+                return;
+
             Machine = (Machine)item.Machine.Clone();
         }
 
@@ -249,8 +252,11 @@ namespace SabreTools.DatItems
         /// Copy all machine information over in one shot
         /// </summary>
         /// <param name="machine">Existing machine to copy information from</param>
-        public void CopyMachineInformation(Machine machine)
+        public void CopyMachineInformation(Machine? machine)
         {
+            if (machine == null)
+                return;
+
             Machine = (Machine)machine.Clone();
         }
 

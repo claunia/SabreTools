@@ -13,7 +13,7 @@ namespace SabreTools.DatFiles.Formats
     internal partial class Missfile : DatFile
     {
         /// <inheritdoc/>
-        protected override List<DatItemField> GetMissingRequiredFields(DatItem datItem)
+        protected override List<DatItemField>? GetMissingRequiredFields(DatItem datItem)
         {
             // TODO: Check required fields
             return null;
@@ -37,7 +37,7 @@ namespace SabreTools.DatFiles.Formats
                 StreamWriter sw = new(fs, new UTF8Encoding(false));
 
                 // Write out each of the machines and roms
-                string lastgame = null;
+                string? lastgame = null;
 
                 // Use a sorted list of games to output
                 foreach (string key in Items.SortedKeys)
@@ -86,7 +86,7 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="sw">StreamWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
         /// <param name="lastgame">The name of the last game to be output</param>
-        private void WriteDatItem(StreamWriter sw, DatItem datItem, string lastgame)
+        private void WriteDatItem(StreamWriter sw, DatItem datItem, string? lastgame)
         {
             // Process the item name
             ProcessItemName(datItem, false, forceRomName: false);

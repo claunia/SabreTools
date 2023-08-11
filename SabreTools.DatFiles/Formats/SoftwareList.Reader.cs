@@ -51,7 +51,7 @@ namespace SabreTools.DatFiles.Formats
             Header.Comment ??= softwarelist.Notes;
 
             // Handle implied SuperDAT
-            if (Header.Name.Contains(" - SuperDAT") && keep)
+            if (Header.Name?.Contains(" - SuperDAT") == true && keep)
                 Header.Type ??= "SuperDAT";
         }
 

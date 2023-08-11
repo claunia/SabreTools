@@ -265,7 +265,7 @@ namespace SabreTools.Serialization
             
             var metadataFile = new Models.Internal.MetadataFile
             {
-                [Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
+                [Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(),
             };
 
             var machine = ConvertMachineToInternalModel(item);
@@ -277,7 +277,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Hashfile.Hashfile"/> to <cref="Models.Internal.Header"/>
         /// </summary>
-        private static Models.Internal.Header ConvertHeaderToInternalModel(Models.Hashfile.Hashfile item)
+        private static Models.Internal.Header ConvertHeaderToInternalModel()
         {
             var header = new Models.Internal.Header
             {

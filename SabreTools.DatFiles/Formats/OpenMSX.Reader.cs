@@ -77,7 +77,7 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ConvertSoftware(Models.OpenMSX.Software software, string filename, int indexId, bool statsOnly, string dirname = null)
+        private void ConvertSoftware(Models.OpenMSX.Software software, string filename, int indexId, bool statsOnly)
         {
             // If the software is missing, we can't do anything
             if (software == null)

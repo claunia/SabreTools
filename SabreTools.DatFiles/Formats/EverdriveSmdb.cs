@@ -9,7 +9,7 @@
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
-        public EverdriveSMDB(DatFile datFile)
+        public EverdriveSMDB(DatFile? datFile)
             : base(datFile)
         {
         }

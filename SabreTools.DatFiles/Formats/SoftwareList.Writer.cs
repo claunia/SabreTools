@@ -27,14 +27,13 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <inheritdoc/>
-        protected override List<DatItemField> GetMissingRequiredFields(DatItem datItem)
+        protected override List<DatItemField>? GetMissingRequiredFields(DatItem datItem)
         {
-            List<DatItemField> missingFields = new();
+            var missingFields = new List<DatItemField>();
 
-            switch (datItem.ItemType)
+            switch (datItem)
             {
-                case ItemType.DipSwitch:
-                    DipSwitch dipSwitch = datItem as DipSwitch;
+                case DipSwitch dipSwitch:
                     if (!dipSwitch.PartSpecified)
                     {
                         missingFields.Add(DatItemField.Part_Name);
@@ -63,8 +62,7 @@ namespace SabreTools.DatFiles.Formats
 
                     break;
 
-                case ItemType.Disk:
-                    Disk disk = datItem as Disk;
+                case Disk disk:
                     if (!disk.PartSpecified)
                     {
                         missingFields.Add(DatItemField.Part_Name);
@@ -90,14 +88,12 @@ namespace SabreTools.DatFiles.Formats
                         missingFields.Add(DatItemField.Name);
                     break;
 
-                case ItemType.Info:
-                    Info info = datItem as Info;
+                case Info info:
                     if (string.IsNullOrWhiteSpace(info.Name))
                         missingFields.Add(DatItemField.Name);
                     break;
 
-                case ItemType.Rom:
-                    Rom rom = datItem as Rom;
+                case Rom rom:
                     if (!rom.PartSpecified)
                     {
                         missingFields.Add(DatItemField.Part_Name);
@@ -124,9 +120,8 @@ namespace SabreTools.DatFiles.Formats
                     }
                     break;
 
-                case ItemType.SharedFeature:
-                    SharedFeature sharedFeature = datItem as SharedFeature;
-                    if (string.IsNullOrWhiteSpace(sharedFeature.Name))
+                case SharedFeature sharedFeat:
+                    if (string.IsNullOrWhiteSpace(sharedFeat.Name))
                         missingFields.Add(DatItemField.Name);
                     break;
                 default:
@@ -260,7 +255,7 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         /// Create a Software from the current internal information
         /// <summary>
-        private Models.SoftwareList.Software? CreateSoftware(Machine machine)
+        private Models.SoftwareList.Software CreateSoftware(Machine machine)
         {
             var software = new Models.SoftwareList.Software
             {
@@ -467,7 +462,7 @@ namespace SabreTools.DatFiles.Formats
         private static List<Models.SoftwareList.Part> SantitizeParts(List<Models.SoftwareList.Part> parts)
         {
             // If we have no parts, we can't do anything
-            if (parts == null || !parts.Any())
+            if (!parts.Any())
                 return parts;
 
             var grouped = parts.GroupBy(p => p.Name);
@@ -521,7 +516,7 @@ namespace SabreTools.DatFiles.Formats
         private static List<Models.SoftwareList.DataArea> SantitizeDataAreas(List<Models.SoftwareList.DataArea> dataAreas)
         {
             // If we have no DataAreas, we can't do anything
-            if (dataAreas == null || !dataAreas.Any())
+            if (!dataAreas.Any())
                 return dataAreas;
 
             var grouped = dataAreas.GroupBy(p => p.Name);
@@ -558,7 +553,7 @@ namespace SabreTools.DatFiles.Formats
         private static List<Models.SoftwareList.DiskArea> SantitizeDiskAreas(List<Models.SoftwareList.DiskArea> diskAreas)
         {
             // If we have no DiskAreas, we can't do anything
-            if (diskAreas == null || !diskAreas.Any())
+            if (!diskAreas.Any())
                 return diskAreas;
 
             var grouped = diskAreas.GroupBy(p => p.Name);

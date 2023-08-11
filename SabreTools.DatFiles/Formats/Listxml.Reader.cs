@@ -55,7 +55,7 @@ namespace SabreTools.DatFiles.Formats
             Header.MameConfig ??= mame.MameConfig;
 
             // Handle implied SuperDAT
-            if (Header.Name.Contains(" - SuperDAT") && keep)
+            if (Header.Name?.Contains(" - SuperDAT") == true && keep)
                 Header.Type ??= "SuperDAT";
         }
 

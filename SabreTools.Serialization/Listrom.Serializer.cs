@@ -192,7 +192,7 @@ namespace SabreTools.Serialization
             
             var metadataFile = new Models.Internal.MetadataFile
             {
-                [Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
+                [Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(),
             };
 
             if (item?.Set != null && item.Set.Any())
@@ -209,7 +209,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listrom.MetadataFile"/> to <cref="Header"/>
         /// </summary>
-        private static Models.Internal.Header ConvertHeaderToInternalModel(MetadataFile item)
+        private static Models.Internal.Header ConvertHeaderToInternalModel()
         {
             var header = new Models.Internal.Header
             {

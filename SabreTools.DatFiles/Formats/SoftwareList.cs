@@ -74,7 +74,7 @@ namespace SabreTools.DatFiles.Formats
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
-        public SoftwareList(DatFile datFile)
+        public SoftwareList(DatFile? datFile)
             : base(datFile)
         {
         }

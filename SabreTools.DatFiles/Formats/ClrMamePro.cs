@@ -19,7 +19,7 @@
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
         /// <param name="quotes">Enable quotes on read and write, false otherwise</param>
-        public ClrMamePro(DatFile datFile, bool quotes)
+        public ClrMamePro(DatFile? datFile, bool quotes)
             : base(datFile)
         {
             Quotes = quotes;

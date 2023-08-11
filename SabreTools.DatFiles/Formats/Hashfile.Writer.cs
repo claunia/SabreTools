@@ -25,7 +25,7 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <inheritdoc/>
-        protected override List<DatItemField> GetMissingRequiredFields(DatItem datItem)
+        protected override List<DatItemField>? GetMissingRequiredFields(DatItem datItem)
         {
             List<DatItemField> missingFields = new();
 
@@ -232,6 +232,8 @@ namespace SabreTools.DatFiles.Formats
                 {
                     // Get the item
                     var item = items[index];
+                    if (item == null)
+                        continue;
 
                     // Check for a "null" item
                     item = ProcessNullifiedItem(item);
@@ -241,7 +243,7 @@ namespace SabreTools.DatFiles.Formats
                         continue;
 
                     string name = string.Empty;
-                    if (Header.GameName)
+                    if (Header.GameName && item.Machine != null)
                         name = $"{item.Machine.Name}{Path.DirectorySeparatorChar}";
 
                     switch (item)
@@ -281,6 +283,8 @@ namespace SabreTools.DatFiles.Formats
                 {
                     // Get the item
                     var item = items[index];
+                    if (item == null)
+                        continue;
 
                     // Check for a "null" item
                     item = ProcessNullifiedItem(item);
@@ -290,7 +294,7 @@ namespace SabreTools.DatFiles.Formats
                         continue;
 
                     string name = string.Empty;
-                    if (Header.GameName)
+                    if (Header.GameName && item.Machine != null)
                         name = $"{item.Machine.Name}{Path.DirectorySeparatorChar}";
 
                     switch (item)
@@ -346,6 +350,8 @@ namespace SabreTools.DatFiles.Formats
                 {
                     // Get the item
                     var item = items[index];
+                    if (item == null)
+                        continue;
 
                     // Check for a "null" item
                     item = ProcessNullifiedItem(item);
@@ -355,7 +361,7 @@ namespace SabreTools.DatFiles.Formats
                         continue;
 
                     string name = string.Empty;
-                    if (Header.GameName)
+                    if (Header.GameName && item.Machine != null)
                         name = $"{item.Machine.Name}{Path.DirectorySeparatorChar}";
 
                     switch (item)
@@ -411,6 +417,8 @@ namespace SabreTools.DatFiles.Formats
                 {
                     // Get the item
                     var item = items[index];
+                    if (item == null)
+                        continue;
 
                     // Check for a "null" item
                     item = ProcessNullifiedItem(item);
@@ -420,7 +428,7 @@ namespace SabreTools.DatFiles.Formats
                         continue;
 
                     string name = string.Empty;
-                    if (Header.GameName)
+                    if (Header.GameName && item.Machine != null)
                         name = $"{item.Machine.Name}{Path.DirectorySeparatorChar}";
 
                     switch (item)
@@ -468,6 +476,8 @@ namespace SabreTools.DatFiles.Formats
                 {
                     // Get the item
                     var item = items[index];
+                    if (item == null)
+                        continue;
 
                     // Check for a "null" item
                     item = ProcessNullifiedItem(item);
@@ -477,7 +487,7 @@ namespace SabreTools.DatFiles.Formats
                         continue;
 
                     string name = string.Empty;
-                    if (Header.GameName)
+                    if (Header.GameName && item.Machine != null)
                         name = $"{item.Machine.Name}{Path.DirectorySeparatorChar}";
 
                     switch (item)
@@ -517,6 +527,8 @@ namespace SabreTools.DatFiles.Formats
                 {
                     // Get the item
                     var item = items[index];
+                    if (item == null)
+                        continue;
 
                     // Check for a "null" item
                     item = ProcessNullifiedItem(item);
@@ -526,7 +538,7 @@ namespace SabreTools.DatFiles.Formats
                         continue;
 
                     string name = string.Empty;
-                    if (Header.GameName)
+                    if (Header.GameName && item.Machine != null)
                         name = $"{item.Machine.Name}{Path.DirectorySeparatorChar}";
 
                     switch (item)
@@ -566,6 +578,8 @@ namespace SabreTools.DatFiles.Formats
                 {
                     // Get the item
                     var item = items[index];
+                    if (item == null)
+                        continue;
 
                     // Check for a "null" item
                     item = ProcessNullifiedItem(item);
@@ -575,7 +589,7 @@ namespace SabreTools.DatFiles.Formats
                         continue;
 
                     string name = string.Empty;
-                    if (Header.GameName)
+                    if (Header.GameName && item.Machine != null)
                         name = $"{item.Machine.Name}{Path.DirectorySeparatorChar}";
 
                     switch (item)

@@ -219,7 +219,7 @@
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
         /// <param name="deprecated">True if the output uses "game", false if the output uses "machine"</param>
-        public Logiqx(DatFile datFile, bool deprecated)
+        public Logiqx(DatFile? datFile, bool deprecated)
             : base(datFile)
         {
             _deprecated = deprecated;

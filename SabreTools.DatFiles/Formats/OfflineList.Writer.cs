@@ -22,7 +22,7 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <inheritdoc/>
-        protected override List<DatItemField> GetMissingRequiredFields(DatItem datItem)
+        protected override List<DatItemField>? GetMissingRequiredFields(DatItem datItem)
         {
             var missingFields = new List<DatItemField>();
 
@@ -120,7 +120,7 @@ namespace SabreTools.DatFiles.Formats
         private Models.OfflineList.Infos? CreateInfos()
         {
             // If we don't have infos, we can't do anything
-            if (!Header.InfosSpecified)
+            if (!Header.InfosSpecified || Header.Infos == null)
                 return null;
 
             var infos = new Models.OfflineList.Infos();
@@ -256,7 +256,7 @@ namespace SabreTools.DatFiles.Formats
         private Models.OfflineList.CanOpen? CreateCanOpen()
         {
             // If we don't have a canopen, we can't do anything
-            if (!Header.CanOpenSpecified)
+            if (!Header.CanOpenSpecified || Header.CanOpen == null)
                 return null;
 
             var canOpen = new Models.OfflineList.CanOpen
@@ -360,12 +360,9 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         /// Create a Machine from the current internal information
         /// <summary>
-        private Models.OfflineList.Game? CreateGame(Machine machine)
+        private Models.OfflineList.Game CreateGame(Machine machine)
         {
-            // If we don't have a machine, we can't do anything
-            if (machine == null)
-                return null;
-
+            
             var game = new Models.OfflineList.Game
             {
                 //ImageNumber = machine.ImageNumber, // TODO: Add to internal model

@@ -172,7 +172,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="path">Path to check</param>
         /// <returns>True if the extension is valid, false otherwise</returns>
-        public static bool HasValidDatExtension(string path)
+        public static bool HasValidDatExtension(string? path)
         {
             // If the path is null or empty, then we return false
             if (string.IsNullOrEmpty(path))

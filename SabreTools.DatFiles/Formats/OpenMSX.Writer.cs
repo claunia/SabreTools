@@ -22,7 +22,7 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <inheritdoc/>
-        protected override List<DatItemField> GetMissingRequiredFields(DatItem datItem)
+        protected override List<DatItemField>? GetMissingRequiredFields(DatItem datItem)
         {
             var missingFields = new List<DatItemField>();
 
@@ -149,9 +149,8 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         private static Models.OpenMSX.Dump CreateDump(Rom item)
         {
-
-            Models.OpenMSX.Original original = null;
-            if (item.OriginalSpecified)
+            Models.OpenMSX.Original? original = null;
+            if (item.OriginalSpecified && item.Original != null)
             {
                 original = new Models.OpenMSX.Original { Content = item.Original.Content };
                 if (item.Original.Value != null)

@@ -9,7 +9,7 @@
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
-        public Listrom(DatFile datFile)
+        public Listrom(DatFile? datFile)
             : base(datFile)
         {
         }

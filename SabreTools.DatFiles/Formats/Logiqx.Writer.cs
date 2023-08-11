@@ -29,7 +29,7 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <inheritdoc/>
-        protected override List<DatItemField> GetMissingRequiredFields(DatItem datItem)
+        protected override List<DatItemField>? GetMissingRequiredFields(DatItem datItem)
         {
             var missingFields = new List<DatItemField>();
             switch (datItem)
@@ -385,7 +385,7 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         /// Create a GameBase from the current internal information
         /// <summary>
-        private Models.Logiqx.GameBase? CreateGame(Machine machine)
+        private Models.Logiqx.GameBase CreateGame(Machine machine)
         {
             Models.Logiqx.GameBase game = _deprecated ? new Models.Logiqx.Game() : new Models.Logiqx.Machine();
 

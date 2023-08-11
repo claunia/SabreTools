@@ -20,7 +20,7 @@ namespace SabreTools.DatFiles
     /// Item dictionary with statistics, bucketing, and sorting
     /// </summary>
     [JsonObject("items"), XmlRoot("items")]
-    public class ItemDictionaryDB : IDictionary<string, ConcurrentList<DatItem>>
+    public class ItemDictionaryDB : IDictionary<string, ConcurrentList<DatItem>?>
     {
         #region Private instance variables
 
@@ -37,12 +37,12 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Internal database connection for the class
         /// </summary>
-        private readonly SqliteConnection dbc = null;
+        private readonly SqliteConnection? dbc = null;
 
         /// <summary>
         /// Internal item dictionary name
         /// </summary>
-        private string itemDictionaryFileName = null;
+        private string? itemDictionaryFileName = null;
 
         /// <summary>
         /// Lock for statistics calculation
@@ -94,7 +94,7 @@ namespace SabreTools.DatFiles
             {
                 // If we have no database connection, we can't do anything
                 if (dbc == null)
-                    return null;
+                    return Array.Empty<string>();
 
                 // Open the database connection
                 dbc.Open();
@@ -131,10 +131,13 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <returns>List of the keys in sorted order</returns>
         [JsonIgnore, XmlIgnore]
-        public List<string> SortedKeys
+        public List<string>? SortedKeys
         {
             get
             {
+                if (Keys == null)
+                    return null;
+
                 var keys = Keys.ToList();
                 keys.Sort(new NaturalComparer());
                 return keys;
@@ -444,7 +447,7 @@ namespace SabreTools.DatFiles
         /// Passthrough to access the file dictionary
         /// </summary>
         /// <param name="key">Key in the dictionary to reference</param>
-        public ConcurrentList<DatItem> this[string key]
+        public ConcurrentList<DatItem>? this[string key]
         {
             get
             {
@@ -471,8 +474,9 @@ namespace SabreTools.DatFiles
                         while (sldr.Read())
                         {
                             string itemString = sldr.GetString(0);
-                            DatItem datItem = JsonConvert.DeserializeObject<DatItem>(itemString);
-                            items.Add(datItem);
+                            DatItem? datItem = JsonConvert.DeserializeObject<DatItem>(itemString);
+                            if (datItem != null)
+                                items.Add(datItem);
                         }
                     }
 
@@ -558,7 +562,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="key">Key in the dictionary to add to</param>
         /// <param name="value">Value to add to the dictionary</param>
-        public void Add(string key, ConcurrentList<DatItem> value)
+        public void Add(string key, ConcurrentList<DatItem>? value)
         {
             AddRange(key, value);
         }
@@ -579,135 +583,135 @@ namespace SabreTools.DatFiles
                     RemovedCount++;
 
                 // Now we do different things for each item type
-                switch (item.ItemType)
+                switch (item)
                 {
-                    case ItemType.Adjuster:
+                    case Adjuster:
                         AdjusterCount++;
                         break;
-                    case ItemType.Analog:
+                    case Analog:
                         AnalogCount++;
                         break;
-                    case ItemType.Archive:
+                    case Archive:
                         ArchiveCount++;
                         break;
-                    case ItemType.BiosSet:
+                    case BiosSet:
                         BiosSetCount++;
                         break;
-                    case ItemType.Chip:
+                    case Chip:
                         ChipCount++;
                         break;
-                    case ItemType.Condition:
+                    case Condition:
                         ConditionCount++;
                         break;
-                    case ItemType.Configuration:
+                    case Configuration:
                         ConfigurationCount++;
                         break;
-                    case ItemType.DataArea:
+                    case DataArea:
                         DataAreaCount++;
                         break;
-                    case ItemType.Device:
+                    case Device:
                         DeviceCount++;
                         break;
-                    case ItemType.DeviceReference:
+                    case DeviceReference:
                         DeviceReferenceCount++;
                         break;
-                    case ItemType.DipSwitch:
+                    case DipSwitch:
                         DipSwitchCount++;
                         break;
-                    case ItemType.Disk:
+                    case Disk disk:
                         DiskCount++;
-                        if ((item as Disk).ItemStatus != ItemStatus.Nodump)
+                        if (disk.ItemStatus != ItemStatus.Nodump)
                         {
-                            MD5Count += (string.IsNullOrWhiteSpace((item as Disk).MD5) ? 0 : 1);
-                            SHA1Count += (string.IsNullOrWhiteSpace((item as Disk).SHA1) ? 0 : 1);
+                            MD5Count += (string.IsNullOrWhiteSpace(disk.MD5) ? 0 : 1);
+                            SHA1Count += (string.IsNullOrWhiteSpace(disk.SHA1) ? 0 : 1);
                         }
 
-                        BaddumpCount += ((item as Disk).ItemStatus == ItemStatus.BadDump ? 1 : 0);
-                        GoodCount += ((item as Disk).ItemStatus == ItemStatus.Good ? 1 : 0);
-                        NodumpCount += ((item as Disk).ItemStatus == ItemStatus.Nodump ? 1 : 0);
-                        VerifiedCount += ((item as Disk).ItemStatus == ItemStatus.Verified ? 1 : 0);
+                        BaddumpCount += (disk.ItemStatus == ItemStatus.BadDump ? 1 : 0);
+                        GoodCount += (disk.ItemStatus == ItemStatus.Good ? 1 : 0);
+                        NodumpCount += (disk.ItemStatus == ItemStatus.Nodump ? 1 : 0);
+                        VerifiedCount += (disk.ItemStatus == ItemStatus.Verified ? 1 : 0);
                         break;
-                    case ItemType.DiskArea:
+                    case DiskArea:
                         DiskAreaCount++;
                         break;
-                    case ItemType.Display:
+                    case Display:
                         DisplayCount++;
                         break;
-                    case ItemType.Driver:
+                    case Driver:
                         DriverCount++;
                         break;
-                    case ItemType.Feature:
+                    case Feature:
                         FeatureCount++;
                         break;
-                    case ItemType.Info:
+                    case Info:
                         InfoCount++;
                         break;
-                    case ItemType.Input:
+                    case Input:
                         InputCount++;
                         break;
-                    case ItemType.Media:
+                    case Media media:
                         MediaCount++;
-                        MD5Count += (string.IsNullOrWhiteSpace((item as Media).MD5) ? 0 : 1);
-                        SHA1Count += (string.IsNullOrWhiteSpace((item as Media).SHA1) ? 0 : 1);
-                        SHA256Count += (string.IsNullOrWhiteSpace((item as Media).SHA256) ? 0 : 1);
-                        SpamSumCount += (string.IsNullOrWhiteSpace((item as Media).SpamSum) ? 0 : 1);
+                        MD5Count += (string.IsNullOrWhiteSpace(media.MD5) ? 0 : 1);
+                        SHA1Count += (string.IsNullOrWhiteSpace(media.SHA1) ? 0 : 1);
+                        SHA256Count += (string.IsNullOrWhiteSpace(media.SHA256) ? 0 : 1);
+                        SpamSumCount += (string.IsNullOrWhiteSpace(media.SpamSum) ? 0 : 1);
                         break;
-                    case ItemType.Part:
+                    case Part:
                         PartCount++;
                         break;
-                    case ItemType.PartFeature:
+                    case PartFeature:
                         PartFeatureCount++;
                         break;
-                    case ItemType.Port:
+                    case Port:
                         PortCount++;
                         break;
-                    case ItemType.RamOption:
+                    case RamOption:
                         RamOptionCount++;
                         break;
-                    case ItemType.Release:
+                    case Release:
                         ReleaseCount++;
                         break;
-                    case ItemType.ReleaseDetails:
+                    case ReleaseDetails:
                         ReleaseDetailsCount++;
                         break;
-                    case ItemType.Rom:
+                    case Rom rom:
                         RomCount++;
-                        if ((item as Rom).ItemStatus != ItemStatus.Nodump)
+                        if (rom.ItemStatus != ItemStatus.Nodump)
                         {
-                            TotalSize += (item as Rom).Size ?? 0;
-                            CRCCount += (string.IsNullOrWhiteSpace((item as Rom).CRC) ? 0 : 1);
-                            MD5Count += (string.IsNullOrWhiteSpace((item as Rom).MD5) ? 0 : 1);
-                            SHA1Count += (string.IsNullOrWhiteSpace((item as Rom).SHA1) ? 0 : 1);
-                            SHA256Count += (string.IsNullOrWhiteSpace((item as Rom).SHA256) ? 0 : 1);
-                            SHA384Count += (string.IsNullOrWhiteSpace((item as Rom).SHA384) ? 0 : 1);
-                            SHA512Count += (string.IsNullOrWhiteSpace((item as Rom).SHA512) ? 0 : 1);
-                            SpamSumCount += (string.IsNullOrWhiteSpace((item as Rom).SpamSum) ? 0 : 1);
+                            TotalSize += rom.Size ?? 0;
+                            CRCCount += (string.IsNullOrWhiteSpace(rom.CRC) ? 0 : 1);
+                            MD5Count += (string.IsNullOrWhiteSpace(rom.MD5) ? 0 : 1);
+                            SHA1Count += (string.IsNullOrWhiteSpace(rom.SHA1) ? 0 : 1);
+                            SHA256Count += (string.IsNullOrWhiteSpace(rom.SHA256) ? 0 : 1);
+                            SHA384Count += (string.IsNullOrWhiteSpace(rom.SHA384) ? 0 : 1);
+                            SHA512Count += (string.IsNullOrWhiteSpace(rom.SHA512) ? 0 : 1);
+                            SpamSumCount += (string.IsNullOrWhiteSpace(rom.SpamSum) ? 0 : 1);
                         }
 
-                        BaddumpCount += ((item as Rom).ItemStatus == ItemStatus.BadDump ? 1 : 0);
-                        GoodCount += ((item as Rom).ItemStatus == ItemStatus.Good ? 1 : 0);
-                        NodumpCount += ((item as Rom).ItemStatus == ItemStatus.Nodump ? 1 : 0);
-                        VerifiedCount += ((item as Rom).ItemStatus == ItemStatus.Verified ? 1 : 0);
+                        BaddumpCount += (rom.ItemStatus == ItemStatus.BadDump ? 1 : 0);
+                        GoodCount += (rom.ItemStatus == ItemStatus.Good ? 1 : 0);
+                        NodumpCount += (rom.ItemStatus == ItemStatus.Nodump ? 1 : 0);
+                        VerifiedCount += (rom.ItemStatus == ItemStatus.Verified ? 1 : 0);
                         break;
-                    case ItemType.Sample:
+                    case Sample:
                         SampleCount++;
                         break;
-                    case ItemType.Serials:
+                    case Serials:
                         SerialsCount++;
                         break;
-                    case ItemType.SharedFeature:
+                    case SharedFeature:
                         SharedFeatureCount++;
                         break;
-                    case ItemType.Slot:
+                    case Slot:
                         SlotCount++;
                         break;
-                    case ItemType.SoftwareList:
+                    case SoftwareList:
                         SoftwareListCount++;
                         break;
-                    case ItemType.Sound:
+                    case Sound:
                         SoundCount++;
                         break;
-                    case ItemType.SourceDetails:
+                    case SourceDetails:
                         SourceDetailsCount++;
                         break;
                 }
@@ -719,7 +723,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="key">Key in the dictionary to add to</param>
         /// <param name="value">Value to add to the dictionary</param>
-        public void AddRange(string key, ConcurrentList<DatItem> value)
+        public void AddRange(string key, ConcurrentList<DatItem>? value)
         {
             // Explicit lock for some weird corner cases
             lock (key)
@@ -797,7 +801,7 @@ namespace SabreTools.DatFiles
             // Explicit lock for some weird corner cases
             lock (key)
             {
-                return Keys.Contains(key);
+                return Keys?.Contains(key) == true;
             }
         }
 
@@ -816,10 +820,10 @@ namespace SabreTools.DatFiles
             // Explicit lock for some weird corner cases
             lock (key)
             {
-                if (!Keys.Contains(key))
+                if (Keys?.Contains(key) != true)
                     return false;
 
-                return this[key].Contains(value);
+                return this[key]?.Contains(value) == true;
             }
         }
 
@@ -830,7 +834,7 @@ namespace SabreTools.DatFiles
         public void EnsureKey(string key)
         {
             // If the key is missing from the dictionary, add it
-            if (Keys.Contains(key))
+            if (Keys?.Contains(key) == true)
                 return;
 
             // If we have no database connection, we can't do anything
@@ -858,7 +862,7 @@ namespace SabreTools.DatFiles
             lock (key)
             {
                 // Get the list, if possible
-                ConcurrentList<DatItem> fi = this[key];
+                ConcurrentList<DatItem>? fi = this[key];
                 if (fi == null)
                     return new ConcurrentList<DatItem>();
 
@@ -880,11 +884,11 @@ namespace SabreTools.DatFiles
             lock (key)
             {
                 // If the key doesn't exist, return
-                if (!ContainsKey(key))
+                if (!ContainsKey(key) || this[key] == null)
                     return false;
 
                 // Remove the statistics first
-                foreach (DatItem item in this[key])
+                foreach (DatItem item in this[key]!)
                 {
                     RemoveItemStatistics(item);
                 }
@@ -939,11 +943,11 @@ namespace SabreTools.DatFiles
         public bool Reset(string key)
         {
             // If the key doesn't exist, return
-            if (!ContainsKey(key))
+            if (!ContainsKey(key) || this[key] == null)
                 return false;
 
             // Remove the statistics first
-            foreach (DatItem item in this[key])
+            foreach (DatItem item in this[key]!)
             {
                 RemoveItemStatistics(item);
             }
@@ -966,7 +970,7 @@ namespace SabreTools.DatFiles
         /// Remove from the statistics given a DatItem
         /// </summary>
         /// <param name="item">Item to remove info for</param>
-        public void RemoveItemStatistics(DatItem item)
+        public void RemoveItemStatistics(DatItem? item)
         {
             // If we have a null item, we can't do anything
             if (item == null)
@@ -982,124 +986,124 @@ namespace SabreTools.DatFiles
                     RemovedCount--;
 
                 // Now we do different things for each item type
-                switch (item.ItemType)
+                switch (item)
                 {
-                    case ItemType.Adjuster:
+                    case Adjuster:
                         AdjusterCount--;
                         break;
-                    case ItemType.Analog:
+                    case Analog:
                         AnalogCount--;
                         break;
-                    case ItemType.Archive:
+                    case Archive:
                         ArchiveCount--;
                         break;
-                    case ItemType.BiosSet:
+                    case BiosSet:
                         BiosSetCount--;
                         break;
-                    case ItemType.Chip:
+                    case Chip:
                         ChipCount--;
                         break;
-                    case ItemType.Condition:
+                    case Condition:
                         ConditionCount--;
                         break;
-                    case ItemType.Configuration:
+                    case Configuration:
                         ConfigurationCount--;
                         break;
-                    case ItemType.DataArea:
+                    case DataArea:
                         DataAreaCount--;
                         break;
-                    case ItemType.Device:
+                    case Device:
                         DeviceCount--;
                         break;
-                    case ItemType.DeviceReference:
+                    case DeviceReference:
                         DeviceReferenceCount--;
                         break;
-                    case ItemType.DipSwitch:
+                    case DipSwitch:
                         DipSwitchCount--;
                         break;
-                    case ItemType.Disk:
+                    case Disk disk:
                         DiskCount--;
-                        if ((item as Disk).ItemStatus != ItemStatus.Nodump)
+                        if (disk.ItemStatus != ItemStatus.Nodump)
                         {
-                            MD5Count -= (string.IsNullOrWhiteSpace((item as Disk).MD5) ? 0 : 1);
-                            SHA1Count -= (string.IsNullOrWhiteSpace((item as Disk).SHA1) ? 0 : 1);
+                            MD5Count -= (string.IsNullOrWhiteSpace(disk.MD5) ? 0 : 1);
+                            SHA1Count -= (string.IsNullOrWhiteSpace(disk.SHA1) ? 0 : 1);
                         }
 
-                        BaddumpCount -= ((item as Disk).ItemStatus == ItemStatus.BadDump ? 1 : 0);
-                        GoodCount -= ((item as Disk).ItemStatus == ItemStatus.Good ? 1 : 0);
-                        NodumpCount -= ((item as Disk).ItemStatus == ItemStatus.Nodump ? 1 : 0);
-                        VerifiedCount -= ((item as Disk).ItemStatus == ItemStatus.Verified ? 1 : 0);
+                        BaddumpCount -= (disk.ItemStatus == ItemStatus.BadDump ? 1 : 0);
+                        GoodCount -= (disk.ItemStatus == ItemStatus.Good ? 1 : 0);
+                        NodumpCount -= (disk.ItemStatus == ItemStatus.Nodump ? 1 : 0);
+                        VerifiedCount -= (disk.ItemStatus == ItemStatus.Verified ? 1 : 0);
                         break;
-                    case ItemType.DiskArea:
+                    case DiskArea:
                         DiskAreaCount--;
                         break;
-                    case ItemType.Display:
+                    case Display:
                         DisplayCount--;
                         break;
-                    case ItemType.Driver:
+                    case Driver:
                         DriverCount--;
                         break;
-                    case ItemType.Feature:
+                    case Feature:
                         FeatureCount--;
                         break;
-                    case ItemType.Info:
+                    case Info:
                         InfoCount--;
                         break;
-                    case ItemType.Input:
+                    case Input:
                         InputCount--;
                         break;
-                    case ItemType.Media:
+                    case Media media:
                         MediaCount--;
-                        MD5Count -= (string.IsNullOrWhiteSpace((item as Media).MD5) ? 0 : 1);
-                        SHA1Count -= (string.IsNullOrWhiteSpace((item as Media).SHA1) ? 0 : 1);
-                        SHA256Count -= (string.IsNullOrWhiteSpace((item as Media).SHA256) ? 0 : 1);
+                        MD5Count -= (string.IsNullOrWhiteSpace(media.MD5) ? 0 : 1);
+                        SHA1Count -= (string.IsNullOrWhiteSpace(media.SHA1) ? 0 : 1);
+                        SHA256Count -= (string.IsNullOrWhiteSpace(media.SHA256) ? 0 : 1);
                         break;
-                    case ItemType.Part:
+                    case Part:
                         PartCount--;
                         break;
-                    case ItemType.PartFeature:
+                    case PartFeature:
                         PartFeatureCount--;
                         break;
-                    case ItemType.Port:
+                    case Port:
                         PortCount--;
                         break;
-                    case ItemType.RamOption:
+                    case RamOption:
                         RamOptionCount--;
                         break;
-                    case ItemType.Release:
+                    case Release:
                         ReleaseCount--;
                         break;
-                    case ItemType.Rom:
+                    case Rom rom:
                         RomCount--;
-                        if ((item as Rom).ItemStatus != ItemStatus.Nodump)
+                        if (rom.ItemStatus != ItemStatus.Nodump)
                         {
-                            TotalSize -= (item as Rom).Size ?? 0;
-                            CRCCount -= (string.IsNullOrWhiteSpace((item as Rom).CRC) ? 0 : 1);
-                            MD5Count -= (string.IsNullOrWhiteSpace((item as Rom).MD5) ? 0 : 1);
-                            SHA1Count -= (string.IsNullOrWhiteSpace((item as Rom).SHA1) ? 0 : 1);
-                            SHA256Count -= (string.IsNullOrWhiteSpace((item as Rom).SHA256) ? 0 : 1);
-                            SHA384Count -= (string.IsNullOrWhiteSpace((item as Rom).SHA384) ? 0 : 1);
-                            SHA512Count -= (string.IsNullOrWhiteSpace((item as Rom).SHA512) ? 0 : 1);
+                            TotalSize -= rom.Size ?? 0;
+                            CRCCount -= (string.IsNullOrWhiteSpace(rom.CRC) ? 0 : 1);
+                            MD5Count -= (string.IsNullOrWhiteSpace(rom.MD5) ? 0 : 1);
+                            SHA1Count -= (string.IsNullOrWhiteSpace(rom.SHA1) ? 0 : 1);
+                            SHA256Count -= (string.IsNullOrWhiteSpace(rom.SHA256) ? 0 : 1);
+                            SHA384Count -= (string.IsNullOrWhiteSpace(rom.SHA384) ? 0 : 1);
+                            SHA512Count -= (string.IsNullOrWhiteSpace(rom.SHA512) ? 0 : 1);
                         }
 
-                        BaddumpCount -= ((item as Rom).ItemStatus == ItemStatus.BadDump ? 1 : 0);
-                        GoodCount -= ((item as Rom).ItemStatus == ItemStatus.Good ? 1 : 0);
-                        NodumpCount -= ((item as Rom).ItemStatus == ItemStatus.Nodump ? 1 : 0);
-                        VerifiedCount -= ((item as Rom).ItemStatus == ItemStatus.Verified ? 1 : 0);
+                        BaddumpCount -= (rom.ItemStatus == ItemStatus.BadDump ? 1 : 0);
+                        GoodCount -= (rom.ItemStatus == ItemStatus.Good ? 1 : 0);
+                        NodumpCount -= (rom.ItemStatus == ItemStatus.Nodump ? 1 : 0);
+                        VerifiedCount -= (rom.ItemStatus == ItemStatus.Verified ? 1 : 0);
                         break;
-                    case ItemType.Sample:
+                    case Sample:
                         SampleCount--;
                         break;
-                    case ItemType.SharedFeature:
+                    case SharedFeature:
                         SharedFeatureCount--;
                         break;
-                    case ItemType.Slot:
+                    case Slot:
                         SlotCount--;
                         break;
-                    case ItemType.SoftwareList:
+                    case SoftwareList:
                         SoftwareListCount--;
                         break;
-                    case ItemType.Sound:
+                    case Sound:
                         SoundCount--;
                         break;
                 }
@@ -1196,11 +1200,13 @@ CREATE TABLE IF NOT EXISTS groups (
                 Parallel.For(0, oldkeys.Count, Globals.ParallelOptions, k =>
                 {
                     string key = oldkeys[k];
+                    if (this[key] == null)
+                        return;
 
                     // Now add each of the roms to their respective keys
-                    for (int i = 0; i < this[key].Count; i++)
+                    for (int i = 0; i < this[key]!.Count; i++)
                     {
-                        DatItem item = this[key][i];
+                        DatItem item = this[key]![i];
                         if (item == null)
                             continue;
 
@@ -1217,7 +1223,7 @@ CREATE TABLE IF NOT EXISTS groups (
                     }
 
                     // If the key is now empty, remove it
-                    if (this[key].Count == 0)
+                    if (this[key]!.Count == 0)
                         Remove(key);
                 });
             }
@@ -1255,10 +1261,11 @@ CREATE TABLE IF NOT EXISTS groups (
                 Parallel.ForEach(keys, Globals.ParallelOptions, key =>
                 {
                     // Get the possibly unsorted list
-                    ConcurrentList<DatItem> sortedlist = this[key];
+                    ConcurrentList<DatItem>? sortedlist = this[key];
 
                     // Sort the list of items to be consistent
-                    DatItem.Sort(ref sortedlist, false);
+                    if (sortedlist != null)
+                        DatItem.Sort(ref sortedlist, false);
                 });
             }
         }
@@ -1280,7 +1287,7 @@ CREATE TABLE IF NOT EXISTS groups (
                     this[key] = null;
 
                 // If there are no non-blank items, remove
-                else if (!this[key].Any(i => i != null && i.ItemType != ItemType.Blank))
+                else if (!this[key]!.Any(i => i != null && i.ItemType != ItemType.Blank))
                     this[key] = null;
             }
         }
@@ -1290,11 +1297,14 @@ CREATE TABLE IF NOT EXISTS groups (
         /// </summary>
         public void ClearMarked()
         {
+            if (Keys == null)
+                return;
+
             var keys = Keys.ToList();
             foreach (string key in keys)
             {
-                ConcurrentList<DatItem> oldItemList = this[key];
-                ConcurrentList<DatItem> newItemList = oldItemList.Where(i => !i.Remove).ToConcurrentList();
+                ConcurrentList<DatItem>? oldItemList = this[key];
+                ConcurrentList<DatItem>? newItemList = oldItemList?.Where(i => !i.Remove)?.ToConcurrentList();
 
                 Remove(key);
                 AddRange(key, newItemList);
@@ -1319,11 +1329,11 @@ CREATE TABLE IF NOT EXISTS groups (
             string key = SortAndGetKey(datItem, sorted);
 
             // If the key doesn't exist, return the empty list
-            if (!ContainsKey(key))
+            if (!ContainsKey(key) || this[key] == null)
                 return output;
 
             // Try to find duplicates
-            ConcurrentList<DatItem> roms = this[key];
+            ConcurrentList<DatItem> roms = this[key]!;
             ConcurrentList<DatItem> left = new();
             for (int i = 0; i < roms.Count; i++)
             {
@@ -1370,8 +1380,8 @@ CREATE TABLE IF NOT EXISTS groups (
                 return false;
 
             // Try to find duplicates
-            ConcurrentList<DatItem> roms = this[key];
-            return roms.Any(r => datItem.Equals(r));
+            ConcurrentList<DatItem>? roms = this[key];
+            return roms?.Any(r => datItem.Equals(r)) == true;
         }
 
         /// <summary>
@@ -1383,13 +1393,16 @@ CREATE TABLE IF NOT EXISTS groups (
             ResetStatistics();
 
             // If we have a blank Dat in any way, return
-            if (dbc == null)
+            if (dbc == null || Keys == null)
                 return;
 
             // Loop through and add
             foreach (string key in Keys)
             {
-                ConcurrentList<DatItem> datItems = this[key];
+                ConcurrentList<DatItem>? datItems = this[key];
+                if (datItems == null)
+                    continue;
+
                 foreach (DatItem item in datItems)
                 {
                     AddItemStatistics(item);
@@ -1482,25 +1495,25 @@ CREATE TABLE IF NOT EXISTS groups (
 
         #region IDictionary Implementations
 
-        public ICollection<ConcurrentList<DatItem>> Values => throw new NotImplementedException();
+        public ICollection<ConcurrentList<DatItem>?> Values => throw new NotImplementedException();
 
         public int Count => throw new NotImplementedException();
 
         public bool IsReadOnly => throw new NotImplementedException();
 
-        public bool TryGetValue(string key, out ConcurrentList<DatItem> value) => throw new NotImplementedException();
+        public bool TryGetValue(string key, out ConcurrentList<DatItem>? value) => throw new NotImplementedException();
 
-        public void Add(KeyValuePair<string, ConcurrentList<DatItem>> item) => throw new NotImplementedException();
+        public void Add(KeyValuePair<string, ConcurrentList<DatItem>?> item) => throw new NotImplementedException();
 
         public void Clear() => throw new NotImplementedException();
 
-        public bool Contains(KeyValuePair<string, ConcurrentList<DatItem>> item) => throw new NotImplementedException();
+        public bool Contains(KeyValuePair<string, ConcurrentList<DatItem>?> item) => throw new NotImplementedException();
 
-        public void CopyTo(KeyValuePair<string, ConcurrentList<DatItem>>[] array, int arrayIndex) => throw new NotImplementedException();
+        public void CopyTo(KeyValuePair<string, ConcurrentList<DatItem>?>[] array, int arrayIndex) => throw new NotImplementedException();
 
-        public bool Remove(KeyValuePair<string, ConcurrentList<DatItem>> item) => throw new NotImplementedException();
+        public bool Remove(KeyValuePair<string, ConcurrentList<DatItem>?> item) => throw new NotImplementedException();
 
-        public IEnumerator<KeyValuePair<string, ConcurrentList<DatItem>>> GetEnumerator() => throw new NotImplementedException();
+        public IEnumerator<KeyValuePair<string, ConcurrentList<DatItem>?>> GetEnumerator() => throw new NotImplementedException();
 
         IEnumerator IEnumerable.GetEnumerator() => throw new NotImplementedException();
 

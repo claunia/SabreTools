@@ -25,98 +25,98 @@ namespace SabreTools.DatFiles
         /// </summary>
         [JsonProperty("filename", DefaultValueHandling = DefaultValueHandling.Include)]
         [XmlElement("filename")]
-        public string FileName { get; set; }
+        public string? FileName { get; set; }
 
         /// <summary>
         /// Internal name of the DAT
         /// </summary>
         [JsonProperty("name", DefaultValueHandling = DefaultValueHandling.Include)]
         [XmlElement("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         /// <summary>
         /// DAT description
         /// </summary>
         [JsonProperty("description", DefaultValueHandling = DefaultValueHandling.Include)]
         [XmlElement("description")]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         /// <summary>
         /// Root directory for the files; currently TruRip/EmuARC-exclusive
         /// </summary>
         [JsonProperty("rootdir", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("rootdir")]
-        public string RootDir { get; set; }
+        public string? RootDir { get; set; }
 
         /// <summary>
         /// General category of items found in the DAT
         /// </summary>
         [JsonProperty("category", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("category")]
-        public string Category { get; set; }
+        public string? Category { get; set; }
 
         /// <summary>
         /// Version of the DAT
         /// </summary>
         [JsonProperty("version", DefaultValueHandling = DefaultValueHandling.Include)]
         [XmlElement("version")]
-        public string Version { get; set; }
+        public string? Version { get; set; }
 
         /// <summary>
         /// Creation or modification date
         /// </summary>
         [JsonProperty("date", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("date")]
-        public string Date { get; set; }
+        public string? Date { get; set; }
 
         /// <summary>
         /// List of authors who contributed to the DAT
         /// </summary>
         [JsonProperty("author", DefaultValueHandling = DefaultValueHandling.Include)]
         [XmlElement("author")]
-        public string Author { get; set; }
+        public string? Author { get; set; }
 
         /// <summary>
         /// Email address for DAT author(s)
         /// </summary>
         [JsonProperty("email", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("email")]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         /// <summary>
         /// Author or distribution homepage name
         /// </summary>
         [JsonProperty("homepage", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("homepage")]
-        public string Homepage { get; set; }
+        public string? Homepage { get; set; }
 
         /// <summary>
         /// Author or distribution URL
         /// </summary>
         [JsonProperty("url", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("url")]
-        public string Url { get; set; }
+        public string? Url { get; set; }
 
         /// <summary>
         /// Any comment that does not already fit an existing field
         /// </summary>
         [JsonProperty("comment", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("comment")]
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
 
         /// <summary>
         /// Header skipper to be used when loading the DAT
         /// </summary>
         [JsonProperty("header", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("header")]
-        public string HeaderSkipper { get; set; }
+        public string? HeaderSkipper { get; set; }
 
         /// <summary>
         /// Classification of the DAT. Generally only used for SuperDAT
         /// </summary>
         [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("type")]
-        public string Type { get; set; }
+        public string? Type { get; set; }
 
         /// <summary>
         /// Force a merging style when loaded
@@ -174,7 +174,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         [JsonProperty("mameconfig", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("mameconfig")]
-        public string MameConfig { get; set; }
+        public string? MameConfig { get; set; }
 
         #endregion
 
@@ -185,21 +185,21 @@ namespace SabreTools.DatFiles
         /// </summary>
         [JsonProperty("nointroid", DefaultValueHandling = DefaultValueHandling.Include)]
         [XmlElement("nointroid")]
-        public string NoIntroID { get; set; }
+        public string? NoIntroID { get; set; }
 
         /// <summary>
         /// Build version
         /// </summary>
         [JsonProperty("build", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("build")]
-        public string Build { get; set; }
+        public string? Build { get; set; }
 
         /// <summary>
         /// Logiqx/RomCenter plugin, OfflineList System
         /// </summary>
         [JsonProperty("system", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("system")]
-        public string System { get; set; }
+        public string? System { get; set; }
 
         /// <summary>
         /// RomCenter rom mode
@@ -283,21 +283,21 @@ namespace SabreTools.DatFiles
         /// </summary>
         [JsonProperty("screenshotswidth", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("screenshotswidth")]
-        public string ScreenshotsWidth { get; set; }
+        public string? ScreenshotsWidth { get; set; }
 
         /// <summary>
         /// Screenshots height
         /// </summary>
         [JsonProperty("screenshotsheight", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("screenshotsheight")]
-        public string ScreenshotsHeight { get; set; }
+        public string? ScreenshotsHeight { get; set; }
 
         /// <summary>
         /// OfflineList info list
         /// </summary>
         [JsonProperty("infos", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("infos")]
-        public List<OfflineListInfo> Infos { get; set; }
+        public List<OfflineListInfo>? Infos { get; set; }
 
         [JsonIgnore]
         public bool InfosSpecified { get { return Infos != null && Infos.Count > 0; } }
@@ -307,7 +307,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         [JsonProperty("canopen", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("canopen")]
-        public List<string> CanOpen { get; set; }
+        public List<string>? CanOpen { get; set; }
 
         [JsonIgnore]
         public bool CanOpenSpecified { get { return CanOpen != null && CanOpen.Count > 0; } }
@@ -325,7 +325,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         [JsonProperty("romtitle", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("romtitle")]
-        public string RomTitle { get; set; }
+        public string? RomTitle { get; set; }
 
         #endregion
 
@@ -336,7 +336,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         [JsonProperty("rcversion", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("rcversion")]
-        public string RomCenterVersion { get; set; }
+        public string? RomCenterVersion { get; set; }
 
         #endregion
 
@@ -346,25 +346,25 @@ namespace SabreTools.DatFiles
         /// Text to prepend to all outputted lines
         /// </summary>
         [JsonIgnore, XmlIgnore]
-        public string Prefix { get; set; }
+        public string? Prefix { get; set; }
 
         /// <summary>
         /// Text to append to all outputted lines
         /// </summary>
         [JsonIgnore, XmlIgnore]
-        public string Postfix { get; set; }
+        public string? Postfix { get; set; }
 
         /// <summary>
         /// Add a new extension to all items
         /// </summary>
         [JsonIgnore, XmlIgnore]
-        public string AddExtension { get; set; }
+        public string? AddExtension { get; set; }
 
         /// <summary>
         /// Replace all item extensions
         /// </summary>
         [JsonIgnore, XmlIgnore]
-        public string ReplaceExtension { get; set; }
+        public string? ReplaceExtension { get; set; }
 
         /// <summary>
         /// Remove all item extensions
@@ -392,13 +392,13 @@ namespace SabreTools.DatFiles
         /// Input depot information
         /// </summary>
         [JsonIgnore, XmlIgnore]
-        public DepotInformation InputDepot { get; set; }
+        public DepotInformation? InputDepot { get; set; }
 
         /// <summary>
         /// Output depot information
         /// </summary>
         [JsonIgnore, XmlIgnore]
-        public DepotInformation OutputDepot { get; set; }
+        public DepotInformation? OutputDepot { get; set; }
 
         #endregion
 
@@ -652,8 +652,11 @@ namespace SabreTools.DatFiles
         /// Overwrite local values from another DatHeader if not default
         /// </summary>
         /// <param name="datHeader">DatHeader to get the values from</param>
-        public void ConditionalCopy(DatHeader datHeader)
+        public void ConditionalCopy(DatHeader? datHeader)
         {
+            if (datHeader == null)
+                return;
+
             if (!string.IsNullOrWhiteSpace(datHeader.FileName))
                 FileName = datHeader.FileName;
 
@@ -1088,7 +1091,7 @@ namespace SabreTools.DatFiles
         /// <returns>String containing the new filename</returns>
         private string CreateOutFileNamesHelper(string outDir, string extension, bool overwrite)
         {
-            string filename = string.IsNullOrWhiteSpace(FileName) ? Description : FileName;
+            string? filename = string.IsNullOrWhiteSpace(FileName) ? Description : FileName;
 
             // Strip off the extension if it's a holdover from the DAT
             if (Utilities.HasValidDatExtension(filename))

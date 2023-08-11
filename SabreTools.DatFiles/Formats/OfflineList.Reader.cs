@@ -25,7 +25,7 @@ namespace SabreTools.DatFiles.Formats
                 ConvertHeader(dat);
 
                 // Convert the configuration to the internal format
-                ConvertConfiguration(dat.Configuration, keep);
+                ConvertConfiguration(dat?.Configuration, keep);
 
                 // Convert the games to the internal format
                 ConvertGames(dat?.Games, filename, indexId, statsOnly);
@@ -78,7 +78,7 @@ namespace SabreTools.DatFiles.Formats
             Header.RomTitle = config.RomTitle;
 
             // Handle implied SuperDAT
-            if (config.DatName.Contains(" - SuperDAT") && keep)
+            if (config.DatName?.Contains(" - SuperDAT") == true && keep)
                 Header.Type ??= "SuperDAT";
         }
 
@@ -235,7 +235,7 @@ namespace SabreTools.DatFiles.Formats
         private void ConvertCanOpen(Models.OfflineList.CanOpen? canOpen)
         {
             // If the canOpen is missing, we can't do anything
-            if (canOpen == null)
+            if (canOpen?.Extension == null)
                 return;
 
             Header.CanOpen = new List<string>(canOpen.Extension);
@@ -354,7 +354,7 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <param name="containsItems">True if there were any items in the array, false otherwise</param>
-        private void ConvertFiles(Models.OfflineList.Files? files, Machine machine, long? size, string releaseNumber, string filename, int indexId, bool statsOnly, ref bool containsItems)
+        private void ConvertFiles(Models.OfflineList.Files? files, Machine machine, long? size, string? releaseNumber, string filename, int indexId, bool statsOnly, ref bool containsItems)
         {
             // If the files array is missing, we can't do anything
             if (files?.RomCRC == null || !files.RomCRC.Any())
@@ -371,6 +371,7 @@ namespace SabreTools.DatFiles.Formats
                 var item = new Rom
                 {
                     Name = name,
+                    Size = size,
                     CRC = crc.Content,
                     ItemStatus = ItemStatus.None,
 

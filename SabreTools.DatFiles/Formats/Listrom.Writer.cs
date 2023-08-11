@@ -23,7 +23,7 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <inheritdoc/>
-        protected override List<DatItemField> GetMissingRequiredFields(DatItem datItem)
+        protected override List<DatItemField>? GetMissingRequiredFields(DatItem datItem)
         {
             List<DatItemField> missingFields = new();
 
@@ -136,10 +136,14 @@ namespace SabreTools.DatFiles.Formats
                     switch (item)
                     {
                         case Disk disk:
-                            rows.Add(CreateRow(disk));
+                            var diskRow = CreateRow(disk);
+                            if (diskRow != null)
+                                rows.Add(diskRow);
                             break;
                         case Rom rom:
-                            rows.Add(CreateRow(rom));
+                            var romRow = CreateRow(rom);
+                            if (romRow != null)
+                                rows.Add(romRow);
                             break;
                     }
                 }

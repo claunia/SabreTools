@@ -67,7 +67,7 @@ namespace SabreTools.DatFiles.Formats
                 Header.ForcePacking = cmp.ForcePacking.AsPackingFlag();
 
             // Handle implied SuperDAT
-            if (cmp.Name.Contains(" - SuperDAT") && keep)
+            if (cmp.Name?.Contains(" - SuperDAT") == true && keep)
                 Header.Type ??= "SuperDAT";
         }
 

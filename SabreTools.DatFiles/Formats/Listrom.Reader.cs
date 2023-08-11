@@ -88,12 +88,10 @@ namespace SabreTools.DatFiles.Formats
                 return;
             }
 
-            foreach (var row in set.Row)
+            foreach (var row in set.Row ?? Array.Empty<Models.Listrom.Row>())
             {
                 ConvertRow(row, machine, filename, indexId, statsOnly);
             }
-
-
         }
 
         /// <summary>
@@ -109,8 +107,6 @@ namespace SabreTools.DatFiles.Formats
             if (row == null)
                 return;
 
-            DatItem item = null;
-
             // Normal CHD
             if (row.Size == null
                 && !row.NoGoodDumpKnown
@@ -118,7 +114,7 @@ namespace SabreTools.DatFiles.Formats
                 && (!string.IsNullOrWhiteSpace(row.MD5)
                     || !string.IsNullOrWhiteSpace(row.SHA1)))
             {
-                item = new Disk
+                var disk = new Disk
                 {
                     Name = row.Name,
                     ItemStatus = ItemStatus.None,
@@ -131,9 +127,13 @@ namespace SabreTools.DatFiles.Formats
                 };
 
                 if (!string.IsNullOrWhiteSpace(row.MD5))
-                    (item as Disk).MD5 = row.MD5;
+                    disk.MD5 = row.MD5;
                 else
-                    (item as Disk).SHA1 = row.SHA1;
+                    disk.SHA1 = row.SHA1;
+
+                // Now process and add the item
+                disk.CopyMachineInformation(machine);
+                ParseAddHelper(disk, statsOnly);
             }
 
             // Normal ROM
@@ -141,7 +141,7 @@ namespace SabreTools.DatFiles.Formats
                 && !row.NoGoodDumpKnown
                 && !row.Bad)
             {
-                item = new Rom
+                var rom = new Rom
                 {
                     Name = row.Name,
                     Size = Utilities.CleanLong(row.Size),
@@ -155,6 +155,10 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+
+                // Now process and add the item
+                rom.CopyMachineInformation(machine);
+                ParseAddHelper(rom, statsOnly);
             }
 
             // Bad CHD
@@ -164,7 +168,7 @@ namespace SabreTools.DatFiles.Formats
                 && (!string.IsNullOrWhiteSpace(row.MD5)
                     || !string.IsNullOrWhiteSpace(row.SHA1)))
             {
-                item = new Disk
+                var disk = new Disk
                 {
                     Name = row.Name,
                     ItemStatus = ItemStatus.BadDump,
@@ -177,16 +181,20 @@ namespace SabreTools.DatFiles.Formats
                 };
 
                 if (!string.IsNullOrWhiteSpace(row.MD5))
-                    (item as Disk).MD5 = row.MD5;
+                    disk.MD5 = row.MD5;
                 else
-                    (item as Disk).SHA1 = row.SHA1;
+                    disk.SHA1 = row.SHA1;
+
+                // Now process and add the item
+                disk.CopyMachineInformation(machine);
+                ParseAddHelper(disk, statsOnly);
             }
 
             // Nodump CHD
             else if (row.Size == null
                 && row.NoGoodDumpKnown)
             {
-                item = new Disk
+                var disk = new Disk
                 {
                     Name = row.Name,
                     MD5 = null,
@@ -199,6 +207,10 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+
+                // Now process and add the item
+                disk.CopyMachineInformation(machine);
+                ParseAddHelper(disk, statsOnly);
             }
 
             // Bad ROM
@@ -206,7 +218,7 @@ namespace SabreTools.DatFiles.Formats
                 && !row.NoGoodDumpKnown
                 && row.Bad)
             {
-                item = new Rom
+                var rom = new Rom
                 {
                     Name = row.Name,
                     Size = Utilities.CleanLong(row.Size),
@@ -220,13 +232,17 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+
+                // Now process and add the item
+                rom.CopyMachineInformation(machine);
+                ParseAddHelper(rom, statsOnly);
             }
 
             // Nodump ROM
             else if (row.Size != null
                 && row.NoGoodDumpKnown)
             {
-                item = new Rom
+                var rom = new Rom
                 {
                     Name = row.Name,
                     Size = Utilities.CleanLong(row.Size),
@@ -240,11 +256,11 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
-            }
 
-            // Now process and add the item
-            item.CopyMachineInformation(machine);
-            ParseAddHelper(item, statsOnly);
+                // Now process and add the item
+                rom.CopyMachineInformation(machine);
+                ParseAddHelper(rom, statsOnly);
+            }
         }
 
         #endregion

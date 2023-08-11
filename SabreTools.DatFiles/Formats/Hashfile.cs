@@ -15,7 +15,7 @@ namespace SabreTools.DatFiles.Formats
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
         /// <param name="hash">Type of hash that is associated with this DAT</param> 
-        public Hashfile(DatFile datFile, Hash hash)
+        public Hashfile(DatFile? datFile, Hash hash)
             : base(datFile)
         {
             _hash = hash;

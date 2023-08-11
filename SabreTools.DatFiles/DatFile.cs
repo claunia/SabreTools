@@ -51,7 +51,7 @@ namespace SabreTools.DatFiles
         /// Create a new DatFile from an existing one
         /// </summary>
         /// <param name="datFile">DatFile to get the values from</param>
-        public DatFile(DatFile datFile)
+        public DatFile(DatFile? datFile)
         {
             logger = new Logger(this);
             if (datFile != null)
@@ -68,7 +68,7 @@ namespace SabreTools.DatFiles
         /// <param name="baseDat">DatFile containing the information to use in specific operations</param>
         /// <param name="quotes">For relevant types, assume the usage of quotes</param>
         /// <returns>DatFile of the specific internal type that corresponds to the inputs</returns>
-        public static DatFile Create(DatFormat? datFormat = null, DatFile baseDat = null, bool quotes = true)
+        public static DatFile Create(DatFormat? datFormat = null, DatFile? baseDat = null, bool quotes = true)
         {
             return datFormat switch
             {
@@ -98,7 +98,7 @@ namespace SabreTools.DatFiles
                 DatFormat.SoftwareList => new Formats.SoftwareList(baseDat),
                 DatFormat.SSV => new SeparatedValue(baseDat, ';'),
                 DatFormat.TSV => new SeparatedValue(baseDat, '\t'),
-                
+
                 // We use new-style Logiqx as a backup for generic DatFile
                 _ => new Logiqx(baseDat, false),
             };
@@ -144,7 +144,7 @@ namespace SabreTools.DatFiles
         }
 
         #endregion
-    
+
         #region Parsing
 
         /// <summary>
@@ -168,10 +168,8 @@ namespace SabreTools.DatFiles
             string key;
 
             // If we have a Disk, Media, or Rom, clean the hash data
-            if (item.ItemType == ItemType.Disk)
+            if (item.ItemType == ItemType.Disk && item is Disk disk)
             {
-                Disk disk = item as Disk;
-
                 // If the file has aboslutely no hashes, skip and log
                 if (disk.ItemStatus != ItemStatus.Nodump
                     && string.IsNullOrWhiteSpace(disk.MD5)
@@ -183,10 +181,21 @@ namespace SabreTools.DatFiles
 
                 item = disk;
             }
-            else if (item.ItemType == ItemType.Rom)
+            if (item.ItemType == ItemType.Media && item is Media media)
             {
-                Rom rom = item as Rom;
+                // If the file has aboslutely no hashes, skip and log
+                if (string.IsNullOrWhiteSpace(media.MD5)
+                    && string.IsNullOrWhiteSpace(media.SHA1)
+                    && string.IsNullOrWhiteSpace(media.SHA256)
+                    && string.IsNullOrWhiteSpace(media.SpamSum))
+                {
+                    logger.Verbose($"Incomplete entry for '{media.Name}' will be output as nodump");
+                }
 
+                item = media;
+            }
+            else if (item.ItemType == ItemType.Rom && item is Rom rom)
+            {
                 // If we have the case where there is SHA-1 and nothing else, we don't fill in any other part of the data
                 if (rom.Size == null && !rom.HasHashes())
                 {
@@ -250,10 +259,10 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="input">String to get value from</param>
         /// <returns>Date as a string, if possible</returns>
-        protected static string CleanDate(string input)
+        protected static string? CleanDate(string? input)
         {
             // Null in, null out
-            if (input == null)
+            if (string.IsNullOrWhiteSpace(input))
                 return null;
 
             string date = string.Empty;
@@ -267,7 +276,7 @@ namespace SabreTools.DatFiles
 
             return date;
         }
-    
+
         /// <summary>
         /// Clean a hash string from a Listrom DAT
         /// </summary>
@@ -285,7 +294,7 @@ namespace SabreTools.DatFiles
         }
 
         #endregion
-    
+
         #region Writing
 
         /// <summary>
@@ -327,28 +336,28 @@ namespace SabreTools.DatFiles
                 fix = (Header.Quotes ? "\"" : string.Empty) + Header.Postfix;
 
             // Ensure we have the proper values for replacement
-            if (item.ItemType == ItemType.Disk)
+            if (item.ItemType == ItemType.Disk && item is Disk disk)
             {
-                md5 = (item as Disk).MD5 ?? string.Empty;
-                sha1 = (item as Disk).SHA1 ?? string.Empty;
+                md5 = disk.MD5 ?? string.Empty;
+                sha1 = disk.SHA1 ?? string.Empty;
             }
-            else if (item.ItemType == ItemType.Media)
+            else if (item.ItemType == ItemType.Media && item is Media media)
             {
-                md5 = (item as Media).MD5 ?? string.Empty;
-                sha1 = (item as Media).SHA1 ?? string.Empty;
-                sha256 = (item as Media).SHA256 ?? string.Empty;
-                spamsum = (item as Media).SpamSum ?? string.Empty;
+                md5 = media.MD5 ?? string.Empty;
+                sha1 = media.SHA1 ?? string.Empty;
+                sha256 = media.SHA256 ?? string.Empty;
+                spamsum = media.SpamSum ?? string.Empty;
             }
-            else if (item.ItemType == ItemType.Rom)
+            else if (item.ItemType == ItemType.Rom && item is Rom rom)
             {
-                crc = (item as Rom).CRC ?? string.Empty;
-                md5 = (item as Rom).MD5 ?? string.Empty;
-                sha1 = (item as Rom).SHA1 ?? string.Empty;
-                sha256 = (item as Rom).SHA256 ?? string.Empty;
-                sha384 = (item as Rom).SHA384 ?? string.Empty;
-                sha512 = (item as Rom).SHA512 ?? string.Empty;
-                size = (item as Rom).Size?.ToString() ?? string.Empty;
-                spamsum = (item as Rom).SpamSum ?? string.Empty;
+                crc = rom.CRC ?? string.Empty;
+                md5 = rom.MD5 ?? string.Empty;
+                sha1 = rom.SHA1 ?? string.Empty;
+                sha256 = rom.SHA256 ?? string.Empty;
+                sha384 = rom.SHA384 ?? string.Empty;
+                sha512 = rom.SHA512 ?? string.Empty;
+                size = rom.Size?.ToString() ?? string.Empty;
+                spamsum = rom.SpamSum ?? string.Empty;
             }
 
             // Now do bulk replacement where possible
@@ -397,10 +406,8 @@ namespace SabreTools.DatFiles
             // If we're in Depot mode, take care of that instead
             if (Header.OutputDepot?.IsActive == true)
             {
-                if (item.ItemType == ItemType.Disk)
+                if (item.ItemType == ItemType.Disk && item is Disk disk)
                 {
-                    Disk disk = item as Disk;
-
                     // We can only write out if there's a SHA-1
                     if (!string.IsNullOrWhiteSpace(disk.SHA1))
                     {
@@ -408,10 +415,8 @@ namespace SabreTools.DatFiles
                         item.SetName($"{pre}{name}{post}");
                     }
                 }
-                else if (item.ItemType == ItemType.Media)
+                else if (item.ItemType == ItemType.Media && item is Media media)
                 {
-                    Media media = item as Media;
-
                     // We can only write out if there's a SHA-1
                     if (!string.IsNullOrWhiteSpace(media.SHA1))
                     {
@@ -419,10 +424,8 @@ namespace SabreTools.DatFiles
                         item.SetName($"{pre}{name}{post}");
                     }
                 }
-                else if (item.ItemType == ItemType.Rom)
+                else if (item.ItemType == ItemType.Rom && item is Rom rom)
                 {
-                    Rom rom = item as Rom;
-
                     // We can only write out if there's a SHA-1
                     if (!string.IsNullOrWhiteSpace(rom.SHA1))
                     {
@@ -439,9 +442,12 @@ namespace SabreTools.DatFiles
                 if (Header.RemoveExtension)
                     Header.ReplaceExtension = string.Empty;
 
-                string dir = Path.GetDirectoryName(name);
-                dir = dir.TrimStart(Path.DirectorySeparatorChar);
-                name = Path.Combine(dir, Path.GetFileNameWithoutExtension(name) + Header.ReplaceExtension);
+                string? dir = Path.GetDirectoryName(name);
+                if (dir != null)
+                {
+                    dir = dir.TrimStart(Path.DirectorySeparatorChar);
+                    name = Path.Combine(dir, Path.GetFileNameWithoutExtension(name) + Header.ReplaceExtension);
+                }
             }
 
             if (!string.IsNullOrWhiteSpace(Header.AddExtension))
@@ -477,7 +483,8 @@ namespace SabreTools.DatFiles
                 return datItem;
 
             // Cast for easier parsing
-            Rom rom = datItem as Rom;
+            if (datItem is not Rom rom)
+                return datItem;
 
             // If the Rom has "null" characteristics, ensure all fields
             if (rom.Size == null && rom.CRC == "null")
@@ -504,14 +511,14 @@ namespace SabreTools.DatFiles
         /// <returns>List of supported types for writing</returns>
         protected virtual ItemType[] GetSupportedTypes()
         {
-            return Enum.GetValues(typeof(ItemType)) as ItemType[];
+            return Enum.GetValues(typeof(ItemType)) as ItemType[] ?? Array.Empty<ItemType>();
         }
 
         /// <summary>
         /// Return list of required fields missing from a DatItem
         /// </summary>
         /// <returns>List of missing required fields, null or empty if none were found</returns>
-        protected virtual List<DatItemField> GetMissingRequiredFields(DatItem datItem) => null;
+        protected virtual List<DatItemField>? GetMissingRequiredFields(DatItem datItem) => null;
 
         /// <summary>
         /// Get if a machine contains any writable items
@@ -540,7 +547,7 @@ namespace SabreTools.DatFiles
         /// <param name="datItem">DatItem to check</param>
         /// <param name="ignoreBlanks">True if blank roms should be skipped on output, false otherwise</param>
         /// <returns>True if the item should be skipped on write, false otherwise</returns>
-        protected bool ShouldIgnore(DatItem datItem, bool ignoreBlanks)
+        protected bool ShouldIgnore(DatItem? datItem, bool ignoreBlanks)
         {
             // If this is invoked with a null DatItem, we ignore
             if (datItem == null)
@@ -566,10 +573,8 @@ namespace SabreTools.DatFiles
             }
 
             // If we're ignoring blanks and we have a Rom
-            if (ignoreBlanks && datItem.ItemType == ItemType.Rom)
+            if (ignoreBlanks && datItem.ItemType == ItemType.Rom && datItem is Rom rom)
             {
-                Rom rom = datItem as Rom;
-
                 // If we have a 0-size or blank rom, then we ignore
                 if (rom.Size == 0 || rom.Size == null)
                 {
@@ -588,7 +593,7 @@ namespace SabreTools.DatFiles
             }
 
             // If we have an item with missing required fields
-            List<DatItemField> missingFields = GetMissingRequiredFields(datItem);
+            List<DatItemField>? missingFields = GetMissingRequiredFields(datItem);
             if (missingFields != null && missingFields.Count != 0)
             {
                 string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);

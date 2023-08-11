@@ -22,7 +22,7 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <inheritdoc/>
-        protected override List<DatItemField> GetMissingRequiredFields(DatItem datItem)
+        protected override List<DatItemField>? GetMissingRequiredFields(DatItem datItem)
         {
             List<DatItemField> missingFields = new();
 
@@ -135,7 +135,7 @@ namespace SabreTools.DatFiles.Formats
         /// Create a Games from the current internal information
         /// <summary>
         /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise</param>
-        private Models.RomCenter.Games CreateGames(bool ignoreblanks)
+        private Models.RomCenter.Games? CreateGames(bool ignoreblanks)
         {
             // If we don't have items, we can't do anything
             if (this.Items == null || !this.Items.Any())

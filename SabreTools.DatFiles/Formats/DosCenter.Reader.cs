@@ -92,8 +92,8 @@ namespace SabreTools.DatFiles.Formats
                 return;
 
             // Create the machine for copying information
-            string machineName = game.Name.Trim('"');
-            if (machineName.EndsWith(".zip"))
+            string? machineName = game.Name?.Trim('"');
+            if (machineName?.EndsWith(".zip") == true)
                 machineName = System.IO.Path.GetFileNameWithoutExtension(machineName);
 
             var machine = new Machine { Name = machineName };

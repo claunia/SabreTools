@@ -22,7 +22,7 @@ namespace SabreTools.DatFiles.Formats
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
-        public SabreJSON(DatFile datFile)
+        public SabreJSON(DatFile? datFile)
             : base(datFile)
         {
         }
@@ -92,7 +92,7 @@ namespace SabreTools.DatFiles.Formats
             // Read in the header and apply any new fields
             jtr.Read();
             JsonSerializer js = new();
-            DatHeader header = js.Deserialize<DatHeader>(jtr);
+            DatHeader? header = js.Deserialize<DatHeader>(jtr);
             Header.ConditionalCopy(header);
         }
 
@@ -112,10 +112,10 @@ namespace SabreTools.DatFiles.Formats
             // Read in the machine array
             jtr.Read();
             JsonSerializer js = new();
-            JArray machineArray = js.Deserialize<JArray>(jtr);
+            JArray? machineArray = js.Deserialize<JArray>(jtr);
 
             // Loop through each machine object and process
-            foreach (JObject machineObj in machineArray)
+            foreach (JObject machineObj in machineArray ?? new JArray())
             {
                 ReadMachine(machineObj, statsOnly, filename, indexId);
             }
@@ -135,11 +135,11 @@ namespace SabreTools.DatFiles.Formats
                 return;
 
             // Prepare internal variables
-            Machine machine = null;
+            Machine? machine = null;
 
             // Read the machine info, if possible
             if (machineObj.ContainsKey("machine"))
-                machine = machineObj["machine"].ToObject<Machine>();
+                machine = machineObj["machine"]?.ToObject<Machine>();
 
             // Read items, if possible
             if (machineObj.ContainsKey("items"))
@@ -155,7 +155,7 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="machine">Machine information to add to the parsed items</param>
         private void ReadItems(
-            JArray itemsArr,
+            JArray? itemsArr,
             bool statsOnly,
 
             // Standard Dat parsing
@@ -163,7 +163,7 @@ namespace SabreTools.DatFiles.Formats
             int indexId,
 
             // Miscellaneous
-            Machine machine)
+            Machine? machine)
         {
             // If the array is invalid, skip
             if (itemsArr == null)
@@ -193,19 +193,22 @@ namespace SabreTools.DatFiles.Formats
             int indexId,
 
             // Miscellaneous
-            Machine machine)
+            Machine? machine)
         {
             // If we have an empty item, skip it
             if (itemObj == null)
                 return;
 
             // Prepare internal variables
-            DatItem datItem = null;
+            DatItem? datItem = null;
 
             // Read the datitem info, if possible
             if (itemObj.ContainsKey("datitem"))
             {
-                JToken datItemObj = itemObj["datitem"];
+                JToken? datItemObj = itemObj["datitem"];
+                if (datItemObj == null)
+                    return;
+
                 switch (datItemObj.Value<string>("type").AsItemType())
                 {
                     case ItemType.Adjuster:
@@ -367,7 +370,7 @@ namespace SabreTools.DatFiles.Formats
                 WriteHeader(jtw);
 
                 // Write out each of the machines and roms
-                string lastgame = null;
+                string? lastgame = null;
 
                 // Use a sorted list of games to output
                 foreach (string key in Items.SortedKeys)
@@ -523,7 +526,7 @@ namespace SabreTools.DatFiles.Formats
 
             jtw.Flush();
         }
-    
+
         // https://github.com/dotnet/runtime/issues/728
         private class BaseFirstContractResolver : DefaultContractResolver
         {
@@ -535,9 +538,11 @@ namespace SabreTools.DatFiles.Formats
             protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
             {
                 return base.CreateProperties(type, memberSerialization)
-                    .OrderBy(p => BaseTypesAndSelf(p.DeclaringType).Count()).ToList();
+                    .Where(p => p != null)
+                    .OrderBy(p => BaseTypesAndSelf(p.DeclaringType).Count())
+                    .ToList();
 
-                static IEnumerable<Type> BaseTypesAndSelf(Type t)
+                static IEnumerable<Type?> BaseTypesAndSelf(Type? t)
                 {
                     while (t != null)
                     {

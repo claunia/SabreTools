@@ -12,7 +12,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Name or path of the Depot
         /// </summary>
-        public string Name { get; private set; }
+        public string? Name { get; private set; }
 
         /// <summary>
         /// Whether to use this Depot or not

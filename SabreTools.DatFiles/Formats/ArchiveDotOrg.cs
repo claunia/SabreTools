@@ -9,7 +9,7 @@
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
-        public ArchiveDotOrg(DatFile datFile)
+        public ArchiveDotOrg(DatFile? datFile)
             : base(datFile)
         {
         }

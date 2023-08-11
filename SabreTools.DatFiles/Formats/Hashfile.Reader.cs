@@ -60,7 +60,7 @@ namespace SabreTools.DatFiles.Formats
         /// </summary>
         /// <param name="filename">Filename to derive from</param>
         /// <returns>Filled machine and new filename on success, null on error</returns>
-        private static (Machine?, string?) DeriveMachine(string filename)
+        private static (Machine?, string?) DeriveMachine(string? filename)
         {
             // If the filename is missing, we can't do anything
             if (string.IsNullOrWhiteSpace(filename))
@@ -89,7 +89,7 @@ namespace SabreTools.DatFiles.Formats
         /// </summary>
         /// <param name="filename">Filename to derive from</param>
         /// <returns>ItemType representing the item (Rom by default), ItemType.NULL on error</returns>
-        private static ItemType DeriveItemType(string filename)
+        private static ItemType DeriveItemType(string? filename)
         {
             // If the filename is missing, we can't do anything
             if (string.IsNullOrWhiteSpace(filename))
@@ -129,12 +129,16 @@ namespace SabreTools.DatFiles.Formats
             // Loop through and add the items
             foreach (var sfv in sfvs)
             {
+                // Skip if we have an invalid item
+                if (sfv == null)
+                    continue;
+
                 // Get the item type
                 ItemType itemType = DeriveItemType(sfv.File);
                 if (itemType == ItemType.NULL)
                     continue;
 
-                (var machine, string itemName) = DeriveMachine(sfv.File);
+                (var machine, string? itemName) = DeriveMachine(sfv.File);
                 switch (itemType)
                 {
                     case ItemType.Disk: // Should not happen with CRC32 hashes
@@ -179,12 +183,16 @@ namespace SabreTools.DatFiles.Formats
             // Loop through and add the items
             foreach (var md5 in md5s)
             {
+                // Skip if we have an invalid item
+                if (md5 == null)
+                    continue;
+
                 // Get the item type
                 ItemType itemType = DeriveItemType(md5.File);
                 if (itemType == ItemType.NULL)
                     continue;
 
-                (var machine, string itemName) = DeriveMachine(md5.File);
+                (var machine, string? itemName) = DeriveMachine(md5.File);
                 switch (itemType)
                 {
                     case ItemType.Disk:
@@ -261,12 +269,16 @@ namespace SabreTools.DatFiles.Formats
             // Loop through and add the items
             foreach (var sha1 in sha1s)
             {
+                // Skip if we have an invalid item
+                if (sha1 == null)
+                    continue;
+
                 // Get the item type
                 ItemType itemType = DeriveItemType(sha1.File);
                 if (itemType == ItemType.NULL)
                     continue;
 
-                (var machine, string itemName) = DeriveMachine(sha1.File);
+                (var machine, string? itemName) = DeriveMachine(sha1.File);
                 switch (itemType)
                 {
                     case ItemType.Disk:
@@ -343,12 +355,16 @@ namespace SabreTools.DatFiles.Formats
             // Loop through and add the items
             foreach (var sha256 in sha256s)
             {
+                // Skip if we have an invalid item
+                if (sha256 == null)
+                    continue;
+
                 // Get the item type
                 ItemType itemType = DeriveItemType(sha256.File);
                 if (itemType == ItemType.NULL)
                     continue;
 
-                (var machine, string itemName) = DeriveMachine(sha256.File);
+                (var machine, string? itemName) = DeriveMachine(sha256.File);
                 switch (itemType)
                 {
                     case ItemType.Media:
@@ -409,12 +425,16 @@ namespace SabreTools.DatFiles.Formats
             // Loop through and add the items
             foreach (var sha384 in sha384s)
             {
+                // Skip if we have an invalid item
+                if (sha384 == null)
+                    continue;
+
                 // Get the item type
                 ItemType itemType = DeriveItemType(sha384.File);
                 if (itemType == ItemType.NULL)
                     continue;
 
-                (var machine, string itemName) = DeriveMachine(sha384.File);
+                (var machine, string? itemName) = DeriveMachine(sha384.File);
                 switch (itemType)
                 {
                     case ItemType.Disk: // Should not happen with SHA-384 hashes
@@ -459,12 +479,16 @@ namespace SabreTools.DatFiles.Formats
             // Loop through and add the items
             foreach (var sha512 in sha512s)
             {
+                // Skip if we have an invalid item
+                if (sha512 == null)
+                    continue;
+
                 // Get the item type
                 ItemType itemType = DeriveItemType(sha512.File);
                 if (itemType == ItemType.NULL)
                     continue;
 
-                (var machine, string itemName) = DeriveMachine(sha512.File);
+                (var machine, string? itemName) = DeriveMachine(sha512.File);
                 switch (itemType)
                 {
                     case ItemType.Disk: // Should not happen with SHA-512 hashes
@@ -509,12 +533,16 @@ namespace SabreTools.DatFiles.Formats
             // Loop through and add the items
             foreach (var spamsum in spamsums)
             {
+                // Skip if we have an invalid item
+                if (spamsum == null)
+                    continue;
+
                 // Get the item type
                 ItemType itemType = DeriveItemType(spamsum.File);
                 if (itemType == ItemType.NULL)
                     continue;
 
-                (var machine, string itemName) = DeriveMachine(spamsum.File);
+                (var machine, string? itemName) = DeriveMachine(spamsum.File);
                 switch (itemType)
                 {
                     case ItemType.Media:

@@ -78,7 +78,7 @@ namespace SabreTools.DatFiles.Formats
             };
 
             // Read item values
-            DatItem item = null;
+            DatItem? item = null;
             switch (row.Type.AsItemType())
             {
                 case ItemType.Disk:
@@ -137,8 +137,11 @@ namespace SabreTools.DatFiles.Formats
             }
 
             // Now process and add the item
-            item.CopyMachineInformation(machine);
-            ParseAddHelper(item, statsOnly);
+            if (item != null)
+            {
+                item.CopyMachineInformation(machine);
+                ParseAddHelper(item, statsOnly);
+            }
         }
 
         #endregion

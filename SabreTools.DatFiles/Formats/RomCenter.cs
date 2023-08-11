@@ -9,7 +9,7 @@
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
-        public RomCenter(DatFile datFile)
+        public RomCenter(DatFile? datFile)
             : base(datFile)
         {
         }

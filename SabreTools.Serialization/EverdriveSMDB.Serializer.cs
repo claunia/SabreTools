@@ -98,7 +98,7 @@ namespace SabreTools.Serialization
             
             var metadataFile = new Models.Internal.MetadataFile
             {
-                [Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
+                [Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(),
             };
 
             if (item?.Row != null && item.Row.Any())
@@ -115,7 +115,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.EverdriveSMDB.MetadataFile"/> to <cref=Models.Internal."Header"/>
         /// </summary>
-        private static Models.Internal.Header ConvertHeaderToInternalModel(MetadataFile item)
+        private static Models.Internal.Header ConvertHeaderToInternalModel()
         {
             var header = new Models.Internal.Header
             {

@@ -85,7 +85,7 @@ namespace SabreTools.DatFiles.Formats
             ConvertSubheader(header.RomCenter);
 
             // Handle implied SuperDAT
-            if (header.Name.Contains(" - SuperDAT") && keep)
+            if (header.Name?.Contains(" - SuperDAT") == true && keep)
                 Header.Type ??= "SuperDAT";
         }
 
@@ -200,7 +200,7 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ConvertGame(Models.Logiqx.GameBase game, string filename, int indexId, bool statsOnly, string dirname = null)
+        private void ConvertGame(Models.Logiqx.GameBase game, string filename, int indexId, bool statsOnly, string? dirname = null)
         {
             // If the game is missing, we can't do anything
             if (game == null)

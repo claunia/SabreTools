@@ -175,7 +175,7 @@
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
-        public Listxml(DatFile datFile)
+        public Listxml(DatFile? datFile)
             : base(datFile)
         {
         }

@@ -12,7 +12,8 @@ namespace SabreTools.DatFiles.Formats
     /// </summary>
     public class OfflineListInfo
     {
-        public string Name { get; set; }
+        [Models.Required]
+        public string? Name { get; set; }
         public bool? Visible { get; set; }
         public bool? InNamingOption { get; set; }
         public bool? Default { get; set; }

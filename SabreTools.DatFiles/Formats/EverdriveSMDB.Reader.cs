@@ -38,7 +38,7 @@ namespace SabreTools.DatFiles.Formats
         /// </summary>
         /// <param name="filename">Filename to derive from</param>
         /// <returns>Filled machine and new filename on success, null on error</returns>
-        private static (Machine?, string?) DeriveMachine(string filename)
+        private static (Machine?, string?) DeriveMachine(string? filename)
         {
             // If the filename is missing, we can't do anything
             if (string.IsNullOrWhiteSpace(filename))
@@ -95,9 +95,8 @@ namespace SabreTools.DatFiles.Formats
             if (row == null)
                 return;
 
-            (var machine, string name) = DeriveMachine(row.Name);
-            if (machine == null)
-                machine = new Machine { Name = Path.GetFileNameWithoutExtension(row.Name) };
+            (var machine, string? name) = DeriveMachine(row.Name);
+            machine ??= new Machine { Name = Path.GetFileNameWithoutExtension(row.Name) };
 
             var rom = new Rom()
             {

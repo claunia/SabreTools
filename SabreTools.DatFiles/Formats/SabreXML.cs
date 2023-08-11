@@ -18,7 +18,7 @@ namespace SabreTools.DatFiles.Formats
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
-        public SabreXML(DatFile datFile)
+        public SabreXML(DatFile? datFile)
             : base(datFile)
         {
         }
@@ -27,7 +27,7 @@ namespace SabreTools.DatFiles.Formats
         public override void ParseFile(string filename, int indexId, bool keep, bool statsOnly = false, bool throwOnError = false)
         {
             // Prepare all internal variables
-            XmlReader xtr = XmlReader.Create(filename, new XmlReaderSettings
+            XmlReader? xtr = XmlReader.Create(filename, new XmlReaderSettings
             {
                 CheckCharacters = false,
                 DtdProcessing = DtdProcessing.Ignore,
@@ -58,7 +58,7 @@ namespace SabreTools.DatFiles.Formats
                     {
                         case "header":
                             XmlSerializer xs = new(typeof(DatHeader));
-                            DatHeader header = xs.Deserialize(xtr.ReadSubtree()) as DatHeader;
+                            DatHeader? header = xs.Deserialize(xtr.ReadSubtree()) as DatHeader;
                             Header.ConditionalCopy(header);
                             xtr.Skip();
                             break;
@@ -78,12 +78,12 @@ namespace SabreTools.DatFiles.Formats
             catch (Exception ex) when (!throwOnError)
             {
                 logger.Warning(ex, $"Exception found while parsing '{filename}'");
-                
+
                 // For XML errors, just skip the affected node
                 xtr?.Read();
             }
 
-            xtr.Dispose();
+            xtr?.Dispose();
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace SabreTools.DatFiles.Formats
                 return;
 
             // Prepare internal variables
-            Machine machine = null;
+            Machine? machine = null;
 
             // Otherwise, read the directory
             xtr.MoveToContent();
@@ -117,7 +117,7 @@ namespace SabreTools.DatFiles.Formats
                 {
                     case "machine":
                         XmlSerializer xs = new(typeof(Machine));
-                        machine = xs.Deserialize(xtr.ReadSubtree()) as Machine;
+                        machine = xs?.Deserialize(xtr.ReadSubtree()) as Machine;
                         xtr.Skip();
                         break;
 
@@ -142,7 +142,7 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
-        private void ReadFiles(XmlReader xtr, Machine machine, bool statsOnly, string filename, int indexId)
+        private void ReadFiles(XmlReader xtr, Machine? machine, bool statsOnly, string filename, int indexId)
         {
             // If the reader is invalid, skip
             if (xtr == null)
@@ -163,10 +163,12 @@ namespace SabreTools.DatFiles.Formats
                 {
                     case "datitem":
                         XmlSerializer xs = new(typeof(DatItem));
-                        DatItem item = xs.Deserialize(xtr.ReadSubtree()) as DatItem;
-                        item.CopyMachineInformation(machine);
-                        item.Source = new Source { Name = filename, Index = indexId };
-                        ParseAddHelper(item, statsOnly);
+                        if (xs.Deserialize(xtr.ReadSubtree()) is DatItem item)
+                        {
+                            item.CopyMachineInformation(machine);
+                            item.Source = new Source { Name = filename, Index = indexId };
+                            ParseAddHelper(item, statsOnly);
+                        }
                         xtr.Skip();
                         break;
                     default:
@@ -202,7 +204,7 @@ namespace SabreTools.DatFiles.Formats
                 WriteHeader(xtw);
 
                 // Write out each of the machines and roms
-                string lastgame = null;
+                string? lastgame = null;
 
                 // Use a sorted list of games to output
                 foreach (string key in Items.SortedKeys)
