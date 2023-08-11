@@ -97,18 +97,24 @@ namespace SabreTools.Filter
             if (checkValue == null)
                 return this.Value == null;
 
+            // If we have both a potentally boolean check and value
+            bool? checkValueBool = ConvertToBoolean(checkValue);
+            bool? matchValueBool = ConvertToBoolean(this.Value);
+            if (checkValueBool != null && matchValueBool != null)
+                return checkValueBool == matchValueBool;
+
             // If we have both a potentially numeric check and value
             if (NumberHelper.IsNumeric(checkValue) && NumberHelper.IsNumeric(this.Value))
             {
                 // Check Int64 values
                 long? checkValueLong = NumberHelper.ConvertToInt64(checkValue);
-                long? matchValueLong = NumberHelper.ConvertToInt64(checkValue);
+                long? matchValueLong = NumberHelper.ConvertToInt64(this.Value);
                 if (checkValueLong != null && matchValueLong != null)
                     return checkValueLong == matchValueLong;
 
                 // Check Double values
                 double? checkValueDouble = NumberHelper.ConvertToDouble(checkValue);
-                double? matchValueDouble = NumberHelper.ConvertToDouble(checkValue);
+                double? matchValueDouble = NumberHelper.ConvertToDouble(this.Value);
                 if (checkValueDouble != null && matchValueDouble != null)
                     return checkValueDouble == matchValueDouble;
             }
@@ -134,18 +140,24 @@ namespace SabreTools.Filter
             if (checkValue == null)
                 return this.Value == null;
 
+            // If we have both a potentally boolean check and value
+            bool? checkValueBool = ConvertToBoolean(checkValue);
+            bool? matchValueBool = ConvertToBoolean(this.Value);
+            if (checkValueBool != null && matchValueBool != null)
+                return checkValueBool != matchValueBool;
+
             // If we have both a potentially numeric check and value
             if (NumberHelper.IsNumeric(checkValue) && NumberHelper.IsNumeric(this.Value))
             {
                 // Check Int64 values
                 long? checkValueLong = NumberHelper.ConvertToInt64(checkValue);
-                long? matchValueLong = NumberHelper.ConvertToInt64(checkValue);
+                long? matchValueLong = NumberHelper.ConvertToInt64(this.Value);
                 if (checkValueLong != null && matchValueLong != null)
                     return checkValueLong != matchValueLong;
 
                 // Check Double values
                 double? checkValueDouble = NumberHelper.ConvertToDouble(checkValue);
-                double? matchValueDouble = NumberHelper.ConvertToDouble(checkValue);
+                double? matchValueDouble = NumberHelper.ConvertToDouble(this.Value);
                 if (checkValueDouble != null && matchValueDouble != null)
                     return checkValueDouble != matchValueDouble;
             }
@@ -176,13 +188,13 @@ namespace SabreTools.Filter
             {
                 // Check Int64 values
                 long? checkValueLong = NumberHelper.ConvertToInt64(checkValue);
-                long? matchValueLong = NumberHelper.ConvertToInt64(checkValue);
+                long? matchValueLong = NumberHelper.ConvertToInt64(this.Value);
                 if (checkValueLong != null && matchValueLong != null)
                     return checkValueLong > matchValueLong;
 
                 // Check Double values
                 double? checkValueDouble = NumberHelper.ConvertToDouble(checkValue);
-                double? matchValueDouble = NumberHelper.ConvertToDouble(checkValue);
+                double? matchValueDouble = NumberHelper.ConvertToDouble(this.Value);
                 if (checkValueDouble != null && matchValueDouble != null)
                     return checkValueDouble > matchValueDouble;
             }
@@ -209,13 +221,13 @@ namespace SabreTools.Filter
             {
                 // Check Int64 values
                 long? checkValueLong = NumberHelper.ConvertToInt64(checkValue);
-                long? matchValueLong = NumberHelper.ConvertToInt64(checkValue);
+                long? matchValueLong = NumberHelper.ConvertToInt64(this.Value);
                 if (checkValueLong != null && matchValueLong != null)
                     return checkValueLong >= matchValueLong;
 
                 // Check Double values
                 double? checkValueDouble = NumberHelper.ConvertToDouble(checkValue);
-                double? matchValueDouble = NumberHelper.ConvertToDouble(checkValue);
+                double? matchValueDouble = NumberHelper.ConvertToDouble(this.Value);
                 if (checkValueDouble != null && matchValueDouble != null)
                     return checkValueDouble >= matchValueDouble;
             }
@@ -242,13 +254,13 @@ namespace SabreTools.Filter
             {
                 // Check Int64 values
                 long? checkValueLong = NumberHelper.ConvertToInt64(checkValue);
-                long? matchValueLong = NumberHelper.ConvertToInt64(checkValue);
+                long? matchValueLong = NumberHelper.ConvertToInt64(this.Value);
                 if (checkValueLong != null && matchValueLong != null)
                     return checkValueLong < matchValueLong;
 
                 // Check Double values
                 double? checkValueDouble = NumberHelper.ConvertToDouble(checkValue);
-                double? matchValueDouble = NumberHelper.ConvertToDouble(checkValue);
+                double? matchValueDouble = NumberHelper.ConvertToDouble(this.Value);
                 if (checkValueDouble != null && matchValueDouble != null)
                     return checkValueDouble < matchValueDouble;
             }
@@ -275,13 +287,13 @@ namespace SabreTools.Filter
             {
                 // Check Int64 values
                 long? checkValueLong = NumberHelper.ConvertToInt64(checkValue);
-                long? matchValueLong = NumberHelper.ConvertToInt64(checkValue);
+                long? matchValueLong = NumberHelper.ConvertToInt64(this.Value);
                 if (checkValueLong != null && matchValueLong != null)
                     return checkValueLong <= matchValueLong;
 
                 // Check Double values
                 double? checkValueDouble = NumberHelper.ConvertToDouble(checkValue);
-                double? matchValueDouble = NumberHelper.ConvertToDouble(checkValue);
+                double? matchValueDouble = NumberHelper.ConvertToDouble(this.Value);
                 if (checkValueDouble != null && matchValueDouble != null)
                     return checkValueDouble <= matchValueDouble;
             }
@@ -328,6 +340,25 @@ namespace SabreTools.Filter
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Convert a string to a Boolean
+        /// </summary>
+        private bool? ConvertToBoolean(string? value)
+        {
+            // If we don't have a valid string, we can't do anything
+            if (string.IsNullOrWhiteSpace(value))
+                return null;
+
+            return value.ToLowerInvariant() switch
+            {
+                "true" => true,
+                "yes" => true,
+                "false" => false,
+                "no" => false,
+                _ => null,
+            };
         }
 
         /// <summary>
