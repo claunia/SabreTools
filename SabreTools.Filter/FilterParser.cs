@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using System.Xml.Serialization;
 using SabreTools.Models;
 using SabreTools.Models.Internal;
 
@@ -11,7 +12,6 @@ namespace SabreTools.Filter
         /// <summary>
         /// Parse a filter ID string into the item name and field name, if possible
         /// </summary>
-        /// <remarks>TODO: Have validation of fields done automatically</remarks>
         public static (string?, string?) ParseFilterId(string filterId)
         {
             // If we don't have a filter ID, we can't do anything
@@ -36,8 +36,7 @@ namespace SabreTools.Filter
                 "set" => ParseMachineFilterId(splitFilter),
 
                 // DatItem
-                // TODO: Implement parsers for all item types
-                _ => (null, null),
+                _ => ParseDatItemFilterId(splitFilter),
             };
         }
 
@@ -66,7 +65,7 @@ namespace SabreTools.Filter
         private static (string?, string?) ParseMachineFilterId(string[] filterId)
         {
             // Get the set of constants
-            var constants = GetConstants(typeof(Header));
+            var constants = GetConstants(typeof(Machine));
             if (constants == null)
                 return (null, null);
 
@@ -77,6 +76,30 @@ namespace SabreTools.Filter
 
             // Return the sanitized ID
             return (MetadataFile.MachineKey, constantMatch);
+        }
+
+        /// <summary>
+        /// Parse and validate item fields
+        /// </summary>
+        private static (string?, string?) ParseDatItemFilterId(string[] filterId)
+        {
+            // Get the correct item type
+            var itemType = GetDatItemType(filterId[0].ToLowerInvariant());
+            if (itemType == null)
+                return (null, null);
+
+            // Get the set of constants
+            var constants = GetConstants(itemType);
+            if (constants == null)
+                return (null, null);
+
+            // Get if there's a match to the constant
+            string? constantMatch = constants.FirstOrDefault(c => string.Equals(c, filterId[1], StringComparison.OrdinalIgnoreCase));
+            if (constantMatch == null)
+                return (null, null);
+
+            // Return the sanitized ID
+            return (filterId[0].ToLowerInvariant(), constantMatch);
         }
 
         /// <summary>
@@ -97,6 +120,20 @@ namespace SabreTools.Filter
                 .Select(f => f.GetRawConstantValue() as string)
                 .Where(v => v != null)
                 .ToArray()!;
+        }
+
+        /// <summary>
+        /// Attempt to get the DatItem type from the name
+        /// </summary>
+        private static Type? GetDatItemType(string? itemType)
+        {
+            if (string.IsNullOrWhiteSpace(itemType))
+                return null;
+
+            return AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(a => a.GetTypes())
+                .Where(t => t.IsAssignableFrom(typeof(DatItem)) && t.IsClass)
+                .FirstOrDefault(t => t.GetCustomAttribute<XmlRootAttribute>()?.ElementName == itemType);
         }
     }
 }
