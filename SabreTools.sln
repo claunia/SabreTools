@@ -42,6 +42,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SabreTools.Models", "SabreT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SabreTools.Serialization", "SabreTools.Serialization\SabreTools.Serialization.csproj", "{E610285C-10E6-4724-B22C-4EADC11789B1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SabreTools.Filter", "SabreTools.Filter\SabreTools.Filter.csproj", "{2A7A27A9-5FB9-4F6D-88F3-67120668A029}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -178,6 +180,14 @@ Global
 		{E610285C-10E6-4724-B22C-4EADC11789B1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E610285C-10E6-4724-B22C-4EADC11789B1}.Release|x64.ActiveCfg = Release|Any CPU
 		{E610285C-10E6-4724-B22C-4EADC11789B1}.Release|x64.Build.0 = Release|Any CPU
+		{2A7A27A9-5FB9-4F6D-88F3-67120668A029}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A7A27A9-5FB9-4F6D-88F3-67120668A029}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A7A27A9-5FB9-4F6D-88F3-67120668A029}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2A7A27A9-5FB9-4F6D-88F3-67120668A029}.Debug|x64.Build.0 = Debug|Any CPU
+		{2A7A27A9-5FB9-4F6D-88F3-67120668A029}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A7A27A9-5FB9-4F6D-88F3-67120668A029}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A7A27A9-5FB9-4F6D-88F3-67120668A029}.Release|x64.ActiveCfg = Release|Any CPU
+		{2A7A27A9-5FB9-4F6D-88F3-67120668A029}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
