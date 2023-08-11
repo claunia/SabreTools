@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SabreTools.Core\SabreTools.Core.csproj" />
     <ProjectReference Include="..\SabreTools.Models\SabreTools.Models.csproj" />
   </ItemGroup>
 

@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using System.Text.RegularExpressions;
+using SabreTools.Core.Tools;
 using SabreTools.Models.Internal;
 
 namespace SabreTools.Filter
@@ -86,7 +88,6 @@ namespace SabreTools.Filter
         /// </summary>
         /// <remarks>
         /// TODO: Add regex matching to this method
-        /// TODO: Add logic to convert SI suffixes and hex
         /// </remarks>
         private bool MatchesEqual(DictionaryBase dictionaryBase)
         {
@@ -94,6 +95,19 @@ namespace SabreTools.Filter
                 return this.Value == null;
 
             string? checkValue = dictionaryBase.ReadString(this.Key[1]);
+            if (NumberHelper.IsNumeric(checkValue) && NumberHelper.IsNumeric(this.Value))
+            {
+                long? checkValueLong = NumberHelper.ConvertToInt64(checkValue);
+                long? matchValueLong = NumberHelper.ConvertToInt64(checkValue);
+                if (checkValueLong != null && matchValueLong != null)
+                    return checkValueLong == matchValueLong;
+
+                double? checkValueDouble = NumberHelper.ConvertToDouble(checkValue);
+                double? matchValueDouble = NumberHelper.ConvertToDouble(checkValue);
+                if (checkValueDouble != null && matchValueDouble != null)
+                    return checkValueDouble == matchValueDouble;
+            }
+
             return checkValue == this.Value;
         }
 
@@ -102,7 +116,6 @@ namespace SabreTools.Filter
         /// </summary>
         /// <remarks>
         /// TODO: Add regex matching to this method
-        /// TODO: Add logic to convert SI suffixes and hex
         /// </remarks>
         private bool MatchesNotEqual(DictionaryBase dictionaryBase)
         {
@@ -110,13 +123,25 @@ namespace SabreTools.Filter
                 return this.Value != null;
 
             string? checkValue = dictionaryBase.ReadString(this.Key[1]);
+            if (NumberHelper.IsNumeric(checkValue) && NumberHelper.IsNumeric(this.Value))
+            {
+                long? checkValueLong = NumberHelper.ConvertToInt64(checkValue);
+                long? matchValueLong = NumberHelper.ConvertToInt64(checkValue);
+                if (checkValueLong != null && matchValueLong != null)
+                    return checkValueLong != matchValueLong;
+
+                double? checkValueDouble = NumberHelper.ConvertToDouble(checkValue);
+                double? matchValueDouble = NumberHelper.ConvertToDouble(checkValue);
+                if (checkValueDouble != null && matchValueDouble != null)
+                    return checkValueDouble != matchValueDouble;
+            }
+
             return checkValue != this.Value;
         }
 
         /// <summary>
         /// Determines if a value is strictly greater than
         /// </summary>
-        /// <remarks>TODO: Add logic to convert SI suffixes and hex</remarks>
         private bool MatchesGreaterThan(DictionaryBase dictionaryBase)
         {
             if (!dictionaryBase.ContainsKey(this.Key[1]))
@@ -125,7 +150,8 @@ namespace SabreTools.Filter
             long? checkLongValue = dictionaryBase.ReadLong(this.Key[1]);
             if (checkLongValue != null)
             {
-                if (!long.TryParse(this.Value, out long matchValue))
+                long? matchValue = NumberHelper.ConvertToInt64(this.Value);
+                if (matchValue == null)
                     return false;
 
                 return checkLongValue > matchValue;
@@ -134,7 +160,8 @@ namespace SabreTools.Filter
             double? checkDoubleValue = dictionaryBase.ReadDouble(this.Key[1]);
             if (checkDoubleValue != null)
             {
-                if (!double.TryParse(this.Value, out double matchValue))
+                double? matchValue = NumberHelper.ConvertToDouble(this.Value);
+                if (matchValue == null)
                     return false;
 
                 return checkDoubleValue > matchValue;
@@ -146,7 +173,6 @@ namespace SabreTools.Filter
         /// <summary>
         /// Determines if a value is greater than or equal
         /// </summary>
-        /// <remarks>TODO: Add logic to convert SI suffixes and hex</remarks>
         private bool MatchesGreaterThanOrEqual(DictionaryBase dictionaryBase)
         {
             if (!dictionaryBase.ContainsKey(this.Key[1]))
@@ -155,7 +181,8 @@ namespace SabreTools.Filter
             long? checkLongValue = dictionaryBase.ReadLong(this.Key[1]);
             if (checkLongValue != null)
             {
-                if (!long.TryParse(this.Value, out long matchValue))
+                long? matchValue = NumberHelper.ConvertToInt64(this.Value);
+                if (matchValue == null)
                     return false;
 
                 return checkLongValue >= matchValue;
@@ -164,7 +191,8 @@ namespace SabreTools.Filter
             double? checkDoubleValue = dictionaryBase.ReadDouble(this.Key[1]);
             if (checkDoubleValue != null)
             {
-                if (!double.TryParse(this.Value, out double matchValue))
+                double? matchValue = NumberHelper.ConvertToDouble(this.Value);
+                if (matchValue == null)
                     return false;
 
                 return checkDoubleValue >= matchValue;
@@ -176,7 +204,6 @@ namespace SabreTools.Filter
         /// <summary>
         /// Determines if a value is strictly less than
         /// </summary>
-        /// <remarks>TODO: Add logic to convert SI suffixes and hex</remarks>
         private bool MatchesLessThan(DictionaryBase dictionaryBase)
         {
             if (!dictionaryBase.ContainsKey(this.Key[1]))
@@ -185,7 +212,8 @@ namespace SabreTools.Filter
             long? checkLongValue = dictionaryBase.ReadLong(this.Key[1]);
             if (checkLongValue != null)
             {
-                if (!long.TryParse(this.Value, out long matchValue))
+                long? matchValue = NumberHelper.ConvertToInt64(this.Value);
+                if (matchValue == null)
                     return false;
 
                 return checkLongValue < matchValue;
@@ -194,7 +222,8 @@ namespace SabreTools.Filter
             double? checkDoubleValue = dictionaryBase.ReadDouble(this.Key[1]);
             if (checkDoubleValue != null)
             {
-                if (!double.TryParse(this.Value, out double matchValue))
+                double? matchValue = NumberHelper.ConvertToDouble(this.Value);
+                if (matchValue == null)
                     return false;
 
                 return checkDoubleValue < matchValue;
@@ -206,7 +235,6 @@ namespace SabreTools.Filter
         /// <summary>
         /// Determines if a value is less than or equal
         /// </summary>
-        /// <remarks>TODO: Add logic to convert SI suffixes and hex</remarks>
         private bool MatchesLessThanOrEqual(DictionaryBase dictionaryBase)
         {
             if (!dictionaryBase.ContainsKey(this.Key[1]))
@@ -215,7 +243,8 @@ namespace SabreTools.Filter
             long? checkLongValue = dictionaryBase.ReadLong(this.Key[1]);
             if (checkLongValue != null)
             {
-                if (!long.TryParse(this.Value, out long matchValue))
+                long? matchValue = NumberHelper.ConvertToInt64(this.Value);
+                if (matchValue == null)
                     return false;
 
                 return checkLongValue <= matchValue;
@@ -224,7 +253,8 @@ namespace SabreTools.Filter
             double? checkDoubleValue = dictionaryBase.ReadDouble(this.Key[1]);
             if (checkDoubleValue != null)
             {
-                if (!double.TryParse(this.Value, out double matchValue))
+                double? matchValue = NumberHelper.ConvertToDouble(this.Value);
+                if (matchValue == null)
                     return false;
 
                 return checkDoubleValue <= matchValue;

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace SabreTools.Core.Tools
 {
@@ -81,8 +82,11 @@ namespace SabreTools.Core.Tools
         /// <summary>
         /// Determine the multiplier from a numeric string
         /// </summary>
-        private static long DetermineMultiplier(string numeric)
+        public static long DetermineMultiplier(string? numeric)
         {
+            if (string.IsNullOrWhiteSpace(numeric))
+                return 0;
+
             long multiplier = 1;
             if (numeric.EndsWith("k") || numeric.EndsWith("kb"))
                 multiplier = KiloByte;
@@ -119,5 +123,67 @@ namespace SabreTools.Core.Tools
 
             return multiplier;
         }
+    
+        /// <summary>
+        /// Determine if a string is fully numeric or not
+        /// </summary>
+        public static bool IsNumeric(string? value)
+        {
+            // If we have no value, it is not numeric
+            if (string.IsNullOrWhiteSpace(value))
+                return false;
+
+            // If we have a hex value
+            value = value.ToLowerInvariant();
+            if (value.StartsWith("0x"))
+                value = value[2..];
+
+            if (DetermineMultiplier(value) > 1)
+                value = value.TrimEnd(new char[] { 'k', 'm', 'g', 't', 'p', 'e', 'z', 'y', 'i', 'b', ' ' });
+
+#if NET7_0_OR_GREATER
+            return value.All(c => char.IsAsciiHexDigit(c) || c == '.' || c == ',');
+#else
+            return value.All(c => c.IsAsciiHexDigit()|| c == '.' || c == ',');
+#endif
+        }
+
+#if NET6_0
+        /// <summary>
+        /// Indicates whether a character is categorized as an ASCII hexademical digit.
+        /// </summary>
+        /// <param name="c">The character to evaluate.</param>
+        /// <returns>true if c is a hexademical digit; otherwise, false.</returns>
+        /// <remarks>This method determines whether the character is in the range '0' through '9', inclusive, 'A' through 'F', inclusive, or 'a' through 'f', inclusive.</remarks>
+        private static bool IsAsciiHexDigit(this char c)
+        {
+            return c switch
+            {
+                '0' => true,
+                '1' => true,
+                '2' => true,
+                '3' => true,
+                '4' => true,
+                '5' => true,
+                '6' => true,
+                '7' => true,
+                '8' => true,
+                '9' => true,
+                'a' => true,
+                'A' => true,
+                'b' => true,
+                'B' => true,
+                'c' => true,
+                'C' => true,
+                'd' => true,
+                'D' => true,
+                'e' => true,
+                'E' => true,
+                'f' => true,
+                'F' => true,
+                _ => false,
+            };
+        }
+#endif
     }
 }
