@@ -14,7 +14,7 @@ namespace SabreTools.Filter
             if (dictionaryBase == null || fieldName == null)
                 return false;
 
-            var constants = TypeHelper.GetConstants(typeof(DictionaryBase));
+            var constants = TypeHelper.GetConstants(dictionaryBase.GetType());
             if (constants == null || !constants.Any(c => string.Equals(c, fieldName, StringComparison.InvariantCultureIgnoreCase)))
                 return false;
 
