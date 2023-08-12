@@ -1040,7 +1040,9 @@ namespace SabreTools.DatFiles
                 Parallel.ForEach(keys, Globals.ParallelOptions, key =>
                 {
                     // Get the possibly unsorted list
-                    ConcurrentList<DatItem> sortedlist = this[key].ToConcurrentList();
+                    ConcurrentList<DatItem>? sortedlist = this[key]?.ToConcurrentList();
+                    if (sortedlist == null)
+                        return;
 
                     // Sort the list of items to be consistent
                     DatItem.Sort(ref sortedlist, false);

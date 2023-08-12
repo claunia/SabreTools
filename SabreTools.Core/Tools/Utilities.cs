@@ -16,7 +16,7 @@ namespace SabreTools.Core.Tools
         /// <param name="bytes">Byte array to convert</param>
         /// <returns>Hex string representing the byte array</returns>
         /// <link>http://stackoverflow.com/questions/311165/how-do-you-convert-byte-array-to-hexadecimal-string-and-vice-versa</link>
-        public static string ByteArrayToString(byte[] bytes)
+        public static string? ByteArrayToString(byte[]? bytes)
         {
             // If we get null in, we send null out
             if (bytes == null)
@@ -39,10 +39,10 @@ namespace SabreTools.Core.Tools
         /// <param name="hex">Hex string to convert</param>
         /// <returns>Byte array represenging the hex string</returns>
         /// <link>http://stackoverflow.com/questions/311165/how-do-you-convert-byte-array-to-hexadecimal-string-and-vice-versa</link>
-        public static byte[] StringToByteArray(string hex)
+        public static byte[]? StringToByteArray(string? hex)
         {
             // If we get null in, we send null out
-            if (hex == null)
+            if (string.IsNullOrWhiteSpace(hex))
                 return null;
 
             try
@@ -102,7 +102,7 @@ namespace SabreTools.Core.Tools
         /// <param name="hash">SHA-1 hash to get the path for</param>
         /// <param name="depth">Positive value representing the depth of the depot</param>
         /// <returns>Subfolder path for the given hash</returns>
-        public static string GetDepotPath(string hash, int depth)
+        public static string? GetDepotPath(string? hash, int depth)
         {
             // If the hash is null or empty, then we return null
             if (string.IsNullOrEmpty(hash))

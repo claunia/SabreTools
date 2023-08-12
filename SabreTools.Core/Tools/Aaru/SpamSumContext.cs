@@ -454,7 +454,7 @@ namespace Aaru.Checksums
         /// <param name="len">Length of the data buffer to hash.</param>
         /// <param name="hash">null</param>
         /// <returns>Base64 representation of SpamSum $blocksize:$hash:$hash</returns>
-        public static string Data(byte[] data, uint len, out byte[] hash)
+        public static string Data(byte[] data, uint len, out byte[]? hash)
         {
             var fuzzyContext = new SpamSumContext();
 
@@ -469,7 +469,7 @@ namespace Aaru.Checksums
         /// <param name="data">Data buffer.</param>
         /// <param name="hash">null</param>
         /// <returns>Base64 representation of SpamSum $blocksize:$hash:$hash</returns>
-        public static string Data(byte[] data, out byte[] hash) => Data(data, (uint)data.Length, out hash);
+        public static string Data(byte[] data, out byte[]? hash) => Data(data, (uint)data.Length, out hash);
 
         // Converts an ASCII null-terminated string to .NET string
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

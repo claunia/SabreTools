@@ -397,7 +397,7 @@ namespace SabreTools.DatFiles
                 Header.UseRomName = true;
 
             // Get the name to update
-            string name = (Header.UseRomName ? item.GetName() : item.Machine.Name) ?? string.Empty;
+            string? name = (Header.UseRomName ? item.GetName() : item.Machine.Name) ?? string.Empty;
 
             // Create the proper Prefix and Postfix
             string pre = CreatePrefixPostfix(item, true);
@@ -411,7 +411,7 @@ namespace SabreTools.DatFiles
                     // We can only write out if there's a SHA-1
                     if (!string.IsNullOrWhiteSpace(disk.SHA1))
                     {
-                        name = Utilities.GetDepotPath(disk.SHA1, Header.OutputDepot.Depth).Replace('\\', '/');
+                        name = Utilities.GetDepotPath(disk.SHA1, Header.OutputDepot.Depth)?.Replace('\\', '/');
                         item.SetName($"{pre}{name}{post}");
                     }
                 }
@@ -420,7 +420,7 @@ namespace SabreTools.DatFiles
                     // We can only write out if there's a SHA-1
                     if (!string.IsNullOrWhiteSpace(media.SHA1))
                     {
-                        name = Utilities.GetDepotPath(media.SHA1, Header.OutputDepot.Depth).Replace('\\', '/');
+                        name = Utilities.GetDepotPath(media.SHA1, Header.OutputDepot.Depth)?.Replace('\\', '/');
                         item.SetName($"{pre}{name}{post}");
                     }
                 }
@@ -429,7 +429,7 @@ namespace SabreTools.DatFiles
                     // We can only write out if there's a SHA-1
                     if (!string.IsNullOrWhiteSpace(rom.SHA1))
                     {
-                        name = Utilities.GetDepotPath(rom.SHA1, Header.OutputDepot.Depth).Replace('\\', '/');
+                        name = Utilities.GetDepotPath(rom.SHA1, Header.OutputDepot.Depth)?.Replace('\\', '/');
                         item.SetName($"{pre}{name}{post}");
                     }
                 }

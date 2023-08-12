@@ -60,11 +60,11 @@ namespace SabreTools.DatFiles.Formats
             Header.HeaderSkipper ??= cmp.Header;
             Header.Type ??= cmp.Type;
             if (Header.ForceMerging == MergingFlag.None)
-                Header.ForceMerging = cmp.ForceMerging.AsMergingFlag();
+                Header.ForceMerging = cmp.ForceMerging?.AsMergingFlag() ?? MergingFlag.None;
             if (Header.ForcePacking == PackingFlag.None)
-                Header.ForcePacking = cmp.ForceZipping.AsPackingFlag();
+                Header.ForcePacking = cmp.ForceZipping?.AsPackingFlag() ?? PackingFlag.None;
             if (Header.ForcePacking == PackingFlag.None)
-                Header.ForcePacking = cmp.ForcePacking.AsPackingFlag();
+                Header.ForcePacking = cmp.ForcePacking?.AsPackingFlag() ?? PackingFlag.None;
 
             // Handle implied SuperDAT
             if (cmp.Name?.Contains(" - SuperDAT") == true && keep)

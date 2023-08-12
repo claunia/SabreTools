@@ -32,10 +32,8 @@ namespace SabreTools.Models.Internal
             string? asString = Read<string>(key);
             return asString?.ToLowerInvariant() switch
             {
-                "true" => true,
-                "yes" => true,
-                "false" => false,
-                "no" => false,
+                "true" or "yes" => true,
+                "false" or "no" => false,
                 _ => null,
             };
         }

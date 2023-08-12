@@ -142,7 +142,7 @@ namespace OptimizedCRC
 
         static public int Compute(ArraySegment<byte> block)
         {
-            return Compute(block.Array, block.Offset, block.Count);
+            return Compute(block.Array!, block.Offset, block.Count);
         }
 
         public void Dispose()

@@ -10,7 +10,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="value">Value to use</param>
         /// <returns>MappingAttribute attached to the value</returns>
-        public static MappingAttribute GetAttribute(T value)
+        public static MappingAttribute? GetAttribute(T? value)
         {
             // Null value in, null value out
             if (value == null)
@@ -22,7 +22,7 @@ namespace SabreTools.Core.Tools
                 enumType = Nullable.GetUnderlyingType(enumType);
 
             // If the value returns a null on ToString, just return null
-            string valueStr = value.ToString();
+            string? valueStr = value.ToString();
             if (string.IsNullOrWhiteSpace(valueStr))
                 return null;
             
@@ -42,7 +42,7 @@ namespace SabreTools.Core.Tools
                 return null;
             
             // Return the first attribute, if possible
-            return (MappingAttribute)attributes.FirstOrDefault();
+            return (MappingAttribute?)attributes.FirstOrDefault();
         }
     }
 }

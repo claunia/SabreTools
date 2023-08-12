@@ -13,7 +13,7 @@ namespace SabreTools.Core
         /// The current toolset version to be used by all child applications
         /// </summary>
         public readonly static string Version = $"v1.1.2";
- 
+
         /// <summary>
         /// Readies the console and outputs the header
         /// </summary>
@@ -30,9 +30,6 @@ namespace SabreTools.Core
             if (!Console.IsOutputRedirected)
             {
                 // Set the console to ready state
-                if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-                    Console.SetBufferSize(Console.BufferWidth, 999);
-
                 ConsoleColor formertext = Console.ForegroundColor;
                 ConsoleColor formerback = Console.BackgroundColor;
                 Console.ForegroundColor = ConsoleColor.Yellow;
@@ -48,7 +45,7 @@ namespace SabreTools.Core
 
                 // Return the console to the original text and background colors
                 Console.ForegroundColor = formertext;
-                    Console.BackgroundColor = formerback;
+                Console.BackgroundColor = formerback;
             }
         }
     }

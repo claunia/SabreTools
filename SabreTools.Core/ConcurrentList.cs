@@ -18,7 +18,7 @@ namespace SabreTools.Core
             set { lock (_lock) _list[index] = value; }
         }
 
-        object IList.this[int index]
+        object? IList.this[int index]
         {
             get { lock (_lock) return ((IList)_list)[index]; }
             set { lock (_lock) ((IList)_list)[index] = value; }
@@ -43,7 +43,7 @@ namespace SabreTools.Core
                 _list.Add(item);
         }
 
-        public int Add(object value)
+        public int Add(object? value)
         {
             lock (_lock)
                 return ((IList)_list).Add(value);
@@ -67,7 +67,7 @@ namespace SabreTools.Core
                 return _list.Contains(item);
         }
 
-        public bool Contains(object value)
+        public bool Contains(object? value)
         {
             lock (_lock)
                 return ((IList)_list).Contains(value);
@@ -109,7 +109,7 @@ namespace SabreTools.Core
                 return _list.IndexOf(item);
         }
 
-        public int IndexOf(object value)
+        public int IndexOf(object? value)
         {
             lock (_lock)
                 return ((IList)_list).IndexOf(value);
@@ -121,7 +121,7 @@ namespace SabreTools.Core
                 _list.Insert(index, item);
         }
 
-        public void Insert(int index, object value)
+        public void Insert(int index, object? value)
         {
             lock (_lock)
                 ((IList)_list).Insert(index, value);
@@ -133,7 +133,7 @@ namespace SabreTools.Core
                 return _list.Remove(item);
         }
 
-        public void Remove(object value)
+        public void Remove(object? value)
         {
             lock (_lock)
                 ((IList)_list).Remove(value);

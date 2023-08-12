@@ -353,10 +353,8 @@ namespace SabreTools.Filter
 
             return value.ToLowerInvariant() switch
             {
-                "true" => true,
-                "yes" => true,
-                "false" => false,
-                "no" => false,
+                "true" or "yes" => true,
+                "false" or "no" => false,
                 _ => null,
             };
         }

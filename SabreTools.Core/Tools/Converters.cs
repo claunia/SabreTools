@@ -43,7 +43,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="chipType">String to get value from</param>
         /// <returns>ChipType value corresponding to the string</returns>
-        public static ChipType AsChipType(this string chipType)
+        public static ChipType AsChipType(this string? chipType)
             => AsEnumValue<ChipType>(chipType);
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="controlType">String to get value from</param>
         /// <returns>ControlType value corresponding to the string</returns>
-        public static ControlType AsControlType(this string controlType)
+        public static ControlType AsControlType(this string? controlType)
             => AsEnumValue<ControlType>(controlType);
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="DatHeaderField">String to get value from</param>
         /// <returns>DatHeaderField value corresponding to the string</returns>
-        public static DatHeaderField AsDatHeaderField(this string input)
+        public static DatHeaderField AsDatHeaderField(this string? input)
         {
             // If the input is empty, we return null
             if (string.IsNullOrEmpty(input))
@@ -89,7 +89,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="input">String to get value from</param>
         /// <returns>DatItemField value corresponding to the string</returns>
-        public static DatItemField AsDatItemField(this string input)
+        public static DatItemField AsDatItemField(this string? input)
         {
             // If the input is empty, we return null
             if (string.IsNullOrEmpty(input))
@@ -119,7 +119,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="deviceType">String to get value from</param>
         /// <returns>DeviceType value corresponding to the string</returns>
-        public static DeviceType AsDeviceType(this string deviceType)
+        public static DeviceType AsDeviceType(this string? deviceType)
             => AsEnumValue<DeviceType>(deviceType);
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="displayType">String to get value from</param>
         /// <returns>DisplayType value corresponding to the string</returns>
-        public static DisplayType AsDisplayType(this string displayType)
+        public static DisplayType AsDisplayType(this string? displayType)
             => AsEnumValue<DisplayType>(displayType);
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="endianness">String to get value from</param>
         /// <returns>Endianness value corresponding to the string</returns>
-        public static Endianness AsEndianness(this string endianness)
+        public static Endianness AsEndianness(this string? endianness)
             => AsEnumValue<Endianness>(endianness);
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="featureStatus">String to get value from</param>
         /// <returns>FeatureStatus value corresponding to the string</returns>
-        public static FeatureStatus AsFeatureStatus(this string featureStatus)
+        public static FeatureStatus AsFeatureStatus(this string? featureStatus)
             => AsEnumValue<FeatureStatus>(featureStatus);
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="emulationStatus">String to get value from</param>
         /// <returns>FeatureType value corresponding to the string</returns>
-        public static FeatureType AsFeatureType(this string featureType)
+        public static FeatureType AsFeatureType(this string? featureType)
             => AsEnumValue<FeatureType>(featureType);
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="status">String to get value from</param>
         /// <returns>ItemStatus value corresponding to the string</returns>
-        public static ItemStatus AsItemStatus(this string status)
+        public static ItemStatus AsItemStatus(this string? status)
             => AsEnumValue<ItemStatus>(status);
 
         /// <summary>
@@ -167,7 +167,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="itemType">String to get value from</param>
         /// <returns>ItemType? value corresponding to the string</returns>
-        public static ItemType AsItemType(this string itemType)
+        public static ItemType AsItemType(this string? itemType)
             => AsEnumValue<ItemType>(itemType);
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="loadFlag">String to get value from</param>
         /// <returns>LoadFlag value corresponding to the string</returns>
-        public static LoadFlag AsLoadFlag(this string loadFlag)
+        public static LoadFlag AsLoadFlag(this string? loadFlag)
             => AsEnumValue<LoadFlag>(loadFlag);
 
         /// <summary>
@@ -183,7 +183,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="logLevel">String to get value from</param>
         /// <returns>LogLevel value corresponding to the string</returns>
-        public static LogLevel AsLogLevel(this string logLevel)
+        public static LogLevel AsLogLevel(this string? logLevel)
             => AsEnumValue<LogLevel>(logLevel);
 
         /// <summary>
@@ -191,7 +191,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="input">String to get value from</param>
         /// <returns>MachineField value corresponding to the string</returns>
-        public static MachineField AsMachineField(this string input)
+        public static MachineField AsMachineField(this string? input)
         {
             // If the input is empty, we return null
             if (string.IsNullOrEmpty(input))
@@ -221,7 +221,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="gametype">String to get value from</param>
         /// <returns>MachineType value corresponding to the string</returns>
-        public static MachineType AsMachineType(this string gametype)
+        public static MachineType AsMachineType(this string? gametype)
             => AsEnumValue<MachineType>(gametype);
 
         /// <summary>
@@ -229,7 +229,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="merging">String to get value from</param>
         /// <returns>MergingFlag value corresponding to the string</returns>
-        public static MergingFlag AsMergingFlag(this string merging)
+        public static MergingFlag AsMergingFlag(this string? merging)
             => AsEnumValue<MergingFlag>(merging);
 
         /// <summary>
@@ -237,7 +237,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="nodump">String to get value from</param>
         /// <returns>NodumpFlag value corresponding to the string</returns>
-        public static NodumpFlag AsNodumpFlag(this string nodump)
+        public static NodumpFlag AsNodumpFlag(this string? nodump)
             => AsEnumValue<NodumpFlag>(nodump);
 
         /// <summary>
@@ -245,7 +245,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="subType">String to get value from</param>
         /// <returns>OpenMSXSubType value corresponding to the string</returns>
-        public static OpenMSXSubType AsOpenMSXSubType(this string subType)
+        public static OpenMSXSubType AsOpenMSXSubType(this string? subType)
             => AsEnumValue<OpenMSXSubType>(subType);
 
         /// <summary>
@@ -253,7 +253,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="packing">String to get value from</param>
         /// <returns>PackingFlag value corresponding to the string</returns>
-        public static PackingFlag AsPackingFlag(this string packing)
+        public static PackingFlag AsPackingFlag(this string? packing)
             => AsEnumValue<PackingFlag>(packing);
 
         /// <summary>
@@ -261,7 +261,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="relation">String to get value from</param>
         /// <returns>Relation value corresponding to the string</returns>
-        public static Relation AsRelation(this string relation)
+        public static Relation AsRelation(this string? relation)
             => AsEnumValue<Relation>(relation);
 
         /// <summary>
@@ -269,7 +269,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="runnable">String to get value from</param>
         /// <returns>Runnable value corresponding to the string</returns>
-        public static Runnable AsRunnable(this string runnable)
+        public static Runnable AsRunnable(this string? runnable)
             => AsEnumValue<Runnable>(runnable);
 
         /// <summary>
@@ -277,7 +277,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="status">String to get value from</param>
         /// <returns>SoftwareListStatus value corresponding to the string</returns>
-        public static SoftwareListStatus AsSoftwareListStatus(this string status)
+        public static SoftwareListStatus AsSoftwareListStatus(this string? status)
             => AsEnumValue<SoftwareListStatus>(status);
 
         /// <summary>
@@ -285,7 +285,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="supported">String to get value from</param>
         /// <returns>Supported value corresponding to the string</returns>
-        public static Supported AsSupported(this string supported)
+        public static Supported AsSupported(this string? supported)
             => AsEnumValue<Supported>(supported);
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="supported">String to get value from</param>
         /// <returns>SupportStatus value corresponding to the string</returns>
-        public static SupportStatus AsSupportStatus(this string supportStatus)
+        public static SupportStatus AsSupportStatus(this string? supportStatus)
             => AsEnumValue<SupportStatus>(supportStatus);
 
         /// <summary>
@@ -301,7 +301,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="yesno">String to get value from</param>
         /// <returns>bool? corresponding to the string</returns>
-        public static bool? AsYesNo(this string yesno)
+        public static bool? AsYesNo(this string? yesno)
         {
             return yesno?.ToLowerInvariant() switch
             {
@@ -317,7 +317,7 @@ namespace SabreTools.Core.Tools
         /// <param name="value">String value to parse/param>
         /// <typeparam name="T">Enum type that is expected</typeparam>
         /// <returns>Enum value representing the input, default on error</returns>
-        internal static T AsEnumValue<T>(string value)
+        internal static T? AsEnumValue<T>(string? value)
         {
             // Get the mapping dictionary
             var mappings = GenerateToEnum<T>();
@@ -352,7 +352,7 @@ namespace SabreTools.Core.Tools
                 foreach (T value in values)
                 {
                     // Try to get the mapping attribute
-                    MappingAttribute attr = AttributeHelper<T>.GetAttribute(value);
+                    MappingAttribute? attr = AttributeHelper<T>.GetAttribute(value);
                     if (attr?.Mappings == null || !attr.Mappings.Any())
                         continue;
 
@@ -383,7 +383,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="chipType">ChipType to get value from</param>
         /// <returns>String value corresponding to the ChipType</returns>
-        public static string FromChipType(this ChipType chipType)
+        public static string? FromChipType(this ChipType chipType)
             => AsStringValue(chipType);
 
         /// <summary>
@@ -391,7 +391,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="controlType">ControlType to get value from</param>
         /// <returns>String value corresponding to the ControlType</returns>
-        public static string FromControlType(this ControlType controlType)
+        public static string? FromControlType(this ControlType controlType)
             => AsStringValue(controlType);
 
         /// <summary>
@@ -399,7 +399,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="deviceType">vDeviceType to get value from</param>
         /// <returns>String value corresponding to the DeviceType</returns>
-        public static string FromDeviceType(this DeviceType deviceType)
+        public static string? FromDeviceType(this DeviceType deviceType)
             => AsStringValue(deviceType);
 
         /// <summary>
@@ -407,7 +407,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="displayType">DisplayType to get value from</param>
         /// <returns>String value corresponding to the DisplayType</returns>
-        public static string FromDisplayType(this DisplayType displayType)
+        public static string? FromDisplayType(this DisplayType displayType)
             => AsStringValue(displayType);
 
         /// <summary>
@@ -415,7 +415,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="endianness">Endianness to get value from</param>
         /// <returns>String value corresponding to the Endianness</returns>
-        public static string FromEndianness(this Endianness endianness)
+        public static string? FromEndianness(this Endianness endianness)
             => AsStringValue(endianness);
 
         /// <summary>
@@ -423,7 +423,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="featureStatus">FeatureStatus to get value from</param>
         /// <returns>String value corresponding to the FeatureStatus</returns>
-        public static string FromFeatureStatus(this FeatureStatus featureStatus)
+        public static string? FromFeatureStatus(this FeatureStatus featureStatus)
             => AsStringValue(featureStatus);
 
         /// <summary>
@@ -431,7 +431,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="featureType">FeatureType to get value from</param>
         /// <returns>String value corresponding to the FeatureType</returns>
-        public static string FromFeatureType(this FeatureType featureType)
+        public static string? FromFeatureType(this FeatureType featureType)
             => AsStringValue(featureType);
 
         /// <summary>
@@ -440,7 +440,7 @@ namespace SabreTools.Core.Tools
         /// <param name="status">ItemStatus to get value from</param>
         /// <param name="yesno">True to use Yes/No format instead</param>
         /// <returns>String value corresponding to the ItemStatus</returns>
-        public static string FromItemStatus(this ItemStatus status, bool yesno)
+        public static string? FromItemStatus(this ItemStatus status, bool yesno)
             => AsStringValue(status, yesno);
 
         /// <summary>
@@ -448,7 +448,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="itemType">ItemType? to get value from</param>
         /// <returns>String value corresponding to the ItemType?</returns>
-        public static string FromItemType(this ItemType itemType)
+        public static string? FromItemType(this ItemType itemType)
             => AsStringValue(itemType);
 
         /// <summary>
@@ -456,7 +456,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="loadFlag">LoadFlag to get value from</param>
         /// <returns>String value corresponding to the LoadFlag</returns>
-        public static string FromLoadFlag(this LoadFlag loadFlag)
+        public static string? FromLoadFlag(this LoadFlag loadFlag)
             => AsStringValue(loadFlag);
 
         /// <summary>
@@ -465,7 +465,7 @@ namespace SabreTools.Core.Tools
         /// <param name="gametype">MachineType to get value from</param>
         /// <param name="romCenter">True to use old naming instead</param>
         /// <returns>String value corresponding to the MachineType</returns>
-        public static string FromMachineType(this MachineType gametype, bool old)
+        public static string? FromMachineType(this MachineType gametype, bool old)
             => AsStringValue(gametype, old);
 
         /// <summary>
@@ -474,7 +474,7 @@ namespace SabreTools.Core.Tools
         /// <param name="merging">MergingFlag to get value from</param>
         /// <param name="romCenter">True to use RomCenter naming instead</param>
         /// <returns>String value corresponding to the MergingFlag</returns>
-        public static string FromMergingFlag(this MergingFlag merging, bool romCenter)
+        public static string? FromMergingFlag(this MergingFlag merging, bool romCenter)
             => AsStringValue(merging, romCenter);
 
         /// <summary>
@@ -482,7 +482,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="nodump">NodumpFlag to get value from</param>
         /// <returns>String value corresponding to the NodumpFlag</returns>
-        public static string FromNodumpFlag(this NodumpFlag nodump)
+        public static string? FromNodumpFlag(this NodumpFlag nodump)
             => AsStringValue(nodump);
 
         /// <summary>
@@ -490,7 +490,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="subType">OpenMSXSubType to get value from</param>
         /// <returns>String value corresponding to the OpenMSXSubType</returns>
-        public static string FromOpenMSXSubType(this OpenMSXSubType subType)
+        public static string? FromOpenMSXSubType(this OpenMSXSubType subType)
             => AsStringValue(subType);
 
         /// <summary>
@@ -499,7 +499,7 @@ namespace SabreTools.Core.Tools
         /// <param name="packing">PackingFlag to get value from</param>
         /// <param name="yesno">True to use Yes/No format instead</param>
         /// <returns>String value corresponding to the PackingFlag</returns>
-        public static string FromPackingFlag(this PackingFlag packing, bool yesno)
+        public static string? FromPackingFlag(this PackingFlag packing, bool yesno)
             => AsStringValue(packing, yesno);
 
         /// <summary>
@@ -507,7 +507,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="relation">Relation to get value from</param>
         /// <returns>String value corresponding to the Relation</returns>
-        public static string FromRelation(this Relation relation)
+        public static string? FromRelation(this Relation relation)
             => AsStringValue(relation);
 
         /// <summary>
@@ -515,7 +515,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="runnable">Runnable to get value from</param>
         /// <returns>String value corresponding to the Runnable</returns>
-        public static string FromRunnable(this Runnable runnable)
+        public static string? FromRunnable(this Runnable runnable)
             => AsStringValue(runnable);
 
         /// <summary>
@@ -523,7 +523,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="status">SoftwareListStatus to get value from</param>
         /// <returns>String value corresponding to the SoftwareListStatus</returns>
-        public static string FromSoftwareListStatus(this SoftwareListStatus status)
+        public static string? FromSoftwareListStatus(this SoftwareListStatus status)
             => AsStringValue(status);
 
         /// <summary>
@@ -532,7 +532,7 @@ namespace SabreTools.Core.Tools
         /// <param name="supported">Supported to get value from</param>
         /// <param name="verbose">True to use verbose output, false otherwise</param>
         /// <returns>String value corresponding to the Supported</returns>
-        public static string FromSupported(this Supported supported, bool verbose)
+        public static string? FromSupported(this Supported supported, bool verbose)
             => AsStringValue(supported, verbose);
 
         /// <summary>
@@ -540,7 +540,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="supportStatus">SupportStatus to get value from</param>
         /// <returns>String value corresponding to the SupportStatus</returns>
-        public static string FromSupportStatus(this SupportStatus supportStatus)
+        public static string? FromSupportStatus(this SupportStatus supportStatus)
             => AsStringValue(supportStatus);
 
         /// <summary>
@@ -548,7 +548,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <param name="yesno">bool? to get value from</param>
         /// <returns>String corresponding to the bool?</returns>
-        public static string FromYesNo(this bool? yesno)
+        public static string? FromYesNo(this bool? yesno)
         {
             return yesno switch
             {
@@ -565,7 +565,7 @@ namespace SabreTools.Core.Tools
         /// <param name="useSecond">True to use the second mapping option, if it exists</param>
         /// <typeparam name="T">Enum type that is expected</typeparam>
         /// <returns>String value representing the input, default on error</returns>
-        internal static string? AsStringValue<T>(T value, bool useSecond = false)
+        internal static string? AsStringValue<T>(T value, bool useSecond = false) where T : notnull
         {
             // Get the mapping dictionary
             var mappings = GenerateToString<T>(useSecond);
@@ -584,7 +584,7 @@ namespace SabreTools.Core.Tools
         /// <param name="useSecond">True to use the second mapping option, if it exists</param>
         /// <typeparam name="T">Enum type that is expected</typeparam>
         /// <returns>Dictionary of enum to string values</returns>
-        internal static Dictionary<T, string> GenerateToString<T>(bool useSecond)
+        internal static Dictionary<T, string> GenerateToString<T>(bool useSecond) where T : notnull
         {
             try
             {
@@ -596,7 +596,7 @@ namespace SabreTools.Core.Tools
                 foreach (T value in values)
                 {
                     // Try to get the mapping attribute
-                    MappingAttribute attr = AttributeHelper<T>.GetAttribute(value);
+                    MappingAttribute? attr = AttributeHelper<T>.GetAttribute(value);
                     if (attr?.Mappings == null || !attr.Mappings.Any())
                         continue;
 
