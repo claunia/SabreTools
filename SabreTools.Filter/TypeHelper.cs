@@ -40,7 +40,18 @@ namespace SabreTools.Filter
             return AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(a => a.GetTypes())
                 .Where(t => t.IsAssignableFrom(typeof(DatItem)) && t.IsClass)
-                .FirstOrDefault(t => t.GetCustomAttribute<XmlRootAttribute>()?.ElementName == itemType);
+                .FirstOrDefault(t => GetXmlRootAttributeElementName(t) == itemType);
+        }
+
+        /// <summary>
+        /// Attempt to get the XmlRootAttribute.ElementName value from a type
+        /// </summary>
+        public static string? GetXmlRootAttributeElementName(Type? type)
+        {
+            if (type == null)
+                return null;
+
+            return type.GetCustomAttribute<XmlRootAttribute>()?.ElementName;
         }
     }
 }

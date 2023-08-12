@@ -3,7 +3,6 @@ namespace SabreTools.Models.Internal
     /// <summary>
     /// Determine what type of file an item is
     /// </summary>
-    /// <remarks>TODO: Create attribute for internal names</remarks>
     public enum ItemType
     {
         /// <summary>

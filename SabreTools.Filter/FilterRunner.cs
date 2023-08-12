@@ -45,14 +45,13 @@ namespace SabreTools.Filter
             {
                 Header => MetadataFile.HeaderKey,
                 Machine => MetadataFile.MachineKey,
-                DatItem => dictionaryBase.ReadString(DatItem.TypeKey),
+                DatItem => TypeHelper.GetXmlRootAttributeElementName(dictionaryBase.GetType()),
                 _ => null,
             };
 
             // Loop through and run each filter in order
             foreach (var filter in this.Filters)
             {
-                // TODO: Make this step more accurate
                 // If the filter isn't for this object type, skip
                 if (filter.Key[0] != itemName)
                     continue;
