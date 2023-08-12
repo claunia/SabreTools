@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace SabreTools.Core.Tools
 {
@@ -175,18 +173,7 @@ namespace SabreTools.Core.Tools
             return array == null || array.Length == 0;
         }
 
-        /// <summary>
-        /// Remove all chars that are considered path unsafe
-        /// </summary>
-        /// <param name="s">Input string to clean</param>
-        /// <returns>Cleaned string</returns>
-        public static string RemovePathUnsafeCharacters(string s)
-        {
-            List<char> invalidPath = Path.GetInvalidPathChars().ToList();
-            return new string(s.Where(c => !invalidPath.Contains(c)).ToArray());
-        }
-
-        /// <summary>
+        //// <summary>
         /// Returns if the first byte array starts with the second array
         /// </summary>
         /// <param name="arr1">First byte array to compare</param>

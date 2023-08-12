@@ -767,14 +767,14 @@ namespace SabreTools.DatItems
                         // If item types match, more refinement is needed
                         if (x.ItemType == y.ItemType)
                         {
-                            string xDirectoryName = Path.GetDirectoryName(Utilities.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty));
-                            string yDirectoryName = Path.GetDirectoryName(Utilities.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty));
+                            string xDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty));
+                            string yDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty));
 
                             // If item directory names match, more refinement is needed
                             if (xDirectoryName == yDirectoryName)
                             {
-                                string xName = Path.GetFileName(Utilities.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty));
-                                string yName = Path.GetFileName(Utilities.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty));
+                                string xName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty));
+                                string yName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty));
 
                                 // If item names match, then compare on machine or source, depending on the flag
                                 if (xName == yName)

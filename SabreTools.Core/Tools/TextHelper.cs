@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace SabreTools.Core.Tools
@@ -20,6 +23,18 @@ namespace SabreTools.Core.Tools
             input = new Regex(@"(([[(].*[\)\]] )?([^([]+))").Match(input).Groups[1].Value;
             input = input.TrimStart().TrimEnd();
             return input;
+        }
+
+        // <summary>
+        /// Remove all chars that are considered path unsafe
+        /// </summary>
+        public static string? RemovePathUnsafeCharacters(string? input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return input;
+
+            List<char> invalidPath = Path.GetInvalidPathChars().ToList();
+            return new string(input.Where(c => !invalidPath.Contains(c)).ToArray());
         }
 
         #region Helpers
