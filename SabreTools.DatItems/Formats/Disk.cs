@@ -248,23 +248,14 @@ namespace SabreTools.DatItems.Formats
         /// <returns></returns>
         public Rom ConvertToRom()
         {
-            var rom = new Rom()
+            var rom = new Rom(_disk.ConvertToRom())
             {
-                Name = this.Name + ".chd",
                 ItemType = ItemType.Rom,
                 DupeType = this.DupeType,
 
                 Machine = this.Machine?.Clone() as Machine,
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
-
-                MergeTag = this.MergeTag,
-                Region = this.Region,
-                ItemStatus = this.ItemStatus,
-                Optional = this.Optional,
-
-                MD5 = this.MD5,
-                SHA1 = this.SHA1,
 
                 DataArea = new DataArea { Name = this.DiskArea?.Name },
                 Part = this.Part,

@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
@@ -104,7 +105,7 @@ namespace SabreTools.DatItems.Formats
             MD5 = TextHelper.ByteArrayToString(baseFile.MD5);
             SHA1 = TextHelper.ByteArrayToString(baseFile.SHA1);
             SHA256 = TextHelper.ByteArrayToString(baseFile.SHA256);
-            SpamSum = TextHelper.ByteArrayToString(baseFile.SpamSum);
+            SpamSum = System.Text.Encoding.UTF8.GetString(baseFile.SpamSum ?? Array.Empty<byte>());
 
             ItemType = ItemType.Media;
             DupeType = 0x00;
@@ -142,7 +143,7 @@ namespace SabreTools.DatItems.Formats
                 MD5 = TextHelper.StringToByteArray(this.MD5),
                 SHA1 = TextHelper.StringToByteArray(this.SHA1),
                 SHA256 = TextHelper.StringToByteArray(this.SHA256),
-                SpamSum = TextHelper.StringToByteArray(this.SpamSum),
+                SpamSum = System.Text.Encoding.UTF8.GetBytes(this.SpamSum ?? string.Empty),
             };
         }
 
@@ -152,7 +153,7 @@ namespace SabreTools.DatItems.Formats
         /// <returns></returns>
         public Rom ConvertToRom()
         {
-            var rom = new Rom()
+            var rom = new Rom(_media.ConvertToRom())
             {
                 ItemType = ItemType.Rom,
                 DupeType = this.DupeType,
@@ -160,12 +161,6 @@ namespace SabreTools.DatItems.Formats
                 Machine = this.Machine?.Clone() as Machine,
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
-
-                Name = this.Name + ".aif",
-                MD5 = this.MD5,
-                SHA1 = this.SHA1,
-                SHA256 = this.SHA256,
-                SpamSum = this.SpamSum,
             };
 
             return rom;

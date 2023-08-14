@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
-using SabreTools.Core;
-using SabreTools.Core.Tools;
 using Compress;
 using Compress.ZipFile;
 using NaturalSort;
+using SabreTools.Core;
+using SabreTools.Core.Tools;
 
 namespace SabreTools.FileTypes.Archives
 {
@@ -753,7 +752,7 @@ namespace SabreTools.FileTypes.Archives
                             DateTime dt = DateTime.Now;
                             if (UseDates && !string.IsNullOrWhiteSpace(baseFiles[-index - 1].Date) && DateTime.TryParse(baseFiles[-index - 1].Date.Replace('\\', '/'), out dt))
                             {
-                                long msDosDateTime = Utilities.ConvertDateTimeToMsDosTimeFormat(dt);
+                                long msDosDateTime = DateTimeHelper.ConvertToMsDosTimeFormat(dt);
                                 TimeStamps ts = new() { ModTime = msDosDateTime };
                                 zipFile.ZipFileOpenWriteStream(false, false, baseFiles[-index - 1].Filename.Replace('\\', '/'), istreamSize, (ushort)CompressionMethod.Deflated, out writeStream, ts);
                             }

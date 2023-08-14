@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using SabreTools.Core;
@@ -487,12 +488,24 @@ namespace SabreTools.DatItems.Formats
             SHA256 = TextHelper.ByteArrayToString(baseFile.SHA256);
             SHA384 = TextHelper.ByteArrayToString(baseFile.SHA384);
             SHA512 = TextHelper.ByteArrayToString(baseFile.SHA512);
-            SpamSum = TextHelper.ByteArrayToString(baseFile.SpamSum);
+            SpamSum = System.Text.Encoding.UTF8.GetString(baseFile.SpamSum ?? Array.Empty<byte>());
 
             ItemType = ItemType.Rom;
             DupeType = 0x00;
             ItemStatus = ItemStatus.None;
             Date = baseFile.Date;
+        }
+
+        /// <summary>
+        /// Create a Rom object from the internal model
+        /// </summary>
+        public Rom(Models.Internal.Rom? rom)
+        {
+            _rom = rom ?? new Models.Internal.Rom();
+
+            ItemType = ItemType.Rom;
+            DupeType = 0x00;
+            ItemStatus = ItemStatus.None;
         }
 
         #endregion
@@ -536,7 +549,7 @@ namespace SabreTools.DatItems.Formats
                 SHA256 = TextHelper.StringToByteArray(this.SHA256),
                 SHA384 = TextHelper.StringToByteArray(this.SHA384),
                 SHA512 = TextHelper.StringToByteArray(this.SHA512),
-                SpamSum = TextHelper.StringToByteArray(this.SpamSum),
+                SpamSum = System.Text.Encoding.UTF8.GetBytes(this.SpamSum ?? string.Empty),
             };
         }
 

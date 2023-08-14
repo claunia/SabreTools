@@ -875,7 +875,7 @@ namespace SabreTools.Test.Core
         [InlineData(FeatureStatus.NULL, 2)]
         [InlineData(FeatureType.NULL, 14)]
         [InlineData(ItemStatus.NULL, 7)]
-        [InlineData(ItemType.NULL, 51)]
+        [InlineData(ItemType.NULL, 54)]
         [InlineData(LoadFlag.NULL, 14)]
         [InlineData(LogLevel.VERBOSE, 4)]
         [InlineData(MachineField.NULL, 68)]

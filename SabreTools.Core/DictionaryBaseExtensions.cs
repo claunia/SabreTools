@@ -65,6 +65,50 @@ namespace SabreTools.Core
 
         #endregion
 
+        #region Conversion
+        
+        /// <summary>
+        /// Convert a Disk to a Rom
+        /// </summary>
+        public static Rom? ConvertToRom(this Disk? disk)
+        {
+            // If the Disk is missing, we can't do anything
+            if (disk == null)
+                return null;
+
+            return new Rom
+            {
+                [Rom.NameKey] = disk.ReadString(Disk.NameKey) + ".chd",
+                [Rom.MergeKey] = disk.ReadString(Disk.MergeKey),
+                [Rom.RegionKey] = disk.ReadString(Disk.RegionKey),
+                [Rom.StatusKey] = disk.ReadString(Disk.StatusKey),
+                [Rom.OptionalKey] = disk.ReadString(Disk.OptionalKey),
+                [Rom.MD5Key] = disk.ReadString(Disk.MD5Key),
+                [Rom.SHA1Key] = disk.ReadString(Disk.SHA1Key),
+            };
+        }
+
+        /// <summary>
+        /// Convert a Media to a Rom
+        /// </summary>
+        public static Rom? ConvertToRom(this Media? media)
+        {
+            // If the Media is missing, we can't do anything
+            if (media == null)
+                return null;
+
+            return new Rom
+            {
+                [Rom.NameKey] = media.ReadString(Media.NameKey) + ".aaruf",
+                [Rom.MD5Key] = media.ReadString(Media.MD5Key),
+                [Rom.SHA1Key] = media.ReadString(Media.SHA1Key),
+                [Rom.SHA256Key] = media.ReadString(Media.SHA256Key),
+                [Rom.SpamSumKey] = media.ReadString(Media.SpamSumKey),
+            };
+        }
+
+        #endregion
+
         #region Equality Checking
 
         /// <summary>
@@ -472,8 +516,5 @@ namespace SabreTools.Core
         }
 
         #endregion
-
-        // TODO: Add DatItem conversion extensions here
-        // TODO: Once done with the above, replace innards on each current model
     }
 }
