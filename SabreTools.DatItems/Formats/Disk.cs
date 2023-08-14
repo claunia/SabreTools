@@ -196,8 +196,8 @@ namespace SabreTools.DatItems.Formats
         public Disk(BaseFile baseFile)
         {
             Name = baseFile.Filename;
-            MD5 = Utilities.ByteArrayToString(baseFile.MD5);
-            SHA1 = Utilities.ByteArrayToString(baseFile.SHA1);
+            MD5 = TextHelper.ByteArrayToString(baseFile.MD5);
+            SHA1 = TextHelper.ByteArrayToString(baseFile.SHA1);
 
             ItemType = ItemType.Disk;
             DupeType = 0x00;
@@ -237,8 +237,8 @@ namespace SabreTools.DatItems.Formats
             {
                 Filename = this.Name,
                 Parent = this.Machine?.Name,
-                MD5 = Utilities.StringToByteArray(this.MD5),
-                SHA1 = Utilities.StringToByteArray(this.SHA1),
+                MD5 = TextHelper.StringToByteArray(this.MD5),
+                SHA1 = TextHelper.StringToByteArray(this.SHA1),
             };
         }
 

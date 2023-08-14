@@ -289,7 +289,7 @@ namespace SabreTools.FileTypes.Archives
             BaseFile baseFile = new()
             {
                 Filename = Path.GetFileNameWithoutExtension(this.Filename).ToLowerInvariant(),
-                SHA1 = Utilities.StringToByteArray(Path.GetFileNameWithoutExtension(this.Filename)),
+                SHA1 = TextHelper.StringToByteArray(Path.GetFileNameWithoutExtension(this.Filename)),
 
                 Parent = Path.GetFileNameWithoutExtension(this.Filename).ToLowerInvariant(),
             };
@@ -336,7 +336,7 @@ namespace SabreTools.FileTypes.Archives
             baseFile = GetInfo(inputStream, keepReadOpen: true);
 
             // Get the output file name
-            string outfile = Path.Combine(outDir, Utilities.GetDepotPath(Utilities.ByteArrayToString(baseFile.SHA1), Depth));
+            string outfile = Path.Combine(outDir, Utilities.GetDepotPath(TextHelper.ByteArrayToString(baseFile.SHA1), Depth));
             outfile = outfile.Replace(".gz", ".xz");
 
             // Check to see if the folder needs to be created

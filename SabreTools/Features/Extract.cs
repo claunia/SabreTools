@@ -93,7 +93,7 @@ The following systems have headers that this program can work with:
                 using var fs = File.OpenRead(file);
                 byte[] hbin = new byte[int.Parse(rule.StartOffset)];
                 fs.Read(hbin, 0, int.Parse(rule.StartOffset));
-                hstr = Utilities.ByteArrayToString(hbin);
+                hstr = TextHelper.ByteArrayToString(hbin);
             }
             catch
             {
@@ -112,7 +112,7 @@ The following systems have headers that this program can work with:
             if (!nostore)
             {
                 BaseFile baseFile = BaseFile.GetInfo(newfile, hashes: Hash.SHA1, asFiles: TreatAsFile.NonArchive);
-                AddHeaderToDatabase(hstr, Utilities.ByteArrayToString(baseFile.SHA1), rule.SourceFile);
+                AddHeaderToDatabase(hstr, TextHelper.ByteArrayToString(baseFile.SHA1), rule.SourceFile);
             }
 
             return true;

@@ -31,12 +31,12 @@ namespace SabreTools.Test.FileTypes
             var baseFile = BaseFile.GetInfo(filename, hashes: Hash.All);
 
             // Extract all the hashes to string
-            string actualCrc = Utilities.ByteArrayToString(baseFile.CRC);
-            string actualMd5 = Utilities.ByteArrayToString(baseFile.MD5);
-            string actualSha1 = Utilities.ByteArrayToString(baseFile.SHA1);
-            string actualSha256 = Utilities.ByteArrayToString(baseFile.SHA256);
-            string actualSha384 = Utilities.ByteArrayToString(baseFile.SHA384);
-            string actualSha512 = Utilities.ByteArrayToString(baseFile.SHA512);
+            string actualCrc = TextHelper.ByteArrayToString(baseFile.CRC);
+            string actualMd5 = TextHelper.ByteArrayToString(baseFile.MD5);
+            string actualSha1 = TextHelper.ByteArrayToString(baseFile.SHA1);
+            string actualSha256 = TextHelper.ByteArrayToString(baseFile.SHA256);
+            string actualSha384 = TextHelper.ByteArrayToString(baseFile.SHA384);
+            string actualSha512 = TextHelper.ByteArrayToString(baseFile.SHA512);
             string actualSpamSum = Encoding.UTF8.GetString(baseFile.SpamSum);
 
             // Verify all of the hashes match

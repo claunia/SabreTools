@@ -555,7 +555,7 @@ CREATE TABLE IF NOT EXISTS dat (
                 if (lowerCaseDats.Contains(input.ToLowerInvariant()))
                 {
                     string fullpath = Path.GetFullPath(datRootDats[lowerCaseDats.IndexOf(input.ToLowerInvariant())]);
-                    string sha1 = Utilities.ByteArrayToString(BaseFile.GetInfo(fullpath, hashes: Hash.SHA1).SHA1);
+                    string sha1 = TextHelper.ByteArrayToString(BaseFile.GetInfo(fullpath, hashes: Hash.SHA1).SHA1);
                     foundDats.Add(sha1, fullpath);
                 }
                 else

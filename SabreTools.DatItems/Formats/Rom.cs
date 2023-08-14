@@ -481,13 +481,13 @@ namespace SabreTools.DatItems.Formats
         {
             Name = baseFile.Filename;
             Size = baseFile.Size;
-            CRC = Utilities.ByteArrayToString(baseFile.CRC);
-            MD5 = Utilities.ByteArrayToString(baseFile.MD5);
-            SHA1 = Utilities.ByteArrayToString(baseFile.SHA1);
-            SHA256 = Utilities.ByteArrayToString(baseFile.SHA256);
-            SHA384 = Utilities.ByteArrayToString(baseFile.SHA384);
-            SHA512 = Utilities.ByteArrayToString(baseFile.SHA512);
-            SpamSum = Utilities.ByteArrayToString(baseFile.SpamSum);
+            CRC = TextHelper.ByteArrayToString(baseFile.CRC);
+            MD5 = TextHelper.ByteArrayToString(baseFile.MD5);
+            SHA1 = TextHelper.ByteArrayToString(baseFile.SHA1);
+            SHA256 = TextHelper.ByteArrayToString(baseFile.SHA256);
+            SHA384 = TextHelper.ByteArrayToString(baseFile.SHA384);
+            SHA512 = TextHelper.ByteArrayToString(baseFile.SHA512);
+            SpamSum = TextHelper.ByteArrayToString(baseFile.SpamSum);
 
             ItemType = ItemType.Rom;
             DupeType = 0x00;
@@ -530,13 +530,13 @@ namespace SabreTools.DatItems.Formats
                 Parent = this.Machine?.Name,
                 Date = this.Date,
                 Size = this.Size,
-                CRC = Utilities.StringToByteArray(this.CRC),
-                MD5 = Utilities.StringToByteArray(this.MD5),
-                SHA1 = Utilities.StringToByteArray(this.SHA1),
-                SHA256 = Utilities.StringToByteArray(this.SHA256),
-                SHA384 = Utilities.StringToByteArray(this.SHA384),
-                SHA512 = Utilities.StringToByteArray(this.SHA512),
-                SpamSum = Utilities.StringToByteArray(this.SpamSum),
+                CRC = TextHelper.StringToByteArray(this.CRC),
+                MD5 = TextHelper.StringToByteArray(this.MD5),
+                SHA1 = TextHelper.StringToByteArray(this.SHA1),
+                SHA256 = TextHelper.StringToByteArray(this.SHA256),
+                SHA384 = TextHelper.StringToByteArray(this.SHA384),
+                SHA512 = TextHelper.StringToByteArray(this.SHA512),
+                SpamSum = TextHelper.StringToByteArray(this.SpamSum),
             };
         }
 

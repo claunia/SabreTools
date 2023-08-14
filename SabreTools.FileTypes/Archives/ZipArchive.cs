@@ -453,7 +453,7 @@ namespace SabreTools.FileTypes.Archives
                     DateTime dt = DateTime.Now;
                     if (UseDates && !string.IsNullOrWhiteSpace(baseFile.Date) && DateTime.TryParse(baseFile.Date.Replace('\\', '/'), out dt))
                     {
-                        long msDosDateTime = Utilities.ConvertDateTimeToMsDosTimeFormat(dt);
+                        long msDosDateTime = DateTimeHelper.ConvertToMsDosTimeFormat(dt);
                         TimeStamps ts = new() { ModTime = msDosDateTime };
                         zipFile.ZipFileOpenWriteStream(false, false, baseFile.Filename.Replace('\\', '/'), istreamSize, (ushort)CompressionMethod.Deflated, out writeStream, ts);
                     }
@@ -527,7 +527,7 @@ namespace SabreTools.FileTypes.Archives
                             DateTime dt = DateTime.Now;
                             if (UseDates && !string.IsNullOrWhiteSpace(baseFile.Date) && DateTime.TryParse(baseFile.Date.Replace('\\', '/'), out dt))
                             {
-                                long msDosDateTime = Utilities.ConvertDateTimeToMsDosTimeFormat(dt);
+                                long msDosDateTime = DateTimeHelper.ConvertToMsDosTimeFormat(dt);
                                 TimeStamps ts = new() { ModTime = msDosDateTime };
                                 zipFile.ZipFileOpenWriteStream(false, false, baseFile.Filename.Replace('\\', '/'), istreamSize, (ushort)CompressionMethod.Deflated, out writeStream, ts);
                             }
@@ -669,7 +669,7 @@ namespace SabreTools.FileTypes.Archives
                         DateTime dt = DateTime.Now;
                         if (UseDates && !string.IsNullOrWhiteSpace(baseFiles[index].Date) && DateTime.TryParse(baseFiles[index].Date.Replace('\\', '/'), out dt))
                         {
-                            long msDosDateTime = Utilities.ConvertDateTimeToMsDosTimeFormat(dt);
+                            long msDosDateTime = DateTimeHelper.ConvertToMsDosTimeFormat(dt);
                             TimeStamps ts = new() { ModTime = msDosDateTime };
                             zipFile.ZipFileOpenWriteStream(false, false, baseFiles[index].Filename.Replace('\\', '/'), istreamSize, (ushort)CompressionMethod.Deflated, out writeStream, ts);
                         }

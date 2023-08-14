@@ -53,8 +53,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("crc", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("crc")]
         public string? CRC
         {
-            get { return _crc.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_crc); }
-            set { _crc = (value == "null" ? Constants.CRCZeroBytes : Utilities.StringToByteArray(TextHelper.NormalizeCRC32(value))); }
+            get { return _crc.IsNullOrEmpty() ? null : TextHelper.ByteArrayToString(_crc); }
+            set { _crc = (value == "null" ? Constants.CRCZeroBytes : TextHelper.StringToByteArray(TextHelper.NormalizeCRC32(value))); }
         }
 
         /// <summary>
@@ -63,8 +63,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("md5", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("md5")]
         public string? MD5
         {
-            get { return _md5.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_md5); }
-            set { _md5 = Utilities.StringToByteArray(TextHelper.NormalizeMD5(value)); }
+            get { return _md5.IsNullOrEmpty() ? null : TextHelper.ByteArrayToString(_md5); }
+            set { _md5 = TextHelper.StringToByteArray(TextHelper.NormalizeMD5(value)); }
         }
 
         /// <summary>
@@ -73,8 +73,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("sha1", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha1")]
         public string? SHA1
         {
-            get { return _sha1.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha1); }
-            set { _sha1 = Utilities.StringToByteArray(TextHelper.NormalizeSHA1(value)); }
+            get { return _sha1.IsNullOrEmpty() ? null : TextHelper.ByteArrayToString(_sha1); }
+            set { _sha1 = TextHelper.StringToByteArray(TextHelper.NormalizeSHA1(value)); }
         }
 
         /// <summary>
@@ -83,8 +83,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("sha256", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha256")]
         public string? SHA256
         {
-            get { return _sha256.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha256); }
-            set { _sha256 = Utilities.StringToByteArray(TextHelper.NormalizeSHA256(value)); }
+            get { return _sha256.IsNullOrEmpty() ? null : TextHelper.ByteArrayToString(_sha256); }
+            set { _sha256 = TextHelper.StringToByteArray(TextHelper.NormalizeSHA256(value)); }
         }
 
         /// <summary>

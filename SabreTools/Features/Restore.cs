@@ -71,7 +71,7 @@ The following systems have headers that this program can work with:
             BaseFile baseFile = BaseFile.GetInfo(file, hashes: Hash.SHA1, asFiles: TreatAsFile.NonArchive);
 
             // Retrieve a list of all related headers from the database
-            List<string> headers = RetrieveHeadersFromDatabase(Utilities.ByteArrayToString(baseFile.SHA1));
+            List<string> headers = RetrieveHeadersFromDatabase(TextHelper.ByteArrayToString(baseFile.SHA1));
 
             // If we have nothing retrieved, we return false
             if (headers.Count == 0)
@@ -82,7 +82,7 @@ The following systems have headers that this program can work with:
             {
                 string outputFile = (string.IsNullOrWhiteSpace(outDir) ? $"{Path.GetFullPath(file)}.new" : Path.Combine(outDir, Path.GetFileName(file))) + i;
                 logger.User($"Creating reheadered file: {outputFile}");
-                AppendBytes(file, outputFile, Utilities.StringToByteArray(headers[i]), null);
+                AppendBytes(file, outputFile, TextHelper.StringToByteArray(headers[i]), null);
                 logger.User("Reheadered file created!");
             }
 

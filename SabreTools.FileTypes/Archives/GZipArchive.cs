@@ -397,7 +397,7 @@ namespace SabreTools.FileTypes.Archives
                 Size = extractedsize,
                 CRC = headercrc,
                 MD5 = headermd5,
-                SHA1 = Utilities.StringToByteArray(Path.GetFileNameWithoutExtension(this.Filename)),
+                SHA1 = TextHelper.StringToByteArray(Path.GetFileNameWithoutExtension(this.Filename)),
 
                 Parent = Path.GetFileNameWithoutExtension(this.Filename).ToLowerInvariant(),
             };
@@ -444,7 +444,7 @@ namespace SabreTools.FileTypes.Archives
             baseFile = GetInfo(inputStream, keepReadOpen: true);
 
             // Get the output file name
-            string outfile = Path.Combine(outDir, Utilities.GetDepotPath(Utilities.ByteArrayToString(baseFile.SHA1), Depth));
+            string outfile = Path.Combine(outDir, Utilities.GetDepotPath(TextHelper.ByteArrayToString(baseFile.SHA1), Depth));
 
             // Check to see if the folder needs to be created
             if (!Directory.Exists(Path.GetDirectoryName(outfile)))

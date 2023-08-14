@@ -101,10 +101,10 @@ namespace SabreTools.DatItems.Formats
         public Media(BaseFile baseFile)
         {
             Name = baseFile.Filename;
-            MD5 = Utilities.ByteArrayToString(baseFile.MD5);
-            SHA1 = Utilities.ByteArrayToString(baseFile.SHA1);
-            SHA256 = Utilities.ByteArrayToString(baseFile.SHA256);
-            SpamSum = Utilities.ByteArrayToString(baseFile.SpamSum);
+            MD5 = TextHelper.ByteArrayToString(baseFile.MD5);
+            SHA1 = TextHelper.ByteArrayToString(baseFile.SHA1);
+            SHA256 = TextHelper.ByteArrayToString(baseFile.SHA256);
+            SpamSum = TextHelper.ByteArrayToString(baseFile.SpamSum);
 
             ItemType = ItemType.Media;
             DupeType = 0x00;
@@ -139,10 +139,10 @@ namespace SabreTools.DatItems.Formats
             {
                 Filename = this.Name,
                 Parent = this.Machine?.Name,
-                MD5 = Utilities.StringToByteArray(this.MD5),
-                SHA1 = Utilities.StringToByteArray(this.SHA1),
-                SHA256 = Utilities.StringToByteArray(this.SHA256),
-                SpamSum = Utilities.StringToByteArray(this.SpamSum),
+                MD5 = TextHelper.StringToByteArray(this.MD5),
+                SHA1 = TextHelper.StringToByteArray(this.SHA1),
+                SHA256 = TextHelper.StringToByteArray(this.SHA256),
+                SpamSum = TextHelper.StringToByteArray(this.SpamSum),
             };
         }
 
