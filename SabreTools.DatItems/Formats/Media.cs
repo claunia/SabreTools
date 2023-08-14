@@ -185,25 +185,13 @@ namespace SabreTools.DatItems.Formats
         /// Fill any missing size and hash information from another Media
         /// </summary>
         /// <param name="other">Media to fill information from</param>
-        public void FillMissingInformation(Media other) => _media?.FillMissingHashes(other?._media);
+        public void FillMissingInformation(Media other) => _media.FillMissingHashes(other?._media);
 
         /// <summary>
         /// Get unique duplicate suffix on name collision
         /// </summary>
         /// <returns>String representing the suffix</returns>
-        public string GetDuplicateSuffix()
-        {
-            if (!string.IsNullOrWhiteSpace(MD5))
-                return $"_{MD5}";
-            else if (!string.IsNullOrWhiteSpace(SHA1))
-                return $"_{SHA1}";
-            else if (!string.IsNullOrWhiteSpace(SHA256))
-                return $"_{SHA256}";
-            else if (!string.IsNullOrWhiteSpace(SpamSum))
-                return $"_{SpamSum}";
-            else
-                return "_1";
-        }
+        public string GetDuplicateSuffix() => _media.GetDuplicateSuffix();
 
         #endregion
 

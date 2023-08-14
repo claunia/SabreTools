@@ -603,5 +603,94 @@ namespace SabreTools.Core
         }
 
         #endregion
+    
+        #region Suffix Generation
+
+        /// <summary>
+        /// Get unique duplicate suffix on name collision
+        /// </summary>
+        public static string GetDuplicateSuffix(this Disk? self)
+        {
+            if (self == null)
+                return string.Empty;
+
+            string? md5 = self.ReadString(Disk.MD5Key);
+            if (!string.IsNullOrWhiteSpace(md5))
+                return $"_{md5}";
+
+            string? sha1 = self.ReadString(Disk.SHA1Key);
+            if (!string.IsNullOrWhiteSpace(sha1))
+                return $"_{sha1}";
+
+            return "_1";
+        }
+
+        /// <summary>
+        /// Get unique duplicate suffix on name collision
+        /// </summary>
+        public static string GetDuplicateSuffix(this Media? self)
+        {
+            if (self == null)
+                return string.Empty;
+
+            string? md5 = self.ReadString(Media.MD5Key);
+            if (!string.IsNullOrWhiteSpace(md5))
+                return $"_{md5}";
+
+            string? sha1 = self.ReadString(Media.SHA1Key);
+            if (!string.IsNullOrWhiteSpace(sha1))
+                return $"_{sha1}";
+
+            string? sha256 = self.ReadString(Media.SHA256Key);
+            if (!string.IsNullOrWhiteSpace(sha256))
+                return $"_{sha256}";
+
+            string? spamSum = self.ReadString(Media.SpamSumKey);
+            if (!string.IsNullOrWhiteSpace(spamSum))
+                return $"_{spamSum}";
+
+            return "_1";
+        }
+
+        /// <summary>
+        /// Get unique duplicate suffix on name collision
+        /// </summary>
+        public static string GetDuplicateSuffix(this Rom? self)
+        {
+            if (self == null)
+                return string.Empty;
+
+            string? crc = self.ReadString(Rom.CRCKey);
+            if (!string.IsNullOrWhiteSpace(crc))
+                return $"_{crc}";
+
+            string? md5 = self.ReadString(Rom.MD5Key);
+            if (!string.IsNullOrWhiteSpace(md5))
+                return $"_{md5}";
+
+            string? sha1 = self.ReadString(Rom.SHA1Key);
+            if (!string.IsNullOrWhiteSpace(sha1))
+                return $"_{sha1}";
+
+            string? sha256 = self.ReadString(Rom.SHA256Key);
+            if (!string.IsNullOrWhiteSpace(sha256))
+                return $"_{sha256}";
+
+            string? sha384 = self.ReadString(Rom.SHA384Key);
+            if (!string.IsNullOrWhiteSpace(sha384))
+                return $"_{sha384}";
+
+            string? sha512 = self.ReadString(Rom.SHA512Key);
+            if (!string.IsNullOrWhiteSpace(sha512))
+                return $"_{sha512}";
+
+            string? spamSum = self.ReadString(Rom.SpamSumKey);
+            if (!string.IsNullOrWhiteSpace(spamSum))
+                return $"_{spamSum}";
+
+            return "_1";
+        }
+
+        #endregion
     }
 }

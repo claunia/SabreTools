@@ -192,7 +192,6 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a Disk object from a BaseFile
         /// </summary>
-        /// <param name="baseFile"></param>
         public Disk(BaseFile baseFile)
         {
             Name = baseFile.Filename;
@@ -213,7 +212,6 @@ namespace SabreTools.DatItems.Formats
         {
             return new Disk()
             {
-                Name = this.Name,
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
@@ -283,21 +281,13 @@ namespace SabreTools.DatItems.Formats
         /// Fill any missing size and hash information from another Disk
         /// </summary>
         /// <param name="other">Disk to fill information from</param>
-        public void FillMissingInformation(Disk other) => _disk?.FillMissingHashes(other?._disk);
+        public void FillMissingInformation(Disk other) => _disk.FillMissingHashes(other?._disk);
 
         /// <summary>
         /// Get unique duplicate suffix on name collision
         /// </summary>
         /// <returns>String representing the suffix</returns>
-        public string GetDuplicateSuffix()
-        {
-            if (!string.IsNullOrWhiteSpace(MD5))
-                return $"_{MD5}";
-            else if (!string.IsNullOrWhiteSpace(SHA1))
-                return $"_{SHA1}";
-            else
-                return "_1";
-        }
+        public string GetDuplicateSuffix() => _disk.GetDuplicateSuffix();
 
         #endregion
 
