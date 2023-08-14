@@ -49,8 +49,11 @@ namespace SabreTools.Core
                     case string[] strArr:
                         clone[key] = strArr.Clone();
                         break;
-                    case DictionaryBase[] enDb:
-                        clone[key] = enDb.Select(Clone).ToArray();
+                    case DictionaryBase[] dbArr:
+                        clone[key] = dbArr.Select(Clone).ToArray();
+                        break;
+                    case ICloneable[] clArr:
+                        clone[key] = clArr.Select(cl => cl.Clone()).ToArray();
                         break;
 
                     // Everything else just copies
