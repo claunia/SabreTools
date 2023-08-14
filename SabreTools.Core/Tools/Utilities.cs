@@ -111,33 +111,5 @@ namespace SabreTools.Core.Tools
                 _ => false,
             };
         }
-
-        //// <summary>
-        /// Returns if the first byte array starts with the second array
-        /// </summary>
-        /// <param name="arr1">First byte array to compare</param>
-        /// <param name="arr2">Second byte array to compare</param>
-        /// <param name="exact">True if the input arrays should match exactly, false otherwise (default)</param>
-        /// <returns>True if the first byte array starts with the second, false otherwise</returns>
-        public static bool StartsWith(this byte[] arr1, byte[] arr2, bool exact = false)
-        {
-            // If we have any invalid inputs, we return false
-            if (arr1 == null || arr2 == null
-                || arr1.Length == 0 || arr2.Length == 0
-                || arr2.Length > arr1.Length
-                || (exact && arr1.Length != arr2.Length))
-            {
-                return false;
-            }
-
-            // Otherwise, loop through and see
-            for (int i = 0; i < arr2.Length; i++)
-            {
-                if (arr1[i] != arr2[i])
-                    return false;
-            }
-
-            return true;
-        }
     }
 }

@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.FileTypes.Aaru;
