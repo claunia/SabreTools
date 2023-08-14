@@ -16,7 +16,17 @@ namespace SabreTools.DatItems.Formats
         /// Analog mask value
         /// </summary>
         [JsonProperty("mask", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("mask")]
-        public string Mask { get; set; }
+        public string? Mask
+        {
+            get => _analog.ReadString(Models.Internal.Analog.MaskKey);
+            set => _analog[Models.Internal.Analog.MaskKey] = value;
+        }
+
+        /// <summary>
+        /// Internal Analog model
+        /// </summary>
+        [JsonIgnore]
+        private Models.Internal.Analog _analog = new();
 
         #endregion
 
@@ -42,11 +52,11 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine.Clone() as Machine,
-                Source = this.Source.Clone() as Source,
+                Machine = this.Machine?.Clone() as Machine,
+                Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                Mask = this.Mask,
+                _analog = this._analog?.Clone() as Models.Internal.Analog ?? new Models.Internal.Analog(),
             };
         }
 
@@ -55,17 +65,14 @@ namespace SabreTools.DatItems.Formats
         #region Comparision Methods
 
         /// <inheritdoc/>
-        public override bool Equals(DatItem other)
+        public override bool Equals(DatItem? other)
         {
             // If we don't have a Analog, return false
-            if (ItemType != other.ItemType)
+            if (ItemType != other?.ItemType || other is not Analog otherInternal)
                 return false;
 
-            // Otherwise, treat it as a Analog
-            Analog newOther = other as Analog;
-
-            // If the Feature information matches
-            return (Mask == newOther.Mask);
+            // Compare the internal models
+            return _analog.EqualTo(otherInternal._analog);
         }
 
         #endregion

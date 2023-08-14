@@ -16,17 +16,27 @@ namespace SabreTools.DatItems.Formats
         /// Name of the item
         /// </summary>
         [JsonProperty("name"), XmlElement("name")]
-        public string Name { get; set; }
+        public string? Name
+        {
+            get => _extension.ReadString(Models.Internal.Extension.NameKey);
+            set => _extension[Models.Internal.Extension.NameKey] = value;
+        }
+
+        /// <summary>
+        /// Internal Extension model
+        /// </summary>
+        [JsonIgnore]
+        private Models.Internal.Extension _extension = new();
 
         #endregion
 
         #region Accessors
 
         /// <inheritdoc/>
-        public override string GetName() => Name;
+        public override string? GetName() => Name;
 
         /// <inheritdoc/>
-        public override void SetName(string name) => Name = name;
+        public override void SetName(string? name) => Name = name;
 
         #endregion
 
@@ -53,11 +63,11 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine.Clone() as Machine,
-                Source = this.Source.Clone() as Source,
+                Machine = this.Machine?.Clone() as Machine,
+                Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                Name = this.Name,
+                _extension = this._extension?.Clone() as Models.Internal.Extension ?? new Models.Internal.Extension(),
             };
         }
 
@@ -66,17 +76,14 @@ namespace SabreTools.DatItems.Formats
         #region Comparision Methods
 
         /// <inheritdoc/>
-        public override bool Equals(DatItem other)
+        public override bool Equals(DatItem? other)
         {
-            // If we don't have a Extension, return false
-            if (ItemType != other.ItemType)
+            // If we don't have a Adjuster, return false
+            if (ItemType != other?.ItemType || other is not Extension otherInternal)
                 return false;
 
-            // Otherwise, treat it as a Extension
-            Extension newOther = other as Extension;
-
-            // If the Extension information matches
-            return (Name == newOther.Name);
+            // Compare the internal models
+            return _extension.EqualTo(otherInternal._extension);
         }
 
         #endregion

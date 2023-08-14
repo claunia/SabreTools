@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
@@ -15,26 +16,44 @@ namespace SabreTools.DatItems.Formats
         #region Fields
 
         [JsonProperty("name"), XmlElement("name")]
-        public string Name { get; set; }
+        public string? Name
+        {
+            get => _part.ReadString(Models.Internal.Part.NameKey);
+            set => _part[Models.Internal.Part.NameKey] = value;
+        }
 
         [JsonProperty("interface"), XmlElement("interface")]
-        public string Interface { get; set; }
+        public string? Interface
+        {
+            get => _part.ReadString(Models.Internal.Part.InterfaceKey);
+            set => _part[Models.Internal.Part.InterfaceKey] = value;
+        }
     
         [JsonProperty("features", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("features")]
-        public List<PartFeature> Features { get; set; }
+        public List<PartFeature>? Features
+        {
+            get => _part.Read<PartFeature[]>(Models.Internal.Part.FeatureKey)?.ToList();
+            set => _part[Models.Internal.Part.FeatureKey] = value?.ToArray();
+        }
 
         [JsonIgnore]
         public bool FeaturesSpecified { get { return Features != null && Features.Count > 0; } }
+
+        /// <summary>
+        /// Internal Part model
+        /// </summary>
+        [JsonIgnore]
+        private Models.Internal.Part _part = new();
 
         #endregion
 
         #region Accessors
 
         /// <inheritdoc/>
-        public override string GetName() => Name;
+        public override string? GetName() => Name;
 
         /// <inheritdoc/>
-        public override void SetName(string name) => Name = name;
+        public override void SetName(string? name) => Name = name;
 
         #endregion
 
@@ -61,13 +80,11 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine.Clone() as Machine,
-                Source = this.Source.Clone() as Source,
+                Machine = this.Machine?.Clone() as Machine,
+                Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                Name = this.Name,
-                Interface = this.Interface,
-                Features = this.Features,
+                _part = this._part?.Clone() as Models.Internal.Part ?? new Models.Internal.Part(),
             };
         }
 
@@ -76,31 +93,14 @@ namespace SabreTools.DatItems.Formats
         #region Comparision Methods
 
         /// <inheritdoc/>
-        public override bool Equals(DatItem other)
+        public override bool Equals(DatItem? other)
         {
             // If we don't have a Part, return false
-            if (ItemType != other.ItemType)
+            if (ItemType != other?.ItemType || other is not Part otherInternal)
                 return false;
 
-            // Otherwise, treat it as a Part
-            Part newOther = other as Part;
-
-            // If the Part information matches
-            bool match = (Name == newOther.Name
-                && Interface == newOther.Interface);
-            if (!match)
-                return match;
-
-            // If the features match
-            if (FeaturesSpecified)
-            {
-                foreach (PartFeature partFeature in Features)
-                {
-                    match &= newOther.Features.Contains(partFeature);
-                }
-            }
-
-            return match;
+            // Compare the internal models
+            return _part.EqualTo(otherInternal._part);
         }
 
         #endregion

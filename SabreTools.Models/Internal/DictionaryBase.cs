@@ -93,6 +93,9 @@ namespace SabreTools.Models.Internal
             if (asArray != null)
                 return string.Join(',', asArray);
 
+            // TODO: Add byte array conversion here
+            // TODO: Add byte array read helper
+
             return this[key]!.ToString();
         }
 

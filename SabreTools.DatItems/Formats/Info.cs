@@ -16,23 +16,37 @@ namespace SabreTools.DatItems.Formats
         /// Name of the item
         /// </summary>
         [JsonProperty("name"), XmlElement("name")]
-        public string Name { get; set; }
+        public string? Name
+        {
+            get => _info.ReadString(Models.Internal.Info.NameKey);
+            set => _info[Models.Internal.Info.NameKey] = value;
+        }
 
         /// <summary>
         /// Information value
         /// </summary>
         [JsonProperty("value"), XmlElement("value")]
-        public string Value { get; set; }
+        public string? Value
+        {
+            get => _info.ReadString(Models.Internal.Info.ValueKey);
+            set => _info[Models.Internal.Info.ValueKey] = value;
+        }
+
+        /// <summary>
+        /// Internal Info model
+        /// </summary>
+        [JsonIgnore]
+        private Models.Internal.Info _info = new();
 
         #endregion
 
         #region Accessors
 
         /// <inheritdoc/>
-        public override string GetName() => Name;
+        public override string? GetName() => Name;
 
         /// <inheritdoc/>
-        public override void SetName(string name) => Name = name;
+        public override void SetName(string? name) => Name = name;
 
         #endregion
 
@@ -59,12 +73,11 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine.Clone() as Machine,
-                Source = this.Source.Clone() as Source,
+                Machine = this.Machine?.Clone() as Machine,
+                Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                Name = this.Name,
-                Value = this.Value,
+                _info = this._info?.Clone() as Models.Internal.Info ?? new Models.Internal.Info(),
             };
         }
 
@@ -73,18 +86,14 @@ namespace SabreTools.DatItems.Formats
         #region Comparision Methods
 
         /// <inheritdoc/>
-        public override bool Equals(DatItem other)
+        public override bool Equals(DatItem? other)
         {
-            // If we don't have a sample, return false
-            if (ItemType != other.ItemType)
+            // If we don't have a Info, return false
+            if (ItemType != other?.ItemType || other is not Info otherInternal)
                 return false;
 
-            // Otherwise, treat it as a Info
-            Info newOther = other as Info;
-
-            // If the archive information matches
-            return (Name == newOther.Name
-                && Value == newOther.Value);
+            // Compare the internal models
+            return _info.EqualTo(otherInternal._info);
         }
 
         #endregion

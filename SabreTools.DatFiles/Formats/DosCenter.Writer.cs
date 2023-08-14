@@ -134,7 +134,7 @@ namespace SabreTools.DatFiles.Formats
                 // We re-add the missing parts of the game name
                 var game = new Models.DosCenter.Game
                 {
-                    Name = $"\"{machine.Name}.zip\""
+                    Name = $"\"{machine?.Name ?? string.Empty}.zip\""
                 };
 
                 // Create holders for all item types

@@ -8,6 +8,9 @@ namespace SabreTools.Models.Internal
     {
         #region Keys
 
+        /// <remarks>string</remarks>
+        public const string ContentKey = "content";
+
         /// <remarks>(yes|no) "no"</remarks>
         public const string DefaultKey = "default";
 

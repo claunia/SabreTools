@@ -1,6 +1,7 @@
 ﻿using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -17,13 +18,21 @@ namespace SabreTools.DatItems.Formats
         /// Name of the item
         /// </summary>
         [JsonProperty("name", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("name")]
-        public string Name { get; set; }
+        public string? Name
+        {
+            get => _dataArea.ReadString(Models.Internal.DataArea.NameKey);
+            set => _dataArea[Models.Internal.DataArea.NameKey] = value;
+        }
 
         /// <summary>
         /// Total size of the area
         /// </summary>
         [JsonProperty("size", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("size")]
-        public long? Size { get; set; }
+        public long? Size
+        {
+            get => _dataArea.ReadLong(Models.Internal.DataArea.SizeKey);
+            set => _dataArea[Models.Internal.DataArea.SizeKey] = value;
+        }
 
         [JsonIgnore]
         public bool SizeSpecified { get { return Size != null; } }
@@ -32,7 +41,11 @@ namespace SabreTools.DatItems.Formats
         /// Word width for the area
         /// </summary>
         [JsonProperty("width", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("width")]
-        public long? Width { get; set; }
+        public long? Width
+        {
+            get => _dataArea.ReadLong(Models.Internal.DataArea.WidthKey);
+            set => _dataArea[Models.Internal.DataArea.WidthKey] = value;
+        }
 
         [JsonIgnore]
         public bool WidthSpecified { get { return Width != null; } }
@@ -41,20 +54,30 @@ namespace SabreTools.DatItems.Formats
         /// Byte endianness of the area
         /// </summary>
         [JsonProperty("endianness", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("endianness")]
-        public Endianness Endianness { get; set; }
+        public Endianness Endianness
+        {
+            get => _dataArea.ReadString(Models.Internal.DataArea.WidthKey).AsEndianness();
+            set => _dataArea[Models.Internal.DataArea.WidthKey] = value.FromEndianness();
+        }
 
         [JsonIgnore]
         public bool EndiannessSpecified { get { return Endianness != Endianness.NULL; } }
+
+        /// <summary>
+        /// Internal DataArea model
+        /// </summary>
+        [JsonIgnore]
+        private Models.Internal.DataArea _dataArea = new();
 
         #endregion
 
         #region Accessors
 
         /// <inheritdoc/>
-        public override string GetName() => Name;
+        public override string? GetName() => Name;
 
         /// <inheritdoc/>
-        public override void SetName(string name) => Name = name;
+        public override void SetName(string? name) => Name = name;
 
         #endregion
 
@@ -81,14 +104,11 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine.Clone() as Machine,
-                Source = this.Source.Clone() as Source,
+                Machine = this.Machine?.Clone() as Machine,
+                Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                Name = this.Name,
-                Size = this.Size,
-                Width = this.Width,
-                Endianness = this.Endianness,
+                _dataArea = this._dataArea?.Clone() as Models.Internal.DataArea ?? new Models.Internal.DataArea(),
             };
         }
 
@@ -97,20 +117,14 @@ namespace SabreTools.DatItems.Formats
         #region Comparision Methods
 
         /// <inheritdoc/>
-        public override bool Equals(DatItem other)
+        public override bool Equals(DatItem? other)
         {
             // If we don't have a DataArea, return false
-            if (ItemType != other.ItemType)
+            if (ItemType != other?.ItemType || other is not DataArea otherInternal)
                 return false;
 
-            // Otherwise, treat it as a DataArea
-            DataArea newOther = other as DataArea;
-
-            // If the DataArea information matches
-            return (Name == newOther.Name
-                && Size == newOther.Size
-                && Width == newOther.Width
-                && Endianness == newOther.Endianness);
+            // Compare the internal models
+            return _dataArea.EqualTo(otherInternal._dataArea);
         }
 
         #endregion

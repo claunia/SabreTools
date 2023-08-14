@@ -105,12 +105,12 @@ namespace SabreTools.DatFiles.Formats
                 var machine = items[0].Machine;
                 var software = new Models.OpenMSX.Software
                 {
-                    Title = machine.Name,
-                    GenMSXID = machine.GenMSXID,
-                    System = machine.System,
-                    Company = machine.Manufacturer,
-                    Year = machine.Year,
-                    Country = machine.Country,
+                    Title = machine?.Name,
+                    GenMSXID = machine?.GenMSXID,
+                    System = machine?.System,
+                    Company = machine?.Manufacturer,
+                    Year = machine?.Year,
+                    Country = machine?.Country,
                 };
 
                 // Create holder for dumps

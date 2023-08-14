@@ -32,8 +32,8 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine.Clone() as Machine,
-                Source = this.Source.Clone() as Source,
+                Machine = this.Machine?.Clone() as Machine,
+                Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
             };
         }
@@ -43,17 +43,17 @@ namespace SabreTools.DatItems.Formats
         #region Comparision Methods
 
         /// <inheritdoc/>
-        public override bool Equals(DatItem other)
+        public override bool Equals(DatItem? other)
         {
             // If we don't have a blank, return false
-            if (ItemType != other.ItemType)
+            if (ItemType != other?.ItemType)
                 return false;
 
             // Otherwise, treat it as a Blank
-            Blank newOther = other as Blank;
+            Blank? newOther = other as Blank;
 
             // If the archive information matches
-            return (Machine == newOther.Machine);
+            return (Machine == newOther!.Machine);
         }
 
         #endregion

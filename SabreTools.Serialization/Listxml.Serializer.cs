@@ -685,6 +685,7 @@ namespace SabreTools.Serialization
             {
                 [Models.Internal.RamOption.NameKey] = item.Name,
                 [Models.Internal.RamOption.DefaultKey] = item.Default,
+                [Models.Internal.RamOption.ContentKey] = item.Content,
             };
             return ramOption;
         }

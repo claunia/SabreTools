@@ -615,10 +615,10 @@ namespace SabreTools.DatFiles.Formats
                     item.Conditions = new List<Condition> { condition };
                 }
 
-                var locations = new List<Location>();
+                var locations = new List<DipLocation>();
                 foreach (var diplocation in dipswitch.DipLocation ?? Array.Empty<Models.Listxml.DipLocation>())
                 {
-                    var locationItem = new Location
+                    var locationItem = new DipLocation
                     {
                         Name = diplocation.Name,
                         Number = NumberHelper.ConvertToInt64(diplocation.Number),
@@ -630,10 +630,10 @@ namespace SabreTools.DatFiles.Formats
                 if (locations.Any())
                     item.Locations = locations;
 
-                var settings = new List<Setting>();
+                var settings = new List<DipValue>();
                 foreach (var dipvalue in dipswitch.DipValue ?? Array.Empty<Models.Listxml.DipValue>())
                 {
-                    var settingItem = new Setting
+                    var dipValueItem = new DipValue
                     {
                         Name = dipvalue.Name,
                         Value = dipvalue.Value,
@@ -649,10 +649,10 @@ namespace SabreTools.DatFiles.Formats
                             Relation = dipvalue.Condition.Relation.AsRelation(),
                             Value = dipvalue.Condition.Value,
                         };
-                        settingItem.Conditions = new List<Condition> { condition };
+                        dipValueItem.Conditions = new List<Condition> { condition };
                     }
 
-                    settings.Add(settingItem);
+                    settings.Add(dipValueItem);
                 }
 
                 if (settings.Any())
@@ -696,20 +696,20 @@ namespace SabreTools.DatFiles.Formats
 
                 if (configuration.Condition != null)
                 {
-                    var condition = new Condition
+                    var condition = new DatItems.Formats.Condition
                     {
                         Tag = configuration.Condition.Tag,
                         Mask = configuration.Condition.Mask,
                         Relation = configuration.Condition.Relation.AsRelation(),
                         Value = configuration.Condition.Value,
                     };
-                    item.Conditions = new List<Condition> { condition };
+                    item.Conditions = new List<DatItems.Formats.Condition> { condition };
                 }
 
-                var locations = new List<Location>();
+                var locations = new List<ConfLocation>();
                 foreach (var confLocation in configuration.ConfLocation ?? Array.Empty<Models.Listxml.ConfLocation>())
                 {
-                    var locationItem = new Location
+                    var locationItem = new ConfLocation
                     {
                         Name = confLocation.Name,
                         Number = NumberHelper.ConvertToInt64(confLocation.Number),
@@ -721,10 +721,10 @@ namespace SabreTools.DatFiles.Formats
                 if (locations.Any())
                     item.Locations = locations;
 
-                var settings = new List<Setting>();
+                var settings = new List<ConfSetting>();
                 foreach (var dipvalue in configuration.ConfSetting ?? Array.Empty<Models.Listxml.ConfSetting>())
                 {
-                    var settingItem = new Setting
+                    var settingItem = new ConfSetting
                     {
                         Name = dipvalue.Name,
                         Value = dipvalue.Value,
@@ -1094,6 +1094,7 @@ namespace SabreTools.DatFiles.Formats
                 {
                     Name = ramoption.Name,
                     Default = ramoption.Default.AsYesNo(),
+                    Content = ramoption.Content,
 
                     Source = new Source
                     {

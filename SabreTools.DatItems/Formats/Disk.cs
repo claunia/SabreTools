@@ -13,13 +13,6 @@ namespace SabreTools.DatItems.Formats
     [JsonObject("disk"), XmlRoot("disk")]
     public class Disk : DatItem
     {
-        #region Private instance variables
-
-        private byte[] _md5; // 16 bytes
-        private byte[] _sha1; // 20 bytes
-
-        #endregion
-
         #region Fields
 
         #region Common
@@ -28,51 +21,71 @@ namespace SabreTools.DatItems.Formats
         /// Name of the item
         /// </summary>
         [JsonProperty("name"), XmlElement("name")]
-        public string Name { get; set; }
+        public string? Name
+        {
+            get => _disk.ReadString(Models.Internal.Disk.NameKey);
+            set => _disk[Models.Internal.Disk.NameKey] = value;
+        }
 
         /// <summary>
         /// Data MD5 hash
         /// </summary>
         [JsonProperty("md5", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("md5")]
-        public string MD5
+        public string? MD5
         {
-            get { return _md5.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_md5); }
-            set { _md5 = Utilities.StringToByteArray(CleanMD5(value)); }
+            get => _disk.ReadString(Models.Internal.Disk.MD5Key);
+            set => _disk[Models.Internal.Disk.MD5Key] = TextHelper.NormalizeMD5(value);
         }
 
         /// <summary>
         /// Data SHA-1 hash
         /// </summary>
         [JsonProperty("sha1", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha1")]
-        public string SHA1
+        public string? SHA1
         {
-            get { return _sha1.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha1); }
-            set { _sha1 = Utilities.StringToByteArray(CleanSHA1(value)); }
+            get => _disk.ReadString(Models.Internal.Disk.SHA1Key);
+            set => _disk[Models.Internal.Disk.SHA1Key] = TextHelper.NormalizeSHA1(value);
         }
 
         /// <summary>
         /// Disk name to merge from parent
         /// </summary>
         [JsonProperty("merge", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("merge")]
-        public string MergeTag { get; set; }
+        public string? MergeTag
+        {
+            get => _disk.ReadString(Models.Internal.Disk.MergeKey);
+            set => _disk[Models.Internal.Disk.MergeKey] = value;
+        }
 
         /// <summary>
         /// Disk region
         /// </summary>
         [JsonProperty("region", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("region")]
-        public string Region { get; set; }
+        public string? Region
+        {
+            get => _disk.ReadString(Models.Internal.Disk.RegionKey);
+            set => _disk[Models.Internal.Disk.RegionKey] = value;
+        }
 
         /// <summary>
         /// Disk index
         /// </summary>
         [JsonProperty("index", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("index")]
-        public string Index { get; set; }
+        public string? Index
+        {
+            get => _disk.ReadString(Models.Internal.Disk.IndexKey);
+            set => _disk[Models.Internal.Disk.IndexKey] = value;
+        }
 
         /// <summary>
         /// Disk writable flag
         /// </summary>
         [JsonProperty("writable", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("writable")]
-        public bool? Writable { get; set; } = null;
+        public bool? Writable
+        {
+            get => _disk.ReadBool(Models.Internal.Disk.WritableKey);
+            set => _disk[Models.Internal.Disk.WritableKey] = value;
+        }
 
         [JsonIgnore]
         public bool WritableSpecified { get { return Writable != null; } }
@@ -82,7 +95,11 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         [JsonProperty("status", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("status")]
         [JsonConverter(typeof(StringEnumConverter))]
-        public ItemStatus ItemStatus { get; set; }
+        public ItemStatus ItemStatus
+        {
+            get => _disk.ReadString(Models.Internal.Disk.StatusKey).AsItemStatus();
+            set => _disk[Models.Internal.Disk.StatusKey] = value.FromItemStatus(yesno: false);
+        }
 
         [JsonIgnore]
         public bool ItemStatusSpecified { get { return ItemStatus != ItemStatus.NULL; } }
@@ -91,7 +108,11 @@ namespace SabreTools.DatItems.Formats
         /// Determine if the disk is optional in the set
         /// </summary>
         [JsonProperty("optional", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("optional")]
-        public bool? Optional { get; set; } = null;
+        public bool? Optional
+        {
+            get => _disk.ReadBool(Models.Internal.Disk.OptionalKey);
+            set => _disk[Models.Internal.Disk.OptionalKey] = value;
+        }
 
         [JsonIgnore]
         public bool OptionalSpecified { get { return Optional != null; } }
@@ -103,8 +124,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Disk area information
         /// </summary>
+        /// <remarks>This is inverted from the internal model</remarks>
         [JsonProperty("diskarea", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("diskarea")]
-        public DiskArea DiskArea { get; set; } = null;
+        public DiskArea? DiskArea { get; set; }
 
         [JsonIgnore]
         public bool DiskAreaSpecified
@@ -119,8 +141,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Original hardware part associated with the item
         /// </summary>
+        /// <remarks>This is inverted from the internal model</remarks>
         [JsonProperty("part", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("part")]
-        public Part Part { get; set; } = null;
+        public Part? Part { get; set; }
 
         [JsonIgnore]
         public bool PartSpecified
@@ -135,15 +158,21 @@ namespace SabreTools.DatItems.Formats
 
         #endregion
 
+        /// <summary>
+        /// Internal Disk model
+        /// </summary>
+        [JsonIgnore]
+        private Models.Internal.Disk _disk = new();
+
         #endregion // Fields
 
         #region Accessors
 
         /// <inheritdoc/>
-        public override string GetName() => Name;
+        public override string? GetName() => Name;
 
         /// <inheritdoc/>
-        public override void SetName(string name) => Name = name;
+        public override void SetName(string? name) => Name = name;
 
         #endregion
 
@@ -167,8 +196,8 @@ namespace SabreTools.DatItems.Formats
         public Disk(BaseFile baseFile)
         {
             Name = baseFile.Filename;
-            _md5 = baseFile.MD5;
-            _sha1 = baseFile.SHA1;
+            MD5 = Utilities.ByteArrayToString(baseFile.MD5);
+            SHA1 = Utilities.ByteArrayToString(baseFile.SHA1);
 
             ItemType = ItemType.Disk;
             DupeType = 0x00;
@@ -188,18 +217,11 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine.Clone() as Machine,
-                Source = this.Source.Clone() as Source,
+                Machine = this.Machine?.Clone() as Machine,
+                Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _md5 = this._md5,
-                _sha1 = this._sha1,
-                MergeTag = this.MergeTag,
-                Region = this.Region,
-                Index = this.Index,
-                Writable = this.Writable,
-                ItemStatus = this.ItemStatus,
-                Optional = this.Optional,
+                _disk = this._disk?.Clone() as Models.Internal.Disk ?? new Models.Internal.Disk(),
 
                 DiskArea = this.DiskArea,
                 Part = this.Part,
@@ -215,8 +237,8 @@ namespace SabreTools.DatItems.Formats
             {
                 Filename = this.Name,
                 Parent = this.Machine?.Name,
-                MD5 = this._md5,
-                SHA1 = this._sha1,
+                MD5 = Utilities.StringToByteArray(this.MD5),
+                SHA1 = Utilities.StringToByteArray(this.SHA1),
             };
         }
 
@@ -232,8 +254,8 @@ namespace SabreTools.DatItems.Formats
                 ItemType = ItemType.Rom,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine.Clone() as Machine,
-                Source = this.Source.Clone() as Source,
+                Machine = this.Machine?.Clone() as Machine,
+                Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
                 MergeTag = this.MergeTag,
@@ -244,7 +266,7 @@ namespace SabreTools.DatItems.Formats
                 MD5 = this.MD5,
                 SHA1 = this.SHA1,
 
-                DataArea = new DataArea { Name = this.DiskArea.Name },
+                DataArea = new DataArea { Name = this.DiskArea?.Name },
                 Part = this.Part,
             };
 
@@ -256,32 +278,14 @@ namespace SabreTools.DatItems.Formats
         #region Comparision Methods
 
         /// <inheritdoc/>
-        public override bool Equals(DatItem other)
+        public override bool Equals(DatItem? other)
         {
-            bool dupefound = false;
+            // If we don't have a Disk, return false
+            if (ItemType != other?.ItemType || other is not Disk otherInternal)
+                return false;
 
-            // If we don't have a rom, return false
-            if (ItemType != other.ItemType)
-                return dupefound;
-
-            // Otherwise, treat it as a Disk
-            Disk newOther = other as Disk;
-
-            // If all hashes are empty but they're both nodump and the names match, then they're dupes
-            if ((ItemStatus == ItemStatus.Nodump && newOther.ItemStatus == ItemStatus.Nodump)
-                && Name == newOther.Name
-                && !HasHashes() && !newOther.HasHashes())
-            {
-                dupefound = true;
-            }
-
-            // Otherwise if we get a partial match
-            else if (HashMatch(newOther))
-            {
-                dupefound = true;
-            }
-
-            return dupefound;
+            // Compare the internal models
+            return _disk.EqualTo(otherInternal._disk);
         }
 
         /// <summary>
@@ -290,11 +294,11 @@ namespace SabreTools.DatItems.Formats
         /// <param name="other">Disk to fill information from</param>
         public void FillMissingInformation(Disk other)
         {
-            if (_md5.IsNullOrEmpty() && !other._md5.IsNullOrEmpty())
-                _md5 = other._md5;
+            if (string.IsNullOrWhiteSpace(MD5) && !string.IsNullOrWhiteSpace(other.MD5))
+                MD5 = other.MD5;
 
-            if (_sha1.IsNullOrEmpty() && !other._sha1.IsNullOrEmpty())
-                _sha1 = other._sha1;
+            if (string.IsNullOrWhiteSpace(SHA1) && !string.IsNullOrWhiteSpace(other.SHA1))
+                SHA1 = other.SHA1;
         }
 
         /// <summary>
@@ -303,53 +307,12 @@ namespace SabreTools.DatItems.Formats
         /// <returns>String representing the suffix</returns>
         public string GetDuplicateSuffix()
         {
-            if (!_md5.IsNullOrEmpty())
+            if (!string.IsNullOrWhiteSpace(MD5))
                 return $"_{MD5}";
-            else if (!_sha1.IsNullOrEmpty())
+            else if (!string.IsNullOrWhiteSpace(SHA1))
                 return $"_{SHA1}";
             else
                 return "_1";
-        }
-
-        /// <summary>
-        /// Returns if there are no, non-empty hashes in common with another Disk
-        /// </summary>
-        /// <param name="other">Disk to compare against</param>
-        /// <returns>True if at least one hash is not mutually exclusive, false otherwise</returns>
-        private bool HasCommonHash(Disk other)
-        {
-            return !(_md5.IsNullOrEmpty() ^ other._md5.IsNullOrEmpty())
-                || !(_sha1.IsNullOrEmpty() ^ other._sha1.IsNullOrEmpty());
-        }
-
-        /// <summary>
-        /// Returns if the Disk contains any hashes
-        /// </summary>
-        /// <returns>True if any hash exists, false otherwise</returns>
-        private bool HasHashes()
-        {
-            return !_md5.IsNullOrEmpty()
-                || !_sha1.IsNullOrEmpty();
-        }
-
-        /// <summary>
-        /// Returns if any hashes are common with another Disk
-        /// </summary>
-        /// <param name="other">Disk to compare against</param>
-        /// <returns>True if any hashes are in common, false otherwise</returns>
-        private bool HashMatch(Disk other)
-        {
-            // If either have no hashes, we return false, otherwise this would be a false positive
-            if (!HasHashes() || !other.HasHashes())
-                return false;
-
-            // If neither have hashes in common, we return false, otherwise this would be a false positive
-            if (!HasCommonHash(other))
-                return false;
-
-            // Return if all hashes match according to merge rules
-            return ConditionalHashEquals(_md5, other._md5)
-                && ConditionalHashEquals(_sha1, other._sha1);
         }
 
         #endregion
@@ -360,7 +323,7 @@ namespace SabreTools.DatItems.Formats
         public override string GetKey(ItemKey bucketedBy, bool lower = true, bool norename = true)
         {
             // Set the output key as the default blank string
-            string key;
+            string? key;
 
             // Now determine what the key should be based on the bucketedBy value
             switch (bucketedBy)

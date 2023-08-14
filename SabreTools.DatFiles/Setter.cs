@@ -231,10 +231,14 @@ namespace SabreTools.DatFiles
                 case Chip chip: SetFields(chip); break;
                 case Condition condition: SetFields(condition); break;
                 case Configuration condition: SetFields(condition); break;
+                case ConfLocation confLocation: SetFields(confLocation); break;
+                case ConfSetting confSetting: SetFields(confSetting); break;
                 case Control control: SetFields(control); break;
                 case DataArea dataArea: SetFields(dataArea); break;
                 case Device device: SetFields(device); break;
+                case DipLocation dipLocation: SetFields(dipLocation); break;
                 case DipSwitch dipSwitch: SetFields(dipSwitch); break;
+                case DipValue dipValue: SetFields(dipValue); break;
                 case Disk disk: SetFields(disk); break;
                 case DiskArea diskArea: SetFields(diskArea); break;
                 case Display display: SetFields(display); break;
@@ -243,7 +247,6 @@ namespace SabreTools.DatFiles
                 case Feature feature: SetFields(feature); break;
                 case Input input: SetFields(input); break;
                 case Instance instance: SetFields(instance); break;
-                case Location location: SetFields(location); break;
                 case Media media: SetFields(media); break;
                 case Part part: SetFields(part); break;
                 case PartFeature partFeature: SetFields(partFeature); break;
@@ -251,7 +254,6 @@ namespace SabreTools.DatFiles
                 case RamOption ramOption: SetFields(ramOption); break;
                 case Release release: SetFields(release); break;
                 case Rom rom: SetFields(rom); break;
-                case Setting setting: SetFields(setting); break;
                 case SharedFeature sharedFeat: SetFields(sharedFeat); break;
                 case Slot slot: SetFields(slot); break;
                 case SlotOption slotOption: SetFields(slotOption); break;
@@ -398,7 +400,7 @@ namespace SabreTools.DatFiles
             // Field.DatItem_Conditions does not apply here
             if (adjuster.ConditionsSpecified)
             {
-                foreach (Condition subCondition in adjuster.Conditions)
+                foreach (Condition subCondition in adjuster.Conditions!)
                 {
                     SetFields(subCondition, true);
                 }
@@ -529,7 +531,7 @@ namespace SabreTools.DatFiles
 
             if (configuration.ConditionsSpecified)
             {
-                foreach (Condition subCondition in configuration.Conditions)
+                foreach (Condition subCondition in configuration.Conditions!)
                 {
                     SetFields(subCondition, true);
                 }
@@ -537,7 +539,7 @@ namespace SabreTools.DatFiles
 
             if (configuration.LocationsSpecified)
             {
-                foreach (Location subLocation in configuration.Locations)
+                foreach (ConfLocation subLocation in configuration.Locations!)
                 {
                     SetFields(subLocation);
                 }
@@ -545,9 +547,49 @@ namespace SabreTools.DatFiles
 
             if (configuration.SettingsSpecified)
             {
-                foreach (Setting subSetting in configuration.Settings)
+                foreach (ConfSetting subSetting in configuration.Settings!)
                 {
                     SetFields(subSetting);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Set fields with given values
+        /// </summary>
+        /// <param name="confLocation">ConfLocation to remove replace fields in</param>
+        private void SetFields(ConfLocation confLocation)
+        {
+            if (DatItemMappings!.ContainsKey(DatItemField.Location_Inverted))
+                confLocation.Inverted = DatItemMappings[DatItemField.Location_Inverted].AsYesNo();
+
+            if (DatItemMappings!.ContainsKey(DatItemField.Location_Name))
+                confLocation.Name = DatItemMappings[DatItemField.Location_Name];
+
+            if (DatItemMappings!.ContainsKey(DatItemField.Location_Number))
+                confLocation.Number = NumberHelper.ConvertToInt64(DatItemMappings[DatItemField.Location_Number]);
+        }
+
+        /// <summary>
+        /// Set fields with given values
+        /// </summary>
+        /// <param name="confSetting">ConfSetting to remove replace fields in</param>
+        private void SetFields(ConfSetting confSetting)
+        {
+            if (DatItemMappings!.ContainsKey(DatItemField.Setting_Default))
+                confSetting.Default = DatItemMappings[DatItemField.Setting_Default].AsYesNo();
+
+            if (DatItemMappings!.ContainsKey(DatItemField.Setting_Name))
+                confSetting.Name = DatItemMappings[DatItemField.Setting_Name];
+
+            if (DatItemMappings!.ContainsKey(DatItemField.Setting_Value))
+                confSetting.Value = DatItemMappings[DatItemField.Setting_Value];
+
+            if (confSetting.ConditionsSpecified)
+            {
+                foreach (Condition subCondition in confSetting.Conditions!)
+                {
+                    SetFields(subCondition, true);
                 }
             }
         }
@@ -637,7 +679,7 @@ namespace SabreTools.DatFiles
 
             if (device.ExtensionsSpecified)
             {
-                foreach (Extension subExtension in device.Extensions)
+                foreach (Extension subExtension in device.Extensions!)
                 {
                     SetFields(subExtension);
                 }
@@ -645,11 +687,27 @@ namespace SabreTools.DatFiles
 
             if (device.InstancesSpecified)
             {
-                foreach (Instance subInstance in device.Instances)
+                foreach (Instance subInstance in device.Instances!)
                 {
                     SetFields(subInstance);
                 }
             }
+        }
+
+        /// <summary>
+        /// Set fields with given values
+        /// </summary>
+        /// <param name="dipLocation">DipLocation to remove replace fields in</param>
+        private void SetFields(DipLocation dipLocation)
+        {
+            if (DatItemMappings!.ContainsKey(DatItemField.Location_Inverted))
+                dipLocation.Inverted = DatItemMappings[DatItemField.Location_Inverted].AsYesNo();
+
+            if (DatItemMappings!.ContainsKey(DatItemField.Location_Name))
+                dipLocation.Name = DatItemMappings[DatItemField.Location_Name];
+
+            if (DatItemMappings!.ContainsKey(DatItemField.Location_Number))
+                dipLocation.Number = NumberHelper.ConvertToInt64(DatItemMappings[DatItemField.Location_Number]);
         }
 
         /// <summary>
@@ -666,7 +724,7 @@ namespace SabreTools.DatFiles
 
             if (dipSwitch.ConditionsSpecified)
             {
-                foreach (Condition subCondition in dipSwitch.Conditions)
+                foreach (Condition subCondition in dipSwitch.Conditions!)
                 {
                     SetFields(subCondition, true);
                 }
@@ -674,7 +732,7 @@ namespace SabreTools.DatFiles
 
             if (dipSwitch.LocationsSpecified)
             {
-                foreach (Location subLocation in dipSwitch.Locations)
+                foreach (DipLocation subLocation in dipSwitch.Locations!)
                 {
                     SetFields(subLocation);
                 }
@@ -682,7 +740,7 @@ namespace SabreTools.DatFiles
 
             if (dipSwitch.ValuesSpecified)
             {
-                foreach (Setting subValue in dipSwitch.Values)
+                foreach (DipValue subValue in dipSwitch.Values!)
                 {
                     SetFields(subValue);
                 }
@@ -690,6 +748,30 @@ namespace SabreTools.DatFiles
 
             dipSwitch.Part ??= new Part();
             SetFields(dipSwitch.Part);
+        }
+
+        /// <summary>
+        /// Set fields with given values
+        /// </summary>
+        /// <param name="dipValue">DipValue to remove replace fields in</param>
+        private void SetFields(DipValue dipValue)
+        {
+            if (DatItemMappings!.ContainsKey(DatItemField.Setting_Default))
+                dipValue.Default = DatItemMappings[DatItemField.Setting_Default].AsYesNo();
+
+            if (DatItemMappings!.ContainsKey(DatItemField.Setting_Name))
+                dipValue.Name = DatItemMappings[DatItemField.Setting_Name];
+
+            if (DatItemMappings!.ContainsKey(DatItemField.Setting_Value))
+                dipValue.Value = DatItemMappings[DatItemField.Setting_Value];
+
+            if (dipValue.ConditionsSpecified)
+            {
+                foreach (Condition subCondition in dipValue.Conditions!)
+                {
+                    SetFields(subCondition, true);
+                }
+            }
         }
 
         /// <summary>
@@ -875,7 +957,7 @@ namespace SabreTools.DatFiles
 
             if (input.ControlsSpecified)
             {
-                foreach (Control subControl in input.Controls)
+                foreach (Control subControl in input.Controls!)
                 {
                     SetFields(subControl);
                 }
@@ -893,22 +975,6 @@ namespace SabreTools.DatFiles
 
             if (DatItemMappings!.ContainsKey(DatItemField.Instance_Name))
                 instance.BriefName = DatItemMappings[DatItemField.Instance_Name];
-        }
-
-        /// <summary>
-        /// Set fields with given values
-        /// </summary>
-        /// <param name="location">Location to remove replace fields in</param>
-        private void SetFields(Location location)
-        {
-            if (DatItemMappings!.ContainsKey(DatItemField.Location_Inverted))
-                location.Inverted = DatItemMappings[DatItemField.Location_Inverted].AsYesNo();
-
-            if (DatItemMappings!.ContainsKey(DatItemField.Location_Name))
-                location.Name = DatItemMappings[DatItemField.Location_Name];
-
-            if (DatItemMappings!.ContainsKey(DatItemField.Location_Number))
-                location.Number = NumberHelper.ConvertToInt64(DatItemMappings[DatItemField.Location_Number]);
         }
 
         /// <summary>
@@ -944,7 +1010,7 @@ namespace SabreTools.DatFiles
 
             if (part.FeaturesSpecified)
             {
-                foreach (PartFeature subPartFeature in part.Features)
+                foreach (PartFeature subPartFeature in part.Features!)
                 {
                     SetFields(subPartFeature);
                 }
@@ -975,7 +1041,7 @@ namespace SabreTools.DatFiles
 
             if (port.AnalogsSpecified)
             {
-                foreach (Analog subAnalog in port.Analogs)
+                foreach (Analog subAnalog in port.Analogs!)
                 {
                     SetFields(subAnalog);
                 }
@@ -1123,30 +1189,6 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Set fields with given values
         /// </summary>
-        /// <param name="setting">Setting to remove replace fields in</param>
-        private void SetFields(Setting setting)
-        {
-            if (DatItemMappings!.ContainsKey(DatItemField.Setting_Default))
-                setting.Default = DatItemMappings[DatItemField.Setting_Default].AsYesNo();
-
-            if (DatItemMappings!.ContainsKey(DatItemField.Setting_Name))
-                setting.Name = DatItemMappings[DatItemField.Setting_Name];
-
-            if (DatItemMappings!.ContainsKey(DatItemField.Setting_Value))
-                setting.Value = DatItemMappings[DatItemField.Setting_Value];
-
-            if (setting.ConditionsSpecified)
-            {
-                foreach (Condition subCondition in setting.Conditions)
-                {
-                    SetFields(subCondition, true);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Set fields with given values
-        /// </summary>
         /// <param name="sharedFeature">SharedFeature to remove replace fields in</param>
         private void SetFields(SharedFeature sharedFeature)
         {
@@ -1162,7 +1204,7 @@ namespace SabreTools.DatFiles
         {
             if (slot.SlotOptionsSpecified)
             {
-                foreach (SlotOption subSlotOption in slot.SlotOptions)
+                foreach (SlotOption subSlotOption in slot.SlotOptions!)
                 {
                     SetFields(subSlotOption);
                 }

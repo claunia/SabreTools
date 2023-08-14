@@ -18,121 +18,121 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         /// <remarks>TODO: Is this required?</remarks>
         [JsonProperty("id", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("id")]
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
         /// <summary>
         /// Section value
         /// </summary>
         [JsonProperty("section", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("section")]
-        public string Section { get; set; }
+        public string? Section { get; set; }
 
         /// <summary>
         /// Rom info value
         /// </summary>
         [JsonProperty("rominfo", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("rominfo")]
-        public string RomInfo { get; set; }
+        public string? RomInfo { get; set; }
 
         /// <summary>
         /// Dumping date value
         /// </summary>
         [JsonProperty("d_date", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("d_date")]
-        public string DDate { get; set; }
+        public string? DDate { get; set; }
 
         /// <summary>
         /// Dumping date info value
         /// </summary>
         [JsonProperty("d_date_info", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("d_date_info")]
-        public string DDateInfo { get; set; }
+        public string? DDateInfo { get; set; }
 
         /// <summary>
         /// Release date value
         /// </summary>
         [JsonProperty("r_date", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("r_date")]
-        public string RDate { get; set; }
+        public string? RDate { get; set; }
 
         /// <summary>
         /// Release date info value
         /// </summary>
         [JsonProperty("r_date_info", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("r_date_info")]
-        public string RDateInfo { get; set; }
+        public string? RDateInfo { get; set; }
 
         /// <summary>
         /// Origin value
         /// </summary>
         [JsonProperty("origin", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("origin")]
-        public string Origin { get; set; }
+        public string? Origin { get; set; }
 
         /// <summary>
         /// Region value
         /// </summary>
         [JsonProperty("region", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("region")]
-        public string Region { get; set; }
+        public string? Region { get; set; }
 
         /// <summary>
         /// Media title value
         /// </summary>
         [JsonProperty("media_title", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("media_title")]
-        public string MediaTitle { get; set; }
+        public string? MediaTitle { get; set; }
 
         /// <summary>
         /// Dumper value
         /// </summary>
         [JsonProperty("dumper", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("dumper")]
-        public string Dumper { get; set; }
+        public string? Dumper { get; set; }
 
         /// <summary>
         /// Project value
         /// </summary>
         [JsonProperty("project", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("project")]
-        public string Project { get; set; }
+        public string? Project { get; set; }
 
         /// <summary>
         /// Original format value
         /// </summary>
         [JsonProperty("originalformat", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("originalformat")]
-        public string OriginalFormat { get; set; }
+        public string? OriginalFormat { get; set; }
 
         /// <summary>
         /// Nodump value
         /// </summary>
         [JsonProperty("nodump", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("nodump")]
-        public string Nodump { get; set; }
+        public string? Nodump { get; set; }
 
         /// <summary>
         /// Tool value
         /// </summary>
         [JsonProperty("tool", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tool")]
-        public string Tool { get; set; }
+        public string? Tool { get; set; }
 
         /// <summary>
         /// Comment 1 value
         /// </summary>
         [JsonProperty("comment1", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("comment1")]
-        public string Comment1 { get; set; }
+        public string? Comment1 { get; set; }
 
         /// <summary>
         /// Link 2 value
         /// </summary>
         [JsonProperty("comment2", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("comment2")]
-        public string Comment2 { get; set; }
+        public string? Comment2 { get; set; }
 
         /// <summary>
         /// Link 1 value
         /// </summary>
         [JsonProperty("link1", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("link1")]
-        public string Link1 { get; set; }
+        public string? Link1 { get; set; }
 
         /// <summary>
         /// Link 2 value
         /// </summary>
         [JsonProperty("link2", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("link2")]
-        public string Link2 { get; set; }
+        public string? Link2 { get; set; }
 
         /// <summary>
         /// Link 3 value
         /// </summary>
         [JsonProperty("link3", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("link3")]
-        public string Link3 { get; set; }
+        public string? Link3 { get; set; }
 
         #endregion
 
@@ -158,8 +158,8 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine.Clone() as Machine,
-                Source = this.Source.Clone() as Source,
+                Machine = this.Machine?.Clone() as Machine,
+                Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
                 Id = this.Id,
@@ -190,17 +190,17 @@ namespace SabreTools.DatItems.Formats
         #region Comparision Methods
 
         /// <inheritdoc/>
-        public override bool Equals(DatItem other)
+        public override bool Equals(DatItem? other)
         {
             // If we don't have a SourceDetails, return false
-            if (ItemType != other.ItemType)
+            if (ItemType != other?.ItemType)
                 return false;
 
             // Otherwise, treat it as a SourceDetails
-            SourceDetails newOther = other as SourceDetails;
+            SourceDetails? newOther = other as SourceDetails;
 
             // If the Details information matches
-            return (Id == newOther.Id
+            return (Id == newOther!.Id
                 && Section == newOther.Section
                 && RomInfo == newOther.RomInfo
                 && DDate == newOther.DDate

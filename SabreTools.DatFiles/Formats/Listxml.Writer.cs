@@ -244,7 +244,7 @@ namespace SabreTools.DatFiles.Formats
 
                 // Get the first item for game information
                 var machine = items[0].Machine;
-                var game = CreateGame(machine);
+                var game = CreateGame(machine!);
 
                 // Create holders for all item types
                 var biosSets = new List<Models.Listxml.BiosSet>();
@@ -604,19 +604,19 @@ namespace SabreTools.DatFiles.Formats
 
             if (item.ConditionsSpecified)
             {
-                var conditionItem = item.Conditions[0];
+                var conditionItem = item.Conditions?.FirstOrDefault();
                 var condition = new Models.Listxml.Condition
                 {
-                    Tag = conditionItem.Tag,
-                    Mask = conditionItem.Mask,
-                    Relation = conditionItem.Relation.FromRelation(),
-                    Value = conditionItem.Value,
+                    Tag = conditionItem?.Tag,
+                    Mask = conditionItem?.Mask,
+                    Relation = conditionItem?.Relation.FromRelation(),
+                    Value = conditionItem?.Value,
                 };
                 dipswitch.Condition = condition;
             }
 
             var diplocations = new List<Models.Listxml.DipLocation>();
-            foreach (var locationItem in item.Locations ?? new List<Location>())
+            foreach (var locationItem in item.Locations ?? new List<DipLocation>())
             {
                 var control = CreateDipLocation(locationItem);
                 diplocations.Add(control);
@@ -626,9 +626,9 @@ namespace SabreTools.DatFiles.Formats
                 dipswitch.DipLocation = diplocations.ToArray();
 
             var dipvalues = new List<Models.Listxml.DipValue>();
-            foreach (var settingItem in item.Values ?? new List<Setting>())
+            foreach (var dipValueItem in item.Values ?? new List<DipValue>())
             {
-                var dipvalue = CreateDipValue(settingItem);
+                var dipvalue = CreateDipValue(dipValueItem);
                 dipvalues.Add(dipvalue);
             }
 
@@ -639,9 +639,9 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <summary>
-        /// Create a DipLocation from the current Location DatItem
+        /// Create a DipLocation from the current DipLocation DatItem
         /// <summary>
-        private static Models.Listxml.DipLocation CreateDipLocation(Location item)
+        private static Models.Listxml.DipLocation CreateDipLocation(DipLocation item)
         {
             var diplocation = new Models.Listxml.DipLocation
             {
@@ -654,9 +654,9 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <summary>
-        /// Create a DipValue from the current Setting DatItem
+        /// Create a DipValue from the current DipValue DatItem
         /// <summary>
-        private static Models.Listxml.DipValue CreateDipValue(Setting item)
+        private static Models.Listxml.DipValue CreateDipValue(DipValue item)
         {
             var dipvalue = new Models.Listxml.DipValue
             {
@@ -667,13 +667,13 @@ namespace SabreTools.DatFiles.Formats
 
             if (item.ConditionsSpecified)
             {
-                var conditionItem = item.Conditions[0];
+                var conditionItem = item.Conditions?.FirstOrDefault();
                 var condition = new Models.Listxml.Condition
                 {
-                    Tag = conditionItem.Tag,
-                    Mask = conditionItem.Mask,
-                    Relation = conditionItem.Relation.FromRelation(),
-                    Value = conditionItem.Value,
+                    Tag = conditionItem?.Tag,
+                    Mask = conditionItem?.Mask,
+                    Relation = conditionItem?.Relation.FromRelation(),
+                    Value = conditionItem?.Value,
                 };
                 dipvalue.Condition = condition;
             }
@@ -695,19 +695,19 @@ namespace SabreTools.DatFiles.Formats
 
             if (item.ConditionsSpecified)
             {
-                var conditionItem = item.Conditions[0];
+                var conditionItem = item.Conditions?.FirstOrDefault();
                 var condition = new Models.Listxml.Condition
                 {
-                    Tag = conditionItem.Tag,
-                    Mask = conditionItem.Mask,
-                    Relation = conditionItem.Relation.FromRelation(),
-                    Value = conditionItem.Value,
+                    Tag = conditionItem?.Tag,
+                    Mask = conditionItem?.Mask,
+                    Relation = conditionItem?.Relation.FromRelation(),
+                    Value = conditionItem?.Value,
                 };
                 configuration.Condition = condition;
             }
 
             var confLocations = new List<Models.Listxml.ConfLocation>();
-            foreach (var location in item.Locations ?? new List<Location>())
+            foreach (var location in item.Locations ?? new List<ConfLocation>())
             {
                 var control = CreateConfLocation(location);
                 confLocations.Add(control);
@@ -717,9 +717,9 @@ namespace SabreTools.DatFiles.Formats
                 configuration.ConfLocation = confLocations.ToArray();
 
             var confsettings = new List<Models.Listxml.ConfSetting>();
-            foreach (var settingItem in item.Settings ?? new List<Setting>())
+            foreach (var confSettingItem in item.Settings ?? new List<ConfSetting>())
             {
-                var dipvalue = CreateConfSetting(settingItem);
+                var dipvalue = CreateConfSetting(confSettingItem);
                 confsettings.Add(dipvalue);
             }
 
@@ -730,9 +730,9 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <summary>
-        /// Create a ConfLocation from the current Location DatItem
+        /// Create a ConfLocation from the current ConfLocation DatItem
         /// <summary>
-        private static Models.Listxml.ConfLocation CreateConfLocation(Location item)
+        private static Models.Listxml.ConfLocation CreateConfLocation(ConfLocation item)
         {
             var conflocation = new Models.Listxml.ConfLocation
             {
@@ -745,9 +745,9 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <summary>
-        /// Create a ConfSetting from the current Setting DatItem
+        /// Create a ConfSetting from the current ConfSetting DatItem
         /// <summary>
-        private static Models.Listxml.ConfSetting CreateConfSetting(Setting item)
+        private static Models.Listxml.ConfSetting CreateConfSetting(ConfSetting item)
         {
             var confsetting = new Models.Listxml.ConfSetting
             {
@@ -758,13 +758,13 @@ namespace SabreTools.DatFiles.Formats
 
             if (item.ConditionsSpecified)
             {
-                var conditionItem = item.Conditions[0];
+                var conditionItem = item.Conditions?.FirstOrDefault();
                 var condition = new Models.Listxml.Condition
                 {
-                    Tag = conditionItem.Tag,
-                    Mask = conditionItem.Mask,
-                    Relation = conditionItem.Relation.FromRelation(),
-                    Value = conditionItem.Value,
+                    Tag = conditionItem?.Tag,
+                    Mask = conditionItem?.Mask,
+                    Relation = conditionItem?.Relation.FromRelation(),
+                    Value = conditionItem?.Value,
                 };
                 confsetting.Condition = condition;
             }
@@ -798,13 +798,13 @@ namespace SabreTools.DatFiles.Formats
 
             if (item.ConditionsSpecified)
             {
-                var conditionItem = item.Conditions[0];
+                var conditionItem = item.Conditions?.FirstOrDefault();
                 var condition = new Models.Listxml.Condition
                 {
-                    Tag = conditionItem.Tag,
-                    Mask = conditionItem.Mask,
-                    Relation = conditionItem.Relation.FromRelation(),
-                    Value = conditionItem.Value,
+                    Tag = conditionItem?.Tag,
+                    Mask = conditionItem?.Mask,
+                    Relation = conditionItem?.Relation.FromRelation(),
+                    Value = conditionItem?.Value,
                 };
                 adjuster.Condition = condition;
             }
@@ -866,11 +866,11 @@ namespace SabreTools.DatFiles.Formats
 
             if (item.InstancesSpecified)
             {
-                var instanceItem = item.Instances[0];
+                var instanceItem = item.Instances?.FirstOrDefault();
                 var instance = new Models.Listxml.Instance
                 {
-                    Name = instanceItem.Name,
-                    BriefName = instanceItem.BriefName,
+                    Name = instanceItem?.Name,
+                    BriefName = instanceItem?.BriefName,
                 };
                 device.Instance = instance;
             }
@@ -944,6 +944,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 Name = item.Name,
                 Default = item.Default.FromYesNo(),
+                Content = item.Content,
             };
 
             return softwarelist;

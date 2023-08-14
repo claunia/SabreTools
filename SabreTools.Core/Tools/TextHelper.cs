@@ -25,13 +25,51 @@ namespace SabreTools.Core.Tools
             return input;
         }
 
-        // <summary>
+        /// <summary>
+        /// Normalize a CRC32 string and pad to the correct size
+        /// </summary>
+        public static string NormalizeCRC32(string? hash)
+            => NormalizeHashData(hash, Constants.CRCLength);
+
+        /// <summary>
+        /// Normalize a MD5 string and pad to the correct size
+        /// </summary>
+        public static string NormalizeMD5(string? hash)
+            => NormalizeHashData(hash, Constants.MD5Length);
+
+        /// <summary>
+        /// Normalize a SHA1 string and pad to the correct size
+        /// </summary>
+        public static string NormalizeSHA1(string? hash)
+            => NormalizeHashData(hash, Constants.SHA1Length);
+
+        /// <summary>
+        /// Normalize a SHA256 string and pad to the correct size
+        /// </summary>
+        public static string NormalizeSHA256(string? hash)
+            => NormalizeHashData(hash, Constants.SHA256Length);
+
+        /// <summary>
+        /// Normalize a SHA384 string and pad to the correct size
+        /// </summary>
+        public static string NormalizeSHA384(string? hash)
+            => NormalizeHashData(hash, Constants.SHA384Length);
+
+        /// <summary>
+        /// Normalize a SHA512 string and pad to the correct size
+        /// </summary>
+        public static string NormalizeSHA512(string? hash)
+            => NormalizeHashData(hash, Constants.SHA512Length);
+
+        /// <summary>
         /// Remove all chars that are considered path unsafe
         /// </summary>
         public static string? RemovePathUnsafeCharacters(string? input)
         {
             if (string.IsNullOrWhiteSpace(input))
                 return input;
+
+            input = input.ToLowerInvariant();
 
             List<char> invalidPath = Path.GetInvalidPathChars().ToList();
             return new string(input.Where(c => !invalidPath.Contains(c)).ToArray());
@@ -88,6 +126,40 @@ namespace SabreTools.Core.Tools
             }
 
             return input;
+        }
+
+        /// <summary>
+        /// Normalize a hash string and pad to the correct size
+        /// </summary>
+        private static string NormalizeHashData(string? hash, int expectedLength)
+        {
+            // If we have a known blank hash, return blank
+            if (string.IsNullOrWhiteSpace(hash) || hash == "-" || hash == "_")
+                return string.Empty;
+
+            // Check to see if it's a "hex" hash
+            hash = hash.Trim().Replace("0x", string.Empty);
+
+            // If we have a blank hash now, return blank
+            if (string.IsNullOrWhiteSpace(hash))
+                return string.Empty;
+
+            // If the hash shorter than the required length, pad it
+            if (hash.Length < expectedLength)
+                hash = hash.PadLeft(expectedLength, '0');
+
+            // If the hash is longer than the required length, it's invalid
+            else if (hash.Length > expectedLength)
+                return string.Empty;
+
+            // Now normalize the hash
+            hash = hash.ToLowerInvariant();
+
+            // Otherwise, make sure that every character is a proper match
+            if (hash.Any(c => (c < '0' || c > '9') && (c < 'a' || c > 'f')))
+                hash = string.Empty;
+
+            return hash;
         }
 
         /// <summary>

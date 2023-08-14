@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -17,29 +18,51 @@ namespace SabreTools.DatItems.Formats
         /// Condition tag value
         /// </summary>
         [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tag")]
-        public string Tag { get; set; }
+        public string? Tag
+        {
+            get => _condition.ReadString(Models.Internal.Condition.TagKey);
+            set => _condition[Models.Internal.Condition.TagKey] = value;
+        }
 
         /// <summary>
         /// Condition mask
         /// </summary>
         [JsonProperty("mask", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("mask")]
-        public string Mask { get; set; }
+        public string? Mask
+        {
+            get => _condition.ReadString(Models.Internal.Condition.MaskKey);
+            set => _condition[Models.Internal.Condition.MaskKey] = value;
+        }
 
         /// <summary>
         /// Condition relationship
         /// </summary>
         [JsonProperty("relation", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("relation")]
         [JsonConverter(typeof(StringEnumConverter))]
-        public Relation Relation { get; set; }
+        public Relation Relation
+        {
+            get => _condition.ReadString(Models.Internal.Condition.RelationKey).AsRelation();
+            set => _condition[Models.Internal.Condition.RelationKey] = value.FromRelation();
+        }
 
         [JsonIgnore]
-        public bool RelationSpecified { get { return Relation != Relation.NULL; } }
+        public bool RelationSpecified { get { return Relation != Core.Relation.NULL; } }
 
         /// <summary>
         /// Condition value
         /// </summary>
         [JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("value")]
-        public string Value { get; set; }
+        public string? Value
+        {
+            get => _condition.ReadString(Models.Internal.Condition.ValueKey);
+            set => _condition[Models.Internal.Condition.ValueKey] = value;
+        }
+
+        /// <summary>
+        /// Internal Condition model
+        /// </summary>
+        [JsonIgnore]
+        private Models.Internal.Condition _condition = new();
 
         #endregion
 
@@ -65,14 +88,11 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine.Clone() as Machine,
-                Source = this.Source.Clone() as Source,
+                Machine = this.Machine?.Clone() as Machine,
+                Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                Tag = this.Tag,
-                Mask = this.Mask,
-                Relation = this.Relation,
-                Value = this.Value,
+                _condition = this._condition?.Clone() as Models.Internal.Condition ?? new Models.Internal.Condition(),
             };
         }
 
@@ -81,20 +101,14 @@ namespace SabreTools.DatItems.Formats
         #region Comparision Methods
 
         /// <inheritdoc/>
-        public override bool Equals(DatItem other)
+        public override bool Equals(DatItem? other)
         {
             // If we don't have a Condition, return false
-            if (ItemType != other.ItemType)
+            if (ItemType != other?.ItemType || other is not Condition otherInternal)
                 return false;
 
-            // Otherwise, treat it as a Condition
-            Condition newOther = other as Condition;
-
-            // If the Feature information matches
-            return (Tag == newOther.Tag
-                && Mask == newOther.Mask
-                && Relation == newOther.Relation
-                && Value == newOther.Value);
+            // Compare the internal models
+            return _condition.EqualTo(otherInternal._condition);
         }
 
         #endregion

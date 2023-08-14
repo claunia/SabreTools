@@ -452,6 +452,12 @@ namespace SabreTools.Core
         [Mapping("configuration")]
         Configuration,
 
+        [Mapping("conflocation")]
+        ConfLocation,
+
+        [Mapping("confsetting")]
+        ConfSetting,
+
         [Mapping("control")]
         Control,
 
@@ -464,8 +470,14 @@ namespace SabreTools.Core
         [Mapping("device_ref", "deviceref")]
         DeviceReference,
 
+        [Mapping("diplocation")]
+        DipLocation,
+
         [Mapping("dipswitch")]
         DipSwitch,
+
+        [Mapping("dipvalue")]
+        DipValue,
 
         [Mapping("diskarea")]
         DiskArea,
@@ -490,9 +502,6 @@ namespace SabreTools.Core
 
         [Mapping("instance")]
         Instance,
-
-        [Mapping("location")]
-        Location,
 
         [Mapping("original")]
         Original,
@@ -520,9 +529,6 @@ namespace SabreTools.Core
 
         [Mapping("serials")]
         Serials,
-
-        [Mapping("setting")]
-        Setting,
 
         [Mapping("sharedfeat", "shared_feat", "sharedfeature", "shared_feature")]
         SharedFeature,

@@ -92,10 +92,14 @@ namespace SabreTools.Filtering
             else if (datItem is Chip) RemoveFields(datItem as Chip);
             else if (datItem is Condition) RemoveFields(datItem as Condition);
             else if (datItem is Configuration) RemoveFields(datItem as Configuration);
+            else if (datItem is ConfLocation) RemoveFields(datItem as ConfLocation);
+            else if (datItem is ConfSetting) RemoveFields(datItem as ConfSetting);
             else if (datItem is Control) RemoveFields(datItem as Control);
             else if (datItem is DataArea) RemoveFields(datItem as DataArea);
             else if (datItem is Device) RemoveFields(datItem as Device);
+            else if (datItem is DipLocation) RemoveFields(datItem as DipLocation);
             else if (datItem is DipSwitch) RemoveFields(datItem as DipSwitch);
+            else if (datItem is DipValue) RemoveFields(datItem as DipValue);
             else if (datItem is Disk) RemoveFields(datItem as Disk);
             else if (datItem is DiskArea) RemoveFields(datItem as DiskArea);
             else if (datItem is Display) RemoveFields(datItem as Display);
@@ -105,7 +109,6 @@ namespace SabreTools.Filtering
             else if (datItem is Info) RemoveFields(datItem as Info);
             else if (datItem is Input) RemoveFields(datItem as Input);
             else if (datItem is Instance) RemoveFields(datItem as Instance);
-            else if (datItem is Location) RemoveFields(datItem as Location);
             else if (datItem is Media) RemoveFields(datItem as Media);
             else if (datItem is Part) RemoveFields(datItem as Part);
             else if (datItem is PartFeature) RemoveFields(datItem as PartFeature);
@@ -113,7 +116,6 @@ namespace SabreTools.Filtering
             else if (datItem is RamOption) RemoveFields(datItem as RamOption);
             else if (datItem is Release) RemoveFields(datItem as Release);
             else if (datItem is Rom) RemoveFields(datItem as Rom);
-            else if (datItem is Setting) RemoveFields(datItem as Setting);
             else if (datItem is SharedFeature) RemoveFields(datItem as SharedFeature);
             else if (datItem is Slot) RemoveFields(datItem as Slot);
             else if (datItem is SlotOption) RemoveFields(datItem as SlotOption);
@@ -394,7 +396,7 @@ namespace SabreTools.Filtering
 
             if (configuration.LocationsSpecified)
             {
-                foreach (Location subLocation in configuration.Locations)
+                foreach (ConfLocation subLocation in configuration.Locations)
                 {
                     RemoveFields(subLocation);
                 }
@@ -402,9 +404,49 @@ namespace SabreTools.Filtering
 
             if (configuration.SettingsSpecified)
             {
-                foreach (Setting subSetting in configuration.Settings)
+                foreach (ConfSetting subSetting in configuration.Settings)
                 {
                     RemoveFields(subSetting);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Remove fields with given values
+        /// </summary>
+        /// <param name="confLocation">ConfLocation to remove fields from</param>
+        private void RemoveFields(ConfLocation confLocation)
+        {
+            if (DatItemFields.Contains(DatItemField.Location_Inverted))
+                confLocation.Inverted = null;
+
+            if (DatItemFields.Contains(DatItemField.Location_Name))
+                confLocation.Name = null;
+
+            if (DatItemFields.Contains(DatItemField.Location_Number))
+                confLocation.Number = null;
+        }
+
+        /// <summary>
+        /// Remove fields with given values
+        /// </summary>
+        /// <param name="confsetting">ConfSetting to remove fields from</param>
+        private void RemoveFields(ConfSetting confsetting)
+        {
+            if (DatItemFields.Contains(DatItemField.Setting_Default))
+                confsetting.Default = null;
+
+            if (DatItemFields.Contains(DatItemField.Setting_Name))
+                confsetting.Name = null;
+
+            if (DatItemFields.Contains(DatItemField.Setting_Value))
+                confsetting.Value = null;
+
+            if (confsetting.ConditionsSpecified)
+            {
+                foreach (Condition subCondition in confsetting.Conditions)
+                {
+                    RemoveFields(subCondition, true);
                 }
             }
         }
@@ -512,6 +554,22 @@ namespace SabreTools.Filtering
         /// <summary>
         /// Remove fields with given values
         /// </summary>
+        /// <param name="dipLocation">DipLocation to remove fields from</param>
+        private void RemoveFields(DipLocation dipLocation)
+        {
+            if (DatItemFields.Contains(DatItemField.Location_Inverted))
+                dipLocation.Inverted = null;
+
+            if (DatItemFields.Contains(DatItemField.Location_Name))
+                dipLocation.Name = null;
+
+            if (DatItemFields.Contains(DatItemField.Location_Number))
+                dipLocation.Number = null;
+        }
+
+        /// <summary>
+        /// Remove fields with given values
+        /// </summary>
         /// <param name="dipSwitch">DipSwitch to remove fields from</param>
         private void RemoveFields(DipSwitch dipSwitch)
         {
@@ -531,7 +589,7 @@ namespace SabreTools.Filtering
 
             if (dipSwitch.LocationsSpecified)
             {
-                foreach (Location subLocation in dipSwitch.Locations)
+                foreach (DipLocation subLocation in dipSwitch.Locations)
                 {
                     RemoveFields(subLocation);
                 }
@@ -539,7 +597,7 @@ namespace SabreTools.Filtering
 
             if (dipSwitch.ValuesSpecified)
             {
-                foreach (Setting subValue in dipSwitch.Values)
+                foreach (DipValue subValue in dipSwitch.Values)
                 {
                     RemoveFields(subValue);
                 }
@@ -547,6 +605,30 @@ namespace SabreTools.Filtering
 
             if (dipSwitch.PartSpecified)
                 RemoveFields(dipSwitch.Part);
+        }
+
+        /// <summary>
+        /// Remove fields with given values
+        /// </summary>
+        /// <param name="dipValue">DipValue to remove fields from</param>
+        private void RemoveFields(DipValue dipValue)
+        {
+            if (DatItemFields.Contains(DatItemField.Setting_Default))
+                dipValue.Default = null;
+
+            if (DatItemFields.Contains(DatItemField.Setting_Name))
+                dipValue.Name = null;
+
+            if (DatItemFields.Contains(DatItemField.Setting_Value))
+                dipValue.Value = null;
+
+            if (dipValue.ConditionsSpecified)
+            {
+                foreach (Condition subCondition in dipValue.Conditions)
+                {
+                    RemoveFields(subCondition, true);
+                }
+            }
         }
 
         /// <summary>
@@ -750,22 +832,6 @@ namespace SabreTools.Filtering
 
             if (DatItemFields.Contains(DatItemField.Instance_Name))
                 instance.Name = null;
-        }
-
-        /// <summary>
-        /// Remove fields with given values
-        /// </summary>
-        /// <param name="location">Location to remove fields from</param>
-        private void RemoveFields(Location location)
-        {
-            if (DatItemFields.Contains(DatItemField.Location_Inverted))
-                location.Inverted = null;
-
-            if (DatItemFields.Contains(DatItemField.Location_Name))
-                location.Name = null;
-
-            if (DatItemFields.Contains(DatItemField.Location_Number))
-                location.Number = null;
         }
 
         /// <summary>
@@ -975,30 +1041,6 @@ namespace SabreTools.Filtering
 
             if (rom.PartSpecified)
                 RemoveFields(rom.Part);
-        }
-
-        /// <summary>
-        /// Remove fields with given values
-        /// </summary>
-        /// <param name="setting">Setting to remove fields from</param>
-        private void RemoveFields(Setting setting)
-        {
-            if (DatItemFields.Contains(DatItemField.Setting_Default))
-                setting.Default = null;
-
-            if (DatItemFields.Contains(DatItemField.Setting_Name))
-                setting.Name = null;
-
-            if (DatItemFields.Contains(DatItemField.Setting_Value))
-                setting.Value = null;
-
-            if (setting.ConditionsSpecified)
-            {
-                foreach (Condition subCondition in setting.Conditions)
-                {
-                    RemoveFields(subCondition, true);
-                }
-            }
         }
 
         /// <summary>

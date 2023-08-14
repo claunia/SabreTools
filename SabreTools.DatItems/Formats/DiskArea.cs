@@ -17,17 +17,27 @@ namespace SabreTools.DatItems.Formats
         /// Name of the item
         /// </summary>
         [JsonProperty("name", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("name")]
-        public string Name { get; set; }
+        public string? Name
+        {
+            get => _diskArea.ReadString(Models.Internal.DiskArea.NameKey);
+            set => _diskArea[Models.Internal.DiskArea.NameKey] = value;
+        }
+
+        /// <summary>
+        /// Internal DiskArea model
+        /// </summary>
+        [JsonIgnore]
+        private Models.Internal.DiskArea _diskArea = new();
 
         #endregion
 
         #region Accessors
 
         /// <inheritdoc/>
-        public override string GetName() => Name;
+        public override string? GetName() => Name;
 
         /// <inheritdoc/>
-        public override void SetName(string name) => Name = name;
+        public override void SetName(string? name) => Name = name;
 
         #endregion
 
@@ -54,11 +64,11 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine.Clone() as Machine,
-                Source = this.Source.Clone() as Source,
+                Machine = this.Machine?.Clone() as Machine,
+                Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                Name = this.Name,
+                _diskArea = this._diskArea?.Clone() as Models.Internal.DiskArea ?? new Models.Internal.DiskArea(),
             };
         }
 
@@ -67,17 +77,14 @@ namespace SabreTools.DatItems.Formats
         #region Comparision Methods
 
         /// <inheritdoc/>
-        public override bool Equals(DatItem other)
+        public override bool Equals(DatItem? other)
         {
             // If we don't have a DiskArea, return false
-            if (ItemType != other.ItemType)
+            if (ItemType != other?.ItemType || other is not DiskArea otherInternal)
                 return false;
 
-            // Otherwise, treat it as a DiskArea
-            DiskArea newOther = other as DiskArea;
-
-            // If the DiskArea information matches
-            return (Name == newOther.Name);
+            // Compare the internal models
+            return _diskArea.EqualTo(otherInternal._diskArea);
         }
 
         #endregion

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using SabreTools.Core;
@@ -16,18 +13,6 @@ namespace SabreTools.DatItems.Formats
     [JsonObject("rom"), XmlRoot("rom")]
     public class Rom : DatItem
     {
-        #region Private instance variables
-
-        private byte[] _crc; // 8 bytes
-        private byte[] _md5; // 16 bytes
-        private byte[] _sha1; // 20 bytes
-        private byte[] _sha256; // 32 bytes
-        private byte[] _sha384; // 48 bytes
-        private byte[] _sha512; // 64 bytes
-        private byte[] _spamsum; // variable bytes
-
-        #endregion
-
         #region Fields
 
         #region Common
@@ -36,19 +21,31 @@ namespace SabreTools.DatItems.Formats
         /// Name of the item
         /// </summary>
         [JsonProperty("name"), XmlElement("name")]
-        public string Name { get; set; }
+        public string? Name
+        {
+            get => _rom.ReadString(Models.Internal.Rom.NameKey);
+            set => _rom[Models.Internal.Rom.NameKey] = value;
+        }
 
         /// <summary>
         /// What BIOS is required for this rom
         /// </summary>
         [JsonProperty("bios", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("bios")]
-        public string Bios { get; set; }
+        public string? Bios
+        {
+            get => _rom.ReadString(Models.Internal.Rom.BiosKey);
+            set => _rom[Models.Internal.Rom.BiosKey] = value;
+        }
 
         /// <summary>
         /// Byte size of the rom
         /// </summary>
         [JsonProperty("size", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("size")]
-        public long? Size { get; set; } = null;
+        public long? Size
+        {
+            get => _rom.ReadLong(Models.Internal.Rom.SizeKey);
+            set => _rom[Models.Internal.Rom.SizeKey] = value;
+        }
 
         [JsonIgnore]
         public bool SizeSpecified { get { return Size != null; } }
@@ -57,102 +54,122 @@ namespace SabreTools.DatItems.Formats
         /// File CRC32 hash
         /// </summary>
         [JsonProperty("crc", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("crc")]
-        public string CRC
+        public string? CRC
         {
-            get { return _crc.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_crc); }
-            set { _crc = (value == "null" ? Constants.CRCZeroBytes : Utilities.StringToByteArray(CleanCRC32(value))); }
+            get => _rom.ReadString(Models.Internal.Rom.CRCKey);
+            set => _rom[Models.Internal.Rom.CRCKey] = TextHelper.NormalizeCRC32(value);
         }
 
         /// <summary>
         /// File MD5 hash
         /// </summary>
         [JsonProperty("md5", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("md5")]
-        public string MD5
+        public string? MD5
         {
-            get { return _md5.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_md5); }
-            set { _md5 = Utilities.StringToByteArray(CleanMD5(value)); }
+            get => _rom.ReadString(Models.Internal.Rom.MD5Key);
+            set => _rom[Models.Internal.Rom.MD5Key] = TextHelper.NormalizeMD5(value);
         }
 
         /// <summary>
         /// File SHA-1 hash
         /// </summary>
         [JsonProperty("sha1", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha1")]
-        public string SHA1
+        public string? SHA1
         {
-            get { return _sha1.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha1); }
-            set { _sha1 = Utilities.StringToByteArray(CleanSHA1(value)); }
+            get => _rom.ReadString(Models.Internal.Rom.SHA1Key);
+            set => _rom[Models.Internal.Rom.SHA1Key] = TextHelper.NormalizeSHA1(value);
         }
 
         /// <summary>
         /// File SHA-256 hash
         /// </summary>
         [JsonProperty("sha256", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha256")]
-        public string SHA256
+        public string? SHA256
         {
-            get { return _sha256.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha256); }
-            set { _sha256 = Utilities.StringToByteArray(CleanSHA256(value)); }
+            get => _rom.ReadString(Models.Internal.Rom.SHA256Key);
+            set => _rom[Models.Internal.Rom.SHA256Key] = TextHelper.NormalizeSHA256(value);
         }
 
         /// <summary>
         /// File SHA-384 hash
         /// </summary>
         [JsonProperty("sha384", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha384")]
-        public string SHA384
+        public string? SHA384
         {
-            get { return _sha384.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha384); }
-            set { _sha384 = Utilities.StringToByteArray(CleanSHA384(value)); }
+            get => _rom.ReadString(Models.Internal.Rom.SHA384Key);
+            set => _rom[Models.Internal.Rom.SHA384Key] = TextHelper.NormalizeSHA384(value);
         }
 
         /// <summary>
         /// File SHA-512 hash
         /// </summary>
         [JsonProperty("sha512", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha512")]
-        public string SHA512
+        public string? SHA512
         {
-            get { return _sha512.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha512); }
-            set { _sha512 = Utilities.StringToByteArray(CleanSHA512(value)); }
+            get => _rom.ReadString(Models.Internal.Rom.SHA512Key);
+            set => _rom[Models.Internal.Rom.SHA512Key] = TextHelper.NormalizeSHA512(value);
         }
 
         /// <summary>
         /// File SpamSum fuzzy hash
         /// </summary>
         [JsonProperty("spamsum", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("spamsum")]
-        public string SpamSum
+        public string? SpamSum
         {
-            get { return _spamsum.IsNullOrEmpty() ? null : Encoding.UTF8.GetString(_spamsum); }
-            set { _spamsum = Encoding.UTF8.GetBytes(value ?? string.Empty); }
+            get => _rom.ReadString(Models.Internal.Rom.SpamSumKey);
+            set => _rom[Models.Internal.Rom.SpamSumKey] = value;
         }
 
         /// <summary>
         /// Rom name to merge from parent
         /// </summary>
         [JsonProperty("merge", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("merge")]
-        public string MergeTag { get; set; }
+        public string? MergeTag
+        {
+            get => _rom.ReadString(Models.Internal.Rom.MergeKey);
+            set => _rom[Models.Internal.Rom.MergeKey] = value;
+        }
 
         /// <summary>
         /// Rom region
         /// </summary>
         [JsonProperty("region", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("biregionos")]
-        public string Region { get; set; }
+        public string? Region
+        {
+            get => _rom.ReadString(Models.Internal.Rom.RegionKey);
+            set => _rom[Models.Internal.Rom.RegionKey] = value;
+        }
 
         /// <summary>
         /// Data offset within rom
         /// </summary>
         [JsonProperty("offset", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("offset")]
-        public string Offset { get; set; }
+        public string? Offset
+        {
+            get => _rom.ReadString(Models.Internal.Rom.OffsetKey);
+            set => _rom[Models.Internal.Rom.OffsetKey] = value;
+        }
 
         /// <summary>
         /// File created date
         /// </summary>
         [JsonProperty("date", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("date")]
-        public string Date { get; set; }
+        public string? Date
+        {
+            get => _rom.ReadString(Models.Internal.Rom.DateKey);
+            set => _rom[Models.Internal.Rom.DateKey] = value;
+        }
 
         /// <summary>
         /// Rom dump status
         /// </summary>
         [JsonProperty("status", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("status")]
         [JsonConverter(typeof(StringEnumConverter))]
-        public ItemStatus ItemStatus { get; set; }
+        public ItemStatus ItemStatus
+        {
+            get => _rom.ReadString(Models.Internal.Rom.StatusKey).AsItemStatus();
+            set => _rom[Models.Internal.Rom.StatusKey] = value.FromItemStatus(yesno: false);
+        }
 
         [JsonIgnore]
         public bool ItemStatusSpecified { get { return ItemStatus != ItemStatus.NULL && ItemStatus != ItemStatus.None; } }
@@ -161,7 +178,11 @@ namespace SabreTools.DatItems.Formats
         /// Determine if the rom is optional in the set
         /// </summary>
         [JsonProperty("optional", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("optional")]
-        public bool? Optional { get; set; } = null;
+        public bool? Optional
+        {
+            get => _rom.ReadBool(Models.Internal.Rom.OptionalKey);
+            set => _rom[Models.Internal.Rom.OptionalKey] = value;
+        }
 
         [JsonIgnore]
         public bool OptionalSpecified { get { return Optional != null; } }
@@ -170,7 +191,11 @@ namespace SabreTools.DatItems.Formats
         /// Determine if the CRC32 hash is inverted
         /// </summary>
         [JsonProperty("inverted", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("inverted")]
-        public bool? Inverted { get; set; } = null;
+        public bool? Inverted
+        {
+            get => _rom.ReadBool(Models.Internal.Rom.InvertedKey);
+            set => _rom[Models.Internal.Rom.InvertedKey] = value;
+        }
 
         [JsonIgnore]
         public bool InvertedSpecified { get { return Inverted != null; } }
@@ -183,19 +208,31 @@ namespace SabreTools.DatItems.Formats
         /// Source of file
         /// </summary>
         [JsonProperty("ado_source", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("ado_source")]
-        public string ArchiveDotOrgSource { get; set; }
+        public string? ArchiveDotOrgSource
+        {
+            get => _rom.ReadString(Models.Internal.Rom.SourceKey);
+            set => _rom[Models.Internal.Rom.SourceKey] = value;
+        }
 
         /// <summary>
         /// Archive.org recognized file format
         /// </summary>
         [JsonProperty("ado_format", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("ado_format")]
-        public string ArchiveDotOrgFormat { get; set; }
+        public string? ArchiveDotOrgFormat
+        {
+            get => _rom.ReadString(Models.Internal.Rom.FormatKey);
+            set => _rom[Models.Internal.Rom.FormatKey] = value;
+        }
 
         /// <summary>
         /// Original filename
         /// </summary>
         [JsonProperty("original_filename", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("original_filename")]
-        public string OriginalFilename { get; set; }
+        public string? OriginalFilename
+        {
+            get => _rom.ReadString(Models.Internal.Rom.OriginalKey);
+            set => _rom[Models.Internal.Rom.OriginalKey] = value;
+        }
 
         /// <summary>
         /// Image rotation
@@ -204,13 +241,21 @@ namespace SabreTools.DatItems.Formats
         /// TODO: This might be Int32?
         /// </remarks>
         [JsonProperty("rotation", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("rotation")]
-        public string Rotation { get; set; }
+        public string? Rotation
+        {
+            get => _rom.ReadString(Models.Internal.Rom.RotationKey);
+            set => _rom[Models.Internal.Rom.RotationKey] = value;
+        }
 
         /// <summary>
         /// Summation value?
         /// </summary>
         [JsonProperty("summation", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("summation")]
-        public string Summation { get; set; }
+        public string? Summation
+        {
+            get => _rom.ReadString(Models.Internal.Rom.SummationKey);
+            set => _rom[Models.Internal.Rom.SummationKey] = value;
+        }
 
         #endregion
 
@@ -220,13 +265,21 @@ namespace SabreTools.DatItems.Formats
         /// Alternate name for the item
         /// </summary>
         [JsonProperty("alt_romname", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("alt_romname")]
-        public string AltName { get; set; }
+        public string? AltName
+        {
+            get => _rom.ReadString(Models.Internal.Rom.AltRomnameKey);
+            set => _rom[Models.Internal.Rom.AltRomnameKey] = value;
+        }
 
         /// <summary>
         /// Alternate title for the item
         /// </summary>
         [JsonProperty("alt_title", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("alt_title")]
-        public string AltTitle { get; set; }
+        public string? AltTitle
+        {
+            get => _rom.ReadString(Models.Internal.Rom.AltTitleKey);
+            set => _rom[Models.Internal.Rom.AltTitleKey] = value;
+        }
 
         #endregion
 
@@ -236,7 +289,11 @@ namespace SabreTools.DatItems.Formats
         /// Alternate title for the item
         /// </summary>
         [JsonProperty("mia", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("mia")]
-        public bool? MIA { get; set; } = null;
+        public bool? MIA
+        {
+            get => _rom.ReadBool(Models.Internal.Rom.MIAKey);
+            set => _rom[Models.Internal.Rom.MIAKey] = value;
+        }
 
         [JsonIgnore]
         public bool MIASpecified { get { return MIA != null; } }
@@ -248,8 +305,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// OpenMSX sub item type
         /// </summary>
+        /// <remarks>This is inverted from the internal model</remarks>
         [JsonProperty("original", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("original")]
-        public Original Original { get; set; } = null;
+        public Original? Original { get; set; }
 
         [JsonIgnore]
         public bool OriginalSpecified { get { return Original != null && Original != default; } }
@@ -259,7 +317,11 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         [JsonProperty("openmsx_subtype", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("openmsx_subtype")]
         [JsonConverter(typeof(StringEnumConverter))]
-        public OpenMSXSubType OpenMSXSubType { get; set; }
+        public OpenMSXSubType OpenMSXSubType
+        {
+            get => _rom.ReadString(Models.Internal.Rom.OpenMSXMediaType).AsOpenMSXSubType();
+            set => _rom[Models.Internal.Rom.OpenMSXMediaType] = value.FromOpenMSXSubType();
+        }
 
         [JsonIgnore]
         public bool OpenMSXSubTypeSpecified { get { return OpenMSXSubType != OpenMSXSubType.NULL; } }
@@ -269,19 +331,28 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         /// <remarks>Not related to the subtype above</remarks>
         [JsonProperty("openmsx_type", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("openmsx_type")]
-        public string OpenMSXType { get; set; }
+        public string? OpenMSXType
+        {
+            get => _rom.ReadString(Models.Internal.Rom.OpenMSXType);
+            set => _rom[Models.Internal.Rom.OpenMSXType] = value;
+        }
 
         /// <summary>
         /// Item remark (like a comment)
         /// </summary>
         [JsonProperty("remark", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("remark")]
-        public string Remark { get; set; }
+        public string? Remark
+        {
+            get => _rom.ReadString(Models.Internal.Rom.RemarkKey);
+            set => _rom[Models.Internal.Rom.RemarkKey] = value;
+        }
 
         /// <summary>
         /// Boot state
         /// </summary>
+        /// TODO: Investigate where this value came from?
         [JsonProperty("boot", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("boot")]
-        public string Boot { get; set; }
+        public string? Boot { get; set; }
 
         #endregion
 
@@ -290,8 +361,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Data area information
         /// </summary>
+        /// <remarks>This is inverted from the internal model</remarks>
         [JsonProperty("dataarea", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("dataarea")]
-        public DataArea DataArea { get; set; } = null;
+        public DataArea? DataArea { get; set; } = null;
 
         [JsonIgnore]
         public bool DataAreaSpecified
@@ -311,7 +383,11 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         [JsonProperty("loadflag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("loadflag")]
         [JsonConverter(typeof(StringEnumConverter))]
-        public LoadFlag LoadFlag { get; set; }
+        public LoadFlag LoadFlag
+        {
+            get => _rom.ReadString(Models.Internal.Rom.LoadFlagKey).AsLoadFlag();
+            set => _rom[Models.Internal.Rom.LoadFlagKey] = value.FromLoadFlag();
+        }
 
         [JsonIgnore]
         public bool LoadFlagSpecified { get { return LoadFlag != LoadFlag.NULL; } }
@@ -319,8 +395,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Original hardware part associated with the item
         /// </summary>
+        /// <remarks>This is inverted from the internal model</remarks>
         [JsonProperty("part", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("part")]
-        public Part Part { get; set; } = null;
+        public Part? Part { get; set; } = null;
 
         [JsonIgnore]
         public bool PartSpecified
@@ -337,19 +414,29 @@ namespace SabreTools.DatItems.Formats
         /// SoftwareList value associated with the item
         /// </summary>
         [JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("value")]
-        public string Value { get; set; }
+        public string? Value
+        {
+            get => _rom.ReadString(Models.Internal.Rom.ValueKey);
+            set => _rom[Models.Internal.Rom.ValueKey] = value;
+        }
 
         #endregion
+
+        /// <summary>
+        /// Internal Rom model
+        /// </summary>
+        [JsonIgnore]
+        private Models.Internal.Rom _rom = new();
 
         #endregion // Fields
 
         #region Accessors
 
         /// <inheritdoc/>
-        public override string GetName() => Name;
+        public override string? GetName() => Name;
 
         /// <inheritdoc/>
-        public override void SetName(string name) => Name = name;
+        public override void SetName(string? name) => Name = name;
 
         #endregion
 
@@ -394,13 +481,13 @@ namespace SabreTools.DatItems.Formats
         {
             Name = baseFile.Filename;
             Size = baseFile.Size;
-            _crc = baseFile.CRC;
-            _md5 = baseFile.MD5;
-            _sha1 = baseFile.SHA1;
-            _sha256 = baseFile.SHA256;
-            _sha384 = baseFile.SHA384;
-            _sha512 = baseFile.SHA512;
-            _spamsum = baseFile.SpamSum;
+            CRC = Utilities.ByteArrayToString(baseFile.CRC);
+            MD5 = Utilities.ByteArrayToString(baseFile.MD5);
+            SHA1 = Utilities.ByteArrayToString(baseFile.SHA1);
+            SHA256 = Utilities.ByteArrayToString(baseFile.SHA256);
+            SHA384 = Utilities.ByteArrayToString(baseFile.SHA384);
+            SHA512 = Utilities.ByteArrayToString(baseFile.SHA512);
+            SpamSum = Utilities.ByteArrayToString(baseFile.SpamSum);
 
             ItemType = ItemType.Rom;
             DupeType = 0x00;
@@ -421,42 +508,14 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine.Clone() as Machine,
-                Source = this.Source.Clone() as Source,
+                Machine = this.Machine?.Clone() as Machine,
+                Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                Bios = this.Bios,
-                Size = this.Size,
-                _crc = this._crc,
-                _md5 = this._md5,
-                _sha1 = this._sha1,
-                _sha256 = this._sha256,
-                _sha384 = this._sha384,
-                _sha512 = this._sha512,
-                _spamsum = this._spamsum,
-                MergeTag = this.MergeTag,
-                Region = this.Region,
-                Offset = this.Offset,
-                Date = this.Date,
-                ItemStatus = this.ItemStatus,
-                Optional = this.Optional,
-                Inverted = this.Inverted,
-
-                AltName = this.AltName,
-                AltTitle = this.AltTitle,
-
-                MIA = this.MIA,
-
-                Original = this.Original,
-                OpenMSXSubType = this.OpenMSXSubType,
-                OpenMSXType = this.OpenMSXType,
-                Remark = this.Remark,
-                Boot = this.Boot,
-
+                _rom = this._rom?.Clone() as Models.Internal.Rom ?? new Models.Internal.Rom(),
+            
                 DataArea = this.DataArea,
-                LoadFlag = this.LoadFlag,
                 Part = this.Part,
-                Value = this.Value,
             };
         }
 
@@ -471,13 +530,13 @@ namespace SabreTools.DatItems.Formats
                 Parent = this.Machine?.Name,
                 Date = this.Date,
                 Size = this.Size,
-                CRC = this._crc,
-                MD5 = this._md5,
-                SHA1 = this._sha1,
-                SHA256 = this._sha256,
-                SHA384 = this._sha384,
-                SHA512 = this._sha512,
-                SpamSum = this._spamsum,
+                CRC = Utilities.StringToByteArray(this.CRC),
+                MD5 = Utilities.StringToByteArray(this.MD5),
+                SHA1 = Utilities.StringToByteArray(this.SHA1),
+                SHA256 = Utilities.StringToByteArray(this.SHA256),
+                SHA384 = Utilities.StringToByteArray(this.SHA384),
+                SHA512 = Utilities.StringToByteArray(this.SHA512),
+                SpamSum = Utilities.StringToByteArray(this.SpamSum),
             };
         }
 
@@ -486,38 +545,14 @@ namespace SabreTools.DatItems.Formats
         #region Comparision Methods
 
         /// <inheritdoc/>
-        public override bool Equals(DatItem other)
+        public override bool Equals(DatItem? other)
         {
-            bool dupefound = false;
+            // If we don't have a Rom, return false
+            if (ItemType != other?.ItemType || other is not Rom otherInternal)
+                return false;
 
-            // If we don't have a rom, return false
-            if (ItemType != other.ItemType)
-                return dupefound;
-
-            // Otherwise, treat it as a Rom
-            Rom newOther = other as Rom;
-
-            // If all hashes are empty but they're both nodump and the names match, then they're dupes
-            if ((ItemStatus == ItemStatus.Nodump && newOther.ItemStatus == ItemStatus.Nodump)
-                && Name == newOther.Name
-                && !HasHashes() && !newOther.HasHashes())
-            {
-                dupefound = true;
-            }
-
-            // If we have a file that has no known size, rely on the hashes only
-            else if (Size == null && HashMatch(newOther))
-            {
-                dupefound = true;
-            }
-
-            // Otherwise if we get a partial match
-            else if (Size == newOther.Size && HashMatch(newOther))
-            {
-                dupefound = true;
-            }
-
-            return dupefound;
+            // Compare the internal models
+            return _rom.EqualTo(otherInternal._rom);
         }
 
         /// <summary>
@@ -529,26 +564,26 @@ namespace SabreTools.DatItems.Formats
             if (Size == null && other.Size != null)
                 Size = other.Size;
 
-            if (_crc.IsNullOrEmpty() && !other._crc.IsNullOrEmpty())
-                _crc = other._crc;
+            if (string.IsNullOrWhiteSpace(CRC) && !string.IsNullOrWhiteSpace(other.CRC))
+                CRC = other.CRC;
 
-            if (_md5.IsNullOrEmpty() && !other._md5.IsNullOrEmpty())
-                _md5 = other._md5;
+            if (string.IsNullOrWhiteSpace(MD5) && !string.IsNullOrWhiteSpace(other.MD5))
+                MD5 = other.MD5;
 
-            if (_sha1.IsNullOrEmpty() && !other._sha1.IsNullOrEmpty())
-                _sha1 = other._sha1;
+            if (string.IsNullOrWhiteSpace(SHA1) && !string.IsNullOrWhiteSpace(other.SHA1))
+                SHA1 = other.SHA1;
 
-            if (_sha256.IsNullOrEmpty() && !other._sha256.IsNullOrEmpty())
-                _sha256 = other._sha256;
+            if (string.IsNullOrWhiteSpace(SHA256) && !string.IsNullOrWhiteSpace(other.SHA256))
+                SHA256 = other.SHA256;
 
-            if (_sha384.IsNullOrEmpty() && !other._sha384.IsNullOrEmpty())
-                _sha384 = other._sha384;
+            if (string.IsNullOrWhiteSpace(SHA384) && !string.IsNullOrWhiteSpace(other.SHA384))
+                SHA384 = other.SHA384;
 
-            if (_sha512.IsNullOrEmpty() && !other._sha512.IsNullOrEmpty())
-                _sha512 = other._sha512;
+            if (string.IsNullOrWhiteSpace(SHA512) && !string.IsNullOrWhiteSpace(other.SHA512))
+                SHA512 = other.SHA512;
 
-            if (_spamsum.IsNullOrEmpty() && !other._spamsum.IsNullOrEmpty())
-                _spamsum = other._spamsum;
+            if (string.IsNullOrWhiteSpace(SpamSum) && !string.IsNullOrWhiteSpace(other.SpamSum))
+                SpamSum = other.SpamSum;
         }
 
         /// <summary>
@@ -557,19 +592,19 @@ namespace SabreTools.DatItems.Formats
         /// <returns>String representing the suffix</returns>
         public string GetDuplicateSuffix()
         {
-            if (!_crc.IsNullOrEmpty())
+            if (!string.IsNullOrWhiteSpace(CRC))
                 return $"_{CRC}";
-            else if (!_md5.IsNullOrEmpty())
+            else if (!string.IsNullOrWhiteSpace(MD5))
                 return $"_{MD5}";
-            else if (!_sha1.IsNullOrEmpty())
+            else if (!string.IsNullOrWhiteSpace(SHA1))
                 return $"_{SHA1}";
-            else if (!_sha256.IsNullOrEmpty())
+            else if (!string.IsNullOrWhiteSpace(SHA256))
                 return $"_{SHA256}";
-            else if (!_sha384.IsNullOrEmpty())
+            else if (!string.IsNullOrWhiteSpace(SHA384))
                 return $"_{SHA384}";
-            else if (!_sha512.IsNullOrEmpty())
+            else if (!string.IsNullOrWhiteSpace(SHA512))
                 return $"_{SHA512}";
-            else if (!_spamsum.IsNullOrEmpty())
+            else if (!string.IsNullOrWhiteSpace(SpamSum))
                 return $"_{SpamSum}";
             else
                 return "_1";
@@ -579,72 +614,13 @@ namespace SabreTools.DatItems.Formats
         /// Returns if the Rom contains any hashes
         /// </summary>
         /// <returns>True if any hash exists, false otherwise</returns>
-        public bool HasHashes()
-        {
-            return !_crc.IsNullOrEmpty()
-                || !_md5.IsNullOrEmpty()
-                || !_sha1.IsNullOrEmpty()
-                || !_sha256.IsNullOrEmpty()
-                || !_sha384.IsNullOrEmpty()
-                || !_sha512.IsNullOrEmpty()
-                || !_spamsum.IsNullOrEmpty();
-        }
+        public bool HasHashes() => _rom.HasHashes();
 
         /// <summary>
         /// Returns if all of the hashes are set to their 0-byte values
         /// </summary>
         /// <returns>True if any hash matches the 0-byte value, false otherwise</returns>
-        public bool HasZeroHash()
-        {
-            return (_crc != null && _crc.SequenceEqual(Constants.CRCZeroBytes))
-                || (_md5 != null && _md5.SequenceEqual(Constants.MD5ZeroBytes))
-                || (_sha1 != null && _sha1.SequenceEqual(Constants.SHA1ZeroBytes))
-                || (_sha256 != null && _sha256.SequenceEqual(Constants.SHA256ZeroBytes))
-                || (_sha384 != null && _sha384.SequenceEqual(Constants.SHA384ZeroBytes))
-                || (_sha512 != null && _sha512.SequenceEqual(Constants.SHA512ZeroBytes))
-                || (_spamsum != null && _spamsum.SequenceEqual(Constants.SpamSumZeroBytes));
-        }
-
-        /// <summary>
-        /// Returns if there are no, non-empty hashes in common with another Rom
-        /// </summary>
-        /// <param name="other">Rom to compare against</param>
-        /// <returns>True if at least one hash is not mutually exclusive, false otherwise</returns>
-        private bool HasCommonHash(Rom other)
-        {
-            return !(_crc.IsNullOrEmpty() ^ other._crc.IsNullOrEmpty())
-                || !(_md5.IsNullOrEmpty() ^ other._md5.IsNullOrEmpty())
-                || !(_sha1.IsNullOrEmpty() ^ other._sha1.IsNullOrEmpty())
-                || !(_sha256.IsNullOrEmpty() ^ other._sha256.IsNullOrEmpty())
-                || !(_sha384.IsNullOrEmpty() ^ other._sha384.IsNullOrEmpty())
-                || !(_sha512.IsNullOrEmpty() ^ other._sha512.IsNullOrEmpty())
-                || !(_spamsum.IsNullOrEmpty() ^ other._spamsum.IsNullOrEmpty());
-        }
-
-        /// <summary>
-        /// Returns if any hashes are common with another Rom
-        /// </summary>
-        /// <param name="other">Rom to compare against</param>
-        /// <returns>True if any hashes are in common, false otherwise</returns>
-        private bool HashMatch(Rom other)
-        {
-            // If either have no hashes, we return false, otherwise this would be a false positive
-            if (!HasHashes() || !other.HasHashes())
-                return false;
-
-            // If neither have hashes in common, we return false, otherwise this would be a false positive
-            if (!HasCommonHash(other))
-                return false;
-
-            // Return if all hashes match according to merge rules
-            return ConditionalHashEquals(_crc, other._crc)
-                && ConditionalHashEquals(_md5, other._md5)
-                && ConditionalHashEquals(_sha1, other._sha1)
-                && ConditionalHashEquals(_sha256, other._sha256)
-                && ConditionalHashEquals(_sha384, other._sha384)
-                && ConditionalHashEquals(_sha512, other._sha512)
-                && ConditionalHashEquals(_spamsum, other._spamsum);
-        }
+        public bool HasZeroHash() => _rom.HasZeroHash();
 
         #endregion
 
@@ -654,7 +630,7 @@ namespace SabreTools.DatItems.Formats
         public override string GetKey(ItemKey bucketedBy, bool lower = true, bool norename = true)
         {
             // Set the output key as the default blank string
-            string key;
+            string? key;
 
             // Now determine what the key should be based on the bucketedBy value
             switch (bucketedBy)

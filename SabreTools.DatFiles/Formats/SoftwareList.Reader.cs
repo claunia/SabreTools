@@ -418,7 +418,7 @@ namespace SabreTools.DatFiles.Formats
                     Name = dipswitch.Name,
                     Tag = dipswitch.Tag,
                     Mask = dipswitch.Mask,
-                    Values = CreateSettings(dipswitch.DipValue, machine, filename, indexId),
+                    Values = CreateDipValues(dipswitch.DipValue, machine, filename, indexId),
                     
                     Part = part,
 
@@ -441,16 +441,16 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="machine">Prefilled machine to use</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
-        private static List<Setting>? CreateSettings(Models.SoftwareList.DipValue[]? dipvalues, Machine machine, string filename, int indexId)
+        private static List<DipValue>? CreateDipValues(Models.SoftwareList.DipValue[]? dipvalues, Machine machine, string filename, int indexId)
         {
             // If the feature array is missing, we can't do anything
             if (dipvalues == null || !dipvalues.Any())
                 return null;
 
-            var settings = new List<Setting>();
+            var settings = new List<DipValue>();
             foreach (var dipvalue in dipvalues)
             {
-                var item = new Setting
+                var item = new DipValue
                 {
                     Name = dipvalue.Name,
                     Value = dipvalue.Value,

@@ -232,14 +232,14 @@ namespace SabreTools.DatFiles.Formats
                 // We normalize to all "game"
                 var game = new Models.ClrMamePro.Game
                 {
-                    Name = machine.Name,
-                    Description = machine.Description,
-                    Year = machine.Year,
-                    Manufacturer = machine.Manufacturer,
-                    Category = machine.Category,
-                    CloneOf = machine.CloneOf,
-                    RomOf = machine.RomOf,
-                    SampleOf = machine.SampleOf,
+                    Name = machine?.Name,
+                    Description = machine?.Description,
+                    Year = machine?.Year,
+                    Manufacturer = machine?.Manufacturer,
+                    Category = machine?.Category,
+                    CloneOf = machine?.CloneOf,
+                    RomOf = machine?.RomOf,
+                    SampleOf = machine?.SampleOf,
                 };
 
                 // Create holders for all item types
@@ -535,7 +535,7 @@ namespace SabreTools.DatFiles.Formats
             };
 
             if (item.ControlsSpecified)
-                input.Buttons = item.Controls[0].Buttons?.ToString();
+                input.Buttons = item.Controls![0].Buttons?.ToString();
 
             return input;
         }
@@ -553,9 +553,9 @@ namespace SabreTools.DatFiles.Formats
             if (item.ValuesSpecified)
             {
                 var entries = new List<string>();
-                foreach (var setting in item.Values)
+                foreach (var setting in item.Values!)
                 {
-                    entries.Add(setting.Value);
+                    entries.Add(setting.Value!);
                     if (setting.Default == true)
                         dipswitch.Default = setting.Value;
                 }

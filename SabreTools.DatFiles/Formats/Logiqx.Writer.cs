@@ -303,7 +303,7 @@ namespace SabreTools.DatFiles.Formats
 
                 // Get the first item for game information
                 var machine = items[0].Machine;
-                var game = CreateGame(machine);
+                var game = CreateGame(machine!);
 
                 // Create holders for all item types
                 var releases = new List<Models.Logiqx.Release>();

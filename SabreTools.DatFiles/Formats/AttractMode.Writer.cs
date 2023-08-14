@@ -121,23 +121,23 @@ namespace SabreTools.DatFiles.Formats
         {
             var row = new Models.AttractMode.Row
             {
-                Name = rom.Machine.Name,
-                Title = rom.Machine.Description,
+                Name = rom.Machine?.Name,
+                Title = rom.Machine?.Description,
                 Emulator = Header.FileName,
-                CloneOf = rom.Machine.CloneOf,
-                Year = rom.Machine.Year,
-                Manufacturer = rom.Machine.Manufacturer,
-                Category = rom.Machine.Category,
-                Players = rom.Machine.Players,
-                Rotation = rom.Machine.Rotation,
-                Control = rom.Machine.Control,
-                Status = rom.Machine.Status,
-                DisplayCount = rom.Machine.DisplayCount,
-                DisplayType = rom.Machine.DisplayType,
+                CloneOf = rom.Machine?.CloneOf,
+                Year = rom.Machine?.Year,
+                Manufacturer = rom.Machine?.Manufacturer,
+                Category = rom.Machine?.Category,
+                Players = rom.Machine?.Players,
+                Rotation = rom.Machine?.Rotation,
+                Control = rom.Machine?.Control,
+                Status = rom.Machine?.Status,
+                DisplayCount = rom.Machine?.DisplayCount,
+                DisplayType = rom.Machine?.DisplayType,
                 AltRomname = rom.AltName,
                 AltTitle = rom.AltTitle,
-                Extra = rom.Machine.Comment,
-                Buttons = rom.Machine.Buttons,
+                Extra = rom.Machine?.Comment,
+                Buttons = rom.Machine?.Buttons,
                 // TODO: Add extended fields
             };
             return row;

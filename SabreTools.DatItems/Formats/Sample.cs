@@ -16,17 +16,27 @@ namespace SabreTools.DatItems.Formats
         /// Name of the item
         /// </summary>
         [JsonProperty("name"), XmlElement("name")]
-        public string Name { get; set; }
+        public string? Name
+        {
+            get => _sample.ReadString(Models.Internal.Sample.NameKey);
+            set => _sample[Models.Internal.Sample.NameKey] = value;
+        }
+
+        /// <summary>
+        /// Internal Sample model
+        /// </summary>
+        [JsonIgnore]
+        private Models.Internal.Sample _sample = new();
 
         #endregion
 
         #region Accessors
 
         /// <inheritdoc/>
-        public override string GetName() => Name;
+        public override string? GetName() => Name;
 
         /// <inheritdoc/>
-        public override void SetName(string name) => Name = name;
+        public override void SetName(string? name) => Name = name;
 
         #endregion
 
@@ -53,11 +63,11 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine.Clone() as Machine,
-                Source = this.Source.Clone() as Source,
+                Machine = this.Machine?.Clone() as Machine,
+                Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                Name = this.Name,
+                _sample = this._sample?.Clone() as Models.Internal.Sample ?? new Models.Internal.Sample(),
             };
         }
 
@@ -66,17 +76,14 @@ namespace SabreTools.DatItems.Formats
         #region Comparision Methods
 
         /// <inheritdoc/>
-        public override bool Equals(DatItem other)
+        public override bool Equals(DatItem? other)
         {
-            // If we don't have a sample, return false
-            if (ItemType != other.ItemType)
+            // If we don't have a Sample, return false
+            if (ItemType != other?.ItemType || other is not Sample otherInternal)
                 return false;
 
-            // Otherwise, treat it as a Sample
-            Sample newOther = other as Sample;
-
-            // If the archive information matches
-            return (Name == newOther.Name);
+            // Compare the internal models
+            return _sample.EqualTo(otherInternal._sample);
         }
 
         #endregion

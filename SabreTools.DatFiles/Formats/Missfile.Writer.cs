@@ -63,7 +63,7 @@ namespace SabreTools.DatFiles.Formats
                             WriteDatItem(sw, datItem, lastgame);
 
                         // Set the new data to compare against
-                        lastgame = datItem.Machine.Name;
+                        lastgame = datItem.Machine?.Name;
                     }
                 }
 
@@ -94,8 +94,8 @@ namespace SabreTools.DatFiles.Formats
             // Romba mode automatically uses item name
             if (Header.OutputDepot?.IsActive == true || Header.UseRomName)
                 sw.Write($"{datItem.GetName() ?? string.Empty}\n");
-            else if (!Header.UseRomName && datItem.Machine.Name != lastgame)
-                sw.Write($"{datItem.Machine.Name}\n");
+            else if (!Header.UseRomName && datItem.Machine?.Name != lastgame)
+                sw.Write($"{datItem.Machine?.Name ?? string.Empty}\n");
 
             sw.Flush();
         }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
@@ -19,25 +20,41 @@ namespace SabreTools.DatItems.Formats
         /// Name of the item
         /// </summary>
         [JsonProperty("name"), XmlElement("name")]
-        public string Name { get; set; }
+        public string? Name
+        {
+            get => _dipSwitch.ReadString(Models.Internal.DipSwitch.NameKey);
+            set => _dipSwitch[Models.Internal.DipSwitch.NameKey] = value;
+        }
 
         /// <summary>
         /// Tag associated with the dipswitch
         /// </summary>
         [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tag")]
-        public string Tag { get; set; }
+        public string? Tag
+        {
+            get => _dipSwitch.ReadString(Models.Internal.DipSwitch.TagKey);
+            set => _dipSwitch[Models.Internal.DipSwitch.TagKey] = value;
+        }
 
         /// <summary>
         /// Mask associated with the dipswitch
         /// </summary>
         [JsonProperty("mask", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("mask")]
-        public string Mask { get; set; }
+        public string? Mask
+        {
+            get => _dipSwitch.ReadString(Models.Internal.DipSwitch.MaskKey);
+            set => _dipSwitch[Models.Internal.DipSwitch.MaskKey] = value;
+        }
 
         /// <summary>
         /// Conditions associated with the dipswitch
         /// </summary>
         [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("conditions")]
-        public List<Condition> Conditions { get; set; }
+        public List<Condition>? Conditions
+        {
+            get => _dipSwitch.Read<Condition[]>(Models.Internal.DipSwitch.ConditionKey)?.ToList();
+            set => _dipSwitch[Models.Internal.DipSwitch.ConditionKey] = value?.ToArray();
+        }
 
         [JsonIgnore]
         public bool ConditionsSpecified { get { return Conditions != null && Conditions.Count > 0; } }
@@ -46,7 +63,11 @@ namespace SabreTools.DatItems.Formats
         /// Locations associated with the dipswitch
         /// </summary>
         [JsonProperty("locations", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("locations")]
-        public List<Location> Locations { get; set; }
+        public List<DipLocation>? Locations
+        {
+            get => _dipSwitch.Read<DipLocation[]>(Models.Internal.DipSwitch.DipLocationKey)?.ToList();
+            set => _dipSwitch[Models.Internal.DipSwitch.DipLocationKey] = value?.ToArray();
+        }
 
         [JsonIgnore]
         public bool LocationsSpecified { get { return Locations != null && Locations.Count > 0; } }
@@ -55,7 +76,11 @@ namespace SabreTools.DatItems.Formats
         /// Settings associated with the dipswitch
         /// </summary>
         [JsonProperty("values", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("values")]
-        public List<Setting> Values { get; set; }
+        public List<DipValue>? Values
+        {
+            get => _dipSwitch.Read<DipValue[]>(Models.Internal.DipSwitch.DipValueKey)?.ToList();
+            set => _dipSwitch[Models.Internal.DipSwitch.DipValueKey] = value?.ToArray();
+        }
 
         [JsonIgnore]
         public bool ValuesSpecified { get { return Values != null && Values.Count > 0; } }
@@ -67,8 +92,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Original hardware part associated with the item
         /// </summary>
+        /// <remarks>This is inverted from the internal model</remarks>
         [JsonProperty("part", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("part")]
-        public Part Part { get; set; } = null;
+        public Part? Part { get; set; }
 
         [JsonIgnore]
         public bool PartSpecified
@@ -83,15 +109,21 @@ namespace SabreTools.DatItems.Formats
 
         #endregion
 
+        /// <summary>
+        /// Internal DipSwitch model
+        /// </summary>
+        [JsonIgnore]
+        private Models.Internal.DipSwitch _dipSwitch = new();
+
         #endregion // Fields
 
         #region Accessors
 
         /// <inheritdoc/>
-        public override string GetName() => Name;
+        public override string? GetName() => Name;
 
         /// <inheritdoc/>
-        public override void SetName(string name) => Name = name;
+        public override void SetName(string? name) => Name = name;
 
         #endregion
 
@@ -118,16 +150,11 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine.Clone() as Machine,
-                Source = this.Source.Clone() as Source,
+                Machine = this.Machine?.Clone() as Machine,
+                Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                Name = this.Name,
-                Tag = this.Tag,
-                Mask = this.Mask,
-                Conditions = this.Conditions,
-                Locations = this.Locations,
-                Values = this.Values,
+                _dipSwitch = this._dipSwitch?.Clone() as Models.Internal.DipSwitch ?? new Models.Internal.DipSwitch(),
 
                 Part = this.Part,
             };
@@ -138,54 +165,14 @@ namespace SabreTools.DatItems.Formats
         #region Comparision Methods
 
         /// <inheritdoc/>
-        public override bool Equals(DatItem other)
+        public override bool Equals(DatItem? other)
         {
             // If we don't have a DipSwitch, return false
-            if (ItemType != other.ItemType)
+            if (ItemType != other?.ItemType || other is not DipSwitch otherInternal)
                 return false;
 
-            // Otherwise, treat it as a DipSwitch
-            DipSwitch newOther = other as DipSwitch;
-
-            // If the DipSwitch information matches
-            bool match = (Name == newOther.Name
-                && Tag == newOther.Tag
-                && Mask == newOther.Mask);
-            if (!match)
-                return match;
-
-            // If the part matches
-            if (PartSpecified)
-                match &= (Part == newOther.Part);
-
-            // If the conditions match
-            if (ConditionsSpecified)
-            {
-                foreach (Condition condition in Conditions)
-                {
-                    match &= newOther.Conditions.Contains(condition);
-                }
-            }
-
-            // If the locations match
-            if (LocationsSpecified)
-            {
-                foreach (Location location in Locations)
-                {
-                    match &= newOther.Locations.Contains(location);
-                }
-            }
-
-            // If the values match
-            if (ValuesSpecified)
-            {
-                foreach (Setting value in Values)
-                {
-                    match &= newOther.Values.Contains(value);
-                }
-            }
-
-            return match;
+            // Compare the internal models
+            return _dipSwitch.EqualTo(otherInternal._dipSwitch);
         }
 
         #endregion

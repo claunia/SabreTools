@@ -2,15 +2,14 @@
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
-
+using NaturalSort;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems.Formats;
 using SabreTools.FileTypes;
 using SabreTools.Logging;
-using NaturalSort;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace SabreTools.DatItems
 {
@@ -29,11 +28,15 @@ namespace SabreTools.DatItems
     [XmlInclude(typeof(Chip))]
     [XmlInclude(typeof(Condition))]
     [XmlInclude(typeof(Configuration))]
+    [XmlInclude(typeof(ConfLocation))]
+    [XmlInclude(typeof(ConfSetting))]
     [XmlInclude(typeof(Control))]
     [XmlInclude(typeof(DataArea))]
     [XmlInclude(typeof(Device))]
     [XmlInclude(typeof(DeviceReference))]
+    [XmlInclude(typeof(DipLocation))]
     [XmlInclude(typeof(DipSwitch))]
+    [XmlInclude(typeof(DipValue))]
     [XmlInclude(typeof(Disk))]
     [XmlInclude(typeof(DiskArea))]
     [XmlInclude(typeof(Display))]
@@ -43,7 +46,6 @@ namespace SabreTools.DatItems
     [XmlInclude(typeof(Info))]
     [XmlInclude(typeof(Input))]
     [XmlInclude(typeof(Instance))]
-    [XmlInclude(typeof(Location))]
     [XmlInclude(typeof(Media))]
     [XmlInclude(typeof(Part))]
     [XmlInclude(typeof(PartFeature))]
@@ -52,7 +54,6 @@ namespace SabreTools.DatItems
     [XmlInclude(typeof(Release))]
     [XmlInclude(typeof(Rom))]
     [XmlInclude(typeof(Sample))]
-    [XmlInclude(typeof(Setting))]
     [XmlInclude(typeof(SharedFeature))]
     [XmlInclude(typeof(Slot))]
     [XmlInclude(typeof(SlotOption))]
@@ -86,7 +87,7 @@ namespace SabreTools.DatItems
         /// Machine values
         /// </summary>
         [JsonIgnore, XmlIgnore]
-        public Machine Machine { get; set; } = new Machine();
+        public Machine? Machine { get; set; } = new Machine();
 
         #endregion
 
@@ -96,7 +97,7 @@ namespace SabreTools.DatItems
         /// Source information
         /// </summary>
         [JsonIgnore, XmlIgnore]
-        public Source Source { get; set; } = new Source();
+        public Source? Source { get; set; } = new Source();
 
         /// <summary>
         /// Flag if item should be removed
@@ -132,13 +133,13 @@ namespace SabreTools.DatItems
         /// Gets the name to use for a DatItem
         /// </summary>
         /// <returns>Name if available, null otherwise</returns>
-        public virtual string GetName() => null;
+        public virtual string? GetName() => null;
 
         /// <summary>
         /// Sets the name to use for a DatItem
         /// </summary>
         /// <param name="name">Name to set for the item</param>
-        public virtual void SetName(string name) { }
+        public virtual void SetName(string? name) { }
 
         #endregion
 
@@ -169,8 +170,10 @@ namespace SabreTools.DatItems
                 ItemType.Chip => new Chip(),
                 ItemType.Condition => new Condition(),
                 ItemType.Configuration => new Configuration(),
+                ItemType.ConfLocation => new ConfLocation(),
                 ItemType.Device => new Device(),
                 ItemType.DeviceReference => new DeviceReference(),
+                ItemType.DipLocation => new DipLocation(),
                 ItemType.DipSwitch => new DipSwitch(),
                 ItemType.Disk => new Disk(),
                 ItemType.Display => new Display(),
@@ -180,7 +183,6 @@ namespace SabreTools.DatItems
                 ItemType.File => new Formats.File(),
                 ItemType.Info => new Info(),
                 ItemType.Instance => new Instance(),
-                ItemType.Location => new Location(),
                 ItemType.Media => new Media(),
                 ItemType.PartFeature => new PartFeature(),
                 ItemType.Port => new Port(),
@@ -205,7 +207,7 @@ namespace SabreTools.DatItems
         /// </summary>
         /// <param name="baseFile">BaseFile containing information to be created</param>
         /// <returns>DatItem of the specific internal type that corresponds to the inputs</returns>
-        public static DatItem Create(BaseFile baseFile)
+        public static DatItem? Create(BaseFile baseFile)
         {
             return baseFile.Type switch
             {
@@ -265,14 +267,14 @@ namespace SabreTools.DatItems
         #region Comparision Methods
 
         /// <inheritdoc/>
-        public int CompareTo(DatItem other)
+        public int CompareTo(DatItem? other)
         {
             try
             {
-                if (GetName() == other.GetName())
+                if (GetName() == other?.GetName())
                     return Equals(other) ? 0 : 1;
 
-                return string.Compare(GetName(), other.GetName());
+                return string.Compare(GetName(), other?.GetName());
             }
             catch
             {
@@ -285,14 +287,14 @@ namespace SabreTools.DatItems
         /// </summary>
         /// <param name="other">DatItem to use as a baseline</param>
         /// <returns>True if the items are duplicates, false otherwise</returns>
-        public abstract bool Equals(DatItem other);
+        public abstract bool Equals(DatItem? other);
 
         /// <summary>
         /// Return the duplicate status of two items
         /// </summary>
         /// <param name="lastItem">DatItem to check against</param>
         /// <returns>The DupeType corresponding to the relationship between the two</returns>
-        public DupeType GetDuplicateStatus(DatItem lastItem)
+        public DupeType GetDuplicateStatus(DatItem? lastItem)
         {
             DupeType output = 0x00;
 
@@ -301,9 +303,9 @@ namespace SabreTools.DatItems
                 return output;
 
             // If the duplicate is external already or should be, set it
-            if (lastItem.DupeType.HasFlag(DupeType.External) || lastItem.Source.Index != Source.Index)
+            if (lastItem.DupeType.HasFlag(DupeType.External) || lastItem?.Source?.Index != Source?.Index)
             {
-                if (lastItem.Machine.Name == Machine.Name && lastItem.GetName() == GetName())
+                if (lastItem?.Machine?.Name == Machine?.Name && lastItem?.GetName() == GetName())
                     output = DupeType.External | DupeType.All;
                 else
                     output = DupeType.External | DupeType.Hash;
@@ -312,120 +314,13 @@ namespace SabreTools.DatItems
             // Otherwise, it's considered an internal dupe
             else
             {
-                if (lastItem.Machine.Name == Machine.Name && lastItem.GetName() == GetName())
+                if (lastItem?.Machine?.Name == Machine?.Name && lastItem?.GetName() == GetName())
                     output = DupeType.Internal | DupeType.All;
                 else
                     output = DupeType.Internal | DupeType.Hash;
             }
 
             return output;
-        }
-
-        #endregion
-
-        #region Filtering
-
-        /// <summary>
-        /// Clean a CRC32 string and pad to the correct size
-        /// </summary>
-        /// <param name="hash">Hash string to sanitize</param>
-        /// <returns>Cleaned string</returns>
-        protected static string CleanCRC32(string hash)
-        {
-            return CleanHashData(hash, Constants.CRCLength);
-        }
-
-        /// <summary>
-        /// Clean a MD5 string and pad to the correct size
-        /// </summary>
-        /// <param name="hash">Hash string to sanitize</param>
-        /// <returns>Cleaned string</returns>
-        protected static string CleanMD5(string hash)
-        {
-            return CleanHashData(hash, Constants.MD5Length);
-        }
-
-        /// <summary>
-        /// Clean a SHA1 string and pad to the correct size
-        /// </summary>
-        /// <param name="hash">Hash string to sanitize</param>
-        /// <returns>Cleaned string</returns>
-        protected static string CleanSHA1(string hash)
-        {
-            return CleanHashData(hash, Constants.SHA1Length);
-        }
-
-        /// <summary>
-        /// Clean a SHA256 string and pad to the correct size
-        /// </summary>
-        /// <param name="hash">Hash string to sanitize</param>
-        /// <returns>Cleaned string</returns>
-        protected static string CleanSHA256(string hash)
-        {
-            return CleanHashData(hash, Constants.SHA256Length);
-        }
-
-        /// <summary>
-        /// Clean a SHA384 string and pad to the correct size
-        /// </summary>
-        /// <param name="hash">Hash string to sanitize</param>
-        /// <returns>Cleaned string</returns>
-        protected static string CleanSHA384(string hash)
-        {
-            return CleanHashData(hash, Constants.SHA384Length);
-        }
-
-        /// <summary>
-        /// Clean a SHA512 string and pad to the correct size
-        /// </summary>
-        /// <param name="hash">Hash string to sanitize</param>
-        /// <returns>Cleaned string</returns>
-        protected static string CleanSHA512(string hash)
-        {
-            return CleanHashData(hash, Constants.SHA512Length);
-        }
-
-        /// <summary>
-        /// Clean a hash string and pad to the correct size
-        /// </summary>
-        /// <param name="hash">Hash string to sanitize</param>
-        /// <param name="padding">Amount of characters to pad to</param>
-        /// <returns>Cleaned string</returns>
-        private static string CleanHashData(string hash, int padding)
-        {
-            // If we have a known blank hash, return blank
-            if (string.IsNullOrWhiteSpace(hash) || hash == "-" || hash == "_")
-                return string.Empty;
-
-            // Check to see if it's a "hex" hash
-            hash = hash.Trim().Replace("0x", string.Empty);
-
-            // If we have a blank hash now, return blank
-            if (string.IsNullOrWhiteSpace(hash))
-                return string.Empty;
-
-            // If the hash shorter than the required length, pad it
-            if (hash.Length < padding)
-                hash = hash.PadLeft(padding, '0');
-
-            // If the hash is longer than the required length, it's invalid
-            else if (hash.Length > padding)
-                return string.Empty;
-
-            // Now normalize the hash
-            hash = hash.ToLowerInvariant();
-
-            // Otherwise, make sure that every character is a proper match
-            for (int i = 0; i < hash.Length; i++)
-            {
-                if ((hash[i] < '0' || hash[i] > '9') && (hash[i] < 'a' || hash[i] > 'f'))
-                {
-                    hash = string.Empty;
-                    break;
-                }
-            }
-
-            return hash;
         }
 
         #endregion
@@ -453,9 +348,9 @@ namespace SabreTools.DatItems
 
                 case ItemKey.Machine:
                     key = (norename ? string.Empty
-                        : Source.Index.ToString().PadLeft(10, '0')
+                        : Source?.Index.ToString().PadLeft(10, '0')
                             + "-")
-                    + (string.IsNullOrWhiteSpace(Machine.Name)
+                    + (string.IsNullOrWhiteSpace(Machine?.Name)
                             ? "Default"
                             : Machine.Name);
                     if (lower)
@@ -510,14 +405,14 @@ namespace SabreTools.DatItems
         /// <param name="firstHash">First hash to compare</param>
         /// <param name="secondHash">Second hash to compare</param>
         /// <returns>True if either is empty OR the hashes exactly match, false otherwise</returns>
-        public static bool ConditionalHashEquals(byte[] firstHash, byte[] secondHash)
+        public static bool ConditionalHashEquals(byte[]? firstHash, byte[]? secondHash)
         {
             // If either hash is empty, we say they're equal for merging
             if (firstHash.IsNullOrEmpty() || secondHash.IsNullOrEmpty())
                 return true;
 
             // If they're different sizes, they can't match
-            if (firstHash.Length != secondHash.Length)
+            if (firstHash!.Length != secondHash!.Length)
                 return false;
 
             // Otherwise, they need to match exactly
@@ -556,13 +451,13 @@ namespace SabreTools.DatItems
                 }
 
                 // If it's a nodump, add and skip
-                if (file.ItemType == ItemType.Rom && (file as Rom).ItemStatus == ItemStatus.Nodump)
+                if (file is Rom rom && rom.ItemStatus == ItemStatus.Nodump)
                 {
                     outfiles.Add(file);
                     nodumpCount++;
                     continue;
                 }
-                else if (file.ItemType == ItemType.Disk && (file as Disk).ItemStatus == ItemStatus.Nodump)
+                else if (file is Disk disk && disk.ItemStatus == ItemStatus.Nodump)
                 {
                     outfiles.Add(file);
                     nodumpCount++;
@@ -593,19 +488,19 @@ namespace SabreTools.DatItems
                         pos = i;
 
                         // Disks, Media, and Roms have more information to fill
-                        if (file.ItemType == ItemType.Disk)
-                            (saveditem as Disk).FillMissingInformation(file as Disk);
-                        else if (file.ItemType == ItemType.File)
-                            (saveditem as Formats.File).FillMissingInformation(file as Formats.File);
-                        else if (file.ItemType == ItemType.Media)
-                            (saveditem as Media).FillMissingInformation(file as Media);
-                        else if (file.ItemType == ItemType.Rom)
-                            (saveditem as Rom).FillMissingInformation(file as Rom);
+                        if (file is Disk disk && saveditem is Disk savedDisk)
+                            savedDisk.FillMissingInformation(disk);
+                        else if (file is Formats.File fileItem && saveditem is Formats.File savedFile)
+                            savedFile.FillMissingInformation(fileItem);
+                        else if (file is Media media && saveditem is Media savedMedia)
+                            savedMedia.FillMissingInformation(media);
+                        else if (file is Rom romItem && saveditem is Rom savedRom)
+                            savedRom.FillMissingInformation(romItem);
 
                         saveditem.DupeType = dupetype;
 
                         // If the current system has a lower ID than the previous, set the system accordingly
-                        if (file.Source.Index < saveditem.Source.Index)
+                        if (file.Source?.Index < saveditem.Source?.Index)
                         {
                             saveditem.Source = file.Source.Clone() as Source;
                             saveditem.CopyMachineInformation(file);
@@ -613,7 +508,7 @@ namespace SabreTools.DatItems
                         }
 
                         // If the current machine is a child of the new machine, use the new machine instead
-                        if (saveditem.Machine.CloneOf == file.Machine.Name || saveditem.Machine.RomOf == file.Machine.Name)
+                        if (saveditem.Machine?.CloneOf == file.Machine?.Name || saveditem.Machine?.RomOf == file.Machine?.Name)
                         {
                             saveditem.CopyMachineInformation(file);
                             saveditem.SetName(file.GetName());
@@ -654,8 +549,8 @@ namespace SabreTools.DatItems
             Sort(ref infiles, true);
 
             // Now we want to loop through and check names
-            DatItem lastItem = null;
-            string lastrenamed = null;
+            DatItem? lastItem = null;
+            string? lastrenamed = null;
             int lastid = 0;
             for (int i = 0; i < infiles.Count; i++)
             {
@@ -735,16 +630,14 @@ namespace SabreTools.DatItems
         /// </summary>
         private static string GetDuplicateSuffix(DatItem datItem)
         {
-            if (datItem.ItemType == ItemType.Disk)
-                return (datItem as Disk).GetDuplicateSuffix();
-            else if (datItem.ItemType == ItemType.File)
-                return (datItem as Formats.File).GetDuplicateSuffix();
-            else if (datItem.ItemType == ItemType.Media)
-                return (datItem as Media).GetDuplicateSuffix();
-            else if (datItem.ItemType == ItemType.Rom)
-                return (datItem as Rom).GetDuplicateSuffix();
-
-            return "_1";
+            return datItem switch
+            {
+                Disk disk => disk.GetDuplicateSuffix(),
+                Formats.File file => file.GetDuplicateSuffix(),
+                Media media => media.GetDuplicateSuffix(),
+                Rom rom => rom.GetDuplicateSuffix(),
+                _ => "_1",
+            };
         }
 
         /// <summary>
@@ -762,23 +655,23 @@ namespace SabreTools.DatItems
                     NaturalComparer nc = new();
 
                     // If machine names match, more refinement is needed
-                    if (x.Machine.Name == y.Machine.Name)
+                    if (x.Machine?.Name == y.Machine?.Name)
                     {
                         // If item types match, more refinement is needed
                         if (x.ItemType == y.ItemType)
                         {
-                            string xDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty));
-                            string yDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty));
+                            string? xDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty));
+                            string? yDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty));
 
                             // If item directory names match, more refinement is needed
                             if (xDirectoryName == yDirectoryName)
                             {
-                                string xName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty));
-                                string yName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty));
+                                string? xName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty));
+                                string? yName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty));
 
                                 // If item names match, then compare on machine or source, depending on the flag
                                 if (xName == yName)
-                                    return (norename ? nc.Compare(x.Machine.Name, y.Machine.Name) : x.Source.Index - y.Source.Index);
+                                    return (norename ? nc.Compare(x.Machine?.Name, y.Machine?.Name) : (x.Source?.Index - y.Source?.Index) ?? 0);
 
                                 // Otherwise, just sort based on item names
                                 return nc.Compare(xName, yName);
@@ -793,7 +686,7 @@ namespace SabreTools.DatItems
                     }
 
                     // Otherwise, just sort based on machine name
-                    return nc.Compare(x.Machine.Name, y.Machine.Name);
+                    return nc.Compare(x.Machine?.Name, y.Machine?.Name);
                 }
                 catch
                 {

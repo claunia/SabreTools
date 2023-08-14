@@ -16,23 +16,37 @@ namespace SabreTools.DatItems.Formats
         /// Name of the item
         /// </summary>
         [JsonProperty("name"), XmlElement("name")]
-        public string Name { get; set; }
+        public string? Name
+        {
+            get => _instance.ReadString(Models.Internal.Instance.NameKey);
+            set => _instance[Models.Internal.Instance.NameKey] = value;
+        }
 
         /// <summary>
         /// Short name for the instance
         /// </summary>
         [JsonProperty("briefname", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("briefname")]
-        public string BriefName { get; set; }
+        public string? BriefName
+        {
+            get => _instance.ReadString(Models.Internal.Instance.BriefNameKey);
+            set => _instance[Models.Internal.Instance.BriefNameKey] = value;
+        }
+
+        /// <summary>
+        /// Internal Instance model
+        /// </summary>
+        [JsonIgnore]
+        private Models.Internal.Instance _instance = new();
 
         #endregion
 
         #region Accessors
 
         /// <inheritdoc/>
-        public override string GetName() => Name;
+        public override string? GetName() => Name;
 
         /// <inheritdoc/>
-        public override void SetName(string name) => Name = name;
+        public override void SetName(string? name) => Name = name;
 
         #endregion
 
@@ -59,12 +73,11 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine.Clone() as Machine,
-                Source = this.Source.Clone() as Source,
+                Machine = this.Machine?.Clone() as Machine,
+                Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                Name = this.Name,
-                BriefName = this.BriefName,
+                _instance = this._instance?.Clone() as Models.Internal.Instance ?? new Models.Internal.Instance(),
             };
         }
 
@@ -73,18 +86,14 @@ namespace SabreTools.DatItems.Formats
         #region Comparision Methods
 
         /// <inheritdoc/>
-        public override bool Equals(DatItem other)
+        public override bool Equals(DatItem? other)
         {
             // If we don't have a Instance, return false
-            if (ItemType != other.ItemType)
+            if (ItemType != other?.ItemType || other is not Instance otherInternal)
                 return false;
 
-            // Otherwise, treat it as a Instance
-            Instance newOther = other as Instance;
-
-            // If the Instance information matches
-            return (Name == newOther.Name
-                && BriefName == newOther.BriefName);
+            // Compare the internal models
+            return _instance.EqualTo(otherInternal._instance);
         }
 
         #endregion

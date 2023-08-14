@@ -41,7 +41,7 @@ namespace SabreTools.DatFiles.Formats
                     }
                     else
                     {
-                        if (string.IsNullOrWhiteSpace(dipSwitch.Part.Name))
+                        if (string.IsNullOrWhiteSpace(dipSwitch.Part!.Name))
                             missingFields.Add(DatItemField.Part_Name);
                         if (string.IsNullOrWhiteSpace(dipSwitch.Part.Interface))
                             missingFields.Add(DatItemField.Part_Interface);
@@ -54,9 +54,9 @@ namespace SabreTools.DatFiles.Formats
                         missingFields.Add(DatItemField.Mask);
                     if (dipSwitch.ValuesSpecified)
                     {
-                        if (dipSwitch.Values.Any(dv => string.IsNullOrWhiteSpace(dv.Name)))
+                        if (dipSwitch.Values!.Any(dv => string.IsNullOrWhiteSpace(dv.Name)))
                             missingFields.Add(DatItemField.Part_Feature_Name);
-                        if (dipSwitch.Values.Any(dv => string.IsNullOrWhiteSpace(dv.Value)))
+                        if (dipSwitch.Values!.Any(dv => string.IsNullOrWhiteSpace(dv.Value)))
                             missingFields.Add(DatItemField.Part_Feature_Value);
                     }
 
@@ -70,7 +70,7 @@ namespace SabreTools.DatFiles.Formats
                     }
                     else
                     {
-                        if (string.IsNullOrWhiteSpace(disk.Part.Name))
+                        if (string.IsNullOrWhiteSpace(disk.Part!.Name))
                             missingFields.Add(DatItemField.Part_Name);
                         if (string.IsNullOrWhiteSpace(disk.Part.Interface))
                             missingFields.Add(DatItemField.Part_Interface);
@@ -81,7 +81,7 @@ namespace SabreTools.DatFiles.Formats
                     }
                     else
                     {
-                        if (string.IsNullOrWhiteSpace(disk.DiskArea.Name))
+                        if (string.IsNullOrWhiteSpace(disk.DiskArea!.Name))
                             missingFields.Add(DatItemField.AreaName);
                     }
                     if (string.IsNullOrWhiteSpace(disk.Name))
@@ -101,7 +101,7 @@ namespace SabreTools.DatFiles.Formats
                     }
                     else
                     {
-                        if (string.IsNullOrWhiteSpace(rom.Part.Name))
+                        if (string.IsNullOrWhiteSpace(rom.Part!.Name))
                             missingFields.Add(DatItemField.Part_Name);
                         if (string.IsNullOrWhiteSpace(rom.Part.Interface))
                             missingFields.Add(DatItemField.Part_Interface);
@@ -113,7 +113,7 @@ namespace SabreTools.DatFiles.Formats
                     }
                     else
                     {
-                        if (string.IsNullOrWhiteSpace(rom.DataArea.Name))
+                        if (string.IsNullOrWhiteSpace(rom.DataArea!.Name))
                             missingFields.Add(DatItemField.AreaName);
                         if (!rom.DataArea.SizeSpecified)
                             missingFields.Add(DatItemField.AreaSize);
@@ -197,7 +197,7 @@ namespace SabreTools.DatFiles.Formats
 
                 // Get the first item for game information
                 var machine = items[0].Machine;
-                var sw = CreateSoftware(machine);
+                var sw = CreateSoftware(machine!);
 
                 // Create holders for all item types
                 var infos = new List<Models.SoftwareList.Info>();
@@ -304,9 +304,9 @@ namespace SabreTools.DatFiles.Formats
         {
             var part = new Models.SoftwareList.Part
             {
-                Name = item.Part.Name,
-                Interface = item.Part.Interface,
-                Feature = CreateFeatures(item.Part.Features),
+                Name = item.Part?.Name,
+                Interface = item.Part?.Interface,
+                Feature = CreateFeatures(item.Part?.Features),
                 DataArea = CreateDataAreas(item),
                 DiskArea = null,
                 DipSwitch = null,
@@ -321,9 +321,9 @@ namespace SabreTools.DatFiles.Formats
         {
             var part = new Models.SoftwareList.Part
             {
-                Name = item.Part.Name,
-                Interface = item.Part.Interface,
-                Feature = CreateFeatures(item.Part.Features),
+                Name = item.Part?.Name,
+                Interface = item.Part?.Interface,
+                Feature = CreateFeatures(item.Part?.Features),
                 DataArea = null,
                 DiskArea = CreateDiskAreas(item),
                 DipSwitch = null,
@@ -338,9 +338,9 @@ namespace SabreTools.DatFiles.Formats
         {
             var part = new Models.SoftwareList.Part
             {
-                Name = item.Part.Name,
-                Interface = item.Part.Interface,
-                Feature = CreateFeatures(item.Part.Features),
+                Name = item.Part?.Name,
+                Interface = item.Part?.Interface,
+                Feature = CreateFeatures(item.Part?.Features),
                 DataArea = null,
                 DiskArea = null,
                 DipSwitch = CreateDipSwitches(item),
@@ -351,7 +351,7 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         /// Create a Feature array from the current list of PartFeature DatItems
         /// <summary>
-        private static Models.SoftwareList.Feature[]? CreateFeatures(List<PartFeature> items)
+        private static Models.SoftwareList.Feature[]? CreateFeatures(List<PartFeature>? items)
         {
             // If we don't have features, we can't do anything
             if (items == null || !items.Any())
@@ -378,10 +378,10 @@ namespace SabreTools.DatFiles.Formats
         {
             var dataArea = new Models.SoftwareList.DataArea
             {
-                Name = item.DataArea.Name,
-                Size = item.DataArea.Size?.ToString(),
-                Width = item.DataArea.Width?.ToString(),
-                Endianness = item.DataArea.Endianness.FromEndianness(),
+                Name = item.DataArea?.Name,
+                Size = item.DataArea?.Size?.ToString(),
+                Width = item.DataArea?.Width?.ToString(),
+                Endianness = item.DataArea?.Endianness.FromEndianness(),
                 Rom = CreateRom(item),
             };
             return new Models.SoftwareList.DataArea[] { dataArea };
@@ -441,7 +441,7 @@ namespace SabreTools.DatFiles.Formats
         private static Models.SoftwareList.DipSwitch[]? CreateDipSwitches(DipSwitch item)
         {
             var dipValues = new List<Models.SoftwareList.DipValue>();
-            foreach (var setting in item.Values ?? new List<Setting>())
+            foreach (var setting in item.Values ?? new List<DipValue>())
             {
                 var dipValue = new Models.SoftwareList.DipValue
                 {

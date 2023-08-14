@@ -13,6 +13,9 @@ namespace SabreTools.Models.Listxml
         [XmlAttribute("default")]
         public string? Default { get; set; }
 
+        [XmlText]
+        public string? Content { get; set; }
+
         #region DO NOT USE IN PRODUCTION
 
         /// <remarks>Should be empty</remarks>

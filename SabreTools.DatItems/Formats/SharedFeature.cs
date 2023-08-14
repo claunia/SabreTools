@@ -16,23 +16,37 @@ namespace SabreTools.DatItems.Formats
         /// Name of the item
         /// </summary>
         [JsonProperty("name"), XmlElement("name")]
-        public string Name { get; set; }
+        public string? Name
+        {
+            get => _sharedFeat.ReadString(Models.Internal.SharedFeat.NameKey);
+            set => _sharedFeat[Models.Internal.SharedFeat.NameKey] = value;
+        }
 
         /// <summary>
         /// SharedFeature value
         /// </summary>
         [JsonProperty("value"), XmlElement("value")]
-        public string Value { get; set; }
+        public string? Value
+        {
+            get => _sharedFeat.ReadString(Models.Internal.SharedFeat.ValueKey);
+            set => _sharedFeat[Models.Internal.SharedFeat.ValueKey] = value;
+        }
+
+        /// <summary>
+        /// Internal SharedFeat model
+        /// </summary>
+        [JsonIgnore]
+        private Models.Internal.SharedFeat _sharedFeat = new();
 
         #endregion
 
         #region Accessors
 
         /// <inheritdoc/>
-        public override string GetName() => Name;
+        public override string? GetName() => Name;
 
         /// <inheritdoc/>
-        public override void SetName(string name) => Name = name;
+        public override void SetName(string? name) => Name = name;
 
         #endregion
 
@@ -59,12 +73,11 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine.Clone() as Machine,
-                Source = this.Source.Clone() as Source,
+                Machine = this.Machine?.Clone() as Machine,
+                Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                Name = this.Name,
-                Value = this.Value,
+                _sharedFeat = this._sharedFeat?.Clone() as Models.Internal.SharedFeat ?? new Models.Internal.SharedFeat(),
             };
         }
 
@@ -73,18 +86,14 @@ namespace SabreTools.DatItems.Formats
         #region Comparision Methods
 
         /// <inheritdoc/>
-        public override bool Equals(DatItem other)
+        public override bool Equals(DatItem? other)
         {
-            // If we don't have a sample, return false
-            if (ItemType != other.ItemType)
+            // If we don't have a SharedFeature, return false
+            if (ItemType != other?.ItemType || other is not SharedFeature otherInternal)
                 return false;
 
-            // Otherwise, treat it as a SharedFeature
-            SharedFeature newOther = other as SharedFeature;
-
-            // If the archive information matches
-            return (Name == newOther.Name
-                && Value == newOther.Value);
+            // Compare the internal models
+            return _sharedFeat.EqualTo(otherInternal._sharedFeat);
         }
 
         #endregion

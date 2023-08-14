@@ -235,6 +235,12 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Configuration:
                         datItem = datItemObj.ToObject<Configuration>();
                         break;
+                    case ItemType.ConfLocation:
+                        datItem = datItemObj.ToObject<ConfLocation>();
+                        break;
+                    case ItemType.ConfSetting:
+                        datItem = datItemObj.ToObject<ConfSetting>();
+                        break;
                     case ItemType.Control:
                         datItem = datItemObj.ToObject<Control>();
                         break;
@@ -246,6 +252,12 @@ namespace SabreTools.DatFiles.Formats
                         break;
                     case ItemType.DeviceReference:
                         datItem = datItemObj.ToObject<DeviceReference>();
+                        break;
+                    case ItemType.DipLocation:
+                        datItem = datItemObj.ToObject<DipLocation>();
+                        break;
+                    case ItemType.DipValue:
+                        datItem = datItemObj.ToObject<DipValue>();
                         break;
                     case ItemType.DipSwitch:
                         datItem = datItemObj.ToObject<DipSwitch>();
@@ -277,9 +289,6 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Instance:
                         datItem = datItemObj.ToObject<Instance>();
                         break;
-                    case ItemType.Location:
-                        datItem = datItemObj.ToObject<Location>();
-                        break;
                     case ItemType.Media:
                         datItem = datItemObj.ToObject<Media>();
                         break;
@@ -309,9 +318,6 @@ namespace SabreTools.DatFiles.Formats
                         break;
                     case ItemType.Serials:
                         datItem = datItemObj.ToObject<Serials>();
-                        break;
-                    case ItemType.Setting:
-                        datItem = datItemObj.ToObject<Setting>();
                         break;
                     case ItemType.SharedFeature:
                         datItem = datItemObj.ToObject<SharedFeature>();
@@ -389,11 +395,11 @@ namespace SabreTools.DatFiles.Formats
                         DatItem datItem = datItems[index];
 
                         // If we have a different game and we're not at the start of the list, output the end of last item
-                        if (lastgame != null && lastgame.ToLowerInvariant() != datItem.Machine.Name.ToLowerInvariant())
+                        if (lastgame != null && lastgame.ToLowerInvariant() != datItem.Machine?.Name?.ToLowerInvariant())
                             WriteEndGame(jtw);
 
                         // If we have a new game, output the beginning of the new item
-                        if (lastgame == null || lastgame.ToLowerInvariant() != datItem.Machine.Name.ToLowerInvariant())
+                        if (lastgame == null || lastgame.ToLowerInvariant() != datItem.Machine?.Name?.ToLowerInvariant())
                             WriteStartGame(jtw, datItem);
 
                         // Check for a "null" item
@@ -404,7 +410,7 @@ namespace SabreTools.DatFiles.Formats
                             WriteDatItem(jtw, datItem);
 
                         // Set the new data to compare against
-                        lastgame = datItem.Machine.Name;
+                        lastgame = datItem.Machine?.Name;
                     }
                 }
 
@@ -451,7 +457,8 @@ namespace SabreTools.DatFiles.Formats
         private void WriteStartGame(JsonTextWriter jtw, DatItem datItem)
         {
             // No game should start with a path separator
-            datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar) ?? string.Empty;
+            if (!string.IsNullOrWhiteSpace(datItem.Machine?.Name))
+                datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar) ?? string.Empty;
 
             // Build the state
             jtw.WriteStartObject();

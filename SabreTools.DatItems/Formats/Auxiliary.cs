@@ -17,10 +17,24 @@ namespace SabreTools.DatItems.Formats
     public class Original
     {
         [JsonProperty("value"), XmlElement("value")]
-        public bool? Value { get; set; }
+        public bool? Value
+        {
+            get => _original.ReadBool(Models.Internal.Original.ValueKey);
+            set => _original[Models.Internal.Original.ValueKey] = value;
+        }
 
         [JsonProperty("content"), XmlElement("content")]
-        public string Content { get; set; }
+        public string? Content
+        {
+            get => _original.ReadString(Models.Internal.Original.ContentKey);
+            set => _original[Models.Internal.Original.ContentKey] = value;
+        }
+
+        /// <summary>
+        /// Internal Original model
+        /// </summary>
+        [JsonIgnore]
+        private readonly Models.Internal.Original _original = new();
     }
 
     #endregion

@@ -223,11 +223,11 @@ namespace SabreTools.DatFiles.Formats
                         DatItem datItem = datItems[index];
 
                         // If we have a different game and we're not at the start of the list, output the end of last item
-                        if (lastgame != null && lastgame.ToLowerInvariant() != datItem.Machine.Name.ToLowerInvariant())
+                        if (lastgame != null && lastgame.ToLowerInvariant() != datItem.Machine?.Name?.ToLowerInvariant())
                             WriteEndGame(xtw);
 
                         // If we have a new game, output the beginning of the new item
-                        if (lastgame == null || lastgame.ToLowerInvariant() != datItem.Machine.Name.ToLowerInvariant())
+                        if (lastgame == null || lastgame.ToLowerInvariant() != datItem.Machine?.Name?.ToLowerInvariant())
                             WriteStartGame(xtw, datItem);
 
                         // Check for a "null" item
@@ -238,7 +238,7 @@ namespace SabreTools.DatFiles.Formats
                             WriteDatItem(xtw, datItem);
 
                         // Set the new data to compare against
-                        lastgame = datItem.Machine.Name;
+                        lastgame = datItem.Machine?.Name;
                     }
                 }
 
@@ -286,7 +286,7 @@ namespace SabreTools.DatFiles.Formats
         private void WriteStartGame(XmlTextWriter xtw, DatItem datItem)
         {
             // No game should start with a path separator
-            datItem.Machine.Name = datItem.Machine.Name?.TrimStart(Path.DirectorySeparatorChar) ?? string.Empty;
+            datItem.Machine!.Name = datItem.Machine.Name?.TrimStart(Path.DirectorySeparatorChar) ?? string.Empty;
 
             // Write the machine
             xtw.WriteStartElement("directory");

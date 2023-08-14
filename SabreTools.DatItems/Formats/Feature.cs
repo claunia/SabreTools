@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -18,7 +19,11 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("type")]
         [JsonConverter(typeof(StringEnumConverter))]
-        public FeatureType Type { get; set; }
+        public FeatureType Type
+        {
+            get => _feature.ReadString(Models.Internal.Feature.FeatureTypeKey).AsFeatureType();
+            set => _feature[Models.Internal.Feature.FeatureTypeKey] = value.FromFeatureType();
+        }
 
         [JsonIgnore]
         public bool TypeSpecified { get { return Type != FeatureType.NULL; } }
@@ -28,7 +33,11 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         [JsonProperty("status", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("status")]
         [JsonConverter(typeof(StringEnumConverter))]
-        public FeatureStatus Status { get; set; }
+        public FeatureStatus Status
+        {
+            get => _feature.ReadString(Models.Internal.Feature.StatusKey).AsFeatureStatus();
+            set => _feature[Models.Internal.Feature.StatusKey] = value.FromFeatureStatus();
+        }
 
         [JsonIgnore]
         public bool StatusSpecified { get { return Status != FeatureStatus.NULL; } }
@@ -38,10 +47,20 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         [JsonProperty("overall", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("overall")]
         [JsonConverter(typeof(StringEnumConverter))]
-        public FeatureStatus Overall { get; set; }
+        public FeatureStatus Overall
+        {
+            get => _feature.ReadString(Models.Internal.Feature.OverallKey).AsFeatureStatus();
+            set => _feature[Models.Internal.Feature.OverallKey] = value.FromFeatureStatus();
+        }
 
         [JsonIgnore]
         public bool OverallSpecified { get { return Overall != FeatureStatus.NULL; } }
+
+        /// <summary>
+        /// Internal Feature model
+        /// </summary>
+        [JsonIgnore]
+        private Models.Internal.Feature _feature = new();
 
         #endregion
 
@@ -67,13 +86,11 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine.Clone() as Machine,
-                Source = this.Source.Clone() as Source,
+                Machine = this.Machine?.Clone() as Machine,
+                Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                Type = this.Type,
-                Status = this.Status,
-                Overall = this.Overall,
+                _feature = this._feature?.Clone() as Models.Internal.Feature ?? new Models.Internal.Feature(),
             };
         }
 
@@ -82,19 +99,14 @@ namespace SabreTools.DatItems.Formats
         #region Comparision Methods
 
         /// <inheritdoc/>
-        public override bool Equals(DatItem other)
+        public override bool Equals(DatItem? other)
         {
             // If we don't have a Feature, return false
-            if (ItemType != other.ItemType)
+            if (ItemType != other?.ItemType || other is not Feature otherInternal)
                 return false;
 
-            // Otherwise, treat it as a Feature
-            Feature newOther = other as Feature;
-
-            // If the Feature information matches
-            return (Type == newOther.Type
-                && Status == newOther.Status
-                && Overall == newOther.Overall);
+            // Compare the internal models
+            return _feature.EqualTo(otherInternal._feature);
         }
 
         #endregion

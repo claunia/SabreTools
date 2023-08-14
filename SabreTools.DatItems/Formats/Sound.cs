@@ -16,10 +16,20 @@ namespace SabreTools.DatItems.Formats
         /// Number of speakers or channels
         /// </summary>
         [JsonProperty("channels", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("channels")]
-        public long? Channels { get; set; }
+        public long? Channels
+        {
+            get => _sound.ReadLong(Models.Internal.Sound.ChannelsKey);
+            set => _sound[Models.Internal.Sound.ChannelsKey] = value;
+        }
 
         [JsonIgnore]
         public bool ChannelsSpecified { get { return Channels != null; } }
+
+        /// <summary>
+        /// Internal Sound model
+        /// </summary>
+        [JsonIgnore]
+        private Models.Internal.Sound _sound = new();
 
         #endregion
 
@@ -45,11 +55,11 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine.Clone() as Machine,
-                Source = this.Source.Clone() as Source,
+                Machine = this.Machine?.Clone() as Machine,
+                Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                Channels = this.Channels,
+                _sound = this._sound?.Clone() as Models.Internal.Sound ?? new Models.Internal.Sound(),
             };
         }
 
@@ -58,17 +68,14 @@ namespace SabreTools.DatItems.Formats
         #region Comparision Methods
 
         /// <inheritdoc/>
-        public override bool Equals(DatItem other)
+        public override bool Equals(DatItem? other)
         {
             // If we don't have a Sound, return false
-            if (ItemType != other.ItemType)
+            if (ItemType != other?.ItemType || other is not Sound otherInternal)
                 return false;
 
-            // Otherwise, treat it as a Sound
-            Sound newOther = other as Sound;
-
-            // If the Sound information matches
-            return (Channels == newOther.Channels);
+            // Compare the internal models
+            return _sound.EqualTo(otherInternal._sound);
         }
 
         #endregion

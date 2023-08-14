@@ -113,7 +113,7 @@ namespace SabreTools.DatFiles.Formats
                 SHA1 = file.SHA1,
                 //FileCount = file.FileCount, // TODO: Add to internal model
                 ArchiveDotOrgFormat = file.Format,
-                //Original = file.Original, // TODO: Add to internal model
+                OriginalFilename = file.Original,
                 Summation = file.Summation,
                 //MatrixNumber = file.MatrixNumber, // TODO: Add to internal model
                 //CollectionCatalogNumber = file.CollectionCatalogNumber, // TODO: Add to internal model

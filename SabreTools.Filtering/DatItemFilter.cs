@@ -785,10 +785,14 @@ namespace SabreTools.Filtering
                 Chip chip => PassesFilters(chip),
                 Condition condition => PassesFilters(condition),
                 Configuration configuration => PassesFilters(configuration),
+                ConfLocation confLocation => PassesFilters(confLocation),
+                ConfSetting confSetting => PassesFilters(confSetting),
                 Control control => PassesFilters(control),
                 DataArea dataArea => PassesFilters(dataArea),
                 Device device => PassesFilters(device),
+                DipLocation dipLocation => PassesFilters(dipLocation),
                 DipSwitch dipSwitch => PassesFilters(dipSwitch),
+                DipValue dipValue => PassesFilters(dipValue),
                 Disk disk => PassesFilters(disk),
                 DiskArea diskArea => PassesFilters(diskArea),
                 Display display => PassesFilters(display),
@@ -798,7 +802,6 @@ namespace SabreTools.Filtering
                 Info info => PassesFilters(info),
                 Input input => PassesFilters(input),
                 Instance instance => PassesFilters(instance),
-                Location location => PassesFilters(location),
                 Media media => PassesFilters(media),
                 Part part => PassesFilters(part),
                 PartFeature partFeature => PassesFilters(partFeature),
@@ -806,7 +809,6 @@ namespace SabreTools.Filtering
                 RamOption ramOption => PassesFilters(ramOption),
                 Release release => PassesFilters(release),
                 Rom rom => PassesFilters(rom),
-                Setting setting => PassesFilters(setting),
                 SharedFeature sharedFeature => PassesFilters(sharedFeature),
                 Slot slot => PassesFilters(slot),
                 SlotOption slotOption => PassesFilters(slotOption),
@@ -1024,7 +1026,7 @@ namespace SabreTools.Filtering
             // Filter on individual locations
             if (configuration.LocationsSpecified)
             {
-                foreach (Location subLocation in configuration.Locations)
+                foreach (ConfLocation subLocation in configuration.Locations)
                 {
                     if (!PassesFilters(subLocation))
                         return false;
@@ -1034,9 +1036,63 @@ namespace SabreTools.Filtering
             // Filter on individual settings
             if (configuration.SettingsSpecified)
             {
-                foreach (Setting subSetting in configuration.Settings)
+                foreach (ConfSetting subSetting in configuration.Settings)
                 {
                     if (!PassesFilters(subSetting))
+                        return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Check to see if a ConfLocation passes the filters
+        /// </summary>
+        /// <param name="confLocation">ConfLocation to check</param>
+        /// <returns>True if the item passed the filter, false otherwise</returns>
+        private bool PassesFilters(ConfLocation confLocation)
+        {
+            // DatItem_Location_Inverted
+            if (!PassBoolFilter(Location_Inverted, confLocation.Inverted))
+                return false;
+
+            // DatItem_Location_Name
+            if (!PassStringFilter(Location_Name, confLocation.Name))
+                return false;
+
+            // DatItem_Location_Number
+            if (!PassLongFilter(Location_Number, confLocation.Number))
+                return false;
+
+            return true;
+        }
+
+        /// <summary>
+        /// Check to see if a ConfSetting passes the filters
+        /// </summary>
+        /// <param name="confSetting">ConfSetting to check</param>
+        /// <returns>True if the item passed the filter, false otherwise</returns>
+        private bool PassesFilters(ConfSetting confSetting)
+        {
+            // DatItem_Setting_Default
+            if (!PassBoolFilter(Setting_Default, confSetting.Default))
+                return false;
+
+            // DatItem_Setting_Name
+            if (!PassStringFilter(Setting_Name, confSetting.Name))
+                return false;
+
+            // DatItem_Setting_Value
+            if (!PassStringFilter(Setting_Value, confSetting.Value))
+                return false;
+
+            // Filter on individual conditions
+            if (confSetting.ConditionsSpecified)
+            {
+                foreach (Condition subCondition in confSetting.Conditions)
+                {
+                    if (!PassesFilters(subCondition, true))
                         return false;
                 }
             }
@@ -1185,6 +1241,28 @@ namespace SabreTools.Filtering
         }
 
         /// <summary>
+        /// Check to see if a DipLocation passes the filters
+        /// </summary>
+        /// <param name="dipLocation">DipLocation to check</param>
+        /// <returns>True if the item passed the filter, false otherwise</returns>
+        private bool PassesFilters(DipLocation dipLocation)
+        {
+            // DatItem_Location_Inverted
+            if (!PassBoolFilter(Location_Inverted, dipLocation.Inverted))
+                return false;
+
+            // DatItem_Location_Name
+            if (!PassStringFilter(Location_Name, dipLocation.Name))
+                return false;
+
+            // DatItem_Location_Number
+            if (!PassLongFilter(Location_Number, dipLocation.Number))
+                return false;
+
+            return true;
+        }
+
+        /// <summary>
         /// Check to see if a DipSwitch passes the filters
         /// </summary>
         /// <param name="dipSwitch">DipSwitch to check</param>
@@ -1212,7 +1290,7 @@ namespace SabreTools.Filtering
             // Filter on individual locations
             if (dipSwitch.LocationsSpecified)
             {
-                foreach (Location subLocation in dipSwitch.Locations)
+                foreach (DipLocation subLocation in dipSwitch.Locations)
                 {
                     if (!PassesFilters(subLocation))
                         return false;
@@ -1222,7 +1300,7 @@ namespace SabreTools.Filtering
             // Filter on individual values
             if (dipSwitch.ValuesSpecified)
             {
-                foreach (Setting subValue in dipSwitch.Values)
+                foreach (DipValue subValue in dipSwitch.Values)
                 {
                     if (!PassesFilters(subValue))
                         return false;
@@ -1234,6 +1312,38 @@ namespace SabreTools.Filtering
             {
                 if (!PassesFilters(dipSwitch.Part))
                     return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Check to see if a DipValue passes the filters
+        /// </summary>
+        /// <param name="dipValue">DipValue to check</param>
+        /// <returns>True if the item passed the filter, false otherwise</returns>
+        private bool PassesFilters(DipValue dipValue)
+        {
+            // DatItem_Setting_Default
+            if (!PassBoolFilter(Setting_Default, dipValue.Default))
+                return false;
+
+            // DatItem_Setting_Name
+            if (!PassStringFilter(Setting_Name, dipValue.Name))
+                return false;
+
+            // DatItem_Setting_Value
+            if (!PassStringFilter(Setting_Value, dipValue.Value))
+                return false;
+
+            // Filter on individual conditions
+            if (dipValue.ConditionsSpecified)
+            {
+                foreach (Condition subCondition in dipValue.Conditions)
+                {
+                    if (!PassesFilters(subCondition, true))
+                        return false;
+                }
             }
 
             return true;
@@ -1540,28 +1650,6 @@ namespace SabreTools.Filtering
         }
 
         /// <summary>
-        /// Check to see if a Location passes the filters
-        /// </summary>
-        /// <param name="location">Location to check</param>
-        /// <returns>True if the item passed the filter, false otherwise</returns>
-        private bool PassesFilters(Location location)
-        {
-            // DatItem_Location_Inverted
-            if (!PassBoolFilter(Location_Inverted, location.Inverted))
-                return false;
-
-            // DatItem_Location_Name
-            if (!PassStringFilter(Location_Name, location.Name))
-                return false;
-
-            // DatItem_Location_Number
-            if (!PassLongFilter(Location_Number, location.Number))
-                return false;
-
-            return true;
-        }
-
-        /// <summary>
         /// Check to see if a Media passes the filters
         /// </summary>
         /// <param name="media">Media to check</param>
@@ -1850,38 +1938,6 @@ namespace SabreTools.Filtering
             {
                 if (!PassesFilters(rom.Part))
                     return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Check to see if a Setting passes the filters
-        /// </summary>
-        /// <param name="setting">Setting to check</param>
-        /// <returns>True if the item passed the filter, false otherwise</returns>
-        private bool PassesFilters(Setting setting)
-        {
-            // DatItem_Setting_Default
-            if (!PassBoolFilter(Setting_Default, setting.Default))
-                return false;
-
-            // DatItem_Setting_Name
-            if (!PassStringFilter(Setting_Name, setting.Name))
-                return false;
-
-            // DatItem_Setting_Value
-            if (!PassStringFilter(Setting_Value, setting.Value))
-                return false;
-
-            // Filter on individual conditions
-            if (setting.ConditionsSpecified)
-            {
-                foreach (Condition subCondition in setting.Conditions)
-                {
-                    if (!PassesFilters(subCondition, true))
-                        return false;
-                }
             }
 
             return true;

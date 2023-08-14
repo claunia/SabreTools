@@ -571,7 +571,7 @@ namespace SabreTools.DatFiles.Formats
                 var item = new DipSwitch
                 {
                     Name = dipswitch.Name,
-                    Values = new List<Setting>(),
+                    Values = new List<DipValue>(),
 
                     Source = new Source
                     {
@@ -582,13 +582,13 @@ namespace SabreTools.DatFiles.Formats
 
                 foreach (string entry in dipswitch.Entry ?? Array.Empty<string>())
                 {
-                    var setting = new Setting
+                    var dipValue = new DipValue
                     {
                         Name = dipswitch.Name,
                         Value = entry,
                         Default = entry == dipswitch.Default,
                     };
-                    item.Values.Add(setting);
+                    item.Values.Add(dipValue);
                 }
 
                 item.CopyMachineInformation(machine);

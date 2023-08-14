@@ -16,32 +16,50 @@ namespace SabreTools.DatItems.Formats
         /// Name of the item
         /// </summary>
         [JsonProperty("name"), XmlElement("name")]
-        public string Name { get; set; }
+        public string? Name
+        {
+            get => _biosSet.ReadString(Models.Internal.BiosSet.NameKey);
+            set => _biosSet[Models.Internal.BiosSet.NameKey] = value;
+        }
 
         /// <summary>
         /// Description of the BIOS
         /// </summary>
         [JsonProperty("description", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("description")]
-        public string Description { get; set; }
+        public string? Description
+        {
+            get => _biosSet.ReadString(Models.Internal.BiosSet.DescriptionKey);
+            set => _biosSet[Models.Internal.BiosSet.DescriptionKey] = value;
+        }
 
         /// <summary>
         /// Determine whether the BIOS is default
         /// </summary>
         [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("default")]
-        public bool? Default { get; set; }
+        public bool? Default
+        {
+            get => _biosSet.ReadBool(Models.Internal.BiosSet.DefaultKey);
+            set => _biosSet[Models.Internal.BiosSet.DefaultKey] = value;
+        }
 
         [JsonIgnore]
         public bool DefaultSpecified { get { return Default != null; } }
+
+        /// <summary>
+        /// Internal BiosSet model
+        /// </summary>
+        [JsonIgnore]
+        private Models.Internal.BiosSet _biosSet = new();
 
         #endregion
 
         #region Accessors
 
         /// <inheritdoc/>
-        public override string GetName() => Name;
+        public override string? GetName() => Name;
 
         /// <inheritdoc/>
-        public override void SetName(string name) => Name = name;
+        public override void SetName(string? name) => Name = name;
 
         #endregion
 
@@ -68,13 +86,11 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine.Clone() as Machine,
-                Source = this.Source.Clone() as Source,
+                Machine = this.Machine?.Clone() as Machine,
+                Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                Name = this.Name,
-                Description = this.Description,
-                Default = this.Default,
+                _biosSet = this._biosSet?.Clone() as Models.Internal.BiosSet ?? new Models.Internal.BiosSet(),
             };
         }
 
@@ -83,19 +99,14 @@ namespace SabreTools.DatItems.Formats
         #region Comparision Methods
 
         /// <inheritdoc/>
-        public override bool Equals(DatItem other)
+        public override bool Equals(DatItem? other)
         {
             // If we don't have a BiosSet, return false
-            if (ItemType != other.ItemType)
+            if (ItemType != other?.ItemType || other is not BiosSet otherInternal)
                 return false;
 
-            // Otherwise, treat it as a BiosSet
-            BiosSet newOther = other as BiosSet;
-
-            // If the BiosSet information matches
-            return (Name == newOther.Name
-                && Description == newOther.Description
-                && Default == newOther.Default);
+            // Compare the internal models
+            return _biosSet.EqualTo(otherInternal._biosSet);
         }
 
         #endregion

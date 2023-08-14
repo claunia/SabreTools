@@ -40,10 +40,14 @@ namespace SabreTools.Filtering
             else if (datItem is Chip) ReplaceFields(datItem as Chip, repDatItem as Chip, datItemFields);
             else if (datItem is Condition) ReplaceFields(datItem as Condition, repDatItem as Condition, datItemFields);
             else if (datItem is Configuration) ReplaceFields(datItem as Configuration, repDatItem as Configuration, datItemFields);
+            else if (datItem is ConfLocation) ReplaceFields(datItem as ConfLocation, repDatItem as ConfLocation, datItemFields);
+            else if (datItem is ConfSetting) ReplaceFields(datItem as ConfSetting, repDatItem as ConfSetting, datItemFields);
             else if (datItem is Control) ReplaceFields(datItem as Control, repDatItem as Control, datItemFields);
             else if (datItem is DataArea) ReplaceFields(datItem as DataArea, repDatItem as DataArea, datItemFields);
             else if (datItem is Device) ReplaceFields(datItem as Device, repDatItem as Device, datItemFields);
+            else if (datItem is DipLocation) ReplaceFields(datItem as DipLocation, repDatItem as DipLocation, datItemFields);
             else if (datItem is DipSwitch) ReplaceFields(datItem as DipSwitch, repDatItem as DipSwitch, datItemFields);
+            else if (datItem is DipValue) ReplaceFields(datItem as DipValue, repDatItem as DipValue, datItemFields);
             else if (datItem is Disk) ReplaceFields(datItem as Disk, repDatItem as Disk, datItemFields);
             else if (datItem is DiskArea) ReplaceFields(datItem as DiskArea, repDatItem as DiskArea, datItemFields);
             else if (datItem is Display) ReplaceFields(datItem as Display, repDatItem as Display, datItemFields);
@@ -53,7 +57,6 @@ namespace SabreTools.Filtering
             else if (datItem is Info) ReplaceFields(datItem as Info, repDatItem as Info, datItemFields);
             else if (datItem is Input) ReplaceFields(datItem as Input, repDatItem as Input, datItemFields);
             else if (datItem is Instance) ReplaceFields(datItem as Instance, repDatItem as Instance, datItemFields);
-            else if (datItem is Location) ReplaceFields(datItem as Location, repDatItem as Location, datItemFields);
             else if (datItem is Media) ReplaceFields(datItem as Media, repDatItem as Media, datItemFields);
             else if (datItem is Part) ReplaceFields(datItem as Part, repDatItem as Part, datItemFields);
             else if (datItem is PartFeature) ReplaceFields(datItem as PartFeature, repDatItem as PartFeature, datItemFields);
@@ -61,7 +64,6 @@ namespace SabreTools.Filtering
             else if (datItem is RamOption) ReplaceFields(datItem as RamOption, repDatItem as RamOption, datItemFields);
             else if (datItem is Release) ReplaceFields(datItem as Release, repDatItem as Release, datItemFields);
             else if (datItem is Rom) ReplaceFields(datItem as Rom, repDatItem as Rom, datItemFields);
-            else if (datItem is Setting) ReplaceFields(datItem as Setting, repDatItem as Setting, datItemFields);
             else if (datItem is SharedFeature) ReplaceFields(datItem as SharedFeature, repDatItem as SharedFeature, datItemFields);
             else if (datItem is Slot) ReplaceFields(datItem as Slot, repDatItem as Slot, datItemFields);
             else if (datItem is SlotOption) ReplaceFields(datItem as SlotOption, repDatItem as SlotOption, datItemFields);
@@ -354,6 +356,46 @@ namespace SabreTools.Filtering
         /// <summary>
         /// Replace fields with given values
         /// </summary>
+        /// <param name="location">ConfLocation to remove replace fields in</param>
+        /// <param name="newItem">ConfLocation to pull new information from</param>
+        /// <param name="datItemFields">List of fields representing what should be updated</param>
+        private static void ReplaceFields(ConfLocation location, ConfLocation newItem, List<DatItemField> datItemFields)
+        {
+            if (datItemFields.Contains(DatItemField.Location_Inverted))
+                location.Inverted = newItem.Inverted;
+
+            if (datItemFields.Contains(DatItemField.Location_Name))
+                location.Name = newItem.Name;
+
+            if (datItemFields.Contains(DatItemField.Location_Number))
+                location.Number = newItem.Number;
+        }
+
+        /// <summary>
+        /// Replace fields with given values
+        /// </summary>
+        /// <param name="confSetting">ConfSetting to remove replace fields in</param>
+        /// <param name="newItem">ConfSetting to pull new information from</param>
+        /// <param name="datItemFields">List of fields representing what should be updated</param>
+        private static void ReplaceFields(ConfSetting confSetting, ConfSetting newItem, List<DatItemField> datItemFields)
+        {
+            if (datItemFields.Contains(DatItemField.Setting_Default))
+                confSetting.Default = newItem.Default;
+
+            if (datItemFields.Contains(DatItemField.Setting_Name))
+                confSetting.Name = newItem.Name;
+
+            if (datItemFields.Contains(DatItemField.Setting_Value))
+                confSetting.Value = newItem.Value;
+
+            // Condition_* doesn't make sense here
+            // since not every condition under the other item
+            // can replace every condition under this item
+        }
+
+        /// <summary>
+        /// Replace fields with given values
+        /// </summary>
         /// <param name="control">Control to remove replace fields in</param>
         /// <param name="newItem">Control to pull new information from</param>
         /// <param name="datItemFields">List of fields representing what should be updated</param>
@@ -452,6 +494,24 @@ namespace SabreTools.Filtering
         /// <summary>
         /// Replace fields with given values
         /// </summary>
+        /// <param name="location">DipLocation to remove replace fields in</param>
+        /// <param name="newItem">DipLocation to pull new information from</param>
+        /// <param name="datItemFields">List of fields representing what should be updated</param>
+        private static void ReplaceFields(DipLocation location, DipLocation newItem, List<DatItemField> datItemFields)
+        {
+            if (datItemFields.Contains(DatItemField.Location_Inverted))
+                location.Inverted = newItem.Inverted;
+
+            if (datItemFields.Contains(DatItemField.Location_Name))
+                location.Name = newItem.Name;
+
+            if (datItemFields.Contains(DatItemField.Location_Number))
+                location.Number = newItem.Number;
+        }
+        
+        /// <summary>
+        /// Replace fields with given values
+        /// </summary>
         /// <param name="dipSwitch">DipSwitch to remove replace fields in</param>
         /// <param name="newItem">DipSwitch to pull new information from</param>
         /// <param name="datItemFields">List of fields representing what should be updated</param>
@@ -477,6 +537,28 @@ namespace SabreTools.Filtering
 
             if (dipSwitch.PartSpecified && newItem.PartSpecified)
                 ReplaceFields(dipSwitch.Part, newItem.Part, datItemFields);
+        }
+
+        /// <summary>
+        /// Replace fields with given values
+        /// </summary>
+        /// <param name="dipValue">DipValue to remove replace fields in</param>
+        /// <param name="newItem">DipValue to pull new information from</param>
+        /// <param name="datItemFields">List of fields representing what should be updated</param>
+        private static void ReplaceFields(DipValue dipValue, DipValue newItem, List<DatItemField> datItemFields)
+        {
+            if (datItemFields.Contains(DatItemField.Setting_Default))
+                dipValue.Default = newItem.Default;
+
+            if (datItemFields.Contains(DatItemField.Setting_Name))
+                dipValue.Name = newItem.Name;
+
+            if (datItemFields.Contains(DatItemField.Setting_Value))
+                dipValue.Value = newItem.Value;
+
+            // Condition_* doesn't make sense here
+            // since not every condition under the other item
+            // can replace every condition under this item
         }
 
         /// <summary>
@@ -700,24 +782,6 @@ namespace SabreTools.Filtering
 
             if (datItemFields.Contains(DatItemField.Instance_Name))
                 instance.Name = newItem.Name;
-        }
-
-        /// <summary>
-        /// Replace fields with given values
-        /// </summary>
-        /// <param name="location">Location to remove replace fields in</param>
-        /// <param name="newItem">Location to pull new information from</param>
-        /// <param name="datItemFields">List of fields representing what should be updated</param>
-        private static void ReplaceFields(Location location, Location newItem, List<DatItemField> datItemFields)
-        {
-            if (datItemFields.Contains(DatItemField.Location_Inverted))
-                location.Inverted = newItem.Inverted;
-
-            if (datItemFields.Contains(DatItemField.Location_Name))
-                location.Name = newItem.Name;
-
-            if (datItemFields.Contains(DatItemField.Location_Number))
-                location.Number = newItem.Number;
         }
 
         /// <summary>
@@ -966,28 +1030,6 @@ namespace SabreTools.Filtering
 
             if (rom.PartSpecified && newItem.PartSpecified)
                 ReplaceFields(rom.Part, newItem.Part, datItemFields);
-        }
-
-        /// <summary>
-        /// Replace fields with given values
-        /// </summary>
-        /// <param name="setting">Setting to remove replace fields in</param>
-        /// <param name="newItem">Setting to pull new information from</param>
-        /// <param name="datItemFields">List of fields representing what should be updated</param>
-        private static void ReplaceFields(Setting setting, Setting newItem, List<DatItemField> datItemFields)
-        {
-            if (datItemFields.Contains(DatItemField.Setting_Default))
-                setting.Default = newItem.Default;
-
-            if (datItemFields.Contains(DatItemField.Setting_Name))
-                setting.Name = newItem.Name;
-
-            if (datItemFields.Contains(DatItemField.Setting_Value))
-                setting.Value = newItem.Value;
-
-            // Condition_* doesn't make sense here
-            // since not every condition under the other item
-            // can replace every condition under this item
         }
 
         /// <summary>

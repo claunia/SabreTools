@@ -18,31 +18,31 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         /// <remarks>TODO: Is this required?</remarks>
         [JsonProperty("id", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("id")]
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
         /// <summary>
         /// Directory name value
         /// </summary>
         [JsonProperty("dirname", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("dirname")]
-        public string DirName { get; set; }
+        public string? DirName { get; set; }
 
         /// <summary>
         /// Rom info value
         /// </summary>
         [JsonProperty("rominfo", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("rominfo")]
-        public string RomInfo { get; set; }
+        public string? RomInfo { get; set; }
 
         /// <summary>
         /// Category value
         /// </summary>
         [JsonProperty("category", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("category")]
-        public string Category { get; set; }
+        public string? Category { get; set; }
 
         /// <summary>
         /// NFO name value
         /// </summary>
         [JsonProperty("nfoname", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("nfoname")]
-        public string NfoName { get; set; }
+        public string? NfoName { get; set; }
 
         /// <summary>
         /// NFO size value
@@ -57,55 +57,55 @@ namespace SabreTools.DatItems.Formats
         /// NFO CRC value
         /// </summary>
         [JsonProperty("nfocrc", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("nfocrc")]
-        public string NfoCrc { get; set; }
+        public string? NfoCrc { get; set; }
 
         /// <summary>
         /// Archive name value
         /// </summary>
         [JsonProperty("archivename", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("archivename")]
-        public string ArchiveName { get; set; }
+        public string? ArchiveName { get; set; }
 
         /// <summary>
         /// Original format value
         /// </summary>
         [JsonProperty("originalformat", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("originalformat")]
-        public string OriginalFormat { get; set; }
+        public string? OriginalFormat { get; set; }
 
         /// <summary>
         /// Date value
         /// </summary>
         [JsonProperty("date", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("date")]
-        public string Date { get; set; }
+        public string? Date { get; set; }
 
         /// <summary>
         /// Grpup value
         /// </summary>
         [JsonProperty("group", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("group")]
-        public string Group { get; set; }
+        public string? Group { get; set; }
 
         /// <summary>
         /// Comment value
         /// </summary>
         [JsonProperty("comment", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("comment")]
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
 
         /// <summary>
         /// Tool value
         /// </summary>
         [JsonProperty("tool", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tool")]
-        public string Tool { get; set; }
+        public string? Tool { get; set; }
 
         /// <summary>
         /// Region value
         /// </summary>
         [JsonProperty("region", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("region")]
-        public string Region { get; set; }
+        public string? Region { get; set; }
 
         /// <summary>
         /// Origin value
         /// </summary>
         [JsonProperty("origin", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("origin")]
-        public string Origin { get; set; }
+        public string? Origin { get; set; }
 
         #endregion
 
@@ -131,8 +131,8 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine.Clone() as Machine,
-                Source = this.Source.Clone() as Source,
+                Machine = this.Machine?.Clone() as Machine,
+                Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
                 Id = this.Id,
@@ -158,17 +158,17 @@ namespace SabreTools.DatItems.Formats
         #region Comparision Methods
 
         /// <inheritdoc/>
-        public override bool Equals(DatItem other)
+        public override bool Equals(DatItem? other)
         {
             // If we don't have a Details, return false
-            if (ItemType != other.ItemType)
+            if (ItemType != other?.ItemType)
                 return false;
 
             // Otherwise, treat it as a Details
-            ReleaseDetails newOther = other as ReleaseDetails;
+            ReleaseDetails? newOther = other as ReleaseDetails;
 
             // If the Details information matches
-            return (Id == newOther.Id
+            return (Id == newOther!.Id
                 && DirName == newOther.DirName
                 && RomInfo == newOther.RomInfo
                 && Category == newOther.Category

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
@@ -7,54 +7,64 @@ using SabreTools.Core;
 namespace SabreTools.DatItems.Formats
 {
     /// <summary>
-    /// Represents which Adjuster(s) is associated with a set
+    /// Represents one ListXML dipvalue
     /// </summary>
-    [JsonObject("adjuster"), XmlRoot("adjuster")]
-    public class Adjuster : DatItem
+    [JsonObject("dipvalue"), XmlRoot("dipvalue")]
+    public class DipValue : DatItem
     {
         #region Fields
 
         /// <summary>
-        /// Name of the item
+        /// Setting name
         /// </summary>
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _adjuster.ReadString(Models.Internal.Adjuster.NameKey);
-            set => _adjuster[Models.Internal.Adjuster.NameKey] = value;
+            get => _dipValue.ReadString(Models.Internal.DipValue.NameKey);
+            set => _dipValue[Models.Internal.DipValue.NameKey] = value;
         }
 
         /// <summary>
-        /// Determine whether the value is default
+        /// Setting value
+        /// </summary>
+        [JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("value")]
+        public string? Value
+        {
+            get => _dipValue.ReadString(Models.Internal.DipValue.ValueKey);
+            set => _dipValue[Models.Internal.DipValue.ValueKey] = value;
+        }
+
+        /// <summary>
+        /// Determines if the setting is default or not
         /// </summary>
         [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("default")]
         public bool? Default
         {
-            get => _adjuster.ReadBool(Models.Internal.Adjuster.DefaultKey);
-            set => _adjuster[Models.Internal.Adjuster.DefaultKey] = value;
+            get => _dipValue.ReadBool(Models.Internal.DipValue.DefaultKey);
+            set => _dipValue[Models.Internal.DipValue.DefaultKey] = value;
         }
 
         [JsonIgnore]
         public bool DefaultSpecified { get { return Default != null; } }
 
         /// <summary>
-        /// Conditions associated with the adjustment
+        /// List of conditions on the setting
         /// </summary>
         [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("conditions")]
         public List<Condition>? Conditions
         {
-            get => _adjuster.Read<Condition[]>(Models.Internal.Adjuster.ConditionKey)?.ToList();
-            set => _adjuster[Models.Internal.Adjuster.ConditionKey] = value?.ToArray();
+            get => _dipValue.Read<Condition[]>(Models.Internal.DipValue.ConditionKey)?.ToList();
+            set => _dipValue[Models.Internal.DipValue.ConditionKey] = value?.ToArray();
         }
 
         [JsonIgnore]
         public bool ConditionsSpecified { get { return Conditions != null && Conditions.Count > 0; } }
 
         /// <summary>
-        /// Internal Adjuster model
+        /// Internal DipValue model
         /// </summary>
         [JsonIgnore]
-        private Models.Internal.Adjuster _adjuster = new();
+        private Models.Internal.DipValue _dipValue = new();
 
         #endregion
 
@@ -71,12 +81,12 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         /// <summary>
-        /// Create a default, empty Adjuster object
+        /// Create a default, empty DipValue object
         /// </summary>
-        public Adjuster()
+        public DipValue()
         {
             Name = string.Empty;
-            ItemType = ItemType.Adjuster;
+            ItemType = ItemType.DipValue;
         }
 
         #endregion
@@ -86,7 +96,7 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc/>
         public override object Clone()
         {
-            return new Adjuster()
+            return new DipValue()
             {
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
@@ -95,7 +105,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _adjuster = this._adjuster?.Clone() as Models.Internal.Adjuster ?? new Models.Internal.Adjuster(),
+                _dipValue = this._dipValue?.Clone() as Models.Internal.DipValue ?? new Models.Internal.DipValue(),
             };
         }
 
@@ -106,12 +116,12 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc/>
         public override bool Equals(DatItem? other)
         {
-            // If we don't have a Adjuster, return false
-            if (ItemType != other?.ItemType || other is not Adjuster otherInternal)
+            // If we don't have a DipValue, return false
+            if (ItemType != other?.ItemType || other is not DipValue otherInternal)
                 return false;
 
             // Compare the internal models
-            return _adjuster.EqualTo(otherInternal._adjuster);
+            return _dipValue.EqualTo(otherInternal._dipValue);
         }
 
         #endregion

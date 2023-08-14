@@ -16,23 +16,37 @@ namespace SabreTools.DatItems.Formats
         /// Name of the item
         /// </summary>
         [JsonProperty("name"), XmlElement("name")]
-        public string Name { get; set; }
+        public string? Name
+        {
+            get => _feature.ReadString(Models.Internal.Feature.NameKey);
+            set => _feature[Models.Internal.Feature.NameKey] = value;
+        }
 
         /// <summary>
         /// PartFeature value
         /// </summary>
         [JsonProperty("value"), XmlElement("value")]
-        public string Value { get; set; }
+        public string? Value
+        {
+            get => _feature.ReadString(Models.Internal.Feature.ValueKey);
+            set => _feature[Models.Internal.Feature.ValueKey] = value;
+        }
+
+        /// <summary>
+        /// Internal Feature model
+        /// </summary>
+        [JsonIgnore]
+        private Models.Internal.Feature _feature = new();
 
         #endregion
 
         #region Accessors
 
         /// <inheritdoc/>
-        public override string GetName() => Name;
+        public override string? GetName() => Name;
 
         /// <inheritdoc/>
-        public override void SetName(string name) => Name = name;
+        public override void SetName(string? name) => Name = name;
 
         #endregion
 
@@ -59,12 +73,11 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine.Clone() as Machine,
-                Source = this.Source.Clone() as Source,
+                Machine = this.Machine?.Clone() as Machine,
+                Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                Name = this.Name,
-                Value = this.Value,
+                _feature = this._feature?.Clone() as Models.Internal.Feature ?? new Models.Internal.Feature(),
             };
         }
 
@@ -73,18 +86,14 @@ namespace SabreTools.DatItems.Formats
         #region Comparision Methods
 
         /// <inheritdoc/>
-        public override bool Equals(DatItem other)
+        public override bool Equals(DatItem? other)
         {
-            // If we don't have a sample, return false
-            if (ItemType != other.ItemType)
+            // If we don't have a PartFeature, return false
+            if (ItemType != other?.ItemType || other is not PartFeature otherInternal)
                 return false;
 
-            // Otherwise, treat it as a PartFeature
-            PartFeature newOther = other as PartFeature;
-
-            // If the archive information matches
-            return (Name == newOther.Name
-                && Value == newOther.Value);
+            // Compare the internal models
+            return _feature.EqualTo(otherInternal._feature);
         }
 
         #endregion

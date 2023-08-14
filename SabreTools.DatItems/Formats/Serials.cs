@@ -17,85 +17,85 @@ namespace SabreTools.DatItems.Formats
         /// Digital serial 1 value
         /// </summary>
         [JsonProperty("digital_serial1", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("digital_serial1")]
-        public string DigitalSerial1 { get; set; }
+        public string? DigitalSerial1 { get; set; }
 
         /// <summary>
         /// Digital serial 2 value
         /// </summary>
         [JsonProperty("digital_serial2", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("digital_serial2")]
-        public string DigitalSerial2 { get; set; }
+        public string? DigitalSerial2 { get; set; }
 
         /// <summary>
         /// Media serial 1 value
         /// </summary>
         [JsonProperty("media_serial1", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("media_serial1")]
-        public string MediaSerial1 { get; set; }
+        public string? MediaSerial1 { get; set; }
 
         /// <summary>
         /// Media serial 2 value
         /// </summary>
         [JsonProperty("media_serial2", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("media_serial2")]
-        public string MediaSerial2 { get; set; }
+        public string? MediaSerial2 { get; set; }
 
         /// <summary>
         /// Media serial 3 value
         /// </summary>
         [JsonProperty("media_serial3", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("media_serial3")]
-        public string MediaSerial3 { get; set; }
+        public string? MediaSerial3 { get; set; }
 
         /// <summary>
         /// PCB serial value
         /// </summary>
         [JsonProperty("pcb_serial", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("pcb_serial")]
-        public string PcbSerial { get; set; }
+        public string? PcbSerial { get; set; }
 
         /// <summary>
         /// Rom chip serial 1 value
         /// </summary>
         [JsonProperty("romchip_serial1", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("romchip_serial1")]
-        public string RomChipSerial1 { get; set; }
+        public string? RomChipSerial1 { get; set; }
 
         /// <summary>
         /// Rom chip serial 2 value
         /// </summary>
         [JsonProperty("romchip_serial2", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("romchip_serial2")]
-        public string RomChipSerial2 { get; set; }
+        public string? RomChipSerial2 { get; set; }
 
         /// <summary>
         /// Lockout serial value
         /// </summary>
         [JsonProperty("lockout_serial", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("lockout_serial")]
-        public string LockoutSerial { get; set; }
+        public string? LockoutSerial { get; set; }
 
         /// <summary>
         /// Save chip serial value
         /// </summary>
         [JsonProperty("savechip_serial", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("savechip_serial")]
-        public string SaveChipSerial { get; set; }
+        public string? SaveChipSerial { get; set; }
 
         /// <summary>
         /// Chip serial value
         /// </summary>
         [JsonProperty("chip_serial", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("chip_serial")]
-        public string ChipSerial { get; set; }
+        public string? ChipSerial { get; set; }
 
         /// <summary>
         /// Box serial value
         /// </summary>
         [JsonProperty("box_serial", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("box_serial")]
-        public string BoxSerial { get; set; }
+        public string? BoxSerial { get; set; }
 
         /// <summary>
         /// Media stamp value
         /// </summary>
         [JsonProperty("mediastamp", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("mediastamp")]
-        public string MediaStamp { get; set; }
+        public string? MediaStamp { get; set; }
 
         /// <summary>
         /// Box barcode value
         /// </summary>
         [JsonProperty("box_barcode", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("box_barcode")]
-        public string BoxBarcode { get; set; }
+        public string? BoxBarcode { get; set; }
 
         #endregion
 
@@ -121,8 +121,8 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine.Clone() as Machine,
-                Source = this.Source.Clone() as Source,
+                Machine = this.Machine?.Clone() as Machine,
+                Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
                 DigitalSerial1 = this.DigitalSerial1,
@@ -147,17 +147,17 @@ namespace SabreTools.DatItems.Formats
         #region Comparision Methods
 
         /// <inheritdoc/>
-        public override bool Equals(DatItem other)
+        public override bool Equals(DatItem? other)
         {
             // If we don't have a Serials, return false
-            if (ItemType != other.ItemType)
+            if (ItemType != other?.ItemType)
                 return false;
 
             // Otherwise, treat it as a Serials
-            Serials newOther = other as Serials;
+            Serials? newOther = other as Serials;
 
             // If the Serials information matches
-            return (DigitalSerial1 == newOther.DigitalSerial1
+            return (DigitalSerial1 == newOther!.DigitalSerial1
                 && DigitalSerial2 == newOther.DigitalSerial2
                 && MediaSerial1 == newOther.MediaSerial1
                 && MediaSerial2 == newOther.MediaSerial2

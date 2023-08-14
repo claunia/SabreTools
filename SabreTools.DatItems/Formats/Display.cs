@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -17,14 +18,22 @@ namespace SabreTools.DatItems.Formats
         /// Display tag
         /// </summary>
         [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tag")]
-        public string Tag { get; set; }
+        public string? Tag
+        {
+            get => _display.ReadString(Models.Internal.Display.TagKey);
+            set => _display[Models.Internal.Display.TagKey] = value;
+        }
 
         /// <summary>
         /// Display type
         /// </summary>
         [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("type")]
         [JsonConverter(typeof(StringEnumConverter))]
-        public DisplayType DisplayType { get; set; }
+        public DisplayType DisplayType
+        {
+            get => _display.ReadString(Models.Internal.Display.DisplayTypeKey).AsDisplayType();
+            set => _display[Models.Internal.Display.DisplayTypeKey] = value.FromDisplayType();
+        }
 
         [JsonIgnore]
         public bool DisplayTypeSpecified { get { return DisplayType != DisplayType.NULL; } }
@@ -33,7 +42,11 @@ namespace SabreTools.DatItems.Formats
         /// Display rotation
         /// </summary>
         [JsonProperty("rotate", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("rotate")]
-        public long? Rotate { get; set; }
+        public long? Rotate
+        {
+            get => _display.ReadLong(Models.Internal.Display.RotateKey);
+            set => _display[Models.Internal.Display.RotateKey] = value;
+        }
 
         [JsonIgnore]
         public bool RotateSpecified { get { return Rotate != null; } }
@@ -42,7 +55,11 @@ namespace SabreTools.DatItems.Formats
         /// Determines if display is flipped in the X-coordinates
         /// </summary>
         [JsonProperty("flipx", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("flipx")]
-        public bool? FlipX { get; set; }
+        public bool? FlipX
+        {
+            get => _display.ReadBool(Models.Internal.Display.FlipXKey);
+            set => _display[Models.Internal.Display.FlipXKey] = value;
+        }
 
         [JsonIgnore]
         public bool FlipXSpecified { get { return FlipX != null; } }
@@ -51,7 +68,11 @@ namespace SabreTools.DatItems.Formats
         /// Display width
         /// </summary>
         [JsonProperty("width", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("width")]
-        public long? Width { get; set; }
+        public long? Width
+        {
+            get => _display.ReadLong(Models.Internal.Display.WidthKey);
+            set => _display[Models.Internal.Display.WidthKey] = value;
+        }
 
         [JsonIgnore]
         public bool WidthSpecified { get { return Width != null; } }
@@ -60,7 +81,11 @@ namespace SabreTools.DatItems.Formats
         /// Display height
         /// </summary>
         [JsonProperty("height", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("height")]
-        public long? Height { get; set; }
+        public long? Height
+        {
+            get => _display.ReadLong(Models.Internal.Display.HeightKey);
+            set => _display[Models.Internal.Display.HeightKey] = value;
+        }
 
         [JsonIgnore]
         public bool HeightSpecified { get { return Height != null; } }
@@ -69,7 +94,11 @@ namespace SabreTools.DatItems.Formats
         /// Refresh rate
         /// </summary>
         [JsonProperty("refresh", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("refresh")]
-        public double? Refresh { get; set; }
+        public double? Refresh
+        {
+            get => _display.ReadDouble(Models.Internal.Display.RefreshKey);
+            set => _display[Models.Internal.Display.RefreshKey] = value;
+        }
 
         [JsonIgnore]
         public bool RefreshSpecified { get { return Refresh != null; } }
@@ -78,7 +107,11 @@ namespace SabreTools.DatItems.Formats
         /// Pixel clock timer
         /// </summary>
         [JsonProperty("pixclock", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("pixclock")]
-        public long? PixClock { get; set; }
+        public long? PixClock
+        {
+            get => _display.ReadLong(Models.Internal.Display.PixClockKey);
+            set => _display[Models.Internal.Display.PixClockKey] = value;
+        }
 
         [JsonIgnore]
         public bool PixClockSpecified { get { return PixClock != null; } }
@@ -87,7 +120,11 @@ namespace SabreTools.DatItems.Formats
         /// Total horizontal lines
         /// </summary>
         [JsonProperty("htotal", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("htotal")]
-        public long? HTotal { get; set; }
+        public long? HTotal
+        {
+            get => _display.ReadLong(Models.Internal.Display.HTotalKey);
+            set => _display[Models.Internal.Display.HTotalKey] = value;
+        }
 
         [JsonIgnore]
         public bool HTotalSpecified { get { return HTotal != null; } }
@@ -96,7 +133,11 @@ namespace SabreTools.DatItems.Formats
         /// Horizontal blank end
         /// </summary>
         [JsonProperty("hbend", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("hbend")]
-        public long? HBEnd { get; set; }
+        public long? HBEnd
+        {
+            get => _display.ReadLong(Models.Internal.Display.HBEndKey);
+            set => _display[Models.Internal.Display.HBEndKey] = value;
+        }
 
         [JsonIgnore]
         public bool HBEndSpecified { get { return HBEnd != null; } }
@@ -105,7 +146,11 @@ namespace SabreTools.DatItems.Formats
         /// Horizontal blank start
         /// </summary>
         [JsonProperty("hbstart", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("hbstart")]
-        public long? HBStart { get; set; }
+        public long? HBStart
+        {
+            get => _display.ReadLong(Models.Internal.Display.HBStartKey);
+            set => _display[Models.Internal.Display.HBStartKey] = value;
+        }
 
         [JsonIgnore]
         public bool HBStartSpecified { get { return HBStart != null; } }
@@ -114,7 +159,11 @@ namespace SabreTools.DatItems.Formats
         /// Total vertical lines
         /// </summary>
         [JsonProperty("vtotal", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("vtotal")]
-        public long? VTotal { get; set; }
+        public long? VTotal
+        {
+            get => _display.ReadLong(Models.Internal.Display.VTotalKey);
+            set => _display[Models.Internal.Display.VTotalKey] = value;
+        }
 
         [JsonIgnore]
         public bool VTotalSpecified { get { return VTotal != null; } }
@@ -123,7 +172,11 @@ namespace SabreTools.DatItems.Formats
         /// Vertical blank end
         /// </summary>
         [JsonProperty("vbend", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("vbend")]
-        public long? VBEnd { get; set; }
+        public long? VBEnd
+        {
+            get => _display.ReadLong(Models.Internal.Display.VBEndKey);
+            set => _display[Models.Internal.Display.VBEndKey] = value;
+        }
 
         [JsonIgnore]
         public bool VBEndSpecified { get { return VBEnd != null; } }
@@ -132,10 +185,20 @@ namespace SabreTools.DatItems.Formats
         /// Vertical blank start
         /// </summary>
         [JsonProperty("vbstart", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("vbstart")]
-        public long? VBStart { get; set; }
+        public long? VBStart
+        {
+            get => _display.ReadLong(Models.Internal.Display.VBStartKey);
+            set => _display[Models.Internal.Display.VBStartKey] = value;
+        }
 
         [JsonIgnore]
         public bool VBStartSpecified { get { return VBStart != null; } }
+
+        /// <summary>
+        /// Internal Display model
+        /// </summary>
+        [JsonIgnore]
+        private Models.Internal.Display _display = new();
 
         #endregion
 
@@ -161,24 +224,11 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine.Clone() as Machine,
-                Source = this.Source.Clone() as Source,
+                Machine = this.Machine?.Clone() as Machine,
+                Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                Tag = this.Tag,
-                DisplayType = this.DisplayType,
-                Rotate = this.Rotate,
-                FlipX = this.FlipX,
-                Width = this.Width,
-                Height = this.Height,
-                Refresh = this.Refresh,
-                PixClock = this.PixClock,
-                HTotal = this.HTotal,
-                HBEnd = this.HBEnd,
-                HBStart = this.HBStart,
-                VTotal = this.VTotal,
-                VBEnd = this.VBEnd,
-                VBStart = this.VBStart,
+                _display = this._display?.Clone() as Models.Internal.Display ?? new Models.Internal.Display(),
             };
         }
 
@@ -187,30 +237,14 @@ namespace SabreTools.DatItems.Formats
         #region Comparision Methods
 
         /// <inheritdoc/>
-        public override bool Equals(DatItem other)
+        public override bool Equals(DatItem? other)
         {
             // If we don't have a Display, return false
-            if (ItemType != other.ItemType)
+            if (ItemType != other?.ItemType || other is not Display otherInternal)
                 return false;
 
-            // Otherwise, treat it as a Display
-            Display newOther = other as Display;
-
-            // If the Display information matches
-            return (Tag == newOther.Tag
-                && DisplayType == newOther.DisplayType
-                && Rotate == newOther.Rotate
-                && FlipX == newOther.FlipX
-                && Width == newOther.Width
-                && Height == newOther.Height
-                && Refresh == newOther.Refresh
-                && PixClock == newOther.PixClock
-                && HTotal == newOther.HTotal
-                && HBEnd == newOther.HBEnd
-                && HBStart == newOther.HBStart
-                && VTotal == newOther.VTotal
-                && VBEnd == newOther.VBEnd
-                && VBStart == newOther.VBStart);
+            // Compare the internal models
+            return _display.EqualTo(otherInternal._display);
         }
 
         #endregion

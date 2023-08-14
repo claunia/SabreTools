@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
@@ -17,7 +18,11 @@ namespace SabreTools.DatItems.Formats
         /// Input service ID
         /// </summary>
         [JsonProperty("service", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("service")]
-        public bool? Service { get; set; }
+        public bool? Service
+        {
+            get => _input.ReadBool(Models.Internal.Input.ServiceKey);
+            set => _input[Models.Internal.Input.ServiceKey] = value;
+        }
 
         [JsonIgnore]
         public bool ServiceSpecified { get { return Service != null; } }
@@ -26,7 +31,11 @@ namespace SabreTools.DatItems.Formats
         /// Determins if this has a tilt sensor
         /// </summary>
         [JsonProperty("tilt", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tilt")]
-        public bool? Tilt { get; set; }
+        public bool? Tilt
+        {
+            get => _input.ReadBool(Models.Internal.Input.TiltKey);
+            set => _input[Models.Internal.Input.TiltKey] = value;
+        }
 
         [JsonIgnore]
         public bool TiltSpecified { get { return Tilt != null; } }
@@ -35,7 +44,11 @@ namespace SabreTools.DatItems.Formats
         /// Number of players on the input
         /// </summary>
         [JsonProperty("players", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("players")]
-        public long? Players { get; set; }
+        public long? Players
+        {
+            get => _input.ReadLong(Models.Internal.Input.PlayersKey);
+            set => _input[Models.Internal.Input.PlayersKey] = value;
+        }
 
         [JsonIgnore]
         public bool PlayersSpecified { get { return Players != null; } }
@@ -44,7 +57,11 @@ namespace SabreTools.DatItems.Formats
         /// Number of coins required
         /// </summary>
         [JsonProperty("coins", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("coins")]
-        public long? Coins { get; set; }
+        public long? Coins
+        {
+            get => _input.ReadLong(Models.Internal.Input.CoinsKey);
+            set => _input[Models.Internal.Input.CoinsKey] = value;
+        }
 
         [JsonIgnore]
         public bool CoinsSpecified { get { return Coins != null; } }
@@ -53,10 +70,20 @@ namespace SabreTools.DatItems.Formats
         /// Set of controls for the input
         /// </summary>
         [JsonProperty("controls", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("controls")]
-        public List<Control> Controls { get; set; }
+        public List<Control>? Controls
+        {
+            get => _input.Read<Control[]>(Models.Internal.Input.ControlKey)?.ToList();
+            set => _input[Models.Internal.Input.ControlKey] = value?.ToArray();
+        }
 
         [JsonIgnore]
         public bool ControlsSpecified { get { return Controls != null && Controls.Count > 0; } }
+
+        /// <summary>
+        /// Internal Input model
+        /// </summary>
+        [JsonIgnore]
+        private Models.Internal.Input _input = new();
 
         #endregion
 
@@ -82,15 +109,11 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine.Clone() as Machine,
-                Source = this.Source.Clone() as Source,
+                Machine = this.Machine?.Clone() as Machine,
+                Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                Service = this.Service,
-                Tilt = this.Tilt,
-                Players = this.Players,
-                Coins = this.Coins,
-                Controls = this.Controls,
+                _input = this._input?.Clone() as Models.Internal.Input ?? new Models.Internal.Input(),
             };
         }
 
@@ -99,33 +122,14 @@ namespace SabreTools.DatItems.Formats
         #region Comparision Methods
 
         /// <inheritdoc/>
-        public override bool Equals(DatItem other)
+        public override bool Equals(DatItem? other)
         {
             // If we don't have a Input, return false
-            if (ItemType != other.ItemType)
+            if (ItemType != other?.ItemType || other is not Input otherInternal)
                 return false;
 
-            // Otherwise, treat it as a Input
-            Input newOther = other as Input;
-
-            // If the Input information matches
-            bool match = (Service == newOther.Service
-                && Tilt == newOther.Tilt
-                && Players == newOther.Players
-                && Coins == newOther.Coins);
-            if (!match)
-                return match;
-
-            // If the controls match
-            if (ControlsSpecified)
-            {
-                foreach (Control control in Controls)
-                {
-                    match &= newOther.Controls.Contains(control);
-                }
-            }
-
-            return match;
+            // Compare the internal models
+            return _input.EqualTo(otherInternal._input);
         }
 
         #endregion

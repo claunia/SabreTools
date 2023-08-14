@@ -17,10 +17,10 @@ namespace SabreTools.DatItems.Formats
     {
         #region Private instance variables
 
-        private byte[] _crc; // 8 bytes
-        private byte[] _md5; // 16 bytes
-        private byte[] _sha1; // 20 bytes
-        private byte[] _sha256; // 32 bytes
+        private byte[]? _crc; // 8 bytes
+        private byte[]? _md5; // 16 bytes
+        private byte[]? _sha1; // 20 bytes
+        private byte[]? _sha256; // 32 bytes
 
         #endregion
 
@@ -30,13 +30,13 @@ namespace SabreTools.DatItems.Formats
         /// ID value
         /// </summary>
         [JsonProperty("id", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("id")]
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
         /// <summary>
         /// Extension value
         /// </summary>
         [JsonProperty("extension", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("extension")]
-        public string Extension { get; set; }
+        public string? Extension { get; set; }
 
         /// <summary>
         /// Byte size of the rom
@@ -51,47 +51,47 @@ namespace SabreTools.DatItems.Formats
         /// File CRC32 hash
         /// </summary>
         [JsonProperty("crc", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("crc")]
-        public string CRC
+        public string? CRC
         {
             get { return _crc.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_crc); }
-            set { _crc = (value == "null" ? Constants.CRCZeroBytes : Utilities.StringToByteArray(CleanCRC32(value))); }
+            set { _crc = (value == "null" ? Constants.CRCZeroBytes : Utilities.StringToByteArray(TextHelper.NormalizeCRC32(value))); }
         }
 
         /// <summary>
         /// File MD5 hash
         /// </summary>
         [JsonProperty("md5", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("md5")]
-        public string MD5
+        public string? MD5
         {
             get { return _md5.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_md5); }
-            set { _md5 = Utilities.StringToByteArray(CleanMD5(value)); }
+            set { _md5 = Utilities.StringToByteArray(TextHelper.NormalizeMD5(value)); }
         }
 
         /// <summary>
         /// File SHA-1 hash
         /// </summary>
         [JsonProperty("sha1", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha1")]
-        public string SHA1
+        public string? SHA1
         {
             get { return _sha1.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha1); }
-            set { _sha1 = Utilities.StringToByteArray(CleanSHA1(value)); }
+            set { _sha1 = Utilities.StringToByteArray(TextHelper.NormalizeSHA1(value)); }
         }
 
         /// <summary>
         /// File SHA-256 hash
         /// </summary>
         [JsonProperty("sha256", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha256")]
-        public string SHA256
+        public string? SHA256
         {
             get { return _sha256.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha256); }
-            set { _sha256 = Utilities.StringToByteArray(CleanSHA256(value)); }
+            set { _sha256 = Utilities.StringToByteArray(TextHelper.NormalizeSHA256(value)); }
         }
 
         /// <summary>
         /// Format value
         /// </summary>
         [JsonProperty("format", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("format")]
-        public string Format { get; set; }
+        public string? Format { get; set; }
 
         #endregion // Fields
 
@@ -132,8 +132,8 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine.Clone() as Machine,
-                Source = this.Source.Clone() as Source,
+                Machine = this.Machine?.Clone() as Machine,
+                Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
                 Id = this.Id,
@@ -174,8 +174,8 @@ namespace SabreTools.DatItems.Formats
                 ItemType = ItemType.Rom,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine.Clone() as Machine,
-                Source = this.Source.Clone() as Source,
+                Machine = this.Machine?.Clone() as Machine,
+                Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
                 CRC = this.CRC,
@@ -192,31 +192,31 @@ namespace SabreTools.DatItems.Formats
         #region Comparision Methods
 
         /// <inheritdoc/>
-        public override bool Equals(DatItem other)
+        public override bool Equals(DatItem? other)
         {
             bool dupefound = false;
 
             // If we don't have a file, return false
-            if (ItemType != other.ItemType)
+            if (ItemType != other?.ItemType)
                 return dupefound;
 
             // Otherwise, treat it as a File
-            File newOther = other as File;
+            File? newOther = other as File;
 
             // If all hashes are empty, then they're dupes
-            if (!HasHashes() && !newOther.HasHashes())
+            if (!HasHashes() && !newOther!.HasHashes())
             {
                 dupefound = true;
             }
 
             // If we have a file that has no known size, rely on the hashes only
-            else if (Size == null && HashMatch(newOther))
+            else if (Size == null && HashMatch(newOther!))
             {
                 dupefound = true;
             }
 
             // Otherwise if we get a partial match
-            else if (Size == newOther.Size && HashMatch(newOther))
+            else if (Size == newOther!.Size && HashMatch(newOther))
             {
                 dupefound = true;
             }
@@ -331,7 +331,7 @@ namespace SabreTools.DatItems.Formats
         public override string GetKey(ItemKey bucketedBy, bool lower = true, bool norename = true)
         {
             // Set the output key as the default blank string
-            string key;
+            string? key;
 
             // Now determine what the key should be based on the bucketedBy value
             switch (bucketedBy)

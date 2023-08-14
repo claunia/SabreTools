@@ -717,6 +717,7 @@ namespace SabreTools.Serialization
             {
                 Name = item.ReadString(Models.Internal.RamOption.NameKey),
                 Default = item.ReadString(Models.Internal.RamOption.DefaultKey),
+                Content = item.ReadString(Models.Internal.RamOption.ContentKey),
             };
             return ramOption;
         }

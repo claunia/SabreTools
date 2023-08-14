@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -17,20 +18,32 @@ namespace SabreTools.DatItems.Formats
         /// Name of the item
         /// </summary>
         [JsonProperty("name"), XmlElement("name")]
-        public string Name { get; set; }
+        public string? Name
+        {
+            get => _chip.ReadString(Models.Internal.Chip.NameKey);
+            set => _chip[Models.Internal.Chip.NameKey] = value;
+        }
 
         /// <summary>
         /// Internal tag
         /// </summary>
         [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tag")]
-        public string Tag { get; set; }
+        public string? Tag
+        {
+            get => _chip.ReadString(Models.Internal.Chip.TagKey);
+            set => _chip[Models.Internal.Chip.TagKey] = value;
+        }
 
         /// <summary>
         /// Type of the chip
         /// </summary>
         [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("type")]
         [JsonConverter(typeof(StringEnumConverter))]
-        public ChipType ChipType { get; set; }
+        public ChipType ChipType
+        {
+            get => _chip.ReadString(Models.Internal.Chip.ChipTypeKey).AsChipType();
+            set => _chip[Models.Internal.Chip.ChipTypeKey] = value.FromChipType();
+        }
 
         [JsonIgnore]
         public bool ChipTypeSpecified { get { return ChipType != ChipType.NULL; } }
@@ -39,20 +52,30 @@ namespace SabreTools.DatItems.Formats
         /// Clock speed
         /// </summary>
         [JsonProperty("clock", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("clock")]
-        public long? Clock { get; set; }
+        public long? Clock
+        {
+            get => _chip.ReadLong(Models.Internal.Chip.ClockKey);
+            set => _chip[Models.Internal.Chip.ClockKey] = value;
+        }
 
         [JsonIgnore]
         public bool ClockSpecified { get { return Clock != null; } }
+
+        /// <summary>
+        /// Internal Chip model
+        /// </summary>
+        [JsonIgnore]
+        private Models.Internal.Chip _chip = new();
 
         #endregion
 
         #region Accessors
 
         /// <inheritdoc/>
-        public override string GetName() => Name;
+        public override string? GetName() => Name;
 
         /// <inheritdoc/>
-        public override void SetName(string name) => Name = name;
+        public override void SetName(string? name) => Name = name;
 
         #endregion
 
@@ -79,14 +102,11 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine.Clone() as Machine,
-                Source = this.Source.Clone() as Source,
+                Machine = this.Machine?.Clone() as Machine,
+                Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                Name = this.Name,
-                Tag = this.Tag,
-                ChipType = this.ChipType,
-                Clock = this.Clock,
+                _chip = this._chip?.Clone() as Models.Internal.Chip ?? new Models.Internal.Chip(),
             };
         }
 
@@ -95,20 +115,14 @@ namespace SabreTools.DatItems.Formats
         #region Comparision Methods
 
         /// <inheritdoc/>
-        public override bool Equals(DatItem other)
+        public override bool Equals(DatItem? other)
         {
-            // If we don't have a chip, return false
-            if (ItemType != other.ItemType)
+            // If we don't have a Chip, return false
+            if (ItemType != other?.ItemType || other is not Chip otherInternal)
                 return false;
 
-            // Otherwise, treat it as a chip
-            Chip newOther = other as Chip;
-
-            // If the chip information matches
-            return (Name == newOther.Name
-                && Tag == newOther.Tag
-                && ChipType == newOther.ChipType
-                && Clock == newOther.Clock);
+            // Compare the internal models
+            return _chip.EqualTo(otherInternal._chip);
         }
 
         #endregion

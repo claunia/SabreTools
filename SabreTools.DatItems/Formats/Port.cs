@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
@@ -17,16 +18,30 @@ namespace SabreTools.DatItems.Formats
         /// Tag for the port
         /// </summary>
         [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tag")]
-        public string Tag { get; set; }
+        public string? Tag
+        {
+            get => _port.ReadString(Models.Internal.Port.TagKey);
+            set => _port[Models.Internal.Port.TagKey] = value;
+        }
 
         /// <summary>
         /// List of analogs on the port
         /// </summary>
         [JsonProperty("analogs", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("analogs")]
-        public List<Analog> Analogs { get; set; }
+        public List<Analog>? Analogs
+        {
+            get => _port.Read<Analog[]>(Models.Internal.Port.AnalogKey)?.ToList();
+            set => _port[Models.Internal.Port.AnalogKey] = value?.ToArray();
+        }
 
         [JsonIgnore]
         public bool AnalogsSpecified { get { return Analogs != null && Analogs.Count > 0; } }
+
+        /// <summary>
+        /// Internal Port model
+        /// </summary>
+        [JsonIgnore]
+        private Models.Internal.Port _port = new();
 
         #endregion
 
@@ -52,12 +67,11 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine.Clone() as Machine,
-                Source = this.Source.Clone() as Source,
+                Machine = this.Machine?.Clone() as Machine,
+                Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                Tag = this.Tag,
-                Analogs = this.Analogs,
+                _port = this._port?.Clone() as Models.Internal.Port ?? new Models.Internal.Port(),
             };
         }
 
@@ -66,30 +80,14 @@ namespace SabreTools.DatItems.Formats
         #region Comparision Methods
 
         /// <inheritdoc/>
-        public override bool Equals(DatItem other)
+        public override bool Equals(DatItem? other)
         {
             // If we don't have a Port, return false
-            if (ItemType != other.ItemType)
+            if (ItemType != other?.ItemType || other is not Port otherInternal)
                 return false;
 
-            // Otherwise, treat it as a Port
-            Port newOther = other as Port;
-
-            // If the Port information matches
-            bool match = (Tag == newOther.Tag);
-            if (!match)
-                return match;
-
-            // If the analogs match
-            if (AnalogsSpecified)
-            {
-                foreach (Analog analog in Analogs)
-                {
-                    match &= newOther.Analogs.Contains(analog);
-                }
-            }
-
-            return match;
+            // Compare the internal models
+            return _port.EqualTo(otherInternal._port);
         }
 
         #endregion

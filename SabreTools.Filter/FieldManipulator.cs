@@ -70,7 +70,7 @@ namespace SabreTools.Filter
 
             // Retrieve the list of valid fields for the item and validate
             var constants = TypeHelper.GetConstants(dictionaryBase.GetType());
-            if (constants == null || !constants.Any(c => string.Equals(c, fieldName, StringComparison.InvariantCultureIgnoreCase)))
+            if (constants == null || !constants.Any(c => string.Equals(c, fieldName, StringComparison.OrdinalIgnoreCase)))
                 return false;
 
             // Set the field with the new value
