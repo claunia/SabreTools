@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
 
 namespace SabreTools.Core.Tools
 {
@@ -7,6 +9,40 @@ namespace SabreTools.Core.Tools
     /// </summary>
     public static class Utilities
     {
+        /// <summary>
+        /// Determine if two hashes are equal for the purposes of merging
+        /// </summary>
+        public static bool ConditionalHashEquals(byte[]? firstHash, byte[]? secondHash)
+        {
+            // If either hash is empty, we say they're equal for merging
+            if (firstHash.IsNullOrEmpty() || secondHash.IsNullOrEmpty())
+                return true;
+
+            // If they're different sizes, they can't match
+            if (firstHash!.Length != secondHash!.Length)
+                return false;
+
+            // Otherwise, they need to match exactly
+            return Enumerable.SequenceEqual(firstHash, secondHash);
+        }
+
+        /// <summary>
+        /// Determine if two hashes are equal for the purposes of merging
+        /// </summary>
+        public static bool ConditionalHashEquals(string? firstHash, string? secondHash)
+        {
+            // If either hash is empty, we say they're equal for merging
+            if (string.IsNullOrWhiteSpace(firstHash) || string.IsNullOrWhiteSpace(secondHash))
+                return true;
+
+            // If they're different sizes, they can't match
+            if (firstHash!.Length != secondHash!.Length)
+                return false;
+
+            // Otherwise, they need to match exactly
+            return string.Equals(firstHash, secondHash, StringComparison.OrdinalIgnoreCase);
+        }
+
         /// <summary>
         /// Get a proper romba sub path
         /// </summary>

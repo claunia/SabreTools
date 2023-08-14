@@ -317,10 +317,10 @@ namespace SabreTools.DatItems.Formats
                 return false;
 
             // Return if all hashes match according to merge rules
-            return ConditionalHashEquals(_crc, other._crc)
-                && ConditionalHashEquals(_md5, other._md5)
-                && ConditionalHashEquals(_sha1, other._sha1)
-                && ConditionalHashEquals(_sha256, other._sha256);
+            return Utilities.ConditionalHashEquals(_crc, other._crc)
+                && Utilities.ConditionalHashEquals(_md5, other._md5)
+                && Utilities.ConditionalHashEquals(_sha1, other._sha1)
+                && Utilities.ConditionalHashEquals(_sha256, other._sha256);
         }
 
         #endregion

@@ -189,7 +189,7 @@ namespace SabreTools.Test.DatItems
         [InlineData(new byte[] { 0x00 }, new byte[] { 0x00 }, true)]
         public void ConditionalHashEqualsTest(byte[] first, byte[] second, bool expected)
         {
-            bool actual = DatItem.ConditionalHashEquals(first, second);
+            bool actual = SabreTools.Core.Tools.Utilities.ConditionalHashEquals(first, second);
             Assert.Equal(expected, actual);
         }
     

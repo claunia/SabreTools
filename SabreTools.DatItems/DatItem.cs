@@ -400,26 +400,6 @@ namespace SabreTools.DatItems
         #region Sorting and Merging
 
         /// <summary>
-        /// Determine if two hashes are equal for the purposes of merging
-        /// </summary>
-        /// <param name="firstHash">First hash to compare</param>
-        /// <param name="secondHash">Second hash to compare</param>
-        /// <returns>True if either is empty OR the hashes exactly match, false otherwise</returns>
-        public static bool ConditionalHashEquals(byte[]? firstHash, byte[]? secondHash)
-        {
-            // If either hash is empty, we say they're equal for merging
-            if (firstHash.IsNullOrEmpty() || secondHash.IsNullOrEmpty())
-                return true;
-
-            // If they're different sizes, they can't match
-            if (firstHash!.Length != secondHash!.Length)
-                return false;
-
-            // Otherwise, they need to match exactly
-            return Enumerable.SequenceEqual(firstHash, secondHash);
-        }
-
-        /// <summary>
         /// Merge an arbitrary set of ROMs based on the supplied information
         /// </summary>
         /// <param name="infiles">List of File objects representing the roms to be merged</param>

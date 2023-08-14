@@ -285,8 +285,8 @@ namespace SabreTools.Core
                 return false;
 
             // Return if all hashes match according to merge rules
-            return ConditionalHashEquals(self.ReadString(Disk.MD5Key), other.ReadString(Disk.MD5Key))
-                && ConditionalHashEquals(self.ReadString(Disk.SHA1Key), other.ReadString(Disk.SHA1Key));
+            return Tools.Utilities.ConditionalHashEquals(self.ReadString(Disk.MD5Key), other.ReadString(Disk.MD5Key))
+                && Tools.Utilities.ConditionalHashEquals(self.ReadString(Disk.SHA1Key), other.ReadString(Disk.SHA1Key));
         }
 
         /// <summary>
@@ -303,10 +303,10 @@ namespace SabreTools.Core
                 return false;
 
             // Return if all hashes match according to merge rules
-            return ConditionalHashEquals(self.ReadString(Media.MD5Key), other.ReadString(Media.MD5Key))
-                && ConditionalHashEquals(self.ReadString(Media.SHA1Key), other.ReadString(Media.SHA1Key))
-                && ConditionalHashEquals(self.ReadString(Media.SHA256Key), other.ReadString(Media.SHA256Key))
-                && ConditionalHashEquals(self.ReadString(Media.SpamSumKey), other.ReadString(Media.SpamSumKey));
+            return Tools.Utilities.ConditionalHashEquals(self.ReadString(Media.MD5Key), other.ReadString(Media.MD5Key))
+                && Tools.Utilities.ConditionalHashEquals(self.ReadString(Media.SHA1Key), other.ReadString(Media.SHA1Key))
+                && Tools.Utilities.ConditionalHashEquals(self.ReadString(Media.SHA256Key), other.ReadString(Media.SHA256Key))
+                && Tools.Utilities.ConditionalHashEquals(self.ReadString(Media.SpamSumKey), other.ReadString(Media.SpamSumKey));
         }
 
         /// <summary>
@@ -323,13 +323,13 @@ namespace SabreTools.Core
                 return false;
 
             // Return if all hashes match according to merge rules
-            return ConditionalHashEquals(self.ReadString(Rom.CRCKey), other.ReadString(Rom.CRCKey))
-                && ConditionalHashEquals(self.ReadString(Rom.MD5Key), other.ReadString(Rom.MD5Key))
-                && ConditionalHashEquals(self.ReadString(Rom.SHA1Key), other.ReadString(Rom.SHA1Key))
-                && ConditionalHashEquals(self.ReadString(Rom.SHA256Key), other.ReadString(Rom.SHA256Key))
-                && ConditionalHashEquals(self.ReadString(Rom.SHA384Key), other.ReadString(Rom.SHA384Key))
-                && ConditionalHashEquals(self.ReadString(Rom.SHA512Key), other.ReadString(Rom.SHA512Key))
-                && ConditionalHashEquals(self.ReadString(Rom.SpamSumKey), other.ReadString(Rom.SpamSumKey));
+            return Tools.Utilities.ConditionalHashEquals(self.ReadString(Rom.CRCKey), other.ReadString(Rom.CRCKey))
+                && Tools.Utilities.ConditionalHashEquals(self.ReadString(Rom.MD5Key), other.ReadString(Rom.MD5Key))
+                && Tools.Utilities.ConditionalHashEquals(self.ReadString(Rom.SHA1Key), other.ReadString(Rom.SHA1Key))
+                && Tools.Utilities.ConditionalHashEquals(self.ReadString(Rom.SHA256Key), other.ReadString(Rom.SHA256Key))
+                && Tools.Utilities.ConditionalHashEquals(self.ReadString(Rom.SHA384Key), other.ReadString(Rom.SHA384Key))
+                && Tools.Utilities.ConditionalHashEquals(self.ReadString(Rom.SHA512Key), other.ReadString(Rom.SHA512Key))
+                && Tools.Utilities.ConditionalHashEquals(self.ReadString(Rom.SpamSumKey), other.ReadString(Rom.SpamSumKey));
         }
 
         /// <summary>
@@ -433,23 +433,6 @@ namespace SabreTools.Core
             bool spamsumNull = string.IsNullOrWhiteSpace(spamsum) || string.Equals(spamsum, Constants.SpamSumZero, StringComparison.OrdinalIgnoreCase);
 
             return crcNull && md5Null && sha1Null && sha256Null && sha384Null && sha512Null && spamsumNull;
-        }
-
-        /// <summary>
-        /// Determine if two hashes are equal for the purposes of merging
-        /// </summary>
-        private static bool ConditionalHashEquals(string? firstHash, string? secondHash)
-        {
-            // If either hash is empty, we say they're equal for merging
-            if (string.IsNullOrWhiteSpace(firstHash) || string.IsNullOrWhiteSpace(secondHash))
-                return true;
-
-            // If they're different sizes, they can't match
-            if (firstHash!.Length != secondHash!.Length)
-                return false;
-
-            // Otherwise, they need to match exactly
-            return string.Equals(firstHash, secondHash, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
