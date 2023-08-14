@@ -283,14 +283,7 @@ namespace SabreTools.DatItems.Formats
         /// Fill any missing size and hash information from another Disk
         /// </summary>
         /// <param name="other">Disk to fill information from</param>
-        public void FillMissingInformation(Disk other)
-        {
-            if (string.IsNullOrWhiteSpace(MD5) && !string.IsNullOrWhiteSpace(other.MD5))
-                MD5 = other.MD5;
-
-            if (string.IsNullOrWhiteSpace(SHA1) && !string.IsNullOrWhiteSpace(other.SHA1))
-                SHA1 = other.SHA1;
-        }
+        public void FillMissingInformation(Disk other) => _disk?.FillMissingHashes(other?._disk);
 
         /// <summary>
         /// Get unique duplicate suffix on name collision

@@ -499,5 +499,106 @@ namespace SabreTools.Core
         }
 
         #endregion
+    
+        #region Information Filling
+
+        /// <summary>
+        /// Fill any missing size and hash information from another Disk
+        /// </summary>
+        public static void FillMissingHashes(this Disk? self, Disk? other)
+        {
+            if (self == null || other == null)
+                return;
+
+            string? selfMd5 = self.ReadString(Disk.MD5Key);
+            string? otherMd5 = other.ReadString(Disk.MD5Key);
+            if (string.IsNullOrWhiteSpace(selfMd5) && !string.IsNullOrWhiteSpace(otherMd5))
+                self[Disk.MD5Key] = otherMd5;
+
+            string? selfSha1 = self.ReadString(Disk.SHA1Key);
+            string? otherSha1 = other.ReadString(Disk.SHA1Key);
+            if (string.IsNullOrWhiteSpace(selfSha1) && !string.IsNullOrWhiteSpace(otherSha1))
+                self[Disk.SHA1Key] = otherSha1;
+        }
+
+        /// <summary>
+        /// Fill any missing size and hash information from another Media
+        /// </summary>
+        public static void FillMissingHashes(this Media? self, Media? other)
+        {
+            if (self == null || other == null)
+                return;
+
+            string? selfMd5 = self.ReadString(Media.MD5Key);
+            string? otherMd5 = other.ReadString(Media.MD5Key);
+            if (string.IsNullOrWhiteSpace(selfMd5) && !string.IsNullOrWhiteSpace(otherMd5))
+                self[Media.MD5Key] = otherMd5;
+
+            string? selfSha1 = self.ReadString(Media.SHA1Key);
+            string? otherSha1 = other.ReadString(Media.SHA1Key);
+            if (string.IsNullOrWhiteSpace(selfSha1) && !string.IsNullOrWhiteSpace(otherSha1))
+                self[Media.SHA1Key] = otherSha1;
+
+            string? selfSha256 = self.ReadString(Media.SHA256Key);
+            string? otherSha256 = other.ReadString(Media.SHA256Key);
+            if (string.IsNullOrWhiteSpace(selfSha256) && !string.IsNullOrWhiteSpace(otherSha256))
+                self[Media.SHA256Key] = otherSha256;
+
+            string? selfSpamSum = self.ReadString(Media.SpamSumKey);
+            string? otherSpamSum = other.ReadString(Media.SpamSumKey);
+            if (string.IsNullOrWhiteSpace(selfSpamSum) && !string.IsNullOrWhiteSpace(otherSpamSum))
+                self[Media.SpamSumKey] = otherSpamSum;
+        }
+
+        /// <summary>
+        /// Fill any missing size and hash information from another Rom
+        /// </summary>
+        public static void FillMissingHashes(this Rom? self, Rom? other)
+        {
+            if (self == null || other == null)
+                return;
+
+            long? selfSize = self.ReadLong(Rom.SizeKey);
+            long? otherSize = other.ReadLong(Rom.SizeKey);
+            if (selfSize == null && otherSize != null)
+                self[Rom.SizeKey] = otherSize;
+
+            string? selfCrc = self.ReadString(Rom.CRCKey);
+            string? otherCrc = other.ReadString(Rom.CRCKey);
+            if (string.IsNullOrWhiteSpace(selfCrc) && !string.IsNullOrWhiteSpace(otherCrc))
+                self[Rom.CRCKey] = otherCrc;
+
+            string? selfMd5 = self.ReadString(Rom.MD5Key);
+            string? otherMd5 = other.ReadString(Rom.MD5Key);
+            if (string.IsNullOrWhiteSpace(selfMd5) && !string.IsNullOrWhiteSpace(otherMd5))
+                self[Rom.MD5Key] = otherMd5;
+
+            string? selfSha1 = self.ReadString(Rom.SHA1Key);
+            string? otherSha1 = other.ReadString(Rom.SHA1Key);
+            if (string.IsNullOrWhiteSpace(selfSha1) && !string.IsNullOrWhiteSpace(otherSha1))
+                self[Rom.SHA1Key] = otherSha1;
+
+            string? selfSha256 = self.ReadString(Rom.SHA256Key);
+            string? otherSha256 = other.ReadString(Rom.SHA256Key);
+            if (string.IsNullOrWhiteSpace(selfSha256) && !string.IsNullOrWhiteSpace(otherSha256))
+                self[Rom.SHA256Key] = otherSha256;
+
+            string? selfSha384 = self.ReadString(Rom.SHA384Key);
+            string? otherSha384 = other.ReadString(Rom.SHA384Key);
+            if (string.IsNullOrWhiteSpace(selfSha384) && !string.IsNullOrWhiteSpace(otherSha384))
+                self[Rom.SHA384Key] = otherSha384;
+
+            string? selfSha512 = self.ReadString(Rom.SHA512Key);
+            string? otherSha512 = other.ReadString(Rom.SHA512Key);
+            if (string.IsNullOrWhiteSpace(selfSha512) && !string.IsNullOrWhiteSpace(otherSha512))
+                self[Rom.SHA512Key] = otherSha512;
+
+            string? selfSpamSum = self.ReadString(Rom.SpamSumKey);
+            string? otherSpamSum = other.ReadString(Rom.SpamSumKey);
+            if (string.IsNullOrWhiteSpace(selfSpamSum) && !string.IsNullOrWhiteSpace(otherSpamSum))
+                self[Rom.SpamSumKey] = otherSpamSum;
+        }
+
+        #endregion
     }
 }

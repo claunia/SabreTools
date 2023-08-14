@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Xml.Serialization;
 using NaturalSort;
 using Newtonsoft.Json;
@@ -247,7 +246,7 @@ namespace SabreTools.DatItems
             if (item?.Machine == null)
                 return;
 
-            Machine = (Machine)item.Machine.Clone();
+            Machine = item.Machine.Clone() as Machine;
         }
 
         /// <summary>
@@ -259,7 +258,7 @@ namespace SabreTools.DatItems
             if (machine == null)
                 return;
 
-            Machine = (Machine)machine.Clone();
+            Machine = machine.Clone() as Machine;
         }
 
         #endregion

@@ -572,32 +572,7 @@ namespace SabreTools.DatItems.Formats
         /// Fill any missing size and hash information from another Rom
         /// </summary>
         /// <param name="other">Rom to fill information from</param>
-        public void FillMissingInformation(Rom other)
-        {
-            if (Size == null && other.Size != null)
-                Size = other.Size;
-
-            if (string.IsNullOrWhiteSpace(CRC) && !string.IsNullOrWhiteSpace(other.CRC))
-                CRC = other.CRC;
-
-            if (string.IsNullOrWhiteSpace(MD5) && !string.IsNullOrWhiteSpace(other.MD5))
-                MD5 = other.MD5;
-
-            if (string.IsNullOrWhiteSpace(SHA1) && !string.IsNullOrWhiteSpace(other.SHA1))
-                SHA1 = other.SHA1;
-
-            if (string.IsNullOrWhiteSpace(SHA256) && !string.IsNullOrWhiteSpace(other.SHA256))
-                SHA256 = other.SHA256;
-
-            if (string.IsNullOrWhiteSpace(SHA384) && !string.IsNullOrWhiteSpace(other.SHA384))
-                SHA384 = other.SHA384;
-
-            if (string.IsNullOrWhiteSpace(SHA512) && !string.IsNullOrWhiteSpace(other.SHA512))
-                SHA512 = other.SHA512;
-
-            if (string.IsNullOrWhiteSpace(SpamSum) && !string.IsNullOrWhiteSpace(other.SpamSum))
-                SpamSum = other.SpamSum;
-        }
+        public void FillMissingInformation(Rom other) => _rom?.FillMissingHashes(other?._rom);
 
         /// <summary>
         /// Get unique duplicate suffix on name collision

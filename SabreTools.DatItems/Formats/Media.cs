@@ -185,20 +185,7 @@ namespace SabreTools.DatItems.Formats
         /// Fill any missing size and hash information from another Media
         /// </summary>
         /// <param name="other">Media to fill information from</param>
-        public void FillMissingInformation(Media other)
-        {
-            if (string.IsNullOrWhiteSpace(MD5) && !string.IsNullOrWhiteSpace(other.MD5))
-                MD5 = other.MD5;
-
-            if (string.IsNullOrWhiteSpace(SHA1) && !string.IsNullOrWhiteSpace(other.SHA1))
-                SHA1 = other.SHA1;
-
-            if (string.IsNullOrWhiteSpace(SHA256) && !string.IsNullOrWhiteSpace(other.SHA256))
-                SHA256 = other.SHA256;
-
-            if (string.IsNullOrWhiteSpace(SpamSum) && !string.IsNullOrWhiteSpace(other.SpamSum))
-                SpamSum = other.SpamSum;
-        }
+        public void FillMissingInformation(Media other) => _media?.FillMissingHashes(other?._media);
 
         /// <summary>
         /// Get unique duplicate suffix on name collision
