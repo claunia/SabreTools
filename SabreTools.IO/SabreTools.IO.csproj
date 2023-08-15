@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\NaturalSort\NaturalSort.csproj" />
     <ProjectReference Include="..\SabreTools.Core\SabreTools.Core.csproj" />
   </ItemGroup>
 

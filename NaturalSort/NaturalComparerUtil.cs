@@ -1,6 +1,5 @@
 ﻿using System.IO;
 
-// TODO: Split into separate library
 namespace NaturalSort
 {
     public static class NaturalComparerUtil

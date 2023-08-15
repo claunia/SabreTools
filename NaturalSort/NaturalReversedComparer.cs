@@ -14,7 +14,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-// TODO: Split into separate library
 namespace NaturalSort
 {
     public class NaturalReversedComparer : Comparer<string>, IDisposable
