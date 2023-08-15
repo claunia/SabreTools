@@ -49,17 +49,6 @@ namespace SabreTools.Filter
         }
 
         /// <summary>
-        /// Remove all unicode-specific chars from a string
-        /// </summary>
-        public static string? RemoveUnicodeCharacters(string? input)
-        {
-            if (string.IsNullOrWhiteSpace(input))
-                return input;
-
-            return new string(input.Where(c => c <= 255).ToArray());
-        }
-
-        /// <summary>
         /// Set a field in a given DictionaryBase
         /// </summary>
         public static bool SetField(DictionaryBase? dictionaryBase, string? fieldName, object value)

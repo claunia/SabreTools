@@ -128,6 +128,17 @@ namespace SabreTools.Core.Tools
             return new string(input.Where(c => !invalidPath.Contains(c)).ToArray());
         }
 
+        /// <summary>
+        /// Remove all unicode-specific chars from a string
+        /// </summary>
+        public static string? RemoveUnicodeCharacters(string? input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return input;
+
+            return new string(input.Where(c => c <= 255).ToArray());
+        }
+
         #endregion
 
         #region Helpers
