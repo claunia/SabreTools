@@ -18,15 +18,9 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _extension.ReadString(Models.Internal.Extension.NameKey);
-            set => _extension[Models.Internal.Extension.NameKey] = value;
+            get => _internal.ReadString(Models.Internal.Extension.NameKey);
+            set => _internal[Models.Internal.Extension.NameKey] = value;
         }
-
-        /// <summary>
-        /// Internal Extension model
-        /// </summary>
-        [JsonIgnore]
-        private Models.Internal.Extension _extension = new();
 
         #endregion
 
@@ -47,6 +41,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Extension()
         {
+            _internal = new Models.Internal.Extension();
             Name = string.Empty;
             ItemType = ItemType.Extension;
         }
@@ -67,23 +62,8 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _extension = this._extension?.Clone() as Models.Internal.Extension ?? new Models.Internal.Extension(),
+                _internal = this._internal?.Clone() as Models.Internal.Extension ?? new Models.Internal.Extension(),
             };
-        }
-
-        #endregion
-
-        #region Comparision Methods
-
-        /// <inheritdoc/>
-        public override bool Equals(DatItem? other)
-        {
-            // If we don't have a Adjuster, return false
-            if (ItemType != other?.ItemType || other is not Extension otherInternal)
-                return false;
-
-            // Compare the internal models
-            return _extension.EqualTo(otherInternal._extension);
         }
 
         #endregion

@@ -20,8 +20,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _confSetting.ReadString(Models.Internal.ConfSetting.NameKey);
-            set => _confSetting[Models.Internal.ConfSetting.NameKey] = value;
+            get => _internal.ReadString(Models.Internal.ConfSetting.NameKey);
+            set => _internal[Models.Internal.ConfSetting.NameKey] = value;
         }
 
         /// <summary>
@@ -30,8 +30,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("value")]
         public string? Value
         {
-            get => _confSetting.ReadString(Models.Internal.ConfSetting.ValueKey);
-            set => _confSetting[Models.Internal.ConfSetting.ValueKey] = value;
+            get => _internal.ReadString(Models.Internal.ConfSetting.ValueKey);
+            set => _internal[Models.Internal.ConfSetting.ValueKey] = value;
         }
 
         /// <summary>
@@ -40,8 +40,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("default")]
         public bool? Default
         {
-            get => _confSetting.ReadBool(Models.Internal.ConfSetting.DefaultKey);
-            set => _confSetting[Models.Internal.ConfSetting.DefaultKey] = value;
+            get => _internal.ReadBool(Models.Internal.ConfSetting.DefaultKey);
+            set => _internal[Models.Internal.ConfSetting.DefaultKey] = value;
         }
 
         [JsonIgnore]
@@ -53,18 +53,12 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("conditions")]
         public List<Condition>? Conditions
         {
-            get => _confSetting.Read<Condition[]>(Models.Internal.ConfSetting.ConditionKey)?.ToList();
-            set => _confSetting[Models.Internal.ConfSetting.ConditionKey] = value?.ToArray();
+            get => _internal.Read<Condition[]>(Models.Internal.ConfSetting.ConditionKey)?.ToList();
+            set => _internal[Models.Internal.ConfSetting.ConditionKey] = value?.ToArray();
         }
 
         [JsonIgnore]
         public bool ConditionsSpecified { get { return Conditions != null && Conditions.Count > 0; } }
-
-        /// <summary>
-        /// Internal ConfSetting model
-        /// </summary>
-        [JsonIgnore]
-        private Models.Internal.ConfSetting _confSetting = new();
 
         #endregion
 
@@ -85,6 +79,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public ConfSetting()
         {
+            _internal = new Models.Internal.ConfSetting();
             Name = string.Empty;
             ItemType = ItemType.ConfSetting;
         }
@@ -105,23 +100,8 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _confSetting = this._confSetting?.Clone() as Models.Internal.ConfSetting ?? new Models.Internal.ConfSetting(),
+                _internal = this._internal?.Clone() as Models.Internal.ConfSetting ?? new Models.Internal.ConfSetting(),
             };
-        }
-
-        #endregion
-
-        #region Comparision Methods
-
-        /// <inheritdoc/>
-        public override bool Equals(DatItem? other)
-        {
-            // If we don't have a ConfSetting, return false
-            if (ItemType != other?.ItemType || other is not ConfSetting otherInternal)
-                return false;
-
-            // Compare the internal models
-            return _confSetting.EqualTo(otherInternal._confSetting);
         }
 
         #endregion

@@ -18,15 +18,9 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _deviceRef.ReadString(Models.Internal.DeviceRef.NameKey);
-            set => _deviceRef[Models.Internal.DeviceRef.NameKey] = value;
+            get => _internal.ReadString(Models.Internal.DeviceRef.NameKey);
+            set => _internal[Models.Internal.DeviceRef.NameKey] = value;
         }
-
-        /// <summary>
-        /// Internal DeviceRef model
-        /// </summary>
-        [JsonIgnore]
-        private Models.Internal.DeviceRef _deviceRef = new();
 
         #endregion
 
@@ -47,6 +41,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public DeviceReference()
         {
+            _internal = new Models.Internal.DeviceRef();
             Name = string.Empty;
             ItemType = ItemType.DeviceReference;
         }
@@ -67,23 +62,8 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _deviceRef = this._deviceRef?.Clone() as Models.Internal.DeviceRef ?? new Models.Internal.DeviceRef(),
+                _internal = this._internal?.Clone() as Models.Internal.DeviceRef ?? new Models.Internal.DeviceRef(),
             };
-        }
-
-        #endregion
-
-        #region Comparision Methods
-
-        /// <inheritdoc/>
-        public override bool Equals(DatItem? other)
-        {
-            // If we don't have a Adjuster, return false
-            if (ItemType != other?.ItemType || other is not DeviceReference otherInternal)
-                return false;
-
-            // Compare the internal models
-            return _deviceRef.EqualTo(otherInternal._deviceRef);
         }
 
         #endregion

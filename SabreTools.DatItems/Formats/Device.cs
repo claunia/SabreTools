@@ -23,8 +23,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public DeviceType DeviceType
         {
-            get => _device.ReadString(Models.Internal.Device.DeviceTypeKey).AsDeviceType();
-            set => _device[Models.Internal.Device.DeviceTypeKey] = value.FromDeviceType();
+            get => _internal.ReadString(Models.Internal.Device.DeviceTypeKey).AsDeviceType();
+            set => _internal[Models.Internal.Device.DeviceTypeKey] = value.FromDeviceType();
         }
 
         [JsonIgnore]
@@ -36,8 +36,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tag")]
         public string? Tag
         {
-            get => _device.ReadString(Models.Internal.Device.TagKey);
-            set => _device[Models.Internal.Device.TagKey] = value;
+            get => _internal.ReadString(Models.Internal.Device.TagKey);
+            set => _internal[Models.Internal.Device.TagKey] = value;
         }
 
         /// <summary>
@@ -46,8 +46,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("fixed_image", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("fixed_image")]
         public string? FixedImage
         {
-            get => _device.ReadString(Models.Internal.Device.FixedImageKey);
-            set => _device[Models.Internal.Device.FixedImageKey] = value;
+            get => _internal.ReadString(Models.Internal.Device.FixedImageKey);
+            set => _internal[Models.Internal.Device.FixedImageKey] = value;
         }
 
         /// <summary>
@@ -57,8 +57,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("mandatory", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("mandatory")]
         public long? Mandatory
         {
-            get => _device.ReadLong(Models.Internal.Device.MandatoryKey);
-            set => _device[Models.Internal.Device.MandatoryKey] = value;
+            get => _internal.ReadLong(Models.Internal.Device.MandatoryKey);
+            set => _internal[Models.Internal.Device.MandatoryKey] = value;
         }
 
         [JsonIgnore]
@@ -70,8 +70,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("interface", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("interface")]
         public string? Interface
         {
-            get => _device.ReadString(Models.Internal.Device.InterfaceKey);
-            set => _device[Models.Internal.Device.InterfaceKey] = value;
+            get => _internal.ReadString(Models.Internal.Device.InterfaceKey);
+            set => _internal[Models.Internal.Device.InterfaceKey] = value;
         }
 
         /// <summary>
@@ -80,8 +80,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("instances", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("instances")]
         public List<Instance>? Instances
         {
-            get => _device.Read<Instance[]>(Models.Internal.Device.InstanceKey)?.ToList();
-            set => _device[Models.Internal.Device.InstanceKey] = value?.ToArray();
+            get => _internal.Read<Instance[]>(Models.Internal.Device.InstanceKey)?.ToList();
+            set => _internal[Models.Internal.Device.InstanceKey] = value?.ToArray();
         }
 
         [JsonIgnore]
@@ -93,18 +93,12 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("extensions", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("extensions")]
         public List<Extension>? Extensions
         {
-            get => _device.Read<Extension[]>(Models.Internal.Device.ExtensionKey)?.ToList();
-            set => _device[Models.Internal.Device.ExtensionKey] = value?.ToArray();
+            get => _internal.Read<Extension[]>(Models.Internal.Device.ExtensionKey)?.ToList();
+            set => _internal[Models.Internal.Device.ExtensionKey] = value?.ToArray();
         }
 
         [JsonIgnore]
         public bool ExtensionsSpecified { get { return Extensions != null && Extensions.Count > 0; } }
-
-        /// <summary>
-        /// Internal Device model
-        /// </summary>
-        [JsonIgnore]
-        private Models.Internal.Device _device = new();
 
         #endregion
 
@@ -115,6 +109,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Device()
         {
+            _internal = new Models.Internal.Device();
             ItemType = ItemType.Device;
         }
 
@@ -134,23 +129,8 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _device = this._device?.Clone() as Models.Internal.Device ?? new Models.Internal.Device(),
+                _internal = this._internal?.Clone() as Models.Internal.Device ?? new Models.Internal.Device(),
             };
-        }
-
-        #endregion
-
-        #region Comparision Methods
-
-        /// <inheritdoc/>
-        public override bool Equals(DatItem? other)
-        {
-            // If we don't have a Adjuster, return false
-            if (ItemType != other?.ItemType || other is not Device otherInternal)
-                return false;
-
-            // Compare the internal models
-            return _device.EqualTo(otherInternal._device);
         }
 
         #endregion

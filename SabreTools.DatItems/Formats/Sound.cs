@@ -18,18 +18,12 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("channels", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("channels")]
         public long? Channels
         {
-            get => _sound.ReadLong(Models.Internal.Sound.ChannelsKey);
-            set => _sound[Models.Internal.Sound.ChannelsKey] = value;
+            get => _internal.ReadLong(Models.Internal.Sound.ChannelsKey);
+            set => _internal[Models.Internal.Sound.ChannelsKey] = value;
         }
 
         [JsonIgnore]
         public bool ChannelsSpecified { get { return Channels != null; } }
-
-        /// <summary>
-        /// Internal Sound model
-        /// </summary>
-        [JsonIgnore]
-        private Models.Internal.Sound _sound = new();
 
         #endregion
 
@@ -40,6 +34,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Sound()
         {
+            _internal = new Models.Internal.Sound();
             ItemType = ItemType.Sound;
         }
 
@@ -59,23 +54,8 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _sound = this._sound?.Clone() as Models.Internal.Sound ?? new Models.Internal.Sound(),
+                _internal = this._internal?.Clone() as Models.Internal.Sound ?? new Models.Internal.Sound(),
             };
-        }
-
-        #endregion
-
-        #region Comparision Methods
-
-        /// <inheritdoc/>
-        public override bool Equals(DatItem? other)
-        {
-            // If we don't have a Sound, return false
-            if (ItemType != other?.ItemType || other is not Sound otherInternal)
-                return false;
-
-            // Compare the internal models
-            return _sound.EqualTo(otherInternal._sound);
         }
 
         #endregion

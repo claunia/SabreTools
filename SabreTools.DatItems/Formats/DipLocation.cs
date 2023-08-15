@@ -18,8 +18,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _dipLocation.ReadString(Models.Internal.DipLocation.NameKey);
-            set => _dipLocation[Models.Internal.DipLocation.NameKey] = value;
+            get => _internal.ReadString(Models.Internal.DipLocation.NameKey);
+            set => _internal[Models.Internal.DipLocation.NameKey] = value;
         }
 
         /// <summary>
@@ -28,8 +28,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("number", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("number")]
         public long? Number
         {
-            get => _dipLocation.ReadLong(Models.Internal.DipLocation.NameKey);
-            set => _dipLocation[Models.Internal.DipLocation.NameKey] = value;
+            get => _internal.ReadLong(Models.Internal.DipLocation.NameKey);
+            set => _internal[Models.Internal.DipLocation.NameKey] = value;
         }
 
         [JsonIgnore]
@@ -41,18 +41,12 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("inverted", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("inverted")]
         public bool? Inverted
         {
-            get => _dipLocation.ReadBool(Models.Internal.DipLocation.InvertedKey);
-            set => _dipLocation[Models.Internal.DipLocation.InvertedKey] = value;
+            get => _internal.ReadBool(Models.Internal.DipLocation.InvertedKey);
+            set => _internal[Models.Internal.DipLocation.InvertedKey] = value;
         }
 
         [JsonIgnore]
         public bool InvertedSpecified { get { return Inverted != null; } }
-
-        /// <summary>
-        /// Internal DipLocation model
-        /// </summary>
-        [JsonIgnore]
-        private Models.Internal.DipLocation _dipLocation = new();
 
         #endregion
 
@@ -73,6 +67,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public DipLocation()
         {
+            _internal = new Models.Internal.DipLocation();
             Name = string.Empty;
             ItemType = ItemType.DipLocation;
         }
@@ -93,23 +88,8 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _dipLocation = this._dipLocation?.Clone() as Models.Internal.DipLocation ?? new Models.Internal.DipLocation(),
+                _internal = this._internal?.Clone() as Models.Internal.DipLocation ?? new Models.Internal.DipLocation(),
             };
-        }
-
-        #endregion
-
-        #region Comparision Methods
-
-        /// <inheritdoc/>
-        public override bool Equals(DatItem? other)
-        {
-            // If we don't have a DipLocation, return false
-            if (ItemType != other?.ItemType || other is not DipLocation otherInternal)
-                return false;
-
-            // Compare the internal models
-            return _dipLocation.EqualTo(otherInternal._dipLocation);
         }
 
         #endregion

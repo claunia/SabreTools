@@ -21,8 +21,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _media.ReadString(Models.Internal.Media.NameKey);
-            set => _media[Models.Internal.Media.NameKey] = value;
+            get => _internal.ReadString(Models.Internal.Media.NameKey);
+            set => _internal[Models.Internal.Media.NameKey] = value;
         }
 
         /// <summary>
@@ -31,8 +31,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("md5", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("md5")]
         public string? MD5
         {
-            get => _media.ReadString(Models.Internal.Media.MD5Key);
-            set => _media[Models.Internal.Media.MD5Key] = TextHelper.NormalizeMD5(value);
+            get => _internal.ReadString(Models.Internal.Media.MD5Key);
+            set => _internal[Models.Internal.Media.MD5Key] = TextHelper.NormalizeMD5(value);
         }
 
         /// <summary>
@@ -41,8 +41,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("sha1", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha1")]
         public string? SHA1
         {
-            get => _media.ReadString(Models.Internal.Media.SHA1Key);
-            set => _media[Models.Internal.Media.SHA1Key] = TextHelper.NormalizeSHA1(value);
+            get => _internal.ReadString(Models.Internal.Media.SHA1Key);
+            set => _internal[Models.Internal.Media.SHA1Key] = TextHelper.NormalizeSHA1(value);
         }
 
         /// <summary>
@@ -51,8 +51,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("sha256", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha256")]
         public string? SHA256
         {
-            get => _media.ReadString(Models.Internal.Media.SHA256Key);
-            set => _media[Models.Internal.Media.SHA256Key] = TextHelper.NormalizeSHA256(value);
+            get => _internal.ReadString(Models.Internal.Media.SHA256Key);
+            set => _internal[Models.Internal.Media.SHA256Key] = TextHelper.NormalizeSHA256(value);
         }
 
         /// <summary>
@@ -61,15 +61,9 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("spamsum", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("spamsum")]
         public string? SpamSum
         {
-            get => _media.ReadString(Models.Internal.Media.SpamSumKey);
-            set => _media[Models.Internal.Media.SpamSumKey] = value;
+            get => _internal.ReadString(Models.Internal.Media.SpamSumKey);
+            set => _internal[Models.Internal.Media.SpamSumKey] = value;
         }
-
-        /// <summary>
-        /// Internal Media model
-        /// </summary>
-        [JsonIgnore]
-        private Models.Internal.Media _media = new();
 
         #endregion
 
@@ -90,6 +84,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Media()
         {
+            _internal = new Models.Internal.Media();
             Name = string.Empty;
             ItemType = ItemType.Media;
             DupeType = 0x00;
@@ -101,6 +96,7 @@ namespace SabreTools.DatItems.Formats
         /// <param name="baseFile"></param>
         public Media(BaseFile baseFile)
         {
+            _internal = new Models.Internal.Media();
             Name = baseFile.Filename;
             MD5 = TextHelper.ByteArrayToString(baseFile.MD5);
             SHA1 = TextHelper.ByteArrayToString(baseFile.SHA1);
@@ -127,7 +123,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _media = this._media?.Clone() as Models.Internal.Media ?? new Models.Internal.Media(),
+                _internal = this._internal?.Clone() as Models.Internal.Media ?? new Models.Internal.Media(),
             };
         }
 
@@ -153,7 +149,7 @@ namespace SabreTools.DatItems.Formats
         /// <returns></returns>
         public Rom ConvertToRom()
         {
-            var rom = new Rom(_media.ConvertToRom())
+            var rom = new Rom(_internal.ConvertToRom())
             {
                 ItemType = ItemType.Rom,
                 DupeType = this.DupeType,
@@ -170,28 +166,17 @@ namespace SabreTools.DatItems.Formats
 
         #region Comparision Methods
 
-        /// <inheritdoc/>
-        public override bool Equals(DatItem? other)
-        {
-            // If we don't have a Media, return false
-            if (ItemType != other?.ItemType || other is not Media otherInternal)
-                return false;
-
-            // Compare the internal models
-            return _media.EqualTo(otherInternal._media);
-        }
-
         /// <summary>
         /// Fill any missing size and hash information from another Media
         /// </summary>
         /// <param name="other">Media to fill information from</param>
-        public void FillMissingInformation(Media other) => _media.FillMissingHashes(other?._media);
+        public void FillMissingInformation(Media other) => _internal.FillMissingHashes(other?._internal);
 
         /// <summary>
         /// Get unique duplicate suffix on name collision
         /// </summary>
         /// <returns>String representing the suffix</returns>
-        public string GetDuplicateSuffix() => _media.GetDuplicateSuffix();
+        public string GetDuplicateSuffix() => _internal.GetDuplicateSuffix();
 
         #endregion
 

@@ -19,15 +19,9 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("name")]
         public string? Name
         {
-            get => _diskArea.ReadString(Models.Internal.DiskArea.NameKey);
-            set => _diskArea[Models.Internal.DiskArea.NameKey] = value;
+            get => _internal.ReadString(Models.Internal.DiskArea.NameKey);
+            set => _internal[Models.Internal.DiskArea.NameKey] = value;
         }
-
-        /// <summary>
-        /// Internal DiskArea model
-        /// </summary>
-        [JsonIgnore]
-        private Models.Internal.DiskArea _diskArea = new();
 
         #endregion
 
@@ -48,6 +42,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public DiskArea()
         {
+            _internal = new Models.Internal.DiskArea();
             Name = string.Empty;
             ItemType = ItemType.DiskArea;
         }
@@ -68,23 +63,8 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _diskArea = this._diskArea?.Clone() as Models.Internal.DiskArea ?? new Models.Internal.DiskArea(),
+                _internal = this._internal?.Clone() as Models.Internal.DiskArea ?? new Models.Internal.DiskArea(),
             };
-        }
-
-        #endregion
-
-        #region Comparision Methods
-
-        /// <inheritdoc/>
-        public override bool Equals(DatItem? other)
-        {
-            // If we don't have a DiskArea, return false
-            if (ItemType != other?.ItemType || other is not DiskArea otherInternal)
-                return false;
-
-            // Compare the internal models
-            return _diskArea.EqualTo(otherInternal._diskArea);
         }
 
         #endregion

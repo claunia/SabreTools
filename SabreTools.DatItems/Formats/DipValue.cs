@@ -20,8 +20,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _dipValue.ReadString(Models.Internal.DipValue.NameKey);
-            set => _dipValue[Models.Internal.DipValue.NameKey] = value;
+            get => _internal.ReadString(Models.Internal.DipValue.NameKey);
+            set => _internal[Models.Internal.DipValue.NameKey] = value;
         }
 
         /// <summary>
@@ -30,8 +30,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("value")]
         public string? Value
         {
-            get => _dipValue.ReadString(Models.Internal.DipValue.ValueKey);
-            set => _dipValue[Models.Internal.DipValue.ValueKey] = value;
+            get => _internal.ReadString(Models.Internal.DipValue.ValueKey);
+            set => _internal[Models.Internal.DipValue.ValueKey] = value;
         }
 
         /// <summary>
@@ -40,8 +40,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("default")]
         public bool? Default
         {
-            get => _dipValue.ReadBool(Models.Internal.DipValue.DefaultKey);
-            set => _dipValue[Models.Internal.DipValue.DefaultKey] = value;
+            get => _internal.ReadBool(Models.Internal.DipValue.DefaultKey);
+            set => _internal[Models.Internal.DipValue.DefaultKey] = value;
         }
 
         [JsonIgnore]
@@ -53,18 +53,12 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("conditions")]
         public List<Condition>? Conditions
         {
-            get => _dipValue.Read<Condition[]>(Models.Internal.DipValue.ConditionKey)?.ToList();
-            set => _dipValue[Models.Internal.DipValue.ConditionKey] = value?.ToArray();
+            get => _internal.Read<Condition[]>(Models.Internal.DipValue.ConditionKey)?.ToList();
+            set => _internal[Models.Internal.DipValue.ConditionKey] = value?.ToArray();
         }
 
         [JsonIgnore]
         public bool ConditionsSpecified { get { return Conditions != null && Conditions.Count > 0; } }
-
-        /// <summary>
-        /// Internal DipValue model
-        /// </summary>
-        [JsonIgnore]
-        private Models.Internal.DipValue _dipValue = new();
 
         #endregion
 
@@ -85,6 +79,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public DipValue()
         {
+            _internal = new Models.Internal.DipValue();
             Name = string.Empty;
             ItemType = ItemType.DipValue;
         }
@@ -105,23 +100,8 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _dipValue = this._dipValue?.Clone() as Models.Internal.DipValue ?? new Models.Internal.DipValue(),
+                _internal = this._internal?.Clone() as Models.Internal.DipValue ?? new Models.Internal.DipValue(),
             };
-        }
-
-        #endregion
-
-        #region Comparision Methods
-
-        /// <inheritdoc/>
-        public override bool Equals(DatItem? other)
-        {
-            // If we don't have a DipValue, return false
-            if (ItemType != other?.ItemType || other is not DipValue otherInternal)
-                return false;
-
-            // Compare the internal models
-            return _dipValue.EqualTo(otherInternal._dipValue);
         }
 
         #endregion

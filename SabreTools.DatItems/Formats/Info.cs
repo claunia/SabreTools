@@ -18,8 +18,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _info.ReadString(Models.Internal.Info.NameKey);
-            set => _info[Models.Internal.Info.NameKey] = value;
+            get => _internal.ReadString(Models.Internal.Info.NameKey);
+            set => _internal[Models.Internal.Info.NameKey] = value;
         }
 
         /// <summary>
@@ -28,15 +28,9 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("value"), XmlElement("value")]
         public string? Value
         {
-            get => _info.ReadString(Models.Internal.Info.ValueKey);
-            set => _info[Models.Internal.Info.ValueKey] = value;
+            get => _internal.ReadString(Models.Internal.Info.ValueKey);
+            set => _internal[Models.Internal.Info.ValueKey] = value;
         }
-
-        /// <summary>
-        /// Internal Info model
-        /// </summary>
-        [JsonIgnore]
-        private Models.Internal.Info _info = new();
 
         #endregion
 
@@ -57,6 +51,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Info()
         {
+            _internal = new Models.Internal.Info();
             Name = string.Empty;
             ItemType = ItemType.Info;
         }
@@ -77,23 +72,8 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _info = this._info?.Clone() as Models.Internal.Info ?? new Models.Internal.Info(),
+                _internal = this._internal?.Clone() as Models.Internal.Info ?? new Models.Internal.Info(),
             };
-        }
-
-        #endregion
-
-        #region Comparision Methods
-
-        /// <inheritdoc/>
-        public override bool Equals(DatItem? other)
-        {
-            // If we don't have a Info, return false
-            if (ItemType != other?.ItemType || other is not Info otherInternal)
-                return false;
-
-            // Compare the internal models
-            return _info.EqualTo(otherInternal._info);
         }
 
         #endregion

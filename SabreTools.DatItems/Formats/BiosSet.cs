@@ -18,8 +18,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _biosSet.ReadString(Models.Internal.BiosSet.NameKey);
-            set => _biosSet[Models.Internal.BiosSet.NameKey] = value;
+            get => _internal.ReadString(Models.Internal.BiosSet.NameKey);
+            set => _internal[Models.Internal.BiosSet.NameKey] = value;
         }
 
         /// <summary>
@@ -28,8 +28,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("description", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("description")]
         public string? Description
         {
-            get => _biosSet.ReadString(Models.Internal.BiosSet.DescriptionKey);
-            set => _biosSet[Models.Internal.BiosSet.DescriptionKey] = value;
+            get => _internal.ReadString(Models.Internal.BiosSet.DescriptionKey);
+            set => _internal[Models.Internal.BiosSet.DescriptionKey] = value;
         }
 
         /// <summary>
@@ -38,18 +38,12 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("default")]
         public bool? Default
         {
-            get => _biosSet.ReadBool(Models.Internal.BiosSet.DefaultKey);
-            set => _biosSet[Models.Internal.BiosSet.DefaultKey] = value;
+            get => _internal.ReadBool(Models.Internal.BiosSet.DefaultKey);
+            set => _internal[Models.Internal.BiosSet.DefaultKey] = value;
         }
 
         [JsonIgnore]
         public bool DefaultSpecified { get { return Default != null; } }
-
-        /// <summary>
-        /// Internal BiosSet model
-        /// </summary>
-        [JsonIgnore]
-        private Models.Internal.BiosSet _biosSet = new();
 
         #endregion
 
@@ -70,6 +64,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public BiosSet()
         {
+            _internal = new Models.Internal.BiosSet();
             Name = string.Empty;
             ItemType = ItemType.BiosSet;
         }
@@ -90,23 +85,8 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _biosSet = this._biosSet?.Clone() as Models.Internal.BiosSet ?? new Models.Internal.BiosSet(),
+                _internal = this._internal?.Clone() as Models.Internal.BiosSet ?? new Models.Internal.BiosSet(),
             };
-        }
-
-        #endregion
-
-        #region Comparision Methods
-
-        /// <inheritdoc/>
-        public override bool Equals(DatItem? other)
-        {
-            // If we don't have a BiosSet, return false
-            if (ItemType != other?.ItemType || other is not BiosSet otherInternal)
-                return false;
-
-            // Compare the internal models
-            return _biosSet.EqualTo(otherInternal._biosSet);
         }
 
         #endregion

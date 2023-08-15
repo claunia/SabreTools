@@ -18,8 +18,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _feature.ReadString(Models.Internal.Feature.NameKey);
-            set => _feature[Models.Internal.Feature.NameKey] = value;
+            get => _internal.ReadString(Models.Internal.Feature.NameKey);
+            set => _internal[Models.Internal.Feature.NameKey] = value;
         }
 
         /// <summary>
@@ -28,15 +28,9 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("value"), XmlElement("value")]
         public string? Value
         {
-            get => _feature.ReadString(Models.Internal.Feature.ValueKey);
-            set => _feature[Models.Internal.Feature.ValueKey] = value;
+            get => _internal.ReadString(Models.Internal.Feature.ValueKey);
+            set => _internal[Models.Internal.Feature.ValueKey] = value;
         }
-
-        /// <summary>
-        /// Internal Feature model
-        /// </summary>
-        [JsonIgnore]
-        private Models.Internal.Feature _feature = new();
 
         #endregion
 
@@ -57,6 +51,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public PartFeature()
         {
+            _internal = new Models.Internal.Feature();
             Name = string.Empty;
             ItemType = ItemType.PartFeature;
         }
@@ -77,23 +72,8 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _feature = this._feature?.Clone() as Models.Internal.Feature ?? new Models.Internal.Feature(),
+                _internal = this._internal?.Clone() as Models.Internal.Feature ?? new Models.Internal.Feature(),
             };
-        }
-
-        #endregion
-
-        #region Comparision Methods
-
-        /// <inheritdoc/>
-        public override bool Equals(DatItem? other)
-        {
-            // If we don't have a PartFeature, return false
-            if (ItemType != other?.ItemType || other is not PartFeature otherInternal)
-                return false;
-
-            // Compare the internal models
-            return _feature.EqualTo(otherInternal._feature);
         }
 
         #endregion

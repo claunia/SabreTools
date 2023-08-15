@@ -24,8 +24,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public SupportStatus Status
         {
-            get => _driver.ReadString(Models.Internal.Driver.StatusKey).AsSupportStatus();
-            set => _driver[Models.Internal.Driver.StatusKey] = value.FromSupportStatus();
+            get => _internal.ReadString(Models.Internal.Driver.StatusKey).AsSupportStatus();
+            set => _internal[Models.Internal.Driver.StatusKey] = value.FromSupportStatus();
         }
 
         [JsonIgnore]
@@ -38,8 +38,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public SupportStatus Emulation
         {
-            get => _driver.ReadString(Models.Internal.Driver.EmulationKey).AsSupportStatus();
-            set => _driver[Models.Internal.Driver.EmulationKey] = value.FromSupportStatus();
+            get => _internal.ReadString(Models.Internal.Driver.EmulationKey).AsSupportStatus();
+            set => _internal[Models.Internal.Driver.EmulationKey] = value.FromSupportStatus();
         }
 
         [JsonIgnore]
@@ -52,8 +52,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public SupportStatus Cocktail
         {
-            get => _driver.ReadString(Models.Internal.Driver.CocktailKey).AsSupportStatus();
-            set => _driver[Models.Internal.Driver.CocktailKey] = value.FromSupportStatus();
+            get => _internal.ReadString(Models.Internal.Driver.CocktailKey).AsSupportStatus();
+            set => _internal[Models.Internal.Driver.CocktailKey] = value.FromSupportStatus();
         }
 
         [JsonIgnore]
@@ -66,8 +66,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public Supported SaveState
         {
-            get => _driver.ReadString(Models.Internal.Driver.SaveStateKey).AsSupported();
-            set => _driver[Models.Internal.Driver.SaveStateKey] = value.FromSupported(verbose: true);
+            get => _internal.ReadString(Models.Internal.Driver.SaveStateKey).AsSupported();
+            set => _internal[Models.Internal.Driver.SaveStateKey] = value.FromSupported(verbose: true);
         }
 
         [JsonIgnore]
@@ -79,8 +79,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("requiresartwork", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("requiresartwork")]
         public bool? RequiresArtwork
         {
-            get => _driver.ReadBool(Models.Internal.Driver.RequiresArtworkKey);
-            set => _driver[Models.Internal.Driver.RequiresArtworkKey] = value;
+            get => _internal.ReadBool(Models.Internal.Driver.RequiresArtworkKey);
+            set => _internal[Models.Internal.Driver.RequiresArtworkKey] = value;
         }
 
         [JsonIgnore]
@@ -92,8 +92,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("unofficial", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("unofficial")]
         public bool? Unofficial
         {
-            get => _driver.ReadBool(Models.Internal.Driver.UnofficialKey);
-            set => _driver[Models.Internal.Driver.UnofficialKey] = value;
+            get => _internal.ReadBool(Models.Internal.Driver.UnofficialKey);
+            set => _internal[Models.Internal.Driver.UnofficialKey] = value;
         }
 
         [JsonIgnore]
@@ -105,8 +105,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("nosoundhardware", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("nosoundhardware")]
         public bool? NoSoundHardware
         {
-            get => _driver.ReadBool(Models.Internal.Driver.NoSoundHardwareKey);
-            set => _driver[Models.Internal.Driver.NoSoundHardwareKey] = value;
+            get => _internal.ReadBool(Models.Internal.Driver.NoSoundHardwareKey);
+            set => _internal[Models.Internal.Driver.NoSoundHardwareKey] = value;
         }
 
         [JsonIgnore]
@@ -118,18 +118,12 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("incomplete", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("incomplete")]
         public bool? Incomplete
         {
-            get => _driver.ReadBool(Models.Internal.Driver.IncompleteKey);
-            set => _driver[Models.Internal.Driver.IncompleteKey] = value;
+            get => _internal.ReadBool(Models.Internal.Driver.IncompleteKey);
+            set => _internal[Models.Internal.Driver.IncompleteKey] = value;
         }
 
         [JsonIgnore]
         public bool IncompleteSpecified { get { return Incomplete != null; } }
-
-        /// <summary>
-        /// Internal Driver model
-        /// </summary>
-        [JsonIgnore]
-        private Models.Internal.Driver _driver = new();
 
         #endregion
 
@@ -140,6 +134,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Driver()
         {
+            _internal = new Models.Internal.Driver();
             ItemType = ItemType.Driver;
         }
 
@@ -159,23 +154,8 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _driver = this._driver?.Clone() as Models.Internal.Driver ?? new Models.Internal.Driver(),
+                _internal = this._internal?.Clone() as Models.Internal.Driver ?? new Models.Internal.Driver(),
             };
-        }
-
-        #endregion
-
-        #region Comparision Methods
-
-        /// <inheritdoc/>
-        public override bool Equals(DatItem? other)
-        {
-            // If we don't have a Driver, return false
-            if (ItemType != other?.ItemType || other is not Driver otherInternal)
-                return false;
-
-            // Compare the internal models
-            return _driver.EqualTo(otherInternal._driver);
         }
 
         #endregion

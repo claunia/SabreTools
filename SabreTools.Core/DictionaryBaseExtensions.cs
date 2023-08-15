@@ -71,9 +71,26 @@ namespace SabreTools.Core
         #region Conversion
         
         /// <summary>
+        /// Convert a DatItem to a Rom
+        /// </summary>
+        public static Rom? ConvertToRom(this DatItem? self)
+        {
+            // If the DatItem is missing, we can't do anything
+            if (self == null)
+                return null;
+
+            return self switch
+            {
+                Disk diskSelf => ConvertToRom(diskSelf),
+                Media mediaSelf => ConvertToRom(mediaSelf),
+                _ => null,
+            };
+        }
+
+        /// <summary>
         /// Convert a Disk to a Rom
         /// </summary>
-        public static Rom? ConvertToRom(this Disk? disk)
+        private static Rom? ConvertToRom(this Disk? disk)
         {
             // If the Disk is missing, we can't do anything
             if (disk == null)
@@ -94,7 +111,7 @@ namespace SabreTools.Core
         /// <summary>
         /// Convert a Media to a Rom
         /// </summary>
-        public static Rom? ConvertToRom(this Media? media)
+        private static Rom? ConvertToRom(this Media? media)
         {
             // If the Media is missing, we can't do anything
             if (media == null)
@@ -338,104 +355,29 @@ namespace SabreTools.Core
         /// <summary>
         /// Returns if any hashes exist
         /// </summary>
-        public static bool HasHashes(this Disk disk)
+        public static bool HasHashes(this DatItem self)
         {
-            bool md5Null = string.IsNullOrWhiteSpace(disk.ReadString(Disk.MD5Key));
-            bool sha1Null = string.IsNullOrWhiteSpace(disk.ReadString(Disk.SHA1Key));
-
-            return !md5Null || !sha1Null;
-        }
-
-        /// <summary>
-        /// Returns if any hashes exist
-        /// </summary>
-        public static bool HasHashes(this Media media)
-        {
-            bool md5Null = string.IsNullOrWhiteSpace(media.ReadString(Media.MD5Key));
-            bool sha1Null = string.IsNullOrWhiteSpace(media.ReadString(Media.SHA1Key));
-            bool sha256Null = string.IsNullOrWhiteSpace(media.ReadString(Media.SHA256Key));
-            bool spamsumNull = string.IsNullOrWhiteSpace(media.ReadString(Media.SpamSumKey));
-
-            return !md5Null || !sha1Null || !sha256Null || !spamsumNull;
-        }
-
-        /// <summary>
-        /// Returns if any hashes exist
-        /// </summary>
-        public static bool HasHashes(this Rom rom)
-        {
-            bool crcNull = string.IsNullOrWhiteSpace(rom.ReadString(Rom.CRCKey));
-            bool md5Null = string.IsNullOrWhiteSpace(rom.ReadString(Rom.MD5Key));
-            bool sha1Null = string.IsNullOrWhiteSpace(rom.ReadString(Rom.SHA1Key));
-            bool sha256Null = string.IsNullOrWhiteSpace(rom.ReadString(Rom.SHA256Key));
-            bool sha384Null = string.IsNullOrWhiteSpace(rom.ReadString(Rom.SHA384Key));
-            bool sha512Null = string.IsNullOrWhiteSpace(rom.ReadString(Rom.SHA512Key));
-            bool spamsumNull = string.IsNullOrWhiteSpace(rom.ReadString(Rom.SpamSumKey));
-
-            return !crcNull || !md5Null || !sha1Null || !sha256Null || !sha384Null || !sha512Null || !spamsumNull;
+            return self switch
+            {
+                Disk diskSelf => diskSelf.HasHashes(),
+                Media mediaSelf => mediaSelf.HasHashes(),
+                Rom romSelf => romSelf.HasHashes(),
+                _ => false,
+            };
         }
 
         /// <summary>
         /// Returns if all of the hashes are set to their 0-byte values or null
         /// </summary>
-        public static bool HasZeroHash(this Disk disk)
+        public static bool HasZeroHash(this DatItem self)
         {
-            string? md5 = disk.ReadString(Disk.MD5Key);
-            bool md5Null = string.IsNullOrWhiteSpace(md5) || string.Equals(md5, Constants.MD5Zero, StringComparison.OrdinalIgnoreCase);
-
-            string? sha1 = disk.ReadString(Disk.SHA1Key);
-            bool sha1Null = string.IsNullOrWhiteSpace(sha1) || string.Equals(sha1, Constants.SHA1Zero, StringComparison.OrdinalIgnoreCase);
-
-            return md5Null && sha1Null;
-        }
-
-        /// <summary>
-        /// Returns if all of the hashes are set to their 0-byte values or null
-        /// </summary>
-        public static bool HasZeroHash(this Media media)
-        {
-            string? md5 = media.ReadString(Media.MD5Key);
-            bool md5Null = string.IsNullOrWhiteSpace(md5) || string.Equals(md5, Constants.MD5Zero, StringComparison.OrdinalIgnoreCase);
-
-            string? sha1 = media.ReadString(Media.SHA1Key);
-            bool sha1Null = string.IsNullOrWhiteSpace(sha1) || string.Equals(sha1, Constants.SHA1Zero, StringComparison.OrdinalIgnoreCase);
-
-            string? sha256 = media.ReadString(Media.SHA256Key);
-            bool sha256Null = string.IsNullOrWhiteSpace(sha256) || string.Equals(sha256, Constants.SHA256Zero, StringComparison.OrdinalIgnoreCase);
-
-            string? spamsum = media.ReadString(Media.SpamSumKey);
-            bool spamsumNull = string.IsNullOrWhiteSpace(spamsum) || string.Equals(spamsum, Constants.SpamSumZero, StringComparison.OrdinalIgnoreCase);
-
-            return md5Null && sha1Null && sha256Null && spamsumNull;
-        }
-
-        /// <summary>
-        /// Returns if all of the hashes are set to their 0-byte values or null
-        /// </summary>
-        public static bool HasZeroHash(this Rom rom)
-        {
-            string? crc = rom.ReadString(Rom.CRCKey);
-            bool crcNull = string.IsNullOrWhiteSpace(crc) || string.Equals(crc, Constants.CRCZero, StringComparison.OrdinalIgnoreCase);
-
-            string? md5 = rom.ReadString(Rom.MD5Key);
-            bool md5Null = string.IsNullOrWhiteSpace(md5) || string.Equals(md5, Constants.MD5Zero, StringComparison.OrdinalIgnoreCase);
-
-            string? sha1 = rom.ReadString(Rom.SHA1Key);
-            bool sha1Null = string.IsNullOrWhiteSpace(sha1) || string.Equals(sha1, Constants.SHA1Zero, StringComparison.OrdinalIgnoreCase);
-
-            string? sha256 = rom.ReadString(Rom.SHA256Key);
-            bool sha256Null = string.IsNullOrWhiteSpace(sha256) || string.Equals(sha256, Constants.SHA256Zero, StringComparison.OrdinalIgnoreCase);
-
-            string? sha384 = rom.ReadString(Rom.SHA384Key);
-            bool sha384Null = string.IsNullOrWhiteSpace(sha384) || string.Equals(sha384, Constants.SHA384Zero, StringComparison.OrdinalIgnoreCase);
-
-            string? sha512 = rom.ReadString(Rom.SHA512Key);
-            bool sha512Null = string.IsNullOrWhiteSpace(sha512) || string.Equals(sha512, Constants.SHA512Zero, StringComparison.OrdinalIgnoreCase);
-
-            string? spamsum = rom.ReadString(Rom.SpamSumKey);
-            bool spamsumNull = string.IsNullOrWhiteSpace(spamsum) || string.Equals(spamsum, Constants.SpamSumZero, StringComparison.OrdinalIgnoreCase);
-
-            return crcNull && md5Null && sha1Null && sha256Null && sha384Null && sha512Null && spamsumNull;
+            return self switch
+            {
+                Disk diskSelf => diskSelf.HasZeroHash(),
+                Media mediaSelf => mediaSelf.HasZeroHash(),
+                Rom romSelf => romSelf.HasZeroHash(),
+                _ => false,
+            };
         }
 
         /// <summary>
@@ -501,14 +443,139 @@ namespace SabreTools.Core
             return !crcNull || !md5Null || !sha1Null || !sha256Null || !sha384Null || !sha512Null || !spamsumNull;
         }
 
+        /// <summary>
+        /// Returns if any hashes exist
+        /// </summary>
+        private static bool HasHashes(this Disk disk)
+        {
+            bool md5Null = string.IsNullOrWhiteSpace(disk.ReadString(Disk.MD5Key));
+            bool sha1Null = string.IsNullOrWhiteSpace(disk.ReadString(Disk.SHA1Key));
+
+            return !md5Null || !sha1Null;
+        }
+
+        /// <summary>
+        /// Returns if any hashes exist
+        /// </summary>
+        private static bool HasHashes(this Media media)
+        {
+            bool md5Null = string.IsNullOrWhiteSpace(media.ReadString(Media.MD5Key));
+            bool sha1Null = string.IsNullOrWhiteSpace(media.ReadString(Media.SHA1Key));
+            bool sha256Null = string.IsNullOrWhiteSpace(media.ReadString(Media.SHA256Key));
+            bool spamsumNull = string.IsNullOrWhiteSpace(media.ReadString(Media.SpamSumKey));
+
+            return !md5Null || !sha1Null || !sha256Null || !spamsumNull;
+        }
+
+        /// <summary>
+        /// Returns if any hashes exist
+        /// </summary>
+        private static bool HasHashes(this Rom rom)
+        {
+            bool crcNull = string.IsNullOrWhiteSpace(rom.ReadString(Rom.CRCKey));
+            bool md5Null = string.IsNullOrWhiteSpace(rom.ReadString(Rom.MD5Key));
+            bool sha1Null = string.IsNullOrWhiteSpace(rom.ReadString(Rom.SHA1Key));
+            bool sha256Null = string.IsNullOrWhiteSpace(rom.ReadString(Rom.SHA256Key));
+            bool sha384Null = string.IsNullOrWhiteSpace(rom.ReadString(Rom.SHA384Key));
+            bool sha512Null = string.IsNullOrWhiteSpace(rom.ReadString(Rom.SHA512Key));
+            bool spamsumNull = string.IsNullOrWhiteSpace(rom.ReadString(Rom.SpamSumKey));
+
+            return !crcNull || !md5Null || !sha1Null || !sha256Null || !sha384Null || !sha512Null || !spamsumNull;
+        }
+
+        /// <summary>
+        /// Returns if all of the hashes are set to their 0-byte values or null
+        /// </summary>
+        private static bool HasZeroHash(this Disk disk)
+        {
+            string? md5 = disk.ReadString(Disk.MD5Key);
+            bool md5Null = string.IsNullOrWhiteSpace(md5) || string.Equals(md5, Constants.MD5Zero, StringComparison.OrdinalIgnoreCase);
+
+            string? sha1 = disk.ReadString(Disk.SHA1Key);
+            bool sha1Null = string.IsNullOrWhiteSpace(sha1) || string.Equals(sha1, Constants.SHA1Zero, StringComparison.OrdinalIgnoreCase);
+
+            return md5Null && sha1Null;
+        }
+
+        /// <summary>
+        /// Returns if all of the hashes are set to their 0-byte values or null
+        /// </summary>
+        private static bool HasZeroHash(this Media media)
+        {
+            string? md5 = media.ReadString(Media.MD5Key);
+            bool md5Null = string.IsNullOrWhiteSpace(md5) || string.Equals(md5, Constants.MD5Zero, StringComparison.OrdinalIgnoreCase);
+
+            string? sha1 = media.ReadString(Media.SHA1Key);
+            bool sha1Null = string.IsNullOrWhiteSpace(sha1) || string.Equals(sha1, Constants.SHA1Zero, StringComparison.OrdinalIgnoreCase);
+
+            string? sha256 = media.ReadString(Media.SHA256Key);
+            bool sha256Null = string.IsNullOrWhiteSpace(sha256) || string.Equals(sha256, Constants.SHA256Zero, StringComparison.OrdinalIgnoreCase);
+
+            string? spamsum = media.ReadString(Media.SpamSumKey);
+            bool spamsumNull = string.IsNullOrWhiteSpace(spamsum) || string.Equals(spamsum, Constants.SpamSumZero, StringComparison.OrdinalIgnoreCase);
+
+            return md5Null && sha1Null && sha256Null && spamsumNull;
+        }
+
+        /// <summary>
+        /// Returns if all of the hashes are set to their 0-byte values or null
+        /// </summary>
+        private static bool HasZeroHash(this Rom rom)
+        {
+            string? crc = rom.ReadString(Rom.CRCKey);
+            bool crcNull = string.IsNullOrWhiteSpace(crc) || string.Equals(crc, Constants.CRCZero, StringComparison.OrdinalIgnoreCase);
+
+            string? md5 = rom.ReadString(Rom.MD5Key);
+            bool md5Null = string.IsNullOrWhiteSpace(md5) || string.Equals(md5, Constants.MD5Zero, StringComparison.OrdinalIgnoreCase);
+
+            string? sha1 = rom.ReadString(Rom.SHA1Key);
+            bool sha1Null = string.IsNullOrWhiteSpace(sha1) || string.Equals(sha1, Constants.SHA1Zero, StringComparison.OrdinalIgnoreCase);
+
+            string? sha256 = rom.ReadString(Rom.SHA256Key);
+            bool sha256Null = string.IsNullOrWhiteSpace(sha256) || string.Equals(sha256, Constants.SHA256Zero, StringComparison.OrdinalIgnoreCase);
+
+            string? sha384 = rom.ReadString(Rom.SHA384Key);
+            bool sha384Null = string.IsNullOrWhiteSpace(sha384) || string.Equals(sha384, Constants.SHA384Zero, StringComparison.OrdinalIgnoreCase);
+
+            string? sha512 = rom.ReadString(Rom.SHA512Key);
+            bool sha512Null = string.IsNullOrWhiteSpace(sha512) || string.Equals(sha512, Constants.SHA512Zero, StringComparison.OrdinalIgnoreCase);
+
+            string? spamsum = rom.ReadString(Rom.SpamSumKey);
+            bool spamsumNull = string.IsNullOrWhiteSpace(spamsum) || string.Equals(spamsum, Constants.SpamSumZero, StringComparison.OrdinalIgnoreCase);
+
+            return crcNull && md5Null && sha1Null && sha256Null && sha384Null && sha512Null && spamsumNull;
+        }
+
         #endregion
     
         #region Information Filling
 
         /// <summary>
+        /// Fill any missing size and hash information from another DatItem
+        /// </summary>
+        public static void FillMissingHashes(this DatItem? self, DatItem? other)
+        {
+            if (self == null || other == null)
+                return;
+
+            switch (self, other)
+            {
+                case (Disk diskSelf, Disk diskOther):
+                    FillMissingHashes(diskSelf, diskOther);
+                    break;
+                case (Media mediaSelf, Media mediaOther):
+                    FillMissingHashes(mediaSelf, mediaOther);
+                    break;
+                case (Rom romSelf, Rom romOther):
+                    FillMissingHashes(romSelf, romOther);
+                    break;
+            };
+        }
+
+        /// <summary>
         /// Fill any missing size and hash information from another Disk
         /// </summary>
-        public static void FillMissingHashes(this Disk? self, Disk? other)
+        private static void FillMissingHashes(this Disk? self, Disk? other)
         {
             if (self == null || other == null)
                 return;
@@ -527,7 +594,7 @@ namespace SabreTools.Core
         /// <summary>
         /// Fill any missing size and hash information from another Media
         /// </summary>
-        public static void FillMissingHashes(this Media? self, Media? other)
+        private static void FillMissingHashes(this Media? self, Media? other)
         {
             if (self == null || other == null)
                 return;
@@ -556,7 +623,7 @@ namespace SabreTools.Core
         /// <summary>
         /// Fill any missing size and hash information from another Rom
         /// </summary>
-        public static void FillMissingHashes(this Rom? self, Rom? other)
+        private static void FillMissingHashes(this Rom? self, Rom? other)
         {
             if (self == null || other == null)
                 return;
@@ -609,7 +676,24 @@ namespace SabreTools.Core
         /// <summary>
         /// Get unique duplicate suffix on name collision
         /// </summary>
-        public static string GetDuplicateSuffix(this Disk? self)
+        public static string GetDuplicateSuffix(this DatItem? self)
+        {
+            if (self == null)
+                return string.Empty;
+
+            return self switch
+            {
+                Disk diskSelf => GetDuplicateSuffix(diskSelf),
+                Media mediaSelf => GetDuplicateSuffix(mediaSelf),
+                Rom romSelf => GetDuplicateSuffix(romSelf),
+                _ => "_1",
+            };
+        }
+
+        /// <summary>
+        /// Get unique duplicate suffix on name collision
+        /// </summary>
+        private static string GetDuplicateSuffix(this Disk? self)
         {
             if (self == null)
                 return string.Empty;
@@ -628,7 +712,7 @@ namespace SabreTools.Core
         /// <summary>
         /// Get unique duplicate suffix on name collision
         /// </summary>
-        public static string GetDuplicateSuffix(this Media? self)
+        private static string GetDuplicateSuffix(this Media? self)
         {
             if (self == null)
                 return string.Empty;
@@ -655,7 +739,7 @@ namespace SabreTools.Core
         /// <summary>
         /// Get unique duplicate suffix on name collision
         /// </summary>
-        public static string GetDuplicateSuffix(this Rom? self)
+        private static string GetDuplicateSuffix(this Rom? self)
         {
             if (self == null)
                 return string.Empty;

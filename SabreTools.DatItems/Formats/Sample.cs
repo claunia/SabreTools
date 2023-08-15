@@ -18,15 +18,9 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _sample.ReadString(Models.Internal.Sample.NameKey);
-            set => _sample[Models.Internal.Sample.NameKey] = value;
+            get => _internal.ReadString(Models.Internal.Sample.NameKey);
+            set => _internal[Models.Internal.Sample.NameKey] = value;
         }
-
-        /// <summary>
-        /// Internal Sample model
-        /// </summary>
-        [JsonIgnore]
-        private Models.Internal.Sample _sample = new();
 
         #endregion
 
@@ -47,6 +41,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Sample()
         {
+            _internal = new Models.Internal.Sample();
             Name = string.Empty;
             ItemType = ItemType.Sample;
         }
@@ -67,23 +62,8 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _sample = this._sample?.Clone() as Models.Internal.Sample ?? new Models.Internal.Sample(),
+                _internal = this._internal?.Clone() as Models.Internal.Sample ?? new Models.Internal.Sample(),
             };
-        }
-
-        #endregion
-
-        #region Comparision Methods
-
-        /// <inheritdoc/>
-        public override bool Equals(DatItem? other)
-        {
-            // If we don't have a Sample, return false
-            if (ItemType != other?.ItemType || other is not Sample otherInternal)
-                return false;
-
-            // Compare the internal models
-            return _sample.EqualTo(otherInternal._sample);
         }
 
         #endregion

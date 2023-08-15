@@ -18,8 +18,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _ramOption.ReadString(Models.Internal.RamOption.NameKey);
-            set => _ramOption[Models.Internal.RamOption.NameKey] = value;
+            get => _internal.ReadString(Models.Internal.RamOption.NameKey);
+            set => _internal[Models.Internal.RamOption.NameKey] = value;
         }
 
         /// <summary>
@@ -28,8 +28,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("default")]
         public bool? Default
         {
-            get => _ramOption.ReadBool(Models.Internal.RamOption.DefaultKey);
-            set => _ramOption[Models.Internal.RamOption.DefaultKey] = value;
+            get => _internal.ReadBool(Models.Internal.RamOption.DefaultKey);
+            set => _internal[Models.Internal.RamOption.DefaultKey] = value;
         }
 
         [JsonIgnore]
@@ -41,15 +41,9 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("content", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("content")]
         public string? Content
         {
-            get => _ramOption.ReadString(Models.Internal.RamOption.ContentKey);
-            set => _ramOption[Models.Internal.RamOption.ContentKey] = value;
+            get => _internal.ReadString(Models.Internal.RamOption.ContentKey);
+            set => _internal[Models.Internal.RamOption.ContentKey] = value;
         }
-
-        /// <summary>
-        /// Internal RamOption model
-        /// </summary>
-        [JsonIgnore]
-        private Models.Internal.RamOption _ramOption = new();
 
         #endregion
 
@@ -70,6 +64,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public RamOption()
         {
+            _internal = new Models.Internal.RamOption();
             Name = string.Empty;
             ItemType = ItemType.RamOption;
         }
@@ -90,23 +85,8 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _ramOption = this._ramOption?.Clone() as Models.Internal.RamOption ?? new Models.Internal.RamOption(),
+                _internal = this._internal?.Clone() as Models.Internal.RamOption ?? new Models.Internal.RamOption(),
             };
-        }
-
-        #endregion
-
-        #region Comparision Methods
-
-        /// <inheritdoc/>
-        public override bool Equals(DatItem? other)
-        {
-           // If we don't have a RamOption, return false
-            if (ItemType != other?.ItemType || other is not RamOption otherInternal)
-                return false;
-
-            // Compare the internal models
-            return _ramOption.EqualTo(otherInternal._ramOption);
         }
 
         #endregion

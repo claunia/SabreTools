@@ -20,8 +20,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("service", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("service")]
         public bool? Service
         {
-            get => _input.ReadBool(Models.Internal.Input.ServiceKey);
-            set => _input[Models.Internal.Input.ServiceKey] = value;
+            get => _internal.ReadBool(Models.Internal.Input.ServiceKey);
+            set => _internal[Models.Internal.Input.ServiceKey] = value;
         }
 
         [JsonIgnore]
@@ -33,8 +33,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("tilt", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tilt")]
         public bool? Tilt
         {
-            get => _input.ReadBool(Models.Internal.Input.TiltKey);
-            set => _input[Models.Internal.Input.TiltKey] = value;
+            get => _internal.ReadBool(Models.Internal.Input.TiltKey);
+            set => _internal[Models.Internal.Input.TiltKey] = value;
         }
 
         [JsonIgnore]
@@ -46,8 +46,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("players", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("players")]
         public long? Players
         {
-            get => _input.ReadLong(Models.Internal.Input.PlayersKey);
-            set => _input[Models.Internal.Input.PlayersKey] = value;
+            get => _internal.ReadLong(Models.Internal.Input.PlayersKey);
+            set => _internal[Models.Internal.Input.PlayersKey] = value;
         }
 
         [JsonIgnore]
@@ -59,8 +59,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("coins", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("coins")]
         public long? Coins
         {
-            get => _input.ReadLong(Models.Internal.Input.CoinsKey);
-            set => _input[Models.Internal.Input.CoinsKey] = value;
+            get => _internal.ReadLong(Models.Internal.Input.CoinsKey);
+            set => _internal[Models.Internal.Input.CoinsKey] = value;
         }
 
         [JsonIgnore]
@@ -72,18 +72,12 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("controls", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("controls")]
         public List<Control>? Controls
         {
-            get => _input.Read<Control[]>(Models.Internal.Input.ControlKey)?.ToList();
-            set => _input[Models.Internal.Input.ControlKey] = value?.ToArray();
+            get => _internal.Read<Control[]>(Models.Internal.Input.ControlKey)?.ToList();
+            set => _internal[Models.Internal.Input.ControlKey] = value?.ToArray();
         }
 
         [JsonIgnore]
         public bool ControlsSpecified { get { return Controls != null && Controls.Count > 0; } }
-
-        /// <summary>
-        /// Internal Input model
-        /// </summary>
-        [JsonIgnore]
-        private Models.Internal.Input _input = new();
 
         #endregion
 
@@ -94,6 +88,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Input()
         {
+            _internal = new Models.Internal.Input();
             ItemType = ItemType.Input;
         }
 
@@ -113,23 +108,8 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _input = this._input?.Clone() as Models.Internal.Input ?? new Models.Internal.Input(),
+                _internal = this._internal?.Clone() as Models.Internal.Input ?? new Models.Internal.Input(),
             };
-        }
-
-        #endregion
-
-        #region Comparision Methods
-
-        /// <inheritdoc/>
-        public override bool Equals(DatItem? other)
-        {
-            // If we don't have a Input, return false
-            if (ItemType != other?.ItemType || other is not Input otherInternal)
-                return false;
-
-            // Compare the internal models
-            return _input.EqualTo(otherInternal._input);
         }
 
         #endregion

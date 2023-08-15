@@ -20,8 +20,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _chip.ReadString(Models.Internal.Chip.NameKey);
-            set => _chip[Models.Internal.Chip.NameKey] = value;
+            get => _internal.ReadString(Models.Internal.Chip.NameKey);
+            set => _internal[Models.Internal.Chip.NameKey] = value;
         }
 
         /// <summary>
@@ -30,8 +30,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tag")]
         public string? Tag
         {
-            get => _chip.ReadString(Models.Internal.Chip.TagKey);
-            set => _chip[Models.Internal.Chip.TagKey] = value;
+            get => _internal.ReadString(Models.Internal.Chip.TagKey);
+            set => _internal[Models.Internal.Chip.TagKey] = value;
         }
 
         /// <summary>
@@ -41,8 +41,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public ChipType ChipType
         {
-            get => _chip.ReadString(Models.Internal.Chip.ChipTypeKey).AsChipType();
-            set => _chip[Models.Internal.Chip.ChipTypeKey] = value.FromChipType();
+            get => _internal.ReadString(Models.Internal.Chip.ChipTypeKey).AsChipType();
+            set => _internal[Models.Internal.Chip.ChipTypeKey] = value.FromChipType();
         }
 
         [JsonIgnore]
@@ -54,18 +54,12 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("clock", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("clock")]
         public long? Clock
         {
-            get => _chip.ReadLong(Models.Internal.Chip.ClockKey);
-            set => _chip[Models.Internal.Chip.ClockKey] = value;
+            get => _internal.ReadLong(Models.Internal.Chip.ClockKey);
+            set => _internal[Models.Internal.Chip.ClockKey] = value;
         }
 
         [JsonIgnore]
         public bool ClockSpecified { get { return Clock != null; } }
-
-        /// <summary>
-        /// Internal Chip model
-        /// </summary>
-        [JsonIgnore]
-        private Models.Internal.Chip _chip = new();
 
         #endregion
 
@@ -86,6 +80,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Chip()
         {
+            _internal = new Models.Internal.Chip();
             Name = string.Empty;
             ItemType = ItemType.Chip;
         }
@@ -106,23 +101,8 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _chip = this._chip?.Clone() as Models.Internal.Chip ?? new Models.Internal.Chip(),
+                _internal = this._internal?.Clone() as Models.Internal.Chip ?? new Models.Internal.Chip(),
             };
-        }
-
-        #endregion
-
-        #region Comparision Methods
-
-        /// <inheritdoc/>
-        public override bool Equals(DatItem? other)
-        {
-            // If we don't have a Chip, return false
-            if (ItemType != other?.ItemType || other is not Chip otherInternal)
-                return false;
-
-            // Compare the internal models
-            return _chip.EqualTo(otherInternal._chip);
         }
 
         #endregion

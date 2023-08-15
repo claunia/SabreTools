@@ -20,8 +20,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _configuration.ReadString(Models.Internal.Configuration.NameKey);
-            set => _configuration[Models.Internal.Configuration.NameKey] = value;
+            get => _internal.ReadString(Models.Internal.Configuration.NameKey);
+            set => _internal[Models.Internal.Configuration.NameKey] = value;
         }
 
         /// <summary>
@@ -30,8 +30,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tag")]
         public string? Tag
         {
-            get => _configuration.ReadString(Models.Internal.Configuration.TagKey);
-            set => _configuration[Models.Internal.Configuration.TagKey] = value;
+            get => _internal.ReadString(Models.Internal.Configuration.TagKey);
+            set => _internal[Models.Internal.Configuration.TagKey] = value;
         }
 
         /// <summary>
@@ -40,8 +40,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("mask", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("mask")]
         public string? Mask
         {
-            get => _configuration.ReadString(Models.Internal.Configuration.MaskKey);
-            set => _configuration[Models.Internal.Configuration.MaskKey] = value;
+            get => _internal.ReadString(Models.Internal.Configuration.MaskKey);
+            set => _internal[Models.Internal.Configuration.MaskKey] = value;
         }
 
         /// <summary>
@@ -50,8 +50,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("conditions")]
         public List<Condition>? Conditions
         {
-            get => _configuration.Read<Condition[]>(Models.Internal.Configuration.ConditionKey)?.ToList();
-            set => _configuration[Models.Internal.Configuration.ConditionKey] = value?.ToArray();
+            get => _internal.Read<Condition[]>(Models.Internal.Configuration.ConditionKey)?.ToList();
+            set => _internal[Models.Internal.Configuration.ConditionKey] = value?.ToArray();
         }
 
         [JsonIgnore]
@@ -63,8 +63,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("locations", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("locations")]
         public List<ConfLocation>? Locations
         {
-            get => _configuration.Read<ConfLocation[]>(Models.Internal.Configuration.ConfLocationKey)?.ToList();
-            set => _configuration[Models.Internal.Configuration.ConfLocationKey] = value?.ToArray();
+            get => _internal.Read<ConfLocation[]>(Models.Internal.Configuration.ConfLocationKey)?.ToList();
+            set => _internal[Models.Internal.Configuration.ConfLocationKey] = value?.ToArray();
         }
 
         [JsonIgnore]
@@ -76,18 +76,12 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("settings", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("settings")]
         public List<ConfSetting>? Settings
         {
-            get => _configuration.Read<List<ConfSetting>>(Models.Internal.Configuration.ConfSettingKey);
-            set => _configuration[Models.Internal.Configuration.ConfSettingKey] = value;
+            get => _internal.Read<List<ConfSetting>>(Models.Internal.Configuration.ConfSettingKey);
+            set => _internal[Models.Internal.Configuration.ConfSettingKey] = value;
         }
 
         [JsonIgnore]
         public bool SettingsSpecified { get { return Settings != null && Settings.Count > 0; } }
-
-        /// <summary>
-        /// Internal Configuration model
-        /// </summary>
-        [JsonIgnore]
-        private Models.Internal.Configuration _configuration = new();
 
         #endregion
 
@@ -108,6 +102,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Configuration()
         {
+            _internal = new Models.Internal.Configuration();
             Name = string.Empty;
             ItemType = ItemType.Configuration;
         }
@@ -128,23 +123,8 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _configuration = this._configuration?.Clone() as Models.Internal.Configuration ?? new Models.Internal.Configuration(),
+                _internal = this._internal?.Clone() as Models.Internal.Configuration ?? new Models.Internal.Configuration(),
             };
-        }
-
-        #endregion
-
-        #region Comparision Methods
-
-        /// <inheritdoc/>
-        public override bool Equals(DatItem? other)
-        {
-            // If we don't have a Configuration, return false
-            if (ItemType != other?.ItemType || other is not Configuration otherInternal)
-                return false;
-
-            // Compare the internal models
-            return _configuration.EqualTo(otherInternal._configuration);
         }
 
         #endregion

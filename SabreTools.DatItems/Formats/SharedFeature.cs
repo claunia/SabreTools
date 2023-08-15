@@ -18,8 +18,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _sharedFeat.ReadString(Models.Internal.SharedFeat.NameKey);
-            set => _sharedFeat[Models.Internal.SharedFeat.NameKey] = value;
+            get => _internal.ReadString(Models.Internal.SharedFeat.NameKey);
+            set => _internal[Models.Internal.SharedFeat.NameKey] = value;
         }
 
         /// <summary>
@@ -28,15 +28,9 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("value"), XmlElement("value")]
         public string? Value
         {
-            get => _sharedFeat.ReadString(Models.Internal.SharedFeat.ValueKey);
-            set => _sharedFeat[Models.Internal.SharedFeat.ValueKey] = value;
+            get => _internal.ReadString(Models.Internal.SharedFeat.ValueKey);
+            set => _internal[Models.Internal.SharedFeat.ValueKey] = value;
         }
-
-        /// <summary>
-        /// Internal SharedFeat model
-        /// </summary>
-        [JsonIgnore]
-        private Models.Internal.SharedFeat _sharedFeat = new();
 
         #endregion
 
@@ -57,6 +51,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public SharedFeature()
         {
+            _internal = new Models.Internal.SharedFeat();
             Name = string.Empty;
             ItemType = ItemType.SharedFeature;
         }
@@ -77,23 +72,8 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _sharedFeat = this._sharedFeat?.Clone() as Models.Internal.SharedFeat ?? new Models.Internal.SharedFeat(),
+                _internal = this._internal?.Clone() as Models.Internal.SharedFeat ?? new Models.Internal.SharedFeat(),
             };
-        }
-
-        #endregion
-
-        #region Comparision Methods
-
-        /// <inheritdoc/>
-        public override bool Equals(DatItem? other)
-        {
-            // If we don't have a SharedFeature, return false
-            if (ItemType != other?.ItemType || other is not SharedFeature otherInternal)
-                return false;
-
-            // Compare the internal models
-            return _sharedFeat.EqualTo(otherInternal._sharedFeat);
         }
 
         #endregion

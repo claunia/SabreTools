@@ -20,8 +20,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tag")]
         public string? Tag
         {
-            get => _port.ReadString(Models.Internal.Port.TagKey);
-            set => _port[Models.Internal.Port.TagKey] = value;
+            get => _internal.ReadString(Models.Internal.Port.TagKey);
+            set => _internal[Models.Internal.Port.TagKey] = value;
         }
 
         /// <summary>
@@ -30,18 +30,12 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("analogs", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("analogs")]
         public List<Analog>? Analogs
         {
-            get => _port.Read<Analog[]>(Models.Internal.Port.AnalogKey)?.ToList();
-            set => _port[Models.Internal.Port.AnalogKey] = value?.ToArray();
+            get => _internal.Read<Analog[]>(Models.Internal.Port.AnalogKey)?.ToList();
+            set => _internal[Models.Internal.Port.AnalogKey] = value?.ToArray();
         }
 
         [JsonIgnore]
         public bool AnalogsSpecified { get { return Analogs != null && Analogs.Count > 0; } }
-
-        /// <summary>
-        /// Internal Port model
-        /// </summary>
-        [JsonIgnore]
-        private Models.Internal.Port _port = new();
 
         #endregion
 
@@ -52,6 +46,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Port()
         {
+            _internal = new Models.Internal.Port();
             ItemType = ItemType.Port;
         }
 
@@ -71,23 +66,8 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _port = this._port?.Clone() as Models.Internal.Port ?? new Models.Internal.Port(),
+                _internal = this._internal?.Clone() as Models.Internal.Port ?? new Models.Internal.Port(),
             };
-        }
-
-        #endregion
-
-        #region Comparision Methods
-
-        /// <inheritdoc/>
-        public override bool Equals(DatItem? other)
-        {
-            // If we don't have a Port, return false
-            if (ItemType != other?.ItemType || other is not Port otherInternal)
-                return false;
-
-            // Compare the internal models
-            return _port.EqualTo(otherInternal._port);
         }
 
         #endregion

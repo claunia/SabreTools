@@ -18,32 +18,26 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _part.ReadString(Models.Internal.Part.NameKey);
-            set => _part[Models.Internal.Part.NameKey] = value;
+            get => _internal.ReadString(Models.Internal.Part.NameKey);
+            set => _internal[Models.Internal.Part.NameKey] = value;
         }
 
         [JsonProperty("interface"), XmlElement("interface")]
         public string? Interface
         {
-            get => _part.ReadString(Models.Internal.Part.InterfaceKey);
-            set => _part[Models.Internal.Part.InterfaceKey] = value;
+            get => _internal.ReadString(Models.Internal.Part.InterfaceKey);
+            set => _internal[Models.Internal.Part.InterfaceKey] = value;
         }
     
         [JsonProperty("features", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("features")]
         public List<PartFeature>? Features
         {
-            get => _part.Read<PartFeature[]>(Models.Internal.Part.FeatureKey)?.ToList();
-            set => _part[Models.Internal.Part.FeatureKey] = value?.ToArray();
+            get => _internal.Read<PartFeature[]>(Models.Internal.Part.FeatureKey)?.ToList();
+            set => _internal[Models.Internal.Part.FeatureKey] = value?.ToArray();
         }
 
         [JsonIgnore]
         public bool FeaturesSpecified { get { return Features != null && Features.Count > 0; } }
-
-        /// <summary>
-        /// Internal Part model
-        /// </summary>
-        [JsonIgnore]
-        private Models.Internal.Part _part = new();
 
         #endregion
 
@@ -64,6 +58,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Part()
         {
+            _internal = new Models.Internal.Part();
             Name = string.Empty;
             ItemType = ItemType.Part;
         }
@@ -84,23 +79,8 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _part = this._part?.Clone() as Models.Internal.Part ?? new Models.Internal.Part(),
+                _internal = this._internal?.Clone() as Models.Internal.Part ?? new Models.Internal.Part(),
             };
-        }
-
-        #endregion
-
-        #region Comparision Methods
-
-        /// <inheritdoc/>
-        public override bool Equals(DatItem? other)
-        {
-            // If we don't have a Part, return false
-            if (ItemType != other?.ItemType || other is not Part otherInternal)
-                return false;
-
-            // Compare the internal models
-            return _part.EqualTo(otherInternal._part);
         }
 
         #endregion

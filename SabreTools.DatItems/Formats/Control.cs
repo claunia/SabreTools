@@ -21,8 +21,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public ControlType ControlType
         {
-            get => _control.ReadString(Models.Internal.Control.ControlTypeKey).AsControlType();
-            set => _control[Models.Internal.Control.ControlTypeKey] = value.FromControlType();
+            get => _internal.ReadString(Models.Internal.Control.ControlTypeKey).AsControlType();
+            set => _internal[Models.Internal.Control.ControlTypeKey] = value.FromControlType();
         }
 
         [JsonIgnore]
@@ -34,8 +34,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("player", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("player")]
         public long? Player
         {
-            get => _control.ReadLong(Models.Internal.Control.PlayerKey);
-            set => _control[Models.Internal.Control.PlayerKey] = value;
+            get => _internal.ReadLong(Models.Internal.Control.PlayerKey);
+            set => _internal[Models.Internal.Control.PlayerKey] = value;
         }
 
         [JsonIgnore]
@@ -47,8 +47,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("buttons", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("buttons")]
         public long? Buttons
         {
-            get => _control.ReadLong(Models.Internal.Control.ButtonsKey);
-            set => _control[Models.Internal.Control.ButtonsKey] = value;
+            get => _internal.ReadLong(Models.Internal.Control.ButtonsKey);
+            set => _internal[Models.Internal.Control.ButtonsKey] = value;
         }
 
         [JsonIgnore]
@@ -60,8 +60,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("reqbuttons", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("reqbuttons")]
         public long? RequiredButtons
         {
-            get => _control.ReadLong(Models.Internal.Control.ReqButtonsKey);
-            set => _control[Models.Internal.Control.ReqButtonsKey] = value;
+            get => _internal.ReadLong(Models.Internal.Control.ReqButtonsKey);
+            set => _internal[Models.Internal.Control.ReqButtonsKey] = value;
         }
 
         [JsonIgnore]
@@ -73,8 +73,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("minimum", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("minimum")]
         public long? Minimum
         {
-            get => _control.ReadLong(Models.Internal.Control.MinimumKey);
-            set => _control[Models.Internal.Control.MinimumKey] = value;
+            get => _internal.ReadLong(Models.Internal.Control.MinimumKey);
+            set => _internal[Models.Internal.Control.MinimumKey] = value;
         }
 
         [JsonIgnore]
@@ -86,8 +86,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("maximum", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("maximum")]
         public long? Maximum
         {
-            get => _control.ReadLong(Models.Internal.Control.MaximumKey);
-            set => _control[Models.Internal.Control.MaximumKey] = value;
+            get => _internal.ReadLong(Models.Internal.Control.MaximumKey);
+            set => _internal[Models.Internal.Control.MaximumKey] = value;
         }
 
         [JsonIgnore]
@@ -99,8 +99,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("sensitivity", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sensitivity")]
         public long? Sensitivity
         {
-            get => _control.ReadLong(Models.Internal.Control.SensitivityKey);
-            set => _control[Models.Internal.Control.SensitivityKey] = value;
+            get => _internal.ReadLong(Models.Internal.Control.SensitivityKey);
+            set => _internal[Models.Internal.Control.SensitivityKey] = value;
         }
 
         [JsonIgnore]
@@ -112,8 +112,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("keydelta", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("keydelta")]
         public long? KeyDelta
         {
-            get => _control.ReadLong(Models.Internal.Control.KeyDeltaKey);
-            set => _control[Models.Internal.Control.KeyDeltaKey] = value;
+            get => _internal.ReadLong(Models.Internal.Control.KeyDeltaKey);
+            set => _internal[Models.Internal.Control.KeyDeltaKey] = value;
         }
 
         [JsonIgnore]
@@ -125,8 +125,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("reverse", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("reverse")]
         public bool? Reverse
         {
-            get => _control.ReadBool(Models.Internal.Control.ReverseKey);
-            set => _control[Models.Internal.Control.ReverseKey] = value;
+            get => _internal.ReadBool(Models.Internal.Control.ReverseKey);
+            set => _internal[Models.Internal.Control.ReverseKey] = value;
         }
 
         [JsonIgnore]
@@ -138,8 +138,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("ways", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("ways")]
         public string? Ways
         {
-            get => _control.ReadString(Models.Internal.Control.WaysKey);
-            set => _control[Models.Internal.Control.WaysKey] = value;
+            get => _internal.ReadString(Models.Internal.Control.WaysKey);
+            set => _internal[Models.Internal.Control.WaysKey] = value;
         }
 
         /// <summary>
@@ -148,8 +148,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("ways2", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("ways2")]
         public string? Ways2
         {
-            get => _control.ReadString(Models.Internal.Control.Ways2Key);
-            set => _control[Models.Internal.Control.Ways2Key] = value;
+            get => _internal.ReadString(Models.Internal.Control.Ways2Key);
+            set => _internal[Models.Internal.Control.Ways2Key] = value;
         }
 
         /// <summary>
@@ -158,15 +158,9 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("ways3", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("ways3")]
         public string? Ways3
         {
-            get => _control.ReadString(Models.Internal.Control.Ways3Key);
-            set => _control[Models.Internal.Control.Ways3Key] = value;
+            get => _internal.ReadString(Models.Internal.Control.Ways3Key);
+            set => _internal[Models.Internal.Control.Ways3Key] = value;
         }
-
-        /// <summary>
-        /// Internal Control model
-        /// </summary>
-        [JsonIgnore]
-        private Models.Internal.Control _control = new();
 
         #endregion
 
@@ -177,6 +171,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Control()
         {
+            _internal = new Models.Internal.Control();
             ItemType = ItemType.Control;
         }
 
@@ -196,23 +191,8 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _control = this._control?.Clone() as Models.Internal.Control ?? new Models.Internal.Control(),
+                _internal = this._internal?.Clone() as Models.Internal.Control ?? new Models.Internal.Control(),
             };
-        }
-
-        #endregion
-
-        #region Comparision Methods
-
-        /// <inheritdoc/>
-        public override bool Equals(DatItem? other)
-        {
-            // If we don't have a Control, return false
-            if (ItemType != other?.ItemType || other is not Control otherInternal)
-                return false;
-
-            // Compare the internal models
-            return _control.EqualTo(otherInternal._control);
         }
 
         #endregion

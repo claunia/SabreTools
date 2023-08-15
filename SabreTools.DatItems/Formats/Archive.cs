@@ -18,8 +18,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _archive.ReadString(Models.Internal.Archive.NameKey);
-            set => _archive[Models.Internal.Archive.NameKey] = value;
+            get => _internal.ReadString(Models.Internal.Archive.NameKey);
+            set => _internal[Models.Internal.Archive.NameKey] = value;
         }
 
         /// <summary>
@@ -87,12 +87,6 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("categories"), XmlElement("categories")]
         public string? Categories { get; set; }
 
-        /// <summary>
-        /// Internal Archive model
-        /// </summary>
-        [JsonIgnore]
-        private Models.Internal.Archive _archive = new();
-
         #endregion
 
         #region Accessors
@@ -112,6 +106,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Archive()
         {
+            _internal = new Models.Internal.Archive();
             Name = string.Empty;
             ItemType = ItemType.Archive;
         }
@@ -132,23 +127,8 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _archive = this._archive?.Clone() as Models.Internal.Archive ?? new Models.Internal.Archive(),
+                _internal = this._internal?.Clone() as Models.Internal.Archive ?? new Models.Internal.Archive(),
             };
-        }
-
-        #endregion
-
-        #region Comparision Methods
-
-        /// <inheritdoc/>
-        public override bool Equals(DatItem? other)
-        {
-            // If we don't have a Archive, return false
-            if (ItemType != other?.ItemType || other is not Archive otherInternal)
-                return false;
-
-            // Compare the internal models
-            return _archive.EqualTo(otherInternal._archive);
         }
 
         #endregion

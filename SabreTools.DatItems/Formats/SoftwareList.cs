@@ -24,8 +24,8 @@ namespace SabreTools.DatItems.Formats
         [XmlElement("tag")]
         public string? Tag
         {
-            get => _softwareList.ReadString(Models.Internal.SoftwareList.TagKey);
-            set => _softwareList[Models.Internal.SoftwareList.TagKey] = value;
+            get => _internal.ReadString(Models.Internal.SoftwareList.TagKey);
+            set => _internal[Models.Internal.SoftwareList.TagKey] = value;
         }
 
         /// <summary>
@@ -35,8 +35,8 @@ namespace SabreTools.DatItems.Formats
         [XmlElement("name")]
         public string? Name
         {
-            get => _softwareList.ReadString(Models.Internal.SoftwareList.NameKey);
-            set => _softwareList[Models.Internal.SoftwareList.NameKey] = value;
+            get => _internal.ReadString(Models.Internal.SoftwareList.NameKey);
+            set => _internal[Models.Internal.SoftwareList.NameKey] = value;
         }
 
         /// <summary>
@@ -47,8 +47,8 @@ namespace SabreTools.DatItems.Formats
         [XmlElement("status")]
         public SoftwareListStatus Status
         {
-            get => _softwareList.ReadString(Models.Internal.SoftwareList.StatusKey).AsSoftwareListStatus();
-            set => _softwareList[Models.Internal.SoftwareList.StatusKey] = value.FromSoftwareListStatus();
+            get => _internal.ReadString(Models.Internal.SoftwareList.StatusKey).AsSoftwareListStatus();
+            set => _internal[Models.Internal.SoftwareList.StatusKey] = value.FromSoftwareListStatus();
         }
 
         [JsonIgnore]
@@ -61,15 +61,9 @@ namespace SabreTools.DatItems.Formats
         [XmlElement("filter")]
         public string? Filter
         {
-            get => _softwareList.ReadString(Models.Internal.SoftwareList.FilterKey);
-            set => _softwareList[Models.Internal.SoftwareList.FilterKey] = value;
+            get => _internal.ReadString(Models.Internal.SoftwareList.FilterKey);
+            set => _internal[Models.Internal.SoftwareList.FilterKey] = value;
         }
-
-        /// <summary>
-        /// Internal SoftwareList model
-        /// </summary>
-        [JsonIgnore]
-        private Models.Internal.SoftwareList _softwareList = new();
 
         #endregion
 
@@ -90,6 +84,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public SoftwareList()
         {
+            _internal = new Models.Internal.SoftwareList();
             Name = string.Empty;
             ItemType = ItemType.SoftwareList;
         }
@@ -109,22 +104,8 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _softwareList = this._softwareList?.Clone() as Models.Internal.SoftwareList ?? new Models.Internal.SoftwareList(),
+                _internal = this._internal?.Clone() as Models.Internal.SoftwareList ?? new Models.Internal.SoftwareList(),
             };
-        }
-
-        #endregion
-
-        #region Comparision Methods
-
-        public override bool Equals(DatItem? other)
-        {
-            // If we don't have a Adjuster, return false
-            if (ItemType != other?.ItemType || other is not SoftwareList otherInternal)
-                return false;
-
-            // Compare the internal models
-            return _softwareList.EqualTo(otherInternal._softwareList);
         }
 
         #endregion

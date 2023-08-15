@@ -70,13 +70,28 @@ namespace SabreTools.DatItems
         [JsonProperty("itemtype")]
         [JsonConverter(typeof(StringEnumConverter))]
         [XmlElement("itemtype")]
-        public ItemType ItemType { get; set; }
+        public ItemType ItemType
+        {
+            get => _internal.ReadString(Models.Internal.DatItem.TypeKey).AsItemType();
+            set => _internal[Models.Internal.DatItem.TypeKey] = value.FromItemType();
+        }
 
         /// <summary>
         /// Duplicate type when compared to another item
         /// </summary>
+        /// <remarks>Hack on top of internal model</remarks>
         [JsonIgnore, XmlIgnore]
-        public DupeType DupeType { get; set; }
+        public DupeType DupeType
+        {
+            get => _internal.Read<DupeType?>("DUPETYPE") ?? 0;
+            set => _internal["DUPETYPE"] = value;
+        }
+
+        /// <summary>
+        /// Internal model wrapped by this DatItem
+        /// </summary>
+        [JsonIgnore, XmlIgnore]
+        protected Models.Internal.DatItem _internal;
 
         #endregion
 
@@ -85,8 +100,13 @@ namespace SabreTools.DatItems
         /// <summary>
         /// Machine values
         /// </summary>
+        /// <remarks>Hack on top of internal model</remarks>
         [JsonIgnore, XmlIgnore]
-        public Machine? Machine { get; set; } = new Machine();
+        public Machine? Machine
+        {
+            get => _internal.Read<Machine>("MACHINE") ?? new Machine();
+            set => _internal["MACHINE"] = value;
+        }
 
         #endregion
 
@@ -95,14 +115,24 @@ namespace SabreTools.DatItems
         /// <summary>
         /// Source information
         /// </summary>
+        /// <remarks>Hack on top of internal model</remarks>
         [JsonIgnore, XmlIgnore]
-        public Source? Source { get; set; } = new Source();
+        public Source? Source
+        {
+            get => _internal.Read<Source>("SOURCE") ?? new Source();
+            set => _internal["SOURCE"] = value;
+        }
 
         /// <summary>
         /// Flag if item should be removed
         /// </summary>
+        /// <remarks>Hack on top of internal model</remarks>
         [JsonIgnore, XmlIgnore]
-        public bool Remove { get; set; }
+        public bool Remove
+        {
+            get => _internal.ReadBool("REMOVE") ?? false;
+            set => _internal["REMOVE"] = value;
+        }
 
         #endregion // Metadata information
 
@@ -149,6 +179,7 @@ namespace SabreTools.DatItems
         /// </summary>
         public DatItem()
         {
+            _internal = new Models.Internal.Blank();
             logger = new Logger(this);
         }
 
@@ -286,7 +317,15 @@ namespace SabreTools.DatItems
         /// </summary>
         /// <param name="other">DatItem to use as a baseline</param>
         /// <returns>True if the items are duplicates, false otherwise</returns>
-        public abstract bool Equals(DatItem? other);
+        public virtual bool Equals(DatItem? other)
+        {
+            // If we don't have a matched type, return false
+            if (ItemType != other?.ItemType)
+                return false;
+
+            // Compare the internal models
+            return _internal.EqualTo(other._internal);
+        }
 
         /// <summary>
         /// Return the duplicate status of two items

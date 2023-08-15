@@ -19,22 +19,22 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("value"), XmlElement("value")]
         public bool? Value
         {
-            get => _original.ReadBool(Models.Internal.Original.ValueKey);
-            set => _original[Models.Internal.Original.ValueKey] = value;
+            get => _internal.ReadBool(Models.Internal.Original.ValueKey);
+            set => _internal[Models.Internal.Original.ValueKey] = value;
         }
 
         [JsonProperty("content"), XmlElement("content")]
         public string? Content
         {
-            get => _original.ReadString(Models.Internal.Original.ContentKey);
-            set => _original[Models.Internal.Original.ContentKey] = value;
+            get => _internal.ReadString(Models.Internal.Original.ContentKey);
+            set => _internal[Models.Internal.Original.ContentKey] = value;
         }
 
         /// <summary>
         /// Internal Original model
         /// </summary>
         [JsonIgnore]
-        private readonly Models.Internal.Original _original = new();
+        private readonly Models.Internal.Original _internal = new();
     }
 
     #endregion

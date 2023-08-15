@@ -23,8 +23,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _disk.ReadString(Models.Internal.Disk.NameKey);
-            set => _disk[Models.Internal.Disk.NameKey] = value;
+            get => _internal.ReadString(Models.Internal.Disk.NameKey);
+            set => _internal[Models.Internal.Disk.NameKey] = value;
         }
 
         /// <summary>
@@ -33,8 +33,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("md5", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("md5")]
         public string? MD5
         {
-            get => _disk.ReadString(Models.Internal.Disk.MD5Key);
-            set => _disk[Models.Internal.Disk.MD5Key] = TextHelper.NormalizeMD5(value);
+            get => _internal.ReadString(Models.Internal.Disk.MD5Key);
+            set => _internal[Models.Internal.Disk.MD5Key] = TextHelper.NormalizeMD5(value);
         }
 
         /// <summary>
@@ -43,8 +43,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("sha1", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha1")]
         public string? SHA1
         {
-            get => _disk.ReadString(Models.Internal.Disk.SHA1Key);
-            set => _disk[Models.Internal.Disk.SHA1Key] = TextHelper.NormalizeSHA1(value);
+            get => _internal.ReadString(Models.Internal.Disk.SHA1Key);
+            set => _internal[Models.Internal.Disk.SHA1Key] = TextHelper.NormalizeSHA1(value);
         }
 
         /// <summary>
@@ -53,8 +53,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("merge", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("merge")]
         public string? MergeTag
         {
-            get => _disk.ReadString(Models.Internal.Disk.MergeKey);
-            set => _disk[Models.Internal.Disk.MergeKey] = value;
+            get => _internal.ReadString(Models.Internal.Disk.MergeKey);
+            set => _internal[Models.Internal.Disk.MergeKey] = value;
         }
 
         /// <summary>
@@ -63,8 +63,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("region", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("region")]
         public string? Region
         {
-            get => _disk.ReadString(Models.Internal.Disk.RegionKey);
-            set => _disk[Models.Internal.Disk.RegionKey] = value;
+            get => _internal.ReadString(Models.Internal.Disk.RegionKey);
+            set => _internal[Models.Internal.Disk.RegionKey] = value;
         }
 
         /// <summary>
@@ -73,8 +73,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("index", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("index")]
         public string? Index
         {
-            get => _disk.ReadString(Models.Internal.Disk.IndexKey);
-            set => _disk[Models.Internal.Disk.IndexKey] = value;
+            get => _internal.ReadString(Models.Internal.Disk.IndexKey);
+            set => _internal[Models.Internal.Disk.IndexKey] = value;
         }
 
         /// <summary>
@@ -83,8 +83,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("writable", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("writable")]
         public bool? Writable
         {
-            get => _disk.ReadBool(Models.Internal.Disk.WritableKey);
-            set => _disk[Models.Internal.Disk.WritableKey] = value;
+            get => _internal.ReadBool(Models.Internal.Disk.WritableKey);
+            set => _internal[Models.Internal.Disk.WritableKey] = value;
         }
 
         [JsonIgnore]
@@ -97,8 +97,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public ItemStatus ItemStatus
         {
-            get => _disk.ReadString(Models.Internal.Disk.StatusKey).AsItemStatus();
-            set => _disk[Models.Internal.Disk.StatusKey] = value.FromItemStatus(yesno: false);
+            get => _internal.ReadString(Models.Internal.Disk.StatusKey).AsItemStatus();
+            set => _internal[Models.Internal.Disk.StatusKey] = value.FromItemStatus(yesno: false);
         }
 
         [JsonIgnore]
@@ -110,8 +110,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("optional", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("optional")]
         public bool? Optional
         {
-            get => _disk.ReadBool(Models.Internal.Disk.OptionalKey);
-            set => _disk[Models.Internal.Disk.OptionalKey] = value;
+            get => _internal.ReadBool(Models.Internal.Disk.OptionalKey);
+            set => _internal[Models.Internal.Disk.OptionalKey] = value;
         }
 
         [JsonIgnore]
@@ -124,9 +124,13 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Disk area information
         /// </summary>
-        /// <remarks>This is inverted from the internal model</remarks>
+        /// <remarks>Hack on top of internal model</remarks>
         [JsonProperty("diskarea", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("diskarea")]
-        public DiskArea? DiskArea { get; set; }
+        public DiskArea? DiskArea
+        {
+            get => _internal.Read<DiskArea>("DISKAREA");
+            set => _internal["DISKAREA"] = value;
+        }
 
         [JsonIgnore]
         public bool DiskAreaSpecified
@@ -141,9 +145,13 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Original hardware part associated with the item
         /// </summary>
-        /// <remarks>This is inverted from the internal model</remarks>
+        /// <remarks>Hack on top of internal model</remarks>
         [JsonProperty("part", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("part")]
-        public Part? Part { get; set; }
+        public Part? Part
+        {
+            get => _internal.Read<Part>("PART");
+            set => _internal["PART"] = value;
+        }
 
         [JsonIgnore]
         public bool PartSpecified
@@ -157,12 +165,6 @@ namespace SabreTools.DatItems.Formats
         }
 
         #endregion
-
-        /// <summary>
-        /// Internal Disk model
-        /// </summary>
-        [JsonIgnore]
-        private Models.Internal.Disk _disk = new();
 
         #endregion // Fields
 
@@ -183,6 +185,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Disk()
         {
+            _internal = new Models.Internal.Disk();
             Name = string.Empty;
             ItemType = ItemType.Disk;
             DupeType = 0x00;
@@ -194,6 +197,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Disk(BaseFile baseFile)
         {
+            _internal = new Models.Internal.Disk();
             Name = baseFile.Filename;
             MD5 = TextHelper.ByteArrayToString(baseFile.MD5);
             SHA1 = TextHelper.ByteArrayToString(baseFile.SHA1);
@@ -219,10 +223,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _disk = this._disk?.Clone() as Models.Internal.Disk ?? new Models.Internal.Disk(),
-
-                DiskArea = this.DiskArea,
-                Part = this.Part,
+                _internal = this._internal?.Clone() as Models.Internal.Disk ?? new Models.Internal.Disk(),
             };
         }
 
@@ -246,7 +247,7 @@ namespace SabreTools.DatItems.Formats
         /// <returns></returns>
         public Rom ConvertToRom()
         {
-            var rom = new Rom(_disk.ConvertToRom())
+            var rom = new Rom(_internal.ConvertToRom())
             {
                 ItemType = ItemType.Rom,
                 DupeType = this.DupeType,
@@ -266,28 +267,17 @@ namespace SabreTools.DatItems.Formats
 
         #region Comparision Methods
 
-        /// <inheritdoc/>
-        public override bool Equals(DatItem? other)
-        {
-            // If we don't have a Disk, return false
-            if (ItemType != other?.ItemType || other is not Disk otherInternal)
-                return false;
-
-            // Compare the internal models
-            return _disk.EqualTo(otherInternal._disk);
-        }
-
         /// <summary>
         /// Fill any missing size and hash information from another Disk
         /// </summary>
         /// <param name="other">Disk to fill information from</param>
-        public void FillMissingInformation(Disk other) => _disk.FillMissingHashes(other?._disk);
+        public void FillMissingInformation(Disk other) => _internal.FillMissingHashes(other?._internal);
 
         /// <summary>
         /// Get unique duplicate suffix on name collision
         /// </summary>
         /// <returns>String representing the suffix</returns>
-        public string GetDuplicateSuffix() => _disk.GetDuplicateSuffix();
+        public string GetDuplicateSuffix() => _internal.GetDuplicateSuffix();
 
         #endregion
 

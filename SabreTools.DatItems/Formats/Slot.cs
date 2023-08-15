@@ -20,8 +20,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _slot.ReadString(Models.Internal.Slot.NameKey);
-            set => _slot[Models.Internal.Slot.NameKey] = value;
+            get => _internal.ReadString(Models.Internal.Slot.NameKey);
+            set => _internal[Models.Internal.Slot.NameKey] = value;
         }
 
         /// <summary>
@@ -30,18 +30,12 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("slotoptions", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("slotoptions")]
         public List<SlotOption>? SlotOptions
         {
-            get => _slot.Read<SlotOption[]>(Models.Internal.Slot.SlotOptionKey)?.ToList();
-            set => _slot[Models.Internal.Slot.SlotOptionKey] = value?.ToArray();
+            get => _internal.Read<SlotOption[]>(Models.Internal.Slot.SlotOptionKey)?.ToList();
+            set => _internal[Models.Internal.Slot.SlotOptionKey] = value?.ToArray();
         }
 
         [JsonIgnore]
         public bool SlotOptionsSpecified { get { return SlotOptions != null && SlotOptions.Count > 0; } }
-
-        /// <summary>
-        /// Internal Slot model
-        /// </summary>
-        [JsonIgnore]
-        private Models.Internal.Slot _slot = new();
 
         #endregion
 
@@ -62,6 +56,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Slot()
         {
+            _internal = new Models.Internal.Slot();
             Name = string.Empty;
             ItemType = ItemType.Slot;
         }
@@ -82,23 +77,8 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _slot = this._slot?.Clone() as Models.Internal.Slot ?? new Models.Internal.Slot(),
+                _internal = this._internal?.Clone() as Models.Internal.Slot ?? new Models.Internal.Slot(),
             };
-        }
-
-        #endregion
-
-        #region Comparision Methods
-
-        /// <inheritdoc/>
-        public override bool Equals(DatItem? other)
-        {
-            // If we don't have a Slot, return false
-            if (ItemType != other?.ItemType || other is not Slot otherInternal)
-                return false;
-
-            // Compare the internal models
-            return _slot.EqualTo(otherInternal._slot);
         }
 
         #endregion

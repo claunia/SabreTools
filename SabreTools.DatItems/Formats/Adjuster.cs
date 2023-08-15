@@ -20,8 +20,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _adjuster.ReadString(Models.Internal.Adjuster.NameKey);
-            set => _adjuster[Models.Internal.Adjuster.NameKey] = value;
+            get => _internal.ReadString(Models.Internal.Adjuster.NameKey);
+            set => _internal[Models.Internal.Adjuster.NameKey] = value;
         }
 
         /// <summary>
@@ -30,8 +30,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("default")]
         public bool? Default
         {
-            get => _adjuster.ReadBool(Models.Internal.Adjuster.DefaultKey);
-            set => _adjuster[Models.Internal.Adjuster.DefaultKey] = value;
+            get => _internal.ReadBool(Models.Internal.Adjuster.DefaultKey);
+            set => _internal[Models.Internal.Adjuster.DefaultKey] = value;
         }
 
         [JsonIgnore]
@@ -43,18 +43,12 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("conditions")]
         public List<Condition>? Conditions
         {
-            get => _adjuster.Read<Condition[]>(Models.Internal.Adjuster.ConditionKey)?.ToList();
-            set => _adjuster[Models.Internal.Adjuster.ConditionKey] = value?.ToArray();
+            get => _internal.Read<Condition[]>(Models.Internal.Adjuster.ConditionKey)?.ToList();
+            set => _internal[Models.Internal.Adjuster.ConditionKey] = value?.ToArray();
         }
 
         [JsonIgnore]
         public bool ConditionsSpecified { get { return Conditions != null && Conditions.Count > 0; } }
-
-        /// <summary>
-        /// Internal Adjuster model
-        /// </summary>
-        [JsonIgnore]
-        private Models.Internal.Adjuster _adjuster = new();
 
         #endregion
 
@@ -75,6 +69,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Adjuster()
         {
+            _internal = new Models.Internal.Adjuster();
             Name = string.Empty;
             ItemType = ItemType.Adjuster;
         }
@@ -95,23 +90,8 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _adjuster = this._adjuster?.Clone() as Models.Internal.Adjuster ?? new Models.Internal.Adjuster(),
+                _internal = this._internal?.Clone() as Models.Internal.Adjuster ?? new Models.Internal.Adjuster(),
             };
-        }
-
-        #endregion
-
-        #region Comparision Methods
-
-        /// <inheritdoc/>
-        public override bool Equals(DatItem? other)
-        {
-            // If we don't have a Adjuster, return false
-            if (ItemType != other?.ItemType || other is not Adjuster otherInternal)
-                return false;
-
-            // Compare the internal models
-            return _adjuster.EqualTo(otherInternal._adjuster);
         }
 
         #endregion
