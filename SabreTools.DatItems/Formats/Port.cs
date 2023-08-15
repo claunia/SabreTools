@@ -47,6 +47,8 @@ namespace SabreTools.DatItems.Formats
         public Port()
         {
             _internal = new Models.Internal.Port();
+            Machine = new Machine();
+
             ItemType = ItemType.Port;
         }
 
@@ -62,7 +64,7 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine?.Clone() as Machine,
+                Machine = this.Machine.Clone() as Machine ?? new Machine(),
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 

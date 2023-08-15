@@ -85,6 +85,8 @@ namespace SabreTools.DatItems.Formats
         public Media()
         {
             _internal = new Models.Internal.Media();
+            Machine = new Machine();
+
             Name = string.Empty;
             ItemType = ItemType.Media;
             DupeType = 0x00;
@@ -97,6 +99,8 @@ namespace SabreTools.DatItems.Formats
         public Media(BaseFile baseFile)
         {
             _internal = new Models.Internal.Media();
+            Machine = new Machine();
+
             Name = baseFile.Filename;
             MD5 = TextHelper.ByteArrayToString(baseFile.MD5);
             SHA1 = TextHelper.ByteArrayToString(baseFile.SHA1);
@@ -119,7 +123,7 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine?.Clone() as Machine,
+                Machine = this.Machine.Clone() as Machine ?? new Machine(),
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
@@ -135,7 +139,7 @@ namespace SabreTools.DatItems.Formats
             return new BaseFile()
             {
                 Filename = this.Name,
-                Parent = this.Machine?.Name,
+                Parent = this.Machine.Name,
                 MD5 = TextHelper.StringToByteArray(this.MD5),
                 SHA1 = TextHelper.StringToByteArray(this.SHA1),
                 SHA256 = TextHelper.StringToByteArray(this.SHA256),
@@ -154,7 +158,7 @@ namespace SabreTools.DatItems.Formats
                 ItemType = ItemType.Rom,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine?.Clone() as Machine,
+                Machine = this.Machine.Clone() as Machine ?? new Machine(),
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
             };

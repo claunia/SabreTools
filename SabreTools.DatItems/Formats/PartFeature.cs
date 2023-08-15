@@ -52,6 +52,8 @@ namespace SabreTools.DatItems.Formats
         public PartFeature()
         {
             _internal = new Models.Internal.Feature();
+            Machine = new Machine();
+
             Name = string.Empty;
             ItemType = ItemType.PartFeature;
         }
@@ -68,7 +70,7 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine?.Clone() as Machine,
+                Machine = this.Machine.Clone() as Machine ?? new Machine(),
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 

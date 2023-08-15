@@ -81,37 +81,37 @@ namespace SabreTools.Core.Tools
         /// <summary>
         /// Normalize a CRC32 string and pad to the correct size
         /// </summary>
-        public static string NormalizeCRC32(string? hash)
+        public static string? NormalizeCRC32(string? hash)
             => NormalizeHashData(hash, Constants.CRCLength);
 
         /// <summary>
         /// Normalize a MD5 string and pad to the correct size
         /// </summary>
-        public static string NormalizeMD5(string? hash)
+        public static string? NormalizeMD5(string? hash)
             => NormalizeHashData(hash, Constants.MD5Length);
 
         /// <summary>
         /// Normalize a SHA1 string and pad to the correct size
         /// </summary>
-        public static string NormalizeSHA1(string? hash)
+        public static string? NormalizeSHA1(string? hash)
             => NormalizeHashData(hash, Constants.SHA1Length);
 
         /// <summary>
         /// Normalize a SHA256 string and pad to the correct size
         /// </summary>
-        public static string NormalizeSHA256(string? hash)
+        public static string? NormalizeSHA256(string? hash)
             => NormalizeHashData(hash, Constants.SHA256Length);
 
         /// <summary>
         /// Normalize a SHA384 string and pad to the correct size
         /// </summary>
-        public static string NormalizeSHA384(string? hash)
+        public static string? NormalizeSHA384(string? hash)
             => NormalizeHashData(hash, Constants.SHA384Length);
 
         /// <summary>
         /// Normalize a SHA512 string and pad to the correct size
         /// </summary>
-        public static string NormalizeSHA512(string? hash)
+        public static string? NormalizeSHA512(string? hash)
             => NormalizeHashData(hash, Constants.SHA512Length);
 
         /// <summary>
@@ -186,10 +186,12 @@ namespace SabreTools.Core.Tools
         /// <summary>
         /// Normalize a hash string and pad to the correct size
         /// </summary>
-        private static string NormalizeHashData(string? hash, int expectedLength)
+        private static string? NormalizeHashData(string? hash, int expectedLength)
         {
             // If we have a known blank hash, return blank
-            if (string.IsNullOrWhiteSpace(hash) || hash == "-" || hash == "_")
+            if (string.IsNullOrWhiteSpace(hash))
+                return null;
+            else if (hash == "-" || hash == "_")
                 return string.Empty;
 
             // Check to see if it's a "hex" hash

@@ -132,7 +132,7 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine?.Clone() as Machine,
+                Machine = this.Machine.Clone() as Machine ?? new Machine(),
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
@@ -154,7 +154,7 @@ namespace SabreTools.DatItems.Formats
         {
             return new BaseFile()
             {
-                Parent = this.Machine?.Name,
+                Parent = this.Machine.Name,
                 CRC = this._crc,
                 MD5 = this._md5,
                 SHA1 = this._sha1,
@@ -174,7 +174,7 @@ namespace SabreTools.DatItems.Formats
                 ItemType = ItemType.Rom,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine?.Clone() as Machine,
+                Machine = this.Machine.Clone() as Machine ?? new Machine(),
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 

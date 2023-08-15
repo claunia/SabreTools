@@ -85,6 +85,8 @@ namespace SabreTools.DatItems.Formats
         public Release()
         {
             _internal = new Models.Internal.Release();
+            Machine = new Machine();
+
             Name = string.Empty;
             ItemType = ItemType.Release;
             Region = string.Empty;
@@ -105,7 +107,7 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine?.Clone() as Machine,
+                Machine = this.Machine.Clone() as Machine ?? new Machine(),
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 

@@ -135,6 +135,8 @@ namespace SabreTools.DatItems.Formats
         public Driver()
         {
             _internal = new Models.Internal.Driver();
+            Machine = new Machine();
+
             ItemType = ItemType.Driver;
         }
 
@@ -150,7 +152,7 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine?.Clone() as Machine,
+                Machine = this.Machine.Clone() as Machine ?? new Machine(),
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 

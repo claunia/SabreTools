@@ -68,6 +68,8 @@ namespace SabreTools.DatItems.Formats
         public ConfLocation()
         {
             _internal = new Models.Internal.ConfLocation();
+            Machine = new Machine();
+
             Name = string.Empty;
             ItemType = ItemType.ConfLocation;
         }
@@ -84,7 +86,7 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine?.Clone() as Machine,
+                Machine = this.Machine.Clone() as Machine ?? new Machine(),
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 

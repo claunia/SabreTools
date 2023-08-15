@@ -316,7 +316,7 @@ namespace SabreTools.DatFiles
         {
             // Initialize strings
             string fix,
-                game = item.Machine?.Name ?? string.Empty,
+                game = item.Machine.Name ?? string.Empty,
                 name = item.GetName() ?? item.ItemType.ToString(),
                 crc = string.Empty,
                 md5 = string.Empty,
@@ -365,9 +365,9 @@ namespace SabreTools.DatFiles
                 .Replace("%game%", game)
                 .Replace("%machine%", game)
                 .Replace("%name%", name)
-                .Replace("%manufacturer%", item.Machine?.Manufacturer ?? string.Empty)
-                .Replace("%publisher%", item.Machine?.Publisher ?? string.Empty)
-                .Replace("%category%", item.Machine?.Category ?? string.Empty)
+                .Replace("%manufacturer%", item.Machine.Manufacturer ?? string.Empty)
+                .Replace("%publisher%", item.Machine.Publisher ?? string.Empty)
+                .Replace("%category%", item.Machine.Category ?? string.Empty)
                 .Replace("%crc%", crc)
                 .Replace("%md5%", md5)
                 .Replace("%sha1%", sha1)
@@ -397,7 +397,7 @@ namespace SabreTools.DatFiles
                 Header.UseRomName = true;
 
             // Get the name to update
-            string? name = (Header.UseRomName ? item.GetName() : item.Machine?.Name) ?? string.Empty;
+            string? name = (Header.UseRomName ? item.GetName() : item.Machine.Name) ?? string.Empty;
 
             // Create the proper Prefix and Postfix
             string pre = CreatePrefixPostfix(item, true);
@@ -454,7 +454,7 @@ namespace SabreTools.DatFiles
                 name += Header.AddExtension;
 
             if (Header.UseRomName && Header.GameName)
-                name = Path.Combine(item.Machine?.Name ?? string.Empty, name);
+                name = Path.Combine(item.Machine.Name ?? string.Empty, name);
 
             // Now assign back the formatted name
             name = $"{pre}{name}{post}";
@@ -489,7 +489,7 @@ namespace SabreTools.DatFiles
             // If the Rom has "null" characteristics, ensure all fields
             if (rom.Size == null && rom.CRC == "null")
             {
-                logger.Verbose($"Empty folder found: {datItem.Machine?.Name}");
+                logger.Verbose($"Empty folder found: {datItem.Machine.Name}");
 
                 rom.Name = (rom.Name == "null" ? "-" : rom.Name);
                 rom.Size = Constants.SizeZero;

@@ -869,7 +869,7 @@ namespace SabreTools.DatFiles
                 // Filter the list
                 return fi.Where(i => i != null)
                     .Where(i => !i.Remove)
-                    .Where(i => i.Machine?.Name != null)
+                    .Where(i => i.Machine.Name != null)
                     .ToConcurrentList();
             }
         }

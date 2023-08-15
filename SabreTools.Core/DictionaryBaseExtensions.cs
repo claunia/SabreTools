@@ -14,10 +14,7 @@ namespace SabreTools.Core
         public static DictionaryBase? Clone(this DictionaryBase dictionaryBase)
         {
             // Create a new object of the same type
-            var clone = dictionaryBase
-                .GetType()
-                .GetConstructor(System.Reflection.BindingFlags.Public, Array.Empty<Type>())?
-                .Invoke(null) as DictionaryBase;
+            var clone = Activator.CreateInstance(dictionaryBase.GetType()) as DictionaryBase;
 
             // If construction failed, we can't do anything
             if (clone == null)

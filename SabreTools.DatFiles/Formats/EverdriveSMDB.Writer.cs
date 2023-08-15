@@ -139,7 +139,7 @@ namespace SabreTools.DatFiles.Formats
             var row = new Models.EverdriveSMDB.Row
             {
                 SHA256 = rom.SHA256,
-                Name = $"{rom.Machine?.Name ?? string.Empty}/{rom.Name}",
+                Name = $"{rom.Machine.Name ?? string.Empty}/{rom.Name}",
                 SHA1 = rom.SHA1,
                 MD5 = rom.MD5,
                 CRC32 = rom.CRC,

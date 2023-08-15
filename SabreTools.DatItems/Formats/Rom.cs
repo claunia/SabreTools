@@ -459,6 +459,8 @@ namespace SabreTools.DatItems.Formats
         public Rom()
         {
             _internal = new Models.Internal.Rom();
+            Machine = new Machine();
+
             Name = null;
             ItemType = ItemType.Rom;
             DupeType = 0x00;
@@ -493,6 +495,8 @@ namespace SabreTools.DatItems.Formats
         public Rom(BaseFile baseFile)
         {
             _internal = new Models.Internal.Rom();
+            Machine = new Machine();
+
             Name = baseFile.Filename;
             Size = baseFile.Size;
             CRC = TextHelper.ByteArrayToString(baseFile.CRC);
@@ -534,7 +538,7 @@ namespace SabreTools.DatItems.Formats
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Machine = this.Machine?.Clone() as Machine,
+                Machine = this.Machine.Clone() as Machine ?? new Machine(),
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
@@ -550,7 +554,7 @@ namespace SabreTools.DatItems.Formats
             return new BaseFile()
             {
                 Filename = this.Name,
-                Parent = this.Machine?.Name,
+                Parent = this.Machine.Name,
                 Date = this.Date,
                 Size = this.Size,
                 CRC = TextHelper.StringToByteArray(this.CRC),
