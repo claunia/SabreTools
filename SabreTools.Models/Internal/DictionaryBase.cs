@@ -12,9 +12,18 @@ namespace SabreTools.Models.Internal
         /// </summary>
         public T? Read<T>(string key)
         {
-            if (!ValidateKey(key))
+            try
+            {
+                if (!ValidateKey(key))
+                    return default;
+                if (this[key] is not T)
+                    return default;
+                return (T?)this[key];
+            }
+            catch
+            {
                 return default;
-            return (T?)this[key];
+            }
         }
 
         /// <summary>
@@ -25,7 +34,7 @@ namespace SabreTools.Models.Internal
             if (!ValidateKey(key))
                 return null;
 
-            bool? asBool = Read<bool>(key);
+            bool? asBool = Read<bool?>(key);
             if (asBool != null)
                 return asBool;
 
@@ -46,7 +55,7 @@ namespace SabreTools.Models.Internal
             if (!ValidateKey(key))
                 return null;
 
-            double? asDouble = Read<double>(key);
+            double? asDouble = Read<double?>(key);
             if (asDouble != null)
                 return asDouble;
 
@@ -66,7 +75,7 @@ namespace SabreTools.Models.Internal
             if (!ValidateKey(key))
                 return null;
 
-            long? asLong = Read<long>(key);
+            long? asLong = Read<long?>(key);
             if (asLong != null)
                 return asLong;
 
