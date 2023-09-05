@@ -20,8 +20,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _internal.ReadString(Models.Internal.Chip.NameKey);
-            set => _internal[Models.Internal.Chip.NameKey] = value;
+            get => _internal.ReadString(Models.Metadata.Chip.NameKey);
+            set => _internal[Models.Metadata.Chip.NameKey] = value;
         }
 
         /// <summary>
@@ -30,8 +30,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tag")]
         public string? Tag
         {
-            get => _internal.ReadString(Models.Internal.Chip.TagKey);
-            set => _internal[Models.Internal.Chip.TagKey] = value;
+            get => _internal.ReadString(Models.Metadata.Chip.TagKey);
+            set => _internal[Models.Metadata.Chip.TagKey] = value;
         }
 
         /// <summary>
@@ -41,8 +41,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public ChipType ChipType
         {
-            get => _internal.ReadString(Models.Internal.Chip.ChipTypeKey).AsChipType();
-            set => _internal[Models.Internal.Chip.ChipTypeKey] = value.FromChipType();
+            get => _internal.ReadString(Models.Metadata.Chip.ChipTypeKey).AsChipType();
+            set => _internal[Models.Metadata.Chip.ChipTypeKey] = value.FromChipType();
         }
 
         [JsonIgnore]
@@ -54,8 +54,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("clock", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("clock")]
         public long? Clock
         {
-            get => _internal.ReadLong(Models.Internal.Chip.ClockKey);
-            set => _internal[Models.Internal.Chip.ClockKey] = value;
+            get => _internal.ReadLong(Models.Metadata.Chip.ClockKey);
+            set => _internal[Models.Metadata.Chip.ClockKey] = value;
         }
 
         [JsonIgnore]
@@ -80,7 +80,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Chip()
         {
-            _internal = new Models.Internal.Chip();
+            _internal = new Models.Metadata.Chip();
             Machine = new Machine();
 
             Name = string.Empty;
@@ -103,7 +103,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.Chip ?? new Models.Internal.Chip(),
+                _internal = this._internal?.Clone() as Models.Metadata.Chip ?? new Models.Metadata.Chip(),
             };
         }
 

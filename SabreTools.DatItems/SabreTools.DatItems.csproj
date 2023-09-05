@@ -10,11 +10,11 @@
     <ProjectReference Include="..\SabreTools.Core\SabreTools.Core.csproj" />
     <ProjectReference Include="..\SabreTools.FileTypes\SabreTools.FileTypes.csproj" />
     <ProjectReference Include="..\SabreTools.Logging\SabreTools.Logging.csproj" />
-    <ProjectReference Include="..\SabreTools.Models\SabreTools.Models.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="SabreTools.Models" Version="1.1.0" />
   </ItemGroup>
 
 </Project>

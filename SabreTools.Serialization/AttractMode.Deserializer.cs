@@ -125,17 +125,17 @@ namespace SabreTools.Serialization
         #region Internal
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.MetadataFile"/> to <cref="Models.AttractMode.MetadataFile"/>
+        /// Convert from <cref="Models.Metadata.MetadataFile"/> to <cref="Models.AttractMode.MetadataFile"/>
         /// </summary>
-        public static MetadataFile? ConvertFromInternalModel(Models.Internal.MetadataFile? item)
+        public static MetadataFile? ConvertFromInternalModel(Models.Metadata.MetadataFile? item)
         {
             if (item == null)
                 return null;
 
-            var header = item.Read<Models.Internal.Header>(Models.Internal.MetadataFile.HeaderKey);
+            var header = item.Read<Models.Metadata.Header>(Models.Metadata.MetadataFile.HeaderKey);
             var metadataFile = header != null ? ConvertHeaderFromInternalModel(header) : new MetadataFile();
 
-            var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
+            var machines = item.Read<Models.Metadata.Machine[]>(Models.Metadata.MetadataFile.MachineKey);
             if (machines != null && machines.Any())
             {
                 metadataFile.Row = machines
@@ -148,23 +148,23 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.AttractMode.MetadataFile"/>
+        /// Convert from <cref="Models.Metadata.Header"/> to <cref="Models.AttractMode.MetadataFile"/>
         /// </summary>
-        private static MetadataFile ConvertHeaderFromInternalModel(Models.Internal.Header item)
+        private static MetadataFile ConvertHeaderFromInternalModel(Models.Metadata.Header item)
         {
             var metadataFile = new MetadataFile
             {
-                Header = item.ReadStringArray(Models.Internal.Header.HeaderKey),
+                Header = item.ReadStringArray(Models.Metadata.Header.HeaderKey),
             };
             return metadataFile;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Machine"/> to an array of <cref="Models.AttractMode.Row"/>
+        /// Convert from <cref="Models.Metadata.Machine"/> to an array of <cref="Models.AttractMode.Row"/>
         /// </summary>
-        private static Row[] ConvertMachineFromInternalModel(Models.Internal.Machine item)
+        private static Row[] ConvertMachineFromInternalModel(Models.Metadata.Machine item)
         {
-            var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
+            var roms = item.Read<Models.Metadata.Rom[]>(Models.Metadata.Machine.RomKey);
             if (roms == null || !roms.Any())
                 return Array.Empty<Row>();
 
@@ -175,34 +175,34 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.AttractMode.Row"/>
+        /// Convert from <cref="Models.Metadata.Rom"/> to <cref="Models.AttractMode.Row"/>
         /// </summary>
-        private static Row ConvertFromInternalModel(Models.Internal.Rom item, Models.Internal.Machine parent)
+        private static Row ConvertFromInternalModel(Models.Metadata.Rom item, Models.Metadata.Machine parent)
         {
             var row = new Row
             {
-                Name = parent.ReadString(Models.Internal.Machine.NameKey),
-                Title = item.ReadString(Models.Internal.Rom.NameKey),
-                Emulator = parent.ReadString(Models.Internal.Machine.EmulatorKey),
-                CloneOf = parent.ReadString(Models.Internal.Machine.CloneOfKey),
-                Year = parent.ReadString(Models.Internal.Machine.YearKey),
-                Manufacturer = parent.ReadString(Models.Internal.Machine.ManufacturerKey),
-                Category = parent.ReadString(Models.Internal.Machine.CategoryKey),
-                Players = parent.ReadString(Models.Internal.Machine.PlayersKey),
-                Rotation = parent.ReadString(Models.Internal.Machine.RotationKey),
-                Control = parent.ReadString(Models.Internal.Machine.ControlKey),
-                Status = parent.ReadString(Models.Internal.Machine.StatusKey),
-                DisplayCount = parent.ReadString(Models.Internal.Machine.DisplayCountKey),
-                DisplayType = parent.ReadString(Models.Internal.Machine.DisplayTypeKey),
-                AltRomname = item.ReadString(Models.Internal.Rom.AltRomnameKey),
-                AltTitle = item.ReadString(Models.Internal.Rom.AltTitleKey),
-                Extra = parent.ReadString(Models.Internal.Machine.ExtraKey),
-                Buttons = parent.ReadString(Models.Internal.Machine.ButtonsKey),
-                Favorite = parent.ReadString(Models.Internal.Machine.FavoriteKey),
-                Tags = parent.ReadString(Models.Internal.Machine.TagsKey),
-                PlayedCount = parent.ReadString(Models.Internal.Machine.PlayedCountKey),
-                PlayedTime = parent.ReadString(Models.Internal.Machine.PlayedTimeKey),
-                FileIsAvailable = item.ReadString(Models.Internal.Rom.FileIsAvailableKey),
+                Name = parent.ReadString(Models.Metadata.Machine.NameKey),
+                Title = item.ReadString(Models.Metadata.Rom.NameKey),
+                Emulator = parent.ReadString(Models.Metadata.Machine.EmulatorKey),
+                CloneOf = parent.ReadString(Models.Metadata.Machine.CloneOfKey),
+                Year = parent.ReadString(Models.Metadata.Machine.YearKey),
+                Manufacturer = parent.ReadString(Models.Metadata.Machine.ManufacturerKey),
+                Category = parent.ReadString(Models.Metadata.Machine.CategoryKey),
+                Players = parent.ReadString(Models.Metadata.Machine.PlayersKey),
+                Rotation = parent.ReadString(Models.Metadata.Machine.RotationKey),
+                Control = parent.ReadString(Models.Metadata.Machine.ControlKey),
+                Status = parent.ReadString(Models.Metadata.Machine.StatusKey),
+                DisplayCount = parent.ReadString(Models.Metadata.Machine.DisplayCountKey),
+                DisplayType = parent.ReadString(Models.Metadata.Machine.DisplayTypeKey),
+                AltRomname = item.ReadString(Models.Metadata.Rom.AltRomnameKey),
+                AltTitle = item.ReadString(Models.Metadata.Rom.AltTitleKey),
+                Extra = parent.ReadString(Models.Metadata.Machine.ExtraKey),
+                Buttons = parent.ReadString(Models.Metadata.Machine.ButtonsKey),
+                Favorite = parent.ReadString(Models.Metadata.Machine.FavoriteKey),
+                Tags = parent.ReadString(Models.Metadata.Machine.TagsKey),
+                PlayedCount = parent.ReadString(Models.Metadata.Machine.PlayedCountKey),
+                PlayedTime = parent.ReadString(Models.Metadata.Machine.PlayedTimeKey),
+                FileIsAvailable = item.ReadString(Models.Metadata.Rom.FileIsAvailableKey),
             };
             return row;
         }

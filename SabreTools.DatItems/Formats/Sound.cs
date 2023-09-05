@@ -18,8 +18,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("channels", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("channels")]
         public long? Channels
         {
-            get => _internal.ReadLong(Models.Internal.Sound.ChannelsKey);
-            set => _internal[Models.Internal.Sound.ChannelsKey] = value;
+            get => _internal.ReadLong(Models.Metadata.Sound.ChannelsKey);
+            set => _internal[Models.Metadata.Sound.ChannelsKey] = value;
         }
 
         [JsonIgnore]
@@ -34,7 +34,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Sound()
         {
-            _internal = new Models.Internal.Sound();
+            _internal = new Models.Metadata.Sound();
             Machine = new Machine();
 
             ItemType = ItemType.Sound;
@@ -56,7 +56,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.Sound ?? new Models.Internal.Sound(),
+                _internal = this._internal?.Clone() as Models.Metadata.Sound ?? new Models.Metadata.Sound(),
             };
         }
 

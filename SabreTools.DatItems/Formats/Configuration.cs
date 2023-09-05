@@ -20,8 +20,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _internal.ReadString(Models.Internal.Configuration.NameKey);
-            set => _internal[Models.Internal.Configuration.NameKey] = value;
+            get => _internal.ReadString(Models.Metadata.Configuration.NameKey);
+            set => _internal[Models.Metadata.Configuration.NameKey] = value;
         }
 
         /// <summary>
@@ -30,8 +30,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tag")]
         public string? Tag
         {
-            get => _internal.ReadString(Models.Internal.Configuration.TagKey);
-            set => _internal[Models.Internal.Configuration.TagKey] = value;
+            get => _internal.ReadString(Models.Metadata.Configuration.TagKey);
+            set => _internal[Models.Metadata.Configuration.TagKey] = value;
         }
 
         /// <summary>
@@ -40,8 +40,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("mask", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("mask")]
         public string? Mask
         {
-            get => _internal.ReadString(Models.Internal.Configuration.MaskKey);
-            set => _internal[Models.Internal.Configuration.MaskKey] = value;
+            get => _internal.ReadString(Models.Metadata.Configuration.MaskKey);
+            set => _internal[Models.Metadata.Configuration.MaskKey] = value;
         }
 
         /// <summary>
@@ -50,8 +50,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("conditions")]
         public List<Condition>? Conditions
         {
-            get => _internal.Read<Condition[]>(Models.Internal.Configuration.ConditionKey)?.ToList();
-            set => _internal[Models.Internal.Configuration.ConditionKey] = value?.ToArray();
+            get => _internal.Read<Condition[]>(Models.Metadata.Configuration.ConditionKey)?.ToList();
+            set => _internal[Models.Metadata.Configuration.ConditionKey] = value?.ToArray();
         }
 
         [JsonIgnore]
@@ -63,8 +63,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("locations", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("locations")]
         public List<ConfLocation>? Locations
         {
-            get => _internal.Read<ConfLocation[]>(Models.Internal.Configuration.ConfLocationKey)?.ToList();
-            set => _internal[Models.Internal.Configuration.ConfLocationKey] = value?.ToArray();
+            get => _internal.Read<ConfLocation[]>(Models.Metadata.Configuration.ConfLocationKey)?.ToList();
+            set => _internal[Models.Metadata.Configuration.ConfLocationKey] = value?.ToArray();
         }
 
         [JsonIgnore]
@@ -76,8 +76,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("settings", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("settings")]
         public List<ConfSetting>? Settings
         {
-            get => _internal.Read<List<ConfSetting>>(Models.Internal.Configuration.ConfSettingKey);
-            set => _internal[Models.Internal.Configuration.ConfSettingKey] = value;
+            get => _internal.Read<List<ConfSetting>>(Models.Metadata.Configuration.ConfSettingKey);
+            set => _internal[Models.Metadata.Configuration.ConfSettingKey] = value;
         }
 
         [JsonIgnore]
@@ -102,7 +102,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Configuration()
         {
-            _internal = new Models.Internal.Configuration();
+            _internal = new Models.Metadata.Configuration();
             Machine = new Machine();
 
             Name = string.Empty;
@@ -125,7 +125,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.Configuration ?? new Models.Internal.Configuration(),
+                _internal = this._internal?.Clone() as Models.Metadata.Configuration ?? new Models.Metadata.Configuration(),
             };
         }
 

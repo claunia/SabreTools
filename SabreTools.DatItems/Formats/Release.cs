@@ -18,8 +18,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _internal.ReadString(Models.Internal.Release.NameKey);
-            set => _internal[Models.Internal.Release.NameKey] = value;
+            get => _internal.ReadString(Models.Metadata.Release.NameKey);
+            set => _internal[Models.Metadata.Release.NameKey] = value;
         }
 
         /// <summary>
@@ -28,8 +28,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("region", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("region")]
         public string? Region
         {
-            get => _internal.ReadString(Models.Internal.Release.RegionKey);
-            set => _internal[Models.Internal.Release.RegionKey] = value;
+            get => _internal.ReadString(Models.Metadata.Release.RegionKey);
+            set => _internal[Models.Metadata.Release.RegionKey] = value;
         }
 
         /// <summary>
@@ -38,8 +38,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("language", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("language")]
         public string? Language
         {
-            get => _internal.ReadString(Models.Internal.Release.LanguageKey);
-            set => _internal[Models.Internal.Release.LanguageKey] = value;
+            get => _internal.ReadString(Models.Metadata.Release.LanguageKey);
+            set => _internal[Models.Metadata.Release.LanguageKey] = value;
         }
 
         /// <summary>
@@ -48,8 +48,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("date", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("date")]
         public string? Date
         {
-            get => _internal.ReadString(Models.Internal.Release.DateKey);
-            set => _internal[Models.Internal.Release.DateKey] = value;
+            get => _internal.ReadString(Models.Metadata.Release.DateKey);
+            set => _internal[Models.Metadata.Release.DateKey] = value;
         }
 
         /// <summary>
@@ -58,8 +58,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("default")]
         public bool? Default
         {
-            get => _internal.ReadBool(Models.Internal.Release.DefaultKey);
-            set => _internal[Models.Internal.Release.DefaultKey] = value;
+            get => _internal.ReadBool(Models.Metadata.Release.DefaultKey);
+            set => _internal[Models.Metadata.Release.DefaultKey] = value;
         }
 
         [JsonIgnore]
@@ -84,7 +84,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Release()
         {
-            _internal = new Models.Internal.Release();
+            _internal = new Models.Metadata.Release();
             Machine = new Machine();
 
             Name = string.Empty;
@@ -111,7 +111,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.Release ?? new Models.Internal.Release(),
+                _internal = this._internal?.Clone() as Models.Metadata.Release ?? new Models.Metadata.Release(),
             };
         }
 

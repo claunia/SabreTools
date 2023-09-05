@@ -18,8 +18,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _internal.ReadString(Models.Internal.DeviceRef.NameKey);
-            set => _internal[Models.Internal.DeviceRef.NameKey] = value;
+            get => _internal.ReadString(Models.Metadata.DeviceRef.NameKey);
+            set => _internal[Models.Metadata.DeviceRef.NameKey] = value;
         }
 
         #endregion
@@ -41,7 +41,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public DeviceReference()
         {
-            _internal = new Models.Internal.DeviceRef();
+            _internal = new Models.Metadata.DeviceRef();
             Machine = new Machine();
 
             Name = string.Empty;
@@ -64,7 +64,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.DeviceRef ?? new Models.Internal.DeviceRef(),
+                _internal = this._internal?.Clone() as Models.Metadata.DeviceRef ?? new Models.Metadata.DeviceRef(),
             };
         }
 

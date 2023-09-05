@@ -18,8 +18,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _internal.ReadString(Models.Internal.Archive.NameKey);
-            set => _internal[Models.Internal.Archive.NameKey] = value;
+            get => _internal.ReadString(Models.Metadata.Archive.NameKey);
+            set => _internal[Models.Metadata.Archive.NameKey] = value;
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Archive()
         {
-            _internal = new Models.Internal.Archive();
+            _internal = new Models.Metadata.Archive();
             Machine = new Machine();
 
             Name = string.Empty;
@@ -129,7 +129,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.Archive ?? new Models.Internal.Archive(),
+                _internal = this._internal?.Clone() as Models.Metadata.Archive ?? new Models.Metadata.Archive(),
             };
         }
 

@@ -18,8 +18,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _internal.ReadString(Models.Internal.DipLocation.NameKey);
-            set => _internal[Models.Internal.DipLocation.NameKey] = value;
+            get => _internal.ReadString(Models.Metadata.DipLocation.NameKey);
+            set => _internal[Models.Metadata.DipLocation.NameKey] = value;
         }
 
         /// <summary>
@@ -28,8 +28,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("number", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("number")]
         public long? Number
         {
-            get => _internal.ReadLong(Models.Internal.DipLocation.NameKey);
-            set => _internal[Models.Internal.DipLocation.NameKey] = value;
+            get => _internal.ReadLong(Models.Metadata.DipLocation.NameKey);
+            set => _internal[Models.Metadata.DipLocation.NameKey] = value;
         }
 
         [JsonIgnore]
@@ -41,8 +41,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("inverted", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("inverted")]
         public bool? Inverted
         {
-            get => _internal.ReadBool(Models.Internal.DipLocation.InvertedKey);
-            set => _internal[Models.Internal.DipLocation.InvertedKey] = value;
+            get => _internal.ReadBool(Models.Metadata.DipLocation.InvertedKey);
+            set => _internal[Models.Metadata.DipLocation.InvertedKey] = value;
         }
 
         [JsonIgnore]
@@ -67,7 +67,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public DipLocation()
         {
-            _internal = new Models.Internal.DipLocation();
+            _internal = new Models.Metadata.DipLocation();
             Machine = new Machine();
 
             Name = string.Empty;
@@ -90,7 +90,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.DipLocation ?? new Models.Internal.DipLocation(),
+                _internal = this._internal?.Clone() as Models.Metadata.DipLocation ?? new Models.Metadata.DipLocation(),
             };
         }
 

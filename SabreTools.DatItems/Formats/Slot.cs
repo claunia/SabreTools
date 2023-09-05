@@ -20,8 +20,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _internal.ReadString(Models.Internal.Slot.NameKey);
-            set => _internal[Models.Internal.Slot.NameKey] = value;
+            get => _internal.ReadString(Models.Metadata.Slot.NameKey);
+            set => _internal[Models.Metadata.Slot.NameKey] = value;
         }
 
         /// <summary>
@@ -30,8 +30,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("slotoptions", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("slotoptions")]
         public List<SlotOption>? SlotOptions
         {
-            get => _internal.Read<SlotOption[]>(Models.Internal.Slot.SlotOptionKey)?.ToList();
-            set => _internal[Models.Internal.Slot.SlotOptionKey] = value?.ToArray();
+            get => _internal.Read<SlotOption[]>(Models.Metadata.Slot.SlotOptionKey)?.ToList();
+            set => _internal[Models.Metadata.Slot.SlotOptionKey] = value?.ToArray();
         }
 
         [JsonIgnore]
@@ -56,7 +56,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Slot()
         {
-            _internal = new Models.Internal.Slot();
+            _internal = new Models.Metadata.Slot();
             Machine = new Machine();
 
             Name = string.Empty;
@@ -79,7 +79,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.Slot ?? new Models.Internal.Slot(),
+                _internal = this._internal?.Clone() as Models.Metadata.Slot ?? new Models.Metadata.Slot(),
             };
         }
 

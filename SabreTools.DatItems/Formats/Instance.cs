@@ -18,8 +18,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _internal.ReadString(Models.Internal.Instance.NameKey);
-            set => _internal[Models.Internal.Instance.NameKey] = value;
+            get => _internal.ReadString(Models.Metadata.Instance.NameKey);
+            set => _internal[Models.Metadata.Instance.NameKey] = value;
         }
 
         /// <summary>
@@ -28,8 +28,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("briefname", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("briefname")]
         public string? BriefName
         {
-            get => _internal.ReadString(Models.Internal.Instance.BriefNameKey);
-            set => _internal[Models.Internal.Instance.BriefNameKey] = value;
+            get => _internal.ReadString(Models.Metadata.Instance.BriefNameKey);
+            set => _internal[Models.Metadata.Instance.BriefNameKey] = value;
         }
 
         #endregion
@@ -51,7 +51,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Instance()
         {
-            _internal = new Models.Internal.Instance();
+            _internal = new Models.Metadata.Instance();
             Machine = new Machine();
 
             Name = string.Empty;
@@ -74,7 +74,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.Instance ?? new Models.Internal.Instance(),
+                _internal = this._internal?.Clone() as Models.Metadata.Instance ?? new Models.Metadata.Instance(),
             };
         }
 

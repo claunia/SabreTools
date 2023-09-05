@@ -18,8 +18,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _internal.ReadString(Models.Internal.RamOption.NameKey);
-            set => _internal[Models.Internal.RamOption.NameKey] = value;
+            get => _internal.ReadString(Models.Metadata.RamOption.NameKey);
+            set => _internal[Models.Metadata.RamOption.NameKey] = value;
         }
 
         /// <summary>
@@ -28,8 +28,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("default")]
         public bool? Default
         {
-            get => _internal.ReadBool(Models.Internal.RamOption.DefaultKey);
-            set => _internal[Models.Internal.RamOption.DefaultKey] = value;
+            get => _internal.ReadBool(Models.Metadata.RamOption.DefaultKey);
+            set => _internal[Models.Metadata.RamOption.DefaultKey] = value;
         }
 
         [JsonIgnore]
@@ -41,8 +41,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("content", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("content")]
         public string? Content
         {
-            get => _internal.ReadString(Models.Internal.RamOption.ContentKey);
-            set => _internal[Models.Internal.RamOption.ContentKey] = value;
+            get => _internal.ReadString(Models.Metadata.RamOption.ContentKey);
+            set => _internal[Models.Metadata.RamOption.ContentKey] = value;
         }
 
         #endregion
@@ -64,7 +64,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public RamOption()
         {
-            _internal = new Models.Internal.RamOption();
+            _internal = new Models.Metadata.RamOption();
             Machine = new Machine();
 
             Name = string.Empty;
@@ -87,7 +87,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.RamOption ?? new Models.Internal.RamOption(),
+                _internal = this._internal?.Clone() as Models.Metadata.RamOption ?? new Models.Metadata.RamOption(),
             };
         }
 

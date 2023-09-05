@@ -430,7 +430,7 @@ Reset the internal state:           reset();";
                     filterPerMachine = Arguments[3].AsYesNo();
 
                 // Create filter to run filters from
-                Filter filter = new()
+                Filtering.Filter filter = new()
                 {
                     MachineFilter = new MachineFilter { HasFilters = true },
                     DatItemFilter = new DatItemFilter { HasFilters = true },

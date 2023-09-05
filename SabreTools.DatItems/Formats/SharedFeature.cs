@@ -18,8 +18,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _internal.ReadString(Models.Internal.SharedFeat.NameKey);
-            set => _internal[Models.Internal.SharedFeat.NameKey] = value;
+            get => _internal.ReadString(Models.Metadata.SharedFeat.NameKey);
+            set => _internal[Models.Metadata.SharedFeat.NameKey] = value;
         }
 
         /// <summary>
@@ -28,8 +28,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("value"), XmlElement("value")]
         public string? Value
         {
-            get => _internal.ReadString(Models.Internal.SharedFeat.ValueKey);
-            set => _internal[Models.Internal.SharedFeat.ValueKey] = value;
+            get => _internal.ReadString(Models.Metadata.SharedFeat.ValueKey);
+            set => _internal[Models.Metadata.SharedFeat.ValueKey] = value;
         }
 
         #endregion
@@ -51,7 +51,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public SharedFeature()
         {
-            _internal = new Models.Internal.SharedFeat();
+            _internal = new Models.Metadata.SharedFeat();
             Machine = new Machine();
 
             Name = string.Empty;
@@ -74,7 +74,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.SharedFeat ?? new Models.Internal.SharedFeat(),
+                _internal = this._internal?.Clone() as Models.Metadata.SharedFeat ?? new Models.Metadata.SharedFeat(),
             };
         }
 

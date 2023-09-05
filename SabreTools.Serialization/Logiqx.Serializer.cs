@@ -22,19 +22,19 @@ namespace SabreTools.Serialization
         #region Internal
 
         /// <summary>
-        /// Convert from <cref="Models.Logiqx.Datafile"/> to <cref="Models.Internal.MetadataFile"/>
+        /// Convert from <cref="Models.Logiqx.Datafile"/> to <cref="Models.Metadata.MetadataFile"/>
         /// </summary>
-        public static Models.Internal.MetadataFile? ConvertToInternalModel(Datafile? item)
+        public static Models.Metadata.MetadataFile? ConvertToInternalModel(Datafile? item)
         {
             if (item == null)
                 return null;
 
-            var metadataFile = new Models.Internal.MetadataFile
+            var metadataFile = new Models.Metadata.MetadataFile
             {
-                [Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
+                [Models.Metadata.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
             };
 
-            var machines = new List<Models.Internal.Machine>();
+            var machines = new List<Models.Metadata.Machine>();
 
             if (item.Game != null && item.Game.Any())
             {
@@ -51,308 +51,308 @@ namespace SabreTools.Serialization
             }
 
             if (machines.Any())
-                metadataFile[Models.Internal.MetadataFile.MachineKey] = machines.ToArray();
+                metadataFile[Models.Metadata.MetadataFile.MachineKey] = machines.ToArray();
 
             return metadataFile;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Logiqx.Datafile"/> to <cref="Models.Internal.Header"/>
+        /// Convert from <cref="Models.Logiqx.Datafile"/> to <cref="Models.Metadata.Header"/>
         /// </summary>
-        private static Models.Internal.Header ConvertHeaderToInternalModel(Datafile item)
+        private static Models.Metadata.Header ConvertHeaderToInternalModel(Datafile item)
         {
-            var header = item.Header != null ? ConvertHeaderToInternalModel(item.Header) : new Models.Internal.Header();
+            var header = item.Header != null ? ConvertHeaderToInternalModel(item.Header) : new Models.Metadata.Header();
 
-            header[Models.Internal.Header.BuildKey] = item.Build;
-            header[Models.Internal.Header.DebugKey] = item.Debug;
-            header[Models.Internal.Header.SchemaLocationKey] = item.SchemaLocation;
+            header[Models.Metadata.Header.BuildKey] = item.Build;
+            header[Models.Metadata.Header.DebugKey] = item.Debug;
+            header[Models.Metadata.Header.SchemaLocationKey] = item.SchemaLocation;
 
             return header;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Logiqx.Header"/> to <cref="Models.Internal.Header"/>
+        /// Convert from <cref="Models.Logiqx.Header"/> to <cref="Models.Metadata.Header"/>
         /// </summary>
-        private static Models.Internal.Header ConvertHeaderToInternalModel(Header item)
+        private static Models.Metadata.Header ConvertHeaderToInternalModel(Header item)
         {
-            var header = new Models.Internal.Header
+            var header = new Models.Metadata.Header
             {
-                [Models.Internal.Header.IdKey] = item.Id,
-                [Models.Internal.Header.NameKey] = item.Name,
-                [Models.Internal.Header.DescriptionKey] = item.Description,
-                [Models.Internal.Header.RootDirKey] = item.RootDir,
-                [Models.Internal.Header.CategoryKey] = item.Category,
-                [Models.Internal.Header.VersionKey] = item.Version,
-                [Models.Internal.Header.DateKey] = item.Date,
-                [Models.Internal.Header.AuthorKey] = item.Author,
-                [Models.Internal.Header.EmailKey] = item.Email,
-                [Models.Internal.Header.HomepageKey] = item.Homepage,
-                [Models.Internal.Header.UrlKey] = item.Url,
-                [Models.Internal.Header.CommentKey] = item.Comment,
-                [Models.Internal.Header.TypeKey] = item.Type,
+                [Models.Metadata.Header.IdKey] = item.Id,
+                [Models.Metadata.Header.NameKey] = item.Name,
+                [Models.Metadata.Header.DescriptionKey] = item.Description,
+                [Models.Metadata.Header.RootDirKey] = item.RootDir,
+                [Models.Metadata.Header.CategoryKey] = item.Category,
+                [Models.Metadata.Header.VersionKey] = item.Version,
+                [Models.Metadata.Header.DateKey] = item.Date,
+                [Models.Metadata.Header.AuthorKey] = item.Author,
+                [Models.Metadata.Header.EmailKey] = item.Email,
+                [Models.Metadata.Header.HomepageKey] = item.Homepage,
+                [Models.Metadata.Header.UrlKey] = item.Url,
+                [Models.Metadata.Header.CommentKey] = item.Comment,
+                [Models.Metadata.Header.TypeKey] = item.Type,
             };
 
             if (item.ClrMamePro != null)
             {
-                header[Models.Internal.Header.HeaderKey] = item.ClrMamePro.Header;
-                header[Models.Internal.Header.ForceMergingKey] = item.ClrMamePro.ForceMerging;
-                header[Models.Internal.Header.ForceNodumpKey] = item.ClrMamePro.ForceNodump;
-                header[Models.Internal.Header.ForcePackingKey] = item.ClrMamePro.ForcePacking;
+                header[Models.Metadata.Header.HeaderKey] = item.ClrMamePro.Header;
+                header[Models.Metadata.Header.ForceMergingKey] = item.ClrMamePro.ForceMerging;
+                header[Models.Metadata.Header.ForceNodumpKey] = item.ClrMamePro.ForceNodump;
+                header[Models.Metadata.Header.ForcePackingKey] = item.ClrMamePro.ForcePacking;
             }
 
             if (item.RomCenter != null)
             {
-                header[Models.Internal.Header.PluginKey] = item.RomCenter.Plugin;
-                header[Models.Internal.Header.RomModeKey] = item.RomCenter.RomMode;
-                header[Models.Internal.Header.BiosModeKey] = item.RomCenter.BiosMode;
-                header[Models.Internal.Header.SampleModeKey] = item.RomCenter.SampleMode;
-                header[Models.Internal.Header.LockRomModeKey] = item.RomCenter.LockRomMode;
-                header[Models.Internal.Header.LockBiosModeKey] = item.RomCenter.LockBiosMode;
-                header[Models.Internal.Header.LockSampleModeKey] = item.RomCenter.LockSampleMode;
+                header[Models.Metadata.Header.PluginKey] = item.RomCenter.Plugin;
+                header[Models.Metadata.Header.RomModeKey] = item.RomCenter.RomMode;
+                header[Models.Metadata.Header.BiosModeKey] = item.RomCenter.BiosMode;
+                header[Models.Metadata.Header.SampleModeKey] = item.RomCenter.SampleMode;
+                header[Models.Metadata.Header.LockRomModeKey] = item.RomCenter.LockRomMode;
+                header[Models.Metadata.Header.LockBiosModeKey] = item.RomCenter.LockBiosMode;
+                header[Models.Metadata.Header.LockSampleModeKey] = item.RomCenter.LockSampleMode;
             }
 
             return header;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Logiqx.Dir"/> to an array of <cref="Models.Internal.Machine"/>
+        /// Convert from <cref="Models.Logiqx.Dir"/> to an array of <cref="Models.Metadata.Machine"/>
         /// </summary>
-        private static Models.Internal.Machine[] ConvertDirToInternalModel(Dir item)
+        private static Models.Metadata.Machine[] ConvertDirToInternalModel(Dir item)
         {
             if (item.Game == null || !item.Game.Any())
-                return Array.Empty<Models.Internal.Machine>();
+                return Array.Empty<Models.Metadata.Machine>();
 
             return item.Game
                 .Where(g => g != null)
                 .Select(game =>
                 {
                     var machine = ConvertMachineToInternalModel(game);
-                    machine[Models.Internal.Machine.DirNameKey] = item.Name;
+                    machine[Models.Metadata.Machine.DirNameKey] = item.Name;
                     return machine;
                 })
                 .ToArray();
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Logiqx.GameBase"/> to <cref="Models.Internal.Machine"/>
+        /// Convert from <cref="Models.Logiqx.GameBase"/> to <cref="Models.Metadata.Machine"/>
         /// </summary>
-        private static Models.Internal.Machine ConvertMachineToInternalModel(GameBase item)
+        private static Models.Metadata.Machine ConvertMachineToInternalModel(GameBase item)
         {
-            var machine = new Models.Internal.Machine
+            var machine = new Models.Metadata.Machine
             {
-                [Models.Internal.Machine.NameKey] = item.Name,
-                [Models.Internal.Machine.SourceFileKey] = item.SourceFile,
-                [Models.Internal.Machine.IsBiosKey] = item.IsBios,
-                [Models.Internal.Machine.IsDeviceKey] = item.IsDevice,
-                [Models.Internal.Machine.IsMechanicalKey] = item.IsMechanical,
-                [Models.Internal.Machine.CloneOfKey] = item.CloneOf,
-                [Models.Internal.Machine.RomOfKey] = item.RomOf,
-                [Models.Internal.Machine.SampleOfKey] = item.SampleOf,
-                [Models.Internal.Machine.BoardKey] = item.Board,
-                [Models.Internal.Machine.RebuildToKey] = item.RebuildTo,
-                [Models.Internal.Machine.IdKey] = item.Id,
-                [Models.Internal.Machine.CloneOfIdKey] = item.CloneOfId,
-                [Models.Internal.Machine.RunnableKey] = item.Runnable,
-                [Models.Internal.Machine.CommentKey] = item.Comment,
-                [Models.Internal.Machine.DescriptionKey] = item.Description,
-                [Models.Internal.Machine.YearKey] = item.Year,
-                [Models.Internal.Machine.ManufacturerKey] = item.Manufacturer,
-                [Models.Internal.Machine.PublisherKey] = item.Publisher,
-                [Models.Internal.Machine.CategoryKey] = item.Category,
-                [Models.Internal.Machine.TruripKey] = item.Trurip,
+                [Models.Metadata.Machine.NameKey] = item.Name,
+                [Models.Metadata.Machine.SourceFileKey] = item.SourceFile,
+                [Models.Metadata.Machine.IsBiosKey] = item.IsBios,
+                [Models.Metadata.Machine.IsDeviceKey] = item.IsDevice,
+                [Models.Metadata.Machine.IsMechanicalKey] = item.IsMechanical,
+                [Models.Metadata.Machine.CloneOfKey] = item.CloneOf,
+                [Models.Metadata.Machine.RomOfKey] = item.RomOf,
+                [Models.Metadata.Machine.SampleOfKey] = item.SampleOf,
+                [Models.Metadata.Machine.BoardKey] = item.Board,
+                [Models.Metadata.Machine.RebuildToKey] = item.RebuildTo,
+                [Models.Metadata.Machine.IdKey] = item.Id,
+                [Models.Metadata.Machine.CloneOfIdKey] = item.CloneOfId,
+                [Models.Metadata.Machine.RunnableKey] = item.Runnable,
+                [Models.Metadata.Machine.CommentKey] = item.Comment,
+                [Models.Metadata.Machine.DescriptionKey] = item.Description,
+                [Models.Metadata.Machine.YearKey] = item.Year,
+                [Models.Metadata.Machine.ManufacturerKey] = item.Manufacturer,
+                [Models.Metadata.Machine.PublisherKey] = item.Publisher,
+                [Models.Metadata.Machine.CategoryKey] = item.Category,
+                [Models.Metadata.Machine.TruripKey] = item.Trurip,
             };
 
             if (item.Release != null && item.Release.Any())
-                machine[Models.Internal.Machine.ReleaseKey] = item.Release.Select(ConvertToInternalModel).ToArray();
+                machine[Models.Metadata.Machine.ReleaseKey] = item.Release.Select(ConvertToInternalModel).ToArray();
 
             if (item.BiosSet != null && item.BiosSet.Any())
-                machine[Models.Internal.Machine.BiosSetKey] = item.BiosSet.Select(ConvertToInternalModel).ToArray();
+                machine[Models.Metadata.Machine.BiosSetKey] = item.BiosSet.Select(ConvertToInternalModel).ToArray();
 
             if (item.Rom != null && item.Rom.Any())
-                machine[Models.Internal.Machine.RomKey] = item.Rom.Select(ConvertToInternalModel).ToArray();
+                machine[Models.Metadata.Machine.RomKey] = item.Rom.Select(ConvertToInternalModel).ToArray();
 
             if (item.Disk != null && item.Disk.Any())
-                machine[Models.Internal.Machine.DiskKey] = item.Disk.Select(ConvertToInternalModel).ToArray();
+                machine[Models.Metadata.Machine.DiskKey] = item.Disk.Select(ConvertToInternalModel).ToArray();
 
             if (item.Media != null && item.Media.Any())
-                machine[Models.Internal.Machine.MediaKey] = item.Media.Select(ConvertToInternalModel).ToArray();
+                machine[Models.Metadata.Machine.MediaKey] = item.Media.Select(ConvertToInternalModel).ToArray();
 
             if (item.DeviceRef != null && item.DeviceRef.Any())
-                machine[Models.Internal.Machine.DeviceRefKey] = item.DeviceRef.Select(ConvertToInternalModel).ToArray();
+                machine[Models.Metadata.Machine.DeviceRefKey] = item.DeviceRef.Select(ConvertToInternalModel).ToArray();
 
             if (item.Sample != null && item.Sample.Any())
-                machine[Models.Internal.Machine.SampleKey] = item.Sample.Select(ConvertToInternalModel).ToArray();
+                machine[Models.Metadata.Machine.SampleKey] = item.Sample.Select(ConvertToInternalModel).ToArray();
 
             if (item.Archive != null && item.Archive.Any())
-                machine[Models.Internal.Machine.ArchiveKey] = item.Archive.Select(ConvertToInternalModel).ToArray();
+                machine[Models.Metadata.Machine.ArchiveKey] = item.Archive.Select(ConvertToInternalModel).ToArray();
 
             if (item.Driver != null)
-                machine[Models.Internal.Machine.DriverKey] = ConvertToInternalModel(item.Driver);
+                machine[Models.Metadata.Machine.DriverKey] = ConvertToInternalModel(item.Driver);
 
             if (item.SoftwareList != null && item.SoftwareList.Any())
-                machine[Models.Internal.Machine.SoftwareListKey] = item.SoftwareList.Select(ConvertToInternalModel).ToArray();
+                machine[Models.Metadata.Machine.SoftwareListKey] = item.SoftwareList.Select(ConvertToInternalModel).ToArray();
 
             return machine;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Logiqx.Archive"/> to <cref="Models.Internal.Archive"/>
+        /// Convert from <cref="Models.Logiqx.Archive"/> to <cref="Models.Metadata.Archive"/>
         /// </summary>
-        private static Models.Internal.Archive ConvertToInternalModel(Archive item)
+        private static Models.Metadata.Archive ConvertToInternalModel(Archive item)
         {
-            var archive = new Models.Internal.Archive
+            var archive = new Models.Metadata.Archive
             {
-                [Models.Internal.Archive.NameKey] = item.Name,
+                [Models.Metadata.Archive.NameKey] = item.Name,
             };
             return archive;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Logiqx.BiosSet"/> to <cref="Models.Internal.BiosSet"/>
+        /// Convert from <cref="Models.Logiqx.BiosSet"/> to <cref="Models.Metadata.BiosSet"/>
         /// </summary>
-        private static Models.Internal.BiosSet ConvertToInternalModel(BiosSet item)
+        private static Models.Metadata.BiosSet ConvertToInternalModel(BiosSet item)
         {
-            var biosset = new Models.Internal.BiosSet
+            var biosset = new Models.Metadata.BiosSet
             {
-                [Models.Internal.BiosSet.NameKey] = item.Name,
-                [Models.Internal.BiosSet.DescriptionKey] = item.Description,
-                [Models.Internal.BiosSet.DefaultKey] = item.Default,
+                [Models.Metadata.BiosSet.NameKey] = item.Name,
+                [Models.Metadata.BiosSet.DescriptionKey] = item.Description,
+                [Models.Metadata.BiosSet.DefaultKey] = item.Default,
             };
             return biosset;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Logiqx.DeviceRef"/> to <cref="Models.Internal.DeviceRef"/>
+        /// Convert from <cref="Models.Logiqx.DeviceRef"/> to <cref="Models.Metadata.DeviceRef"/>
         /// </summary>
-        private static Models.Internal.DeviceRef ConvertToInternalModel(DeviceRef item)
+        private static Models.Metadata.DeviceRef ConvertToInternalModel(DeviceRef item)
         {
-            var deviceRef = new Models.Internal.DeviceRef
+            var deviceRef = new Models.Metadata.DeviceRef
             {
-                [Models.Internal.DeviceRef.NameKey] = item.Name,
+                [Models.Metadata.DeviceRef.NameKey] = item.Name,
             };
             return deviceRef;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Logiqx.Disk"/> to <cref="Models.Internal.Disk"/>
+        /// Convert from <cref="Models.Logiqx.Disk"/> to <cref="Models.Metadata.Disk"/>
         /// </summary>
-        private static Models.Internal.Disk ConvertToInternalModel(Disk item)
+        private static Models.Metadata.Disk ConvertToInternalModel(Disk item)
         {
-            var disk = new Models.Internal.Disk
+            var disk = new Models.Metadata.Disk
             {
-                [Models.Internal.Disk.NameKey] = item.Name,
-                [Models.Internal.Disk.MD5Key] = item.MD5,
-                [Models.Internal.Disk.SHA1Key] = item.SHA1,
-                [Models.Internal.Disk.MergeKey] = item.Merge,
-                [Models.Internal.Disk.StatusKey] = item.Status,
-                [Models.Internal.Disk.RegionKey] = item.Region,
+                [Models.Metadata.Disk.NameKey] = item.Name,
+                [Models.Metadata.Disk.MD5Key] = item.MD5,
+                [Models.Metadata.Disk.SHA1Key] = item.SHA1,
+                [Models.Metadata.Disk.MergeKey] = item.Merge,
+                [Models.Metadata.Disk.StatusKey] = item.Status,
+                [Models.Metadata.Disk.RegionKey] = item.Region,
             };
             return disk;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Logiqx.Driver"/> to <cref="Models.Internal.Driver"/>
+        /// Convert from <cref="Models.Logiqx.Driver"/> to <cref="Models.Metadata.Driver"/>
         /// </summary>
-        private static Models.Internal.Driver ConvertToInternalModel(Driver item)
+        private static Models.Metadata.Driver ConvertToInternalModel(Driver item)
         {
-            var driver = new Models.Internal.Driver
+            var driver = new Models.Metadata.Driver
             {
-                [Models.Internal.Driver.StatusKey] = item.Status,
-                [Models.Internal.Driver.EmulationKey] = item.Emulation,
-                [Models.Internal.Driver.CocktailKey] = item.Cocktail,
-                [Models.Internal.Driver.SaveStateKey] = item.SaveState,
-                [Models.Internal.Driver.RequiresArtworkKey] = item.RequiresArtwork,
-                [Models.Internal.Driver.UnofficialKey] = item.Unofficial,
-                [Models.Internal.Driver.NoSoundHardwareKey] = item.NoSoundHardware,
-                [Models.Internal.Driver.IncompleteKey] = item.Incomplete,
+                [Models.Metadata.Driver.StatusKey] = item.Status,
+                [Models.Metadata.Driver.EmulationKey] = item.Emulation,
+                [Models.Metadata.Driver.CocktailKey] = item.Cocktail,
+                [Models.Metadata.Driver.SaveStateKey] = item.SaveState,
+                [Models.Metadata.Driver.RequiresArtworkKey] = item.RequiresArtwork,
+                [Models.Metadata.Driver.UnofficialKey] = item.Unofficial,
+                [Models.Metadata.Driver.NoSoundHardwareKey] = item.NoSoundHardware,
+                [Models.Metadata.Driver.IncompleteKey] = item.Incomplete,
             };
             return driver;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Logiqx.Media"/> to <cref="Models.Internal.Media"/>
+        /// Convert from <cref="Models.Logiqx.Media"/> to <cref="Models.Metadata.Media"/>
         /// </summary>
-        private static Models.Internal.Media ConvertToInternalModel(Media item)
+        private static Models.Metadata.Media ConvertToInternalModel(Media item)
         {
-            var media = new Models.Internal.Media
+            var media = new Models.Metadata.Media
             {
-                [Models.Internal.Media.NameKey] = item.Name,
-                [Models.Internal.Media.MD5Key] = item.MD5,
-                [Models.Internal.Media.SHA1Key] = item.SHA1,
-                [Models.Internal.Media.SHA256Key] = item.SHA256,
-                [Models.Internal.Media.SpamSumKey] = item.SpamSum,
+                [Models.Metadata.Media.NameKey] = item.Name,
+                [Models.Metadata.Media.MD5Key] = item.MD5,
+                [Models.Metadata.Media.SHA1Key] = item.SHA1,
+                [Models.Metadata.Media.SHA256Key] = item.SHA256,
+                [Models.Metadata.Media.SpamSumKey] = item.SpamSum,
             };
             return media;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Logiqx.Release"/> to <cref="Models.Internal.Release"/>
+        /// Convert from <cref="Models.Logiqx.Release"/> to <cref="Models.Metadata.Release"/>
         /// </summary>
-        private static Models.Internal.Release ConvertToInternalModel(Release item)
+        private static Models.Metadata.Release ConvertToInternalModel(Release item)
         {
-            var release = new Models.Internal.Release
+            var release = new Models.Metadata.Release
             {
-                [Models.Internal.Release.NameKey] = item.Name,
-                [Models.Internal.Release.RegionKey] = item.Region,
-                [Models.Internal.Release.LanguageKey] = item.Language,
-                [Models.Internal.Release.DateKey] = item.Date,
-                [Models.Internal.Release.DefaultKey] = item.Default,
+                [Models.Metadata.Release.NameKey] = item.Name,
+                [Models.Metadata.Release.RegionKey] = item.Region,
+                [Models.Metadata.Release.LanguageKey] = item.Language,
+                [Models.Metadata.Release.DateKey] = item.Date,
+                [Models.Metadata.Release.DefaultKey] = item.Default,
             };
             return release;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Logiqx.Rom"/> to <cref="Models.Internal.Rom"/>
+        /// Convert from <cref="Models.Logiqx.Rom"/> to <cref="Models.Metadata.Rom"/>
         /// </summary>
-        private static Models.Internal.Rom ConvertToInternalModel(Rom item)
+        private static Models.Metadata.Rom ConvertToInternalModel(Rom item)
         {
-            var rom = new Models.Internal.Rom
+            var rom = new Models.Metadata.Rom
             {
-                [Models.Internal.Rom.NameKey] = item.Name,
-                [Models.Internal.Rom.SizeKey] = item.Size,
-                [Models.Internal.Rom.CRCKey] = item.CRC,
-                [Models.Internal.Rom.MD5Key] = item.MD5,
-                [Models.Internal.Rom.SHA1Key] = item.SHA1,
-                [Models.Internal.Rom.SHA256Key] = item.SHA256,
-                [Models.Internal.Rom.SHA384Key] = item.SHA384,
-                [Models.Internal.Rom.SHA512Key] = item.SHA512,
-                [Models.Internal.Rom.SpamSumKey] = item.SpamSum,
-                [Models.Internal.Rom.xxHash364Key] = item.xxHash364,
-                [Models.Internal.Rom.xxHash3128Key] = item.xxHash3128,
-                [Models.Internal.Rom.MergeKey] = item.Merge,
-                [Models.Internal.Rom.StatusKey] = item.Status,
-                [Models.Internal.Rom.SerialKey] = item.Serial,
-                [Models.Internal.Rom.HeaderKey] = item.Header,
-                [Models.Internal.Rom.DateKey] = item.Date,
-                [Models.Internal.Rom.InvertedKey] = item.Inverted,
-                [Models.Internal.Rom.MIAKey] = item.MIA,
+                [Models.Metadata.Rom.NameKey] = item.Name,
+                [Models.Metadata.Rom.SizeKey] = item.Size,
+                [Models.Metadata.Rom.CRCKey] = item.CRC,
+                [Models.Metadata.Rom.MD5Key] = item.MD5,
+                [Models.Metadata.Rom.SHA1Key] = item.SHA1,
+                [Models.Metadata.Rom.SHA256Key] = item.SHA256,
+                [Models.Metadata.Rom.SHA384Key] = item.SHA384,
+                [Models.Metadata.Rom.SHA512Key] = item.SHA512,
+                [Models.Metadata.Rom.SpamSumKey] = item.SpamSum,
+                [Models.Metadata.Rom.xxHash364Key] = item.xxHash364,
+                [Models.Metadata.Rom.xxHash3128Key] = item.xxHash3128,
+                [Models.Metadata.Rom.MergeKey] = item.Merge,
+                [Models.Metadata.Rom.StatusKey] = item.Status,
+                [Models.Metadata.Rom.SerialKey] = item.Serial,
+                [Models.Metadata.Rom.HeaderKey] = item.Header,
+                [Models.Metadata.Rom.DateKey] = item.Date,
+                [Models.Metadata.Rom.InvertedKey] = item.Inverted,
+                [Models.Metadata.Rom.MIAKey] = item.MIA,
             };
             return rom;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Logiqx.Sample"/> to <cref="Models.Internal.Sample"/>
+        /// Convert from <cref="Models.Logiqx.Sample"/> to <cref="Models.Metadata.Sample"/>
         /// </summary>
-        private static Models.Internal.Sample ConvertToInternalModel(Sample item)
+        private static Models.Metadata.Sample ConvertToInternalModel(Sample item)
         {
-            var sample = new Models.Internal.Sample
+            var sample = new Models.Metadata.Sample
             {
-                [Models.Internal.Sample.NameKey] = item.Name,
+                [Models.Metadata.Sample.NameKey] = item.Name,
             };
             return sample;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Logiqx.SoftwareList"/> to <cref="Models.Internal.SoftwareList"/>
+        /// Convert from <cref="Models.Logiqx.SoftwareList"/> to <cref="Models.Metadata.SoftwareList"/>
         /// </summary>
-        private static Models.Internal.SoftwareList ConvertToInternalModel(SoftwareList item)
+        private static Models.Metadata.SoftwareList ConvertToInternalModel(SoftwareList item)
         {
-            var softwareList = new Models.Internal.SoftwareList
+            var softwareList = new Models.Metadata.SoftwareList
             {
-                [Models.Internal.SoftwareList.TagKey] = item.Tag,
-                [Models.Internal.SoftwareList.NameKey] = item.Name,
-                [Models.Internal.SoftwareList.StatusKey] = item.Status,
-                [Models.Internal.SoftwareList.FilterKey] = item.Filter,
+                [Models.Metadata.SoftwareList.TagKey] = item.Tag,
+                [Models.Metadata.SoftwareList.NameKey] = item.Name,
+                [Models.Metadata.SoftwareList.StatusKey] = item.Status,
+                [Models.Metadata.SoftwareList.FilterKey] = item.Filter,
             };
             return softwareList;
         }

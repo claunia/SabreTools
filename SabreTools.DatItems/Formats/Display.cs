@@ -20,8 +20,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tag")]
         public string? Tag
         {
-            get => _internal.ReadString(Models.Internal.Display.TagKey);
-            set => _internal[Models.Internal.Display.TagKey] = value;
+            get => _internal.ReadString(Models.Metadata.Display.TagKey);
+            set => _internal[Models.Metadata.Display.TagKey] = value;
         }
 
         /// <summary>
@@ -31,8 +31,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public DisplayType DisplayType
         {
-            get => _internal.ReadString(Models.Internal.Display.DisplayTypeKey).AsDisplayType();
-            set => _internal[Models.Internal.Display.DisplayTypeKey] = value.FromDisplayType();
+            get => _internal.ReadString(Models.Metadata.Display.DisplayTypeKey).AsDisplayType();
+            set => _internal[Models.Metadata.Display.DisplayTypeKey] = value.FromDisplayType();
         }
 
         [JsonIgnore]
@@ -44,8 +44,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("rotate", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("rotate")]
         public long? Rotate
         {
-            get => _internal.ReadLong(Models.Internal.Display.RotateKey);
-            set => _internal[Models.Internal.Display.RotateKey] = value;
+            get => _internal.ReadLong(Models.Metadata.Display.RotateKey);
+            set => _internal[Models.Metadata.Display.RotateKey] = value;
         }
 
         [JsonIgnore]
@@ -57,8 +57,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("flipx", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("flipx")]
         public bool? FlipX
         {
-            get => _internal.ReadBool(Models.Internal.Display.FlipXKey);
-            set => _internal[Models.Internal.Display.FlipXKey] = value;
+            get => _internal.ReadBool(Models.Metadata.Display.FlipXKey);
+            set => _internal[Models.Metadata.Display.FlipXKey] = value;
         }
 
         [JsonIgnore]
@@ -70,8 +70,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("width", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("width")]
         public long? Width
         {
-            get => _internal.ReadLong(Models.Internal.Display.WidthKey);
-            set => _internal[Models.Internal.Display.WidthKey] = value;
+            get => _internal.ReadLong(Models.Metadata.Display.WidthKey);
+            set => _internal[Models.Metadata.Display.WidthKey] = value;
         }
 
         [JsonIgnore]
@@ -83,8 +83,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("height", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("height")]
         public long? Height
         {
-            get => _internal.ReadLong(Models.Internal.Display.HeightKey);
-            set => _internal[Models.Internal.Display.HeightKey] = value;
+            get => _internal.ReadLong(Models.Metadata.Display.HeightKey);
+            set => _internal[Models.Metadata.Display.HeightKey] = value;
         }
 
         [JsonIgnore]
@@ -96,8 +96,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("refresh", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("refresh")]
         public double? Refresh
         {
-            get => _internal.ReadDouble(Models.Internal.Display.RefreshKey);
-            set => _internal[Models.Internal.Display.RefreshKey] = value;
+            get => _internal.ReadDouble(Models.Metadata.Display.RefreshKey);
+            set => _internal[Models.Metadata.Display.RefreshKey] = value;
         }
 
         [JsonIgnore]
@@ -109,8 +109,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("pixclock", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("pixclock")]
         public long? PixClock
         {
-            get => _internal.ReadLong(Models.Internal.Display.PixClockKey);
-            set => _internal[Models.Internal.Display.PixClockKey] = value;
+            get => _internal.ReadLong(Models.Metadata.Display.PixClockKey);
+            set => _internal[Models.Metadata.Display.PixClockKey] = value;
         }
 
         [JsonIgnore]
@@ -122,8 +122,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("htotal", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("htotal")]
         public long? HTotal
         {
-            get => _internal.ReadLong(Models.Internal.Display.HTotalKey);
-            set => _internal[Models.Internal.Display.HTotalKey] = value;
+            get => _internal.ReadLong(Models.Metadata.Display.HTotalKey);
+            set => _internal[Models.Metadata.Display.HTotalKey] = value;
         }
 
         [JsonIgnore]
@@ -135,8 +135,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("hbend", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("hbend")]
         public long? HBEnd
         {
-            get => _internal.ReadLong(Models.Internal.Display.HBEndKey);
-            set => _internal[Models.Internal.Display.HBEndKey] = value;
+            get => _internal.ReadLong(Models.Metadata.Display.HBEndKey);
+            set => _internal[Models.Metadata.Display.HBEndKey] = value;
         }
 
         [JsonIgnore]
@@ -148,8 +148,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("hbstart", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("hbstart")]
         public long? HBStart
         {
-            get => _internal.ReadLong(Models.Internal.Display.HBStartKey);
-            set => _internal[Models.Internal.Display.HBStartKey] = value;
+            get => _internal.ReadLong(Models.Metadata.Display.HBStartKey);
+            set => _internal[Models.Metadata.Display.HBStartKey] = value;
         }
 
         [JsonIgnore]
@@ -161,8 +161,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("vtotal", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("vtotal")]
         public long? VTotal
         {
-            get => _internal.ReadLong(Models.Internal.Display.VTotalKey);
-            set => _internal[Models.Internal.Display.VTotalKey] = value;
+            get => _internal.ReadLong(Models.Metadata.Display.VTotalKey);
+            set => _internal[Models.Metadata.Display.VTotalKey] = value;
         }
 
         [JsonIgnore]
@@ -174,8 +174,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("vbend", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("vbend")]
         public long? VBEnd
         {
-            get => _internal.ReadLong(Models.Internal.Display.VBEndKey);
-            set => _internal[Models.Internal.Display.VBEndKey] = value;
+            get => _internal.ReadLong(Models.Metadata.Display.VBEndKey);
+            set => _internal[Models.Metadata.Display.VBEndKey] = value;
         }
 
         [JsonIgnore]
@@ -187,8 +187,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("vbstart", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("vbstart")]
         public long? VBStart
         {
-            get => _internal.ReadLong(Models.Internal.Display.VBStartKey);
-            set => _internal[Models.Internal.Display.VBStartKey] = value;
+            get => _internal.ReadLong(Models.Metadata.Display.VBStartKey);
+            set => _internal[Models.Metadata.Display.VBStartKey] = value;
         }
 
         [JsonIgnore]
@@ -203,7 +203,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Display()
         {
-            _internal = new Models.Internal.Display();
+            _internal = new Models.Metadata.Display();
             Machine = new Machine();
 
             ItemType = ItemType.Display;
@@ -225,7 +225,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.Display ?? new Models.Internal.Display(),
+                _internal = this._internal?.Clone() as Models.Metadata.Display ?? new Models.Metadata.Display(),
             };
         }
 

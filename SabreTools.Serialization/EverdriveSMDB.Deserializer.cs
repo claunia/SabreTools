@@ -81,16 +81,16 @@ namespace SabreTools.Serialization
         #region Internal
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.MetadataFile"/> to <cref="Models.EverdriveSMDB.MetadataFile"/>
+        /// Convert from <cref="Models.Metadata.MetadataFile"/> to <cref="Models.EverdriveSMDB.MetadataFile"/>
         /// </summary>
-        public static MetadataFile? ConvertFromInternalModel(Models.Internal.MetadataFile? item)
+        public static MetadataFile? ConvertFromInternalModel(Models.Metadata.MetadataFile? item)
         {
             if (item == null)
                 return null;
 
             var metadataFile = new MetadataFile();
 
-            var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
+            var machines = item.Read<Models.Metadata.Machine[]>(Models.Metadata.MetadataFile.MachineKey);
             if (machines != null && machines.Any())
             {
                 metadataFile.Row = machines
@@ -103,11 +103,11 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Machine"/> to an array of <cref="Models.EverdriveSMDB.Row"/>
+        /// Convert from <cref="Models.Metadata.Machine"/> to an array of <cref="Models.EverdriveSMDB.Row"/>
         /// </summary>
-        private static Row[] ConvertMachineFromInternalModel(Models.Internal.Machine item)
+        private static Row[] ConvertMachineFromInternalModel(Models.Metadata.Machine item)
         {
-            var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
+            var roms = item.Read<Models.Metadata.Rom[]>(Models.Metadata.Machine.RomKey);
             if (roms == null || !roms.Any())
                 return Array.Empty<Row>();
 
@@ -118,18 +118,18 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.EverdriveSMDB.Row"/>
+        /// Convert from <cref="Models.Metadata.Rom"/> to <cref="Models.EverdriveSMDB.Row"/>
         /// </summary>
-        private static Row ConvertFromInternalModel(Models.Internal.Rom item)
+        private static Row ConvertFromInternalModel(Models.Metadata.Rom item)
         {
             var row = new Row
             {
-                SHA256 = item.ReadString(Models.Internal.Rom.SHA256Key),
-                Name = item.ReadString(Models.Internal.Rom.NameKey),
-                SHA1 = item.ReadString(Models.Internal.Rom.SHA1Key),
-                MD5 = item.ReadString(Models.Internal.Rom.MD5Key),
-                CRC32 = item.ReadString(Models.Internal.Rom.CRCKey),
-                Size = item.ReadString(Models.Internal.Rom.SizeKey),
+                SHA256 = item.ReadString(Models.Metadata.Rom.SHA256Key),
+                Name = item.ReadString(Models.Metadata.Rom.NameKey),
+                SHA1 = item.ReadString(Models.Metadata.Rom.SHA1Key),
+                MD5 = item.ReadString(Models.Metadata.Rom.MD5Key),
+                CRC32 = item.ReadString(Models.Metadata.Rom.CRCKey),
+                Size = item.ReadString(Models.Metadata.Rom.SizeKey),
             };
             return row;
         }

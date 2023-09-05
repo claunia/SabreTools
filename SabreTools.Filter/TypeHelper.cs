@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Xml.Serialization;
 using SabreTools.Models;
-using SabreTools.Models.Internal;
+using SabreTools.Models.Metadata;
 
 namespace SabreTools.Filter
 {

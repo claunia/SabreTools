@@ -7,7 +7,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SabreTools.Core\SabreTools.Core.csproj" />
-    <ProjectReference Include="..\SabreTools.Models\SabreTools.Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SabreTools.Models" Version="1.1.0" />
   </ItemGroup>
 
 </Project>

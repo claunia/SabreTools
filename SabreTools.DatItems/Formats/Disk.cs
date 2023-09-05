@@ -23,8 +23,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _internal.ReadString(Models.Internal.Disk.NameKey);
-            set => _internal[Models.Internal.Disk.NameKey] = value;
+            get => _internal.ReadString(Models.Metadata.Disk.NameKey);
+            set => _internal[Models.Metadata.Disk.NameKey] = value;
         }
 
         /// <summary>
@@ -33,8 +33,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("md5", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("md5")]
         public string? MD5
         {
-            get => _internal.ReadString(Models.Internal.Disk.MD5Key);
-            set => _internal[Models.Internal.Disk.MD5Key] = TextHelper.NormalizeMD5(value);
+            get => _internal.ReadString(Models.Metadata.Disk.MD5Key);
+            set => _internal[Models.Metadata.Disk.MD5Key] = TextHelper.NormalizeMD5(value);
         }
 
         /// <summary>
@@ -43,8 +43,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("sha1", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha1")]
         public string? SHA1
         {
-            get => _internal.ReadString(Models.Internal.Disk.SHA1Key);
-            set => _internal[Models.Internal.Disk.SHA1Key] = TextHelper.NormalizeSHA1(value);
+            get => _internal.ReadString(Models.Metadata.Disk.SHA1Key);
+            set => _internal[Models.Metadata.Disk.SHA1Key] = TextHelper.NormalizeSHA1(value);
         }
 
         /// <summary>
@@ -53,8 +53,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("merge", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("merge")]
         public string? MergeTag
         {
-            get => _internal.ReadString(Models.Internal.Disk.MergeKey);
-            set => _internal[Models.Internal.Disk.MergeKey] = value;
+            get => _internal.ReadString(Models.Metadata.Disk.MergeKey);
+            set => _internal[Models.Metadata.Disk.MergeKey] = value;
         }
 
         /// <summary>
@@ -63,8 +63,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("region", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("region")]
         public string? Region
         {
-            get => _internal.ReadString(Models.Internal.Disk.RegionKey);
-            set => _internal[Models.Internal.Disk.RegionKey] = value;
+            get => _internal.ReadString(Models.Metadata.Disk.RegionKey);
+            set => _internal[Models.Metadata.Disk.RegionKey] = value;
         }
 
         /// <summary>
@@ -73,8 +73,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("index", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("index")]
         public string? Index
         {
-            get => _internal.ReadString(Models.Internal.Disk.IndexKey);
-            set => _internal[Models.Internal.Disk.IndexKey] = value;
+            get => _internal.ReadString(Models.Metadata.Disk.IndexKey);
+            set => _internal[Models.Metadata.Disk.IndexKey] = value;
         }
 
         /// <summary>
@@ -83,8 +83,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("writable", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("writable")]
         public bool? Writable
         {
-            get => _internal.ReadBool(Models.Internal.Disk.WritableKey);
-            set => _internal[Models.Internal.Disk.WritableKey] = value;
+            get => _internal.ReadBool(Models.Metadata.Disk.WritableKey);
+            set => _internal[Models.Metadata.Disk.WritableKey] = value;
         }
 
         [JsonIgnore]
@@ -97,8 +97,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public ItemStatus ItemStatus
         {
-            get => _internal.ReadString(Models.Internal.Disk.StatusKey).AsItemStatus();
-            set => _internal[Models.Internal.Disk.StatusKey] = value.FromItemStatus(yesno: false);
+            get => _internal.ReadString(Models.Metadata.Disk.StatusKey).AsItemStatus();
+            set => _internal[Models.Metadata.Disk.StatusKey] = value.FromItemStatus(yesno: false);
         }
 
         [JsonIgnore]
@@ -110,8 +110,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("optional", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("optional")]
         public bool? Optional
         {
-            get => _internal.ReadBool(Models.Internal.Disk.OptionalKey);
-            set => _internal[Models.Internal.Disk.OptionalKey] = value;
+            get => _internal.ReadBool(Models.Metadata.Disk.OptionalKey);
+            set => _internal[Models.Metadata.Disk.OptionalKey] = value;
         }
 
         [JsonIgnore]
@@ -185,7 +185,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Disk()
         {
-            _internal = new Models.Internal.Disk();
+            _internal = new Models.Metadata.Disk();
             Machine = new Machine();
 
             Name = string.Empty;
@@ -199,7 +199,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Disk(BaseFile baseFile)
         {
-            _internal = new Models.Internal.Disk();
+            _internal = new Models.Metadata.Disk();
             Machine = new Machine();
 
             Name = baseFile.Filename;
@@ -227,7 +227,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.Disk ?? new Models.Internal.Disk(),
+                _internal = this._internal?.Clone() as Models.Metadata.Disk ?? new Models.Metadata.Disk(),
             };
         }
 

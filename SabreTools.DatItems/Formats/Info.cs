@@ -18,8 +18,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _internal.ReadString(Models.Internal.Info.NameKey);
-            set => _internal[Models.Internal.Info.NameKey] = value;
+            get => _internal.ReadString(Models.Metadata.Info.NameKey);
+            set => _internal[Models.Metadata.Info.NameKey] = value;
         }
 
         /// <summary>
@@ -28,8 +28,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("value"), XmlElement("value")]
         public string? Value
         {
-            get => _internal.ReadString(Models.Internal.Info.ValueKey);
-            set => _internal[Models.Internal.Info.ValueKey] = value;
+            get => _internal.ReadString(Models.Metadata.Info.ValueKey);
+            set => _internal[Models.Metadata.Info.ValueKey] = value;
         }
 
         #endregion
@@ -51,7 +51,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Info()
         {
-            _internal = new Models.Internal.Info();
+            _internal = new Models.Metadata.Info();
             Machine = new Machine();
 
             Name = string.Empty;
@@ -74,7 +74,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.Info ?? new Models.Internal.Info(),
+                _internal = this._internal?.Clone() as Models.Metadata.Info ?? new Models.Metadata.Info(),
             };
         }
 

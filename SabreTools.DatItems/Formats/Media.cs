@@ -21,8 +21,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _internal.ReadString(Models.Internal.Media.NameKey);
-            set => _internal[Models.Internal.Media.NameKey] = value;
+            get => _internal.ReadString(Models.Metadata.Media.NameKey);
+            set => _internal[Models.Metadata.Media.NameKey] = value;
         }
 
         /// <summary>
@@ -31,8 +31,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("md5", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("md5")]
         public string? MD5
         {
-            get => _internal.ReadString(Models.Internal.Media.MD5Key);
-            set => _internal[Models.Internal.Media.MD5Key] = TextHelper.NormalizeMD5(value);
+            get => _internal.ReadString(Models.Metadata.Media.MD5Key);
+            set => _internal[Models.Metadata.Media.MD5Key] = TextHelper.NormalizeMD5(value);
         }
 
         /// <summary>
@@ -41,8 +41,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("sha1", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha1")]
         public string? SHA1
         {
-            get => _internal.ReadString(Models.Internal.Media.SHA1Key);
-            set => _internal[Models.Internal.Media.SHA1Key] = TextHelper.NormalizeSHA1(value);
+            get => _internal.ReadString(Models.Metadata.Media.SHA1Key);
+            set => _internal[Models.Metadata.Media.SHA1Key] = TextHelper.NormalizeSHA1(value);
         }
 
         /// <summary>
@@ -51,8 +51,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("sha256", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha256")]
         public string? SHA256
         {
-            get => _internal.ReadString(Models.Internal.Media.SHA256Key);
-            set => _internal[Models.Internal.Media.SHA256Key] = TextHelper.NormalizeSHA256(value);
+            get => _internal.ReadString(Models.Metadata.Media.SHA256Key);
+            set => _internal[Models.Metadata.Media.SHA256Key] = TextHelper.NormalizeSHA256(value);
         }
 
         /// <summary>
@@ -61,8 +61,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("spamsum", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("spamsum")]
         public string? SpamSum
         {
-            get => _internal.ReadString(Models.Internal.Media.SpamSumKey);
-            set => _internal[Models.Internal.Media.SpamSumKey] = value;
+            get => _internal.ReadString(Models.Metadata.Media.SpamSumKey);
+            set => _internal[Models.Metadata.Media.SpamSumKey] = value;
         }
 
         #endregion
@@ -84,7 +84,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Media()
         {
-            _internal = new Models.Internal.Media();
+            _internal = new Models.Metadata.Media();
             Machine = new Machine();
 
             Name = string.Empty;
@@ -98,7 +98,7 @@ namespace SabreTools.DatItems.Formats
         /// <param name="baseFile"></param>
         public Media(BaseFile baseFile)
         {
-            _internal = new Models.Internal.Media();
+            _internal = new Models.Metadata.Media();
             Machine = new Machine();
 
             Name = baseFile.Filename;
@@ -127,7 +127,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.Media ?? new Models.Internal.Media(),
+                _internal = this._internal?.Clone() as Models.Metadata.Media ?? new Models.Metadata.Media(),
             };
         }
 

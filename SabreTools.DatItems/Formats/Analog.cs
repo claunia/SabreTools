@@ -18,8 +18,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("mask", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("mask")]
         public string? Mask
         {
-            get => _internal.ReadString(Models.Internal.Analog.MaskKey);
-            set => _internal[Models.Internal.Analog.MaskKey] = value;
+            get => _internal.ReadString(Models.Metadata.Analog.MaskKey);
+            set => _internal[Models.Metadata.Analog.MaskKey] = value;
         }
 
         #endregion
@@ -31,7 +31,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Analog()
         {
-            _internal = new Models.Internal.Analog();
+            _internal = new Models.Metadata.Analog();
             Machine = new Machine();
 
             ItemType = ItemType.Analog;
@@ -53,7 +53,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.Analog ?? new Models.Internal.Analog(),
+                _internal = this._internal?.Clone() as Models.Metadata.Analog ?? new Models.Metadata.Analog(),
             };
         }
 

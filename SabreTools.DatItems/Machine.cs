@@ -24,8 +24,8 @@ namespace SabreTools.DatItems
         [XmlElement("name")]
         public string? Name
         {
-            get => _machine.ReadString(Models.Internal.Machine.NameKey);
-            set => _machine[Models.Internal.Machine.NameKey] = value;
+            get => _machine.ReadString(Models.Metadata.Machine.NameKey);
+            set => _machine[Models.Metadata.Machine.NameKey] = value;
         }
 
         /// <summary>
@@ -36,8 +36,8 @@ namespace SabreTools.DatItems
         [XmlElement("comment")]
         public string? Comment
         {
-            get => _machine.ReadString(Models.Internal.Machine.CommentKey);
-            set => _machine[Models.Internal.Machine.CommentKey] = value;
+            get => _machine.ReadString(Models.Metadata.Machine.CommentKey);
+            set => _machine[Models.Metadata.Machine.CommentKey] = value;
         }
 
         /// <summary>
@@ -47,8 +47,8 @@ namespace SabreTools.DatItems
         [XmlElement("description")]
         public string? Description
         {
-            get => _machine.ReadString(Models.Internal.Machine.DescriptionKey);
-            set => _machine[Models.Internal.Machine.DescriptionKey] = value;
+            get => _machine.ReadString(Models.Metadata.Machine.DescriptionKey);
+            set => _machine[Models.Metadata.Machine.DescriptionKey] = value;
         }
 
         /// <summary>
@@ -58,8 +58,8 @@ namespace SabreTools.DatItems
         [XmlElement("year")]
         public string? Year
         {
-            get => _machine.ReadString(Models.Internal.Machine.YearKey);
-            set => _machine[Models.Internal.Machine.YearKey] = value;
+            get => _machine.ReadString(Models.Metadata.Machine.YearKey);
+            set => _machine[Models.Metadata.Machine.YearKey] = value;
         }
 
         /// <summary>
@@ -69,8 +69,8 @@ namespace SabreTools.DatItems
         [XmlElement("manufacturer")]
         public string? Manufacturer
         {
-            get => _machine.ReadString(Models.Internal.Machine.ManufacturerKey);
-            set => _machine[Models.Internal.Machine.ManufacturerKey] = value;
+            get => _machine.ReadString(Models.Metadata.Machine.ManufacturerKey);
+            set => _machine[Models.Metadata.Machine.ManufacturerKey] = value;
         }
 
         /// <summary>
@@ -80,8 +80,8 @@ namespace SabreTools.DatItems
         [XmlElement("publisher")]
         public string? Publisher
         {
-            get => _machine.ReadString(Models.Internal.Machine.PublisherKey);
-            set => _machine[Models.Internal.Machine.PublisherKey] = value;
+            get => _machine.ReadString(Models.Metadata.Machine.PublisherKey);
+            set => _machine[Models.Metadata.Machine.PublisherKey] = value;
         }
 
         /// <summary>
@@ -91,8 +91,8 @@ namespace SabreTools.DatItems
         [XmlElement("category")]
         public string? Category
         {
-            get => _machine.ReadString(Models.Internal.Machine.CategoryKey);
-            set => _machine[Models.Internal.Machine.CategoryKey] = value;
+            get => _machine.ReadString(Models.Metadata.Machine.CategoryKey);
+            set => _machine[Models.Metadata.Machine.CategoryKey] = value;
         }
 
         /// <summary>
@@ -102,8 +102,8 @@ namespace SabreTools.DatItems
         [XmlElement("romof")]
         public string? RomOf
         {
-            get => _machine.ReadString(Models.Internal.Machine.RomOfKey);
-            set => _machine[Models.Internal.Machine.RomOfKey] = value;
+            get => _machine.ReadString(Models.Metadata.Machine.RomOfKey);
+            set => _machine[Models.Metadata.Machine.RomOfKey] = value;
         }
 
         /// <summary>
@@ -113,8 +113,8 @@ namespace SabreTools.DatItems
         [XmlElement("cloneof")]
         public string? CloneOf
         {
-            get => _machine.ReadString(Models.Internal.Machine.CloneOfKey);
-            set => _machine[Models.Internal.Machine.CloneOfKey] = value;
+            get => _machine.ReadString(Models.Metadata.Machine.CloneOfKey);
+            set => _machine[Models.Metadata.Machine.CloneOfKey] = value;
         }
 
         /// <summary>
@@ -124,8 +124,8 @@ namespace SabreTools.DatItems
         [XmlElement("sampleof")]
         public string? SampleOf
         {
-            get => _machine.ReadString(Models.Internal.Machine.SampleOfKey);
-            set => _machine[Models.Internal.Machine.SampleOfKey] = value;
+            get => _machine.ReadString(Models.Metadata.Machine.SampleOfKey);
+            set => _machine[Models.Metadata.Machine.SampleOfKey] = value;
         }
 
         /// <summary>
@@ -138,9 +138,9 @@ namespace SabreTools.DatItems
         {
             get
             {
-                bool? isBios = _machine.ReadBool(Models.Internal.Machine.IsBiosKey);
-                bool? isDevice = _machine.ReadBool(Models.Internal.Machine.IsDeviceKey);
-                bool? isMechanical = _machine.ReadBool(Models.Internal.Machine.IsMechanicalKey);
+                bool? isBios = _machine.ReadBool(Models.Metadata.Machine.IsBiosKey);
+                bool? isDevice = _machine.ReadBool(Models.Metadata.Machine.IsDeviceKey);
+                bool? isMechanical = _machine.ReadBool(Models.Metadata.Machine.IsMechanicalKey);
 
                 MachineType machineType = MachineType.None;
                 if (isBios == true)
@@ -155,11 +155,11 @@ namespace SabreTools.DatItems
             set
             {
                 if (value.HasFlag(MachineType.Bios))
-                    _machine[Models.Internal.Machine.IsBiosKey] = "yes";
+                    _machine[Models.Metadata.Machine.IsBiosKey] = "yes";
                 if (value.HasFlag(MachineType.Device))
-                    _machine[Models.Internal.Machine.IsDeviceKey] = "yes";
+                    _machine[Models.Metadata.Machine.IsDeviceKey] = "yes";
                 if (value.HasFlag(MachineType.Mechanical))
-                    _machine[Models.Internal.Machine.IsMechanicalKey] = "yes";
+                    _machine[Models.Metadata.Machine.IsMechanicalKey] = "yes";
             }
         }
 
@@ -178,8 +178,8 @@ namespace SabreTools.DatItems
         [XmlElement("players")]
         public string? Players
         {
-            get => _machine.ReadString(Models.Internal.Machine.PlayersKey);
-            set => _machine[Models.Internal.Machine.PlayersKey] = value;
+            get => _machine.ReadString(Models.Metadata.Machine.PlayersKey);
+            set => _machine[Models.Metadata.Machine.PlayersKey] = value;
         }
 
         /// <summary>
@@ -189,8 +189,8 @@ namespace SabreTools.DatItems
         [XmlElement("rotation")]
         public string? Rotation
         {
-            get => _machine.ReadString(Models.Internal.Machine.RotationKey);
-            set => _machine[Models.Internal.Machine.RotationKey] = value;
+            get => _machine.ReadString(Models.Metadata.Machine.RotationKey);
+            set => _machine[Models.Metadata.Machine.RotationKey] = value;
         }
 
         /// <summary>
@@ -200,8 +200,8 @@ namespace SabreTools.DatItems
         [XmlElement("control")]
         public string? Control
         {
-            get => _machine.ReadString(Models.Internal.Machine.ControlKey);
-            set => _machine[Models.Internal.Machine.ControlKey] = value;
+            get => _machine.ReadString(Models.Metadata.Machine.ControlKey);
+            set => _machine[Models.Metadata.Machine.ControlKey] = value;
         }
 
         /// <summary>
@@ -211,8 +211,8 @@ namespace SabreTools.DatItems
         [XmlElement("status")]
         public string? Status
         {
-            get => _machine.ReadString(Models.Internal.Machine.StatusKey);
-            set => _machine[Models.Internal.Machine.StatusKey] = value;
+            get => _machine.ReadString(Models.Metadata.Machine.StatusKey);
+            set => _machine[Models.Metadata.Machine.StatusKey] = value;
         }
 
         /// <summary>
@@ -222,8 +222,8 @@ namespace SabreTools.DatItems
         [XmlElement("displaycount")]
         public string? DisplayCount
         {
-            get => _machine.ReadString(Models.Internal.Machine.DisplayCountKey);
-            set => _machine[Models.Internal.Machine.DisplayCountKey] = value;
+            get => _machine.ReadString(Models.Metadata.Machine.DisplayCountKey);
+            set => _machine[Models.Metadata.Machine.DisplayCountKey] = value;
         }
 
         /// <summary>
@@ -233,8 +233,8 @@ namespace SabreTools.DatItems
         [XmlElement("displaytype")]
         public string? DisplayType
         {
-            get => _machine.ReadString(Models.Internal.Machine.DisplayTypeKey);
-            set => _machine[Models.Internal.Machine.DisplayTypeKey] = value;
+            get => _machine.ReadString(Models.Metadata.Machine.DisplayTypeKey);
+            set => _machine[Models.Metadata.Machine.DisplayTypeKey] = value;
         }
 
         /// <summary>
@@ -244,8 +244,8 @@ namespace SabreTools.DatItems
         [XmlElement("buttons")]
         public string? Buttons
         {
-            get => _machine.ReadString(Models.Internal.Machine.ButtonsKey);
-            set => _machine[Models.Internal.Machine.ButtonsKey] = value;
+            get => _machine.ReadString(Models.Metadata.Machine.ButtonsKey);
+            set => _machine[Models.Metadata.Machine.ButtonsKey] = value;
         }
 
         #endregion
@@ -259,8 +259,8 @@ namespace SabreTools.DatItems
         [XmlElement("history")]
         public string? History
         {
-            get => _machine.ReadString(Models.Internal.Machine.HistoryKey);
-            set => _machine[Models.Internal.Machine.HistoryKey] = value;
+            get => _machine.ReadString(Models.Metadata.Machine.HistoryKey);
+            set => _machine[Models.Metadata.Machine.HistoryKey] = value;
         }
 
         /// <summary>
@@ -271,8 +271,8 @@ namespace SabreTools.DatItems
         [XmlElement("sourcefile")]
         public string? SourceFile
         {
-            get => _machine.ReadString(Models.Internal.Machine.SourceFileKey);
-            set => _machine[Models.Internal.Machine.SourceFileKey] = value;
+            get => _machine.ReadString(Models.Metadata.Machine.SourceFileKey);
+            set => _machine[Models.Metadata.Machine.SourceFileKey] = value;
         }
 
         /// <summary>
@@ -283,8 +283,8 @@ namespace SabreTools.DatItems
         [XmlElement("runnable")]
         public Runnable Runnable
         {
-            get => _machine.ReadString(Models.Internal.Machine.RunnableKey).AsRunnable();
-            set => _machine[Models.Internal.Machine.RunnableKey] = value.FromRunnable();
+            get => _machine.ReadString(Models.Metadata.Machine.RunnableKey).AsRunnable();
+            set => _machine[Models.Metadata.Machine.RunnableKey] = value.FromRunnable();
         }
 
         [JsonIgnore]
@@ -301,8 +301,8 @@ namespace SabreTools.DatItems
         [XmlElement("board")]
         public string? Board
         {
-            get => _machine.ReadString(Models.Internal.Machine.BoardKey);
-            set => _machine[Models.Internal.Machine.BoardKey] = value;
+            get => _machine.ReadString(Models.Metadata.Machine.BoardKey);
+            set => _machine[Models.Metadata.Machine.BoardKey] = value;
         }
 
         /// <summary>
@@ -312,8 +312,8 @@ namespace SabreTools.DatItems
         [XmlElement("rebuildto")]
         public string? RebuildTo
         {
-            get => _machine.ReadString(Models.Internal.Machine.RebuildToKey);
-            set => _machine[Models.Internal.Machine.RebuildToKey] = value;
+            get => _machine.ReadString(Models.Metadata.Machine.RebuildToKey);
+            set => _machine[Models.Metadata.Machine.RebuildToKey] = value;
         }
 
         /// <summary>
@@ -323,8 +323,8 @@ namespace SabreTools.DatItems
         [XmlElement("nointroid")]
         public string? NoIntroId
         {
-            get => _machine.ReadString(Models.Internal.Machine.IdKey);
-            set => _machine[Models.Internal.Machine.IdKey] = value;
+            get => _machine.ReadString(Models.Metadata.Machine.IdKey);
+            set => _machine[Models.Metadata.Machine.IdKey] = value;
         }
 
         /// <summary>
@@ -334,8 +334,8 @@ namespace SabreTools.DatItems
         [XmlElement("nointrocloneofid")]
         public string? NoIntroCloneOfId
         {
-            get => _machine.ReadString(Models.Internal.Machine.CloneOfIdKey);
-            set => _machine[Models.Internal.Machine.CloneOfIdKey] = value;
+            get => _machine.ReadString(Models.Metadata.Machine.CloneOfIdKey);
+            set => _machine[Models.Metadata.Machine.CloneOfIdKey] = value;
         }
 
         #endregion
@@ -420,8 +420,8 @@ namespace SabreTools.DatItems
         [XmlElement("genmsxid")]
         public string? GenMSXID
         {
-            get => _machine.ReadString(Models.Internal.Machine.GenMSXIDKey);
-            set => _machine[Models.Internal.Machine.GenMSXIDKey] = value;
+            get => _machine.ReadString(Models.Metadata.Machine.GenMSXIDKey);
+            set => _machine[Models.Metadata.Machine.GenMSXIDKey] = value;
         }
 
         /// <summary>
@@ -431,8 +431,8 @@ namespace SabreTools.DatItems
         [XmlElement("system")]
         public string? System
         {
-            get => _machine.ReadString(Models.Internal.Machine.SystemKey);
-            set => _machine[Models.Internal.Machine.SystemKey] = value;
+            get => _machine.ReadString(Models.Metadata.Machine.SystemKey);
+            set => _machine[Models.Metadata.Machine.SystemKey] = value;
         }
 
         /// <summary>
@@ -442,8 +442,8 @@ namespace SabreTools.DatItems
         [XmlElement("country")]
         public string? Country
         {
-            get => _machine.ReadString(Models.Internal.Machine.CountryKey);
-            set => _machine[Models.Internal.Machine.CountryKey] = value;
+            get => _machine.ReadString(Models.Metadata.Machine.CountryKey);
+            set => _machine[Models.Metadata.Machine.CountryKey] = value;
         }
 
         #endregion
@@ -457,8 +457,8 @@ namespace SabreTools.DatItems
         [XmlElement("supported")]
         public Supported Supported
         {
-            get => _machine.ReadString(Models.Internal.Machine.SupportedKey).AsSupported();
-            set => _machine[Models.Internal.Machine.SupportedKey] = value.FromSupported(verbose: true);
+            get => _machine.ReadString(Models.Metadata.Machine.SupportedKey).AsSupported();
+            set => _machine[Models.Metadata.Machine.SupportedKey] = value.FromSupported(verbose: true);
         }
 
         [JsonIgnore]
@@ -470,7 +470,7 @@ namespace SabreTools.DatItems
         /// Internal Machine model
         /// </summary>
         [JsonIgnore]
-        private Models.Internal.Machine _machine = new();
+        private Models.Metadata.Machine _machine = new();
 
         #endregion // Fields
 
@@ -508,7 +508,7 @@ namespace SabreTools.DatItems
             {
                 #region Common
 
-                _machine = this._machine.Clone() as Models.Internal.Machine ?? new Models.Internal.Machine(),
+                _machine = this._machine.Clone() as Models.Metadata.Machine ?? new Models.Metadata.Machine(),
 
                 #endregion
 

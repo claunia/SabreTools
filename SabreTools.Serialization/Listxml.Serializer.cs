@@ -11,21 +11,21 @@ namespace SabreTools.Serialization
         #region Internal
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.M1"/> to <cref="Models.Internal.MetadataFile"/>
+        /// Convert from <cref="Models.Listxml.M1"/> to <cref="Models.Metadata.MetadataFile"/>
         /// </summary>
-        public static Models.Internal.MetadataFile? ConvertToInternalModel(M1? item)
+        public static Models.Metadata.MetadataFile? ConvertToInternalModel(M1? item)
         {
             if (item == null)
                 return null;
 
-            var metadataFile = new Models.Internal.MetadataFile
+            var metadataFile = new Models.Metadata.MetadataFile
             {
-                [Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
+                [Models.Metadata.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
             };
 
             if (item?.Game != null && item.Game.Any())
             {
-                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.Game
+                metadataFile[Models.Metadata.MetadataFile.MachineKey] = item.Game
                     .Where(g => g != null)
                     .Select(ConvertMachineToInternalModel)
                     .ToArray();
@@ -35,21 +35,21 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.Mame"/> to <cref="Models.Internal.MetadataFile"/>
+        /// Convert from <cref="Models.Listxml.Mame"/> to <cref="Models.Metadata.MetadataFile"/>
         /// </summary>
-        public static Models.Internal.MetadataFile? ConvertToInternalModel(Mame? item)
+        public static Models.Metadata.MetadataFile? ConvertToInternalModel(Mame? item)
         {
             if (item == null)
                 return null;
 
-            var metadataFile = new Models.Internal.MetadataFile
+            var metadataFile = new Models.Metadata.MetadataFile
             {
-                [Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
+                [Models.Metadata.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
             };
 
             if (item?.Game != null && item.Game.Any())
             {
-                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.Game
+                metadataFile[Models.Metadata.MetadataFile.MachineKey] = item.Game
                     .Where(g => g != null)
                     .Select(ConvertMachineToInternalModel)
                     .ToArray();
@@ -59,56 +59,56 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.M1"/> to <cref="Models.Internal.Header"/>
+        /// Convert from <cref="Models.Listxml.M1"/> to <cref="Models.Metadata.Header"/>
         /// </summary>
-        private static Models.Internal.Header ConvertHeaderToInternalModel(M1 item)
+        private static Models.Metadata.Header ConvertHeaderToInternalModel(M1 item)
         {
-            var header = new Models.Internal.Header
+            var header = new Models.Metadata.Header
             {
-                [Models.Internal.Header.VersionKey] = item.Version,
+                [Models.Metadata.Header.VersionKey] = item.Version,
             };
             return header;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.Mame"/> to <cref="Models.Internal.Header"/>
+        /// Convert from <cref="Models.Listxml.Mame"/> to <cref="Models.Metadata.Header"/>
         /// </summary>
-        private static Models.Internal.Header ConvertHeaderToInternalModel(Mame item)
+        private static Models.Metadata.Header ConvertHeaderToInternalModel(Mame item)
         {
-            var header = new Models.Internal.Header
+            var header = new Models.Metadata.Header
             {
-                [Models.Internal.Header.BuildKey] = item.Build,
-                [Models.Internal.Header.DebugKey] = item.Debug,
-                [Models.Internal.Header.MameConfigKey] = item.MameConfig,
+                [Models.Metadata.Header.BuildKey] = item.Build,
+                [Models.Metadata.Header.DebugKey] = item.Debug,
+                [Models.Metadata.Header.MameConfigKey] = item.MameConfig,
             };
             return header;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.GameBase"/> to <cref="Models.Internal.Machine"/>
+        /// Convert from <cref="Models.Listxml.GameBase"/> to <cref="Models.Metadata.Machine"/>
         /// </summary>
-        private static Models.Internal.Machine ConvertMachineToInternalModel(GameBase item)
+        private static Models.Metadata.Machine ConvertMachineToInternalModel(GameBase item)
         {
-            var machine = new Models.Internal.Machine
+            var machine = new Models.Metadata.Machine
             {
-                [Models.Internal.Machine.NameKey] = item.Name,
-                [Models.Internal.Machine.SourceFileKey] = item.SourceFile,
-                [Models.Internal.Machine.IsBiosKey] = item.IsBios,
-                [Models.Internal.Machine.IsDeviceKey] = item.IsDevice,
-                [Models.Internal.Machine.IsMechanicalKey] = item.IsMechanical,
-                [Models.Internal.Machine.RunnableKey] = item.Runnable,
-                [Models.Internal.Machine.CloneOfKey] = item.CloneOf,
-                [Models.Internal.Machine.RomOfKey] = item.RomOf,
-                [Models.Internal.Machine.SampleOfKey] = item.SampleOf,
-                [Models.Internal.Machine.DescriptionKey] = item.Description,
-                [Models.Internal.Machine.YearKey] = item.Year,
-                [Models.Internal.Machine.ManufacturerKey] = item.Manufacturer,
-                [Models.Internal.Machine.HistoryKey] = item.History,
+                [Models.Metadata.Machine.NameKey] = item.Name,
+                [Models.Metadata.Machine.SourceFileKey] = item.SourceFile,
+                [Models.Metadata.Machine.IsBiosKey] = item.IsBios,
+                [Models.Metadata.Machine.IsDeviceKey] = item.IsDevice,
+                [Models.Metadata.Machine.IsMechanicalKey] = item.IsMechanical,
+                [Models.Metadata.Machine.RunnableKey] = item.Runnable,
+                [Models.Metadata.Machine.CloneOfKey] = item.CloneOf,
+                [Models.Metadata.Machine.RomOfKey] = item.RomOf,
+                [Models.Metadata.Machine.SampleOfKey] = item.SampleOf,
+                [Models.Metadata.Machine.DescriptionKey] = item.Description,
+                [Models.Metadata.Machine.YearKey] = item.Year,
+                [Models.Metadata.Machine.ManufacturerKey] = item.Manufacturer,
+                [Models.Metadata.Machine.HistoryKey] = item.History,
             };
 
             if (item.BiosSet != null && item.BiosSet.Any())
             {
-                machine[Models.Internal.Machine.BiosSetKey] = item.BiosSet
+                machine[Models.Metadata.Machine.BiosSetKey] = item.BiosSet
                     .Where(b => b != null)
                     .Select(ConvertToInternalModel)
                     .ToArray();
@@ -116,7 +116,7 @@ namespace SabreTools.Serialization
 
             if (item.Rom != null && item.Rom.Any())
             {
-                machine[Models.Internal.Machine.RomKey] = item.Rom
+                machine[Models.Metadata.Machine.RomKey] = item.Rom
                     .Where(r => r != null)
                     .Select(ConvertToInternalModel)
                     .ToArray();
@@ -124,7 +124,7 @@ namespace SabreTools.Serialization
 
             if (item.Disk != null && item.Disk.Any())
             {
-                machine[Models.Internal.Machine.DiskKey] = item.Disk
+                machine[Models.Metadata.Machine.DiskKey] = item.Disk
                     .Where(d => d != null)
                     .Select(ConvertToInternalModel)
                     .ToArray();
@@ -132,7 +132,7 @@ namespace SabreTools.Serialization
 
             if (item.DeviceRef != null && item.DeviceRef.Any())
             {
-                machine[Models.Internal.Machine.DeviceRefKey] = item.DeviceRef
+                machine[Models.Metadata.Machine.DeviceRefKey] = item.DeviceRef
                     .Where(d => d != null)
                     .Select(ConvertToInternalModel)
                     .ToArray();
@@ -140,7 +140,7 @@ namespace SabreTools.Serialization
 
             if (item.Sample != null && item.Sample.Any())
             {
-                machine[Models.Internal.Machine.SampleKey] = item.Sample
+                machine[Models.Metadata.Machine.SampleKey] = item.Sample
                     .Where(s => s != null)
                     .Select(ConvertToInternalModel)
                     .ToArray();
@@ -148,7 +148,7 @@ namespace SabreTools.Serialization
 
             if (item.Chip != null && item.Chip.Any())
             {
-                machine[Models.Internal.Machine.ChipKey] = item.Chip
+                machine[Models.Metadata.Machine.ChipKey] = item.Chip
                     .Where(c => c != null)
                     .Select(ConvertToInternalModel)
                     .ToArray();
@@ -156,7 +156,7 @@ namespace SabreTools.Serialization
 
             if (item.Display != null && item.Display.Any())
             {
-                machine[Models.Internal.Machine.DisplayKey] = item.Display
+                machine[Models.Metadata.Machine.DisplayKey] = item.Display
                     .Where(d => d != null)
                     .Select(ConvertToInternalModel)
                     .ToArray();
@@ -164,21 +164,21 @@ namespace SabreTools.Serialization
 
             if (item.Video != null && item.Video.Any())
             {
-                machine[Models.Internal.Machine.VideoKey] = item.Video
+                machine[Models.Metadata.Machine.VideoKey] = item.Video
                     .Where(v => v != null)
                     .Select(ConvertToInternalModel)
                     .ToArray();
             }
 
             if (item.Sound != null)
-                machine[Models.Internal.Machine.SoundKey] = ConvertToInternalModel(item.Sound);
+                machine[Models.Metadata.Machine.SoundKey] = ConvertToInternalModel(item.Sound);
 
             if (item.Input != null)
-                machine[Models.Internal.Machine.InputKey] = ConvertToInternalModel(item.Input);
+                machine[Models.Metadata.Machine.InputKey] = ConvertToInternalModel(item.Input);
 
             if (item.DipSwitch != null && item.DipSwitch.Any())
             {
-                machine[Models.Internal.Machine.DipSwitchKey] = item.DipSwitch
+                machine[Models.Metadata.Machine.DipSwitchKey] = item.DipSwitch
                     .Where(d => d != null)
                     .Select(ConvertToInternalModel)
                     .ToArray();
@@ -186,7 +186,7 @@ namespace SabreTools.Serialization
 
             if (item.Configuration != null && item.Configuration.Any())
             {
-                machine[Models.Internal.Machine.ConfigurationKey] = item.Configuration
+                machine[Models.Metadata.Machine.ConfigurationKey] = item.Configuration
                     .Where(c => c != null)
                     .Select(ConvertToInternalModel)
                     .ToArray();
@@ -194,7 +194,7 @@ namespace SabreTools.Serialization
 
             if (item.Port != null && item.Port.Any())
             {
-                machine[Models.Internal.Machine.PortKey] = item.Port
+                machine[Models.Metadata.Machine.PortKey] = item.Port
                     .Where(p => p != null)
                     .Select(ConvertToInternalModel)
                     .ToArray();
@@ -202,18 +202,18 @@ namespace SabreTools.Serialization
 
             if (item.Adjuster != null && item.Adjuster.Any())
             {
-                machine[Models.Internal.Machine.AdjusterKey] = item.Adjuster
+                machine[Models.Metadata.Machine.AdjusterKey] = item.Adjuster
                     .Where(a => a != null)
                     .Select(ConvertToInternalModel)
                     .ToArray();
             }
 
             if (item.Driver != null)
-                machine[Models.Internal.Machine.DriverKey] = ConvertToInternalModel(item.Driver);
+                machine[Models.Metadata.Machine.DriverKey] = ConvertToInternalModel(item.Driver);
 
             if (item.Feature != null && item.Feature.Any())
             {
-                machine[Models.Internal.Machine.FeatureKey] = item.Feature
+                machine[Models.Metadata.Machine.FeatureKey] = item.Feature
                     .Where(f => f != null)
                     .Select(ConvertToInternalModel)
                     .ToArray();
@@ -221,7 +221,7 @@ namespace SabreTools.Serialization
 
             if (item.Device != null && item.Device.Any())
             {
-                machine[Models.Internal.Machine.DeviceKey] = item.Device
+                machine[Models.Metadata.Machine.DeviceKey] = item.Device
                     .Where(d => d != null)
                     .Select(ConvertToInternalModel)
                     .ToArray();
@@ -229,7 +229,7 @@ namespace SabreTools.Serialization
 
             if (item.Slot != null && item.Slot.Any())
             {
-                machine[Models.Internal.Machine.SlotKey] = item.Slot
+                machine[Models.Metadata.Machine.SlotKey] = item.Slot
                     .Where(s => s != null)
                     .Select(ConvertToInternalModel)
                     .ToArray();
@@ -237,7 +237,7 @@ namespace SabreTools.Serialization
 
             if (item.SoftwareList != null && item.SoftwareList.Any())
             {
-                machine[Models.Internal.Machine.SoftwareListKey] = item.SoftwareList
+                machine[Models.Metadata.Machine.SoftwareListKey] = item.SoftwareList
                     .Where(s => s != null)
                     .Select(ConvertToInternalModel)
                     .ToArray();
@@ -245,7 +245,7 @@ namespace SabreTools.Serialization
 
             if (item.RamOption != null && item.RamOption.Any())
             {
-                machine[Models.Internal.Machine.RamOptionKey] = item.RamOption
+                machine[Models.Metadata.Machine.RamOptionKey] = item.RamOption
                     .Where(r => r != null)
                     .Select(ConvertToInternalModel)
                     .ToArray();
@@ -255,97 +255,97 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.Adjuster"/> to <cref="Models.Internal.Adjuster"/>
+        /// Convert from <cref="Models.Listxml.Adjuster"/> to <cref="Models.Metadata.Adjuster"/>
         /// </summary>
-        private static Models.Internal.Adjuster ConvertToInternalModel(Adjuster item)
+        private static Models.Metadata.Adjuster ConvertToInternalModel(Adjuster item)
         {
-            var adjuster = new Models.Internal.Adjuster
+            var adjuster = new Models.Metadata.Adjuster
             {
-                [Models.Internal.Adjuster.NameKey] = item.Name,
-                [Models.Internal.Adjuster.DefaultKey] = item.Default,
+                [Models.Metadata.Adjuster.NameKey] = item.Name,
+                [Models.Metadata.Adjuster.DefaultKey] = item.Default,
             };
 
             if (item.Condition != null)
-                adjuster[Models.Internal.Adjuster.ConditionKey] = ConvertToInternalModel(item.Condition);
+                adjuster[Models.Metadata.Adjuster.ConditionKey] = ConvertToInternalModel(item.Condition);
 
             return adjuster;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.Analog"/> to <cref="Models.Internal.Analog"/>
+        /// Convert from <cref="Models.Listxml.Analog"/> to <cref="Models.Metadata.Analog"/>
         /// </summary>
-        private static Models.Internal.Analog ConvertToInternalModel(Analog item)
+        private static Models.Metadata.Analog ConvertToInternalModel(Analog item)
         {
-            var analog = new Models.Internal.Analog
+            var analog = new Models.Metadata.Analog
             {
-                [Models.Internal.Analog.MaskKey] = item.Mask,
+                [Models.Metadata.Analog.MaskKey] = item.Mask,
             };
             return analog;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.BiosSet"/> to <cref="Models.Internal.BiosSet"/>
+        /// Convert from <cref="Models.Listxml.BiosSet"/> to <cref="Models.Metadata.BiosSet"/>
         /// </summary>
-        private static Models.Internal.BiosSet ConvertToInternalModel(BiosSet item)
+        private static Models.Metadata.BiosSet ConvertToInternalModel(BiosSet item)
         {
-            var biosset = new Models.Internal.BiosSet
+            var biosset = new Models.Metadata.BiosSet
             {
-                [Models.Internal.BiosSet.NameKey] = item.Name,
-                [Models.Internal.BiosSet.DescriptionKey] = item.Description,
-                [Models.Internal.BiosSet.DefaultKey] = item.Default,
+                [Models.Metadata.BiosSet.NameKey] = item.Name,
+                [Models.Metadata.BiosSet.DescriptionKey] = item.Description,
+                [Models.Metadata.BiosSet.DefaultKey] = item.Default,
             };
             return biosset;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.Chip"/> to <cref="Models.Internal.Chip"/>
+        /// Convert from <cref="Models.Listxml.Chip"/> to <cref="Models.Metadata.Chip"/>
         /// </summary>
-        private static Models.Internal.Chip ConvertToInternalModel(Chip item)
+        private static Models.Metadata.Chip ConvertToInternalModel(Chip item)
         {
-            var chip = new Models.Internal.Chip
+            var chip = new Models.Metadata.Chip
             {
-                [Models.Internal.Chip.NameKey] = item.Name,
-                [Models.Internal.Chip.TagKey] = item.Tag,
-                [Models.Internal.Chip.TypeKey] = item.Type,
-                [Models.Internal.Chip.SoundOnlyKey] = item.SoundOnly,
-                [Models.Internal.Chip.ClockKey] = item.Clock,
+                [Models.Metadata.Chip.NameKey] = item.Name,
+                [Models.Metadata.Chip.TagKey] = item.Tag,
+                [Models.Metadata.Chip.TypeKey] = item.Type,
+                [Models.Metadata.Chip.SoundOnlyKey] = item.SoundOnly,
+                [Models.Metadata.Chip.ClockKey] = item.Clock,
             };
             return chip;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.Condition"/> to <cref="Models.Internal.Condition"/>
+        /// Convert from <cref="Models.Listxml.Condition"/> to <cref="Models.Metadata.Condition"/>
         /// </summary>
-        private static Models.Internal.Condition ConvertToInternalModel(Condition item)
+        private static Models.Metadata.Condition ConvertToInternalModel(Condition item)
         {
-            var condition = new Models.Internal.Condition
+            var condition = new Models.Metadata.Condition
             {
-                [Models.Internal.Condition.TagKey] = item.Tag,
-                [Models.Internal.Condition.MaskKey] = item.Mask,
-                [Models.Internal.Condition.RelationKey] = item.Relation,
-                [Models.Internal.Condition.ValueKey] = item.Value,
+                [Models.Metadata.Condition.TagKey] = item.Tag,
+                [Models.Metadata.Condition.MaskKey] = item.Mask,
+                [Models.Metadata.Condition.RelationKey] = item.Relation,
+                [Models.Metadata.Condition.ValueKey] = item.Value,
             };
             return condition;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.Configuration"/> to <cref="Models.Internal.Configuration"/>
+        /// Convert from <cref="Models.Listxml.Configuration"/> to <cref="Models.Metadata.Configuration"/>
         /// </summary>
-        private static Models.Internal.Configuration ConvertToInternalModel(Configuration item)
+        private static Models.Metadata.Configuration ConvertToInternalModel(Configuration item)
         {
-            var configuration = new Models.Internal.Configuration
+            var configuration = new Models.Metadata.Configuration
             {
-                [Models.Internal.Configuration.NameKey] = item.Name,
-                [Models.Internal.Configuration.TagKey] = item.Tag,
-                [Models.Internal.Configuration.MaskKey] = item.Mask,
+                [Models.Metadata.Configuration.NameKey] = item.Name,
+                [Models.Metadata.Configuration.TagKey] = item.Tag,
+                [Models.Metadata.Configuration.MaskKey] = item.Mask,
             };
 
             if (item.Condition != null)
-                configuration[Models.Internal.Configuration.ConditionKey] = ConvertToInternalModel(item.Condition);
+                configuration[Models.Metadata.Configuration.ConditionKey] = ConvertToInternalModel(item.Condition);
 
             if (item.ConfLocation != null && item.ConfLocation.Any())
             {
-                configuration[Models.Internal.Configuration.ConfLocationKey] = item.ConfLocation
+                configuration[Models.Metadata.Configuration.ConfLocationKey] = item.ConfLocation
                     .Where(c => c != null)
                     .Select(ConvertToInternalModel)
                     .ToArray();
@@ -353,7 +353,7 @@ namespace SabreTools.Serialization
 
             if (item.ConfSetting != null && item.ConfSetting.Any())
             {
-                configuration[Models.Internal.Configuration.ConfSettingKey] = item.ConfSetting
+                configuration[Models.Metadata.Configuration.ConfSettingKey] = item.ConfSetting
                     .Where(c => c != null)
                     .Select(ConvertToInternalModel)
                     .ToArray();
@@ -363,80 +363,80 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.ConfLocation"/> to <cref="Models.Internal.ConfLocation"/>
+        /// Convert from <cref="Models.Listxml.ConfLocation"/> to <cref="Models.Metadata.ConfLocation"/>
         /// </summary>
-        private static Models.Internal.ConfLocation ConvertToInternalModel(ConfLocation item)
+        private static Models.Metadata.ConfLocation ConvertToInternalModel(ConfLocation item)
         {
-            var confLocation = new Models.Internal.ConfLocation
+            var confLocation = new Models.Metadata.ConfLocation
             {
-                [Models.Internal.ConfLocation.NameKey] = item.Name,
-                [Models.Internal.ConfLocation.NumberKey] = item.Number,
-                [Models.Internal.ConfLocation.InvertedKey] = item.Inverted,
+                [Models.Metadata.ConfLocation.NameKey] = item.Name,
+                [Models.Metadata.ConfLocation.NumberKey] = item.Number,
+                [Models.Metadata.ConfLocation.InvertedKey] = item.Inverted,
             };
             return confLocation;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.ConfSetting"/> to <cref="Models.Internal.ConfSetting"/>
+        /// Convert from <cref="Models.Listxml.ConfSetting"/> to <cref="Models.Metadata.ConfSetting"/>
         /// </summary>
-        private static Models.Internal.ConfSetting ConvertToInternalModel(ConfSetting item)
+        private static Models.Metadata.ConfSetting ConvertToInternalModel(ConfSetting item)
         {
-            var confSetting = new Models.Internal.ConfSetting
+            var confSetting = new Models.Metadata.ConfSetting
             {
-                [Models.Internal.ConfSetting.NameKey] = item.Name,
-                [Models.Internal.ConfSetting.ValueKey] = item.Value,
-                [Models.Internal.ConfSetting.DefaultKey] = item.Default,
+                [Models.Metadata.ConfSetting.NameKey] = item.Name,
+                [Models.Metadata.ConfSetting.ValueKey] = item.Value,
+                [Models.Metadata.ConfSetting.DefaultKey] = item.Default,
             };
 
             if (item.Condition != null)
-                confSetting[Models.Internal.ConfSetting.ConditionKey] = ConvertToInternalModel(item.Condition);
+                confSetting[Models.Metadata.ConfSetting.ConditionKey] = ConvertToInternalModel(item.Condition);
 
             return confSetting;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.Control"/> to <cref="Models.Internal.Control"/>
+        /// Convert from <cref="Models.Listxml.Control"/> to <cref="Models.Metadata.Control"/>
         /// </summary>
-        private static Models.Internal.Control ConvertToInternalModel(Control item)
+        private static Models.Metadata.Control ConvertToInternalModel(Control item)
         {
-            var control = new Models.Internal.Control
+            var control = new Models.Metadata.Control
             {
-                [Models.Internal.Control.TypeKey] = item.Type,
-                [Models.Internal.Control.PlayerKey] = item.Player,
-                [Models.Internal.Control.ButtonsKey] = item.Buttons,
-                [Models.Internal.Control.ReqButtonsKey] = item.ReqButtons,
-                [Models.Internal.Control.MinimumKey] = item.Minimum,
-                [Models.Internal.Control.MaximumKey] = item.Maximum,
-                [Models.Internal.Control.SensitivityKey] = item.Sensitivity,
-                [Models.Internal.Control.KeyDeltaKey] = item.KeyDelta,
-                [Models.Internal.Control.ReverseKey] = item.Reverse,
-                [Models.Internal.Control.WaysKey] = item.Ways,
-                [Models.Internal.Control.Ways2Key] = item.Ways2,
-                [Models.Internal.Control.Ways3Key] = item.Ways3,
+                [Models.Metadata.Control.TypeKey] = item.Type,
+                [Models.Metadata.Control.PlayerKey] = item.Player,
+                [Models.Metadata.Control.ButtonsKey] = item.Buttons,
+                [Models.Metadata.Control.ReqButtonsKey] = item.ReqButtons,
+                [Models.Metadata.Control.MinimumKey] = item.Minimum,
+                [Models.Metadata.Control.MaximumKey] = item.Maximum,
+                [Models.Metadata.Control.SensitivityKey] = item.Sensitivity,
+                [Models.Metadata.Control.KeyDeltaKey] = item.KeyDelta,
+                [Models.Metadata.Control.ReverseKey] = item.Reverse,
+                [Models.Metadata.Control.WaysKey] = item.Ways,
+                [Models.Metadata.Control.Ways2Key] = item.Ways2,
+                [Models.Metadata.Control.Ways3Key] = item.Ways3,
             };
             return control;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.Device"/> to <cref="Models.Internal.Device"/>
+        /// Convert from <cref="Models.Listxml.Device"/> to <cref="Models.Metadata.Device"/>
         /// </summary>
-        private static Models.Internal.Device ConvertToInternalModel(Device item)
+        private static Models.Metadata.Device ConvertToInternalModel(Device item)
         {
-            var device = new Models.Internal.Device
+            var device = new Models.Metadata.Device
             {
-                [Models.Internal.Device.TypeKey] = item.Type,
-                [Models.Internal.Device.TagKey] = item.Tag,
-                [Models.Internal.Device.FixedImageKey] = item.FixedImage,
-                [Models.Internal.Device.MandatoryKey] = item.Mandatory,
-                [Models.Internal.Device.InterfaceKey] = item.Interface,
+                [Models.Metadata.Device.TypeKey] = item.Type,
+                [Models.Metadata.Device.TagKey] = item.Tag,
+                [Models.Metadata.Device.FixedImageKey] = item.FixedImage,
+                [Models.Metadata.Device.MandatoryKey] = item.Mandatory,
+                [Models.Metadata.Device.InterfaceKey] = item.Interface,
             };
 
             if (item.Instance != null)
-                device[Models.Internal.Device.InstanceKey] = ConvertToInternalModel(item.Instance);
+                device[Models.Metadata.Device.InstanceKey] = ConvertToInternalModel(item.Instance);
 
             if (item.Extension != null && item.Extension.Any())
             {
-                device[Models.Internal.Device.ExtensionKey] = item.Extension
+                device[Models.Metadata.Device.ExtensionKey] = item.Extension
                     .Where(e => e != null)
                     .Select(ConvertToInternalModel)
                     .ToArray();
@@ -446,49 +446,49 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.DeviceRef"/> to <cref="Models.Internal.DeviceRef"/>
+        /// Convert from <cref="Models.Listxml.DeviceRef"/> to <cref="Models.Metadata.DeviceRef"/>
         /// </summary>
-        private static Models.Internal.DeviceRef ConvertToInternalModel(DeviceRef item)
+        private static Models.Metadata.DeviceRef ConvertToInternalModel(DeviceRef item)
         {
-            var deviceRef = new Models.Internal.DeviceRef
+            var deviceRef = new Models.Metadata.DeviceRef
             {
-                [Models.Internal.DeviceRef.NameKey] = item.Name,
+                [Models.Metadata.DeviceRef.NameKey] = item.Name,
             };
             return deviceRef;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.DipLocation"/> to <cref="Models.Internal.DipLocation"/>
+        /// Convert from <cref="Models.Listxml.DipLocation"/> to <cref="Models.Metadata.DipLocation"/>
         /// </summary>
-        private static Models.Internal.DipLocation ConvertToInternalModel(DipLocation item)
+        private static Models.Metadata.DipLocation ConvertToInternalModel(DipLocation item)
         {
-            var dipLocation = new Models.Internal.DipLocation
+            var dipLocation = new Models.Metadata.DipLocation
             {
-                [Models.Internal.DipLocation.NameKey] = item.Name,
-                [Models.Internal.DipLocation.NumberKey] = item.Number,
-                [Models.Internal.DipLocation.InvertedKey] = item.Inverted,
+                [Models.Metadata.DipLocation.NameKey] = item.Name,
+                [Models.Metadata.DipLocation.NumberKey] = item.Number,
+                [Models.Metadata.DipLocation.InvertedKey] = item.Inverted,
             };
             return dipLocation;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.DipSwitch"/> to <cref="Models.Internal.DipSwitch"/>
+        /// Convert from <cref="Models.Listxml.DipSwitch"/> to <cref="Models.Metadata.DipSwitch"/>
         /// </summary>
-        private static Models.Internal.DipSwitch ConvertToInternalModel(DipSwitch item)
+        private static Models.Metadata.DipSwitch ConvertToInternalModel(DipSwitch item)
         {
-            var dipSwitch = new Models.Internal.DipSwitch
+            var dipSwitch = new Models.Metadata.DipSwitch
             {
-                [Models.Internal.DipSwitch.NameKey] = item.Name,
-                [Models.Internal.DipSwitch.TagKey] = item.Tag,
-                [Models.Internal.DipSwitch.MaskKey] = item.Mask,
+                [Models.Metadata.DipSwitch.NameKey] = item.Name,
+                [Models.Metadata.DipSwitch.TagKey] = item.Tag,
+                [Models.Metadata.DipSwitch.MaskKey] = item.Mask,
             };
 
             if (item.Condition != null)
-                dipSwitch[Models.Internal.DipSwitch.ConditionKey] = ConvertToInternalModel(item.Condition);
+                dipSwitch[Models.Metadata.DipSwitch.ConditionKey] = ConvertToInternalModel(item.Condition);
 
             if (item.DipLocation != null && item.DipLocation.Any())
             {
-                dipSwitch[Models.Internal.DipSwitch.DipLocationKey] = item.DipLocation
+                dipSwitch[Models.Metadata.DipSwitch.DipLocationKey] = item.DipLocation
                     .Where(d => d != null)
                     .Select(ConvertToInternalModel)
                     .ToArray();
@@ -496,7 +496,7 @@ namespace SabreTools.Serialization
 
             if (item.DipValue != null && item.DipValue.Any())
             {
-                dipSwitch[Models.Internal.DipSwitch.DipValueKey] = item.DipValue
+                dipSwitch[Models.Metadata.DipSwitch.DipValueKey] = item.DipValue
                     .Where(d => d != null)
                     .Select(ConvertToInternalModel)
                     .ToArray();
@@ -506,134 +506,134 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.DipValue"/> to <cref="Models.Internal.DipValue"/>
+        /// Convert from <cref="Models.Listxml.DipValue"/> to <cref="Models.Metadata.DipValue"/>
         /// </summary>
-        private static Models.Internal.DipValue ConvertToInternalModel(DipValue item)
+        private static Models.Metadata.DipValue ConvertToInternalModel(DipValue item)
         {
-            var dipValue = new Models.Internal.DipValue
+            var dipValue = new Models.Metadata.DipValue
             {
-                [Models.Internal.DipValue.NameKey] = item.Name,
-                [Models.Internal.DipValue.ValueKey] = item.Value,
-                [Models.Internal.DipValue.DefaultKey] = item.Default,
+                [Models.Metadata.DipValue.NameKey] = item.Name,
+                [Models.Metadata.DipValue.ValueKey] = item.Value,
+                [Models.Metadata.DipValue.DefaultKey] = item.Default,
             };
 
             if (item.Condition != null)
-                dipValue[Models.Internal.DipValue.ConditionKey] = ConvertToInternalModel(item.Condition);
+                dipValue[Models.Metadata.DipValue.ConditionKey] = ConvertToInternalModel(item.Condition);
 
             return dipValue;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.Disk"/> to <cref="Models.Internal.Disk"/>
+        /// Convert from <cref="Models.Listxml.Disk"/> to <cref="Models.Metadata.Disk"/>
         /// </summary>
-        private static Models.Internal.Disk ConvertToInternalModel(Disk item)
+        private static Models.Metadata.Disk ConvertToInternalModel(Disk item)
         {
-            var disk = new Models.Internal.Disk
+            var disk = new Models.Metadata.Disk
             {
-                [Models.Internal.Disk.NameKey] = item.Name,
-                [Models.Internal.Disk.MD5Key] = item.MD5,
-                [Models.Internal.Disk.SHA1Key] = item.SHA1,
-                [Models.Internal.Disk.MergeKey] = item.Merge,
-                [Models.Internal.Disk.RegionKey] = item.Region,
-                [Models.Internal.Disk.IndexKey] = item.Index,
-                [Models.Internal.Disk.WritableKey] = item.Writable,
-                [Models.Internal.Disk.StatusKey] = item.Status,
-                [Models.Internal.Disk.OptionalKey] = item.Optional,
+                [Models.Metadata.Disk.NameKey] = item.Name,
+                [Models.Metadata.Disk.MD5Key] = item.MD5,
+                [Models.Metadata.Disk.SHA1Key] = item.SHA1,
+                [Models.Metadata.Disk.MergeKey] = item.Merge,
+                [Models.Metadata.Disk.RegionKey] = item.Region,
+                [Models.Metadata.Disk.IndexKey] = item.Index,
+                [Models.Metadata.Disk.WritableKey] = item.Writable,
+                [Models.Metadata.Disk.StatusKey] = item.Status,
+                [Models.Metadata.Disk.OptionalKey] = item.Optional,
             };
             return disk;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.Display"/> to <cref="Models.Internal.Display"/>
+        /// Convert from <cref="Models.Listxml.Display"/> to <cref="Models.Metadata.Display"/>
         /// </summary>
-        private static Models.Internal.Display ConvertToInternalModel(Display item)
+        private static Models.Metadata.Display ConvertToInternalModel(Display item)
         {
-            var display = new Models.Internal.Display
+            var display = new Models.Metadata.Display
             {
-                [Models.Internal.Display.TagKey] = item.Tag,
-                [Models.Internal.Display.TypeKey] = item.Type,
-                [Models.Internal.Display.RotateKey] = item.Rotate,
-                [Models.Internal.Display.FlipXKey] = item.FlipX,
-                [Models.Internal.Display.WidthKey] = item.Width,
-                [Models.Internal.Display.HeightKey] = item.Height,
-                [Models.Internal.Display.RefreshKey] = item.Refresh,
-                [Models.Internal.Display.PixClockKey] = item.PixClock,
-                [Models.Internal.Display.HTotalKey] = item.HTotal,
-                [Models.Internal.Display.HBEndKey] = item.HBEnd,
-                [Models.Internal.Display.HBStartKey] = item.HBStart,
-                [Models.Internal.Display.VTotalKey] = item.VTotal,
-                [Models.Internal.Display.VBEndKey] = item.VBEnd,
-                [Models.Internal.Display.VBStartKey] = item.VBStart,
+                [Models.Metadata.Display.TagKey] = item.Tag,
+                [Models.Metadata.Display.TypeKey] = item.Type,
+                [Models.Metadata.Display.RotateKey] = item.Rotate,
+                [Models.Metadata.Display.FlipXKey] = item.FlipX,
+                [Models.Metadata.Display.WidthKey] = item.Width,
+                [Models.Metadata.Display.HeightKey] = item.Height,
+                [Models.Metadata.Display.RefreshKey] = item.Refresh,
+                [Models.Metadata.Display.PixClockKey] = item.PixClock,
+                [Models.Metadata.Display.HTotalKey] = item.HTotal,
+                [Models.Metadata.Display.HBEndKey] = item.HBEnd,
+                [Models.Metadata.Display.HBStartKey] = item.HBStart,
+                [Models.Metadata.Display.VTotalKey] = item.VTotal,
+                [Models.Metadata.Display.VBEndKey] = item.VBEnd,
+                [Models.Metadata.Display.VBStartKey] = item.VBStart,
             };
             return display;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.Driver"/> to <cref="Models.Internal.Driver"/>
+        /// Convert from <cref="Models.Listxml.Driver"/> to <cref="Models.Metadata.Driver"/>
         /// </summary>
-        private static Models.Internal.Driver ConvertToInternalModel(Driver item)
+        private static Models.Metadata.Driver ConvertToInternalModel(Driver item)
         {
-            var driver = new Models.Internal.Driver
+            var driver = new Models.Metadata.Driver
             {
-                [Models.Internal.Driver.StatusKey] = item.Status,
-                [Models.Internal.Driver.ColorKey] = item.Color,
-                [Models.Internal.Driver.SoundKey] = item.Sound,
-                [Models.Internal.Driver.PaletteSizeKey] = item.PaletteSize,
-                [Models.Internal.Driver.EmulationKey] = item.Emulation,
-                [Models.Internal.Driver.CocktailKey] = item.Cocktail,
-                [Models.Internal.Driver.SaveStateKey] = item.SaveState,
-                [Models.Internal.Driver.RequiresArtworkKey] = item.RequiresArtwork,
-                [Models.Internal.Driver.UnofficialKey] = item.Unofficial,
-                [Models.Internal.Driver.NoSoundHardwareKey] = item.NoSoundHardware,
-                [Models.Internal.Driver.IncompleteKey] = item.Incomplete,
+                [Models.Metadata.Driver.StatusKey] = item.Status,
+                [Models.Metadata.Driver.ColorKey] = item.Color,
+                [Models.Metadata.Driver.SoundKey] = item.Sound,
+                [Models.Metadata.Driver.PaletteSizeKey] = item.PaletteSize,
+                [Models.Metadata.Driver.EmulationKey] = item.Emulation,
+                [Models.Metadata.Driver.CocktailKey] = item.Cocktail,
+                [Models.Metadata.Driver.SaveStateKey] = item.SaveState,
+                [Models.Metadata.Driver.RequiresArtworkKey] = item.RequiresArtwork,
+                [Models.Metadata.Driver.UnofficialKey] = item.Unofficial,
+                [Models.Metadata.Driver.NoSoundHardwareKey] = item.NoSoundHardware,
+                [Models.Metadata.Driver.IncompleteKey] = item.Incomplete,
             };
             return driver;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.Extension"/> to <cref="Models.Internal.Extension"/>
+        /// Convert from <cref="Models.Listxml.Extension"/> to <cref="Models.Metadata.Extension"/>
         /// </summary>
-        private static Models.Internal.Extension ConvertToInternalModel(Extension item)
+        private static Models.Metadata.Extension ConvertToInternalModel(Extension item)
         {
-            var extension = new Models.Internal.Extension
+            var extension = new Models.Metadata.Extension
             {
-                [Models.Internal.Extension.NameKey] = item.Name,
+                [Models.Metadata.Extension.NameKey] = item.Name,
             };
             return extension;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.Feature"/> to <cref="Models.Internal.Feature"/>
+        /// Convert from <cref="Models.Listxml.Feature"/> to <cref="Models.Metadata.Feature"/>
         /// </summary>
-        private static Models.Internal.Feature ConvertToInternalModel(Feature item)
+        private static Models.Metadata.Feature ConvertToInternalModel(Feature item)
         {
-            var feature = new Models.Internal.Feature
+            var feature = new Models.Metadata.Feature
             {
-                [Models.Internal.Feature.TypeKey] = item.Type,
-                [Models.Internal.Feature.StatusKey] = item.Status,
-                [Models.Internal.Feature.OverallKey] = item.Overall,
+                [Models.Metadata.Feature.TypeKey] = item.Type,
+                [Models.Metadata.Feature.StatusKey] = item.Status,
+                [Models.Metadata.Feature.OverallKey] = item.Overall,
             };
             return feature;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.Input"/> to <cref="Models.Internal.Input"/>
+        /// Convert from <cref="Models.Listxml.Input"/> to <cref="Models.Metadata.Input"/>
         /// </summary>
-        private static Models.Internal.Input ConvertToInternalModel(Input item)
+        private static Models.Metadata.Input ConvertToInternalModel(Input item)
         {
-            var input = new Models.Internal.Input
+            var input = new Models.Metadata.Input
             {
-                [Models.Internal.Input.ServiceKey] = item.Service,
-                [Models.Internal.Input.TiltKey] = item.Tilt,
-                [Models.Internal.Input.PlayersKey] = item.Players,
-                [Models.Internal.Input.ControlKey] = item.ControlAttr,
-                [Models.Internal.Input.ButtonsKey] = item.Buttons,
-                [Models.Internal.Input.CoinsKey] = item.Coins,
+                [Models.Metadata.Input.ServiceKey] = item.Service,
+                [Models.Metadata.Input.TiltKey] = item.Tilt,
+                [Models.Metadata.Input.PlayersKey] = item.Players,
+                [Models.Metadata.Input.ControlKey] = item.ControlAttr,
+                [Models.Metadata.Input.ButtonsKey] = item.Buttons,
+                [Models.Metadata.Input.CoinsKey] = item.Coins,
             };
 
             if (item.Control != null && item.Control.Any())
             {
-                input[Models.Internal.Input.ControlKey] = item.Control
+                input[Models.Metadata.Input.ControlKey] = item.Control
                     .Where(c => c != null)
                     .Select(ConvertToInternalModel)
                     .ToArray();
@@ -643,31 +643,31 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.Instance"/> to <cref="Models.Internal.Instance"/>
+        /// Convert from <cref="Models.Listxml.Instance"/> to <cref="Models.Metadata.Instance"/>
         /// </summary>
-        private static Models.Internal.Instance ConvertToInternalModel(Instance item)
+        private static Models.Metadata.Instance ConvertToInternalModel(Instance item)
         {
-            var instance = new Models.Internal.Instance
+            var instance = new Models.Metadata.Instance
             {
-                [Models.Internal.Instance.NameKey] = item.Name,
-                [Models.Internal.Instance.BriefNameKey] = item.BriefName,
+                [Models.Metadata.Instance.NameKey] = item.Name,
+                [Models.Metadata.Instance.BriefNameKey] = item.BriefName,
             };
             return instance;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.Port"/> to <cref="Models.Internal.Port"/>
+        /// Convert from <cref="Models.Listxml.Port"/> to <cref="Models.Metadata.Port"/>
         /// </summary>
-        private static Models.Internal.Port ConvertToInternalModel(Port item)
+        private static Models.Metadata.Port ConvertToInternalModel(Port item)
         {
-            var port = new Models.Internal.Port
+            var port = new Models.Metadata.Port
             {
-                [Models.Internal.Port.TagKey] = item.Tag,
+                [Models.Metadata.Port.TagKey] = item.Tag,
             };
 
             if (item.Analog != null && item.Analog.Any())
             {
-                port[Models.Internal.Port.AnalogKey] = item.Analog
+                port[Models.Metadata.Port.AnalogKey] = item.Analog
                     .Where(a => a != null)
                     .Select(ConvertToInternalModel)
                     .ToArray();
@@ -677,67 +677,67 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.RamOption"/> to <cref="Models.Internal.RamOption"/>
+        /// Convert from <cref="Models.Listxml.RamOption"/> to <cref="Models.Metadata.RamOption"/>
         /// </summary>
-        private static Models.Internal.RamOption ConvertToInternalModel(RamOption item)
+        private static Models.Metadata.RamOption ConvertToInternalModel(RamOption item)
         {
-            var ramOption = new Models.Internal.RamOption
+            var ramOption = new Models.Metadata.RamOption
             {
-                [Models.Internal.RamOption.NameKey] = item.Name,
-                [Models.Internal.RamOption.DefaultKey] = item.Default,
-                [Models.Internal.RamOption.ContentKey] = item.Content,
+                [Models.Metadata.RamOption.NameKey] = item.Name,
+                [Models.Metadata.RamOption.DefaultKey] = item.Default,
+                [Models.Metadata.RamOption.ContentKey] = item.Content,
             };
             return ramOption;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.Rom"/> to <cref="Models.Internal.Rom"/>
+        /// Convert from <cref="Models.Listxml.Rom"/> to <cref="Models.Metadata.Rom"/>
         /// </summary>
-        private static Models.Internal.Rom ConvertToInternalModel(Rom item)
+        private static Models.Metadata.Rom ConvertToInternalModel(Rom item)
         {
-            var rom = new Models.Internal.Rom
+            var rom = new Models.Metadata.Rom
             {
-                [Models.Internal.Rom.NameKey] = item.Name,
-                [Models.Internal.Rom.BiosKey] = item.Bios,
-                [Models.Internal.Rom.SizeKey] = item.Size,
-                [Models.Internal.Rom.CRCKey] = item.CRC,
-                [Models.Internal.Rom.SHA1Key] = item.SHA1,
-                [Models.Internal.Rom.MergeKey] = item.Merge,
-                [Models.Internal.Rom.RegionKey] = item.Region,
-                [Models.Internal.Rom.OffsetKey] = item.Offset,
-                [Models.Internal.Rom.StatusKey] = item.Status,
-                [Models.Internal.Rom.OptionalKey] = item.Optional,
-                [Models.Internal.Rom.DisposeKey] = item.Dispose,
-                [Models.Internal.Rom.SoundOnlyKey] = item.SoundOnly,
+                [Models.Metadata.Rom.NameKey] = item.Name,
+                [Models.Metadata.Rom.BiosKey] = item.Bios,
+                [Models.Metadata.Rom.SizeKey] = item.Size,
+                [Models.Metadata.Rom.CRCKey] = item.CRC,
+                [Models.Metadata.Rom.SHA1Key] = item.SHA1,
+                [Models.Metadata.Rom.MergeKey] = item.Merge,
+                [Models.Metadata.Rom.RegionKey] = item.Region,
+                [Models.Metadata.Rom.OffsetKey] = item.Offset,
+                [Models.Metadata.Rom.StatusKey] = item.Status,
+                [Models.Metadata.Rom.OptionalKey] = item.Optional,
+                [Models.Metadata.Rom.DisposeKey] = item.Dispose,
+                [Models.Metadata.Rom.SoundOnlyKey] = item.SoundOnly,
             };
             return rom;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.Sample"/> to <cref="Models.Internal.Sample"/>
+        /// Convert from <cref="Models.Listxml.Sample"/> to <cref="Models.Metadata.Sample"/>
         /// </summary>
-        private static Models.Internal.Sample ConvertToInternalModel(Sample item)
+        private static Models.Metadata.Sample ConvertToInternalModel(Sample item)
         {
-            var sample = new Models.Internal.Sample
+            var sample = new Models.Metadata.Sample
             {
-                [Models.Internal.Sample.NameKey] = item.Name,
+                [Models.Metadata.Sample.NameKey] = item.Name,
             };
             return sample;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.Slot"/> to <cref="Models.Internal.Slot"/>
+        /// Convert from <cref="Models.Listxml.Slot"/> to <cref="Models.Metadata.Slot"/>
         /// </summary>
-        private static Models.Internal.Slot ConvertToInternalModel(Slot item)
+        private static Models.Metadata.Slot ConvertToInternalModel(Slot item)
         {
-            var slot = new Models.Internal.Slot
+            var slot = new Models.Metadata.Slot
             {
-                [Models.Internal.Slot.NameKey] = item.Name,
+                [Models.Metadata.Slot.NameKey] = item.Name,
             };
 
             if (item.SlotOption != null && item.SlotOption.Any())
             {
-                slot[Models.Internal.Slot.SlotOptionKey] = item.SlotOption
+                slot[Models.Metadata.Slot.SlotOptionKey] = item.SlotOption
                     .Where(s => s != null)
                     .Select(ConvertToInternalModel)
                     .ToArray();
@@ -747,60 +747,60 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.SlotOption"/> to <cref="Models.Internal.SlotOption"/>
+        /// Convert from <cref="Models.Listxml.SlotOption"/> to <cref="Models.Metadata.SlotOption"/>
         /// </summary>
-        private static Models.Internal.SlotOption ConvertToInternalModel(SlotOption item)
+        private static Models.Metadata.SlotOption ConvertToInternalModel(SlotOption item)
         {
-            var slotOption = new Models.Internal.SlotOption
+            var slotOption = new Models.Metadata.SlotOption
             {
-                [Models.Internal.SlotOption.NameKey] = item.Name,
-                [Models.Internal.SlotOption.DevNameKey] = item.DevName,
-                [Models.Internal.SlotOption.DefaultKey] = item.Default,
+                [Models.Metadata.SlotOption.NameKey] = item.Name,
+                [Models.Metadata.SlotOption.DevNameKey] = item.DevName,
+                [Models.Metadata.SlotOption.DefaultKey] = item.Default,
             };
             return slotOption;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.SoftwareList"/> to <cref="Models.Internal.SoftwareList"/>
+        /// Convert from <cref="Models.Listxml.SoftwareList"/> to <cref="Models.Metadata.SoftwareList"/>
         /// </summary>
-        private static Models.Internal.SoftwareList ConvertToInternalModel(SoftwareList item)
+        private static Models.Metadata.SoftwareList ConvertToInternalModel(SoftwareList item)
         {
-            var softwareList = new Models.Internal.SoftwareList
+            var softwareList = new Models.Metadata.SoftwareList
             {
-                [Models.Internal.SoftwareList.TagKey] = item.Tag,
-                [Models.Internal.SoftwareList.NameKey] = item.Name,
-                [Models.Internal.SoftwareList.StatusKey] = item.Status,
-                [Models.Internal.SoftwareList.FilterKey] = item.Filter,
+                [Models.Metadata.SoftwareList.TagKey] = item.Tag,
+                [Models.Metadata.SoftwareList.NameKey] = item.Name,
+                [Models.Metadata.SoftwareList.StatusKey] = item.Status,
+                [Models.Metadata.SoftwareList.FilterKey] = item.Filter,
             };
             return softwareList;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.Sound"/> to <cref="Models.Internal.Sound"/>
+        /// Convert from <cref="Models.Listxml.Sound"/> to <cref="Models.Metadata.Sound"/>
         /// </summary>
-        private static Models.Internal.Sound ConvertToInternalModel(Sound item)
+        private static Models.Metadata.Sound ConvertToInternalModel(Sound item)
         {
-            var sound = new Models.Internal.Sound
+            var sound = new Models.Metadata.Sound
             {
-                [Models.Internal.Sound.ChannelsKey] = item.Channels,
+                [Models.Metadata.Sound.ChannelsKey] = item.Channels,
             };
             return sound;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listxml.Video"/> to <cref="Models.Internal.Video"/>
+        /// Convert from <cref="Models.Listxml.Video"/> to <cref="Models.Metadata.Video"/>
         /// </summary>
-        private static Models.Internal.Video ConvertToInternalModel(Video item)
+        private static Models.Metadata.Video ConvertToInternalModel(Video item)
         {
-            var video = new Models.Internal.Video
+            var video = new Models.Metadata.Video
             {
-                [Models.Internal.Video.ScreenKey] = item.Screen,
-                [Models.Internal.Video.OrientationKey] = item.Orientation,
-                [Models.Internal.Video.WidthKey] = item.Width,
-                [Models.Internal.Video.HeightKey] = item.Height,
-                [Models.Internal.Video.AspectXKey] = item.AspectX,
-                [Models.Internal.Video.AspectYKey] = item.AspectY,
-                [Models.Internal.Video.RefreshKey] = item.Refresh,
+                [Models.Metadata.Video.ScreenKey] = item.Screen,
+                [Models.Metadata.Video.OrientationKey] = item.Orientation,
+                [Models.Metadata.Video.WidthKey] = item.Width,
+                [Models.Metadata.Video.HeightKey] = item.Height,
+                [Models.Metadata.Video.AspectXKey] = item.AspectX,
+                [Models.Metadata.Video.AspectYKey] = item.AspectY,
+                [Models.Metadata.Video.RefreshKey] = item.Refresh,
             };
             return video;
         }

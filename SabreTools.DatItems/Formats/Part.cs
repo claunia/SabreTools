@@ -18,22 +18,22 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _internal.ReadString(Models.Internal.Part.NameKey);
-            set => _internal[Models.Internal.Part.NameKey] = value;
+            get => _internal.ReadString(Models.Metadata.Part.NameKey);
+            set => _internal[Models.Metadata.Part.NameKey] = value;
         }
 
         [JsonProperty("interface"), XmlElement("interface")]
         public string? Interface
         {
-            get => _internal.ReadString(Models.Internal.Part.InterfaceKey);
-            set => _internal[Models.Internal.Part.InterfaceKey] = value;
+            get => _internal.ReadString(Models.Metadata.Part.InterfaceKey);
+            set => _internal[Models.Metadata.Part.InterfaceKey] = value;
         }
     
         [JsonProperty("features", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("features")]
         public List<PartFeature>? Features
         {
-            get => _internal.Read<PartFeature[]>(Models.Internal.Part.FeatureKey)?.ToList();
-            set => _internal[Models.Internal.Part.FeatureKey] = value?.ToArray();
+            get => _internal.Read<PartFeature[]>(Models.Metadata.Part.FeatureKey)?.ToList();
+            set => _internal[Models.Metadata.Part.FeatureKey] = value?.ToArray();
         }
 
         [JsonIgnore]
@@ -58,7 +58,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Part()
         {
-            _internal = new Models.Internal.Part();
+            _internal = new Models.Metadata.Part();
             Machine = new Machine();
 
             Name = string.Empty;
@@ -81,7 +81,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.Part ?? new Models.Internal.Part(),
+                _internal = this._internal?.Clone() as Models.Metadata.Part ?? new Models.Metadata.Part(),
             };
         }
 

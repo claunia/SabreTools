@@ -176,21 +176,21 @@ namespace SabreTools.Serialization
         #region Internal
 
         /// <summary>
-        /// Convert from <cref="Models.RomCenter.MetadataFile"/> to <cref="Models.Internal.MetadataFile"/>
+        /// Convert from <cref="Models.RomCenter.MetadataFile"/> to <cref="Models.Metadata.MetadataFile"/>
         /// </summary>
-        public static Models.Internal.MetadataFile? ConvertToInternalModel(MetadataFile? item)
+        public static Models.Metadata.MetadataFile? ConvertToInternalModel(MetadataFile? item)
         {
             if (item == null)
                 return null;
             
-            var metadataFile = new Models.Internal.MetadataFile
+            var metadataFile = new Models.Metadata.MetadataFile
             {
-                [Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
+                [Models.Metadata.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
             };
 
             if (item?.Games?.Rom != null && item.Games.Rom.Any())
             {
-                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.Games.Rom
+                metadataFile[Models.Metadata.MetadataFile.MachineKey] = item.Games.Rom
                     .Where(r => r != null)
                     .Select(ConvertMachineToInternalModel).ToArray();
             }
@@ -199,71 +199,71 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.RomCenter.MetadataFile"/> to <cref="Models.Internal.Header"/>
+        /// Convert from <cref="Models.RomCenter.MetadataFile"/> to <cref="Models.Metadata.Header"/>
         /// </summary>
-        private static Models.Internal.Header ConvertHeaderToInternalModel(MetadataFile item)
+        private static Models.Metadata.Header ConvertHeaderToInternalModel(MetadataFile item)
         {
-            var header = new Models.Internal.Header();
+            var header = new Models.Metadata.Header();
 
             if (item.Credits != null)
             {
-                header[Models.Internal.Header.AuthorKey] = item.Credits.Author;
-                header[Models.Internal.Header.VersionKey] = item.Credits.Version;
-                header[Models.Internal.Header.EmailKey] = item.Credits.Email;
-                header[Models.Internal.Header.HomepageKey] = item.Credits.Homepage;
-                header[Models.Internal.Header.UrlKey] = item.Credits.Url;
-                header[Models.Internal.Header.DateKey] = item.Credits.Date;
-                header[Models.Internal.Header.CommentKey] = item.Credits.Comment;
+                header[Models.Metadata.Header.AuthorKey] = item.Credits.Author;
+                header[Models.Metadata.Header.VersionKey] = item.Credits.Version;
+                header[Models.Metadata.Header.EmailKey] = item.Credits.Email;
+                header[Models.Metadata.Header.HomepageKey] = item.Credits.Homepage;
+                header[Models.Metadata.Header.UrlKey] = item.Credits.Url;
+                header[Models.Metadata.Header.DateKey] = item.Credits.Date;
+                header[Models.Metadata.Header.CommentKey] = item.Credits.Comment;
             }
 
             if (item.Dat != null)
             {
-                header[Models.Internal.Header.DatVersionKey] = item.Dat.Version;
-                header[Models.Internal.Header.PluginKey] = item.Dat.Plugin;
+                header[Models.Metadata.Header.DatVersionKey] = item.Dat.Version;
+                header[Models.Metadata.Header.PluginKey] = item.Dat.Plugin;
 
                 if (item.Dat.Split == "yes" || item.Dat.Split == "1")
-                    header[Models.Internal.Header.ForceMergingKey] = "split";
+                    header[Models.Metadata.Header.ForceMergingKey] = "split";
                 else if (item.Dat.Merge == "yes" || item.Dat.Merge == "1")
-                    header[Models.Internal.Header.ForceMergingKey] = "merge";
+                    header[Models.Metadata.Header.ForceMergingKey] = "merge";
             }
 
             if (item.Emulator != null)
             {
-                header[Models.Internal.Header.RefNameKey] = item.Emulator.RefName;
-                header[Models.Internal.Header.EmulatorVersionKey] = item.Emulator.Version;
+                header[Models.Metadata.Header.RefNameKey] = item.Emulator.RefName;
+                header[Models.Metadata.Header.EmulatorVersionKey] = item.Emulator.Version;
             }
 
             return header;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.RomCenter.Game"/> to <cref="Models.Internal.Machine"/>
+        /// Convert from <cref="Models.RomCenter.Game"/> to <cref="Models.Metadata.Machine"/>
         /// </summary>
-        private static Models.Internal.Machine ConvertMachineToInternalModel(Rom item)
+        private static Models.Metadata.Machine ConvertMachineToInternalModel(Rom item)
         {
-            var machine = new Models.Internal.Machine
+            var machine = new Models.Metadata.Machine
             {
-                [Models.Internal.Machine.RomOfKey] = item.ParentName,
-                //[Models.Internal.Machine.ParentDescriptionKey] = item.ParentDescription, // This is unmappable
-                [Models.Internal.Machine.NameKey] = item.GameName,
-                [Models.Internal.Machine.DescriptionKey] = item.GameDescription,
-                [Models.Internal.Machine.RomKey] = new Models.Internal.Rom[] { ConvertToInternalModel(item) },
+                [Models.Metadata.Machine.RomOfKey] = item.ParentName,
+                //[Models.Metadata.Machine.ParentDescriptionKey] = item.ParentDescription, // This is unmappable
+                [Models.Metadata.Machine.NameKey] = item.GameName,
+                [Models.Metadata.Machine.DescriptionKey] = item.GameDescription,
+                [Models.Metadata.Machine.RomKey] = new Models.Metadata.Rom[] { ConvertToInternalModel(item) },
             };
 
             return machine;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.RomCenter.Rom"/> to <cref="Models.Internal.Rom"/>
+        /// Convert from <cref="Models.RomCenter.Rom"/> to <cref="Models.Metadata.Rom"/>
         /// </summary>
-        private static Models.Internal.Rom ConvertToInternalModel(Rom item)
+        private static Models.Metadata.Rom ConvertToInternalModel(Rom item)
         {
-            var rom = new Models.Internal.Rom
+            var rom = new Models.Metadata.Rom
             {
-                [Models.Internal.Rom.NameKey] = item.RomName,
-                [Models.Internal.Rom.CRCKey] = item.RomCRC,
-                [Models.Internal.Rom.SizeKey] = item.RomSize,
-                [Models.Internal.Rom.MergeKey] = item.MergeName,
+                [Models.Metadata.Rom.NameKey] = item.RomName,
+                [Models.Metadata.Rom.CRCKey] = item.RomCRC,
+                [Models.Metadata.Rom.SizeKey] = item.RomSize,
+                [Models.Metadata.Rom.MergeKey] = item.MergeName,
             };
             return rom;
         }

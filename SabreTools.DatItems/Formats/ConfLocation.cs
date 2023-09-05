@@ -18,8 +18,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _internal.ReadString(Models.Internal.ConfLocation.NameKey);
-            set => _internal[Models.Internal.ConfLocation.NameKey] = value;
+            get => _internal.ReadString(Models.Metadata.ConfLocation.NameKey);
+            set => _internal[Models.Metadata.ConfLocation.NameKey] = value;
         }
 
         /// <summary>
@@ -28,8 +28,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("number", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("number")]
         public long? Number
         {
-            get => _internal.ReadLong(Models.Internal.ConfLocation.NumberKey);
-            set => _internal[Models.Internal.ConfLocation.NumberKey] = value;
+            get => _internal.ReadLong(Models.Metadata.ConfLocation.NumberKey);
+            set => _internal[Models.Metadata.ConfLocation.NumberKey] = value;
         }
 
         [JsonIgnore]
@@ -41,8 +41,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("inverted", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("inverted")]
         public bool? Inverted
         {
-            get => _internal.ReadBool(Models.Internal.ConfLocation.InvertedKey);
-            set => _internal[Models.Internal.ConfLocation.InvertedKey] = value;
+            get => _internal.ReadBool(Models.Metadata.ConfLocation.InvertedKey);
+            set => _internal[Models.Metadata.ConfLocation.InvertedKey] = value;
         }
 
         [JsonIgnore]
@@ -67,7 +67,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public ConfLocation()
         {
-            _internal = new Models.Internal.ConfLocation();
+            _internal = new Models.Metadata.ConfLocation();
             Machine = new Machine();
 
             Name = string.Empty;
@@ -90,7 +90,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.ConfLocation ?? new Models.Internal.ConfLocation(),
+                _internal = this._internal?.Clone() as Models.Metadata.ConfLocation ?? new Models.Metadata.ConfLocation(),
             };
         }
 

@@ -21,8 +21,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public FeatureType Type
         {
-            get => _internal.ReadString(Models.Internal.Feature.FeatureTypeKey).AsFeatureType();
-            set => _internal[Models.Internal.Feature.FeatureTypeKey] = value.FromFeatureType();
+            get => _internal.ReadString(Models.Metadata.Feature.FeatureTypeKey).AsFeatureType();
+            set => _internal[Models.Metadata.Feature.FeatureTypeKey] = value.FromFeatureType();
         }
 
         [JsonIgnore]
@@ -35,8 +35,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public FeatureStatus Status
         {
-            get => _internal.ReadString(Models.Internal.Feature.StatusKey).AsFeatureStatus();
-            set => _internal[Models.Internal.Feature.StatusKey] = value.FromFeatureStatus();
+            get => _internal.ReadString(Models.Metadata.Feature.StatusKey).AsFeatureStatus();
+            set => _internal[Models.Metadata.Feature.StatusKey] = value.FromFeatureStatus();
         }
 
         [JsonIgnore]
@@ -49,8 +49,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public FeatureStatus Overall
         {
-            get => _internal.ReadString(Models.Internal.Feature.OverallKey).AsFeatureStatus();
-            set => _internal[Models.Internal.Feature.OverallKey] = value.FromFeatureStatus();
+            get => _internal.ReadString(Models.Metadata.Feature.OverallKey).AsFeatureStatus();
+            set => _internal[Models.Metadata.Feature.OverallKey] = value.FromFeatureStatus();
         }
 
         [JsonIgnore]
@@ -65,7 +65,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Feature()
         {
-            _internal = new Models.Internal.Feature();
+            _internal = new Models.Metadata.Feature();
             Machine = new Machine();
 
             ItemType = ItemType.Feature;
@@ -87,7 +87,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.Feature ?? new Models.Internal.Feature(),
+                _internal = this._internal?.Clone() as Models.Metadata.Feature ?? new Models.Metadata.Feature(),
             };
         }
 

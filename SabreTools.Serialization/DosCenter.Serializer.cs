@@ -149,21 +149,21 @@ namespace SabreTools.Serialization
         #region Internal
 
         /// <summary>
-        /// Convert from <cref="Models.DosCenter.MetadataFile"/> to <cref="Models.Internal.MetadataFile"/>
+        /// Convert from <cref="Models.DosCenter.MetadataFile"/> to <cref="Models.Metadata.MetadataFile"/>
         /// </summary>
-        public static Models.Internal.MetadataFile? ConvertToInternalModel(MetadataFile? item)
+        public static Models.Metadata.MetadataFile? ConvertToInternalModel(MetadataFile? item)
         {
             if (item == null)
                 return null;
             
-            var metadataFile = new Models.Internal.MetadataFile();
+            var metadataFile = new Models.Metadata.MetadataFile();
 
             if (item?.DosCenter != null)
-                metadataFile[Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item.DosCenter);
+                metadataFile[Models.Metadata.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item.DosCenter);
 
             if (item?.Game != null && item.Game.Any())
             {
-                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.Game
+                metadataFile[Models.Metadata.MetadataFile.MachineKey] = item.Game
                     .Where(g => g != null)
                     .Select(ConvertMachineToInternalModel)
                     .ToArray();
@@ -173,36 +173,36 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.DosCenter.DosCenter"/> to <cref="Models.Internal.Header"/>
+        /// Convert from <cref="Models.DosCenter.DosCenter"/> to <cref="Models.Metadata.Header"/>
         /// </summary>
-        private static Models.Internal.Header ConvertHeaderToInternalModel(Models.DosCenter.DosCenter item)
+        private static Models.Metadata.Header ConvertHeaderToInternalModel(Models.DosCenter.DosCenter item)
         {
-            var header = new Models.Internal.Header
+            var header = new Models.Metadata.Header
             {
-                [Models.Internal.Header.NameKey] = item.Name,
-                [Models.Internal.Header.DescriptionKey] = item.Description,
-                [Models.Internal.Header.VersionKey] = item.Version,
-                [Models.Internal.Header.DateKey] = item.Date,
-                [Models.Internal.Header.AuthorKey] = item.Author,
-                [Models.Internal.Header.HomepageKey] = item.Homepage,
-                [Models.Internal.Header.CommentKey] = item.Comment,
+                [Models.Metadata.Header.NameKey] = item.Name,
+                [Models.Metadata.Header.DescriptionKey] = item.Description,
+                [Models.Metadata.Header.VersionKey] = item.Version,
+                [Models.Metadata.Header.DateKey] = item.Date,
+                [Models.Metadata.Header.AuthorKey] = item.Author,
+                [Models.Metadata.Header.HomepageKey] = item.Homepage,
+                [Models.Metadata.Header.CommentKey] = item.Comment,
             };
             return header;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.DosCenter.Game"/> to <cref="Models.Internal.Machine"/>
+        /// Convert from <cref="Models.DosCenter.Game"/> to <cref="Models.Metadata.Machine"/>
         /// </summary>
-        private static Models.Internal.Machine ConvertMachineToInternalModel(Game item)
+        private static Models.Metadata.Machine ConvertMachineToInternalModel(Game item)
         {
-            var machine = new Models.Internal.Machine
+            var machine = new Models.Metadata.Machine
             {
-                [Models.Internal.Machine.NameKey] = item.Name,
+                [Models.Metadata.Machine.NameKey] = item.Name,
             };
 
             if (item.File != null && item.File.Any())
             {
-                machine[Models.Internal.Machine.RomKey] = item.File
+                machine[Models.Metadata.Machine.RomKey] = item.File
                     .Where(f => f != null)
                     .Select(ConvertToInternalModel)
                     .ToArray();
@@ -212,16 +212,16 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.DosCenter.File"/> to <cref="Models.Internal.Rom"/>
+        /// Convert from <cref="Models.DosCenter.File"/> to <cref="Models.Metadata.Rom"/>
         /// </summary>
-        private static Models.Internal.Rom ConvertToInternalModel(Models.DosCenter.File item)
+        private static Models.Metadata.Rom ConvertToInternalModel(Models.DosCenter.File item)
         {
-            var rom = new Models.Internal.Rom
+            var rom = new Models.Metadata.Rom
             {
-                [Models.Internal.Rom.NameKey] = item.Name,
-                [Models.Internal.Rom.SizeKey] = item.Size,
-                [Models.Internal.Rom.CRCKey] = item.CRC,
-                [Models.Internal.Rom.DateKey] = item.Date,
+                [Models.Metadata.Rom.NameKey] = item.Name,
+                [Models.Metadata.Rom.SizeKey] = item.Size,
+                [Models.Metadata.Rom.CRCKey] = item.CRC,
+                [Models.Metadata.Rom.DateKey] = item.Date,
             };
             return rom;
         }

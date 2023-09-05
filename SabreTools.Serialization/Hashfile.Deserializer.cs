@@ -145,15 +145,15 @@ namespace SabreTools.Serialization
         #region Internal
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.MetadataFile"/> to an array of <cref="Models.Hashfile.Hashfile"/>
+        /// Convert from <cref="Models.Metadata.MetadataFile"/> to an array of <cref="Models.Hashfile.Hashfile"/>
         /// </summary>
         /// <remarks>TODO: Add machine name prefixes to all items</remarks>
-        public static Models.Hashfile.Hashfile? ConvertFromInternalModel(Models.Internal.MetadataFile? item, Hash hash)
+        public static Models.Hashfile.Hashfile? ConvertFromInternalModel(Models.Metadata.MetadataFile? item, Hash hash)
         {
             if (item == null)
                 return null;
 
-            var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
+            var machines = item.Read<Models.Metadata.Machine[]>(Models.Metadata.MetadataFile.MachineKey);
             if (machines == null || !machines.Any())
                 return null;
 
@@ -208,14 +208,14 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.MetadataFile"/> to an array of <cref="Models.Hashfile.Hashfile"/>
+        /// Convert from <cref="Models.Metadata.MetadataFile"/> to an array of <cref="Models.Hashfile.Hashfile"/>
         /// </summary>
-        public static Models.Hashfile.Hashfile[]? ConvertArrayFromInternalModel(Models.Internal.MetadataFile? item, Hash hash)
+        public static Models.Hashfile.Hashfile[]? ConvertArrayFromInternalModel(Models.Metadata.MetadataFile? item, Hash hash)
         {
             if (item == null)
                 return null;
 
-            var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
+            var machines = item.Read<Models.Metadata.Machine[]>(Models.Metadata.MetadataFile.MachineKey);
             if (machines != null && machines.Any())
             {
                 return machines
@@ -228,11 +228,11 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.Hashfile.Hashfile"/>
+        /// Convert from <cref="Models.Metadata.Machine"/> to <cref="Models.Hashfile.Hashfile"/>
         /// </summary>
-        private static Models.Hashfile.Hashfile ConvertMachineFromInternalModel(Models.Internal.Machine item, Hash hash)
+        private static Models.Hashfile.Hashfile ConvertMachineFromInternalModel(Models.Metadata.Machine item, Hash hash)
         {
-            var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
+            var roms = item.Read<Models.Metadata.Rom[]>(Models.Metadata.Machine.RomKey);
             if (roms == null)
                 return new Models.Hashfile.Hashfile();
 
@@ -284,92 +284,92 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Hashfile.MD5"/>
+        /// Convert from <cref="Models.Metadata.Rom"/> to <cref="Models.Hashfile.MD5"/>
         /// </summary>
-        private static MD5 ConvertToMD5(Models.Internal.Rom item)
+        private static MD5 ConvertToMD5(Models.Metadata.Rom item)
         {
             var md5 = new MD5
             {
-                Hash = item.ReadString(Models.Internal.Rom.MD5Key),
-                File = item.ReadString(Models.Internal.Rom.NameKey),
+                Hash = item.ReadString(Models.Metadata.Rom.MD5Key),
+                File = item.ReadString(Models.Metadata.Rom.NameKey),
             };
             return md5;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Hashfile.SFV"/>
+        /// Convert from <cref="Models.Metadata.Rom"/> to <cref="Models.Hashfile.SFV"/>
         /// </summary>
-        private static SFV ConvertToSFV(Models.Internal.Rom item)
+        private static SFV ConvertToSFV(Models.Metadata.Rom item)
         {
             var sfv = new SFV
             {
-                File = item.ReadString(Models.Internal.Rom.NameKey),
-                Hash = item.ReadString(Models.Internal.Rom.CRCKey),
+                File = item.ReadString(Models.Metadata.Rom.NameKey),
+                Hash = item.ReadString(Models.Metadata.Rom.CRCKey),
             };
             return sfv;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Hashfile.SHA1"/>
+        /// Convert from <cref="Models.Metadata.Rom"/> to <cref="Models.Hashfile.SHA1"/>
         /// </summary>
-        private static SHA1 ConvertToSHA1(Models.Internal.Rom item)
+        private static SHA1 ConvertToSHA1(Models.Metadata.Rom item)
         {
             var sha1 = new SHA1
             {
-                Hash = item.ReadString(Models.Internal.Rom.SHA1Key),
-                File = item.ReadString(Models.Internal.Rom.NameKey),
+                Hash = item.ReadString(Models.Metadata.Rom.SHA1Key),
+                File = item.ReadString(Models.Metadata.Rom.NameKey),
             };
             return sha1;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Hashfile.SHA256"/>
+        /// Convert from <cref="Models.Metadata.Rom"/> to <cref="Models.Hashfile.SHA256"/>
         /// </summary>
-        private static SHA256 ConvertToSHA256(Models.Internal.Rom item)
+        private static SHA256 ConvertToSHA256(Models.Metadata.Rom item)
         {
             var sha256 = new SHA256
             {
-                Hash = item.ReadString(Models.Internal.Rom.SHA256Key),
-                File = item.ReadString(Models.Internal.Rom.NameKey),
+                Hash = item.ReadString(Models.Metadata.Rom.SHA256Key),
+                File = item.ReadString(Models.Metadata.Rom.NameKey),
             };
             return sha256;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Hashfile.SHA384"/>
+        /// Convert from <cref="Models.Metadata.Rom"/> to <cref="Models.Hashfile.SHA384"/>
         /// </summary>
-        private static SHA384 ConvertToSHA384(Models.Internal.Rom item)
+        private static SHA384 ConvertToSHA384(Models.Metadata.Rom item)
         {
             var sha384 = new SHA384
             {
-                Hash = item.ReadString(Models.Internal.Rom.SHA384Key),
-                File = item.ReadString(Models.Internal.Rom.NameKey),
+                Hash = item.ReadString(Models.Metadata.Rom.SHA384Key),
+                File = item.ReadString(Models.Metadata.Rom.NameKey),
             };
             return sha384;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Hashfile.SHA512"/>
+        /// Convert from <cref="Models.Metadata.Rom"/> to <cref="Models.Hashfile.SHA512"/>
         /// </summary>
-        private static SHA512 ConvertToSHA512(Models.Internal.Rom item)
+        private static SHA512 ConvertToSHA512(Models.Metadata.Rom item)
         {
             var sha512 = new SHA512
             {
-                Hash = item.ReadString(Models.Internal.Rom.SHA512Key),
-                File = item.ReadString(Models.Internal.Rom.NameKey),
+                Hash = item.ReadString(Models.Metadata.Rom.SHA512Key),
+                File = item.ReadString(Models.Metadata.Rom.NameKey),
             };
             return sha512;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Hashfile.SpamSum"/>
+        /// Convert from <cref="Models.Metadata.Rom"/> to <cref="Models.Hashfile.SpamSum"/>
         /// </summary>
-        private static SpamSum ConvertToSpamSum(Models.Internal.Rom item)
+        private static SpamSum ConvertToSpamSum(Models.Metadata.Rom item)
         {
             var spamsum = new SpamSum
             {
-                Hash = item.ReadString(Models.Internal.Rom.SpamSumKey),
-                File = item.ReadString(Models.Internal.Rom.NameKey),
+                Hash = item.ReadString(Models.Metadata.Rom.SpamSumKey),
+                File = item.ReadString(Models.Metadata.Rom.NameKey),
             };
             return spamsum;
         }

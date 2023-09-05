@@ -20,21 +20,21 @@ namespace SabreTools.Serialization
         #region Internal
 
         /// <summary>
-        /// Convert from <cref="Models.OpenMSX.SoftwareDb"/> to <cref="Models.Internal.MetadataFile"/>
+        /// Convert from <cref="Models.OpenMSX.SoftwareDb"/> to <cref="Models.Metadata.MetadataFile"/>
         /// </summary>
-        public static Models.Internal.MetadataFile? ConvertToInternalModel(SoftwareDb? item)
+        public static Models.Metadata.MetadataFile? ConvertToInternalModel(SoftwareDb? item)
         {
             if (item == null)
                 return null;
 
-            var metadataFile = new Models.Internal.MetadataFile
+            var metadataFile = new Models.Metadata.MetadataFile
             {
-                [Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
+                [Models.Metadata.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
             };
 
             if (item?.Software != null && item.Software.Any())
             {
-                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.Software
+                metadataFile[Models.Metadata.MetadataFile.MachineKey] = item.Software
                     .Where(s => s != null)
                     .Select(ConvertMachineToInternalModel)
                     .ToArray();
@@ -44,35 +44,35 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.OpenMSX.SoftwareDb"/> to <cref="Models.Internal.Header"/>
+        /// Convert from <cref="Models.OpenMSX.SoftwareDb"/> to <cref="Models.Metadata.Header"/>
         /// </summary>
-        public static Models.Internal.Header ConvertHeaderToInternalModel(SoftwareDb item)
+        public static Models.Metadata.Header ConvertHeaderToInternalModel(SoftwareDb item)
         {
-            var header = new Models.Internal.Header
+            var header = new Models.Metadata.Header
             {
-                [Models.Internal.Header.TimestampKey] = item.Timestamp,
+                [Models.Metadata.Header.TimestampKey] = item.Timestamp,
             };
             return header;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.OpenMSX.Software"/> to <cref="Models.Internal.Machine"/>
+        /// Convert from <cref="Models.OpenMSX.Software"/> to <cref="Models.Metadata.Machine"/>
         /// </summary>
-        public static Models.Internal.Machine ConvertMachineToInternalModel(Software item)
+        public static Models.Metadata.Machine ConvertMachineToInternalModel(Software item)
         {
-            var machine = new Models.Internal.Machine
+            var machine = new Models.Metadata.Machine
             {
-                [Models.Internal.Machine.NameKey] = item.Title,
-                [Models.Internal.Machine.GenMSXIDKey] = item.GenMSXID,
-                [Models.Internal.Machine.SystemKey] = item.System,
-                [Models.Internal.Machine.CompanyKey] = item.Company,
-                [Models.Internal.Machine.YearKey] = item.Year,
-                [Models.Internal.Machine.CountryKey] = item.Country,
+                [Models.Metadata.Machine.NameKey] = item.Title,
+                [Models.Metadata.Machine.GenMSXIDKey] = item.GenMSXID,
+                [Models.Metadata.Machine.SystemKey] = item.System,
+                [Models.Metadata.Machine.CompanyKey] = item.Company,
+                [Models.Metadata.Machine.YearKey] = item.Year,
+                [Models.Metadata.Machine.CountryKey] = item.Country,
             };
 
             if (item.Dump != null && item.Dump.Any())
             {
-                machine[Models.Internal.Machine.DumpKey] = item.Dump
+                machine[Models.Metadata.Machine.DumpKey] = item.Dump
                     .Where(d => d != null)
                     .Select(ConvertToInternalModel)
                     .ToArray();
@@ -82,29 +82,29 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.OpenMSX.Dump"/> to <cref="Models.Internal.Dump"/>
+        /// Convert from <cref="Models.OpenMSX.Dump"/> to <cref="Models.Metadata.Dump"/>
         /// </summary>
-        public static Models.Internal.Dump ConvertToInternalModel(Dump item)
+        public static Models.Metadata.Dump ConvertToInternalModel(Dump item)
         {
-            var dump = new Models.Internal.Dump();
+            var dump = new Models.Metadata.Dump();
 
             if (item.Original != null)
-                dump[Models.Internal.Dump.OriginalKey] = ConvertToInternalModel(item.Original);
+                dump[Models.Metadata.Dump.OriginalKey] = ConvertToInternalModel(item.Original);
 
             if (item.Rom != null)
             {
                 switch (item.Rom)
                 {
                     case Rom rom:
-                        dump[Models.Internal.Dump.RomKey] = ConvertToInternalModel(rom);
+                        dump[Models.Metadata.Dump.RomKey] = ConvertToInternalModel(rom);
                         break;
 
                     case MegaRom megaRom:
-                        dump[Models.Internal.Dump.MegaRomKey] = ConvertToInternalModel(megaRom);
+                        dump[Models.Metadata.Dump.MegaRomKey] = ConvertToInternalModel(megaRom);
                         break;
 
                     case SCCPlusCart sccPlusCart:
-                        dump[Models.Internal.Dump.SCCPlusCartKey] = ConvertToInternalModel(sccPlusCart);
+                        dump[Models.Metadata.Dump.SCCPlusCartKey] = ConvertToInternalModel(sccPlusCart);
                         break;
                 }
             }
@@ -113,29 +113,29 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.OpenMSX.Original"/> to <cref="Models.Internal.Rom"/>
+        /// Convert from <cref="Models.OpenMSX.Original"/> to <cref="Models.Metadata.Rom"/>
         /// </summary>
-        public static Models.Internal.Original ConvertToInternalModel(Original item)
+        public static Models.Metadata.Original ConvertToInternalModel(Original item)
         {
-            var original = new Models.Internal.Original
+            var original = new Models.Metadata.Original
             {
-                [Models.Internal.Original.ValueKey] = item.Value,
-                [Models.Internal.Original.ContentKey] = item.Content,
+                [Models.Metadata.Original.ValueKey] = item.Value,
+                [Models.Metadata.Original.ContentKey] = item.Content,
             };
             return original;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.OpenMSX.RomBase"/> to <cref="Models.Internal.Rom"/>
+        /// Convert from <cref="Models.OpenMSX.RomBase"/> to <cref="Models.Metadata.Rom"/>
         /// </summary>
-        public static Models.Internal.Rom ConvertToInternalModel(RomBase item)
+        public static Models.Metadata.Rom ConvertToInternalModel(RomBase item)
         {
-            var rom = new Models.Internal.Rom
+            var rom = new Models.Metadata.Rom
             {
-                [Models.Internal.Rom.StartKey] = item.Start,
-                [Models.Internal.Rom.TypeKey] = item.Type,
-                [Models.Internal.Rom.SHA1Key] = item.Hash,
-                [Models.Internal.Rom.RemarkKey] = item.Remark,
+                [Models.Metadata.Rom.StartKey] = item.Start,
+                [Models.Metadata.Rom.TypeKey] = item.Type,
+                [Models.Metadata.Rom.SHA1Key] = item.Hash,
+                [Models.Metadata.Rom.RemarkKey] = item.Remark,
             };
             return rom;
         }

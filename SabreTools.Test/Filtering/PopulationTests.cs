@@ -103,7 +103,7 @@ namespace SabreTools.Test.Filtering
             List<string> filters = null;
 
             // Setup the filter
-            var filter = new Filter();
+            var filter = new SabreTools.Filtering.Filter();
             filter.PopulateFiltersFromList(filters);
 
             // Check the filters
@@ -118,7 +118,7 @@ namespace SabreTools.Test.Filtering
             List<string> filters = new();
 
             // Setup the filter
-            var filter = new Filter();
+            var filter = new SabreTools.Filtering.Filter();
             filter.PopulateFiltersFromList(filters);
 
             // Check the filters
@@ -137,7 +137,7 @@ namespace SabreTools.Test.Filtering
             };
 
             // Setup the filter
-            var filter = new Filter();
+            var filter = new SabreTools.Filtering.Filter();
             filter.PopulateFiltersFromList(filters);
 
             // Check the filters
@@ -157,7 +157,7 @@ namespace SabreTools.Test.Filtering
             };
 
             // Setup the filter
-            var filter = new Filter();
+            var filter = new SabreTools.Filtering.Filter();
             filter.PopulateFiltersFromList(filters);
 
             // Check the filters

@@ -20,8 +20,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _internal.ReadString(Models.Internal.Adjuster.NameKey);
-            set => _internal[Models.Internal.Adjuster.NameKey] = value;
+            get => _internal.ReadString(Models.Metadata.Adjuster.NameKey);
+            set => _internal[Models.Metadata.Adjuster.NameKey] = value;
         }
 
         /// <summary>
@@ -30,8 +30,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("default")]
         public bool? Default
         {
-            get => _internal.ReadBool(Models.Internal.Adjuster.DefaultKey);
-            set => _internal[Models.Internal.Adjuster.DefaultKey] = value;
+            get => _internal.ReadBool(Models.Metadata.Adjuster.DefaultKey);
+            set => _internal[Models.Metadata.Adjuster.DefaultKey] = value;
         }
 
         [JsonIgnore]
@@ -43,8 +43,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("conditions")]
         public List<Condition>? Conditions
         {
-            get => _internal.Read<Condition[]>(Models.Internal.Adjuster.ConditionKey)?.ToList();
-            set => _internal[Models.Internal.Adjuster.ConditionKey] = value?.ToArray();
+            get => _internal.Read<Condition[]>(Models.Metadata.Adjuster.ConditionKey)?.ToList();
+            set => _internal[Models.Metadata.Adjuster.ConditionKey] = value?.ToArray();
         }
 
         [JsonIgnore]
@@ -69,7 +69,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Adjuster()
         {
-            _internal = new Models.Internal.Adjuster();
+            _internal = new Models.Metadata.Adjuster();
             Machine = new Machine();
 
             Name = string.Empty;
@@ -92,7 +92,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.Adjuster ?? new Models.Internal.Adjuster(),
+                _internal = this._internal?.Clone() as Models.Metadata.Adjuster ?? new Models.Metadata.Adjuster(),
             };
         }
 

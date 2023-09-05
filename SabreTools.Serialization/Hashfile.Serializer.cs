@@ -256,148 +256,148 @@ namespace SabreTools.Serialization
         #region Internal
 
         /// <summary>
-        /// Convert from <cref="Models.Hashfile.Hashfile"/> to <cref="Models.Internal.MetadataFile"/>
+        /// Convert from <cref="Models.Hashfile.Hashfile"/> to <cref="Models.Metadata.MetadataFile"/>
         /// </summary>
-        public static Models.Internal.MetadataFile? ConvertToInternalModel(Models.Hashfile.Hashfile? item)
+        public static Models.Metadata.MetadataFile? ConvertToInternalModel(Models.Hashfile.Hashfile? item)
         {
             if (item == null)
                 return null;
             
-            var metadataFile = new Models.Internal.MetadataFile
+            var metadataFile = new Models.Metadata.MetadataFile
             {
-                [Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(),
+                [Models.Metadata.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(),
             };
 
             var machine = ConvertMachineToInternalModel(item);
-            metadataFile[Models.Internal.MetadataFile.MachineKey] = new Models.Internal.Machine[] { machine };
+            metadataFile[Models.Metadata.MetadataFile.MachineKey] = new Models.Metadata.Machine[] { machine };
 
             return metadataFile;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Hashfile.Hashfile"/> to <cref="Models.Internal.Header"/>
+        /// Convert from <cref="Models.Hashfile.Hashfile"/> to <cref="Models.Metadata.Header"/>
         /// </summary>
-        private static Models.Internal.Header ConvertHeaderToInternalModel()
+        private static Models.Metadata.Header ConvertHeaderToInternalModel()
         {
-            var header = new Models.Internal.Header
+            var header = new Models.Metadata.Header
             {
-                [Models.Internal.Header.NameKey] = "Hashfile",
+                [Models.Metadata.Header.NameKey] = "Hashfile",
             };
             return header;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Hashfile.Hashfile"/> to <cref="Models.Internal.Machine"/>
+        /// Convert from <cref="Models.Hashfile.Hashfile"/> to <cref="Models.Metadata.Machine"/>
         /// </summary>
-        private static Models.Internal.Machine ConvertMachineToInternalModel(Models.Hashfile.Hashfile item)
+        private static Models.Metadata.Machine ConvertMachineToInternalModel(Models.Hashfile.Hashfile item)
         {
-            var machine = new Models.Internal.Machine();
+            var machine = new Models.Metadata.Machine();
 
             if (item.SFV != null && item.SFV.Any())
-                machine[Models.Internal.Machine.RomKey] = item.SFV.Select(ConvertToInternalModel).ToArray();
+                machine[Models.Metadata.Machine.RomKey] = item.SFV.Select(ConvertToInternalModel).ToArray();
             else if (item.MD5 != null && item.MD5.Any())
-                machine[Models.Internal.Machine.RomKey] = item.MD5.Select(ConvertToInternalModel).ToArray();
+                machine[Models.Metadata.Machine.RomKey] = item.MD5.Select(ConvertToInternalModel).ToArray();
             else if (item.SHA1 != null && item.SHA1.Any())
-                machine[Models.Internal.Machine.RomKey] = item.SHA1.Select(ConvertToInternalModel).ToArray();
+                machine[Models.Metadata.Machine.RomKey] = item.SHA1.Select(ConvertToInternalModel).ToArray();
             else if (item.SHA256 != null && item.SHA256.Any())
-                machine[Models.Internal.Machine.RomKey] = item.SHA256.Select(ConvertToInternalModel).ToArray();
+                machine[Models.Metadata.Machine.RomKey] = item.SHA256.Select(ConvertToInternalModel).ToArray();
             else if (item.SHA384 != null && item.SHA384.Any())
-                machine[Models.Internal.Machine.RomKey] = item.SHA384.Select(ConvertToInternalModel).ToArray();
+                machine[Models.Metadata.Machine.RomKey] = item.SHA384.Select(ConvertToInternalModel).ToArray();
             else if (item.SHA512 != null && item.SHA512.Any())
-                machine[Models.Internal.Machine.RomKey] = item.SHA512.Select(ConvertToInternalModel).ToArray();
+                machine[Models.Metadata.Machine.RomKey] = item.SHA512.Select(ConvertToInternalModel).ToArray();
             else if (item.SpamSum != null && item.SpamSum.Any())
-                machine[Models.Internal.Machine.RomKey] = item.SpamSum.Select(ConvertToInternalModel).ToArray();
+                machine[Models.Metadata.Machine.RomKey] = item.SpamSum.Select(ConvertToInternalModel).ToArray();
 
             return machine;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Hashfile.MD5"/> to <cref="Models.Internal.Rom"/>
+        /// Convert from <cref="Models.Hashfile.MD5"/> to <cref="Models.Metadata.Rom"/>
         /// </summary>
-        private static Models.Internal.Rom ConvertToInternalModel(MD5 item)
+        private static Models.Metadata.Rom ConvertToInternalModel(MD5 item)
         {
-            var rom = new Models.Internal.Rom
+            var rom = new Models.Metadata.Rom
             {
-                [Models.Internal.Rom.MD5Key] = item.Hash,
-                [Models.Internal.Rom.NameKey] = item.File,
+                [Models.Metadata.Rom.MD5Key] = item.Hash,
+                [Models.Metadata.Rom.NameKey] = item.File,
             };
             return rom;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Hashfile.SFV"/> to <cref="Models.Internal.Rom"/>
+        /// Convert from <cref="Models.Hashfile.SFV"/> to <cref="Models.Metadata.Rom"/>
         /// </summary>
-        private static Models.Internal.Rom ConvertToInternalModel(SFV item)
+        private static Models.Metadata.Rom ConvertToInternalModel(SFV item)
         {
-            var rom = new Models.Internal.Rom
+            var rom = new Models.Metadata.Rom
             {
-                [Models.Internal.Rom.NameKey] = item.File,
-                [Models.Internal.Rom.CRCKey] = item.Hash,
+                [Models.Metadata.Rom.NameKey] = item.File,
+                [Models.Metadata.Rom.CRCKey] = item.Hash,
             };
             return rom;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Hashfile.SHA1"/> to <cref="Models.Internal.Rom"/>
+        /// Convert from <cref="Models.Hashfile.SHA1"/> to <cref="Models.Metadata.Rom"/>
         /// </summary>
-        private static Models.Internal.Rom ConvertToInternalModel(SHA1 item)
+        private static Models.Metadata.Rom ConvertToInternalModel(SHA1 item)
         {
-            var rom = new Models.Internal.Rom
+            var rom = new Models.Metadata.Rom
             {
-                [Models.Internal.Rom.SHA1Key] = item.Hash,
-                [Models.Internal.Rom.NameKey] = item.File,
+                [Models.Metadata.Rom.SHA1Key] = item.Hash,
+                [Models.Metadata.Rom.NameKey] = item.File,
             };
             return rom;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Hashfile.SHA256"/> to <cref="Models.Internal.Rom"/>
+        /// Convert from <cref="Models.Hashfile.SHA256"/> to <cref="Models.Metadata.Rom"/>
         /// </summary>
-        private static Models.Internal.Rom ConvertToInternalModel(SHA256 item)
+        private static Models.Metadata.Rom ConvertToInternalModel(SHA256 item)
         {
-            var rom = new Models.Internal.Rom
+            var rom = new Models.Metadata.Rom
             {
-                [Models.Internal.Rom.SHA256Key] = item.Hash,
-                [Models.Internal.Rom.NameKey] = item.File,
+                [Models.Metadata.Rom.SHA256Key] = item.Hash,
+                [Models.Metadata.Rom.NameKey] = item.File,
             };
             return rom;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Hashfile.SHA384"/> to <cref="Models.Internal.Rom"/>
+        /// Convert from <cref="Models.Hashfile.SHA384"/> to <cref="Models.Metadata.Rom"/>
         /// </summary>
-        private static Models.Internal.Rom ConvertToInternalModel(SHA384 item)
+        private static Models.Metadata.Rom ConvertToInternalModel(SHA384 item)
         {
-            var rom = new Models.Internal.Rom
+            var rom = new Models.Metadata.Rom
             {
-                [Models.Internal.Rom.SHA384Key] = item.Hash,
-                [Models.Internal.Rom.NameKey] = item.File,
+                [Models.Metadata.Rom.SHA384Key] = item.Hash,
+                [Models.Metadata.Rom.NameKey] = item.File,
             };
             return rom;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Hashfile.SHA512"/> to <cref="Models.Internal.Rom"/>
+        /// Convert from <cref="Models.Hashfile.SHA512"/> to <cref="Models.Metadata.Rom"/>
         /// </summary>
-        private static Models.Internal.Rom ConvertToInternalModel(SHA512 item)
+        private static Models.Metadata.Rom ConvertToInternalModel(SHA512 item)
         {
-            var rom = new Models.Internal.Rom
+            var rom = new Models.Metadata.Rom
             {
-                [Models.Internal.Rom.SHA512Key] = item.Hash,
-                [Models.Internal.Rom.NameKey] = item.File,
+                [Models.Metadata.Rom.SHA512Key] = item.Hash,
+                [Models.Metadata.Rom.NameKey] = item.File,
             };
             return rom;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Hashfile.SpamSum"/> to <cref="Models.Internal.Rom"/>
+        /// Convert from <cref="Models.Hashfile.SpamSum"/> to <cref="Models.Metadata.Rom"/>
         /// </summary>
-        private static Models.Internal.Rom ConvertToInternalModel(SpamSum item)
+        private static Models.Metadata.Rom ConvertToInternalModel(SpamSum item)
         {
-            var rom = new Models.Internal.Rom
+            var rom = new Models.Metadata.Rom
             {
-                [Models.Internal.Rom.SpamSumKey] = item.Hash,
-                [Models.Internal.Rom.NameKey] = item.File,
+                [Models.Metadata.Rom.SpamSumKey] = item.Hash,
+                [Models.Metadata.Rom.NameKey] = item.File,
             };
             return rom;
         }

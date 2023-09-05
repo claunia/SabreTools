@@ -22,8 +22,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _internal.ReadString(Models.Internal.DipSwitch.NameKey);
-            set => _internal[Models.Internal.DipSwitch.NameKey] = value;
+            get => _internal.ReadString(Models.Metadata.DipSwitch.NameKey);
+            set => _internal[Models.Metadata.DipSwitch.NameKey] = value;
         }
 
         /// <summary>
@@ -32,8 +32,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tag")]
         public string? Tag
         {
-            get => _internal.ReadString(Models.Internal.DipSwitch.TagKey);
-            set => _internal[Models.Internal.DipSwitch.TagKey] = value;
+            get => _internal.ReadString(Models.Metadata.DipSwitch.TagKey);
+            set => _internal[Models.Metadata.DipSwitch.TagKey] = value;
         }
 
         /// <summary>
@@ -42,8 +42,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("mask", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("mask")]
         public string? Mask
         {
-            get => _internal.ReadString(Models.Internal.DipSwitch.MaskKey);
-            set => _internal[Models.Internal.DipSwitch.MaskKey] = value;
+            get => _internal.ReadString(Models.Metadata.DipSwitch.MaskKey);
+            set => _internal[Models.Metadata.DipSwitch.MaskKey] = value;
         }
 
         /// <summary>
@@ -52,8 +52,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("conditions")]
         public List<Condition>? Conditions
         {
-            get => _internal.Read<Condition[]>(Models.Internal.DipSwitch.ConditionKey)?.ToList();
-            set => _internal[Models.Internal.DipSwitch.ConditionKey] = value?.ToArray();
+            get => _internal.Read<Condition[]>(Models.Metadata.DipSwitch.ConditionKey)?.ToList();
+            set => _internal[Models.Metadata.DipSwitch.ConditionKey] = value?.ToArray();
         }
 
         [JsonIgnore]
@@ -65,8 +65,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("locations", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("locations")]
         public List<DipLocation>? Locations
         {
-            get => _internal.Read<DipLocation[]>(Models.Internal.DipSwitch.DipLocationKey)?.ToList();
-            set => _internal[Models.Internal.DipSwitch.DipLocationKey] = value?.ToArray();
+            get => _internal.Read<DipLocation[]>(Models.Metadata.DipSwitch.DipLocationKey)?.ToList();
+            set => _internal[Models.Metadata.DipSwitch.DipLocationKey] = value?.ToArray();
         }
 
         [JsonIgnore]
@@ -78,8 +78,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("values", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("values")]
         public List<DipValue>? Values
         {
-            get => _internal.Read<DipValue[]>(Models.Internal.DipSwitch.DipValueKey)?.ToList();
-            set => _internal[Models.Internal.DipSwitch.DipValueKey] = value?.ToArray();
+            get => _internal.Read<DipValue[]>(Models.Metadata.DipSwitch.DipValueKey)?.ToList();
+            set => _internal[Models.Metadata.DipSwitch.DipValueKey] = value?.ToArray();
         }
 
         [JsonIgnore]
@@ -128,7 +128,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public DipSwitch()
         {
-            _internal = new Models.Internal.DipSwitch();
+            _internal = new Models.Metadata.DipSwitch();
             Machine = new Machine();
 
             Name = string.Empty;
@@ -151,7 +151,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.DipSwitch ?? new Models.Internal.DipSwitch(),
+                _internal = this._internal?.Clone() as Models.Metadata.DipSwitch ?? new Models.Metadata.DipSwitch(),
 
                 Part = this.Part,
             };

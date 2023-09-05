@@ -24,8 +24,8 @@ namespace SabreTools.DatItems.Formats
         [XmlElement("tag")]
         public string? Tag
         {
-            get => _internal.ReadString(Models.Internal.SoftwareList.TagKey);
-            set => _internal[Models.Internal.SoftwareList.TagKey] = value;
+            get => _internal.ReadString(Models.Metadata.SoftwareList.TagKey);
+            set => _internal[Models.Metadata.SoftwareList.TagKey] = value;
         }
 
         /// <summary>
@@ -35,8 +35,8 @@ namespace SabreTools.DatItems.Formats
         [XmlElement("name")]
         public string? Name
         {
-            get => _internal.ReadString(Models.Internal.SoftwareList.NameKey);
-            set => _internal[Models.Internal.SoftwareList.NameKey] = value;
+            get => _internal.ReadString(Models.Metadata.SoftwareList.NameKey);
+            set => _internal[Models.Metadata.SoftwareList.NameKey] = value;
         }
 
         /// <summary>
@@ -47,8 +47,8 @@ namespace SabreTools.DatItems.Formats
         [XmlElement("status")]
         public SoftwareListStatus Status
         {
-            get => _internal.ReadString(Models.Internal.SoftwareList.StatusKey).AsSoftwareListStatus();
-            set => _internal[Models.Internal.SoftwareList.StatusKey] = value.FromSoftwareListStatus();
+            get => _internal.ReadString(Models.Metadata.SoftwareList.StatusKey).AsSoftwareListStatus();
+            set => _internal[Models.Metadata.SoftwareList.StatusKey] = value.FromSoftwareListStatus();
         }
 
         [JsonIgnore]
@@ -61,8 +61,8 @@ namespace SabreTools.DatItems.Formats
         [XmlElement("filter")]
         public string? Filter
         {
-            get => _internal.ReadString(Models.Internal.SoftwareList.FilterKey);
-            set => _internal[Models.Internal.SoftwareList.FilterKey] = value;
+            get => _internal.ReadString(Models.Metadata.SoftwareList.FilterKey);
+            set => _internal[Models.Metadata.SoftwareList.FilterKey] = value;
         }
 
         #endregion
@@ -84,7 +84,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public SoftwareList()
         {
-            _internal = new Models.Internal.SoftwareList();
+            _internal = new Models.Metadata.SoftwareList();
             Machine = new Machine();
 
             Name = string.Empty;
@@ -106,7 +106,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.SoftwareList ?? new Models.Internal.SoftwareList(),
+                _internal = this._internal?.Clone() as Models.Metadata.SoftwareList ?? new Models.Metadata.SoftwareList(),
             };
         }
 

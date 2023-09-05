@@ -20,8 +20,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tag")]
         public string? Tag
         {
-            get => _internal.ReadString(Models.Internal.Condition.TagKey);
-            set => _internal[Models.Internal.Condition.TagKey] = value;
+            get => _internal.ReadString(Models.Metadata.Condition.TagKey);
+            set => _internal[Models.Metadata.Condition.TagKey] = value;
         }
 
         /// <summary>
@@ -30,8 +30,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("mask", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("mask")]
         public string? Mask
         {
-            get => _internal.ReadString(Models.Internal.Condition.MaskKey);
-            set => _internal[Models.Internal.Condition.MaskKey] = value;
+            get => _internal.ReadString(Models.Metadata.Condition.MaskKey);
+            set => _internal[Models.Metadata.Condition.MaskKey] = value;
         }
 
         /// <summary>
@@ -41,8 +41,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public Relation Relation
         {
-            get => _internal.ReadString(Models.Internal.Condition.RelationKey).AsRelation();
-            set => _internal[Models.Internal.Condition.RelationKey] = value.FromRelation();
+            get => _internal.ReadString(Models.Metadata.Condition.RelationKey).AsRelation();
+            set => _internal[Models.Metadata.Condition.RelationKey] = value.FromRelation();
         }
 
         [JsonIgnore]
@@ -54,8 +54,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("value")]
         public string? Value
         {
-            get => _internal.ReadString(Models.Internal.Condition.ValueKey);
-            set => _internal[Models.Internal.Condition.ValueKey] = value;
+            get => _internal.ReadString(Models.Metadata.Condition.ValueKey);
+            set => _internal[Models.Metadata.Condition.ValueKey] = value;
         }
 
         #endregion
@@ -67,7 +67,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Condition()
         {
-            _internal = new Models.Internal.Condition();
+            _internal = new Models.Metadata.Condition();
             Machine = new Machine();
 
             ItemType = ItemType.Condition;
@@ -89,7 +89,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.Condition ?? new Models.Internal.Condition(),
+                _internal = this._internal?.Clone() as Models.Metadata.Condition ?? new Models.Metadata.Condition(),
             };
         }
 

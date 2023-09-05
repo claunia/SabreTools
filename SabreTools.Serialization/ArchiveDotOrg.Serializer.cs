@@ -11,21 +11,21 @@ namespace SabreTools.Serialization
         #region Internal
 
         /// <summary>
-        /// Convert from <cref="Models.ArchiveDotOrg.Files"/> to <cref="Models.Internal.MetadataFile"/>
+        /// Convert from <cref="Models.ArchiveDotOrg.Files"/> to <cref="Models.Metadata.MetadataFile"/>
         /// </summary>
-        public static Models.Internal.MetadataFile? ConvertToInternalModel(Files? item)
+        public static Models.Metadata.MetadataFile? ConvertToInternalModel(Files? item)
         {
             if (item == null)
                 return null;
             
-            var metadataFile = new Models.Internal.MetadataFile
+            var metadataFile = new Models.Metadata.MetadataFile
             {
-                [Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
+                [Models.Metadata.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
             };
 
             if (item?.File != null && item.File.Any())
             {
-                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.File
+                metadataFile[Models.Metadata.MetadataFile.MachineKey] = item.File
                     .Where(f => f != null)
                     .Select(ConvertMachineToInternalModel)
                     .ToArray();
@@ -35,99 +35,99 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.ArchiveDotOrg.Files"/> to <cref="Models.Internal.Header"/>
+        /// Convert from <cref="Models.ArchiveDotOrg.Files"/> to <cref="Models.Metadata.Header"/>
         /// </summary>
-        private static Models.Internal.Header ConvertHeaderToInternalModel(Files item)
+        private static Models.Metadata.Header ConvertHeaderToInternalModel(Files item)
         {
-            var header = new Models.Internal.Header
+            var header = new Models.Metadata.Header
             {
-                [Models.Internal.Header.NameKey] = "archive.org",
+                [Models.Metadata.Header.NameKey] = "archive.org",
             };
             return header;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.ArchiveDotOrg.File"/> to <cref="Models.Internal.Machine"/>
+        /// Convert from <cref="Models.ArchiveDotOrg.File"/> to <cref="Models.Metadata.Machine"/>
         /// </summary>
-        private static Models.Internal.Machine ConvertMachineToInternalModel(File item)
+        private static Models.Metadata.Machine ConvertMachineToInternalModel(File item)
         {
-            var machine = new Models.Internal.Machine
+            var machine = new Models.Metadata.Machine
             {
-                [Models.Internal.Machine.RomKey] = ConvertToInternalModel(item),
+                [Models.Metadata.Machine.RomKey] = ConvertToInternalModel(item),
             };
             return machine;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.ArchiveDotOrg.File"/> to <cref="Models.Internal.Rom"/>
+        /// Convert from <cref="Models.ArchiveDotOrg.File"/> to <cref="Models.Metadata.Rom"/>
         /// </summary>
-        private static Models.Internal.Rom ConvertToInternalModel(File item)
+        private static Models.Metadata.Rom ConvertToInternalModel(File item)
         {
-            var rom = new Models.Internal.Rom
+            var rom = new Models.Metadata.Rom
             {
-                [Models.Internal.Rom.NameKey] = item.Name,
-                [Models.Internal.Rom.SourceKey] = item.Source,
-                [Models.Internal.Rom.BitTorrentMagnetHashKey] = item.BitTorrentMagnetHash,
-                [Models.Internal.Rom.LastModifiedTimeKey] = item.LastModifiedTime,
-                [Models.Internal.Rom.SizeKey] = item.Size,
-                [Models.Internal.Rom.MD5Key] = item.MD5,
-                [Models.Internal.Rom.CRCKey] = item.CRC32,
-                [Models.Internal.Rom.SHA1Key] = item.SHA1,
-                [Models.Internal.Rom.FileCountKey] = item.FileCount,
-                [Models.Internal.Rom.FormatKey] = item.Format,
-                [Models.Internal.Rom.OriginalKey] = item.Original,
-                [Models.Internal.Rom.SummationKey] = item.Summation,
-                [Models.Internal.Rom.MatrixNumberKey] = item.MatrixNumber,
-                [Models.Internal.Rom.CollectionCatalogNumberKey] = item.CollectionCatalogNumber,
-                [Models.Internal.Rom.PublisherKey] = item.Publisher,
-                [Models.Internal.Rom.CommentKey] = item.Comment,
+                [Models.Metadata.Rom.NameKey] = item.Name,
+                [Models.Metadata.Rom.SourceKey] = item.Source,
+                [Models.Metadata.Rom.BitTorrentMagnetHashKey] = item.BitTorrentMagnetHash,
+                [Models.Metadata.Rom.LastModifiedTimeKey] = item.LastModifiedTime,
+                [Models.Metadata.Rom.SizeKey] = item.Size,
+                [Models.Metadata.Rom.MD5Key] = item.MD5,
+                [Models.Metadata.Rom.CRCKey] = item.CRC32,
+                [Models.Metadata.Rom.SHA1Key] = item.SHA1,
+                [Models.Metadata.Rom.FileCountKey] = item.FileCount,
+                [Models.Metadata.Rom.FormatKey] = item.Format,
+                [Models.Metadata.Rom.OriginalKey] = item.Original,
+                [Models.Metadata.Rom.SummationKey] = item.Summation,
+                [Models.Metadata.Rom.MatrixNumberKey] = item.MatrixNumber,
+                [Models.Metadata.Rom.CollectionCatalogNumberKey] = item.CollectionCatalogNumber,
+                [Models.Metadata.Rom.PublisherKey] = item.Publisher,
+                [Models.Metadata.Rom.CommentKey] = item.Comment,
 
-                [Models.Internal.Rom.ASRDetectedLangKey] = item.ASRDetectedLang,
-                [Models.Internal.Rom.ASRDetectedLangConfKey] = item.ASRDetectedLangConf,
-                [Models.Internal.Rom.ASRTranscribedLangKey] = item.ASRTranscribedLang,
-                [Models.Internal.Rom.WhisperASRModuleVersionKey] = item.WhisperASRModuleVersion,
-                [Models.Internal.Rom.WhisperModelHashKey] = item.WhisperModelHash,
-                [Models.Internal.Rom.WhisperModelNameKey] = item.WhisperModelName,
-                [Models.Internal.Rom.WhisperVersionKey] = item.WhisperVersion,
+                [Models.Metadata.Rom.ASRDetectedLangKey] = item.ASRDetectedLang,
+                [Models.Metadata.Rom.ASRDetectedLangConfKey] = item.ASRDetectedLangConf,
+                [Models.Metadata.Rom.ASRTranscribedLangKey] = item.ASRTranscribedLang,
+                [Models.Metadata.Rom.WhisperASRModuleVersionKey] = item.WhisperASRModuleVersion,
+                [Models.Metadata.Rom.WhisperModelHashKey] = item.WhisperModelHash,
+                [Models.Metadata.Rom.WhisperModelNameKey] = item.WhisperModelName,
+                [Models.Metadata.Rom.WhisperVersionKey] = item.WhisperVersion,
 
-                [Models.Internal.Rom.ClothCoverDetectionModuleVersionKey] = item.ClothCoverDetectionModuleVersion,
-                [Models.Internal.Rom.hOCRCharToWordhOCRVersionKey] = item.hOCRCharToWordhOCRVersion,
-                [Models.Internal.Rom.hOCRCharToWordModuleVersionKey] = item.hOCRCharToWordModuleVersion,
-                [Models.Internal.Rom.hOCRFtsTexthOCRVersionKey] = item.hOCRFtsTexthOCRVersion,
-                [Models.Internal.Rom.hOCRFtsTextModuleVersionKey] = item.hOCRFtsTextModuleVersion,
-                [Models.Internal.Rom.hOCRPageIndexhOCRVersionKey] = item.hOCRPageIndexhOCRVersion,
-                [Models.Internal.Rom.hOCRPageIndexModuleVersionKey] = item.hOCRPageIndexModuleVersion,
-                [Models.Internal.Rom.TesseractOCRKey] = item.TesseractOCR,
-                [Models.Internal.Rom.TesseractOCRConvertedKey] = item.TesseractOCRConverted,
-                [Models.Internal.Rom.TesseractOCRDetectedLangKey] = item.TesseractOCRDetectedLang,
-                [Models.Internal.Rom.TesseractOCRDetectedLangConfKey] = item.TesseractOCRDetectedLangConf,
-                [Models.Internal.Rom.TesseractOCRDetectedScriptKey] = item.TesseractOCRDetectedScript,
-                [Models.Internal.Rom.TesseractOCRDetectedScriptConfKey] = item.TesseractOCRDetectedScriptConf,
-                [Models.Internal.Rom.TesseractOCRModuleVersionKey] = item.TesseractOCRModuleVersion,
-                [Models.Internal.Rom.TesseractOCRParametersKey] = item.TesseractOCRParameters,
-                [Models.Internal.Rom.PDFModuleVersionKey] = item.PDFModuleVersion,
-                [Models.Internal.Rom.WordConfidenceInterval0To10Key] = item.WordConfidenceInterval0To10,
-                [Models.Internal.Rom.WordConfidenceInterval11To20Key] = item.WordConfidenceInterval11To20,
-                [Models.Internal.Rom.WordConfidenceInterval21To30Key] = item.WordConfidenceInterval21To30,
-                [Models.Internal.Rom.WordConfidenceInterval31To40Key] = item.WordConfidenceInterval31To40,
-                [Models.Internal.Rom.WordConfidenceInterval41To50Key] = item.WordConfidenceInterval41To50,
-                [Models.Internal.Rom.WordConfidenceInterval51To60Key] = item.WordConfidenceInterval51To60,
-                [Models.Internal.Rom.WordConfidenceInterval61To70Key] = item.WordConfidenceInterval61To70,
-                [Models.Internal.Rom.WordConfidenceInterval71To80Key] = item.WordConfidenceInterval71To80,
-                [Models.Internal.Rom.WordConfidenceInterval81To90Key] = item.WordConfidenceInterval81To90,
-                [Models.Internal.Rom.WordConfidenceInterval91To100Key] = item.WordConfidenceInterval91To100,
+                [Models.Metadata.Rom.ClothCoverDetectionModuleVersionKey] = item.ClothCoverDetectionModuleVersion,
+                [Models.Metadata.Rom.hOCRCharToWordhOCRVersionKey] = item.hOCRCharToWordhOCRVersion,
+                [Models.Metadata.Rom.hOCRCharToWordModuleVersionKey] = item.hOCRCharToWordModuleVersion,
+                [Models.Metadata.Rom.hOCRFtsTexthOCRVersionKey] = item.hOCRFtsTexthOCRVersion,
+                [Models.Metadata.Rom.hOCRFtsTextModuleVersionKey] = item.hOCRFtsTextModuleVersion,
+                [Models.Metadata.Rom.hOCRPageIndexhOCRVersionKey] = item.hOCRPageIndexhOCRVersion,
+                [Models.Metadata.Rom.hOCRPageIndexModuleVersionKey] = item.hOCRPageIndexModuleVersion,
+                [Models.Metadata.Rom.TesseractOCRKey] = item.TesseractOCR,
+                [Models.Metadata.Rom.TesseractOCRConvertedKey] = item.TesseractOCRConverted,
+                [Models.Metadata.Rom.TesseractOCRDetectedLangKey] = item.TesseractOCRDetectedLang,
+                [Models.Metadata.Rom.TesseractOCRDetectedLangConfKey] = item.TesseractOCRDetectedLangConf,
+                [Models.Metadata.Rom.TesseractOCRDetectedScriptKey] = item.TesseractOCRDetectedScript,
+                [Models.Metadata.Rom.TesseractOCRDetectedScriptConfKey] = item.TesseractOCRDetectedScriptConf,
+                [Models.Metadata.Rom.TesseractOCRModuleVersionKey] = item.TesseractOCRModuleVersion,
+                [Models.Metadata.Rom.TesseractOCRParametersKey] = item.TesseractOCRParameters,
+                [Models.Metadata.Rom.PDFModuleVersionKey] = item.PDFModuleVersion,
+                [Models.Metadata.Rom.WordConfidenceInterval0To10Key] = item.WordConfidenceInterval0To10,
+                [Models.Metadata.Rom.WordConfidenceInterval11To20Key] = item.WordConfidenceInterval11To20,
+                [Models.Metadata.Rom.WordConfidenceInterval21To30Key] = item.WordConfidenceInterval21To30,
+                [Models.Metadata.Rom.WordConfidenceInterval31To40Key] = item.WordConfidenceInterval31To40,
+                [Models.Metadata.Rom.WordConfidenceInterval41To50Key] = item.WordConfidenceInterval41To50,
+                [Models.Metadata.Rom.WordConfidenceInterval51To60Key] = item.WordConfidenceInterval51To60,
+                [Models.Metadata.Rom.WordConfidenceInterval61To70Key] = item.WordConfidenceInterval61To70,
+                [Models.Metadata.Rom.WordConfidenceInterval71To80Key] = item.WordConfidenceInterval71To80,
+                [Models.Metadata.Rom.WordConfidenceInterval81To90Key] = item.WordConfidenceInterval81To90,
+                [Models.Metadata.Rom.WordConfidenceInterval91To100Key] = item.WordConfidenceInterval91To100,
 
-                [Models.Internal.Rom.AlbumKey] = item.Album,
-                [Models.Internal.Rom.ArtistKey] = item.Artist,
-                [Models.Internal.Rom.BitrateKey] = item.Bitrate,
-                [Models.Internal.Rom.CreatorKey] = item.Creator,
-                [Models.Internal.Rom.HeightKey] = item.Height,
-                [Models.Internal.Rom.LengthKey] = item.Length,
-                [Models.Internal.Rom.PreviewImageKey] = item.PreviewImage,
-                [Models.Internal.Rom.RotationKey] = item.Rotation,
-                [Models.Internal.Rom.TitleKey] = item.Title,
-                [Models.Internal.Rom.TrackKey] = item.Track,
-                [Models.Internal.Rom.WidthKey] = item.Width,
+                [Models.Metadata.Rom.AlbumKey] = item.Album,
+                [Models.Metadata.Rom.ArtistKey] = item.Artist,
+                [Models.Metadata.Rom.BitrateKey] = item.Bitrate,
+                [Models.Metadata.Rom.CreatorKey] = item.Creator,
+                [Models.Metadata.Rom.HeightKey] = item.Height,
+                [Models.Metadata.Rom.LengthKey] = item.Length,
+                [Models.Metadata.Rom.PreviewImageKey] = item.PreviewImage,
+                [Models.Metadata.Rom.RotationKey] = item.Rotation,
+                [Models.Metadata.Rom.TitleKey] = item.Title,
+                [Models.Metadata.Rom.TrackKey] = item.Track,
+                [Models.Metadata.Rom.WidthKey] = item.Width,
             };
             return rom;
         }

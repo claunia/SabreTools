@@ -19,8 +19,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("name")]
         public string? Name
         {
-            get => _internal.ReadString(Models.Internal.DiskArea.NameKey);
-            set => _internal[Models.Internal.DiskArea.NameKey] = value;
+            get => _internal.ReadString(Models.Metadata.DiskArea.NameKey);
+            set => _internal[Models.Metadata.DiskArea.NameKey] = value;
         }
 
         #endregion
@@ -42,7 +42,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public DiskArea()
         {
-            _internal = new Models.Internal.DiskArea();
+            _internal = new Models.Metadata.DiskArea();
             Machine = new Machine();
 
             Name = string.Empty;
@@ -65,7 +65,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.DiskArea ?? new Models.Internal.DiskArea(),
+                _internal = this._internal?.Clone() as Models.Metadata.DiskArea ?? new Models.Metadata.DiskArea(),
             };
         }
 

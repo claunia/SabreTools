@@ -20,8 +20,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _internal.ReadString(Models.Internal.DipValue.NameKey);
-            set => _internal[Models.Internal.DipValue.NameKey] = value;
+            get => _internal.ReadString(Models.Metadata.DipValue.NameKey);
+            set => _internal[Models.Metadata.DipValue.NameKey] = value;
         }
 
         /// <summary>
@@ -30,8 +30,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("value")]
         public string? Value
         {
-            get => _internal.ReadString(Models.Internal.DipValue.ValueKey);
-            set => _internal[Models.Internal.DipValue.ValueKey] = value;
+            get => _internal.ReadString(Models.Metadata.DipValue.ValueKey);
+            set => _internal[Models.Metadata.DipValue.ValueKey] = value;
         }
 
         /// <summary>
@@ -40,8 +40,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("default")]
         public bool? Default
         {
-            get => _internal.ReadBool(Models.Internal.DipValue.DefaultKey);
-            set => _internal[Models.Internal.DipValue.DefaultKey] = value;
+            get => _internal.ReadBool(Models.Metadata.DipValue.DefaultKey);
+            set => _internal[Models.Metadata.DipValue.DefaultKey] = value;
         }
 
         [JsonIgnore]
@@ -53,8 +53,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("conditions")]
         public List<Condition>? Conditions
         {
-            get => _internal.Read<Condition[]>(Models.Internal.DipValue.ConditionKey)?.ToList();
-            set => _internal[Models.Internal.DipValue.ConditionKey] = value?.ToArray();
+            get => _internal.Read<Condition[]>(Models.Metadata.DipValue.ConditionKey)?.ToList();
+            set => _internal[Models.Metadata.DipValue.ConditionKey] = value?.ToArray();
         }
 
         [JsonIgnore]
@@ -79,7 +79,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public DipValue()
         {
-            _internal = new Models.Internal.DipValue();
+            _internal = new Models.Metadata.DipValue();
             Machine = new Machine();
 
             Name = string.Empty;
@@ -102,7 +102,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.DipValue ?? new Models.Internal.DipValue(),
+                _internal = this._internal?.Clone() as Models.Metadata.DipValue ?? new Models.Metadata.DipValue(),
             };
         }
 

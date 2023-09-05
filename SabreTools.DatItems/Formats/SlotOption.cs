@@ -18,8 +18,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _internal.ReadString(Models.Internal.SlotOption.NameKey);
-            set => _internal[Models.Internal.SlotOption.NameKey] = value;
+            get => _internal.ReadString(Models.Metadata.SlotOption.NameKey);
+            set => _internal[Models.Metadata.SlotOption.NameKey] = value;
         }
 
         /// <summary>
@@ -28,8 +28,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("devname"), XmlElement("devname")]
         public string? DeviceName
         {
-            get => _internal.ReadString(Models.Internal.SlotOption.DevNameKey);
-            set => _internal[Models.Internal.SlotOption.DevNameKey] = value;
+            get => _internal.ReadString(Models.Metadata.SlotOption.DevNameKey);
+            set => _internal[Models.Metadata.SlotOption.DevNameKey] = value;
         }
 
         /// <summary>
@@ -38,8 +38,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("default")]
         public bool? Default
         {
-            get => _internal.ReadBool(Models.Internal.SlotOption.DefaultKey);
-            set => _internal[Models.Internal.SlotOption.DefaultKey] = value;
+            get => _internal.ReadBool(Models.Metadata.SlotOption.DefaultKey);
+            set => _internal[Models.Metadata.SlotOption.DefaultKey] = value;
         }
 
         [JsonIgnore]
@@ -64,7 +64,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public SlotOption()
         {
-            _internal = new Models.Internal.SlotOption();
+            _internal = new Models.Metadata.SlotOption();
             Machine = new Machine();
 
             Name = string.Empty;
@@ -87,7 +87,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.SlotOption ?? new Models.Internal.SlotOption(),
+                _internal = this._internal?.Clone() as Models.Metadata.SlotOption ?? new Models.Metadata.SlotOption(),
             };
         }
 

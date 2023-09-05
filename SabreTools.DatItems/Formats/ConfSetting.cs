@@ -20,8 +20,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _internal.ReadString(Models.Internal.ConfSetting.NameKey);
-            set => _internal[Models.Internal.ConfSetting.NameKey] = value;
+            get => _internal.ReadString(Models.Metadata.ConfSetting.NameKey);
+            set => _internal[Models.Metadata.ConfSetting.NameKey] = value;
         }
 
         /// <summary>
@@ -30,8 +30,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("value")]
         public string? Value
         {
-            get => _internal.ReadString(Models.Internal.ConfSetting.ValueKey);
-            set => _internal[Models.Internal.ConfSetting.ValueKey] = value;
+            get => _internal.ReadString(Models.Metadata.ConfSetting.ValueKey);
+            set => _internal[Models.Metadata.ConfSetting.ValueKey] = value;
         }
 
         /// <summary>
@@ -40,8 +40,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("default")]
         public bool? Default
         {
-            get => _internal.ReadBool(Models.Internal.ConfSetting.DefaultKey);
-            set => _internal[Models.Internal.ConfSetting.DefaultKey] = value;
+            get => _internal.ReadBool(Models.Metadata.ConfSetting.DefaultKey);
+            set => _internal[Models.Metadata.ConfSetting.DefaultKey] = value;
         }
 
         [JsonIgnore]
@@ -53,8 +53,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("conditions")]
         public List<Condition>? Conditions
         {
-            get => _internal.Read<Condition[]>(Models.Internal.ConfSetting.ConditionKey)?.ToList();
-            set => _internal[Models.Internal.ConfSetting.ConditionKey] = value?.ToArray();
+            get => _internal.Read<Condition[]>(Models.Metadata.ConfSetting.ConditionKey)?.ToList();
+            set => _internal[Models.Metadata.ConfSetting.ConditionKey] = value?.ToArray();
         }
 
         [JsonIgnore]
@@ -79,7 +79,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public ConfSetting()
         {
-            _internal = new Models.Internal.ConfSetting();
+            _internal = new Models.Metadata.ConfSetting();
             Machine = new Machine();
 
             Name = string.Empty;
@@ -102,7 +102,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.ConfSetting ?? new Models.Internal.ConfSetting(),
+                _internal = this._internal?.Clone() as Models.Metadata.ConfSetting ?? new Models.Metadata.ConfSetting(),
             };
         }
 

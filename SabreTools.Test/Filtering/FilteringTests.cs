@@ -2,7 +2,6 @@ using System.Collections.Generic;
 
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
-using SabreTools.Filtering;
 using Xunit;
 
 namespace SabreTools.Test.Filtering
@@ -13,7 +12,7 @@ namespace SabreTools.Test.Filtering
         public void PassesFiltersDatItemFilterPass()
         {
             // Setup filter
-            var filter = new Filter();
+            var filter = new SabreTools.Filtering.Filter();
             filter.PopulateFiltersFromList(new List<string> { "item.name:foo" });
 
             // Setup DatItem
@@ -28,7 +27,7 @@ namespace SabreTools.Test.Filtering
         public void PassesFiltersDatItemFilterFail()
         {
             // Setup filter
-            var filter = new Filter();
+            var filter = new SabreTools.Filtering.Filter();
             filter.PopulateFiltersFromList(new List<string> { "item.name:bar" });
 
             // Setup DatItem
@@ -43,7 +42,7 @@ namespace SabreTools.Test.Filtering
         public void PassesFiltersMachineFilterPass()
         {
             // Setup filter
-            var filter = new Filter();
+            var filter = new SabreTools.Filtering.Filter();
             filter.PopulateFiltersFromList(new List<string> { "machine.name:bar" });
 
             // Setup DatItem
@@ -58,7 +57,7 @@ namespace SabreTools.Test.Filtering
         public void PassesFiltersMachineFilterFail()
         {
             // Setup filter
-            var filter = new Filter();
+            var filter = new SabreTools.Filtering.Filter();
             filter.PopulateFiltersFromList(new List<string> { "machine.name:foo" });
 
             // Setup DatItem

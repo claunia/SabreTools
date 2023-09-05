@@ -1783,7 +1783,7 @@ Some special strings that can be used:
         /// <summary>
         /// Preconfigured Filter
         /// </summary>
-        protected Filter Filter { get; set; }
+        protected Filtering.Filter Filter { get; set; }
 
         /// <summary>
         /// Pre-configured DatHeader
@@ -2224,9 +2224,9 @@ Some special strings that can be used:
         /// <summary>
         /// Get Filter from feature list
         /// </summary>
-        private static Filter GetFilter(Dictionary<string, Feature> features)
+        private static Filtering.Filter GetFilter(Dictionary<string, Feature> features)
         {
-            Filter filter = new()
+            Filtering.Filter filter = new()
             {
                 DatItemFilter = new DatItemFilter(),
                 MachineFilter = new MachineFilter(),

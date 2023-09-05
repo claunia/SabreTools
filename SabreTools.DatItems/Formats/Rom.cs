@@ -24,8 +24,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _internal.ReadString(Models.Internal.Rom.NameKey);
-            set => _internal[Models.Internal.Rom.NameKey] = value;
+            get => _internal.ReadString(Models.Metadata.Rom.NameKey);
+            set => _internal[Models.Metadata.Rom.NameKey] = value;
         }
 
         /// <summary>
@@ -34,8 +34,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("bios", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("bios")]
         public string? Bios
         {
-            get => _internal.ReadString(Models.Internal.Rom.BiosKey);
-            set => _internal[Models.Internal.Rom.BiosKey] = value;
+            get => _internal.ReadString(Models.Metadata.Rom.BiosKey);
+            set => _internal[Models.Metadata.Rom.BiosKey] = value;
         }
 
         /// <summary>
@@ -44,8 +44,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("size", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("size")]
         public long? Size
         {
-            get => _internal.ReadLong(Models.Internal.Rom.SizeKey);
-            set => _internal[Models.Internal.Rom.SizeKey] = value;
+            get => _internal.ReadLong(Models.Metadata.Rom.SizeKey);
+            set => _internal[Models.Metadata.Rom.SizeKey] = value;
         }
 
         [JsonIgnore]
@@ -57,8 +57,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("crc", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("crc")]
         public string? CRC
         {
-            get => _internal.ReadString(Models.Internal.Rom.CRCKey);
-            set => _internal[Models.Internal.Rom.CRCKey] = TextHelper.NormalizeCRC32(value);
+            get => _internal.ReadString(Models.Metadata.Rom.CRCKey);
+            set => _internal[Models.Metadata.Rom.CRCKey] = TextHelper.NormalizeCRC32(value);
         }
 
         /// <summary>
@@ -67,8 +67,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("md5", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("md5")]
         public string? MD5
         {
-            get => _internal.ReadString(Models.Internal.Rom.MD5Key);
-            set => _internal[Models.Internal.Rom.MD5Key] = TextHelper.NormalizeMD5(value);
+            get => _internal.ReadString(Models.Metadata.Rom.MD5Key);
+            set => _internal[Models.Metadata.Rom.MD5Key] = TextHelper.NormalizeMD5(value);
         }
 
         /// <summary>
@@ -77,8 +77,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("sha1", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha1")]
         public string? SHA1
         {
-            get => _internal.ReadString(Models.Internal.Rom.SHA1Key);
-            set => _internal[Models.Internal.Rom.SHA1Key] = TextHelper.NormalizeSHA1(value);
+            get => _internal.ReadString(Models.Metadata.Rom.SHA1Key);
+            set => _internal[Models.Metadata.Rom.SHA1Key] = TextHelper.NormalizeSHA1(value);
         }
 
         /// <summary>
@@ -87,8 +87,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("sha256", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha256")]
         public string? SHA256
         {
-            get => _internal.ReadString(Models.Internal.Rom.SHA256Key);
-            set => _internal[Models.Internal.Rom.SHA256Key] = TextHelper.NormalizeSHA256(value);
+            get => _internal.ReadString(Models.Metadata.Rom.SHA256Key);
+            set => _internal[Models.Metadata.Rom.SHA256Key] = TextHelper.NormalizeSHA256(value);
         }
 
         /// <summary>
@@ -97,8 +97,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("sha384", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha384")]
         public string? SHA384
         {
-            get => _internal.ReadString(Models.Internal.Rom.SHA384Key);
-            set => _internal[Models.Internal.Rom.SHA384Key] = TextHelper.NormalizeSHA384(value);
+            get => _internal.ReadString(Models.Metadata.Rom.SHA384Key);
+            set => _internal[Models.Metadata.Rom.SHA384Key] = TextHelper.NormalizeSHA384(value);
         }
 
         /// <summary>
@@ -107,8 +107,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("sha512", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha512")]
         public string? SHA512
         {
-            get => _internal.ReadString(Models.Internal.Rom.SHA512Key);
-            set => _internal[Models.Internal.Rom.SHA512Key] = TextHelper.NormalizeSHA512(value);
+            get => _internal.ReadString(Models.Metadata.Rom.SHA512Key);
+            set => _internal[Models.Metadata.Rom.SHA512Key] = TextHelper.NormalizeSHA512(value);
         }
 
         /// <summary>
@@ -117,8 +117,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("spamsum", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("spamsum")]
         public string? SpamSum
         {
-            get => _internal.ReadString(Models.Internal.Rom.SpamSumKey);
-            set => _internal[Models.Internal.Rom.SpamSumKey] = value;
+            get => _internal.ReadString(Models.Metadata.Rom.SpamSumKey);
+            set => _internal[Models.Metadata.Rom.SpamSumKey] = value;
         }
 
         /// <summary>
@@ -127,8 +127,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("merge", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("merge")]
         public string? MergeTag
         {
-            get => _internal.ReadString(Models.Internal.Rom.MergeKey);
-            set => _internal[Models.Internal.Rom.MergeKey] = value;
+            get => _internal.ReadString(Models.Metadata.Rom.MergeKey);
+            set => _internal[Models.Metadata.Rom.MergeKey] = value;
         }
 
         /// <summary>
@@ -137,8 +137,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("region", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("biregionos")]
         public string? Region
         {
-            get => _internal.ReadString(Models.Internal.Rom.RegionKey);
-            set => _internal[Models.Internal.Rom.RegionKey] = value;
+            get => _internal.ReadString(Models.Metadata.Rom.RegionKey);
+            set => _internal[Models.Metadata.Rom.RegionKey] = value;
         }
 
         /// <summary>
@@ -147,8 +147,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("offset", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("offset")]
         public string? Offset
         {
-            get => _internal.ReadString(Models.Internal.Rom.OffsetKey);
-            set => _internal[Models.Internal.Rom.OffsetKey] = value;
+            get => _internal.ReadString(Models.Metadata.Rom.OffsetKey);
+            set => _internal[Models.Metadata.Rom.OffsetKey] = value;
         }
 
         /// <summary>
@@ -157,8 +157,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("date", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("date")]
         public string? Date
         {
-            get => _internal.ReadString(Models.Internal.Rom.DateKey);
-            set => _internal[Models.Internal.Rom.DateKey] = value;
+            get => _internal.ReadString(Models.Metadata.Rom.DateKey);
+            set => _internal[Models.Metadata.Rom.DateKey] = value;
         }
 
         /// <summary>
@@ -168,8 +168,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public ItemStatus ItemStatus
         {
-            get => _internal.ReadString(Models.Internal.Rom.StatusKey).AsItemStatus();
-            set => _internal[Models.Internal.Rom.StatusKey] = value.FromItemStatus(yesno: false);
+            get => _internal.ReadString(Models.Metadata.Rom.StatusKey).AsItemStatus();
+            set => _internal[Models.Metadata.Rom.StatusKey] = value.FromItemStatus(yesno: false);
         }
 
         [JsonIgnore]
@@ -181,8 +181,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("optional", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("optional")]
         public bool? Optional
         {
-            get => _internal.ReadBool(Models.Internal.Rom.OptionalKey);
-            set => _internal[Models.Internal.Rom.OptionalKey] = value;
+            get => _internal.ReadBool(Models.Metadata.Rom.OptionalKey);
+            set => _internal[Models.Metadata.Rom.OptionalKey] = value;
         }
 
         [JsonIgnore]
@@ -194,8 +194,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("inverted", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("inverted")]
         public bool? Inverted
         {
-            get => _internal.ReadBool(Models.Internal.Rom.InvertedKey);
-            set => _internal[Models.Internal.Rom.InvertedKey] = value;
+            get => _internal.ReadBool(Models.Metadata.Rom.InvertedKey);
+            set => _internal[Models.Metadata.Rom.InvertedKey] = value;
         }
 
         [JsonIgnore]
@@ -211,8 +211,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("ado_source", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("ado_source")]
         public string? ArchiveDotOrgSource
         {
-            get => _internal.ReadString(Models.Internal.Rom.SourceKey);
-            set => _internal[Models.Internal.Rom.SourceKey] = value;
+            get => _internal.ReadString(Models.Metadata.Rom.SourceKey);
+            set => _internal[Models.Metadata.Rom.SourceKey] = value;
         }
 
         /// <summary>
@@ -221,8 +221,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("ado_format", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("ado_format")]
         public string? ArchiveDotOrgFormat
         {
-            get => _internal.ReadString(Models.Internal.Rom.FormatKey);
-            set => _internal[Models.Internal.Rom.FormatKey] = value;
+            get => _internal.ReadString(Models.Metadata.Rom.FormatKey);
+            set => _internal[Models.Metadata.Rom.FormatKey] = value;
         }
 
         /// <summary>
@@ -231,8 +231,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("original_filename", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("original_filename")]
         public string? OriginalFilename
         {
-            get => _internal.ReadString(Models.Internal.Rom.OriginalKey);
-            set => _internal[Models.Internal.Rom.OriginalKey] = value;
+            get => _internal.ReadString(Models.Metadata.Rom.OriginalKey);
+            set => _internal[Models.Metadata.Rom.OriginalKey] = value;
         }
 
         /// <summary>
@@ -244,8 +244,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("rotation", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("rotation")]
         public string? Rotation
         {
-            get => _internal.ReadString(Models.Internal.Rom.RotationKey);
-            set => _internal[Models.Internal.Rom.RotationKey] = value;
+            get => _internal.ReadString(Models.Metadata.Rom.RotationKey);
+            set => _internal[Models.Metadata.Rom.RotationKey] = value;
         }
 
         /// <summary>
@@ -254,8 +254,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("summation", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("summation")]
         public string? Summation
         {
-            get => _internal.ReadString(Models.Internal.Rom.SummationKey);
-            set => _internal[Models.Internal.Rom.SummationKey] = value;
+            get => _internal.ReadString(Models.Metadata.Rom.SummationKey);
+            set => _internal[Models.Metadata.Rom.SummationKey] = value;
         }
 
         #endregion
@@ -268,8 +268,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("alt_internalname", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("alt_internalname")]
         public string? AltName
         {
-            get => _internal.ReadString(Models.Internal.Rom.AltRomnameKey);
-            set => _internal[Models.Internal.Rom.AltRomnameKey] = value;
+            get => _internal.ReadString(Models.Metadata.Rom.AltRomnameKey);
+            set => _internal[Models.Metadata.Rom.AltRomnameKey] = value;
         }
 
         /// <summary>
@@ -278,8 +278,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("alt_title", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("alt_title")]
         public string? AltTitle
         {
-            get => _internal.ReadString(Models.Internal.Rom.AltTitleKey);
-            set => _internal[Models.Internal.Rom.AltTitleKey] = value;
+            get => _internal.ReadString(Models.Metadata.Rom.AltTitleKey);
+            set => _internal[Models.Metadata.Rom.AltTitleKey] = value;
         }
 
         #endregion
@@ -292,8 +292,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("mia", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("mia")]
         public bool? MIA
         {
-            get => _internal.ReadBool(Models.Internal.Rom.MIAKey);
-            set => _internal[Models.Internal.Rom.MIAKey] = value;
+            get => _internal.ReadBool(Models.Metadata.Rom.MIAKey);
+            set => _internal[Models.Metadata.Rom.MIAKey] = value;
         }
 
         [JsonIgnore]
@@ -324,8 +324,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public OpenMSXSubType OpenMSXSubType
         {
-            get => _internal.ReadString(Models.Internal.Rom.OpenMSXMediaType).AsOpenMSXSubType();
-            set => _internal[Models.Internal.Rom.OpenMSXMediaType] = value.FromOpenMSXSubType();
+            get => _internal.ReadString(Models.Metadata.Rom.OpenMSXMediaType).AsOpenMSXSubType();
+            set => _internal[Models.Metadata.Rom.OpenMSXMediaType] = value.FromOpenMSXSubType();
         }
 
         [JsonIgnore]
@@ -338,8 +338,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("openmsx_type", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("openmsx_type")]
         public string? OpenMSXType
         {
-            get => _internal.ReadString(Models.Internal.Rom.OpenMSXType);
-            set => _internal[Models.Internal.Rom.OpenMSXType] = value;
+            get => _internal.ReadString(Models.Metadata.Rom.OpenMSXType);
+            set => _internal[Models.Metadata.Rom.OpenMSXType] = value;
         }
 
         /// <summary>
@@ -348,8 +348,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("remark", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("remark")]
         public string? Remark
         {
-            get => _internal.ReadString(Models.Internal.Rom.RemarkKey);
-            set => _internal[Models.Internal.Rom.RemarkKey] = value;
+            get => _internal.ReadString(Models.Metadata.Rom.RemarkKey);
+            set => _internal[Models.Metadata.Rom.RemarkKey] = value;
         }
 
         /// <summary>
@@ -398,8 +398,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public LoadFlag LoadFlag
         {
-            get => _internal.ReadString(Models.Internal.Rom.LoadFlagKey).AsLoadFlag();
-            set => _internal[Models.Internal.Rom.LoadFlagKey] = value.FromLoadFlag();
+            get => _internal.ReadString(Models.Metadata.Rom.LoadFlagKey).AsLoadFlag();
+            set => _internal[Models.Metadata.Rom.LoadFlagKey] = value.FromLoadFlag();
         }
 
         [JsonIgnore]
@@ -433,8 +433,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("value")]
         public string? Value
         {
-            get => _internal.ReadString(Models.Internal.Rom.ValueKey);
-            set => _internal[Models.Internal.Rom.ValueKey] = value;
+            get => _internal.ReadString(Models.Metadata.Rom.ValueKey);
+            set => _internal[Models.Metadata.Rom.ValueKey] = value;
         }
 
         #endregion
@@ -458,7 +458,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Rom()
         {
-            _internal = new Models.Internal.Rom();
+            _internal = new Models.Metadata.Rom();
             Machine = new Machine();
 
             Name = null;
@@ -475,7 +475,7 @@ namespace SabreTools.DatItems.Formats
         /// <param name="omitFromScan"></param>
         public Rom(string name, string machineName)
         {
-            _internal = new Models.Internal.Rom();
+            _internal = new Models.Metadata.Rom();
             Name = name;
             ItemType = ItemType.Rom;
             Size = null;
@@ -494,7 +494,7 @@ namespace SabreTools.DatItems.Formats
         /// <param name="baseFile"></param>
         public Rom(BaseFile baseFile)
         {
-            _internal = new Models.Internal.Rom();
+            _internal = new Models.Metadata.Rom();
             Machine = new Machine();
 
             Name = baseFile.Filename;
@@ -516,9 +516,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a Rom object from the internal model
         /// </summary>
-        public Rom(Models.Internal.Rom? rom)
+        public Rom(Models.Metadata.Rom? rom)
         {
-            _internal = rom ?? new Models.Internal.Rom();
+            _internal = rom ?? new Models.Metadata.Rom();
 
             ItemType = ItemType.Rom;
             DupeType = 0x00;
@@ -542,7 +542,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.Rom ?? new Models.Internal.Rom(),
+                _internal = this._internal?.Clone() as Models.Metadata.Rom ?? new Models.Metadata.Rom(),
             };
         }
 

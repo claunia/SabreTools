@@ -193,16 +193,16 @@ namespace SabreTools.Serialization
         #region Internal
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.MetadataFile"/> to <cref="Models.Listrom.MetadataFile"/>
+        /// Convert from <cref="Models.Metadata.MetadataFile"/> to <cref="Models.Listrom.MetadataFile"/>
         /// </summary>
-        public static MetadataFile? ConvertFromInternalModel(Models.Internal.MetadataFile? item)
+        public static MetadataFile? ConvertFromInternalModel(Models.Metadata.MetadataFile? item)
         {
             if (item == null)
                 return null;
 
             var metadataFile = new MetadataFile();
 
-            var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
+            var machines = item.Read<Models.Metadata.Machine[]>(Models.Metadata.MetadataFile.MachineKey);
             if (machines != null && machines.Any())
             {
                 metadataFile.Set = machines
@@ -215,25 +215,25 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.Listrom.Set"/>
+        /// Convert from <cref="Models.Metadata.Machine"/> to <cref="Models.Listrom.Set"/>
         /// </summary>
-        private static Set ConvertMachineFromInternalModel(Models.Internal.Machine item)
+        private static Set ConvertMachineFromInternalModel(Models.Metadata.Machine item)
         {
             var set = new Set();
-            if (item.ReadString(Models.Internal.Machine.IsDeviceKey) == "yes")
-                set.Device = item.ReadString(Models.Internal.Machine.NameKey);
+            if (item.ReadString(Models.Metadata.Machine.IsDeviceKey) == "yes")
+                set.Device = item.ReadString(Models.Metadata.Machine.NameKey);
             else
-                set.Driver = item.ReadString(Models.Internal.Machine.NameKey);
+                set.Driver = item.ReadString(Models.Metadata.Machine.NameKey);
 
             var rowItems = new List<Row>();
 
-            var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
+            var roms = item.Read<Models.Metadata.Rom[]>(Models.Metadata.Machine.RomKey);
             if (roms != null)
             {
                 rowItems.AddRange(roms.Where(r => r != null).Select(ConvertFromInternalModel));
             }
 
-            var disks = item.Read<Models.Internal.Disk[]>(Models.Internal.Machine.DiskKey);
+            var disks = item.Read<Models.Metadata.Disk[]>(Models.Metadata.Machine.DiskKey);
             if (disks != null)
                 rowItems.AddRange(disks.Where(d => d != null).Select(ConvertFromInternalModel));
 
@@ -242,41 +242,41 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Disk"/> to <cref="Models.Listrom.Row"/>
+        /// Convert from <cref="Models.Metadata.Disk"/> to <cref="Models.Listrom.Row"/>
         /// </summary>
-        private static Row ConvertFromInternalModel(Models.Internal.Disk item)
+        private static Row ConvertFromInternalModel(Models.Metadata.Disk item)
         {
             var row = new Row
             {
-                Name = item.ReadString(Models.Internal.Disk.NameKey),
-                MD5 = item.ReadString(Models.Internal.Disk.MD5Key),
-                SHA1 = item.ReadString(Models.Internal.Disk.SHA1Key),
+                Name = item.ReadString(Models.Metadata.Disk.NameKey),
+                MD5 = item.ReadString(Models.Metadata.Disk.MD5Key),
+                SHA1 = item.ReadString(Models.Metadata.Disk.SHA1Key),
             };
 
-            if (item[Models.Internal.Disk.StatusKey] as string == "nodump")
+            if (item[Models.Metadata.Disk.StatusKey] as string == "nodump")
                 row.NoGoodDumpKnown = true;
-            else if (item[Models.Internal.Disk.StatusKey] as string == "baddump")
+            else if (item[Models.Metadata.Disk.StatusKey] as string == "baddump")
                 row.Bad = true;
 
             return row;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Listrom.Row"/>
+        /// Convert from <cref="Models.Metadata.Rom"/> to <cref="Models.Listrom.Row"/>
         /// </summary>
-        private static Row ConvertFromInternalModel(Models.Internal.Rom item)
+        private static Row ConvertFromInternalModel(Models.Metadata.Rom item)
         {
             var row = new Row
             {
-                Name = item.ReadString(Models.Internal.Rom.NameKey),
-                Size = item.ReadString(Models.Internal.Rom.SizeKey),
-                CRC = item.ReadString(Models.Internal.Rom.CRCKey),
-                SHA1 = item.ReadString(Models.Internal.Rom.SHA1Key),
+                Name = item.ReadString(Models.Metadata.Rom.NameKey),
+                Size = item.ReadString(Models.Metadata.Rom.SizeKey),
+                CRC = item.ReadString(Models.Metadata.Rom.CRCKey),
+                SHA1 = item.ReadString(Models.Metadata.Rom.SHA1Key),
             };
 
-            if (item[Models.Internal.Rom.StatusKey] as string == "nodump")
+            if (item[Models.Metadata.Rom.StatusKey] as string == "nodump")
                 row.NoGoodDumpKnown = true;
-            else if (item[Models.Internal.Rom.StatusKey] as string == "baddump")
+            else if (item[Models.Metadata.Rom.StatusKey] as string == "baddump")
                 row.Bad = true;
 
             return row;

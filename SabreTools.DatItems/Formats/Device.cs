@@ -23,8 +23,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public DeviceType DeviceType
         {
-            get => _internal.ReadString(Models.Internal.Device.DeviceTypeKey).AsDeviceType();
-            set => _internal[Models.Internal.Device.DeviceTypeKey] = value.FromDeviceType();
+            get => _internal.ReadString(Models.Metadata.Device.DeviceTypeKey).AsDeviceType();
+            set => _internal[Models.Metadata.Device.DeviceTypeKey] = value.FromDeviceType();
         }
 
         [JsonIgnore]
@@ -36,8 +36,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tag")]
         public string? Tag
         {
-            get => _internal.ReadString(Models.Internal.Device.TagKey);
-            set => _internal[Models.Internal.Device.TagKey] = value;
+            get => _internal.ReadString(Models.Metadata.Device.TagKey);
+            set => _internal[Models.Metadata.Device.TagKey] = value;
         }
 
         /// <summary>
@@ -46,8 +46,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("fixed_image", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("fixed_image")]
         public string? FixedImage
         {
-            get => _internal.ReadString(Models.Internal.Device.FixedImageKey);
-            set => _internal[Models.Internal.Device.FixedImageKey] = value;
+            get => _internal.ReadString(Models.Metadata.Device.FixedImageKey);
+            set => _internal[Models.Metadata.Device.FixedImageKey] = value;
         }
 
         /// <summary>
@@ -57,8 +57,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("mandatory", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("mandatory")]
         public long? Mandatory
         {
-            get => _internal.ReadLong(Models.Internal.Device.MandatoryKey);
-            set => _internal[Models.Internal.Device.MandatoryKey] = value;
+            get => _internal.ReadLong(Models.Metadata.Device.MandatoryKey);
+            set => _internal[Models.Metadata.Device.MandatoryKey] = value;
         }
 
         [JsonIgnore]
@@ -70,8 +70,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("interface", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("interface")]
         public string? Interface
         {
-            get => _internal.ReadString(Models.Internal.Device.InterfaceKey);
-            set => _internal[Models.Internal.Device.InterfaceKey] = value;
+            get => _internal.ReadString(Models.Metadata.Device.InterfaceKey);
+            set => _internal[Models.Metadata.Device.InterfaceKey] = value;
         }
 
         /// <summary>
@@ -80,8 +80,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("instances", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("instances")]
         public List<Instance>? Instances
         {
-            get => _internal.Read<Instance[]>(Models.Internal.Device.InstanceKey)?.ToList();
-            set => _internal[Models.Internal.Device.InstanceKey] = value?.ToArray();
+            get => _internal.Read<Instance[]>(Models.Metadata.Device.InstanceKey)?.ToList();
+            set => _internal[Models.Metadata.Device.InstanceKey] = value?.ToArray();
         }
 
         [JsonIgnore]
@@ -93,8 +93,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("extensions", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("extensions")]
         public List<Extension>? Extensions
         {
-            get => _internal.Read<Extension[]>(Models.Internal.Device.ExtensionKey)?.ToList();
-            set => _internal[Models.Internal.Device.ExtensionKey] = value?.ToArray();
+            get => _internal.Read<Extension[]>(Models.Metadata.Device.ExtensionKey)?.ToList();
+            set => _internal[Models.Metadata.Device.ExtensionKey] = value?.ToArray();
         }
 
         [JsonIgnore]
@@ -109,7 +109,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Device()
         {
-            _internal = new Models.Internal.Device();
+            _internal = new Models.Metadata.Device();
             Machine = new Machine();
 
             ItemType = ItemType.Device;
@@ -131,7 +131,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.Device ?? new Models.Internal.Device(),
+                _internal = this._internal?.Clone() as Models.Metadata.Device ?? new Models.Metadata.Device(),
             };
         }
 

@@ -18,8 +18,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string? Name
         {
-            get => _internal.ReadString(Models.Internal.BiosSet.NameKey);
-            set => _internal[Models.Internal.BiosSet.NameKey] = value;
+            get => _internal.ReadString(Models.Metadata.BiosSet.NameKey);
+            set => _internal[Models.Metadata.BiosSet.NameKey] = value;
         }
 
         /// <summary>
@@ -28,8 +28,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("description", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("description")]
         public string? Description
         {
-            get => _internal.ReadString(Models.Internal.BiosSet.DescriptionKey);
-            set => _internal[Models.Internal.BiosSet.DescriptionKey] = value;
+            get => _internal.ReadString(Models.Metadata.BiosSet.DescriptionKey);
+            set => _internal[Models.Metadata.BiosSet.DescriptionKey] = value;
         }
 
         /// <summary>
@@ -38,8 +38,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("default")]
         public bool? Default
         {
-            get => _internal.ReadBool(Models.Internal.BiosSet.DefaultKey);
-            set => _internal[Models.Internal.BiosSet.DefaultKey] = value;
+            get => _internal.ReadBool(Models.Metadata.BiosSet.DefaultKey);
+            set => _internal[Models.Metadata.BiosSet.DefaultKey] = value;
         }
 
         [JsonIgnore]
@@ -64,7 +64,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public BiosSet()
         {
-            _internal = new Models.Internal.BiosSet();
+            _internal = new Models.Metadata.BiosSet();
             Machine = new Machine();
 
             Name = string.Empty;
@@ -87,7 +87,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.BiosSet ?? new Models.Internal.BiosSet(),
+                _internal = this._internal?.Clone() as Models.Metadata.BiosSet ?? new Models.Metadata.BiosSet(),
             };
         }
 

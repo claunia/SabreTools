@@ -20,8 +20,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tag")]
         public string? Tag
         {
-            get => _internal.ReadString(Models.Internal.Port.TagKey);
-            set => _internal[Models.Internal.Port.TagKey] = value;
+            get => _internal.ReadString(Models.Metadata.Port.TagKey);
+            set => _internal[Models.Metadata.Port.TagKey] = value;
         }
 
         /// <summary>
@@ -30,8 +30,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("analogs", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("analogs")]
         public List<Analog>? Analogs
         {
-            get => _internal.Read<Analog[]>(Models.Internal.Port.AnalogKey)?.ToList();
-            set => _internal[Models.Internal.Port.AnalogKey] = value?.ToArray();
+            get => _internal.Read<Analog[]>(Models.Metadata.Port.AnalogKey)?.ToList();
+            set => _internal[Models.Metadata.Port.AnalogKey] = value?.ToArray();
         }
 
         [JsonIgnore]
@@ -46,7 +46,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Port()
         {
-            _internal = new Models.Internal.Port();
+            _internal = new Models.Metadata.Port();
             Machine = new Machine();
 
             ItemType = ItemType.Port;
@@ -68,7 +68,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.Port ?? new Models.Internal.Port(),
+                _internal = this._internal?.Clone() as Models.Metadata.Port ?? new Models.Metadata.Port(),
             };
         }
 

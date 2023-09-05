@@ -20,8 +20,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("name")]
         public string? Name
         {
-            get => _internal.ReadString(Models.Internal.DataArea.NameKey);
-            set => _internal[Models.Internal.DataArea.NameKey] = value;
+            get => _internal.ReadString(Models.Metadata.DataArea.NameKey);
+            set => _internal[Models.Metadata.DataArea.NameKey] = value;
         }
 
         /// <summary>
@@ -30,8 +30,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("size", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("size")]
         public long? Size
         {
-            get => _internal.ReadLong(Models.Internal.DataArea.SizeKey);
-            set => _internal[Models.Internal.DataArea.SizeKey] = value;
+            get => _internal.ReadLong(Models.Metadata.DataArea.SizeKey);
+            set => _internal[Models.Metadata.DataArea.SizeKey] = value;
         }
 
         [JsonIgnore]
@@ -43,8 +43,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("width", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("width")]
         public long? Width
         {
-            get => _internal.ReadLong(Models.Internal.DataArea.WidthKey);
-            set => _internal[Models.Internal.DataArea.WidthKey] = value;
+            get => _internal.ReadLong(Models.Metadata.DataArea.WidthKey);
+            set => _internal[Models.Metadata.DataArea.WidthKey] = value;
         }
 
         [JsonIgnore]
@@ -56,8 +56,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("endianness", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("endianness")]
         public Endianness Endianness
         {
-            get => _internal.ReadString(Models.Internal.DataArea.WidthKey).AsEndianness();
-            set => _internal[Models.Internal.DataArea.WidthKey] = value.FromEndianness();
+            get => _internal.ReadString(Models.Metadata.DataArea.WidthKey).AsEndianness();
+            set => _internal[Models.Metadata.DataArea.WidthKey] = value.FromEndianness();
         }
 
         [JsonIgnore]
@@ -82,7 +82,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public DataArea()
         {
-            _internal = new Models.Internal.DataArea();
+            _internal = new Models.Metadata.DataArea();
             Machine = new Machine();
 
             Name = string.Empty;
@@ -105,7 +105,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Internal.DataArea ?? new Models.Internal.DataArea(),
+                _internal = this._internal?.Clone() as Models.Metadata.DataArea ?? new Models.Metadata.DataArea(),
             };
         }
 

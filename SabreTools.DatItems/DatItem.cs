@@ -72,8 +72,8 @@ namespace SabreTools.DatItems
         [XmlElement("itemtype")]
         public ItemType ItemType
         {
-            get => _internal.ReadString(Models.Internal.DatItem.TypeKey).AsItemType();
-            set => _internal[Models.Internal.DatItem.TypeKey] = value.FromItemType();
+            get => _internal.ReadString(Models.Metadata.DatItem.TypeKey).AsItemType();
+            set => _internal[Models.Metadata.DatItem.TypeKey] = value.FromItemType();
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace SabreTools.DatItems
         /// Internal model wrapped by this DatItem
         /// </summary>
         [JsonIgnore, XmlIgnore]
-        protected Models.Internal.DatItem _internal;
+        protected Models.Metadata.DatItem _internal;
 
         #endregion
 
@@ -179,7 +179,7 @@ namespace SabreTools.DatItems
         /// </summary>
         public DatItem()
         {
-            _internal = new Models.Internal.Blank();
+            _internal = new Models.Metadata.Blank();
             Machine = new Machine();
 
             logger = new Logger(this);

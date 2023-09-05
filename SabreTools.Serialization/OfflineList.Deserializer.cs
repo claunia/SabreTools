@@ -11,17 +11,17 @@ namespace SabreTools.Serialization
         #region Internal
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.MetadataFile"/> to <cref="Models.OfflineList.Dat"/>
+        /// Convert from <cref="Models.Metadata.MetadataFile"/> to <cref="Models.OfflineList.Dat"/>
         /// </summary>
-        public static Dat? ConvertFromInternalModel(Models.Internal.MetadataFile? item)
+        public static Dat? ConvertFromInternalModel(Models.Metadata.MetadataFile? item)
         {
             if (item == null)
                 return null;
 
-            var header = item.Read<Models.Internal.Header>(Models.Internal.MetadataFile.HeaderKey);
+            var header = item.Read<Models.Metadata.Header>(Models.Metadata.MetadataFile.HeaderKey);
             var dat = header != null ? ConvertHeaderFromInternalModel(header) : new Dat();
 
-            var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
+            var machines = item.Read<Models.Metadata.Machine[]>(Models.Metadata.MetadataFile.MachineKey);
             if (machines != null && machines.Any())
             {
                 dat.Games = new Games
@@ -37,48 +37,48 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.OfflineList.Dat"/>
+        /// Convert from <cref="Models.Metadata.Header"/> to <cref="Models.OfflineList.Dat"/>
         /// </summary>
-        private static Dat ConvertHeaderFromInternalModel(Models.Internal.Header item)
+        private static Dat ConvertHeaderFromInternalModel(Models.Metadata.Header item)
         {
             var dat = new Dat
             {
-                NoNamespaceSchemaLocation = item.ReadString(Models.Internal.Header.SchemaLocationKey),
+                NoNamespaceSchemaLocation = item.ReadString(Models.Metadata.Header.SchemaLocationKey),
             };
 
-            if (item.ContainsKey(Models.Internal.Header.NameKey)
-                || item.ContainsKey(Models.Internal.Header.ImFolderKey)
-                || item.ContainsKey(Models.Internal.Header.DatVersionKey)
-                || item.ContainsKey(Models.Internal.Header.SystemKey)
-                || item.ContainsKey(Models.Internal.Header.ScreenshotsWidthKey)
-                || item.ContainsKey(Models.Internal.Header.ScreenshotsHeightKey)
-                || item.ContainsKey(Models.Internal.Header.InfosKey)
-                || item.ContainsKey(Models.Internal.Header.CanOpenKey)
-                || item.ContainsKey(Models.Internal.Header.NewDatKey)
-                || item.ContainsKey(Models.Internal.Header.SearchKey)
-                || item.ContainsKey(Models.Internal.Header.RomTitleKey))
+            if (item.ContainsKey(Models.Metadata.Header.NameKey)
+                || item.ContainsKey(Models.Metadata.Header.ImFolderKey)
+                || item.ContainsKey(Models.Metadata.Header.DatVersionKey)
+                || item.ContainsKey(Models.Metadata.Header.SystemKey)
+                || item.ContainsKey(Models.Metadata.Header.ScreenshotsWidthKey)
+                || item.ContainsKey(Models.Metadata.Header.ScreenshotsHeightKey)
+                || item.ContainsKey(Models.Metadata.Header.InfosKey)
+                || item.ContainsKey(Models.Metadata.Header.CanOpenKey)
+                || item.ContainsKey(Models.Metadata.Header.NewDatKey)
+                || item.ContainsKey(Models.Metadata.Header.SearchKey)
+                || item.ContainsKey(Models.Metadata.Header.RomTitleKey))
             {
                 dat.Configuration = new Configuration
                 {
-                    DatName = item.ReadString(Models.Internal.Header.NameKey),
-                    ImFolder = item.ReadString(Models.Internal.Header.ImFolderKey),
-                    DatVersion = item.ReadString(Models.Internal.Header.DatVersionKey),
-                    System = item.ReadString(Models.Internal.Header.SystemKey),
-                    ScreenshotsWidth = item.ReadString(Models.Internal.Header.ScreenshotsWidthKey),
-                    ScreenshotsHeight = item.ReadString(Models.Internal.Header.ScreenshotsHeightKey),
-                    Infos = item.Read<Infos>(Models.Internal.Header.InfosKey),
-                    CanOpen = item.Read<CanOpen>(Models.Internal.Header.CanOpenKey),
-                    NewDat = item.Read<NewDat>(Models.Internal.Header.NewDatKey),
-                    Search = item.Read<Search>(Models.Internal.Header.SearchKey),
-                    RomTitle = item.ReadString(Models.Internal.Header.RomTitleKey),
+                    DatName = item.ReadString(Models.Metadata.Header.NameKey),
+                    ImFolder = item.ReadString(Models.Metadata.Header.ImFolderKey),
+                    DatVersion = item.ReadString(Models.Metadata.Header.DatVersionKey),
+                    System = item.ReadString(Models.Metadata.Header.SystemKey),
+                    ScreenshotsWidth = item.ReadString(Models.Metadata.Header.ScreenshotsWidthKey),
+                    ScreenshotsHeight = item.ReadString(Models.Metadata.Header.ScreenshotsHeightKey),
+                    Infos = item.Read<Infos>(Models.Metadata.Header.InfosKey),
+                    CanOpen = item.Read<CanOpen>(Models.Metadata.Header.CanOpenKey),
+                    NewDat = item.Read<NewDat>(Models.Metadata.Header.NewDatKey),
+                    Search = item.Read<Search>(Models.Metadata.Header.SearchKey),
+                    RomTitle = item.ReadString(Models.Metadata.Header.RomTitleKey),
                 };
             }
 
-            if (item.ContainsKey(Models.Internal.Header.ImagesKey))
+            if (item.ContainsKey(Models.Metadata.Header.ImagesKey))
             {
                 dat.GUI = new GUI
                 {
-                    Images = item.Read<Images>(Models.Internal.Header.ImagesKey),
+                    Images = item.Read<Images>(Models.Metadata.Header.ImagesKey),
                 };
             }
 
@@ -86,31 +86,31 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.OfflineList.Game"/>
+        /// Convert from <cref="Models.Metadata.Machine"/> to <cref="Models.OfflineList.Game"/>
         /// </summary>
-        private static Game ConvertMachineFromInternalModel(Models.Internal.Machine item)
+        private static Game ConvertMachineFromInternalModel(Models.Metadata.Machine item)
         {
             var game = new Game
             {
-                ImageNumber = item.ReadString(Models.Internal.Machine.ImageNumberKey),
-                ReleaseNumber = item.ReadString(Models.Internal.Machine.ReleaseNumberKey),
-                Title = item.ReadString(Models.Internal.Machine.NameKey),
-                SaveType = item.ReadString(Models.Internal.Machine.SaveTypeKey),
-                Publisher = item.ReadString(Models.Internal.Machine.PublisherKey),
-                Location = item.ReadString(Models.Internal.Machine.LocationKey),
-                SourceRom = item.ReadString(Models.Internal.Machine.SourceRomKey),
-                Language = item.ReadString(Models.Internal.Machine.LanguageKey),
-                Im1CRC = item.ReadString(Models.Internal.Machine.Im1CRCKey),
-                Im2CRC = item.ReadString(Models.Internal.Machine.Im2CRCKey),
-                Comment = item.ReadString(Models.Internal.Machine.CommentKey),
-                DuplicateID = item.ReadString(Models.Internal.Machine.DuplicateIDKey),
+                ImageNumber = item.ReadString(Models.Metadata.Machine.ImageNumberKey),
+                ReleaseNumber = item.ReadString(Models.Metadata.Machine.ReleaseNumberKey),
+                Title = item.ReadString(Models.Metadata.Machine.NameKey),
+                SaveType = item.ReadString(Models.Metadata.Machine.SaveTypeKey),
+                Publisher = item.ReadString(Models.Metadata.Machine.PublisherKey),
+                Location = item.ReadString(Models.Metadata.Machine.LocationKey),
+                SourceRom = item.ReadString(Models.Metadata.Machine.SourceRomKey),
+                Language = item.ReadString(Models.Metadata.Machine.LanguageKey),
+                Im1CRC = item.ReadString(Models.Metadata.Machine.Im1CRCKey),
+                Im2CRC = item.ReadString(Models.Metadata.Machine.Im2CRCKey),
+                Comment = item.ReadString(Models.Metadata.Machine.CommentKey),
+                DuplicateID = item.ReadString(Models.Metadata.Machine.DuplicateIDKey),
             };
 
-            var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
+            var roms = item.Read<Models.Metadata.Rom[]>(Models.Metadata.Machine.RomKey);
             if (roms != null && roms.Any())
             {
                 game.RomSize = roms
-                    .Select(rom => rom.ReadString(Models.Internal.Rom.SizeKey))
+                    .Select(rom => rom.ReadString(Models.Metadata.Rom.SizeKey))
                     .FirstOrDefault(s => s != null);
 
                 var romCRCs = roms
@@ -125,14 +125,14 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.OfflineList.FileRomCRC"/>
+        /// Convert from <cref="Models.Metadata.Rom"/> to <cref="Models.OfflineList.FileRomCRC"/>
         /// </summary>
-        private static FileRomCRC ConvertFromInternalModel(Models.Internal.Rom item)
+        private static FileRomCRC ConvertFromInternalModel(Models.Metadata.Rom item)
         {
             var fileRomCRC = new FileRomCRC
             {
-                Extension = item.ReadString(Models.Internal.Rom.ExtensionKey),
-                Content = item.ReadString(Models.Internal.Rom.CRCKey),
+                Extension = item.ReadString(Models.Metadata.Rom.ExtensionKey),
+                Content = item.ReadString(Models.Metadata.Rom.CRCKey),
             };
             return fileRomCRC;
         }
