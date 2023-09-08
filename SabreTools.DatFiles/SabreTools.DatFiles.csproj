@@ -9,7 +9,6 @@
     <ProjectReference Include="..\NaturalSort\NaturalSort.csproj" />
     <ProjectReference Include="..\SabreTools.Core\SabreTools.Core.csproj" />
     <ProjectReference Include="..\SabreTools.DatItems\SabreTools.DatItems.csproj" />
-    <ProjectReference Include="..\SabreTools.IO\SabreTools.IO.csproj" />
     <ProjectReference Include="..\SabreTools.Logging\SabreTools.Logging.csproj" />
     <ProjectReference Include="..\SabreTools.Serialization\SabreTools.Serialization.csproj" />
   </ItemGroup>
@@ -17,6 +16,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.10" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="SabreTools.IO" Version="1.1.0" />
     <PackageReference Include="SabreTools.Models" Version="1.1.0" />
   </ItemGroup>
 

@@ -12,7 +12,6 @@
     <ProjectReference Include="..\SabreTools.DatTools\SabreTools.DatTools.csproj" />
     <ProjectReference Include="..\SabreTools.FileTypes\SabreTools.FileTypes.csproj" />
     <ProjectReference Include="..\SabreTools.Filtering\SabreTools.Filtering.csproj" />
-    <ProjectReference Include="..\SabreTools.IO\SabreTools.IO.csproj" />
     <ProjectReference Include="..\SabreTools.Serialization\SabreTools.Serialization.csproj" />
     <ProjectReference Include="..\SabreTools.Skippers\SabreTools.Skippers.csproj" />
   </ItemGroup>
@@ -33,6 +32,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
+    <PackageReference Include="SabreTools.IO" Version="1.1.0" />
     <PackageReference Include="SabreTools.Models" Version="1.1.0" />
     <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">

@@ -7,12 +7,12 @@
   <ItemGroup>
     <ProjectReference Include="..\NaturalSort\NaturalSort.csproj" />
     <ProjectReference Include="..\SabreTools.Core\SabreTools.Core.csproj" />
-    <ProjectReference Include="..\SabreTools.IO\SabreTools.IO.csproj" />
     <ProjectReference Include="..\SabreTools.Logging\SabreTools.Logging.csproj" />
     <ProjectReference Include="..\SabreTools.Skippers\SabreTools.Skippers.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="SabreTools.IO" Version="1.1.0" />
     <PackageReference Include="SharpCompress" Version="0.32.2" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
     <PackageReference Include="ZstdSharp.Port" Version="0.6.2" />

@@ -9,8 +9,11 @@
     <ProjectReference Include="..\SabreTools.DatFiles\SabreTools.DatFiles.csproj" />
     <ProjectReference Include="..\SabreTools.DatItems\SabreTools.DatItems.csproj" />
     <ProjectReference Include="..\SabreTools.Filter\SabreTools.Filter.csproj" />
-    <ProjectReference Include="..\SabreTools.IO\SabreTools.IO.csproj" />
     <ProjectReference Include="..\SabreTools.Logging\SabreTools.Logging.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="SabreTools.IO" Version="1.1.0" />
   </ItemGroup>
 
 </Project>
