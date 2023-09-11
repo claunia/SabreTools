@@ -138,9 +138,9 @@ namespace SabreTools.DatFiles.Formats
                 // Only write the doctype if we don't have No-Intro data
                 bool success;
                 if (string.IsNullOrWhiteSpace(Header.NoIntroID))
-                    success = Serialization.Logiqx.SerializeToFileWithDocType(datafile, outfile);
+                    success = new Serialization.Files.Logiqx().SerializeToFileWithDocType(datafile, outfile);
                 else
-                    success = Serialization.Logiqx.SerializeToFile(datafile, outfile);
+                    success = new Serialization.Files.Logiqx().Serialize(datafile, outfile);
 
                 if (!success)
                 {

@@ -19,7 +19,7 @@ namespace SabreTools.DatFiles.Formats
             try
             {
                 // Deserialize the input file
-                var dat = Serialization.OfflineList.Deserialize(filename);
+                var dat = new Serialization.Files.OfflineList().Deserialize(filename);
 
                 // Convert the header to the internal format
                 ConvertHeader(dat);

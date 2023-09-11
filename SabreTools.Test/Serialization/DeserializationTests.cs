@@ -22,7 +22,7 @@ namespace SabreTools.Test.Parser
             string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
 
             // Deserialize the file
-            var dat = Serialization.ArchiveDotOrg.Deserialize(filename);
+            var dat = new Serialization.Files.ArchiveDotOrg().Deserialize(filename);
 
             // Validate the values
             Assert.NotNull(dat?.File);
@@ -46,7 +46,7 @@ namespace SabreTools.Test.Parser
             string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
 
             // Deserialize the file
-            var dat = Serialization.AttractMode.Deserialize(filename);
+            var dat = new Serialization.Files.AttractMode().Deserialize(filename);
 
             // Validate texpected: he values
             Assert.NotNull(dat?.Row);
@@ -68,7 +68,7 @@ namespace SabreTools.Test.Parser
             string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
 
             // Deserialize the file
-            var dat = Serialization.ClrMamePro.Deserialize(filename, quotes: true);
+            var dat = new Serialization.Files.ClrMamePro().Deserialize(filename, quotes: true);
 
             // Validate the values
             if (expectHeader)
@@ -163,7 +163,7 @@ namespace SabreTools.Test.Parser
             string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
 
             // Deserialize the file
-            var dat = Serialization.DosCenter.Deserialize(filename);
+            var dat = new Serialization.Files.DosCenter().Deserialize(filename);
 
             // Validate the values
             Assert.NotNull(dat?.DosCenter);
@@ -190,7 +190,7 @@ namespace SabreTools.Test.Parser
             string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
 
             // Deserialize the file
-            var dat = Serialization.EverdriveSMDB.Deserialize(filename);
+            var dat = new Serialization.Files.EverdriveSMDB().Deserialize(filename);
 
             // Validate the values
             Assert.NotNull(dat?.Row);
@@ -217,7 +217,7 @@ namespace SabreTools.Test.Parser
             string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
 
             // Deserialize the file
-            var dat = Serialization.Hashfile.Deserialize(filename, hash);
+            var dat = new Serialization.Files.Hashfile().Deserialize(filename, hash);
 
             // Validate the values
             Assert.NotNull(dat);
@@ -258,7 +258,7 @@ namespace SabreTools.Test.Parser
             string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
 
             // Deserialize the file
-            var dat = Serialization.Listrom.Deserialize(filename);
+            var dat = new Serialization.Files.Listrom().Deserialize(filename);
 
             // Validate the values
             Assert.NotNull(dat?.Set);
@@ -277,7 +277,7 @@ namespace SabreTools.Test.Parser
             string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
 
             // Deserialize the file
-            var dat = Serialization.Listxml.Deserialize(filename);
+            var dat = new Serialization.Files.Listxml().Deserialize(filename);
 
             // Validate the values
             Assert.NotNull(dat?.Game);
@@ -506,7 +506,7 @@ namespace SabreTools.Test.Parser
             string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
 
             // Deserialize the file
-            var dat = Serialization.Logiqx.Deserialize(filename);
+            var dat = new Serialization.Files.Logiqx().Deserialize(filename);
 
             // Validate the values
             Assert.NotNull(dat?.Game);
@@ -694,7 +694,7 @@ namespace SabreTools.Test.Parser
             string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
 
             // Deserialize the file
-            var dat = Serialization.OfflineList.Deserialize(filename);
+            var dat = new Serialization.Files.OfflineList().Deserialize(filename);
 
             // Validate the values
             Assert.NotNull(dat?.Games?.Game);
@@ -899,7 +899,7 @@ namespace SabreTools.Test.Parser
             string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
 
             // Deserialize the file
-            var dat = Serialization.OpenMSX.Deserialize(filename);
+            var dat = new Serialization.Files.OpenMSX().Deserialize(filename);
 
             // Validate the values
             Assert.NotNull(dat);
@@ -942,7 +942,7 @@ namespace SabreTools.Test.Parser
             string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
 
             // Deserialize the file
-            var dat = Serialization.RomCenter.Deserialize(filename);
+            var dat = new Serialization.Files.RomCenter().Deserialize(filename);
 
             // Validate the values
             Assert.NotNull(dat?.Games?.Rom);
@@ -982,7 +982,7 @@ namespace SabreTools.Test.Parser
             string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
 
             // Deserialize the file
-            var dat = Serialization.SeparatedValue.Deserialize(filename, delim);
+            var dat = new Serialization.Files.SeparatedValue().Deserialize(filename, delim);
 
             // Validate the values
             Assert.NotNull(dat);
@@ -1005,7 +1005,7 @@ namespace SabreTools.Test.Parser
             string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
 
             // Deserialize the file
-            var dat = Serialization.SoftawreList.Deserialize(filename);
+            var dat = new Serialization.Files.SoftawreList().Deserialize(filename);
 
             // Validate the values
             Assert.NotNull(dat);

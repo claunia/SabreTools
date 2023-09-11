@@ -20,7 +20,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 // Deserialize the input file
                 // TODO: Support M1 DATs again
-                var mame = Serialization.Listxml.Deserialize(filename);
+                var mame = new Serialization.Files.Listxml().Deserialize(filename);
 
                 // Convert the header to the internal format
                 ConvertHeader(mame, keep);

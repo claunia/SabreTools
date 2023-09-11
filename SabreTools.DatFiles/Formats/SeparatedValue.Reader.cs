@@ -18,7 +18,7 @@ namespace SabreTools.DatFiles.Formats
             try
             {
                 // Deserialize the input file
-                var metadataFile = Serialization.SeparatedValue.Deserialize(filename, _delim);
+                var metadataFile = new Serialization.Files.SeparatedValue().Deserialize(filename, _delim);
 
                 // Convert the row data to the internal format
                 ConvertRows(metadataFile?.Row, filename, indexId, statsOnly);

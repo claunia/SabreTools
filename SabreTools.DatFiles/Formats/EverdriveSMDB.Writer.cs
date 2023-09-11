@@ -55,7 +55,7 @@ namespace SabreTools.DatFiles.Formats
                 logger.User($"Writing to '{outfile}'...");
 
                 var metadataFile = CreateMetadataFile(ignoreblanks);
-                if (!Serialization.EverdriveSMDB.SerializeToFile(metadataFile, outfile))
+                if (!(new Serialization.Files.EverdriveSMDB().Serialize(metadataFile, outfile)))
                 {
                     logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
                     return false;

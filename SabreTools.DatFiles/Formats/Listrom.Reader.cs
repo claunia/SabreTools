@@ -18,7 +18,7 @@ namespace SabreTools.DatFiles.Formats
             try
             {
                 // Deserialize the input file
-                var metadataFile = Serialization.Listrom.Deserialize(filename);
+                var metadataFile = new Serialization.Files.Listrom().Deserialize(filename);
 
                 // Convert the set data to the internal format
                 ConvertSets(metadataFile?.Set, filename, indexId, statsOnly);

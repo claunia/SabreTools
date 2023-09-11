@@ -140,7 +140,7 @@ namespace SabreTools.DatFiles.Formats
                 logger.User($"Writing to '{outfile}'...");
 
                 var softwarelist = CreateSoftwareList(ignoreblanks);
-                if (!Serialization.SoftawreList.SerializeToFileWithDocType(softwarelist, outfile))
+                if (!(new Serialization.Files.SoftwareList().SerializeToFileWithDocType(softwarelist, outfile)))
                 {
                     logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
                     return false;

@@ -157,7 +157,7 @@ namespace SabreTools.DatFiles.Formats
                 logger.User($"Writing to '{outfile}'...");
 
                 var hashfile = CreateHashFile(ignoreblanks);
-                if (!Serialization.Hashfile.SerializeToFile(hashfile, outfile, _hash))
+                if (!(new Serialization.Files.Hashfile().Serialize(hashfile, outfile, _hash)))
                 {
                     logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
                     return false;

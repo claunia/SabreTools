@@ -52,7 +52,7 @@ namespace SabreTools.DatFiles.Formats
                 logger.User($"Writing to '{outfile}'...");
 
                 var datafile = CreateDat(ignoreblanks);
-                if (!Serialization.OfflineList.SerializeToFile(datafile, outfile))
+                if (!(new Serialization.Files.OfflineList().Serialize(datafile, outfile)))
                 {
                     logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
                     return false;

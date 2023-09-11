@@ -19,7 +19,7 @@ namespace SabreTools.DatFiles.Formats
             try
             {
                 // Deserialize the input file
-                var metadataFile = Serialization.ClrMamePro.Deserialize(filename, this.Quotes);
+                var metadataFile = new Serialization.Files.ClrMamePro().Deserialize(filename, this.Quotes);
 
                 // Convert the header to the internal format
                 ConvertHeader(metadataFile?.ClrMamePro, keep);

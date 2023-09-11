@@ -18,7 +18,7 @@ namespace SabreTools.DatFiles.Formats
             try
             {
                 // Deserialize the input file
-                var metadataFile = Serialization.Logiqx.Deserialize(filename);
+                var metadataFile = new Serialization.Files.Logiqx().Deserialize(filename);
 
                 // Convert the header to the internal format
                 ConvertHeader(metadataFile, keep);

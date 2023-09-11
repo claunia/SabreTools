@@ -55,7 +55,7 @@ namespace SabreTools.DatFiles.Formats
                 logger.User($"Writing to '{outfile}'...");
 
                 var files = CreateFiles(ignoreblanks);
-                if (!Serialization.ArchiveDotOrg.SerializeToFile(files, outfile))
+                if (!(new Serialization.Files.ArchiveDotOrg().Serialize(files, outfile)))
                 {
                     logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
                     return false;

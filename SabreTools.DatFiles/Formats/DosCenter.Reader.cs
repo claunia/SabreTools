@@ -17,7 +17,7 @@ namespace SabreTools.DatFiles.Formats
             try
             {
                 // Deserialize the input file
-                var metadataFile = Serialization.DosCenter.Deserialize(filename);
+                var metadataFile = new Serialization.Files.DosCenter().Deserialize(filename);
 
                 // Convert the header to the internal format
                 ConvertHeader(metadataFile?.DosCenter, keep);

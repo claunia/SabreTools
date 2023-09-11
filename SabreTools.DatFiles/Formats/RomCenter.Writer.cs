@@ -51,7 +51,7 @@ namespace SabreTools.DatFiles.Formats
                 logger.User($"Writing to '{outfile}'...");
 
                 var metadataFile = CreateMetadataFile(ignoreblanks);
-                if (!Serialization.RomCenter.SerializeToFile(metadataFile, outfile))
+                if (!(new Serialization.Files.RomCenter().Serialize(metadataFile, outfile)))
                 {
                     logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
                     return false;

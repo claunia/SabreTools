@@ -186,7 +186,7 @@ namespace SabreTools.DatFiles.Formats
                 logger.User($"Writing to '{outfile}'...");
 
                 var mame = CreateMame(ignoreblanks);
-                if (!Serialization.Listxml.SerializeToFile(mame, outfile))
+                if (!(new Serialization.Files.Listxml().Serialize(mame, outfile)))
                 {
                     logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
                     return false;

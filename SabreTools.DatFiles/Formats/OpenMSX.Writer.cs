@@ -49,7 +49,7 @@ namespace SabreTools.DatFiles.Formats
 
                 // TODO: Write out comment prefix somehow
                 var softwaredb = CreateSoftwareDb(ignoreblanks);
-                if (!Serialization.OpenMSX.SerializeToFileWithDocType(softwaredb, outfile))
+                if (!(new Serialization.Files.OpenMSX().SerializeToFileWithDocType(softwaredb, outfile)))
                 {
                     logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
                     return false;

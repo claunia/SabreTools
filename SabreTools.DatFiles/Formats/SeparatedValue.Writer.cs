@@ -70,7 +70,7 @@ namespace SabreTools.DatFiles.Formats
                 logger.User($"Writing to '{outfile}'...");
 
                 var metadataFile = CreateMetadataFile(ignoreblanks);
-                if (!Serialization.SeparatedValue.SerializeToFile(metadataFile, outfile, _delim))
+                if (!(new Serialization.Files.SeparatedValue().Serialize(metadataFile, outfile, _delim)))
                 {
                     logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
                     return false;

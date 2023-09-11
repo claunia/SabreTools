@@ -17,7 +17,7 @@ namespace SabreTools.DatFiles.Formats
             try
             {
                 // Deserialize the input file
-                var metadataFile = Serialization.AttractMode.Deserialize(filename);
+                var metadataFile = new Serialization.Files.AttractMode().Deserialize(filename);
 
                 // Convert the row data to the internal format
                 ConvertRows(metadataFile?.Row, filename, indexId, statsOnly);
@@ -38,7 +38,7 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ConvertRows(Models.AttractMode.Row[]? rows, string filename, int indexId, bool statsOnly)
+        private void ConvertRows(Models.AttractMode.Row?[]? rows, string filename, int indexId, bool statsOnly)
         {
             // If the rows array is missing, we can't do anything
             if (rows == null || !rows.Any())

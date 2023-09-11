@@ -18,7 +18,7 @@ namespace SabreTools.DatFiles.Formats
             try
             {
                 // Deserialize the input file
-                var softwarelist = Serialization.SoftawreList.Deserialize(filename);
+                var softwarelist = new Serialization.Files.SoftwareList().Deserialize(filename);
 
                 // Convert the header to the internal format
                 ConvertHeader(softwarelist, keep);

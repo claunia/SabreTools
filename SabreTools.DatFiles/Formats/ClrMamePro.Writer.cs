@@ -141,7 +141,7 @@ namespace SabreTools.DatFiles.Formats
                 logger.User($"Writing to '{outfile}'...");
 
                 var metadataFile = CreateMetadataFile(ignoreblanks);
-                if (!Serialization.ClrMamePro.SerializeToFile(metadataFile, outfile, Quotes))
+                if (!(new Serialization.Files.ClrMamePro().Serialize(metadataFile, outfile, Quotes)))
                 {
                     logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
                     return false;

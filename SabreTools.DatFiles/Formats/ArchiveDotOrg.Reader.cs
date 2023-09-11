@@ -19,7 +19,7 @@ namespace SabreTools.DatFiles.Formats
             try
             {
                 // Deserialize the input file
-                var files = Serialization.ArchiveDotOrg.Deserialize(filename);
+                var files = new Serialization.Files.ArchiveDotOrg().Deserialize(filename);
 
                 // Convert the files data to the internal format
                 ConvertFiles(files?.File, filename, indexId, statsOnly);
@@ -69,7 +69,11 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+#if NET48
         private void ConvertFiles(Models.ArchiveDotOrg.File[]? files, string filename, int indexId, bool statsOnly)
+#else
+        private void ConvertFiles(Models.ArchiveDotOrg.File?[]? files, string filename, int indexId, bool statsOnly)
+#endif
         {
             // If the files array is missing, we can't do anything
             if (files == null || !files.Any())

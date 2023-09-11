@@ -19,7 +19,7 @@ namespace SabreTools.DatFiles.Formats
             try
             {
                 // Deserialize the input file
-                var metadataFile = Serialization.EverdriveSMDB.Deserialize(filename);
+                var metadataFile = new Serialization.Files.EverdriveSMDB().Deserialize(filename);
 
                 // Convert the row data to the internal format
                 ConvertRows(metadataFile?.Row, filename, indexId, statsOnly);

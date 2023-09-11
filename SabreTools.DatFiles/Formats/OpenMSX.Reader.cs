@@ -18,7 +18,7 @@ namespace SabreTools.DatFiles.Formats
             try
             {
                 // Deserialize the input file
-                var softwareDb = Serialization.OpenMSX.Deserialize(filename);
+                var softwareDb = new Serialization.Files.OpenMSX().Deserialize(filename);
 
                 // Convert the header to the internal format
                 ConvertHeader(softwareDb);

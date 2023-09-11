@@ -18,7 +18,7 @@ namespace SabreTools.DatFiles.Formats
             try
             {
                 // Deserialize the input file
-                var metadataFile = Serialization.RomCenter.Deserialize(filename);
+                var metadataFile = new Serialization.Files.RomCenter().Deserialize(filename);
 
                 // Convert the credits data to the internal format
                 ConvertCredits(metadataFile?.Credits);

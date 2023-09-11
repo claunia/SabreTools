@@ -18,7 +18,7 @@ namespace SabreTools.DatFiles.Formats
             try
             {
                 // Deserialize the input file
-                var hashfile = Serialization.Hashfile.Deserialize(filename, _hash);
+                var hashfile = new Serialization.Files.Hashfile().Deserialize(filename, _hash);
 
                 // Convert items
                 switch (_hash)
