@@ -12,7 +12,7 @@ namespace SabreTools.Test.Parser
             var dat = GenerateOpenMSX();
 
             // Deserialize the file
-            var stream = new Serialization.Files.OpenMSX.SerializeToStream(dat) as System.IO.MemoryStream;
+            var stream = new Serialization.Streams.OpenMSX().Serialize(dat) as System.IO.MemoryStream;
 
             // Validate the values
             Assert.NotNull(stream);

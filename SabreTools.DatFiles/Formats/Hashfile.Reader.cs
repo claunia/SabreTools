@@ -23,25 +23,25 @@ namespace SabreTools.DatFiles.Formats
                 // Convert items
                 switch (_hash)
                 {
-                    case Hash.CRC:
+                    case Serialization.Hash.CRC:
                         ConvertSFV(hashfile?.SFV, filename, indexId, statsOnly);
                         break;
-                    case Hash.MD5:
+                    case Serialization.Hash.MD5:
                         ConvertMD5(hashfile?.MD5, filename, indexId, statsOnly);
                         break;
-                    case Hash.SHA1:
+                    case Serialization.Hash.SHA1:
                         ConvertSHA1(hashfile?.SHA1, filename, indexId, statsOnly);
                         break;
-                    case Hash.SHA256:
+                    case Serialization.Hash.SHA256:
                         ConvertSHA256(hashfile?.SHA256, filename, indexId, statsOnly);
                         break;
-                    case Hash.SHA384:
+                    case Serialization.Hash.SHA384:
                         ConvertSHA384(hashfile?.SHA384, filename, indexId, statsOnly);
                         break;
-                    case Hash.SHA512:
+                    case Serialization.Hash.SHA512:
                         ConvertSHA512(hashfile?.SHA512, filename, indexId, statsOnly);
                         break;
-                    case Hash.SpamSum:
+                    case Serialization.Hash.SpamSum:
                         ConvertSpamSum(hashfile?.SpamSum, filename, indexId, statsOnly);
                         break;
                 }

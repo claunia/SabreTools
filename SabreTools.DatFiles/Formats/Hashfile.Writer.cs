@@ -36,7 +36,7 @@ namespace SabreTools.DatFiles.Formats
             // Check hash linked to specific Hashfile type
             switch (_hash)
             {
-                case Hash.CRC:
+                case Serialization.Hash.CRC:
                     switch (datItem.ItemType)
                     {
                         case ItemType.Rom:
@@ -48,7 +48,7 @@ namespace SabreTools.DatFiles.Formats
                             break;
                     }
                     break;
-                case Hash.MD5:
+                case Serialization.Hash.MD5:
                     switch (datItem.ItemType)
                     {
                         case ItemType.Disk:
@@ -68,7 +68,7 @@ namespace SabreTools.DatFiles.Formats
                             break;
                     }
                     break;
-                case Hash.SHA1:
+                case Serialization.Hash.SHA1:
                     switch (datItem.ItemType)
                     {
                         case ItemType.Disk:
@@ -88,7 +88,7 @@ namespace SabreTools.DatFiles.Formats
                             break;
                     }
                     break;
-                case Hash.SHA256:
+                case Serialization.Hash.SHA256:
                     switch (datItem.ItemType)
                     {
                         case ItemType.Media:
@@ -104,7 +104,7 @@ namespace SabreTools.DatFiles.Formats
                             break;
                     }
                     break;
-                case Hash.SHA384:
+                case Serialization.Hash.SHA384:
                     switch (datItem.ItemType)
                     {
                         case ItemType.Rom:
@@ -116,7 +116,7 @@ namespace SabreTools.DatFiles.Formats
                             break;
                     }
                     break;
-                case Hash.SHA512:
+                case Serialization.Hash.SHA512:
                     switch (datItem.ItemType)
                     {
                         case ItemType.Rom:
@@ -128,7 +128,7 @@ namespace SabreTools.DatFiles.Formats
                             break;
                     }
                     break;
-                case Hash.SpamSum:
+                case Serialization.Hash.SpamSum:
                     switch (datItem.ItemType)
                     {
                         case ItemType.Media:
@@ -185,25 +185,25 @@ namespace SabreTools.DatFiles.Formats
 
             switch (_hash)
             {
-                case Hash.CRC:
+                case Serialization.Hash.CRC:
                     hashfile.SFV = CreateSFV(ignoreblanks);
                     break;
-                case Hash.MD5:
+                case Serialization.Hash.MD5:
                     hashfile.MD5 = CreateMD5(ignoreblanks);
                     break;
-                case Hash.SHA1:
+                case Serialization.Hash.SHA1:
                     hashfile.SHA1 = CreateSHA1(ignoreblanks);
                     break;
-                case Hash.SHA256:
+                case Serialization.Hash.SHA256:
                     hashfile.SHA256 = CreateSHA256(ignoreblanks);
                     break;
-                case Hash.SHA384:
+                case Serialization.Hash.SHA384:
                     hashfile.SHA384 = CreateSHA384(ignoreblanks);
                     break;
-                case Hash.SHA512:
+                case Serialization.Hash.SHA512:
                     hashfile.SHA512 = CreateSHA512(ignoreblanks);
                     break;
-                case Hash.SpamSum:
+                case Serialization.Hash.SpamSum:
                     hashfile.SpamSum = CreateSpamSum(ignoreblanks);
                     break;
             }

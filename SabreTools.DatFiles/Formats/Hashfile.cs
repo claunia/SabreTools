@@ -8,7 +8,7 @@ namespace SabreTools.DatFiles.Formats
     internal partial class Hashfile : DatFile
     {
         // Private instance variables specific to Hashfile DATs
-        private readonly Hash _hash;
+        private readonly Serialization.Hash _hash;
 
         /// <summary>
         /// Constructor designed for casting a base DatFile
@@ -18,7 +18,25 @@ namespace SabreTools.DatFiles.Formats
         public Hashfile(DatFile? datFile, Hash hash)
             : base(datFile)
         {
-            _hash = hash;
+            _hash = ConvertHash(hash);
+        }
+
+        /// <summary>
+        /// Convert hash types between internal and Serialization
+        /// </summary>
+        private Serialization.Hash ConvertHash(Hash hash)
+        {
+            return hash switch
+            {
+                Hash.CRC => Serialization.Hash.CRC,
+                Hash.MD5 => Serialization.Hash.MD5,
+                Hash.SHA1 => Serialization.Hash.SHA1,
+                Hash.SHA256 => Serialization.Hash.SHA256,
+                Hash.SHA384 => Serialization.Hash.SHA384,
+                Hash.SHA512 => Serialization.Hash.SHA512,
+                Hash.SpamSum => Serialization.Hash.SpamSum,
+                _ => throw new System.ArgumentOutOfRangeException(),
+            };
         }
     }
 }

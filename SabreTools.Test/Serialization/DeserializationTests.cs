@@ -204,14 +204,14 @@ namespace SabreTools.Test.Parser
         }
 
         [Theory]
-        [InlineData("test-sfv-files.sfv", Hash.CRC, 100)]
-        [InlineData("test-md5-files.md5", Hash.MD5, 100)]
-        [InlineData("test-sha1-files.sha1", Hash.SHA1, 100)]
-        [InlineData("test-sha256.sha256", Hash.SHA256, 1)]
-        [InlineData("test-sha384.sha384", Hash.SHA384, 1)]
-        [InlineData("test-sha512.sha512", Hash.SHA512, 1)]
-        [InlineData("test-spamsum.spamsum", Hash.SpamSum, 1)]
-        public void HashfileDeserializeTest(string path, Hash hash, long count)
+        [InlineData("test-sfv-files.sfv", Serialization.Hash.CRC, 100)]
+        [InlineData("test-md5-files.md5", Serialization.Hash.MD5, 100)]
+        [InlineData("test-sha1-files.sha1", Serialization.Hash.SHA1, 100)]
+        [InlineData("test-sha256.sha256", Serialization.Hash.SHA256, 1)]
+        [InlineData("test-sha384.sha384", Serialization.Hash.SHA384, 1)]
+        [InlineData("test-sha512.sha512", Serialization.Hash.SHA512, 1)]
+        [InlineData("test-spamsum.spamsum", Serialization.Hash.SpamSum, 1)]
+        public void HashfileDeserializeTest(string path, Serialization.Hash hash, long count)
         {
             // Open the file for reading
             string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
@@ -224,25 +224,25 @@ namespace SabreTools.Test.Parser
 
             switch (hash)
             {
-                case Hash.CRC:
+                case Serialization.Hash.CRC:
                     Assert.Equal(count, dat.SFV.Length);
                     break;
-                case Hash.MD5:
+                case Serialization.Hash.MD5:
                     Assert.Equal(count, dat.MD5.Length);
                     break;
-                case Hash.SHA1:
+                case Serialization.Hash.SHA1:
                     Assert.Equal(count, dat.SHA1.Length);
                     break;
-                case Hash.SHA256:
+                case Serialization.Hash.SHA256:
                     Assert.Equal(count, dat.SHA256.Length);
                     break;
-                case Hash.SHA384:
+                case Serialization.Hash.SHA384:
                     Assert.Equal(count, dat.SHA384.Length);
                     break;
-                case Hash.SHA512:
+                case Serialization.Hash.SHA512:
                     Assert.Equal(count, dat.SHA512.Length);
                     break;
-                case Hash.SpamSum:
+                case Serialization.Hash.SpamSum:
                     Assert.Equal(count, dat.SpamSum.Length);
                     break;
                 default:
@@ -1005,7 +1005,7 @@ namespace SabreTools.Test.Parser
             string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
 
             // Deserialize the file
-            var dat = new Serialization.Files.SoftawreList().Deserialize(filename);
+            var dat = new Serialization.Files.SoftwareList().Deserialize(filename);
 
             // Validate the values
             Assert.NotNull(dat);

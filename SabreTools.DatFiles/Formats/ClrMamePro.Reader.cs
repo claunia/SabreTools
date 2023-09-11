@@ -78,7 +78,7 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ConvertGames(Models.ClrMamePro.GameBase[]? games, string filename, int indexId, bool statsOnly)
+        private void ConvertGames(Models.ClrMamePro.GameBase?[]? games, string filename, int indexId, bool statsOnly)
         {
             // If the game array is missing, we can't do anything
             if (games == null || !games.Any())
@@ -98,7 +98,7 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ConvertGame(Models.ClrMamePro.GameBase game, string filename, int indexId, bool statsOnly)
+        private void ConvertGame(Models.ClrMamePro.GameBase? game, string filename, int indexId, bool statsOnly)
         {
             // If the game is missing, we can't do anything
             if (game == null)
