@@ -22,11 +22,11 @@ build_script:
   - cmd: dotnet publish SabreTools\SabreTools.csproj --framework net6.0 --runtime linux-x64 --self-contained true -p:PublishSingleFile=true
   - cmd: dotnet publish SabreTools\SabreTools.csproj --framework net6.0 --runtime osx-x64 --self-contained true -p:PublishSingleFile=true
 
-  # SabreTools, .NET 7.0
-  - cmd: dotnet publish SabreTools\SabreTools.csproj --framework net7.0 --runtime win-x86 --self-contained true -p:PublishSingleFile=true
-  - cmd: dotnet publish SabreTools\SabreTools.csproj --framework net7.0 --runtime win-x64 --self-contained true -p:PublishSingleFile=true
-  - cmd: dotnet publish SabreTools\SabreTools.csproj --framework net7.0 --runtime linux-x64 --self-contained true -p:PublishSingleFile=true
-  - cmd: dotnet publish SabreTools\SabreTools.csproj --framework net7.0 --runtime osx-x64 --self-contained true -p:PublishSingleFile=true
+  # SabreTools, .NET 8.0
+  - cmd: dotnet publish SabreTools\SabreTools.csproj --framework net8.0 --runtime win-x86 --self-contained true -p:PublishSingleFile=true
+  - cmd: dotnet publish SabreTools\SabreTools.csproj --framework net8.0 --runtime win-x64 --self-contained true -p:PublishSingleFile=true
+  - cmd: dotnet publish SabreTools\SabreTools.csproj --framework net8.0 --runtime linux-x64 --self-contained true -p:PublishSingleFile=true
+  - cmd: dotnet publish SabreTools\SabreTools.csproj --framework net8.0 --runtime osx-x64 --self-contained true -p:PublishSingleFile=true
 
   # RombaSharp, .NET 6.0
   - cmd: dotnet publish RombaSharp\RombaSharp.csproj --framework net6.0 --runtime win-x86 --self-contained true -p:PublishSingleFile=true
@@ -34,11 +34,11 @@ build_script:
   - cmd: dotnet publish RombaSharp\RombaSharp.csproj --framework net6.0 --runtime linux-x64 --self-contained true -p:PublishSingleFile=true
   - cmd: dotnet publish RombaSharp\RombaSharp.csproj --framework net6.0 --runtime osx-x64 --self-contained true -p:PublishSingleFile=true
 
-  # RombaSharp, .NET 7.0
-  - cmd: dotnet publish RombaSharp\RombaSharp.csproj --framework net7.0 --runtime win-x86 --self-contained true -p:PublishSingleFile=true
-  - cmd: dotnet publish RombaSharp\RombaSharp.csproj --framework net7.0 --runtime win-x64 --self-contained true -p:PublishSingleFile=true
-  - cmd: dotnet publish RombaSharp\RombaSharp.csproj --framework net7.0 --runtime linux-x64 --self-contained true -p:PublishSingleFile=true
-  - cmd: dotnet publish RombaSharp\RombaSharp.csproj --framework net7.0 --runtime osx-x64 --self-contained true -p:PublishSingleFile=true
+  # RombaSharp, .NET 8.0
+  - cmd: dotnet publish RombaSharp\RombaSharp.csproj --framework net8.0 --runtime win-x86 --self-contained true -p:PublishSingleFile=true
+  - cmd: dotnet publish RombaSharp\RombaSharp.csproj --framework net8.0 --runtime win-x64 --self-contained true -p:PublishSingleFile=true
+  - cmd: dotnet publish RombaSharp\RombaSharp.csproj --framework net8.0 --runtime linux-x64 --self-contained true -p:PublishSingleFile=true
+  - cmd: dotnet publish RombaSharp\RombaSharp.csproj --framework net8.0 --runtime osx-x64 --self-contained true -p:PublishSingleFile=true
 
 # post-build step
 after_build:
@@ -53,15 +53,15 @@ after_build:
   - cmd: cd %APPVEYOR_BUILD_FOLDER%\SabreTools\bin\Debug\net6.0\osx-x64\publish\
   - cmd: 7z a -tzip %APPVEYOR_BUILD_FOLDER%\SabreTools_net6.0_osx-x64.zip *
 
-  # SabreTools, .NET 7.0
-  - cmd: cd %APPVEYOR_BUILD_FOLDER%\SabreTools\bin\Debug\net7.0\win-x86\publish\
-  - cmd: 7z a -tzip %APPVEYOR_BUILD_FOLDER%\SabreTools_net7.0_win-x86.zip *
-  - cmd: cd %APPVEYOR_BUILD_FOLDER%\SabreTools\bin\Debug\net7.0\win-x64\publish\
-  - cmd: 7z a -tzip %APPVEYOR_BUILD_FOLDER%\SabreTools_net7.0_win-x64.zip *
-  - cmd: cd %APPVEYOR_BUILD_FOLDER%\SabreTools\bin\Debug\net7.0\linux-x64\publish\
-  - cmd: 7z a -tzip %APPVEYOR_BUILD_FOLDER%\SabreTools_net7.0_linux-x64.zip *
-  - cmd: cd %APPVEYOR_BUILD_FOLDER%\SabreTools\bin\Debug\net7.0\osx-x64\publish\
-  - cmd: 7z a -tzip %APPVEYOR_BUILD_FOLDER%\SabreTools_net7.0_osx-x64.zip *
+  # SabreTools, .NET 8.0
+  - cmd: cd %APPVEYOR_BUILD_FOLDER%\SabreTools\bin\Debug\net8.0\win-x86\publish\
+  - cmd: 7z a -tzip %APPVEYOR_BUILD_FOLDER%\SabreTools_net8.0_win-x86.zip *
+  - cmd: cd %APPVEYOR_BUILD_FOLDER%\SabreTools\bin\Debug\net8.0\win-x64\publish\
+  - cmd: 7z a -tzip %APPVEYOR_BUILD_FOLDER%\SabreTools_net8.0_win-x64.zip *
+  - cmd: cd %APPVEYOR_BUILD_FOLDER%\SabreTools\bin\Debug\net8.0\linux-x64\publish\
+  - cmd: 7z a -tzip %APPVEYOR_BUILD_FOLDER%\SabreTools_net8.0_linux-x64.zip *
+  - cmd: cd %APPVEYOR_BUILD_FOLDER%\SabreTools\bin\Debug\net8.0\osx-x64\publish\
+  - cmd: 7z a -tzip %APPVEYOR_BUILD_FOLDER%\SabreTools_net8.0_osx-x64.zip *
 
   # RombaSharp, .NET 6.0
   - cmd: cd %APPVEYOR_BUILD_FOLDER%\RombaSharp\bin\Debug\net6.0\win-x86\publish\
@@ -73,15 +73,15 @@ after_build:
   - cmd: cd %APPVEYOR_BUILD_FOLDER%\RombaSharp\bin\Debug\net6.0\osx-x64\publish\
   - cmd: 7z a -tzip %APPVEYOR_BUILD_FOLDER%\RombaSharp_net6.0_osx-x64.zip *
 
-  # RombaSharp, .NET 7.0
-  - cmd: cd %APPVEYOR_BUILD_FOLDER%\RombaSharp\bin\Debug\net7.0\win-x86\publish\
-  - cmd: 7z a -tzip %APPVEYOR_BUILD_FOLDER%\RombaSharp_net7.0_win-x86.zip *
-  - cmd: cd %APPVEYOR_BUILD_FOLDER%\RombaSharp\bin\Debug\net7.0\win-x64\publish\
-  - cmd: 7z a -tzip %APPVEYOR_BUILD_FOLDER%\RombaSharp_net7.0_win-x64.zip *
-  - cmd: cd %APPVEYOR_BUILD_FOLDER%\RombaSharp\bin\Debug\net7.0\linux-x64\publish\
-  - cmd: 7z a -tzip %APPVEYOR_BUILD_FOLDER%\RombaSharp_net7.0_linux-x64.zip *
-  - cmd: cd %APPVEYOR_BUILD_FOLDER%\RombaSharp\bin\Debug\net7.0\osx-x64\publish\
-  - cmd: 7z a -tzip %APPVEYOR_BUILD_FOLDER%\RombaSharp_net7.0_osx-x64.zip *
+  # RombaSharp, .NET 8.0
+  - cmd: cd %APPVEYOR_BUILD_FOLDER%\RombaSharp\bin\Debug\net8.0\win-x86\publish\
+  - cmd: 7z a -tzip %APPVEYOR_BUILD_FOLDER%\RombaSharp_net8.0_win-x86.zip *
+  - cmd: cd %APPVEYOR_BUILD_FOLDER%\RombaSharp\bin\Debug\net8.0\win-x64\publish\
+  - cmd: 7z a -tzip %APPVEYOR_BUILD_FOLDER%\RombaSharp_net8.0_win-x64.zip *
+  - cmd: cd %APPVEYOR_BUILD_FOLDER%\RombaSharp\bin\Debug\net8.0\linux-x64\publish\
+  - cmd: 7z a -tzip %APPVEYOR_BUILD_FOLDER%\RombaSharp_net8.0_linux-x64.zip *
+  - cmd: cd %APPVEYOR_BUILD_FOLDER%\RombaSharp\bin\Debug\net8.0\osx-x64\publish\
+  - cmd: 7z a -tzip %APPVEYOR_BUILD_FOLDER%\RombaSharp_net8.0_osx-x64.zip *
 
 # testing step
 test:
@@ -109,15 +109,15 @@ artifacts:
 - path: SabreTools_net6.0_osx-x64.zip
   name: SabreTools (.NET 6.0, OSX x64)
 
-# SabreTools, .NET 7.0
-- path: SabreTools_net7.0_win-x86.zip
-  name: SabreTools (.NET 7.0, Windows x86)
-- path: SabreTools_net7.0_win-x64.zip
-  name: SabreTools (.NET 7.0, Windows x64)
-- path: SabreTools_net7.0_linux-x64.zip
-  name: SabreTools (.NET 7.0, Linux x64)
-- path: SabreTools_net7.0_osx-x64.zip
-  name: SabreTools (.NET 7.0, OSX x64)
+# SabreTools, .NET 8.0
+- path: SabreTools_net8.0_win-x86.zip
+  name: SabreTools (.NET 8.0, Windows x86)
+- path: SabreTools_net8.0_win-x64.zip
+  name: SabreTools (.NET 8.0, Windows x64)
+- path: SabreTools_net8.0_linux-x64.zip
+  name: SabreTools (.NET 8.0, Linux x64)
+- path: SabreTools_net8.0_osx-x64.zip
+  name: SabreTools (.NET 8.0, OSX x64)
 
   # RombaSharp, .NET 6.0
 - path: RombaSharp_net6.0_win-x86.zip
@@ -129,12 +129,12 @@ artifacts:
 - path: RombaSharp_net6.0_osx-x64.zip
   name: RombaSharp (.NET 6.0, OSX x64)
 
-# RombaSharp, .NET 7.0
-- path: RombaSharp_net7.0_win-x86.zip
-  name: RombaSharp (.NET 7.0, Windows x86)
-- path: RombaSharp_net7.0_win-x64.zip
-  name: RombaSharp (.NET 7.0, Windows x64)
-- path: RombaSharp_net7.0_linux-x64.zip
-  name: RombaSharp (.NET 7.0, Linux x64)
-- path: RombaSharp_net7.0_osx-x64.zip
-  name: RombaSharp (.NET 7.0, OSX x64)
+# RombaSharp, .NET 8.0
+- path: RombaSharp_net8.0_win-x86.zip
+  name: RombaSharp (.NET 8.0, Windows x86)
+- path: RombaSharp_net8.0_win-x64.zip
+  name: RombaSharp (.NET 8.0, Windows x64)
+- path: RombaSharp_net8.0_linux-x64.zip
+  name: RombaSharp (.NET 8.0, Linux x64)
+- path: RombaSharp_net8.0_osx-x64.zip
+  name: RombaSharp (.NET 8.0, OSX x64)
