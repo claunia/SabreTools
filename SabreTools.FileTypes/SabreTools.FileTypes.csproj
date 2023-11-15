@@ -12,10 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="SabreTools.IO" Version="1.1.1" />
-    <PackageReference Include="SharpCompress" Version="0.32.2" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
-    <PackageReference Include="ZstdSharp.Port" Version="0.6.2" />
+    <PackageReference Include="SabreTools.IO" Version="1.2.0" />
+    <PackageReference Include="SharpCompress" Version="0.34.1" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
+    <PackageReference Include="ZstdSharp.Port" Version="0.7.3" />
   </ItemGroup>
 
 </Project>
