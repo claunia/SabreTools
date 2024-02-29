@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
+// Ported to SabreTools.Matching. Remove once published.
 namespace NaturalSort
 {
     public class NaturalComparer : Comparer<string>, IDisposable

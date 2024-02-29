@@ -1,5 +1,6 @@
 ﻿using System.IO;
 
+// Ported to SabreTools.Matching. Remove once published.
 namespace NaturalSort
 {
     public static class NaturalComparerUtil
