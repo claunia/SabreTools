@@ -154,12 +154,21 @@ namespace SabreTools.DatItems
             }
             set
             {
+#if NETFRAMEWORK
+                if ((value & MachineType.Bios) != 0)
+                    _machine[Models.Metadata.Machine.IsBiosKey] = "yes";
+                if ((value & MachineType.Device) != 0)
+                    _machine[Models.Metadata.Machine.IsDeviceKey] = "yes";
+                if ((value & MachineType.Mechanical) != 0)
+                    _machine[Models.Metadata.Machine.IsMechanicalKey] = "yes";
+#else
                 if (value.HasFlag(MachineType.Bios))
                     _machine[Models.Metadata.Machine.IsBiosKey] = "yes";
                 if (value.HasFlag(MachineType.Device))
                     _machine[Models.Metadata.Machine.IsDeviceKey] = "yes";
                 if (value.HasFlag(MachineType.Mechanical))
                     _machine[Models.Metadata.Machine.IsMechanicalKey] = "yes";
+#endif
             }
         }
 

@@ -345,7 +345,11 @@ namespace SabreTools.DatItems
                 return output;
 
             // If the duplicate is external already or should be, set it
+#if NETFRAMEWORK
+            if ((lastItem.DupeType & DupeType.External) != 0 || lastItem?.Source?.Index != Source?.Index)
+#else
             if (lastItem.DupeType.HasFlag(DupeType.External) || lastItem?.Source?.Index != Source?.Index)
+#endif
             {
                 if (lastItem?.Machine.Name == Machine?.Name && lastItem?.GetName() == GetName())
                     output = DupeType.External | DupeType.All;
@@ -392,9 +396,9 @@ namespace SabreTools.DatItems
                     key = (norename ? string.Empty
                         : Source?.Index.ToString().PadLeft(10, '0')
                             + "-")
-                    + (string.IsNullOrWhiteSpace(Machine?.Name)
+                    + (string.IsNullOrEmpty(Machine?.Name)
                             ? "Default"
-                            : Machine.Name);
+                            : Machine!.Name!);
                     if (lower)
                         key = key.ToLowerInvariant();
 
@@ -593,7 +597,11 @@ namespace SabreTools.DatItems
                 string datItemName = datItem.GetName() ?? datItem.ItemType.ToString();
 
                 // If the current item exactly matches the last item, then we don't add it
+#if NETFRAMEWORK
+                if ((datItem.GetDuplicateStatus(lastItem) & DupeType.All) != 0)
+#else
                 if (datItem.GetDuplicateStatus(lastItem).HasFlag(DupeType.All))
+#endif
                 {
                     staticLogger.Verbose($"Exact duplicate found for '{datItemName}'");
                     continue;
