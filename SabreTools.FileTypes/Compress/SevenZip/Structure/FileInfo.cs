@@ -98,7 +98,11 @@ namespace Compress.SevenZip.Structure
             byte[] namebyte;
             using (MemoryStream nameMem = new())
             {
+#if NET20 || NET35 || NET40
+                using BinaryWriter nameBw = new(nameMem, Encoding.UTF8);
+#else
                 using BinaryWriter nameBw = new(nameMem, Encoding.UTF8, true);
+#endif
                 nameBw.Write((byte)0); //not external
                 foreach (string name in Names)
                 {

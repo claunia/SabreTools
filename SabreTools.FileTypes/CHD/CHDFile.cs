@@ -94,7 +94,11 @@ namespace SabreTools.FileTypes.CHD
             uint parsedLength = 0;
             uint parsedVersion = 0;
 
+#if NET20 || NET35 || NET40
+            using (BinaryReader br = new(stream, Encoding.Default))
+#else
             using (BinaryReader br = new(stream, Encoding.Default, true))
+#endif
             {
                 parsedTag = br.ReadChars(8);
                 parsedLength = br.ReadUInt32BigEndian();

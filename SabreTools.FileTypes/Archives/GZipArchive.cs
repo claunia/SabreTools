@@ -94,7 +94,16 @@ namespace SabreTools.FileTypes.Archives
                 var gz = new gZip();
                 ZipReturn ret = gz.ZipFileOpen(this.Filename);
                 ret = gz.ZipFileOpenReadStream(0, out Stream gzstream, out ulong streamSize);
+#if NET20 || NET35
+                byte[] buffer = new byte[32768];
+                int read;
+                while ((read = gzstream.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    outstream.Write(buffer, 0, read);
+                }
+#else
                 gzstream.CopyTo(outstream);
+#endif
 
                 // Dispose of the streams
                 outstream.Dispose();
@@ -319,7 +328,9 @@ namespace SabreTools.FileTypes.Archives
             br.ReadBytes(16); // headermd5
             br.ReadBytes(4); // headercrc
             br.ReadUInt64(); // headersz
+#if NET40_OR_GREATER
             br.Dispose();
+#endif
 
             // If the header is not correct, return a blank rom
             bool correct = true;
@@ -382,7 +393,9 @@ namespace SabreTools.FileTypes.Archives
             headermd5 = br.ReadBytes(16);
             headercrc = br.ReadBytes(4);
             headersz = br.ReadUInt64();
+#if NET40_OR_GREATER
             br.Dispose();
+#endif
 
             // If the header is not correct, return a blank rom
             bool correct = true;
@@ -497,7 +510,9 @@ namespace SabreTools.FileTypes.Archives
                 sw.Write((uint)(baseFile.Size ?? 0));
 
                 // Dispose of everything
+#if NET40_OR_GREATER
                 sw.Dispose();
+#endif
                 outputStream.Dispose();
             }
 

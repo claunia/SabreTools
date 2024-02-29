@@ -175,7 +175,11 @@ namespace SabreTools.Features
 
                     // Try to output the file, overwriting only if it's not in the current directory
                     Writer.Write(datFile, realOutDir, overwrite: GetBoolean(features, InplaceValue));
+#if NET40_OR_GREATER || NETCOREAPP
                 });
+#else
+                }
+#endif
 
                 return true;
             }
@@ -308,7 +312,11 @@ namespace SabreTools.Features
                     // Finally output the diffed DatFile
                     string interOutDir = inputPath.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
                     Writer.Write(repDat, interOutDir, overwrite: GetBoolean(features, InplaceValue));
+#if NET40_OR_GREATER || NETCOREAPP
                 });
+#else
+                }
+#endif
             }
 
             // Output DATs after replacing fields from a base DatFile
@@ -339,7 +347,11 @@ namespace SabreTools.Features
                     // Finally output the replaced DatFile
                     string interOutDir = inputPath.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
                     Writer.Write(repDat, interOutDir, overwrite: GetBoolean(features, InplaceValue));
+#if NET40_OR_GREATER || NETCOREAPP
                 });
+#else
+                }
+#endif
             }
 
             // Merge all input files and write

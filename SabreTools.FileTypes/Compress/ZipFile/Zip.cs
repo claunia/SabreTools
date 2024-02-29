@@ -10,7 +10,7 @@ using FileInfo = RVIO.FileInfo;
 namespace Compress.ZipFile
 {
     public partial class Zip : ICompress
-    { 
+    {
         private readonly List<ZipLocalFile> _localFiles = new();
 
         private FileInfo? _zipFileInfo;
@@ -33,7 +33,7 @@ namespace Compress.ZipFile
 
         public Zip()
         {
-           CompressUtils.EncodeSetup();
+            CompressUtils.EncodeSetup();
         }
 
         public ZipOpenType ZipOpen { get; private set; }
@@ -56,7 +56,7 @@ namespace Compress.ZipFile
         {
             return _localFiles[i];
         }
-        
+
         public void ZipFileClose()
         {
             switch (ZipOpen)
@@ -79,7 +79,11 @@ namespace Compress.ZipFile
         public void BreakTrrntZip(string filename)
         {
             _zipFs = new FileStream(filename, FileMode.Open, FileAccess.ReadWrite);
-            using (BinaryReader zipBr = new BinaryReader(_zipFs,Encoding.UTF8,true))
+#if NET20 || NET35 || NET40
+            using (var zipBr = new BinaryReader(_zipFs,Encoding.UTF8))
+#else
+            using (var zipBr = new BinaryReader(_zipFs,Encoding.UTF8,true))
+#endif
             {
             _zipFs.Position = _zipFs.Length - 22;
             byte[] fileComment = zipBr.ReadBytes(22);

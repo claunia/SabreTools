@@ -182,8 +182,11 @@ namespace SabreTools.DatTools
                     {
                         logger.Error(ex, $"Report '{outfile}' could not be written out");
                     }
-
+#if NET40_OR_GREATER || NETCOREAPP
                 });
+#else
+                }
+#endif
             }
             catch (Exception ex) when (!throwOnError)
             {

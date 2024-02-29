@@ -66,7 +66,11 @@ namespace SabreTools.DatTools
 
                 datFile.Items.Remove(key);
                 datFile.Items.AddRange(key, newItems);
+#if NET40_OR_GREATER || NETCOREAPP
             });
+#else
+            }
+#endif
         }
 
         /// <summary>
@@ -117,7 +121,11 @@ namespace SabreTools.DatTools
                     // Now add the new list to the key
                     intDat.Items.Remove(key);
                     intDat.Items.AddRange(key, newDatItems);
+#if NET40_OR_GREATER || NETCOREAPP
                 });
+#else
+                }
+#endif
             }
 
             // If we are matching based on Machine fields of any sort
@@ -152,7 +160,11 @@ namespace SabreTools.DatTools
                     // Now add the new list to the key
                     intDat.Items.Remove(key);
                     intDat.Items.AddRange(key, newDatItems);
+#if NET40_OR_GREATER || NETCOREAPP
                 });
+#else
+                }
+#endif
             }
 
             watch.Stop();
@@ -234,7 +246,11 @@ namespace SabreTools.DatTools
                     intDat.Items.Remove(key);
                     intDat.Items.AddRange(key, keepDatItems);
                 }
+#if NET40_OR_GREATER || NETCOREAPP
             });
+#else
+            }
+#endif
 
             watch.Stop();
         }
@@ -336,7 +352,11 @@ namespace SabreTools.DatTools
                         dupeData.Items.Add(key, newrom);
                     }
                 }
+#if NET40_OR_GREATER || NETCOREAPP
             });
+#else
+            }
+#endif
 
             watch.Stop();
 
@@ -412,7 +432,11 @@ namespace SabreTools.DatTools
                     if (item.DupeType.HasFlag(DupeType.Internal) || item.DupeType == 0x00)
                         outDats[item.Source.Index].Items.Add(key, item);
                 }
+#if NET40_OR_GREATER || NETCOREAPP
             });
+#else
+            }
+#endif
 
             watch.Stop();
 
@@ -481,7 +505,11 @@ namespace SabreTools.DatTools
                         outerDiffData.Items.Add(key, newrom);
                     }
                 }
+#if NET40_OR_GREATER || NETCOREAPP
             });
+#else
+            }
+#endif
 
             watch.Stop();
 
@@ -581,7 +609,11 @@ namespace SabreTools.DatTools
                     if (item.Source != null && item.Source.Index == index)
                         indexDat.Items.Add(key, item);
                 }
+#if NET40_OR_GREATER || NETCOREAPP
             });
+#else
+            }
+#endif
         }
     }
 }

@@ -27,7 +27,11 @@ namespace SabreTools.FileTypes.Aaru
         {
             var checksumEntry = new ChecksumEntry();
 
+#if NET20 || NET35 || NET40
+            using (var br = new BinaryReader(stream, Encoding.Default))
+#else
             using (var br = new BinaryReader(stream, Encoding.Default, true))
+#endif
             {
                 checksumEntry.type = (AaruChecksumAlgorithm)br.ReadByte();
                 checksumEntry.length = br.ReadUInt32();

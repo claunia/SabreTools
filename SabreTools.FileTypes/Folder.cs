@@ -171,7 +171,7 @@ namespace SabreTools.FileTypes
         public virtual string? CopyToFile(string entryName, string outDir)
         {
             string? realentry = null;
-            
+
             // If we have an invalid filename
             if (this.Filename == null)
                 return null;
@@ -190,7 +190,7 @@ namespace SabreTools.FileTypes
                 string? match = files.Where(s => s.EndsWith(entryName)).FirstOrDefault();
 
                 // If we had a file, copy that over to the new name
-                if (!string.IsNullOrWhiteSpace(match))
+                if (!string.IsNullOrEmpty(match))
                 {
                     realentry = match;
                     File.Copy(match, Path.Combine(outDir, entryName));
@@ -232,9 +232,19 @@ namespace SabreTools.FileTypes
                 string? match = files.Where(s => s.EndsWith(entryName)).FirstOrDefault();
 
                 // If we had a file, copy that over to the new name
-                if (!string.IsNullOrWhiteSpace(match))
+                if (!string.IsNullOrEmpty(match))
                 {
+#if NET20 || NET35
+                    var tempStream = File.OpenRead(match);
+                    byte[] buffer = new byte[32768];
+                    int read;
+                    while ((read = tempStream.Read(buffer, 0, buffer.Length)) > 0)
+                    {
+                        ms.Write(buffer, 0, read);
+                    }
+#else
                     File.OpenRead(match).CopyTo(ms);
+#endif
                     realentry = match;
                 }
             }
@@ -264,14 +274,22 @@ namespace SabreTools.FileTypes
             if (_children == null || _children.Count == 0)
             {
                 _children = [];
+#if NETFRAMEWORK
+                foreach (string file in Directory.GetFiles(this.Filename, "*"))
+#else
                 foreach (string file in Directory.EnumerateFiles(this.Filename, "*", SearchOption.TopDirectoryOnly))
+#endif
                 {
                     BaseFile? nf = GetInfo(file, hashes: this.AvailableHashes);
                     if (nf != null)
                         _children.Add(nf);
                 }
 
+#if NETFRAMEWORK
+                foreach (string dir in Directory.GetDirectories(this.Filename, "*"))
+#else
                 foreach (string dir in Directory.EnumerateDirectories(this.Filename, "*", SearchOption.TopDirectoryOnly))
+#endif
                 {
                     Folder fl = new(dir);
                     _children.Add(fl);
@@ -337,7 +355,11 @@ namespace SabreTools.FileTypes
             if (writeToParent)
                 fileName = Path.Combine(outDir, TextHelper.RemovePathUnsafeCharacters(baseFile.Filename) ?? string.Empty);
             else
+#if NET20 || NET35
+                fileName = Path.Combine(Path.Combine(outDir, TextHelper.RemovePathUnsafeCharacters(baseFile.Parent) ?? string.Empty), TextHelper.RemovePathUnsafeCharacters(baseFile.Filename) ?? string.Empty);
+#else
                 fileName = Path.Combine(outDir, TextHelper.RemovePathUnsafeCharacters(baseFile.Parent) ?? string.Empty, TextHelper.RemovePathUnsafeCharacters(baseFile.Filename) ?? string.Empty);
+#endif
 
             try
             {
@@ -365,7 +387,7 @@ namespace SabreTools.FileTypes
 
                     outputStream.Dispose();
 
-                    if (!string.IsNullOrWhiteSpace(baseFile.Date))
+                    if (!string.IsNullOrEmpty(baseFile.Date))
                         File.SetCreationTime(fileName, DateTime.Parse(baseFile.Date));
 
                     success = true;

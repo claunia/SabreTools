@@ -119,7 +119,11 @@ namespace SabreTools.FileTypes.Aaru
             {
                 AaruFormat aif = new();
 
+#if NET20 || NET35 || NET40
+                using (BinaryReader br = new(stream, Encoding.Default))
+#else
                 using (BinaryReader br = new(stream, Encoding.Default, true))
+#endif
                 {
                     aif.Identifier = br.ReadUInt64();
                     aif.Application = Encoding.Unicode.GetString(br.ReadBytes(64), 0, 64);

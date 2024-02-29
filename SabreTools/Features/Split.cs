@@ -97,7 +97,11 @@ namespace SabreTools.Features
                     Parallel.ForEach(typeDats.Keys, Globals.ParallelOptions, itemType =>
                     {
                         Writer.Write(typeDats[itemType], OutputDir);
+#if NET40_OR_GREATER || NETCOREAPP
                     });
+#else
+                    }
+#endif
 
                     watch.Stop();
                 }
@@ -139,7 +143,11 @@ namespace SabreTools.Features
                     Parallel.ForEach(sizedDats, Globals.ParallelOptions, sizedDat =>
                     {
                         Writer.Write(sizedDat, OutputDir);
+#if NET40_OR_GREATER || NETCOREAPP
                     });
+#else
+                    }
+#endif
 
                     watch.Stop();
                 }
@@ -155,7 +163,11 @@ namespace SabreTools.Features
                     Parallel.ForEach(typeDats.Keys, Globals.ParallelOptions, itemType =>
                     {
                         Writer.Write(typeDats[itemType], OutputDir);
+#if NET40_OR_GREATER || NETCOREAPP
                     });
+#else
+                    }
+#endif
 
                     watch.Stop();
                 }

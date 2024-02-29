@@ -65,7 +65,11 @@ namespace SabreTools.FileTypes.CHD
         {
             CHDFileV3 chd = new();
 
-            using (BinaryReader br = new(stream, Encoding.Default, true))
+#if NET20 || NET35 || NET40
+            using (var br = new BinaryReader(stream, Encoding.Default))
+#else
+            using (var br = new BinaryReader(stream, Encoding.Default, true))
+#endif
             {
                 chd.tag = br.ReadChars(8);
                 chd.length = br.ReadUInt32BigEndian();

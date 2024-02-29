@@ -72,7 +72,7 @@ namespace Compress.Support.Utils
                     MessageCallBack?.Invoke($"Extracting {filenameOut}");
                     string fOut = Path.Combine(outDir, filenameOut.Replace('/', '\\'));
                     string dOut = Path.GetDirectoryName(fOut);
-                    if (!string.IsNullOrWhiteSpace(dOut) && !Directory.Exists(dOut))
+                    if (!string.IsNullOrEmpty(dOut) && !Directory.Exists(dOut))
                         Directory.CreateDirectory(dOut);
 
                     int errorCode = FileStream.OpenFileWrite(fOut, out Stream sWrite);

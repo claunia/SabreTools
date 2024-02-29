@@ -201,7 +201,9 @@ namespace SabreTools.FileTypes
             // Read the first bytes of the file and get the magic number
             BinaryReader br = new(File.OpenRead(input));
             byte[] magic = br.ReadBytes(8);
+#if NET40_OR_GREATER
             br.Dispose();
+#endif
 
             // Now try to match it to a known signature
             if (magic.StartsWith(SevenZipSignature))
@@ -300,10 +302,17 @@ namespace SabreTools.FileTypes
 
             // Get the info in the proper manner
             BaseFile? baseFile;
+#if NETFRAMEWORK
+            if (fileType == FileType.AaruFormat && (asFiles & TreatAsFile.AaruFormat) == 0)
+                baseFile = AaruFormat.Create(inputStream);
+            else if (fileType == FileType.CHD && (asFiles & TreatAsFile.CHD) == 0)
+                baseFile = CHDFile.Create(inputStream);
+#else
             if (fileType == FileType.AaruFormat && !asFiles.HasFlag(TreatAsFile.AaruFormat))
                 baseFile = AaruFormat.Create(inputStream);
             else if (fileType == FileType.CHD && !asFiles.HasFlag(TreatAsFile.CHD))
                 baseFile = CHDFile.Create(inputStream);
+#endif
             else
                 baseFile = GetInfo(inputStream, hashes: hashes, keepReadOpen: false);
 
@@ -340,6 +349,22 @@ namespace SabreTools.FileTypes
                 // Get a list of hashers to run over the buffer
                 List<Hasher> hashers = [];
 
+#if NETFRAMEWORK
+                if ((hashes & Hash.CRC) != 0)
+                    hashers.Add(new Hasher(Hash.CRC));
+                if ((hashes & Hash.MD5) != 0)
+                    hashers.Add(new Hasher(Hash.MD5));
+                if ((hashes & Hash.SHA1) != 0)
+                    hashers.Add(new Hasher(Hash.SHA1));
+                if ((hashes & Hash.SHA256) != 0)
+                    hashers.Add(new Hasher(Hash.SHA256));
+                if ((hashes & Hash.SHA384) != 0)
+                    hashers.Add(new Hasher(Hash.SHA384));
+                if ((hashes & Hash.SHA512) != 0)
+                    hashers.Add(new Hasher(Hash.SHA512));
+                if ((hashes & Hash.SpamSum) != 0)
+                    hashers.Add(new Hasher(Hash.SpamSum));
+#else
                 if (hashes.HasFlag(Hash.CRC))
                     hashers.Add(new Hasher(Hash.CRC));
                 if (hashes.HasFlag(Hash.MD5))
@@ -354,6 +379,7 @@ namespace SabreTools.FileTypes
                     hashers.Add(new Hasher(Hash.SHA512));
                 if (hashes.HasFlag(Hash.SpamSum))
                     hashers.Add(new Hasher(Hash.SpamSum));
+#endif
 
                 // Initialize the hashing helpers
                 int buffersize = 3 * 1024 * 1024;
@@ -376,7 +402,16 @@ namespace SabreTools.FileTypes
                 {
                     // Run hashes in parallel
                     if (current > 0)
+#if NET452_OR_GREATER || NETCOREAPP
                         Parallel.ForEach(hashers, Globals.ParallelOptions, h => h.Process(buffer, current));
+#elif NET40_OR_GREATER
+                        Parallel.ForEach(hashers, h => h.Process(buffer, current));
+#else
+                        foreach (var h in hashers)
+                        {
+                            h.Process(buffer, current);
+                        }
+#endif
 
                     // Load the next buffer
                     refsize -= current;
@@ -391,12 +426,30 @@ namespace SabreTools.FileTypes
                 }
 
                 // Finalize all hashing helpers
+#if NET452_OR_GREATER || NETCOREAPP
                 Parallel.ForEach(hashers, Globals.ParallelOptions, h => h.Terminate());
+#elif NET40_OR_GREATER
+                Parallel.ForEach(hashers, h => h.Terminate());
+#else
+                foreach (var h in hashers)
+                {
+                    h.Terminate();
+                }
+#endif
 
                 // Get the results
                 BaseFile baseFile = new()
                 {
                     Size = size,
+#if NETFRAMEWORK
+                    CRC = (hashes & Hash.CRC) != 0 ? hashers.First(h => h.HashType == Hash.CRC).GetHash() : null,
+                    MD5 = (hashes & Hash.MD5) != 0 ? hashers.First(h => h.HashType == Hash.MD5).GetHash() : null,
+                    SHA1 = (hashes & Hash.SHA1) != 0 ? hashers.First(h => h.HashType == Hash.SHA1).GetHash() : null,
+                    SHA256 = (hashes & Hash.SHA256) != 0 ? hashers.First(h => h.HashType == Hash.SHA256).GetHash() : null,
+                    SHA384 = (hashes & Hash.SHA384) != 0 ? hashers.First(h => h.HashType == Hash.SHA384).GetHash() : null,
+                    SHA512 = (hashes & Hash.SHA512) != 0 ? hashers.First(h => h.HashType == Hash.SHA512).GetHash() : null,
+                    SpamSum = (hashes & Hash.SpamSum) != 0 ? hashers.First(h => h.HashType == Hash.SpamSum).GetHash() : null,
+#else
                     CRC = hashes.HasFlag(Hash.CRC) ? hashers.First(h => h.HashType == Hash.CRC).GetHash() : null,
                     MD5 = hashes.HasFlag(Hash.MD5) ? hashers.First(h => h.HashType == Hash.MD5).GetHash() : null,
                     SHA1 = hashes.HasFlag(Hash.SHA1) ? hashers.First(h => h.HashType == Hash.SHA1).GetHash() : null,
@@ -404,6 +457,7 @@ namespace SabreTools.FileTypes
                     SHA384 = hashes.HasFlag(Hash.SHA384) ? hashers.First(h => h.HashType == Hash.SHA384).GetHash() : null,
                     SHA512 = hashes.HasFlag(Hash.SHA512) ? hashers.First(h => h.HashType == Hash.SHA512).GetHash() : null,
                     SpamSum = hashes.HasFlag(Hash.SpamSum) ? hashers.First(h => h.HashType == Hash.SpamSum).GetHash() : null,
+#endif
                 };
 
                 // Dispose of the hashers
@@ -444,7 +498,7 @@ namespace SabreTools.FileTypes
                 "aaruformat" => true,
                 "aif" => true,
                 "dicf" => true,
-                
+
                 // Archive
                 "7z" => true,
                 "gz" => true,
@@ -458,10 +512,10 @@ namespace SabreTools.FileTypes
                 "tlz" => true,
                 "zip" => true,
                 "zipx" => true,
-                
+
                 // CHD
                 "chd" => true,
-                
+
                 _ => false,
             };
         }

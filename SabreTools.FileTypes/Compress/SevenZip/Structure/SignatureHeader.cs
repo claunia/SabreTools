@@ -20,7 +20,11 @@ namespace Compress.SevenZip.Structure
 
         public bool Read(Stream stream)
         {
+#if NET20 || NET35 || NET40
+            using BinaryReader br = new(stream, Encoding.UTF8);
+#else
             using BinaryReader br = new(stream, Encoding.UTF8, true);
+#endif
             byte[] signatureBytes = br.ReadBytes(6);
             if (!signatureBytes.Compare(Signature))
             {
@@ -82,7 +86,11 @@ namespace Compress.SevenZip.Structure
             byte[] sigHeaderBytes;
             using (MemoryStream sigHeaderMem = new())
             {
+#if NET20 || NET35 || NET40
+                using BinaryWriter sigHeaderBw = new(sigHeaderMem, Encoding.UTF8);
+#else
                 using BinaryWriter sigHeaderBw = new(sigHeaderMem, Encoding.UTF8, true);
+#endif
                 sigHeaderBw.Write((ulong)((long)headerpos - BaseOffset)); //NextHeaderOffset
                 sigHeaderBw.Write(headerLength); //NextHeaderSize
                 sigHeaderBw.Write(headerCRC); //NextHeaderCRC

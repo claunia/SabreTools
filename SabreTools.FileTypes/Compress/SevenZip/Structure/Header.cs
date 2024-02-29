@@ -49,7 +49,11 @@ namespace Compress.SevenZip.Structure
         {
             header = null;
 
+#if NET20 || NET35 || NET40
+            using BinaryReader br = new(stream, Encoding.UTF8);
+#else
             using BinaryReader br = new(stream, Encoding.UTF8, true);
+#endif
             HeaderProperty hp = (HeaderProperty)br.ReadByte();
             switch (hp)
             {

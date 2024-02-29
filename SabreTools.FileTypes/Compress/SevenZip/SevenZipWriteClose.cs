@@ -130,7 +130,11 @@ namespace Compress.SevenZip
             byte[] newHeaderByte;
             using (Stream headerMem = new MemoryStream())
             {
+#if NET20 || NET35 || NET40
+                using BinaryWriter headerBw = new(headerMem, Encoding.UTF8);
+#else
                 using BinaryWriter headerBw = new(headerMem, Encoding.UTF8, true);
+#endif
                 _header.WriteHeader(headerBw);
 
                 newHeaderByte = new byte[headerMem.Length];
@@ -140,7 +144,7 @@ namespace Compress.SevenZip
 
             uint mainHeaderCRC = CRC.CalculateDigest(newHeaderByte, 0, (uint)newHeaderByte.Length);
 
-#region Header Compression
+            #region Header Compression
             long packedHeaderPos = _zipFs.Position;
             LzmaEncoderProperties ep = new(true, GetDictionarySizeFromUncompressedSize((ulong)newHeaderByte.Length), 64);
             LzmaStream lzs = new(ep, false, _zipFs);
@@ -177,7 +181,11 @@ namespace Compress.SevenZip
 
             using (Stream headerMem = new MemoryStream())
             {
+#if NET20 || NET35 || NET40
+                using BinaryWriter bw = new(headerMem, Encoding.UTF8);
+#else
                 using BinaryWriter bw = new(headerMem, Encoding.UTF8, true);
+#endif
                 bw.Write((byte)HeaderProperty.kEncodedHeader);
                 streamsInfo.WriteHeader(bw);
 
@@ -186,10 +194,13 @@ namespace Compress.SevenZip
                 headerMem.Read(newHeaderByte, 0, newHeaderByte.Length);
             }
             mainHeaderCRC = CRC.CalculateDigest(newHeaderByte, 0, (uint)newHeaderByte.Length);
-#endregion
+            #endregion
 
-
+#if NET20 || NET35 || NET40
+            using (BinaryWriter bw = new(_zipFs, Encoding.UTF8))
+#else
             using (BinaryWriter bw = new(_zipFs, Encoding.UTF8, true))
+#endif
             {
                 ulong headerPosition = (ulong)_zipFs.Position + 32; //tzip header is 32 bytes
                 WriteRomVault7Zip(bw, headerPosition, (ulong)newHeaderByte.Length, mainHeaderCRC);

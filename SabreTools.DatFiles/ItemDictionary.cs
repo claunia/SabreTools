@@ -1054,7 +1054,11 @@ namespace SabreTools.DatFiles
                     // Add the list back to the dictionary
                     Reset(key);
                     AddRange(key, sortedlist);
+#if NET40_OR_GREATER || NETCOREAPP
                 });
+#else
+                }
+#endif
             }
             // If the merge type is the same, we want to sort the dictionary to be consistent
             else
@@ -1068,7 +1072,11 @@ namespace SabreTools.DatFiles
                     // Sort the list of items to be consistent
                     if (sortedlist != null)
                         DatItem.Sort(ref sortedlist, false);
+#if NET40_OR_GREATER || NETCOREAPP
                 });
+#else
+                }
+#endif
             }
         }
 

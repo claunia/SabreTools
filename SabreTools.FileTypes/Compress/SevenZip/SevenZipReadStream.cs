@@ -7,7 +7,9 @@ using Compress.SevenZip.Structure;
 using Compress.Support.Compression.BZip2;
 using Compress.Support.Compression.LZMA;
 using Compress.Support.Compression.PPmd;
+#if NET462_OR_GREATER || NETCOREAPP
 using Compress.Support.Compression.zStd;
+#endif
 using Compress.Support.Filters;
 using FileStream = RVIO.FileStream;
 
@@ -163,9 +165,11 @@ namespace Compress.SevenZip
                                 case DecompressType.BCJ2:
                                     coder.DecoderStream = new BCJ2Filter(inputCoders[0], inputCoders[1], inputCoders[2], inputCoders[3]);
                                     break;
+#if NET462_OR_GREATER || NETCOREAPP
                                 case DecompressType.ZSTD:
-                                    coder.DecoderStream =new zStdSharp(inputCoders[0]);
+                                    coder.DecoderStream = new zStdSharp(inputCoders[0]);
                                     break;
+#endif
                                 default:
                                     return ZipReturn.ZipDecodeError;
                             }

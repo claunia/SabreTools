@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
-
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.IO;
+#if NET462_OR_GREATER || NETCOREAPP
 using SharpCompress.Compressors.Xz;
+#endif
 
 namespace SabreTools.FileTypes.Archives
 {
@@ -67,6 +68,7 @@ namespace SabreTools.FileTypes.Archives
         /// <inheritdoc/>
         public override bool CopyAll(string outDir)
         {
+#if NET462_OR_GREATER || NETCOREAPP
             bool encounteredErrors = true;
 
             try
@@ -102,6 +104,10 @@ namespace SabreTools.FileTypes.Archives
             }
 
             return encounteredErrors;
+#else
+            // TODO: Support XZ archives in old .NET
+            return true;
+#endif
         }
 
         /// <inheritdoc/>
@@ -148,6 +154,7 @@ namespace SabreTools.FileTypes.Archives
         /// <inheritdoc/>
         public override (MemoryStream?, string?) CopyToStream(string entryName)
         {
+#if NET462_OR_GREATER || NETCOREAPP
             MemoryStream? ms = new();
             string? realEntry;
 
@@ -178,6 +185,10 @@ namespace SabreTools.FileTypes.Archives
             }
 
             return (ms, realEntry);
+#else
+            // TODO: Support XZ archives in old .NET
+            return (null, null);
+#endif
         }
 
         #endregion
@@ -187,9 +198,10 @@ namespace SabreTools.FileTypes.Archives
         /// <inheritdoc/>
         public override List<BaseFile>? GetChildren()
         {
+#if NET462_OR_GREATER || NETCOREAPP
             if (_children == null || _children.Count == 0)
             {
-                _children = new List<BaseFile>();
+                _children = [];
 
                 string? gamename = Path.GetFileNameWithoutExtension(this.Filename);
 
@@ -239,6 +251,10 @@ namespace SabreTools.FileTypes.Archives
             }
 
             return _children;
+#else
+            // TODO: Support XZ archives in old .NET
+            return [];
+#endif
         }
 
         /// <inheritdoc/>
@@ -320,6 +336,7 @@ namespace SabreTools.FileTypes.Archives
         /// <inheritdoc/>
         public override bool Write(Stream? inputStream, string outDir, BaseFile? baseFile)
         {
+#if NET462_OR_GREATER || NETCOREAPP
             bool success = false;
 
             // If the stream is not readable, return
@@ -355,6 +372,10 @@ namespace SabreTools.FileTypes.Archives
             }
 
             return true;
+#else
+            // TODO: Support XZ archives in old .NET
+            return false;
+#endif
         }
 
         /// <inheritdoc/>

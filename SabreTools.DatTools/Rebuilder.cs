@@ -87,7 +87,11 @@ namespace SabreTools.DatTools
                         directories.Add(input);
                     }
                 }
+#if NET40_OR_GREATER || NETCOREAPP
             });
+#else
+            }
+#endif
 
             // If we don't have any directories, we want to exit
             if (directories.Count == 0)

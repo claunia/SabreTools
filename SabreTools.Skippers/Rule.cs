@@ -284,15 +284,23 @@ namespace SabreTools.Skippers
             }
             finally
             {
-#if NET40_OR_GREATER
                 // If we're not keeping the read stream open, dispose of the binary reader
                 if (!keepReadOpen)
+                {
+#if NET40_OR_GREATER
                     br?.Dispose();
+#endif
+                }
+
 
                 // If we're not keeping the write stream open, dispose of the binary reader
                 if (!keepWriteOpen)
+                {
+#if NET40_OR_GREATER
                     bw?.Dispose();
 #endif
+                }
+
             }
 
             return success;

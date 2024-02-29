@@ -25,7 +25,11 @@ namespace SabreTools.FileTypes.Aaru
         {
             var indexHeader = new IndexHeader();
 
+#if NET20 || NET35 || NET40
+            using (var br = new BinaryReader(stream, Encoding.Default))
+#else
             using (var br = new BinaryReader(stream, Encoding.Default, true))
+#endif
             {
                 indexHeader.identifier = (AaruBlockType)br.ReadUInt32();
                 indexHeader.entries = br.ReadUInt16();

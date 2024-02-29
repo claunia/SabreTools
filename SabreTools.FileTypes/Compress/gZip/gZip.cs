@@ -90,7 +90,7 @@ namespace Compress.gZip
                 ZipFileClose();
                 return ZipReturn.ZipErrorOpeningFile;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 ZipFileClose();
                 return ZipReturn.ZipErrorReadingFile;
@@ -111,7 +111,11 @@ namespace Compress.gZip
 
         private ZipReturn ZipFileReadHeaders()
         {
+#if NET20 || NET35 || NET40
+            using BinaryReader zipBr = new(_zipFs, Encoding.UTF8);
+#else
             using BinaryReader zipBr = new(_zipFs, Encoding.UTF8, true);
+#endif
 
             byte ID1 = zipBr.ReadByte();
             byte ID2 = zipBr.ReadByte();
@@ -316,7 +320,11 @@ namespace Compress.gZip
 
         public ZipReturn ZipFileOpenWriteStream(bool raw, bool trrntzip, string filename, ulong unCompressedSize, ushort compressionMethod, out Stream stream, TimeStamps dateTime)
         {
+#if NET20 || NET35 || NET40
+            using (BinaryWriter zipBw = new(_zipFs, Encoding.UTF8))
+#else
             using (BinaryWriter zipBw = new(_zipFs, Encoding.UTF8, true))
+#endif
             {
                 UnCompressedSize = unCompressedSize;
 
@@ -422,7 +430,11 @@ namespace Compress.gZip
 
             CompressedSize = (ulong)(_zipFs.Position - dataStartPos);
 
+#if NET20 || NET35 || NET40
+            using (BinaryWriter zipBw = new(_zipFs, Encoding.UTF8))
+#else
             using (BinaryWriter zipBw = new(_zipFs, Encoding.UTF8, true))
+#endif
             {
 
                 zipBw.Write(crc32[3]);

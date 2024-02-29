@@ -56,7 +56,11 @@ namespace Compress.ZipFile
 
         private ZipReturn EndOfCentralDirRead()
         {
+#if NET20 || NET35 || NET40
+            using BinaryReader zipBr = new(_zipFs, Encoding.UTF8);
+#else
             using BinaryReader zipBr = new(_zipFs, Encoding.UTF8, true);
+#endif
             uint thisSignature = zipBr.ReadUInt32();
             if (thisSignature != EndOfCentralDirSignature)
             {
@@ -105,7 +109,11 @@ namespace Compress.ZipFile
 
         private void EndOfCentralDirWrite()
         {
+#if NET20 || NET35 || NET40
+            using BinaryWriter bw = new(_zipFs, Encoding.UTF8);
+#else
             using BinaryWriter bw = new(_zipFs, Encoding.UTF8, true);
+#endif
             bw.Write(EndOfCentralDirSignature);
             bw.Write((ushort)0); // NumberOfThisDisk
             bw.Write((ushort)0); // NumberOfThisDiskCenterDir
@@ -122,7 +130,11 @@ namespace Compress.ZipFile
 
         private ZipReturn Zip64EndOfCentralDirRead()
         {
+#if NET20 || NET35 || NET40
+            using BinaryReader zipBr = new(_zipFs, Encoding.UTF8);
+#else
             using BinaryReader zipBr = new(_zipFs, Encoding.UTF8, true);
+#endif
             uint thisSignature = zipBr.ReadUInt32();
             if (thisSignature != Zip64EndOfCentralDirSignature)
             {
@@ -174,7 +186,11 @@ namespace Compress.ZipFile
 
         private void Zip64EndOfCentralDirWrite()
         {
+#if NET20 || NET35 || NET40
+            using BinaryWriter bw = new(_zipFs, Encoding.UTF8);
+#else
             using BinaryWriter bw = new(_zipFs, Encoding.UTF8, true);
+#endif
             bw.Write(Zip64EndOfCentralDirSignature);
             bw.Write((ulong)44); // Size of zip64 end of central directory record
             bw.Write((ushort)45); // version made by
@@ -191,7 +207,11 @@ namespace Compress.ZipFile
 
         private ZipReturn Zip64EndOfCentralDirectoryLocatorRead()
         {
+#if NET20 || NET35 || NET40
+            using BinaryReader zipBr = new(_zipFs, Encoding.UTF8);
+#else
             using BinaryReader zipBr = new(_zipFs, Encoding.UTF8, true);
+#endif
             uint thisSignature = zipBr.ReadUInt32();
             if (thisSignature != Zip64EndOfCentralDirectoryLocator)
             {
@@ -217,7 +237,11 @@ namespace Compress.ZipFile
 
         private void Zip64EndOfCentralDirectoryLocatorWrite()
         {
+#if NET20 || NET35 || NET40
+            using BinaryWriter bw = new(_zipFs, Encoding.UTF8);
+#else
             using BinaryWriter bw = new(_zipFs, Encoding.UTF8, true);
+#endif
             bw.Write(Zip64EndOfCentralDirectoryLocator);
             bw.Write((uint)0); // number of the disk with the start of the zip64 end of central directory
             bw.Write(_endOfCentralDir64); // relative offset of the zip64 end of central directory record

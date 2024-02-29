@@ -55,7 +55,11 @@ namespace Compress.ZipFile
         {
             try
             {
+#if NET20 || NET35 || NET40
+                using BinaryReader br = new(zipFs, Encoding.UTF8);
+#else
                 using BinaryReader br = new(zipFs, Encoding.UTF8, true);
+#endif
                 uint thisSignature = br.ReadUInt32();
                 if (thisSignature != CentralDirectoryHeaderSignature)
                 {
@@ -156,7 +160,7 @@ namespace Compress.ZipFile
                 switch (_compressionMethod)
                 {
                     case 0: // The file is stored (no compression)
-                
+
                     case 8: // The file is Deflated
                     case 9: // Enhanced Deflating using Deflate64(tm)
                     case 12: // The file is BZIP2 algorithm. 
@@ -182,7 +186,11 @@ namespace Compress.ZipFile
 
         internal void CentralDirectoryWrite(Stream crcStream)
         {
+#if NET20 || NET35 || NET40
+            using BinaryWriter bw = new(crcStream, Encoding.UTF8);
+#else
             using BinaryWriter bw = new(crcStream, Encoding.UTF8, true);
+#endif
 
             ZipExtraFieldWrite zefw = new();
             SetStatus(LocalFileStatus.Zip64,
@@ -238,7 +246,11 @@ namespace Compress.ZipFile
 
             try
             {
+#if NET20 || NET35 || NET40
+                using (BinaryReader br = new(zipFs, Encoding.UTF8))
+#else
                 using (BinaryReader br = new(zipFs, Encoding.UTF8, true))
+#endif
                 {
 
                     SetStatus(LocalFileStatus.TrrntZip);
@@ -368,7 +380,11 @@ namespace Compress.ZipFile
 
             try
             {
+#if NET20 || NET35 || NET40
+                using BinaryReader br = new(zipFs, Encoding.UTF8);
+#else
                 using BinaryReader br = new(zipFs, Encoding.UTF8, true);
+#endif
                 SetStatus(LocalFileStatus.TrrntZip);
 
                 zipFs.Position = (long)RelativeOffsetOfLocalHeader;
@@ -431,7 +447,11 @@ namespace Compress.ZipFile
 
         private void LocalFileHeaderWrite(Stream zipFs)
         {
+#if NET20 || NET35 || NET40
+            using BinaryWriter bw = new(zipFs, Encoding.UTF8);
+#else
             using BinaryWriter bw = new(zipFs, Encoding.UTF8, true);
+#endif
             ZipExtraFieldWrite zefw = new();
             bool zip64 = zefw.Zip64(UncompressedSize, _compressedSize, RelativeOffsetOfLocalHeader, false,
                 out uint headerUnCompressedSize, out uint headerCompressedSize,
@@ -505,7 +525,11 @@ namespace Compress.ZipFile
             long posNow = zipFs.Position;
 
             zipFs.Seek((long)RelativeOffsetOfLocalHeader + 14, SeekOrigin.Begin);
+#if NET20 || NET35 || NET40
+            using (BinaryWriter bw = new(zipFs, Encoding.UTF8))
+#else
             using (BinaryWriter bw = new(zipFs, Encoding.UTF8, true))
+#endif
             {
                 WriteCRC(bw, CRC);
                 bw.Write(headerCompressedSize);
@@ -524,7 +548,11 @@ namespace Compress.ZipFile
 
         internal void LocalFileHeaderFake(ulong filePosition, ulong uncompressedSize, ulong compressedSize, byte[] crc32, MemoryStream ms)
         {
+#if NET20 || NET35 || NET40
+            using BinaryWriter bw = new(ms, Encoding.UTF8);
+#else
             using BinaryWriter bw = new(ms, Encoding.UTF8, true);
+#endif
             RelativeOffsetOfLocalHeader = filePosition;
             SetStatus(LocalFileStatus.TrrntZip);
             UncompressedSize = uncompressedSize;
@@ -580,7 +608,7 @@ namespace Compress.ZipFile
             compressionMethod = _compressionMethod;
 
             readStream = null;
-            
+
             if (zipFs == null)
                 return ZipReturn.ZipErrorFileNotFound;
 
@@ -634,11 +662,13 @@ namespace Compress.ZipFile
                         break;
                     }
 
+#if NET462_OR_GREATER || NETCOREAPP
                 case 20:
                 case 93:
                     readStream = new ZstdSharp.DecompressionStream(zipFs);
                     streamSize = UncompressedSize;
                     break;
+#endif
 
                 case 98:
                     {
@@ -675,10 +705,12 @@ namespace Compress.ZipFile
                 {
                     writeStream = zipFs;
                 }
+#if NET462_OR_GREATER || NETCOREAPP
                 else if (compressionMethod == 93)
                 {
                     writeStream = new ZstdSharp.CompressionStream(zipFs, 19);
                 }
+#endif
                 else if (compressionMethod == 8)
                 {
                     writeStream = new ZlibBaseStream(zipFs, CompressionMode.Compress, CompressionLevel.BestCompression, ZlibStreamFlavor.DEFLATE, true);
@@ -712,7 +744,11 @@ namespace Compress.ZipFile
         private void FixFileForZip64(Stream zipFs, int oldExtraFieldLength, int newExtraFieldLength)
         {
             long posNow = zipFs.Position;
+#if NET20 || NET35 || NET40
+            using (BinaryWriter bw = new(zipFs, Encoding.UTF8))
+#else
             using (BinaryWriter bw = new(zipFs, Encoding.UTF8, true))
+#endif
             {
                 zipFs.Seek((long)RelativeOffsetOfLocalHeader + 4, SeekOrigin.Begin);
                 ushort versionNeededToExtract = 45;

@@ -57,7 +57,11 @@ namespace Compress.SevenZip
             _signatureHeader = new SignatureHeader();
             _header = new Header();
 
+#if NET20 || NET35 || NET40
+            using (BinaryWriter bw = new(_zipFs, Encoding.UTF8))
+#else
             using (BinaryWriter bw = new(_zipFs, Encoding.UTF8, true))
+#endif
             {
                 _signatureHeader.Write(bw);
             }
@@ -179,6 +183,7 @@ namespace Compress.SevenZip
                     _compressStream = lzs;
                     break;
 
+#if NET462_OR_GREATER || NETCOREAPP
                 case SevenZipCompressType.zstd:
 
                     ZstdSharp.CompressionStream zss = new(_zipFs, 19);
@@ -186,6 +191,7 @@ namespace Compress.SevenZip
                     newStream.Properties = new byte[] { 1, 5, 19, 0, 0 };
                     _compressStream = zss;
                     break;
+#endif
 
                 case SevenZipCompressType.uncompressed:
                     newStream.Method = new byte[] { 0 };

@@ -64,7 +64,11 @@ namespace SabreTools.DatTools
                 Parallel.ForEach(files, Globals.ParallelOptions, item =>
                 {
                     Interlocked.Add(ref totalSize, new FileInfo(item).Length);
+#if NET40_OR_GREATER || NETCOREAPP
                 });
+#else
+                }
+#endif
 
                 // Process the files in the main folder or any subfolder
                 logger.User(totalSize, currentSize);
@@ -226,7 +230,11 @@ namespace SabreTools.DatTools
                     return;
 
                 ProcessFileHelper(datFile, item, datItem, basePath, parent);
+#if NET40_OR_GREATER || NETCOREAPP
             });
+#else
+            }
+#endif
         }
 
         /// <summary>
@@ -252,7 +260,11 @@ namespace SabreTools.DatTools
             {
                 Rom emptyRom = new(Path.Combine(empty, "_"), item);
                 ProcessFileHelper(datFile, item, emptyRom, basePath, parent);
+#if NET40_OR_GREATER || NETCOREAPP
             });
+#else
+            }
+#endif
         }
 
         /// <summary>
@@ -308,7 +320,11 @@ namespace SabreTools.DatTools
 
                 logger.Verbose($"Adding blank empty folder: {gamename}");
                 datFile.Items["null"]?.Add(new Rom(romname, gamename));
+#if NET40_OR_GREATER || NETCOREAPP
             });
+#else
+            }
+#endif
         }
 
         /// <summary>

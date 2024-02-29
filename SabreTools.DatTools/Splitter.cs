@@ -85,7 +85,11 @@ namespace SabreTools.DatTools
                         extBDat.Items.Add(key, item);
                     }
                 }
+#if NET40_OR_GREATER || NETCOREAPP
             });
+#else
+            }
+#endif
 
             // Then return both DatFiles
             watch.Stop();
@@ -212,7 +216,11 @@ namespace SabreTools.DatTools
                         fieldDats[DatItemField.NULL].Items.Add(key, item);
                     }
                 }
+#if NET40_OR_GREATER || NETCOREAPP
             });
+#else
+            }
+#endif
 
             watch.Stop();
             return fieldDats;
@@ -265,7 +273,11 @@ namespace SabreTools.DatTools
 
                 // Then set the DAT name to be the parent directory name
                 tempDat.Header.Name = Path.GetDirectoryName(key);
+#if NET40_OR_GREATER || NETCOREAPP
             });
+#else
+            }
+#endif
 
             watch.Stop();
             return true;
@@ -366,7 +378,11 @@ namespace SabreTools.DatTools
                     else if (item.ItemType == ItemType.Rom && (item as Rom)!.Size >= radix)
                         greaterThan.Items.Add(key, item);
                 }
+#if NET40_OR_GREATER || NETCOREAPP
             });
+#else
+            }
+#endif
 
             // Then return both DatFiles
             watch.Stop();
@@ -497,7 +513,11 @@ namespace SabreTools.DatTools
             Parallel.ForEach(outputTypes, Globals.ParallelOptions, itemType =>
             {
                 FillWithItemType(datFile, typeDats[itemType], itemType);
+#if NET40_OR_GREATER || NETCOREAPP
             });
+#else
+            }
+#endif
 
             watch.Stop();
             return typeDats;
@@ -526,7 +546,11 @@ namespace SabreTools.DatTools
                     if (item.ItemType == itemType)
                         indexDat.Items.Add(key, item);
                 }
+#if NET40_OR_GREATER || NETCOREAPP
             });
+#else
+            }
+#endif
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿#if NET462_OR_GREATER || NETCOREAPP
+using System.IO;
 
 namespace Compress.Support.Compression.zStd
 {
@@ -62,3 +63,4 @@ namespace Compress.Support.Compression.zStd
         }
     }
 }
+#endif

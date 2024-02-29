@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
 using SabreTools.Core;
+#if NET462_OR_GREATER || NETCOREAPP
 using SharpCompress.Archives;
 using SharpCompress.Archives.Rar;
 using SharpCompress.Readers;
+#endif
 
 namespace SabreTools.FileTypes.Archives
 {
@@ -45,6 +46,7 @@ namespace SabreTools.FileTypes.Archives
         /// <inheritdoc/>
         public override bool CopyAll(string outDir)
         {
+#if NET462_OR_GREATER || NETCOREAPP
             bool encounteredErrors = true;
 
             // If we have an invalid file
@@ -82,6 +84,10 @@ namespace SabreTools.FileTypes.Archives
             }
 
             return encounteredErrors;
+#else
+            // TODO: Support RAR archives in old .NET
+            return true;
+#endif
         }
 
         /// <inheritdoc/>
@@ -128,6 +134,7 @@ namespace SabreTools.FileTypes.Archives
         /// <inheritdoc/>
         public override (MemoryStream?, string?) CopyToStream(string entryName)
         {
+#if NET462_OR_GREATER || NETCOREAPP
             MemoryStream? ms = new();
             string? realEntry = null;
 
@@ -157,6 +164,10 @@ namespace SabreTools.FileTypes.Archives
             }
 
             return (ms, realEntry);
+#else
+            // TODO: Support RAR archives in old .NET
+            return (null, null);
+#endif
         }
 
         #endregion
@@ -166,6 +177,7 @@ namespace SabreTools.FileTypes.Archives
         /// <inheritdoc/>
         public override List<BaseFile>? GetChildren()
         {
+#if NET462_OR_GREATER || NETCOREAPP
             // If we have an invalid file
             if (this.Filename == null)
                 return null;
@@ -211,11 +223,16 @@ namespace SabreTools.FileTypes.Archives
             }
 
             return found;
+#else
+            // TODO: Support RAR archives in old .NET
+            return null;
+#endif
         }
 
         /// <inheritdoc/>
         public override List<string> GetEmptyFolders()
         {
+#if NET462_OR_GREATER || NETCOREAPP
             List<string> empties = [];
 
             // If we have an invalid file
@@ -251,6 +268,10 @@ namespace SabreTools.FileTypes.Archives
             }
 
             return empties;
+#else
+            // TODO: Support RAR archives in old .NET
+            return [];
+#endif
         }
 
         /// <inheritdoc/>

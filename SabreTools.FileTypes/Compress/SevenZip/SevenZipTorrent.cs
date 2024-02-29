@@ -26,7 +26,7 @@ namespace Compress.SevenZip
             ZipStatus = ZipStatus.TrrntZip;
         }
 
-        private bool IsRomVault7Z(long testBaseOffset,ulong testHeaderPos,ulong testHeaderLength,uint testHeaderCRC)
+        private bool IsRomVault7Z(long testBaseOffset, ulong testHeaderPos, ulong testHeaderLength, uint testHeaderCRC)
         {
             long length = _zipFs.Length;
             if (length < 32)
@@ -39,8 +39,8 @@ namespace Compress.SevenZip
             byte[] rv7Zid = Util.Enc.GetBytes(sig);
             byte[] header = new byte[12];
             _zipFs.Read(header, 0, 12);
-            
-            
+
+
             for (int i = 0; i < 12; i++)
             {
                 if (header[i] != rv7Zid[i])
@@ -52,7 +52,11 @@ namespace Compress.SevenZip
             uint headerCRC;
             ulong headerOffset; // is location of header in file
             ulong headerSize;
+#if NET20 || NET35 || NET40
+            using (BinaryReader br = new(_zipFs, Encoding.UTF8))
+#else
             using (BinaryReader br = new(_zipFs, Encoding.UTF8, true))
+#endif
             {
                 headerCRC = br.ReadUInt32();
                 headerOffset = br.ReadUInt64();
@@ -62,7 +66,7 @@ namespace Compress.SevenZip
             if (headerCRC != testHeaderCRC)
                 return false;
 
-            if (headerOffset != testHeaderPos+(ulong)testBaseOffset)
+            if (headerOffset != testHeaderPos + (ulong)testBaseOffset)
                 return false;
 
             return headerSize == testHeaderLength;

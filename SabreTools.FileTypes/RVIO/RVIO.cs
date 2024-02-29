@@ -358,7 +358,11 @@ namespace RVIO
             catch (Exception e)
             {
                 stream = null;
+#if NET462_OR_GREATER || NETCOREAPP
                 return e.HResult;
+#else
+                return -1;
+#endif
             }
         }
 
@@ -372,7 +376,11 @@ namespace RVIO
             catch (Exception e)
             {
                 stream = null;
+#if NET462_OR_GREATER || NETCOREAPP
                 return e.HResult;
+#else
+                return -1;
+#endif
             }
         }
     }

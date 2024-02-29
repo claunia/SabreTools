@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using Compress;
+#if NET462_OR_GREATER || NETCOREAPP
 using SharpCompress.Archives;
 using SharpCompress.Archives.Tar;
 using SharpCompress.Common;
 using SharpCompress.Readers;
 using SharpCompress.Writers;
+#endif
 
 namespace SabreTools.FileTypes.Archives
 {
@@ -50,6 +51,7 @@ namespace SabreTools.FileTypes.Archives
         /// <inheritdoc/>
         public override bool CopyAll(string outDir)
         {
+#if NET462_OR_GREATER || NETCOREAPP
             bool encounteredErrors = true;
 
             try
@@ -83,6 +85,10 @@ namespace SabreTools.FileTypes.Archives
             }
 
             return encounteredErrors;
+#else
+            // TODO: Support tape archives in old .NET
+            return true;
+#endif
         }
 
         /// <inheritdoc/>
@@ -129,6 +135,7 @@ namespace SabreTools.FileTypes.Archives
         /// <inheritdoc/>
         public override (MemoryStream?, string?) CopyToStream(string entryName)
         {
+#if NET462_OR_GREATER || NETCOREAPP
             MemoryStream? ms = new();
             string? realEntry = null;
 
@@ -154,6 +161,10 @@ namespace SabreTools.FileTypes.Archives
             }
 
             return (ms, realEntry);
+#else
+            // TODO: Support tape archives in old .NET
+            return (null, null);
+#endif
         }
 
         #endregion
@@ -163,7 +174,8 @@ namespace SabreTools.FileTypes.Archives
         /// <inheritdoc/>
         public override List<BaseFile>? GetChildren()
         {
-            List<BaseFile> found = new();
+#if NET462_OR_GREATER || NETCOREAPP
+            List<BaseFile> found = [];
             string? gamename = Path.GetFileNameWithoutExtension(this.Filename);
 
             try
@@ -204,12 +216,17 @@ namespace SabreTools.FileTypes.Archives
             }
 
             return found;
+#else
+            // TODO: Support tape archives in old .NET
+            return null;
+#endif
         }
 
         /// <inheritdoc/>
         public override List<string> GetEmptyFolders()
         {
-            List<string> empties = new();
+#if NET462_OR_GREATER || NETCOREAPP
+            List<string> empties = [];
 
             try
             {
@@ -240,6 +257,10 @@ namespace SabreTools.FileTypes.Archives
             }
 
             return empties;
+#else
+            // TODO: Support tape archives in old .NET
+            return [];
+#endif
         }
 
         /// <inheritdoc/>
@@ -262,6 +283,7 @@ namespace SabreTools.FileTypes.Archives
         /// <inheritdoc/>
         public override bool Write(Stream? inputStream, string outDir, BaseFile? baseFile)
         {
+#if NET462_OR_GREATER || NETCOREAPP
             bool success = false;
             string tempFile = Path.Combine(outDir, $"tmp{Guid.NewGuid()}");
 
@@ -291,7 +313,7 @@ namespace SabreTools.FileTypes.Archives
                 {
                     // Get temporary date-time if possible
                     DateTime? usableDate = null;
-                    if (UseDates && !string.IsNullOrWhiteSpace(baseFile.Date) && DateTime.TryParse(baseFile.Date.Replace('\\', '/'), out DateTime dt))
+                    if (UseDates && !string.IsNullOrEmpty(baseFile.Date) && DateTime.TryParse(baseFile.Date.Replace('\\', '/'), out DateTime dt))
                         usableDate = dt;
 
                     // Copy the input stream to the output
@@ -340,7 +362,7 @@ namespace SabreTools.FileTypes.Archives
 
                         // Get temporary date-time if possible
                         DateTime? usableDate = null;
-                        if (UseDates && !string.IsNullOrWhiteSpace(baseFile.Date) && DateTime.TryParse(baseFile.Date.Replace('\\', '/'), out DateTime dt))
+                        if (UseDates && !string.IsNullOrEmpty(baseFile.Date) && DateTime.TryParse(baseFile.Date.Replace('\\', '/'), out DateTime dt))
                             usableDate = dt;
 
                         // If we have the input file, add it now
@@ -388,11 +410,16 @@ namespace SabreTools.FileTypes.Archives
             File.Move(tempFile, archiveFileName);
 
             return success;
+#else
+            // TODO: Support tape archives in old .NET
+            return false;
+#endif
         }
 
         /// <inheritdoc/>
         public override bool Write(List<string> inputFiles, string outDir, List<BaseFile>? baseFiles)
         {
+#if NET462_OR_GREATER || NETCOREAPP
             bool success = false;
             string tempFile = Path.Combine(outDir, $"tmp{Guid.NewGuid()}");
 
@@ -454,7 +481,7 @@ namespace SabreTools.FileTypes.Archives
 
                         // Get temporary date-time if possible
                         DateTime? usableDate = null;
-                        if (UseDates && !string.IsNullOrWhiteSpace(baseFiles[index].Date) && DateTime.TryParse(baseFiles[index].Date?.Replace('\\', '/'), out DateTime dt))
+                        if (UseDates && !string.IsNullOrEmpty(baseFiles[index].Date) && DateTime.TryParse(baseFiles[index].Date?.Replace('\\', '/'), out DateTime dt))
                             usableDate = dt;
 
                         // Copy the input stream to the output
@@ -512,7 +539,7 @@ namespace SabreTools.FileTypes.Archives
                         {
                             // Get temporary date-time if possible
                             DateTime? usableDate = null;
-                            if (UseDates && !string.IsNullOrWhiteSpace(baseFiles[-index - 1].Date) && DateTime.TryParse(baseFiles[-index - 1].Date?.Replace('\\', '/'), out DateTime dt))
+                            if (UseDates && !string.IsNullOrEmpty(baseFiles[-index - 1].Date) && DateTime.TryParse(baseFiles[-index - 1].Date?.Replace('\\', '/'), out DateTime dt))
                                 usableDate = dt;
 
                             // Copy the input file to the output
@@ -557,6 +584,10 @@ namespace SabreTools.FileTypes.Archives
             File.Move(tempFile, archiveFileName);
 
             return true;
+#else
+            // TODO: Support tape archives in old .NET
+            return false;
+#endif
         }
 
         #endregion

@@ -68,7 +68,7 @@ namespace SabreTools.Filtering
             InternalStopwatch watch = new("Populating removals from list");
 
             foreach (string field in fields)
-            {                
+            {
                 // If we don't even have a possible field name
                 if (field == null)
                     continue;
@@ -111,7 +111,13 @@ namespace SabreTools.Filtering
             // Remove DatItem and Machine fields
             if (DatItemRemover != null && (DatItemRemover.MachineFields.Any() || DatItemRemover.DatItemFields.Any()))
             {
+#if NET452_OR_GREATER || NETCOREAPP
                 Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+                Parallel.ForEach(datFile.Items.Keys, key =>
+#else
+                foreach (var key in datFile.Items.Keys)
+#endif
                 {
                     ConcurrentList<DatItem>? items = datFile.Items[key];
                     if (items == null)
@@ -124,7 +130,11 @@ namespace SabreTools.Filtering
 
                     datFile.Items.Remove(key);
                     datFile.Items.AddRange(key, items);
+#if NET40_OR_GREATER || NETCOREAPP
                 });
+#else
+                }
+#endif
             }
 
             watch.Stop();

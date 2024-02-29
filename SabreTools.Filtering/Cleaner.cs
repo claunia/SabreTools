@@ -232,7 +232,13 @@ namespace SabreTools.Filtering
                 // First we want to get a mapping for all games to description
                 ConcurrentDictionary<string, string> concurrentDictionary = new();
                 ConcurrentDictionary<string, string> mapping = concurrentDictionary;
+#if NET452_OR_GREATER || NETCOREAPP
                 Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+                Parallel.ForEach(datFile.Items.Keys, key =>
+#else
+                foreach (var key in datFile.Items.Keys)
+#endif
                 {
                     var items = datFile.Items[key];
                     if (items == null)
@@ -243,10 +249,20 @@ namespace SabreTools.Filtering
                         // If the key mapping doesn't exist, add it
                         mapping.TryAdd(item.Machine.Name!, item.Machine.Description!.Replace('/', '_').Replace("\"", "''").Replace(":", " -"));
                     }
+#if NET40_OR_GREATER || NETCOREAPP
                 });
+#else
+                }
+#endif
 
                 // Now we loop through every item and update accordingly
+#if NET452_OR_GREATER || NETCOREAPP
                 Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+                Parallel.ForEach(datFile.Items.Keys, key =>
+#else
+                foreach (var key in datFile.Items.Keys)
+#endif
                 {
                     var items = datFile.Items[key];
                     if (items == null)
@@ -278,7 +294,11 @@ namespace SabreTools.Filtering
                     // Replace the old list of roms with the new one
                     datFile.Items.Remove(key);
                     datFile.Items.AddRange(key, newItems);
+#if NET40_OR_GREATER || NETCOREAPP
                 });
+#else
+                }
+#endif
             }
             catch (Exception ex) when (!throwOnError)
             {
@@ -379,7 +399,13 @@ namespace SabreTools.Filtering
             datFile.Header.Type = "SuperDAT";
 
             // For each rom, we want to update the game to be "<game name>/<rom name>"
+#if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(datFile.Items.Keys, key =>
+#else
+            foreach (var key in datFile.Items.Keys)
+#endif
             {
                 var items = datFile.Items[key];
                 if (items == null)
@@ -389,7 +415,11 @@ namespace SabreTools.Filtering
                 {
                     SetOneRomPerGame(items[i]);
                 }
+#if NET40_OR_GREATER || NETCOREAPP
             });
+#else
+            }
+#endif
         }
 
         /// <summary>
@@ -419,7 +449,13 @@ namespace SabreTools.Filtering
             string pattern = @"([0-9]{2}\.[0-9]{2}\.[0-9]{2}-)(.*?-.*?)";
 
             // Now process all of the roms
+#if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(datFile.Items.Keys, key =>
+#else
+            foreach (var key in datFile.Items.Keys)
+#endif
             {
                 var items = datFile.Items[key];
                 if (items == null)
@@ -439,7 +475,11 @@ namespace SabreTools.Filtering
 
                 datFile.Items.Remove(key);
                 datFile.Items.AddRange(key, items);
+#if NET40_OR_GREATER || NETCOREAPP
             });
+#else
+            }
+#endif
         }
 
         #endregion

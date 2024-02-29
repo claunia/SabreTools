@@ -78,6 +78,7 @@ namespace SabreTools.DatTools
             try
             {
                 // Write out all required formats
+                
                 Parallel.ForEach(outfiles.Keys, Globals.ParallelOptions, datFormat =>
                 {
                     string outfile = outfiles[datFormat];
@@ -89,8 +90,11 @@ namespace SabreTools.DatTools
                     {
                         logger.Error(ex, $"Datfile '{outfile}' could not be written out");
                     }
-
+#if NET40_OR_GREATER || NETCOREAPP
                 });
+#else
+                }
+#endif
             }
             catch (Exception ex) when (!throwOnError)
             {
