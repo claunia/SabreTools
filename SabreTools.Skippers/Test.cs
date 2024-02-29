@@ -25,10 +25,10 @@ namespace SabreTools.Skippers
         protected static byte[]? ParseByteArrayFromHex(string? hex)
         {
             // If we have an invalid string
-            if (string.IsNullOrWhiteSpace(hex))
+            if (string.IsNullOrEmpty(hex))
                 return null;
 
-            var ret = new byte[hex.Length / 2];
+            var ret = new byte[hex!.Length / 2];
             for (int index = 0; index < ret.Length; index++)
             {
                 string byteValue = hex.Substring(index * 2, 2);

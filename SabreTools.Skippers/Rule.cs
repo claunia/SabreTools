@@ -130,14 +130,14 @@ namespace SabreTools.Skippers
         public bool TransformFile(string input, string output)
         {
             // If the input file doesn't exist
-            if (string.IsNullOrWhiteSpace(input) || !File.Exists(input))
+            if (string.IsNullOrEmpty(input) || !File.Exists(input))
             {
                 logger.Error($"'{input}' doesn't exist and cannot be transformed!");
                 return false;
             }
 
             // If we have an invalid output directory name
-            if (string.IsNullOrWhiteSpace(output))
+            if (string.IsNullOrEmpty(output))
             {
                 logger.Error($"Output path was null or empty, cannot write transformed file!");
                 return false;
@@ -284,6 +284,7 @@ namespace SabreTools.Skippers
             }
             finally
             {
+#if NET40_OR_GREATER
                 // If we're not keeping the read stream open, dispose of the binary reader
                 if (!keepReadOpen)
                     br?.Dispose();
@@ -291,6 +292,7 @@ namespace SabreTools.Skippers
                 // If we're not keeping the write stream open, dispose of the binary reader
                 if (!keepWriteOpen)
                     bw?.Dispose();
+#endif
             }
 
             return success;

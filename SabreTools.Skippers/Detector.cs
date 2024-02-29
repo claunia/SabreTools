@@ -53,7 +53,7 @@ namespace SabreTools.Skippers
         public Rule? GetMatchingRule(Stream input, string skipperName)
         {
             // If we have no name supplied, try to blindly match
-            if (string.IsNullOrWhiteSpace(skipperName))
+            if (string.IsNullOrEmpty(skipperName))
                 return GetMatchingRule(input);
 
             // If the name matches the internal name of the skipper

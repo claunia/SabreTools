@@ -79,7 +79,11 @@ namespace SabreTools.Skippers
             var xts = new XmlSerializer(typeof(Detector));
 
             // Get skippers for each known header type
+#if NET20 || NET35
+            foreach (string skipperPath in Directory.GetFiles(LocalPath, "*"))
+#else
             foreach (string skipperPath in Directory.EnumerateFiles(LocalPath, "*", SearchOption.AllDirectories))
+#endif
             {
                 try
                 {
@@ -87,7 +91,9 @@ namespace SabreTools.Skippers
                     var xtr = XmlReader.Create(skipperPath, new XmlReaderSettings
                     {
                         CheckCharacters = false,
+#if NET40_OR_GREATER
                         DtdProcessing = DtdProcessing.Ignore,
+#endif
                         IgnoreComments = true,
                         IgnoreWhitespace = true,
                         ValidationFlags = XmlSchemaValidationFlags.None,
