@@ -227,7 +227,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Metadata.Disk ?? new Models.Metadata.Disk(),
+                _internal = this._internal?.Clone() as Models.Metadata.Disk ?? [],
             };
         }
 

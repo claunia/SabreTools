@@ -118,7 +118,7 @@ namespace SabreTools.DatTools
 
             var statsList = new List<DatStatistics>
             {
-                new DatStatistics
+                new() 
                 {
                     Statistics = datFile.Items,
                     DisplayName = datFile.Header.FileName,
@@ -127,7 +127,7 @@ namespace SabreTools.DatTools
                 },
             };
             var consoleOutput = BaseReport.Create(StatReportFormat.None, statsList);
-            consoleOutput.WriteToFile(null, true, true);
+            consoleOutput!.WriteToFile(null, true, true);
         }
 
         /// <summary>

@@ -102,7 +102,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Metadata.ConfSetting ?? new Models.Metadata.ConfSetting(),
+                _internal = this._internal?.Clone() as Models.Metadata.ConfSetting ?? [],
             };
         }
 

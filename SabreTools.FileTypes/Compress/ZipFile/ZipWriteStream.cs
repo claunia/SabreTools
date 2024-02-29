@@ -10,7 +10,7 @@ namespace Compress.ZipFile
 {
     public partial class Zip
     {
-        private Stream _compressionStream;
+        private Stream? _compressionStream;
 
         /*
          raw is true if we are just going to copy the raw data stream from the source to the destination zip file
@@ -20,7 +20,7 @@ namespace Compress.ZipFile
          if raw is false then compressionMthod must be 0,8 or 93 (zstd)
          */
 
-        public ZipReturn ZipFileOpenWriteStream(bool raw, bool trrntzip, string filename, ulong uncompressedSize, ushort compressionMethod, out Stream stream, TimeStamps timeStamp = null)
+        public ZipReturn ZipFileOpenWriteStream(bool raw, bool trrntzip, string filename, ulong uncompressedSize, ushort compressionMethod, out Stream? stream, TimeStamps? timeStamp = null)
         {
             stream = null;
             if (ZipOpen != ZipOpenType.OpenWrite)
@@ -108,7 +108,7 @@ namespace Compress.ZipFile
             }
 
             _localFiles.RemoveAt(fileCount - 1);
-            _zipFs.Position = (long)_localFiles[fileCount - 1].RelativeOffsetOfLocalHeader;
+            _zipFs!.Position = (long)_localFiles[fileCount - 1].RelativeOffsetOfLocalHeader;
             return ZipReturn.ZipGood;
         }
 

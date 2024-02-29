@@ -528,13 +528,13 @@ namespace SabreTools.DatFiles.Formats
             {
                 Players = NumberHelper.ConvertToInt64(input.Players),
                 //Control = input.Control, // TODO: Add to internal model or find mapping
-                Controls = new List<Control>
-                {
+                Controls =
+                [
                     new Control
                     {
                         Buttons = NumberHelper.ConvertToInt64(input.Buttons),
                     },
-                },
+                ],
                 Coins = NumberHelper.ConvertToInt64(input.Coins),
                 Tilt = input.Tilt?.AsYesNo(),
                 Service = input.Service?.AsYesNo(),
@@ -571,7 +571,7 @@ namespace SabreTools.DatFiles.Formats
                 var item = new DipSwitch
                 {
                     Name = dipswitch.Name,
-                    Values = new List<DipValue>(),
+                    Values = [],
 
                     Source = new Source
                     {
@@ -580,7 +580,7 @@ namespace SabreTools.DatFiles.Formats
                     },
                 };
 
-                foreach (string entry in dipswitch.Entry ?? Array.Empty<string>())
+                foreach (string entry in dipswitch.Entry ?? [])
                 {
                     var dipValue = new DipValue
                     {

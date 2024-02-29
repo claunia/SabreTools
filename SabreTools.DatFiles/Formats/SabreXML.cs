@@ -283,7 +283,7 @@ namespace SabreTools.DatFiles.Formats
         /// </summary>
         /// <param name="xtw">XmlTextWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
-        private void WriteStartGame(XmlTextWriter xtw, DatItem datItem)
+        private static void WriteStartGame(XmlTextWriter xtw, DatItem datItem)
         {
             // No game should start with a path separator
             datItem.Machine!.Name = datItem.Machine.Name?.TrimStart(Path.DirectorySeparatorChar) ?? string.Empty;
@@ -304,7 +304,7 @@ namespace SabreTools.DatFiles.Formats
         /// Write out Game start using the supplied StreamWriter
         /// </summary>
         /// <param name="xtw">XmlTextWriter to output to</param>
-        private void WriteEndGame(XmlTextWriter xtw)
+        private static void WriteEndGame(XmlTextWriter xtw)
         {
             // End files
             xtw.WriteEndElement();
@@ -338,7 +338,7 @@ namespace SabreTools.DatFiles.Formats
         /// Write out DAT footer using the supplied StreamWriter
         /// </summary>
         /// <param name="xtw">XmlTextWriter to output to</param>
-        private void WriteFooter(XmlTextWriter xtw)
+        private static void WriteFooter(XmlTextWriter xtw)
         {
             // End files
             xtw.WriteEndElement();

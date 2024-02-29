@@ -16,7 +16,7 @@ namespace SabreTools.FileTypes.Aaru
         #region Header
 
         protected ulong Identifier;                     // 'AARUFRMT' (0x544D524655524141)
-        protected string Application;                   // Name of application that created image
+        protected string? Application;                  // Name of application that created image
         protected byte ImageMajorVersion;               // Image format major version
         protected byte ImageMinorVersion;               // Image format minor version
         protected byte ApplicationMajorVersion;         // Major version of application that created image
@@ -30,8 +30,8 @@ namespace SabreTools.FileTypes.Aaru
 
         #region Internal Values
 
-        protected IndexHeader IndexHeader;
-        protected IndexEntry[] IndexEntries;
+        protected IndexHeader? IndexHeader;
+        protected IndexEntry[]? IndexEntries;
 
         #endregion
 
@@ -51,7 +51,7 @@ namespace SabreTools.FileTypes.Aaru
         /// Create a new AaruFormat from an input file
         /// </summary>
         /// <param name="filename">Filename respresenting the AaruFormat file</param>
-        public static AaruFormat Create(string filename)
+        public static AaruFormat? Create(string filename)
         {
             using FileStream fs = File.OpenRead(filename);
             return Create(fs);
@@ -61,7 +61,7 @@ namespace SabreTools.FileTypes.Aaru
         /// Create a new AaruFormat from an input stream
         /// </summary>
         /// <param name="aarustream">Stream representing the AaruFormat file</param>
-        public static AaruFormat Create(Stream aarustream)
+        public static AaruFormat? Create(Stream aarustream)
         {
             try
             {
@@ -72,7 +72,7 @@ namespace SabreTools.FileTypes.Aaru
                     return null;
 
                 // Read and retrun the current AaruFormat
-                AaruFormat generated = Deserialize(aarustream);
+                AaruFormat? generated = Deserialize(aarustream);
                 if (generated != null)
                     generated.Type = FileType.AaruFormat;
 
@@ -113,7 +113,7 @@ namespace SabreTools.FileTypes.Aaru
         /// </summary>
         /// <param name="stream">AaruFormat file as a stream</param>
         /// <returns>Populated AaruFormat file, null on failure</returns>
-        public static AaruFormat Deserialize(Stream stream)
+        public static AaruFormat? Deserialize(Stream stream)
         {
             try
             {
@@ -183,7 +183,7 @@ namespace SabreTools.FileTypes.Aaru
                                 // Read through each and pick out the ones we care about
                                 for (byte entry = 0; entry < checksumHeader.entries; entry++)
                                 {
-                                    ChecksumEntry checksumEntry = ChecksumEntry.Deserialize(stream);
+                                    ChecksumEntry? checksumEntry = ChecksumEntry.Deserialize(stream);
                                     if (checksumEntry == null)
                                         continue;
 

@@ -78,8 +78,8 @@ namespace SabreTools.Filtering
                     else if (foundRootFolder)
                     {
                         // Get the value and machine name
-                        string value = ir.Section;
-                        string machineName = ir.CurrentLine.Trim();
+                        string? value = ir.Section;
+                        string? machineName = ir.CurrentLine?.Trim();
 
                         // If the section is "ROOT_FOLDER", then we use the value "true" instead.
                         // This is done because some INI files use the name of the file as the
@@ -88,7 +88,8 @@ namespace SabreTools.Filtering
                             value = "true";
 
                         // Add the new mapping
-                        Mappings[machineName] = value;
+                        if (machineName != null && value != null)
+                            Mappings[machineName] = value;
                     }
                 }
             }

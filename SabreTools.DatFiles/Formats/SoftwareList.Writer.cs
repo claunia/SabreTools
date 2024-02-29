@@ -16,14 +16,14 @@ namespace SabreTools.DatFiles.Formats
         /// <inheritdoc/>
         protected override ItemType[] GetSupportedTypes()
         {
-            return new ItemType[]
-            {
+            return
+            [
                 ItemType.DipSwitch,
                 ItemType.Disk,
                 ItemType.Info,
                 ItemType.Rom,
                 ItemType.SharedFeature,
-            };
+            ];
         }
 
         /// <inheritdoc/>
@@ -241,15 +241,15 @@ namespace SabreTools.DatFiles.Formats
                 parts = SantitizeParts(parts);
 
                 // Assign the values to the game
-                sw.Info = infos.ToArray();
-                sw.SharedFeat = sharedfeats.ToArray();
-                sw.Part = parts.ToArray();
+                sw.Info = [.. infos];
+                sw.SharedFeat = [.. sharedfeats];
+                sw.Part = [.. parts];
 
                 // Add the game to the list
                 software.Add(sw);
             }
 
-            return software.ToArray();
+            return [.. software];
         }
 
         /// <summary>
@@ -368,7 +368,7 @@ namespace SabreTools.DatFiles.Formats
                 features.Add(feature);
             }
 
-            return features.ToArray();
+            return [.. features];
         }
 
         /// <summary>
@@ -384,7 +384,7 @@ namespace SabreTools.DatFiles.Formats
                 Endianness = item.DataArea?.Endianness.FromEndianness(),
                 Rom = CreateRom(item),
             };
-            return new Models.SoftwareList.DataArea[] { dataArea };
+            return [dataArea];
         }
 
         /// <summary>
@@ -404,7 +404,7 @@ namespace SabreTools.DatFiles.Formats
                 Status = item.ItemStatus.FromItemStatus(yesno: false),
                 LoadFlag = item.LoadFlag.FromLoadFlag(),
             };
-            return new Models.SoftwareList.Rom[] { rom };
+            return [rom];
         }
 
         /// <summary>
@@ -416,7 +416,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 Disk = CreateDisk(item),
             };
-            return new Models.SoftwareList.DiskArea[] { diskArea };
+            return [diskArea];
         }
 
         /// <summary>
@@ -432,7 +432,7 @@ namespace SabreTools.DatFiles.Formats
                 Status = item.ItemStatus.FromItemStatus(yesno: false),
                 Writeable = item.Writable?.ToString(),
             };
-            return new Models.SoftwareList.Disk[] { disk };
+            return [disk];
         }
 
         /// <summary>
@@ -441,7 +441,7 @@ namespace SabreTools.DatFiles.Formats
         private static Models.SoftwareList.DipSwitch[]? CreateDipSwitches(DipSwitch item)
         {
             var dipValues = new List<Models.SoftwareList.DipValue>();
-            foreach (var setting in item.Values ?? new List<DipValue>())
+            foreach (var setting in item.Values ?? [])
             {
                 var dipValue = new Models.SoftwareList.DipValue
                 {
@@ -452,8 +452,8 @@ namespace SabreTools.DatFiles.Formats
                 dipValues.Add(dipValue);
             }
 
-            var dipSwitch = new Models.SoftwareList.DipSwitch { DipValue = dipValues.ToArray() };
-            return new Models.SoftwareList.DipSwitch[] { dipSwitch };
+            var dipSwitch = new Models.SoftwareList.DipSwitch { DipValue = [.. dipValues] };
+            return [dipSwitch];
         }
 
         /// <summary>
@@ -496,13 +496,13 @@ namespace SabreTools.DatFiles.Formats
                 tempDiskAreas = SantitizeDiskAreas(tempDiskAreas);
 
                 if (tempFeatures.Count > 0)
-                    tempPart.Feature = tempFeatures.ToArray();
+                    tempPart.Feature = [.. tempFeatures];
                 if (tempDataAreas.Count > 0)
-                    tempPart.DataArea = tempDataAreas.ToArray();
+                    tempPart.DataArea = [.. tempDataAreas];
                 if (tempDiskAreas.Count > 0)
-                    tempPart.DiskArea = tempDiskAreas.ToArray();
+                    tempPart.DiskArea = [.. tempDiskAreas];
                 if (tempDipSwitches.Count > 0)
-                    tempPart.DipSwitch = tempDipSwitches.ToArray();
+                    tempPart.DipSwitch = [.. tempDipSwitches];
 
                 tempParts.Add(tempPart);
             }
@@ -539,7 +539,7 @@ namespace SabreTools.DatFiles.Formats
                 }
 
                 if (tempRoms.Count > 0)
-                    tempDataArea.Rom = tempRoms.ToArray();
+                    tempDataArea.Rom = [.. tempRoms];
 
                 tempDataAreas.Add(tempDataArea);
             }
@@ -572,7 +572,7 @@ namespace SabreTools.DatFiles.Formats
                 }
 
                 if (tempDisks.Count > 0)
-                    tempDiskArea.Disk = tempDisks.ToArray();
+                    tempDiskArea.Disk = [.. tempDisks];
 
                 tempDiskAreas.Add(tempDiskArea);
             }

@@ -13,32 +13,32 @@ namespace SabreTools.Filtering
         /// <summary>
         /// Single positive value for this filter
         /// </summary>
-        public T Positive { get; set; }
+        public T? Positive { get; set; }
 
         /// <summary>
         /// List of positive values for this filter
         /// </summary>
-        public List<T> PositiveSet { get; set; } = new List<T>();
+        public List<T?> PositiveSet { get; set; } = new List<T?>();
 
         /// <summary>
         /// Single negative value for this filter
         /// </summary>
-        public T Negative { get; set; }
+        public T? Negative { get; set; }
 
         /// <summary>
         /// List of negative values for this filter
         /// </summary>
-        public List<T> NegativeSet { get; set; } = new List<T>();
+        public List<T?> NegativeSet { get; set; } = new List<T?>();
 
         /// <summary>
         /// Single neutral value for this filter
         /// </summary>
-        public T Neutral { get; set; }
+        public T? Neutral { get; set; }
 
         /// <summary>
         /// List of neutral values for this filter
         /// </summary>
-        public List<T> NeutralSet { get; set; } = new List<T>();
+        public List<T?> NeutralSet { get; set; } = new List<T?>();
 
         /// <summary>
         /// Check if a value matches the positive filter
@@ -78,7 +78,7 @@ namespace SabreTools.Filtering
         /// </summary>
         /// <param name="value">Value to check</param>
         /// <returns>True if the value was found in a positive filter, null on an empty set, false otherwise</returns>
-        public bool? MatchesPositiveSet(T value)
+        public bool? MatchesPositiveSet(T? value)
         {
             return MatchesSet(this.PositiveSet, value);
         }
@@ -88,7 +88,7 @@ namespace SabreTools.Filtering
         /// </summary>
         /// <param name="value">Value to check</param>
         /// <returns>True if the value was found in a negative filter, null on an empty set, false otherwise</returns>
-        public bool? MatchesNegativeSet(T value)
+        public bool? MatchesNegativeSet(T? value)
         {
             return MatchesSet(this.NegativeSet, value);
         }
@@ -98,7 +98,7 @@ namespace SabreTools.Filtering
         /// </summary>
         /// <param name="value">Value to check</param>
         /// <returns>True if the value was found in a neutral filter, null on an empty set, false otherwise</returns>
-        public bool? MatchesNeutralSet(T value)
+        public bool? MatchesNeutralSet(T? value)
         {
             return MatchesSet(this.NeutralSet, value);
         }
@@ -110,14 +110,14 @@ namespace SabreTools.Filtering
         /// <param name="def">Default value to check filter value</param>
         /// <param name="value">Value to check</param>
         /// <returns>True if the value was found in the supplied filter, null on default value, false otherwise</returns>
-        private static bool? Matches(T single, T def, T value)
+        private static bool? Matches(T? single, T def, T value)
         {
             // If the filter is default, we ignore
-            if (single.Equals(def))
+            if (single == null || single.Equals(def))
                 return null;
 
             // If we have a flag
-            if (typeof(T).IsEnum && (single as Enum).HasFlag(value as Enum))
+            if (typeof(T).IsEnum && (single as Enum)!.HasFlag((value as Enum)!))
                 return true;
 
             return single.Equals(value);
@@ -129,7 +129,7 @@ namespace SabreTools.Filtering
         /// <param name="set">Set to check against</param>
         /// <param name="value">Value to check</param>
         /// <returns>True if the value was found in the supplied filter, null on an empty set, false otherwise</returns>
-        private static bool? MatchesSet(List<T> set, T value)
+        private static bool? MatchesSet(List<T?> set, T? value)
         {
             if (set.Count == 0)
                 return null;
@@ -146,14 +146,13 @@ namespace SabreTools.Filtering
         /// <param name="haystack">List to search for the value in</param>
         /// <param name="needle">Value to search the list for</param>
         /// <returns>True if the value could be found, false otherwise</returns>
-        private static bool FindValueInList(List<T> haystack, T needle)
+        private static bool FindValueInList(List<T?> haystack, T? needle)
         {
             bool found = false;
-            foreach (T straw in haystack)
+            foreach (T? straw in haystack)
             {
-                if (straw is string)
+                if (straw is string strawString)
                 {
-                    string strawString = straw as string;
                     if (!string.IsNullOrWhiteSpace(strawString) && needle is string needleString)
                     {
                         string regexStraw = strawString;
@@ -168,7 +167,7 @@ namespace SabreTools.Filtering
                 }
                 else
                 {
-                    found |= (needle.Equals(straw));
+                    found |= (needle?.Equals(straw) ?? false);
                 }
             }
 

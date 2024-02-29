@@ -16,18 +16,18 @@ namespace SabreTools.FileTypes.Aaru
         /// <summary>Length in bytes of checksum that follows this structure</summary>
         public uint length;
         /// <summary>Checksum that follows this structure</summary>
-        public byte[] checksum;
+        public byte[]? checksum;
 
         /// <summary>
         /// Read a stream as an v
         /// </summary>
         /// <param name="stream">ChecksumEntry as a stream</param>
         /// <returns>Populated ChecksumEntry, null on failure</returns>
-        public static ChecksumEntry Deserialize(Stream stream)
+        public static ChecksumEntry? Deserialize(Stream stream)
         {
-            ChecksumEntry checksumEntry = new ChecksumEntry();
+            var checksumEntry = new ChecksumEntry();
 
-            using (BinaryReader br = new BinaryReader(stream, Encoding.Default, true))
+            using (var br = new BinaryReader(stream, Encoding.Default, true))
             {
                 checksumEntry.type = (AaruChecksumAlgorithm)br.ReadByte();
                 checksumEntry.length = br.ReadUInt32();

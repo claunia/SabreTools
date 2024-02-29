@@ -4,14 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-
+using NaturalSort;
 using SabreTools.Core;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using SabreTools.IO;
 using SabreTools.Logging;
-using NaturalSort;
 
 namespace SabreTools.DatTools
 {
@@ -37,7 +36,7 @@ namespace SabreTools.DatTools
         /// <param name="extA">List of extensions to split on (first DAT)</param>
         /// <param name="extB">List of extensions to split on (second DAT)</param>
         /// <returns>Extension Set A and Extension Set B DatFiles</returns>
-        public static (DatFile extADat, DatFile extBDat) SplitByExtension(DatFile datFile, List<string> extA, List<string> extB)
+        public static (DatFile? extADat, DatFile? extBDat) SplitByExtension(DatFile datFile, List<string> extA, List<string> extB)
         {
             // If roms is empty, return false
             if (datFile.Items.TotalCount == 0)
@@ -66,7 +65,10 @@ namespace SabreTools.DatTools
             // Now separate the roms accordingly
             Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
             {
-                ConcurrentList<DatItem> items = datFile.Items[key];
+                ConcurrentList<DatItem>? items = datFile.Items[key];
+                if (items == null)
+                    return;
+
                 foreach (DatItem item in items)
                 {
                     if (newExtA.Contains((item.GetName() ?? string.Empty).GetNormalizedExtension()))
@@ -101,7 +103,7 @@ namespace SabreTools.DatTools
             InternalStopwatch watch = new($"Splitting DAT by best available hashes");
 
             // Create the set of field-to-dat mappings
-            Dictionary<DatItemField, DatFile> fieldDats = new();
+            Dictionary<DatItemField, DatFile> fieldDats = [];
 
             // TODO: Can this be made into a loop?
             fieldDats[DatItemField.Status] = DatFile.Create(datFile.Header.CloneStandard());
@@ -147,7 +149,10 @@ namespace SabreTools.DatTools
             // Now populate each of the DAT objects in turn
             Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
             {
-                ConcurrentList<DatItem> items = datFile.Items[key];
+                ConcurrentList<DatItem>? items = datFile.Items[key];
+                if (items == null)
+                    return;
+
                 foreach (DatItem item in items)
                 {
                     // If the file is not a Disk, Media, or Rom, continue
@@ -155,49 +160,49 @@ namespace SabreTools.DatTools
                         return;
 
                     // If the file is a nodump
-                    if ((item.ItemType == ItemType.Rom && (item as Rom).ItemStatus == ItemStatus.Nodump)
-                        || (item.ItemType == ItemType.Disk && (item as Disk).ItemStatus == ItemStatus.Nodump))
+                    if ((item.ItemType == ItemType.Rom && (item as Rom)!.ItemStatus == ItemStatus.Nodump)
+                        || (item.ItemType == ItemType.Disk && (item as Disk)!.ItemStatus == ItemStatus.Nodump))
                     {
                         fieldDats[DatItemField.Status].Items.Add(key, item);
                     }
 
                     // If the file has a SHA-512
-                    else if ((item.ItemType == ItemType.Rom && !string.IsNullOrWhiteSpace((item as Rom).SHA512)))
+                    else if ((item.ItemType == ItemType.Rom && !string.IsNullOrWhiteSpace((item as Rom)!.SHA512)))
                     {
                         fieldDats[DatItemField.SHA512].Items.Add(key, item);
                     }
 
                     // If the file has a SHA-384
-                    else if ((item.ItemType == ItemType.Rom && !string.IsNullOrWhiteSpace((item as Rom).SHA384)))
+                    else if ((item.ItemType == ItemType.Rom && !string.IsNullOrWhiteSpace((item as Rom)!.SHA384)))
                     {
                         fieldDats[DatItemField.SHA384].Items.Add(key, item);
                     }
 
                     // If the file has a SHA-256
-                    else if ((item.ItemType == ItemType.Media && !string.IsNullOrWhiteSpace((item as Media).SHA256))
-                        || (item.ItemType == ItemType.Rom && !string.IsNullOrWhiteSpace((item as Rom).SHA256)))
+                    else if ((item.ItemType == ItemType.Media && !string.IsNullOrWhiteSpace((item as Media)!.SHA256))
+                        || (item.ItemType == ItemType.Rom && !string.IsNullOrWhiteSpace((item as Rom)!.SHA256)))
                     {
                         fieldDats[DatItemField.SHA256].Items.Add(key, item);
                     }
 
                     // If the file has a SHA-1
-                    else if ((item.ItemType == ItemType.Disk && !string.IsNullOrWhiteSpace((item as Disk).SHA1))
-                        || (item.ItemType == ItemType.Media && !string.IsNullOrWhiteSpace((item as Media).SHA1))
-                        || (item.ItemType == ItemType.Rom && !string.IsNullOrWhiteSpace((item as Rom).SHA1)))
+                    else if ((item.ItemType == ItemType.Disk && !string.IsNullOrWhiteSpace((item as Disk)!.SHA1))
+                        || (item.ItemType == ItemType.Media && !string.IsNullOrWhiteSpace((item as Media)!.SHA1))
+                        || (item.ItemType == ItemType.Rom && !string.IsNullOrWhiteSpace((item as Rom)!.SHA1)))
                     {
                         fieldDats[DatItemField.SHA1].Items.Add(key, item);
                     }
 
                     // If the file has an MD5
-                    else if ((item.ItemType == ItemType.Disk && !string.IsNullOrWhiteSpace((item as Disk).MD5))
-                        || (item.ItemType == ItemType.Media && !string.IsNullOrWhiteSpace((item as Media).MD5))
-                        || (item.ItemType == ItemType.Rom && !string.IsNullOrWhiteSpace((item as Rom).MD5)))
+                    else if ((item.ItemType == ItemType.Disk && !string.IsNullOrWhiteSpace((item as Disk)!.MD5))
+                        || (item.ItemType == ItemType.Media && !string.IsNullOrWhiteSpace((item as Media)!.MD5))
+                        || (item.ItemType == ItemType.Rom && !string.IsNullOrWhiteSpace((item as Rom)!.MD5)))
                     {
                         fieldDats[DatItemField.MD5].Items.Add(key, item);
                     }
 
                     // If the file has a CRC
-                    else if ((item.ItemType == ItemType.Rom && !string.IsNullOrWhiteSpace((item as Rom).CRC)))
+                    else if ((item.ItemType == ItemType.Rom && !string.IsNullOrWhiteSpace((item as Rom)!.CRC)))
                     {
                         fieldDats[DatItemField.CRC].Items.Add(key, item);
                     }
@@ -233,7 +238,7 @@ namespace SabreTools.DatTools
             tempDat.Header.Name = null;
 
             // Sort the input keys
-            List<string> keys = datFile.Items.Keys.ToList();
+            List<string> keys = [.. datFile.Items.Keys];
             keys.Sort(SplitByLevelSort);
 
             // Then, we loop over the games
@@ -248,7 +253,10 @@ namespace SabreTools.DatTools
                 }
 
                 // Clean the input list and set all games to be pathless
-                ConcurrentList<DatItem> items = datFile.Items[key];
+                ConcurrentList<DatItem>? items = datFile.Items[key];
+                if (items == null)
+                    return;
+
                 items.ForEach(item => item.Machine.Name = Path.GetFileName(item.Machine.Name));
                 items.ForEach(item => item.Machine.Description = Path.GetFileName(item.Machine.Description));
 
@@ -292,8 +300,8 @@ namespace SabreTools.DatTools
         private static void SplitByLevelHelper(DatFile datFile, DatFile newDatFile, string outDir, bool shortname, bool restore)
         {
             // Get the name from the DAT to use separately
-            string name = newDatFile.Header.Name;
-            string expName = name.Replace("/", " - ").Replace("\\", " - ");
+            string? name = newDatFile.Header.Name;
+            string? expName = name?.Replace("/", " - ")?.Replace("\\", " - ");
 
             // Now set the new output values
             newDatFile.Header.FileName = WebUtility.HtmlDecode(string.IsNullOrWhiteSpace(name)
@@ -336,7 +344,10 @@ namespace SabreTools.DatTools
             // Now populate each of the DAT objects in turn
             Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
             {
-                ConcurrentList<DatItem> items = datFile.Items[key];
+                ConcurrentList<DatItem>? items = datFile.Items[key];
+                if (items == null)
+                    return;
+
                 foreach (DatItem item in items)
                 {
                     // If the file is not a Rom, it automatically goes in the "lesser" dat
@@ -344,15 +355,15 @@ namespace SabreTools.DatTools
                         lessThan.Items.Add(key, item);
 
                     // If the file is a Rom and has no size, put it in the "lesser" dat
-                    else if (item.ItemType == ItemType.Rom && (item as Rom).Size == null)
+                    else if (item.ItemType == ItemType.Rom && (item as Rom)!.Size == null)
                         lessThan.Items.Add(key, item);
 
                     // If the file is a Rom and less than the radix, put it in the "lesser" dat
-                    else if (item.ItemType == ItemType.Rom && (item as Rom).Size < radix)
+                    else if (item.ItemType == ItemType.Rom && (item as Rom)!.Size < radix)
                         lessThan.Items.Add(key, item);
 
                     // If the file is a Rom and greater than or equal to the radix, put it in the "greater" dat
-                    else if (item.ItemType == ItemType.Rom && (item as Rom).Size >= radix)
+                    else if (item.ItemType == ItemType.Rom && (item as Rom)!.Size >= radix)
                         greaterThan.Items.Add(key, item);
                 }
             });
@@ -372,7 +383,7 @@ namespace SabreTools.DatTools
         {
             // If the size is invalid, just return
             if (chunkSize <= 0)
-                return new List<DatFile>();
+                return [];
 
             // Create each of the respective output DATs
             InternalStopwatch watch = new($"Splitting DAT by total size");
@@ -384,7 +395,7 @@ namespace SabreTools.DatTools
             var keys = datFile.Items.SortedKeys;
 
             // Get the output list
-            List<DatFile> datFiles = new();
+            List<DatFile> datFiles = [];
 
             // Initialize everything
             long currentSize = 0;
@@ -462,16 +473,16 @@ namespace SabreTools.DatTools
             InternalStopwatch watch = new($"Splitting DAT by item type");
 
             // Create the set of type-to-dat mappings
-            Dictionary<ItemType, DatFile> typeDats = new();
+            Dictionary<ItemType, DatFile> typeDats = [];
 
             // We only care about a subset of types
-            List<ItemType> outputTypes = new()
-            {
+            List<ItemType> outputTypes =
+            [
                 ItemType.Disk,
                 ItemType.Media,
                 ItemType.Rom,
                 ItemType.Sample,
-            };
+            ];
 
             // Setup all of the DatFiles
             foreach (ItemType itemType in outputTypes)

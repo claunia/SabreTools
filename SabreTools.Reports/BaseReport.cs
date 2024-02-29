@@ -36,7 +36,7 @@ namespace SabreTools.Reports
         /// <param name="statReportFormat">Format of the Statistics Report to be created</param>
         /// <param name="statsList">List of statistics objects to set</param>
         /// <returns>BaseReport of the specific internal type that corresponds to the inputs</returns>
-        public static BaseReport Create(StatReportFormat statReportFormat, List<DatStatistics> statsList)
+        public static BaseReport? Create(StatReportFormat statReportFormat, List<DatStatistics> statsList)
         {
             return statReportFormat switch
             {
@@ -58,7 +58,7 @@ namespace SabreTools.Reports
         /// <param name="nodumpCol">True if nodumps should be included in output, false otherwise</param>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         /// <returns>True if the report was written correctly, false otherwise</returns>
-        public abstract bool WriteToFile(string outfile, bool baddumpCol, bool nodumpCol, bool throwOnError = false);
+        public abstract bool WriteToFile(string? outfile, bool baddumpCol, bool nodumpCol, bool throwOnError = false);
     
         /// <summary>
         /// Returns the human-readable file size for an arbitrary, 64-bit file size 

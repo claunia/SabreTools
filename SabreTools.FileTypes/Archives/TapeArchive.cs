@@ -58,7 +58,7 @@ namespace SabreTools.FileTypes.Archives
                 Directory.CreateDirectory(outDir);
 
                 // Extract all files to the temp directory
-                TarArchive ta = TarArchive.Open(this.Filename);
+                TarArchive ta = TarArchive.Open(this.Filename!);
                 foreach (TarArchiveEntry entry in ta.Entries)
                 {
                     entry.WriteToDirectory(outDir, new ExtractionOptions { PreserveFileTime = true, ExtractFullPath = true, Overwrite = true });
@@ -86,10 +86,10 @@ namespace SabreTools.FileTypes.Archives
         }
 
         /// <inheritdoc/>
-        public override string CopyToFile(string entryName, string outDir)
+        public override string? CopyToFile(string entryName, string outDir)
         {
             // Try to extract a stream using the given information
-            (MemoryStream ms, string realEntry) = CopyToStream(entryName);
+            (MemoryStream? ms, string? realEntry) = CopyToStream(entryName);
 
             // If the memory stream and the entry name are both non-null, we write to file
             if (ms != null && realEntry != null)
@@ -97,7 +97,7 @@ namespace SabreTools.FileTypes.Archives
                 realEntry = Path.Combine(outDir, realEntry);
 
                 // Create the output subfolder now
-                Directory.CreateDirectory(Path.GetDirectoryName(realEntry));
+                Directory.CreateDirectory(Path.GetDirectoryName(realEntry)!);
 
                 // Now open and write the file if possible
                 FileStream fs = File.Create(realEntry);
@@ -127,14 +127,14 @@ namespace SabreTools.FileTypes.Archives
         }
 
         /// <inheritdoc/>
-        public override (MemoryStream, string) CopyToStream(string entryName)
+        public override (MemoryStream?, string?) CopyToStream(string entryName)
         {
-            MemoryStream ms = new();
-            string realEntry = null;
+            MemoryStream? ms = new();
+            string? realEntry = null;
 
             try
             {
-                TarArchive ta = TarArchive.Open(this.Filename, new ReaderOptions { LeaveStreamOpen = false, });
+                TarArchive ta = TarArchive.Open(this.Filename!, new ReaderOptions { LeaveStreamOpen = false, });
                 foreach (TarArchiveEntry entry in ta.Entries)
                 {
                     if (entry != null && !entry.IsDirectory && entry.Key.Contains(entryName))
@@ -161,14 +161,14 @@ namespace SabreTools.FileTypes.Archives
         #region Information
 
         /// <inheritdoc/>
-        public override List<BaseFile> GetChildren()
+        public override List<BaseFile>? GetChildren()
         {
             List<BaseFile> found = new();
-            string gamename = Path.GetFileNameWithoutExtension(this.Filename);
+            string? gamename = Path.GetFileNameWithoutExtension(this.Filename);
 
             try
             {
-                TarArchive ta = TarArchive.Open(File.OpenRead(this.Filename));
+                TarArchive ta = TarArchive.Open(File.OpenRead(this.Filename!));
                 foreach (TarArchiveEntry entry in ta.Entries.Where(e => e != null && !e.IsDirectory))
                 {
                     // Create a blank item for the entry
@@ -213,9 +213,9 @@ namespace SabreTools.FileTypes.Archives
 
             try
             {
-                TarArchive ta = TarArchive.Open(this.Filename, new ReaderOptions { LeaveStreamOpen = false });
+                TarArchive ta = TarArchive.Open(this.Filename!, new ReaderOptions { LeaveStreamOpen = false });
                 List<TarArchiveEntry> tarEntries = ta.Entries.OrderBy(e => e.Key, new NaturalSort.NaturalReversedComparer()).ToList();
-                string lastTarEntry = null;
+                string? lastTarEntry = null;
                 foreach (TarArchiveEntry entry in tarEntries)
                 {
                     if (entry != null)
@@ -253,14 +253,14 @@ namespace SabreTools.FileTypes.Archives
         #region Writing
 
         /// <inheritdoc/>
-        public override bool Write(string inputFile, string outDir, BaseFile baseFile)
+        public override bool Write(string inputFile, string outDir, BaseFile? baseFile)
         {
             // Get the file stream for the file and write out
             return Write(File.OpenRead(inputFile), outDir, baseFile);
         }
 
         /// <inheritdoc/>
-        public override bool Write(Stream inputStream, string outDir, BaseFile baseFile)
+        public override bool Write(Stream? inputStream, string outDir, BaseFile? baseFile)
         {
             bool success = false;
             string tempFile = Path.Combine(outDir, $"tmp{Guid.NewGuid()}");
@@ -274,7 +274,7 @@ namespace SabreTools.FileTypes.Archives
                 return success;
 
             // Get the output archive name from the first rebuild rom
-            string archiveFileName = Path.Combine(outDir, TextHelper.RemovePathUnsafeCharacters(baseFile.Parent) + (baseFile.Parent.EndsWith(".tar") ? string.Empty : ".tar"));
+            string archiveFileName = Path.Combine(outDir, TextHelper.RemovePathUnsafeCharacters(baseFile.Parent) + (baseFile.Parent!.EndsWith(".tar") ? string.Empty : ".tar"));
 
             // Set internal variables
             TarArchive oldTarFile = TarArchive.Create();
@@ -284,7 +284,7 @@ namespace SabreTools.FileTypes.Archives
             {
                 // If the full output path doesn't exist, create it
                 if (!Directory.Exists(Path.GetDirectoryName(archiveFileName)))
-                    Directory.CreateDirectory(Path.GetDirectoryName(archiveFileName));
+                    Directory.CreateDirectory(Path.GetDirectoryName(archiveFileName)!);
 
                 // If the archive doesn't exist, create it and put the single file
                 if (!File.Exists(archiveFileName))
@@ -391,7 +391,7 @@ namespace SabreTools.FileTypes.Archives
         }
 
         /// <inheritdoc/>
-        public override bool Write(List<string> inputFiles, string outDir, List<BaseFile> baseFiles)
+        public override bool Write(List<string> inputFiles, string outDir, List<BaseFile>? baseFiles)
         {
             bool success = false;
             string tempFile = Path.Combine(outDir, $"tmp{Guid.NewGuid()}");
@@ -418,7 +418,7 @@ namespace SabreTools.FileTypes.Archives
             }
 
             // Get the output archive name from the first rebuild rom
-            string archiveFileName = Path.Combine(outDir, TextHelper.RemovePathUnsafeCharacters(baseFiles[0].Parent) + (baseFiles[0].Parent.EndsWith(".tar") ? string.Empty : ".tar"));
+            string archiveFileName = Path.Combine(outDir, TextHelper.RemovePathUnsafeCharacters(baseFiles[0].Parent) + (baseFiles[0].Parent!.EndsWith(".tar") ? string.Empty : ".tar"));
 
             // Set internal variables
             TarArchive oldTarFile = TarArchive.Create();
@@ -429,7 +429,7 @@ namespace SabreTools.FileTypes.Archives
                 // If the full output path doesn't exist, create it
                 if (!Directory.Exists(Path.GetDirectoryName(archiveFileName)))
                 {
-                    Directory.CreateDirectory(Path.GetDirectoryName(archiveFileName));
+                    Directory.CreateDirectory(Path.GetDirectoryName(archiveFileName)!);
                 }
 
                 // If the archive doesn't exist, create it and put the single file
@@ -439,7 +439,7 @@ namespace SabreTools.FileTypes.Archives
                     Dictionary<string, int> inputIndexMap = new();
                     for (int i = 0; i < inputFiles.Count; i++)
                     {
-                        inputIndexMap.Add(baseFiles[i].Filename.Replace('\\', '/'), i);
+                        inputIndexMap.Add(baseFiles[i].Filename!.Replace('\\', '/'), i);
                     }
 
                     // Sort the keys in TZIP order
@@ -454,11 +454,11 @@ namespace SabreTools.FileTypes.Archives
 
                         // Get temporary date-time if possible
                         DateTime? usableDate = null;
-                        if (UseDates && !string.IsNullOrWhiteSpace(baseFiles[index].Date) && DateTime.TryParse(baseFiles[index].Date.Replace('\\', '/'), out DateTime dt))
+                        if (UseDates && !string.IsNullOrWhiteSpace(baseFiles[index].Date) && DateTime.TryParse(baseFiles[index].Date?.Replace('\\', '/'), out DateTime dt))
                             usableDate = dt;
 
                         // Copy the input stream to the output
-                        tarFile.AddEntry(baseFiles[index].Filename, File.OpenRead(inputFiles[index]), size: baseFiles[index].Size ?? 0, modified: usableDate);
+                        tarFile.AddEntry(baseFiles[index].Filename!, File.OpenRead(inputFiles[index]), size: baseFiles[index].Size ?? 0, modified: usableDate);
                     }
                 }
 
@@ -476,12 +476,12 @@ namespace SabreTools.FileTypes.Archives
                     for (int i = 0; i < inputFiles.Count; i++)
                     {
                         // If the old one contains the new file, then just skip out
-                        if (entries.Contains(baseFiles[i].Filename.Replace('\\', '/')))
+                        if (entries.Contains(baseFiles[i].Filename!.Replace('\\', '/')))
                         {
                             continue;
                         }
 
-                        inputIndexMap.Add(baseFiles[i].Filename.Replace('\\', '/'), -(i + 1));
+                        inputIndexMap.Add(baseFiles[i].Filename!.Replace('\\', '/'), -(i + 1));
                     }
 
                     // Then add all of the old entries to it too
@@ -512,11 +512,11 @@ namespace SabreTools.FileTypes.Archives
                         {
                             // Get temporary date-time if possible
                             DateTime? usableDate = null;
-                            if (UseDates && !string.IsNullOrWhiteSpace(baseFiles[-index - 1].Date) && DateTime.TryParse(baseFiles[-index - 1].Date.Replace('\\', '/'), out DateTime dt))
+                            if (UseDates && !string.IsNullOrWhiteSpace(baseFiles[-index - 1].Date) && DateTime.TryParse(baseFiles[-index - 1].Date?.Replace('\\', '/'), out DateTime dt))
                                 usableDate = dt;
 
                             // Copy the input file to the output
-                            tarFile.AddEntry(baseFiles[-index - 1].Filename, File.OpenRead(inputFiles[-index - 1]), size: baseFiles[-index - 1].Size ?? 0, modified: usableDate);
+                            tarFile.AddEntry(baseFiles[-index - 1].Filename!, File.OpenRead(inputFiles[-index - 1]), size: baseFiles[-index - 1].Size ?? 0, modified: usableDate);
                         }
 
                         // Otherwise, copy the file from the old archive

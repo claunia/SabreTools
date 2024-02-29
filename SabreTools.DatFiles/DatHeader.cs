@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
-
+using Newtonsoft.Json;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles.Formats;
-using Newtonsoft.Json;
 
 namespace SabreTools.DatFiles
 {
@@ -744,14 +743,14 @@ namespace SabreTools.DatFiles
         public Dictionary<DatFormat, string> CreateOutFileNames(string outDir, bool overwrite = true)
         {
             // Create the output dictionary
-            Dictionary<DatFormat, string> outfileNames = new();
+            Dictionary<DatFormat, string> outfileNames = [];
 
             // Double check the outDir for the end delim
             if (!outDir.EndsWith(Path.DirectorySeparatorChar.ToString()))
                 outDir += Path.DirectorySeparatorChar;
 
             // Get all used extensions
-            List<string> usedExtensions = new();
+            List<string> usedExtensions = [];
 
             // Get the extensions from the output type
 

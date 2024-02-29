@@ -73,7 +73,7 @@ namespace SabreTools.Skippers
         private static void PopulateSkippers()
         {
             // Ensure the list exists
-            Skippers ??= new List<Detector>();
+            Skippers ??= [];
 
             // Create the XML serializer
             var xts = new XmlSerializer(typeof(Detector));
@@ -131,7 +131,7 @@ namespace SabreTools.Skippers
         private static void PopulateSkippersInternal()
         {
             // Ensure the list exists
-            Skippers ??= new List<Detector>();
+            Skippers ??= [];
 
             // Get skippers for each known header type
             Skippers.Add(new Detectors.Atari7800());
@@ -171,9 +171,13 @@ namespace SabreTools.Skippers
         /// <param name="skipperName">Name of the skipper to be used, blank to find a matching skipper</param>
         /// <param name="keepOpen">True if the underlying stream should be kept open, false otherwise</param>
         /// <returns>The Rule that matched the file</returns>
-        public static Rule GetMatchingRule(Stream input, string skipperName, bool keepOpen = false)
+        public static Rule GetMatchingRule(Stream? input, string skipperName, bool keepOpen = false)
         {
             var skipperRule = new Rule();
+
+            // If we have an invalid input
+            if (input == null || !input.CanRead)
+                return skipperRule;
 
             // If we have an invalid set of skippers or skipper name
             if (Skippers == null || skipperName == null)
@@ -196,7 +200,7 @@ namespace SabreTools.Skippers
 
             // If we're not keeping the stream open, dispose of the binary reader
             if (!keepOpen)
-                input.Dispose();
+                input?.Dispose();
 
             // If the Rule is null, make it empty
             skipperRule ??= new Rule();

@@ -16,8 +16,8 @@ namespace SabreTools.DatFiles.Formats
         /// <inheritdoc/>
         protected override ItemType[] GetSupportedTypes()
         {
-            return new ItemType[]
-            {
+            return
+            [
                 ItemType.Adjuster,
                 ItemType.BiosSet,
                 ItemType.Chip,
@@ -38,7 +38,7 @@ namespace SabreTools.DatFiles.Formats
                 ItemType.Slot,
                 ItemType.SoftwareList,
                 ItemType.Sound,
-            };
+            ];
         }
 
         /// <inheritdoc/>
@@ -244,7 +244,7 @@ namespace SabreTools.DatFiles.Formats
 
                 // Get the first item for game information
                 var machine = items[0].Machine;
-                var game = CreateGame(machine!);
+                var game = Listxml.CreateGame(machine!);
 
                 // Create holders for all item types
                 var biosSets = new List<Models.Listxml.BiosSet>();
@@ -340,35 +340,35 @@ namespace SabreTools.DatFiles.Formats
                 }
 
                 // Assign the values to the game
-                game.BiosSet = biosSets.ToArray();
-                game.Rom = roms.ToArray();
-                game.Disk = disks.ToArray();
-                game.DeviceRef = deviceRefs.ToArray();
-                game.Sample = samples.ToArray();
-                game.Chip = chips.ToArray();
-                game.Display = displays.ToArray();
+                game.BiosSet = [.. biosSets];
+                game.Rom = [.. roms];
+                game.Disk = [.. disks];
+                game.DeviceRef = [.. deviceRefs];
+                game.Sample = [.. samples];
+                game.Chip = [.. chips];
+                game.Display = [.. displays];
                 game.Video = null;
-                game.DipSwitch = dipSwitches.ToArray();
-                game.Configuration = configurations.ToArray();
-                game.Port = ports.ToArray();
-                game.Adjuster = adjusters.ToArray();
-                game.Feature = features.ToArray();
-                game.Device = devices.ToArray();
-                game.Slot = slots.ToArray();
-                game.SoftwareList = softwareLists.ToArray();
-                game.RamOption = ramOptions.ToArray();
+                game.DipSwitch = [.. dipSwitches];
+                game.Configuration = [.. configurations];
+                game.Port = [.. ports];
+                game.Adjuster = [.. adjusters];
+                game.Feature = [.. features];
+                game.Device = [.. devices];
+                game.Slot = [.. slots];
+                game.SoftwareList = [.. softwareLists];
+                game.RamOption = [.. ramOptions];
 
                 // Add the game to the list
                 games.Add(game);
             }
 
-            return games.ToArray();
+            return [.. games];
         }
 
         /// <summary>
         /// Create a GameBase from the current internal information
         /// <summary>
-        private Models.Listxml.GameBase CreateGame(Machine machine)
+        private static Models.Listxml.GameBase CreateGame(Machine machine)
         {
             var game = new Models.Listxml.Machine
             {
@@ -554,14 +554,14 @@ namespace SabreTools.DatFiles.Formats
             };
 
             var controls = new List<Models.Listxml.Control>();
-            foreach (var controlItem in item.Controls ?? new List<Control>())
+            foreach (var controlItem in item.Controls ?? [])
             {
                 var control = CreateControl(controlItem);
                 controls.Add(control);
             }
 
             if (controls.Any())
-                input.Control = controls.ToArray();
+                input.Control = [.. controls];
 
             return input;
         }
@@ -616,24 +616,24 @@ namespace SabreTools.DatFiles.Formats
             }
 
             var diplocations = new List<Models.Listxml.DipLocation>();
-            foreach (var locationItem in item.Locations ?? new List<DipLocation>())
+            foreach (var locationItem in item.Locations ?? [])
             {
                 var control = CreateDipLocation(locationItem);
                 diplocations.Add(control);
             }
 
             if (diplocations.Any())
-                dipswitch.DipLocation = diplocations.ToArray();
+                dipswitch.DipLocation = [.. diplocations];
 
             var dipvalues = new List<Models.Listxml.DipValue>();
-            foreach (var dipValueItem in item.Values ?? new List<DipValue>())
+            foreach (var dipValueItem in item.Values ?? [])
             {
                 var dipvalue = CreateDipValue(dipValueItem);
                 dipvalues.Add(dipvalue);
             }
 
             if (dipvalues.Any())
-                dipswitch.DipValue = dipvalues.ToArray();
+                dipswitch.DipValue = [.. dipvalues];
 
             return dipswitch;
         }
@@ -707,24 +707,24 @@ namespace SabreTools.DatFiles.Formats
             }
 
             var confLocations = new List<Models.Listxml.ConfLocation>();
-            foreach (var location in item.Locations ?? new List<ConfLocation>())
+            foreach (var location in item.Locations ?? [])
             {
                 var control = CreateConfLocation(location);
                 confLocations.Add(control);
             }
 
             if (confLocations.Any())
-                configuration.ConfLocation = confLocations.ToArray();
+                configuration.ConfLocation = [.. confLocations];
 
             var confsettings = new List<Models.Listxml.ConfSetting>();
-            foreach (var confSettingItem in item.Settings ?? new List<ConfSetting>())
+            foreach (var confSettingItem in item.Settings ?? [])
             {
                 var dipvalue = CreateConfSetting(confSettingItem);
                 confsettings.Add(dipvalue);
             }
 
             if (confsettings.Any())
-                configuration.ConfSetting = confsettings.ToArray();
+                configuration.ConfSetting = [.. confsettings];
 
             return configuration;
         }
@@ -876,7 +876,7 @@ namespace SabreTools.DatFiles.Formats
             }
 
             var extensions = new List<Models.Listxml.Extension>();
-            foreach (var extensionItem in item.Extensions ?? new List<Extension>())
+            foreach (var extensionItem in item.Extensions ?? [])
             {
                 var extension = new Models.Listxml.Extension
                 {
@@ -886,7 +886,7 @@ namespace SabreTools.DatFiles.Formats
             }
 
             if (extensions.Any())
-                device.Extension = extensions.ToArray();
+                device.Extension = [.. extensions];
 
             return device;
         }
@@ -902,7 +902,7 @@ namespace SabreTools.DatFiles.Formats
             };
 
             var slotoptions = new List<Models.Listxml.SlotOption>();
-            foreach (var slotoptionItem in item.SlotOptions ?? new List<SlotOption>())
+            foreach (var slotoptionItem in item.SlotOptions ?? [])
             {
                 var slotoption = new Models.Listxml.SlotOption
                 {
@@ -914,7 +914,7 @@ namespace SabreTools.DatFiles.Formats
             }
 
             if (slotoptions.Any())
-                slot.SlotOption = slotoptions.ToArray();
+                slot.SlotOption = [.. slotoptions];
 
             return slot;
         }

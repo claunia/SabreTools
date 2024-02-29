@@ -118,11 +118,13 @@ namespace SabreTools.Filtering
                         continue;
 
                     // Get the list of DatItems for the machine
-                    ConcurrentList<DatItem> datItems = datFile.Items[machine];
+                    var datItems = datFile.Items[machine];
+                    if (datItems == null)
+                        continue;
 
                     // Try to get the map values, if possible
-                    combinedMachineMaps.TryGetValue(machine, out Dictionary<MachineField, string> machineMappings);
-                    combinedDatItemMaps.TryGetValue(machine, out Dictionary<DatItemField, string> datItemMappings);
+                    combinedMachineMaps.TryGetValue(machine, out var machineMappings);
+                    combinedDatItemMaps.TryGetValue(machine, out var datItemMappings);
 
                     // Create a setter with the new mappings
                     Setter setter = new()

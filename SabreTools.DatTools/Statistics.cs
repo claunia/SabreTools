@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-
 using SabreTools.Core;
 using SabreTools.DatFiles;
 using SabreTools.IO;
@@ -16,7 +15,7 @@ namespace SabreTools.DatTools
     /// <summary>
     /// Helper methods for dealing with DatFile statistics
     /// </summary>
-    
+
     public class Statistics
     {
         #region Logging
@@ -37,7 +36,7 @@ namespace SabreTools.DatTools
         public static List<DatStatistics> CalculateStatistics(List<string> inputs, bool single, bool throwOnError = false)
         {
             // Create the output list
-            List<DatStatistics> stats = new();
+            List<DatStatistics> stats = [];
 
             // Make sure we have all files and then order them
             List<ParentablePath> files = PathTool.GetFilesOnly(inputs);
@@ -49,17 +48,17 @@ namespace SabreTools.DatTools
             // Init total
             DatStatistics totalStats = new()
             {
-                Statistics = new ItemDictionary(),
+                Statistics = [],
                 DisplayName = "DIR: All DATs",
                 MachineCount = 0,
                 IsDirectory = true,
             };
 
             // Init directory-level variables
-            string lastdir = null;
+            string? lastdir = null;
             DatStatistics dirStats = new()
             {
-                Statistics = new ItemDictionary(),
+                Statistics = [],
                 MachineCount = 0,
                 IsDirectory = true,
             };
@@ -68,7 +67,7 @@ namespace SabreTools.DatTools
             foreach (ParentablePath file in files)
             {
                 // Get the directory for the current file
-                string thisdir = Path.GetDirectoryName(file.CurrentPath);
+                string? thisdir = Path.GetDirectoryName(file.CurrentPath);
 
                 // If we don't have the first file and the directory has changed, show the previous directory stats and reset
                 if (lastdir != null && thisdir != lastdir && single)
@@ -78,7 +77,7 @@ namespace SabreTools.DatTools
                     stats.Add(dirStats);
                     dirStats = new DatStatistics
                     {
-                        Statistics = new ItemDictionary(),
+                        Statistics = [],
                         MachineCount = 0,
                         IsDirectory = true,
                     };
@@ -86,7 +85,7 @@ namespace SabreTools.DatTools
 
                 InternalStopwatch watch = new($"Collecting statistics for '{file.CurrentPath}'");
 
-                List<string> machines = new();
+                List<string> machines = [];
                 DatFile datdata = Parser.CreateAndParse(file.CurrentPath, statsOnly: true, throwOnError: throwOnError);
 
                 // Add single DAT stats (if asked)
@@ -208,7 +207,7 @@ namespace SabreTools.DatTools
         /// <returns>Dictionary of output formats mapped to file names</returns>
         private static Dictionary<StatReportFormat, string> CreateOutStatsNames(string outDir, StatReportFormat statDatFormat, string reportName, bool overwrite = true)
         {
-            Dictionary<StatReportFormat, string> output = new();
+            Dictionary<StatReportFormat, string> output = [];
 
             // First try to create the output directory if we need to
             if (!Directory.Exists(outDir))

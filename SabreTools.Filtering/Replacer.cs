@@ -33,42 +33,42 @@ namespace SabreTools.Filtering
 
             #region Item-Specific
 
-            if (datItem is Adjuster) ReplaceFields(datItem as Adjuster, repDatItem as Adjuster, datItemFields);
-            else if (datItem is Analog) ReplaceFields(datItem as Analog, repDatItem as Analog, datItemFields);
-            else if (datItem is Archive) ReplaceFields(datItem as Archive, repDatItem as Archive, datItemFields);
-            else if (datItem is BiosSet) ReplaceFields(datItem as BiosSet, repDatItem as BiosSet, datItemFields);
-            else if (datItem is Chip) ReplaceFields(datItem as Chip, repDatItem as Chip, datItemFields);
-            else if (datItem is Condition) ReplaceFields(datItem as Condition, repDatItem as Condition, datItemFields);
-            else if (datItem is Configuration) ReplaceFields(datItem as Configuration, repDatItem as Configuration, datItemFields);
-            else if (datItem is ConfLocation) ReplaceFields(datItem as ConfLocation, repDatItem as ConfLocation, datItemFields);
-            else if (datItem is ConfSetting) ReplaceFields(datItem as ConfSetting, repDatItem as ConfSetting, datItemFields);
-            else if (datItem is Control) ReplaceFields(datItem as Control, repDatItem as Control, datItemFields);
-            else if (datItem is DataArea) ReplaceFields(datItem as DataArea, repDatItem as DataArea, datItemFields);
-            else if (datItem is Device) ReplaceFields(datItem as Device, repDatItem as Device, datItemFields);
-            else if (datItem is DipLocation) ReplaceFields(datItem as DipLocation, repDatItem as DipLocation, datItemFields);
-            else if (datItem is DipSwitch) ReplaceFields(datItem as DipSwitch, repDatItem as DipSwitch, datItemFields);
-            else if (datItem is DipValue) ReplaceFields(datItem as DipValue, repDatItem as DipValue, datItemFields);
-            else if (datItem is Disk) ReplaceFields(datItem as Disk, repDatItem as Disk, datItemFields);
-            else if (datItem is DiskArea) ReplaceFields(datItem as DiskArea, repDatItem as DiskArea, datItemFields);
-            else if (datItem is Display) ReplaceFields(datItem as Display, repDatItem as Display, datItemFields);
-            else if (datItem is Driver) ReplaceFields(datItem as Driver, repDatItem as Driver, datItemFields);
-            else if (datItem is Extension) ReplaceFields(datItem as Extension, repDatItem as Extension, datItemFields);
-            else if (datItem is Feature) ReplaceFields(datItem as Feature, repDatItem as Feature, datItemFields);
-            else if (datItem is Info) ReplaceFields(datItem as Info, repDatItem as Info, datItemFields);
-            else if (datItem is Input) ReplaceFields(datItem as Input, repDatItem as Input, datItemFields);
-            else if (datItem is Instance) ReplaceFields(datItem as Instance, repDatItem as Instance, datItemFields);
-            else if (datItem is Media) ReplaceFields(datItem as Media, repDatItem as Media, datItemFields);
-            else if (datItem is Part) ReplaceFields(datItem as Part, repDatItem as Part, datItemFields);
-            else if (datItem is PartFeature) ReplaceFields(datItem as PartFeature, repDatItem as PartFeature, datItemFields);
-            else if (datItem is Port) ReplaceFields(datItem as Port, repDatItem as Port, datItemFields);
-            else if (datItem is RamOption) ReplaceFields(datItem as RamOption, repDatItem as RamOption, datItemFields);
-            else if (datItem is Release) ReplaceFields(datItem as Release, repDatItem as Release, datItemFields);
-            else if (datItem is Rom) ReplaceFields(datItem as Rom, repDatItem as Rom, datItemFields);
-            else if (datItem is SharedFeature) ReplaceFields(datItem as SharedFeature, repDatItem as SharedFeature, datItemFields);
-            else if (datItem is Slot) ReplaceFields(datItem as Slot, repDatItem as Slot, datItemFields);
-            else if (datItem is SlotOption) ReplaceFields(datItem as SlotOption, repDatItem as SlotOption, datItemFields);
-            else if (datItem is SoftwareList) ReplaceFields(datItem as SoftwareList, repDatItem as SoftwareList, datItemFields);
-            else if (datItem is Sound) ReplaceFields(datItem as Sound, repDatItem as Sound, datItemFields);
+            if (datItem is Adjuster) ReplaceFields((datItem as Adjuster)!, (repDatItem as Adjuster)!, datItemFields);
+            else if (datItem is Analog) ReplaceFields((datItem as Analog)!, (repDatItem as Analog)!, datItemFields);
+            else if (datItem is Archive) ReplaceFields((datItem as Archive)!, (repDatItem as Archive)!, datItemFields);
+            else if (datItem is BiosSet) ReplaceFields((datItem as BiosSet)!, (repDatItem as BiosSet)!, datItemFields);
+            else if (datItem is Chip) ReplaceFields((datItem as Chip)!, (repDatItem as Chip)!, datItemFields);
+            else if (datItem is Condition) ReplaceFields((datItem as Condition)!, (repDatItem as Condition)!, datItemFields);
+            else if (datItem is Configuration) ReplaceFields((datItem as Configuration)!, (repDatItem as Configuration)!, datItemFields);
+            else if (datItem is ConfLocation) ReplaceFields((datItem as ConfLocation)!, (repDatItem as ConfLocation)!, datItemFields);
+            else if (datItem is ConfSetting) ReplaceFields((datItem as ConfSetting)!, (repDatItem as ConfSetting)!, datItemFields);
+            else if (datItem is Control) ReplaceFields((datItem as Control)!, (repDatItem as Control)!, datItemFields);
+            else if (datItem is DataArea) ReplaceFields((datItem as DataArea)!, (repDatItem as DataArea)!, datItemFields);
+            else if (datItem is Device) ReplaceFields((datItem as Device)!, (repDatItem as Device)!, datItemFields);
+            else if (datItem is DipLocation) ReplaceFields((datItem as DipLocation)!, (repDatItem as DipLocation)!, datItemFields);
+            else if (datItem is DipSwitch) ReplaceFields((datItem as DipSwitch)!, (repDatItem as DipSwitch)!, datItemFields);
+            else if (datItem is DipValue) ReplaceFields((datItem as DipValue)!, (repDatItem as DipValue)!, datItemFields);
+            else if (datItem is Disk) ReplaceFields((datItem as Disk)!, (repDatItem as Disk)!, datItemFields);
+            else if (datItem is DiskArea) ReplaceFields((datItem as DiskArea)!, (repDatItem as DiskArea)!, datItemFields);
+            else if (datItem is Display) ReplaceFields((datItem as Display)!, (repDatItem as Display)!, datItemFields);
+            else if (datItem is Driver) ReplaceFields((datItem as Driver)!, (repDatItem as Driver)!, datItemFields);
+            else if (datItem is Extension) ReplaceFields((datItem as Extension)!, (repDatItem as Extension)!, datItemFields);
+            else if (datItem is Feature) ReplaceFields((datItem as Feature)!, (repDatItem as Feature)!, datItemFields);
+            else if (datItem is Info) ReplaceFields((datItem as Info)!, (repDatItem as Info)!, datItemFields);
+            else if (datItem is Input) ReplaceFields((datItem as Input)!, (repDatItem as Input)!, datItemFields);
+            else if (datItem is Instance) ReplaceFields((datItem as Instance)!, (repDatItem as Instance)!, datItemFields);
+            else if (datItem is Media) ReplaceFields((datItem as Media)!, (repDatItem as Media)!, datItemFields);
+            else if (datItem is Part) ReplaceFields((datItem as Part)!, (repDatItem as Part)!, datItemFields);
+            else if (datItem is PartFeature) ReplaceFields((datItem as PartFeature)!, (repDatItem as PartFeature)!, datItemFields);
+            else if (datItem is Port) ReplaceFields((datItem as Port)!, (repDatItem as Port)!, datItemFields);
+            else if (datItem is RamOption) ReplaceFields((datItem as RamOption)!, (repDatItem as RamOption)!, datItemFields);
+            else if (datItem is Release) ReplaceFields((datItem as Release)!, (repDatItem as Release)!, datItemFields);
+            else if (datItem is Rom) ReplaceFields((datItem as Rom)!, (repDatItem as Rom)!, datItemFields);
+            else if (datItem is SharedFeature) ReplaceFields((datItem as SharedFeature)!, (repDatItem as SharedFeature)!, datItemFields);
+            else if (datItem is Slot) ReplaceFields((datItem as Slot)!, (repDatItem as Slot)!, datItemFields);
+            else if (datItem is SlotOption) ReplaceFields((datItem as SlotOption)!, (repDatItem as SlotOption)!, datItemFields);
+            else if (datItem is SoftwareList) ReplaceFields((datItem as SoftwareList)!, (repDatItem as SoftwareList)!, datItemFields);
+            else if (datItem is Sound) ReplaceFields((datItem as Sound)!, (repDatItem as Sound)!, datItemFields);
 
             #endregion
         }
@@ -508,7 +508,7 @@ namespace SabreTools.Filtering
             if (datItemFields.Contains(DatItemField.Location_Number))
                 location.Number = newItem.Number;
         }
-        
+
         /// <summary>
         /// Replace fields with given values
         /// </summary>
@@ -536,7 +536,7 @@ namespace SabreTools.Filtering
             // can replace every value under this item
 
             if (dipSwitch.PartSpecified && newItem.PartSpecified)
-                ReplaceFields(dipSwitch.Part, newItem.Part, datItemFields);
+                ReplaceFields(dipSwitch.Part!, newItem.Part!, datItemFields);
         }
 
         /// <summary>
@@ -600,10 +600,10 @@ namespace SabreTools.Filtering
                 disk.Writable = newItem.Writable;
 
             if (disk.DiskAreaSpecified && newItem.DiskAreaSpecified)
-                ReplaceFields(disk.DiskArea, newItem.DiskArea, datItemFields);
+                ReplaceFields(disk.DiskArea!, newItem.DiskArea!, datItemFields);
 
             if (disk.PartSpecified && newItem.PartSpecified)
-                ReplaceFields(disk.Part, newItem.Part, datItemFields);
+                ReplaceFields(disk.Part!, newItem.Part!, datItemFields);
         }
 
         /// <summary>
@@ -1026,10 +1026,10 @@ namespace SabreTools.Filtering
                 rom.Value = newItem.Value;
 
             if (rom.DataAreaSpecified && newItem.DataAreaSpecified)
-                ReplaceFields(rom.DataArea, newItem.DataArea, datItemFields);
+                ReplaceFields(rom.DataArea!, newItem.DataArea!, datItemFields);
 
             if (rom.PartSpecified && newItem.PartSpecified)
-                ReplaceFields(rom.Part, newItem.Part, datItemFields);
+                ReplaceFields(rom.Part!, newItem.Part!, datItemFields);
         }
 
         /// <summary>

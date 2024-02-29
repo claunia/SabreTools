@@ -115,7 +115,7 @@ namespace SabreTools.DatFiles.Formats
             JArray? machineArray = js.Deserialize<JArray>(jtr);
 
             // Loop through each machine object and process
-            foreach (JObject machineObj in machineArray ?? new JArray())
+            foreach (JObject machineObj in (machineArray ?? []).Cast<JObject>())
             {
                 ReadMachine(machineObj, statsOnly, filename, indexId);
             }
@@ -170,7 +170,7 @@ namespace SabreTools.DatFiles.Formats
                 return;
 
             // Loop through each datitem object and process
-            foreach (JObject itemObj in itemsArr)
+            foreach (JObject itemObj in itemsArr.Cast<JObject>())
             {
                 ReadItem(itemObj, statsOnly, filename, indexId, machine);
             }
@@ -396,11 +396,11 @@ namespace SabreTools.DatFiles.Formats
 
                         // If we have a different game and we're not at the start of the list, output the end of last item
                         if (lastgame != null && lastgame.ToLowerInvariant() != datItem.Machine.Name?.ToLowerInvariant())
-                            WriteEndGame(jtw);
+                            SabreJSON.WriteEndGame(jtw);
 
                         // If we have a new game, output the beginning of the new item
                         if (lastgame == null || lastgame.ToLowerInvariant() != datItem.Machine.Name?.ToLowerInvariant())
-                            WriteStartGame(jtw, datItem);
+                            SabreJSON.WriteStartGame(jtw, datItem);
 
                         // Check for a "null" item
                         datItem = ProcessNullifiedItem(datItem);
@@ -415,7 +415,7 @@ namespace SabreTools.DatFiles.Formats
                 }
 
                 // Write the file footer out
-                WriteFooter(jtw);
+                SabreJSON.WriteFooter(jtw);
 
                 logger.User($"'{outfile}' written!{Environment.NewLine}");
                 jtw.Close();
@@ -454,7 +454,7 @@ namespace SabreTools.DatFiles.Formats
         /// </summary>
         /// <param name="jtw">JsonTextWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
-        private void WriteStartGame(JsonTextWriter jtw, DatItem datItem)
+        private static void WriteStartGame(JsonTextWriter jtw, DatItem datItem)
         {
             // No game should start with a path separator
             if (!string.IsNullOrWhiteSpace(datItem.Machine.Name))
@@ -478,7 +478,7 @@ namespace SabreTools.DatFiles.Formats
         /// Write out Game end using the supplied JsonTextWriter
         /// </summary>
         /// <param name="jtw">JsonTextWriter to output to</param>
-        private void WriteEndGame(JsonTextWriter jtw)
+        private static void WriteEndGame(JsonTextWriter jtw)
         {
             // End items
             jtw.WriteEndArray();
@@ -517,7 +517,7 @@ namespace SabreTools.DatFiles.Formats
         /// Write out DAT footer using the supplied JsonTextWriter
         /// </summary>
         /// <param name="jtw">JsonTextWriter to output to</param>
-        private void WriteFooter(JsonTextWriter jtw)
+        private static void WriteFooter(JsonTextWriter jtw)
         {
             // End items
             jtw.WriteEndArray();

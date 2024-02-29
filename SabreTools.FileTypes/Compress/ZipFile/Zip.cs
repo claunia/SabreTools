@@ -13,9 +13,9 @@ namespace Compress.ZipFile
     { 
         private readonly List<ZipLocalFile> _localFiles = new();
 
-        private FileInfo _zipFileInfo;
+        private FileInfo? _zipFileInfo;
 
-        private Stream _zipFs;
+        private Stream? _zipFs;
 
         private uint _localFilesCount;
 

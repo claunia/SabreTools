@@ -243,15 +243,15 @@ namespace RVIO
             }
         }
 
-        public static StreamWriter CreateText(string filename)
+        public static StreamWriter? CreateText(string filename)
         {
-            int errorCode = FileStream.OpenFileWrite(filename, out Stream fStream);
-            return errorCode != 0 ? null : new StreamWriter(fStream);
+            int errorCode = FileStream.OpenFileWrite(filename, out Stream? fStream);
+            return errorCode != 0 ? null : new StreamWriter(fStream!);
         }
-        public static StreamReader OpenText(string filename, Encoding Enc)
+        public static StreamReader? OpenText(string filename, Encoding Enc)
         {
-            int errorCode = FileStream.OpenFileRead(filename, out Stream fStream);
-            return errorCode != 0 ? null : new StreamReader(fStream, Enc);
+            int errorCode = FileStream.OpenFileRead(filename, out Stream? fStream);
+            return errorCode != 0 ? null : new StreamReader(fStream!, Enc);
         }
 
         public static string ReadAllText(string filename)
@@ -332,7 +332,7 @@ namespace RVIO
         {
             return System.IO.Path.GetFileName(path);
         }
-        public static string GetDirectoryName(string path)
+        public static string? GetDirectoryName(string path)
         {
             return System.IO.Path.GetDirectoryName(path);
 
@@ -342,13 +342,13 @@ namespace RVIO
 
     public static class FileStream
     {
-        public static Stream OpenFileRead(string path, out int result)
+        public static Stream? OpenFileRead(string path, out int result)
         {
-            result = OpenFileRead(path, out Stream stream);
+            result = OpenFileRead(path, out Stream? stream);
             return stream;
         }
 
-        public static int OpenFileRead(string path, out Stream stream)
+        public static int OpenFileRead(string path, out Stream? stream)
         {
             try
             {
@@ -362,7 +362,7 @@ namespace RVIO
             }
         }
 
-        public static int OpenFileWrite(string path, out Stream stream)
+        public static int OpenFileWrite(string path, out Stream? stream)
         {
             try
             {

@@ -4,12 +4,12 @@ namespace Compress.ZipFile
 {
     public partial class Zip
     {
-        public ZipReturn ZipFileOpenReadStream(int index, out Stream stream, out ulong streamSize)
+        public ZipReturn ZipFileOpenReadStream(int index, out Stream? stream, out ulong streamSize)
         {
             return ZipFileOpenReadStream(index, false, out stream, out streamSize, out ushort _);
         }
 
-        public ZipReturn ZipFileOpenReadStream(int index, bool raw, out Stream stream, out ulong streamSize, out ushort compressionMethod)
+        public ZipReturn ZipFileOpenReadStream(int index, bool raw, out Stream? stream, out ulong streamSize, out ushort compressionMethod)
         {
             ZipFileCloseReadStream();
 
@@ -33,7 +33,7 @@ namespace Compress.ZipFile
             return zRet;
         }
 
-        public ZipReturn ZipFileOpenReadStreamQuick(ulong pos, bool raw, out Stream stream, out ulong streamSize, out ushort compressionMethod)
+        public ZipReturn ZipFileOpenReadStreamQuick(ulong pos, bool raw, out Stream? stream, out ulong streamSize, out ushort compressionMethod)
         {
             ZipFileCloseReadStream();
 

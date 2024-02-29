@@ -49,9 +49,9 @@ namespace SabreTools.FileTypes
         /// </summary>
         /// <param name="input">Name of the file to create the archive from</param>
         /// <returns>Archive object representing the inputs</returns>
-        public static BaseArchive Create(string input)
+        public static BaseArchive? Create(string input)
         {
-            BaseArchive archive = null;
+            BaseArchive? archive = null;
 
             // First get the archive type
             FileType? at = GetFileType(input);
@@ -97,7 +97,7 @@ namespace SabreTools.FileTypes
         /// </summary>
         /// <param name="archiveType">SharpCompress.Common.ArchiveType representing the archive to create</param>
         /// <returns>Archive object representing the inputs</returns>
-        public static BaseArchive Create(FileType archiveType)
+        public static BaseArchive? Create(FileType archiveType)
         {
             return archiveType switch
             {
@@ -118,17 +118,17 @@ namespace SabreTools.FileTypes
         public override abstract bool CopyAll(string outDir);
 
         /// <inheritdoc/>
-        public override abstract string CopyToFile(string entryName, string outDir);
+        public override abstract string? CopyToFile(string entryName, string outDir);
 
         /// <inheritdoc/>
-        public override abstract (MemoryStream, string) CopyToStream(string entryName);
+        public override abstract (MemoryStream?, string?) CopyToStream(string entryName);
 
         #endregion
 
         #region Information
 
         /// <inheritdoc/>
-        public override abstract List<BaseFile> GetChildren();
+        public override abstract List<BaseFile>? GetChildren();
 
         /// <inheritdoc/>
         public override abstract List<string> GetEmptyFolders();
@@ -143,13 +143,13 @@ namespace SabreTools.FileTypes
         #region Writing
 
         /// <inheritdoc/>
-        public override abstract bool Write(string inputFile, string outDir, BaseFile baseFile);
+        public override abstract bool Write(string inputFile, string outDir, BaseFile? baseFile);
 
         /// <inheritdoc/>
-        public override abstract bool Write(Stream inputStream, string outDir, BaseFile baseFile);
+        public override abstract bool Write(Stream? inputStream, string outDir, BaseFile? baseFile);
 
         /// <inheritdoc/>
-        public override abstract bool Write(List<string> inputFiles, string outDir, List<BaseFile> baseFiles);
+        public override abstract bool Write(List<string> inputFiles, string outDir, List<BaseFile>? baseFiles);
 
         #endregion
     }

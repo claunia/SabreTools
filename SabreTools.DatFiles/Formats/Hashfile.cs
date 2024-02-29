@@ -24,7 +24,7 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         /// Convert hash types between internal and Serialization
         /// </summary>
-        private Serialization.Hash ConvertHash(Hash hash)
+        private static Serialization.Hash ConvertHash(Hash hash)
         {
             return hash switch
             {
@@ -35,7 +35,7 @@ namespace SabreTools.DatFiles.Formats
                 Hash.SHA384 => Serialization.Hash.SHA384,
                 Hash.SHA512 => Serialization.Hash.SHA512,
                 Hash.SpamSum => Serialization.Hash.SpamSum,
-                _ => throw new System.ArgumentOutOfRangeException(),
+                _ => throw new System.ArgumentOutOfRangeException(nameof(hash)),
             };
         }
     }

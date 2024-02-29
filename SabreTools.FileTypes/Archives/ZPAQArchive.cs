@@ -81,19 +81,19 @@ namespace SabreTools.FileTypes.Archives
         #region Writing
 
         /// <inheritdoc/>
-        public override bool Write(string inputFile, string outDir, BaseFile baseFile)
+        public override bool Write(string inputFile, string outDir, BaseFile? baseFile)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public override bool Write(Stream inputStream, string outDir, BaseFile baseFile)
+        public override bool Write(Stream? inputStream, string outDir, BaseFile? baseFile)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public override bool Write(List<string> inputFiles, string outDir, List<BaseFile> baseFiles)
+        public override bool Write(List<string> inputFiles, string outDir, List<BaseFile>? baseFiles)
         {
             throw new NotImplementedException();
         }

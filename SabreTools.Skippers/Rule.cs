@@ -21,7 +21,7 @@ namespace SabreTools.Skippers
             get => _startOffset == null ? "EOF" : _startOffset.Value.ToString();
             set
             {
-                if (value == null || value.ToLowerInvariant() == "eof")
+                if (value == null || value.Equals("eof", StringComparison.InvariantCultureIgnoreCase))
                     _startOffset = null;
                 else
                     _startOffset = Convert.ToInt64(value, fromBase: 16);
@@ -38,7 +38,7 @@ namespace SabreTools.Skippers
             get => _endOffset == null ? "EOF" : _endOffset.Value.ToString();
             set
             {
-                if (value == null || value.ToLowerInvariant() == "eof")
+                if (value == null || value.Equals("eof", StringComparison.InvariantCultureIgnoreCase))
                     _endOffset = null;
                 else
                     _endOffset = Convert.ToInt64(value, fromBase: 16);
@@ -168,9 +168,16 @@ namespace SabreTools.Skippers
         /// <param name="keepReadOpen">True if the underlying read stream should be kept open, false otherwise</param>
         /// <param name="keepWriteOpen">True if the underlying write stream should be kept open, false otherwise</param>
         /// <returns>True if the file was transformed properly, false otherwise</returns>
-        public bool TransformStream(Stream input, Stream output, bool keepReadOpen = false, bool keepWriteOpen = false)
+        public bool TransformStream(Stream? input, Stream output, bool keepReadOpen = false, bool keepWriteOpen = false)
         {
             bool success = true;
+
+            // If the input stream isn't valid
+            if (input == null || !input.CanRead)
+            {
+                logger.Error("The stream was invalid!");
+                return false;
+            }
 
             // If the sizes are wrong for the values, fail
             long extsize = input.Length;

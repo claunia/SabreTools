@@ -47,6 +47,10 @@ namespace SabreTools.FileTypes.Archives
         {
             bool encounteredErrors = true;
 
+            // If we have an invalid file
+            if (this.Filename == null)
+                return true;
+
             try
             {
                 // Create the temp directory
@@ -81,10 +85,10 @@ namespace SabreTools.FileTypes.Archives
         }
 
         /// <inheritdoc/>
-        public override string CopyToFile(string entryName, string outDir)
+        public override string? CopyToFile(string entryName, string outDir)
         {
             // Try to extract a stream using the given information
-            (MemoryStream ms, string realEntry) = CopyToStream(entryName);
+            (MemoryStream? ms, string? realEntry) = CopyToStream(entryName);
 
             // If the memory stream and the entry name are both non-null, we write to file
             if (ms != null && realEntry != null)
@@ -92,7 +96,7 @@ namespace SabreTools.FileTypes.Archives
                 realEntry = Path.Combine(outDir, realEntry);
 
                 // Create the output subfolder now
-                Directory.CreateDirectory(Path.GetDirectoryName(realEntry));
+                Directory.CreateDirectory(Path.GetDirectoryName(realEntry) ?? string.Empty);
 
                 // Now open and write the file if possible
                 FileStream fs = File.Create(realEntry);
@@ -122,10 +126,14 @@ namespace SabreTools.FileTypes.Archives
         }
 
         /// <inheritdoc/>
-        public override (MemoryStream, string) CopyToStream(string entryName)
+        public override (MemoryStream?, string?) CopyToStream(string entryName)
         {
-            MemoryStream ms = new();
-            string realEntry = null;
+            MemoryStream? ms = new();
+            string? realEntry = null;
+
+            // If we have an invalid file
+            if (this.Filename == null)
+                return (null, null);
 
             try
             {
@@ -156,10 +164,14 @@ namespace SabreTools.FileTypes.Archives
         #region Information
 
         /// <inheritdoc/>
-        public override List<BaseFile> GetChildren()
+        public override List<BaseFile>? GetChildren()
         {
-            List<BaseFile> found = new();
-            string gamename = Path.GetFileNameWithoutExtension(this.Filename);
+            // If we have an invalid file
+            if (this.Filename == null)
+                return null;
+
+            List<BaseFile> found = [];
+            string? gamename = Path.GetFileNameWithoutExtension(this.Filename);
 
             try
             {
@@ -204,13 +216,17 @@ namespace SabreTools.FileTypes.Archives
         /// <inheritdoc/>
         public override List<string> GetEmptyFolders()
         {
-            List<string> empties = new();
+            List<string> empties = [];
+
+            // If we have an invalid file
+            if (this.Filename == null)
+                return empties;
 
             try
             {
                 SharpCompress.Archives.Rar.RarArchive ra = SharpCompress.Archives.Rar.RarArchive.Open(this.Filename, new ReaderOptions { LeaveStreamOpen = false });
                 List<RarArchiveEntry> rarEntries = ra.Entries.OrderBy(e => e.Key, new NaturalSort.NaturalReversedComparer()).ToList();
-                string lastRarEntry = null;
+                string? lastRarEntry = null;
                 foreach (RarArchiveEntry entry in rarEntries)
                 {
                     if (entry != null)
@@ -248,20 +264,20 @@ namespace SabreTools.FileTypes.Archives
         #region Writing
 
         /// <inheritdoc/>
-        public override bool Write(string inputFile, string outDir, BaseFile baseFile)
+        public override bool Write(string inputFile, string outDir, BaseFile? baseFile)
         {
             // Get the file stream for the file and write out
             return Write(File.OpenRead(inputFile), outDir, baseFile);
         }
 
         /// <inheritdoc/>
-        public override bool Write(Stream inputStream, string outDir, BaseFile baseFile)
+        public override bool Write(Stream? inputStream, string outDir, BaseFile? baseFile)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public override bool Write(List<string> inputFiles, string outDir, List<BaseFile> roms)
+        public override bool Write(List<string> inputFiles, string outDir, List<BaseFile>? roms)
         {
             throw new NotImplementedException();
         }

@@ -17,7 +17,7 @@ namespace SabreTools.Logging
         /// <summary>
         /// Optional output filename for logs
         /// </summary>
-        public static string Filename { get; private set; } = null;
+        public static string? Filename { get; private set; } = null;
 
         /// <summary>
         /// Determines if we're logging to file or not
@@ -27,7 +27,7 @@ namespace SabreTools.Logging
         /// <summary>
         /// Optional output log directory
         /// </summary>
-        public static string LogDirectory { get; private set; } = null;
+        public static string? LogDirectory { get; private set; } = null;
 
         /// <summary>
         /// Determines the lowest log level to output
@@ -66,7 +66,7 @@ namespace SabreTools.Logging
         /// <summary>
         /// StreamWriter representing the output log file
         /// </summary>
-        private static StreamWriter _log;
+        private static StreamWriter? _log;
 
         /// <summary>
         /// Object lock for multithreaded logging
@@ -117,7 +117,7 @@ namespace SabreTools.Logging
                 if (!string.IsNullOrEmpty(LogDirectory) && !Directory.Exists(LogDirectory))
                     Directory.CreateDirectory(LogDirectory);
 
-                FileStream logfile = File.Create(Path.Combine(LogDirectory, Filename));
+                FileStream logfile = File.Create(Path.Combine(LogDirectory ?? string.Empty, Filename ?? string.Empty));
                 _log = new StreamWriter(logfile, Encoding.UTF8, 4096, true)
                 {
                     AutoFlush = true
@@ -166,10 +166,10 @@ namespace SabreTools.Logging
 
                 try
                 {
-                    _log.WriteLine($"Logging ended {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
-                    _log.WriteLine($"Total runtime: {total}");
+                    _log?.WriteLine($"Logging ended {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+                    _log?.WriteLine($"Total runtime: {total}");
                     Console.WriteLine($"Total runtime: {total}");
-                    _log.Close();
+                    _log?.Close();
                 }
                 catch
                 {
@@ -180,7 +180,7 @@ namespace SabreTools.Logging
             {
                 try
                 {
-                    _log.Close();
+                    _log?.Close();
                 }
                 catch
                 {
@@ -203,7 +203,7 @@ namespace SabreTools.Logging
         /// <summary>
         /// Default log event handling
         /// </summary>
-        public static void HandleLogEvent(object sender, LogEventArgs args)
+        public static void HandleLogEvent(object? sender, LogEventArgs args)
         {
             // Null args means we can't handle it
             if (args == null)
@@ -261,7 +261,7 @@ namespace SabreTools.Logging
                 {
                     lock (_lock)
                     {
-                        _log.WriteLine((AppendPrefix ? $"{loglevel} - {DateTime.Now} - " : string.Empty) + output);
+                        _log?.WriteLine((AppendPrefix ? $"{loglevel} - {DateTime.Now} - " : string.Empty) + output);
                     }
                 }
                 catch (Exception ex) when (ThrowOnError)
@@ -286,7 +286,7 @@ namespace SabreTools.Logging
         /// <param name="ex">Exception to be written log</param>
         /// <param name="output">String to be written log</param>
         /// <returns>True if the output could be written, false otherwise</returns>
-        public static void Verbose(object instance, Exception ex, string output = null)
+        public static void Verbose(object? instance, Exception ex, string? output = null)
         {
             LogEventHandler(instance, new LogEventArgs(LogLevel.VERBOSE, output, ex));
         }
@@ -297,7 +297,7 @@ namespace SabreTools.Logging
         /// <param name="instance">Instance object that's the source of logging</param>
         /// <param name="output">String to be written log</param>
         /// <returns>True if the output could be written, false otherwise</returns>
-        public static void Verbose(object instance, string output)
+        public static void Verbose(object? instance, string output)
         {
             LogEventHandler(instance, new LogEventArgs(LogLevel.VERBOSE, output, null));
         }
@@ -309,7 +309,7 @@ namespace SabreTools.Logging
         /// <param name="total">Total count for progress</param>
         /// <param name="current">Current count for progres</param>
         /// <param name="output">String to be written log</param>
-        public static void Verbose(object instance, long total, long current, string output = null)
+        public static void Verbose(object? instance, long total, long current, string? output = null)
         {
             LogEventHandler(instance, new LogEventArgs(total, current, LogLevel.VERBOSE, output));
         }
@@ -321,7 +321,7 @@ namespace SabreTools.Logging
         /// <param name="ex">Exception to be written log</param>
         /// <param name="output">String to be written log</param>
         /// <returns>True if the output could be written, false otherwise</returns>
-        public static void User(object instance, Exception ex, string output = null)
+        public static void User(object? instance, Exception ex, string? output = null)
         {
             LogEventHandler(instance, new LogEventArgs(LogLevel.USER, output, ex));
         }
@@ -332,7 +332,7 @@ namespace SabreTools.Logging
         /// <param name="instance">Instance object that's the source of logging</param>
         /// <param name="output">String to be written log</param>
         /// <returns>True if the output could be written, false otherwise</returns>
-        public static void User(object instance, string output)
+        public static void User(object? instance, string output)
         {
             LogEventHandler(instance, new LogEventArgs(LogLevel.USER, output, null));
         }
@@ -344,7 +344,7 @@ namespace SabreTools.Logging
         /// <param name="total">Total count for progress</param>
         /// <param name="current">Current count for progres</param>
         /// <param name="output">String to be written log</param>
-        public static void User(object instance, long total, long current, string output = null)
+        public static void User(object? instance, long total, long current, string? output = null)
         {
             LogEventHandler(instance, new LogEventArgs(total, current, LogLevel.USER, output));
         }
@@ -356,7 +356,7 @@ namespace SabreTools.Logging
         /// <param name="ex">Exception to be written log</param>
         /// <param name="output">String to be written log</param>
         /// <returns>True if the output could be written, false otherwise</returns>
-        public static void Warning(object instance, Exception ex, string output = null)
+        public static void Warning(object? instance, Exception ex, string? output = null)
         {
             LogEventHandler(instance, new LogEventArgs(LogLevel.WARNING, output, ex));
         }
@@ -367,7 +367,7 @@ namespace SabreTools.Logging
         /// <param name="instance">Instance object that's the source of logging</param>
         /// <param name="output">String to be written log</param>
         /// <returns>True if the output could be written, false otherwise</returns>
-        public static void Warning(object instance, string output)
+        public static void Warning(object? instance, string output)
         {
             LogEventHandler(instance, new LogEventArgs(LogLevel.WARNING, output, null));
         }
@@ -379,7 +379,7 @@ namespace SabreTools.Logging
         /// <param name="total">Total count for progress</param>
         /// <param name="current">Current count for progres</param>
         /// <param name="output">String to be written log</param>
-        public static void Warning(object instance, long total, long current, string output = null)
+        public static void Warning(object? instance, long total, long current, string? output = null)
         {
             LogEventHandler(instance, new LogEventArgs(total, current, LogLevel.WARNING, output));
         }
@@ -391,7 +391,7 @@ namespace SabreTools.Logging
         /// <param name="ex">Exception to be written log</param>
         /// <param name="output">String to be written log</param>
         /// <returns>True if the output could be written, false otherwise</returns>
-        public static void Error(object instance, Exception ex, string output = null)
+        public static void Error(object? instance, Exception ex, string? output = null)
         {
             LogEventHandler(instance, new LogEventArgs(LogLevel.ERROR, output, ex));
         }
@@ -402,7 +402,7 @@ namespace SabreTools.Logging
         /// <param name="instance">Instance object that's the source of logging</param>
         /// <param name="output">String to be written log</param>
         /// <returns>True if the output could be written, false otherwise</returns>
-        public static void Error(object instance, string output)
+        public static void Error(object? instance, string output)
         {
             LogEventHandler(instance, new LogEventArgs(LogLevel.ERROR, output, null));
         }
@@ -414,7 +414,7 @@ namespace SabreTools.Logging
         /// <param name="total">Total count for progress</param>
         /// <param name="current">Current count for progres</param>
         /// <param name="output">String to be written log</param>
-        public static void Error(object instance, long total, long current, string output = null)
+        public static void Error(object? instance, long total, long current, string? output = null)
         {
             LogEventHandler(instance, new LogEventArgs(total, current, LogLevel.ERROR, output));
         }

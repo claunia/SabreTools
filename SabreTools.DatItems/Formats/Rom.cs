@@ -505,7 +505,7 @@ namespace SabreTools.DatItems.Formats
             SHA256 = TextHelper.ByteArrayToString(baseFile.SHA256);
             SHA384 = TextHelper.ByteArrayToString(baseFile.SHA384);
             SHA512 = TextHelper.ByteArrayToString(baseFile.SHA512);
-            SpamSum = System.Text.Encoding.UTF8.GetString(baseFile.SpamSum ?? Array.Empty<byte>());
+            SpamSum = System.Text.Encoding.UTF8.GetString(baseFile.SpamSum ?? []);
 
             ItemType = ItemType.Rom;
             DupeType = 0x00;
@@ -518,7 +518,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Rom(Models.Metadata.Rom? rom)
         {
-            _internal = rom ?? new Models.Metadata.Rom();
+            _internal = rom ?? [];
 
             ItemType = ItemType.Rom;
             DupeType = 0x00;
@@ -542,7 +542,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Metadata.Rom ?? new Models.Metadata.Rom(),
+                _internal = this._internal?.Clone() as Models.Metadata.Rom ?? [],
             };
         }
 

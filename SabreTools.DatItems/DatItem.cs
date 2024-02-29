@@ -239,9 +239,9 @@ namespace SabreTools.DatItems
         /// </summary>
         /// <param name="baseFile">BaseFile containing information to be created</param>
         /// <returns>DatItem of the specific internal type that corresponds to the inputs</returns>
-        public static DatItem? Create(BaseFile baseFile)
+        public static DatItem? Create(BaseFile? baseFile)
         {
-            return baseFile.Type switch
+            return baseFile?.Type switch
             {
                 FileType.AaruFormat => new Media(baseFile),
                 FileType.CHD => new Disk(baseFile),
@@ -279,8 +279,7 @@ namespace SabreTools.DatItems
             if (item?.Machine == null)
                 return;
 
-            var cloned = item.Machine.Clone() as Machine;
-            if (cloned != null)
+            if (item.Machine.Clone() is Machine cloned)
                 Machine = cloned;
         }
 
@@ -293,8 +292,7 @@ namespace SabreTools.DatItems
             if (machine == null)
                 return;
 
-            var cloned = machine.Clone() as Machine;
-            if (cloned != null)
+            if (machine.Clone() is Machine cloned)
                 Machine = cloned;
         }
 
@@ -448,14 +446,14 @@ namespace SabreTools.DatItems
         /// </summary>
         /// <param name="infiles">List of File objects representing the roms to be merged</param>
         /// <returns>A List of DatItem objects representing the merged roms</returns>
-        public static ConcurrentList<DatItem> Merge(ConcurrentList<DatItem> infiles)
+        public static ConcurrentList<DatItem> Merge(ConcurrentList<DatItem>? infiles)
         {
             // Check for null or blank roms first
             if (infiles == null || infiles.Count == 0)
-                return new ConcurrentList<DatItem>();
+                return [];
 
             // Create output list
-            ConcurrentList<DatItem> outfiles = new();
+            ConcurrentList<DatItem> outfiles = [];
 
             // Then deduplicate them by checking to see if data matches previous saved roms
             int nodumpCount = 0;
@@ -567,7 +565,7 @@ namespace SabreTools.DatItems
         public static ConcurrentList<DatItem> ResolveNames(ConcurrentList<DatItem> infiles)
         {
             // Create the output list
-            ConcurrentList<DatItem> output = new();
+            ConcurrentList<DatItem> output = [];
 
             // First we want to make sure the list is in alphabetical order
             Sort(ref infiles, true);

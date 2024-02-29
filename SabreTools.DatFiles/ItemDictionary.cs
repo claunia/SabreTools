@@ -709,7 +709,7 @@ namespace SabreTools.DatFiles
         {
             // If the key is missing from the dictionary, add it
             if (!items.ContainsKey(key))
-                items.TryAdd(key, new ConcurrentList<DatItem>());
+                items.TryAdd(key, []);
         }
 
         /// <summary>
@@ -723,7 +723,7 @@ namespace SabreTools.DatFiles
                 // Get the list, if possible
                 ConcurrentList<DatItem>? fi = items[key];
                 if (fi == null)
-                    return new ConcurrentList<DatItem>();
+                    return [];
 
                 // Filter the list
                 return fi.Where(i => i != null)
@@ -795,7 +795,7 @@ namespace SabreTools.DatFiles
             }
 
             // Remove the key from the dictionary
-            items[key] = new ConcurrentList<DatItem>();
+            items[key] = [];
             return true;
         }
 
@@ -996,7 +996,7 @@ namespace SabreTools.DatFiles
                 mergedBy = DedupeType.None;
 
                 // First do the initial sort of all of the roms inplace
-                List<string> oldkeys = Keys.ToList();
+                List<string> oldkeys = [.. Keys];
                 Parallel.For(0, oldkeys.Count, Globals.ParallelOptions, k =>
                 {
                     string key = oldkeys[k];
@@ -1036,7 +1036,7 @@ namespace SabreTools.DatFiles
                 // Set the sorted type
                 mergedBy = dedupeType;
 
-                List<string> keys = Keys.ToList();
+                List<string> keys = [.. Keys];
                 Parallel.ForEach(keys, Globals.ParallelOptions, key =>
                 {
                     // Get the possibly unsorted list
@@ -1059,7 +1059,7 @@ namespace SabreTools.DatFiles
             // If the merge type is the same, we want to sort the dictionary to be consistent
             else
             {
-                List<string> keys = Keys.ToList();
+                List<string> keys = [.. Keys];
                 Parallel.ForEach(keys, Globals.ParallelOptions, key =>
                 {
                     // Get the possibly unsorted list
@@ -1118,7 +1118,7 @@ namespace SabreTools.DatFiles
         /// <returns>List of matched DatItem objects</returns>
         public ConcurrentList<DatItem> GetDuplicates(DatItem datItem, bool sorted = false)
         {
-            ConcurrentList<DatItem> output = new();
+            ConcurrentList<DatItem> output = [];
 
             // Check for an empty rom list first
             if (TotalCount == 0)
@@ -1136,7 +1136,7 @@ namespace SabreTools.DatFiles
             if (roms == null)
                 return output;
 
-            ConcurrentList<DatItem> left = new();
+            ConcurrentList<DatItem> left = [];
             for (int i = 0; i < roms.Count; i++)
             {
                 DatItem other = roms[i];

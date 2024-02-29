@@ -13,51 +13,31 @@ namespace SabreTools.Core
         /// </summary>
         public static DictionaryBase? Clone(this DictionaryBase dictionaryBase)
         {
-            // Create a new object of the same type
-            var clone = Activator.CreateInstance(dictionaryBase.GetType()) as DictionaryBase;
-
             // If construction failed, we can't do anything
-            if (clone == null)
+            if (Activator.CreateInstance(dictionaryBase.GetType()) is not DictionaryBase clone)
                 return null;
 
             // Loop through and clone per type
             foreach (string key in dictionaryBase.Keys)
             {
                 object? value = dictionaryBase[key];
-                switch (value)
+                clone[key] = value switch
                 {
                     // Primative types
-                    case bool:
-                    case long:
-                    case double:
-                    case string:
-                        clone[key] = value;
-                        break;
+                    bool or long or double or string => value,
 
                     // DictionaryBase types
-                    case DictionaryBase db:
-                        clone[key] = db.Clone();
-                        break;
+                    DictionaryBase db => db.Clone(),
 
                     // Enumerable types
-                    case byte[] bytArr:
-                        clone[key] = bytArr.Clone();
-                        break;
-                    case string[] strArr:
-                        clone[key] = strArr.Clone();
-                        break;
-                    case DictionaryBase[] dbArr:
-                        clone[key] = dbArr.Select(Clone).ToArray();
-                        break;
-                    case ICloneable[] clArr:
-                        clone[key] = clArr.Select(cl => cl.Clone()).ToArray();
-                        break;
+                    byte[] bytArr => bytArr.Clone(),
+                    string[] strArr => strArr.Clone(),
+                    DictionaryBase[] dbArr => dbArr.Select(Clone).ToArray(),
+                    ICloneable[] clArr => clArr.Select(cl => cl.Clone()).ToArray(),
 
                     // Everything else just copies
-                    default:
-                        clone[key] = value;
-                        break;
-                }
+                    _ => value,
+                };
             }
 
             return clone;

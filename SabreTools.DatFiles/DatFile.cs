@@ -31,7 +31,7 @@ namespace SabreTools.DatFiles
         /// DatItems and related statistics
         /// </summary>
         [JsonProperty("items"), XmlElement("items")]
-        public ItemDictionary Items { get; set; } = new ItemDictionary();
+        public ItemDictionary Items { get; set; } = [];
 
         #endregion
 
@@ -511,7 +511,7 @@ namespace SabreTools.DatFiles
         /// <returns>List of supported types for writing</returns>
         protected virtual ItemType[] GetSupportedTypes()
         {
-            return Enum.GetValues(typeof(ItemType)) as ItemType[] ?? Array.Empty<ItemType>();
+            return Enum.GetValues(typeof(ItemType)) as ItemType[] ?? [];
         }
 
         /// <summary>

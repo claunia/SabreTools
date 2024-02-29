@@ -14,7 +14,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         public static List<DatItemField> AsDatItemFields(this Hash hash)
         {
-            List<DatItemField> fields = new();
+            List<DatItemField> fields = [];
 
             if (hash.HasFlag(Hash.CRC))
                 fields.Add(DatItemField.CRC);
@@ -348,7 +348,7 @@ namespace SabreTools.Core.Tools
                 var values = Enum.GetValues(typeof(T));
 
                 // Build the output dictionary
-                Dictionary<string, T> mappings = new();
+                Dictionary<string, T> mappings = [];
                 foreach (T value in values)
                 {
                     // Try to get the mapping attribute
@@ -370,7 +370,7 @@ namespace SabreTools.Core.Tools
             catch
             {
                 // This should not happen, only if the type was not an enum
-                return new Dictionary<string, T>();
+                return [];
             }
         }
 
@@ -592,7 +592,7 @@ namespace SabreTools.Core.Tools
                 var values = Enum.GetValues(typeof(T));
 
                 // Build the output dictionary
-                Dictionary<T, string> mappings = new();
+                Dictionary<T, string> mappings = [];
                 foreach (T value in values)
                 {
                     // Try to get the mapping attribute
@@ -613,7 +613,7 @@ namespace SabreTools.Core.Tools
             catch
             {
                 // This should not happen, only if the type was not an enum
-                return new Dictionary<T, string>();
+                return [];
             }
         }
 

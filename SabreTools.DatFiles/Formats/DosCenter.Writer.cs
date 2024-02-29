@@ -15,16 +15,16 @@ namespace SabreTools.DatFiles.Formats
         /// <inheritdoc/>
         protected override ItemType[] GetSupportedTypes()
         {
-            return new ItemType[]
-            {
+            return
+            [
                 ItemType.Rom
-            };
+            ];
         }
 
         /// <inheritdoc/>
         protected override List<DatItemField>? GetMissingRequiredFields(DatItem datItem)
         {
-            List<DatItemField> missingFields = new();
+            List<DatItemField> missingFields = [];
 
             // Check item name
             if (string.IsNullOrWhiteSpace(datItem.GetName()))
@@ -162,13 +162,13 @@ namespace SabreTools.DatFiles.Formats
                 }
 
                 // Assign the values to the game
-                game.File = files.ToArray();
+                game.File = [.. files];
 
                 // Add the game to the list
                 games.Add(game);
             }
 
-            return games.ToArray();
+            return [.. games];
         }
 
         /// <summary>

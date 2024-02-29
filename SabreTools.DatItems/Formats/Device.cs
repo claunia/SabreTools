@@ -131,7 +131,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Metadata.Device ?? new Models.Metadata.Device(),
+                _internal = this._internal?.Clone() as Models.Metadata.Device ?? [],
             };
         }
 

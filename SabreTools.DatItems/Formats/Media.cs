@@ -105,7 +105,7 @@ namespace SabreTools.DatItems.Formats
             MD5 = TextHelper.ByteArrayToString(baseFile.MD5);
             SHA1 = TextHelper.ByteArrayToString(baseFile.SHA1);
             SHA256 = TextHelper.ByteArrayToString(baseFile.SHA256);
-            SpamSum = System.Text.Encoding.UTF8.GetString(baseFile.SpamSum ?? Array.Empty<byte>());
+            SpamSum = System.Text.Encoding.UTF8.GetString(baseFile.SpamSum ?? []);
 
             ItemType = ItemType.Media;
             DupeType = 0x00;
@@ -127,7 +127,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Metadata.Media ?? new Models.Metadata.Media(),
+                _internal = this._internal?.Clone() as Models.Metadata.Media ?? [],
             };
         }
 

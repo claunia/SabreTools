@@ -53,17 +53,17 @@ namespace SabreTools.FileTypes
         /// <summary>
         /// Filename or path to the file
         /// </summary>
-        public string Filename { get; set; }
+        public string? Filename { get; set; }
 
         /// <summary>
         /// Direct parent of the file
         /// </summary>
-        public string Parent { get; set; }
+        public string? Parent { get; set; }
 
         /// <summary>
         /// Date stamp of the file
         /// </summary>
-        public string Date { get; set; }
+        public string? Date { get; set; }
 
         /// <summary>
         /// Optional size of the file
@@ -78,37 +78,37 @@ namespace SabreTools.FileTypes
         /// <summary>
         /// CRC32 hash of the file
         /// </summary>
-        public byte[] CRC { get; set; } = null;
+        public byte[]? CRC { get; set; } = null;
 
         /// <summary>
         /// MD5 hash of the file
         /// </summary>
-        public byte[] MD5 { get; set; } = null;
+        public byte[]? MD5 { get; set; } = null;
 
         /// <summary>
         /// SHA-1 hash of the file
         /// </summary>
-        public byte[] SHA1 { get; set; } = null;
+        public byte[]? SHA1 { get; set; } = null;
 
         /// <summary>
         /// SHA-256 hash of the file
         /// </summary>
-        public byte[] SHA256 { get; set; } = null;
+        public byte[]? SHA256 { get; set; } = null;
 
         /// <summary>
         /// SHA-384 hash of the file
         /// </summary>
-        public byte[] SHA384 { get; set; } = null;
+        public byte[]? SHA384 { get; set; } = null;
 
         /// <summary>
         /// SHA-512 hash of the file
         /// </summary>
-        public byte[] SHA512 { get; set; } = null;
+        public byte[]? SHA512 { get; set; } = null;
 
         /// <summary>
         /// SpamSum fuzzy hash of the file
         /// </summary>
-        public byte[] SpamSum { get; set; } = null;
+        public byte[]? SpamSum { get; set; } = null;
 
         #endregion
 
@@ -132,7 +132,7 @@ namespace SabreTools.FileTypes
 
             if (getHashes)
             {
-                BaseFile temp = GetInfo(this.Filename, hashes: this.AvailableHashes);
+                BaseFile? temp = GetInfo(this.Filename, hashes: this.AvailableHashes);
                 if (temp != null)
                 {
                     this.Parent = temp.Parent;
@@ -270,7 +270,7 @@ namespace SabreTools.FileTypes
         /// <param name="hashes">Hashes to include in the information</param>
         /// <param name="asFiles">TreatAsFiles representing special format scanning</param>
         /// <returns>Populated BaseFile object if success, empty one on error</returns>
-        public static BaseFile GetInfo(string input, string header = null, Hash hashes = Hash.Standard, TreatAsFile asFiles = 0x00)
+        public static BaseFile? GetInfo(string input, string? header = null, Hash hashes = Hash.Standard, TreatAsFile asFiles = 0x00)
         {
             // Add safeguard if file doesn't exist
             if (!File.Exists(input))
@@ -299,7 +299,7 @@ namespace SabreTools.FileTypes
             }
 
             // Get the info in the proper manner
-            BaseFile baseFile;
+            BaseFile? baseFile;
             if (fileType == FileType.AaruFormat && !asFiles.HasFlag(TreatAsFile.AaruFormat))
                 baseFile = AaruFormat.Create(inputStream);
             else if (fileType == FileType.CHD && !asFiles.HasFlag(TreatAsFile.CHD))
@@ -311,7 +311,7 @@ namespace SabreTools.FileTypes
             inputStream?.Dispose();
 
             // Add unique data from the file
-            baseFile.Filename = Path.GetFileName(input);
+            baseFile!.Filename = Path.GetFileName(input);
             baseFile.Date = new FileInfo(input).LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss");
 
             return baseFile;
@@ -325,8 +325,12 @@ namespace SabreTools.FileTypes
         /// <param name="hashes">Hashes to include in the information</param>
         /// <param name="keepReadOpen">True if the underlying read stream should be kept open, false otherwise</param>
         /// <returns>Populated BaseFile object if success, empty one on error</returns>
-        public static BaseFile GetInfo(Stream input, long size = -1, Hash hashes = Hash.Standard, bool keepReadOpen = false)
+        public static BaseFile GetInfo(Stream? input, long size = -1, Hash hashes = Hash.Standard, bool keepReadOpen = false)
         {
+            // If we have no stream
+            if (input == null)
+                return new BaseFile();
+
             // If we want to automatically set the size
             if (size == -1)
                 size = input.Length;
@@ -334,7 +338,7 @@ namespace SabreTools.FileTypes
             try
             {
                 // Get a list of hashers to run over the buffer
-                List<Hasher> hashers = new();
+                List<Hasher> hashers = [];
 
                 if (hashes.HasFlag(Hash.CRC))
                     hashers.Add(new Hasher(Hash.CRC));
@@ -429,7 +433,7 @@ namespace SabreTools.FileTypes
         private static bool HasValidArchiveExtension(string path)
         {
             // Get the extension from the path, if possible
-            string ext = path.GetNormalizedExtension();
+            string? ext = path.GetNormalizedExtension();
 
             // Check against the list of known archive extensions
             return ext switch

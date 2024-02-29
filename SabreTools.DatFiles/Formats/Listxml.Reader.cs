@@ -545,7 +545,7 @@ namespace SabreTools.DatFiles.Formats
             };
 
             var controls = new List<Control>();
-            foreach (var control in input.Control ?? Array.Empty<Models.Listxml.Control>())
+            foreach (var control in input.Control ?? [])
             {
                 var controlItem = new Control
                 {
@@ -612,11 +612,11 @@ namespace SabreTools.DatFiles.Formats
                         Relation = dipswitch.Condition.Relation.AsRelation(),
                         Value = dipswitch.Condition.Value,
                     };
-                    item.Conditions = new List<Condition> { condition };
+                    item.Conditions = [condition];
                 }
 
                 var locations = new List<DipLocation>();
-                foreach (var diplocation in dipswitch.DipLocation ?? Array.Empty<Models.Listxml.DipLocation>())
+                foreach (var diplocation in dipswitch.DipLocation ?? [])
                 {
                     var locationItem = new DipLocation
                     {
@@ -631,7 +631,7 @@ namespace SabreTools.DatFiles.Formats
                     item.Locations = locations;
 
                 var settings = new List<DipValue>();
-                foreach (var dipvalue in dipswitch.DipValue ?? Array.Empty<Models.Listxml.DipValue>())
+                foreach (var dipvalue in dipswitch.DipValue ?? [])
                 {
                     var dipValueItem = new DipValue
                     {
@@ -649,7 +649,7 @@ namespace SabreTools.DatFiles.Formats
                             Relation = dipvalue.Condition.Relation.AsRelation(),
                             Value = dipvalue.Condition.Value,
                         };
-                        dipValueItem.Conditions = new List<Condition> { condition };
+                        dipValueItem.Conditions = [condition];
                     }
 
                     settings.Add(dipValueItem);
@@ -703,11 +703,11 @@ namespace SabreTools.DatFiles.Formats
                         Relation = configuration.Condition.Relation.AsRelation(),
                         Value = configuration.Condition.Value,
                     };
-                    item.Conditions = new List<DatItems.Formats.Condition> { condition };
+                    item.Conditions = [condition];
                 }
 
                 var locations = new List<ConfLocation>();
-                foreach (var confLocation in configuration.ConfLocation ?? Array.Empty<Models.Listxml.ConfLocation>())
+                foreach (var confLocation in configuration.ConfLocation ?? [])
                 {
                     var locationItem = new ConfLocation
                     {
@@ -722,7 +722,7 @@ namespace SabreTools.DatFiles.Formats
                     item.Locations = locations;
 
                 var settings = new List<ConfSetting>();
-                foreach (var dipvalue in configuration.ConfSetting ?? Array.Empty<Models.Listxml.ConfSetting>())
+                foreach (var dipvalue in configuration.ConfSetting ?? [])
                 {
                     var settingItem = new ConfSetting
                     {
@@ -740,7 +740,7 @@ namespace SabreTools.DatFiles.Formats
                             Relation = dipvalue.Condition.Relation.AsRelation(),
                             Value = dipvalue.Condition.Value,
                         };
-                        settingItem.Conditions = new List<Condition> { condition };
+                        settingItem.Conditions = [condition];
                     }
 
                     settings.Add(settingItem);
@@ -784,7 +784,7 @@ namespace SabreTools.DatFiles.Formats
                 };
 
                 var analogs = new List<Analog>();
-                foreach (var analog in port.Analog ?? Array.Empty<Models.Listxml.Analog>())
+                foreach (var analog in port.Analog ?? [])
                 {
                     var analogItem = new Analog
                     {
@@ -840,7 +840,7 @@ namespace SabreTools.DatFiles.Formats
                         Relation = adjuster.Condition.Relation.AsRelation(),
                         Value = adjuster.Condition.Value,
                     };
-                    item.Conditions = new List<Condition> { condition };
+                    item.Conditions = [condition];
                 }
 
                 item.CopyMachineInformation(machine);
@@ -965,11 +965,11 @@ namespace SabreTools.DatFiles.Formats
                         Name = device.Instance.Name,
                         BriefName = device.Instance.BriefName,
                     };
-                    item.Instances = new List<Instance> { instance };
+                    item.Instances = [instance];
                 }
 
                 var extensions = new List<Extension>();
-                foreach (var extension in device.Extension ?? Array.Empty<Models.Listxml.Extension>())
+                foreach (var extension in device.Extension ?? [])
                 {
                     var extensionItem = new Extension
                     {
@@ -1016,7 +1016,7 @@ namespace SabreTools.DatFiles.Formats
                 };
 
                 var slotoptions = new List<SlotOption>();
-                foreach (var slotoption in slot.SlotOption ?? Array.Empty<Models.Listxml.SlotOption>())
+                foreach (var slotoption in slot.SlotOption ?? [])
                 {
                     var slotoptionItem = new SlotOption
                     {

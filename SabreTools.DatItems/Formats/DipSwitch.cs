@@ -151,7 +151,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Metadata.DipSwitch ?? new Models.Metadata.DipSwitch(),
+                _internal = this._internal?.Clone() as Models.Metadata.DipSwitch ?? [],
 
                 Part = this.Part,
             };

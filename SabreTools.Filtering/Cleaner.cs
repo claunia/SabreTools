@@ -51,7 +51,7 @@ namespace SabreTools.Filtering
         /// <summary>
         /// Ordered list of regions for "One Rom, One Region (1G1R)" mode
         /// </summary>
-        public List<string> RegionList { get; set; }
+        public List<string>? RegionList { get; set; }
 
         /// <summary>
         /// Ensure each rom is in their own game
@@ -66,7 +66,7 @@ namespace SabreTools.Filtering
         /// <summary>
         /// Include root directory when determing trim sizes
         /// </summary>
-        public string Root { get; set; }
+        public string? Root { get; set; }
 
         /// <summary>
         /// Remove scene dates from the beginning of machine names
@@ -82,7 +82,7 @@ namespace SabreTools.Filtering
         /// Trim total machine and item name to not exceed NTFS limits
         /// </summary>
         public bool Trim { get; set; }
-    
+
         #endregion
 
         #region Logging
@@ -163,7 +163,10 @@ namespace SabreTools.Filtering
             foreach (string key in keys)
             {
                 // For every item in the current key
-                ConcurrentList<DatItem> items = datFile.Items[key];
+                var items = datFile.Items[key];
+                if (items == null)
+                    continue;
+
                 foreach (DatItem item in items)
                 {
                     // If we have a null item, we can't clean it it
@@ -208,11 +211,11 @@ namespace SabreTools.Filtering
             if (Trim && datItem.GetName() != null)
             {
                 // Windows max name length is 260
-                int usableLength = 260 - datItem.Machine.Name.Length - (Root?.Length ?? 0);
-                if (datItem.GetName().Length > usableLength)
+                int usableLength = 260 - datItem.Machine.Name!.Length - (Root?.Length ?? 0);
+                if (datItem.GetName()!.Length > usableLength)
                 {
-                    string ext = Path.GetExtension(datItem.GetName());
-                    datItem.SetName(datItem.GetName()[..(usableLength - ext.Length)] + ext);
+                    string ext = Path.GetExtension(datItem.GetName()!);
+                    datItem.SetName(datItem.GetName()![..(usableLength - ext.Length)] + ext);
                 }
             }
         }
@@ -227,22 +230,29 @@ namespace SabreTools.Filtering
             try
             {
                 // First we want to get a mapping for all games to description
-                ConcurrentDictionary<string, string> mapping = new();
+                ConcurrentDictionary<string, string> concurrentDictionary = new();
+                ConcurrentDictionary<string, string> mapping = concurrentDictionary;
                 Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
                 {
-                    ConcurrentList<DatItem> items = datFile.Items[key];
+                    var items = datFile.Items[key];
+                    if (items == null)
+                        return;
+
                     foreach (DatItem item in items)
                     {
                         // If the key mapping doesn't exist, add it
-                        mapping.TryAdd(item.Machine.Name, item.Machine.Description.Replace('/', '_').Replace("\"", "''").Replace(":", " -"));
+                        mapping.TryAdd(item.Machine.Name!, item.Machine.Description!.Replace('/', '_').Replace("\"", "''").Replace(":", " -"));
                     }
                 });
 
                 // Now we loop through every item and update accordingly
                 Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
                 {
-                    ConcurrentList<DatItem> items = datFile.Items[key];
-                    ConcurrentList<DatItem> newItems = new();
+                    var items = datFile.Items[key];
+                    if (items == null)
+                        return;
+
+                    ConcurrentList<DatItem> newItems = [];
                     foreach (DatItem item in items)
                     {
                         // Update machine name
@@ -293,16 +303,16 @@ namespace SabreTools.Filtering
         internal void SetOneGamePerRegion(DatFile datFile)
         {
             // If we have null region list, make it empty
-            RegionList ??= new List<string>();
+            RegionList ??= [];
 
             // For sake of ease, the first thing we want to do is bucket by game
             datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
             // Then we want to get a mapping of all machines to parents
-            Dictionary<string, List<string>> parents = new();
+            Dictionary<string, List<string>> parents = [];
             foreach (string key in datFile.Items.Keys)
             {
-                DatItem item = datFile.Items[key][0];
+                DatItem item = datFile.Items[key]![0];
 
                 // Match on CloneOf first
                 if (!string.IsNullOrEmpty(item.Machine.CloneOf))
@@ -310,7 +320,7 @@ namespace SabreTools.Filtering
                     if (!parents.ContainsKey(item.Machine.CloneOf.ToLowerInvariant()))
                         parents.Add(item.Machine.CloneOf.ToLowerInvariant(), new List<string>());
 
-                    parents[item.Machine.CloneOf.ToLowerInvariant()].Add(item.Machine.Name.ToLowerInvariant());
+                    parents[item.Machine.CloneOf.ToLowerInvariant()].Add(item.Machine.Name!.ToLowerInvariant());
                 }
 
                 // Then by RomOf
@@ -319,13 +329,13 @@ namespace SabreTools.Filtering
                     if (!parents.ContainsKey(item.Machine.RomOf.ToLowerInvariant()))
                         parents.Add(item.Machine.RomOf.ToLowerInvariant(), new List<string>());
 
-                    parents[item.Machine.RomOf.ToLowerInvariant()].Add(item.Machine.Name.ToLowerInvariant());
+                    parents[item.Machine.RomOf.ToLowerInvariant()].Add(item.Machine.Name!.ToLowerInvariant());
                 }
 
                 // Otherwise, treat it as a parent
                 else
                 {
-                    if (!parents.ContainsKey(item.Machine.Name.ToLowerInvariant()))
+                    if (!parents.ContainsKey(item.Machine.Name!.ToLowerInvariant()))
                         parents.Add(item.Machine.Name.ToLowerInvariant(), new List<string>());
 
                     parents[item.Machine.Name.ToLowerInvariant()].Add(item.Machine.Name.ToLowerInvariant());
@@ -336,7 +346,7 @@ namespace SabreTools.Filtering
             foreach (string key in parents.Keys)
             {
                 // Find the first machine that matches the regions in order, if possible
-                string machine = default;
+                string? machine = default;
                 foreach (string region in RegionList)
                 {
                     machine = parents[key].FirstOrDefault(m => Regex.IsMatch(m, @"\(.*" + region + @".*\)", RegexOptions.IgnoreCase));
@@ -371,7 +381,10 @@ namespace SabreTools.Filtering
             // For each rom, we want to update the game to be "<game name>/<rom name>"
             Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
             {
-                ConcurrentList<DatItem> items = datFile.Items[key];
+                var items = datFile.Items[key];
+                if (items == null)
+                    return;
+
                 for (int i = 0; i < items.Count; i++)
                 {
                     SetOneRomPerGame(items[i]);
@@ -388,7 +401,7 @@ namespace SabreTools.Filtering
             if (datItem.GetName() == null)
                 return;
 
-            string[] splitname = datItem.GetName().Split('.');
+            string[] splitname = datItem.GetName()!.Split('.');
             datItem.Machine.Name += $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1))}";
             datItem.SetName(Path.GetFileName(datItem.GetName()));
         }
@@ -408,15 +421,18 @@ namespace SabreTools.Filtering
             // Now process all of the roms
             Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
             {
-                ConcurrentList<DatItem> items = datFile.Items[key];
+                var items = datFile.Items[key];
+                if (items == null)
+                    return;
+
                 for (int j = 0; j < items.Count; j++)
                 {
                     DatItem item = items[j];
-                    if (Regex.IsMatch(item.Machine.Name, pattern))
-                        item.Machine.Name = Regex.Replace(item.Machine.Name, pattern, "$2");
+                    if (Regex.IsMatch(item.Machine.Name!, pattern))
+                        item.Machine.Name = Regex.Replace(item.Machine.Name!, pattern, "$2");
 
-                    if (Regex.IsMatch(item.Machine.Description, pattern))
-                        item.Machine.Description = Regex.Replace(item.Machine.Description, pattern, "$2");
+                    if (Regex.IsMatch(item.Machine.Description!, pattern))
+                        item.Machine.Description = Regex.Replace(item.Machine.Description!, pattern, "$2");
 
                     items[j] = item;
                 }

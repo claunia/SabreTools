@@ -19,12 +19,12 @@ namespace SabreTools.Filtering
         /// <summary>
         /// DatItemRemover to remove fields from DatHeaders
         /// </summary>
-        public DatHeaderRemover DatHeaderRemover { get; set; }
+        public DatHeaderRemover? DatHeaderRemover { get; set; }
 
         /// <summary>
         /// DatItemRemover to remove fields from DatItems
         /// </summary>
-        public DatItemRemover DatItemRemover { get; set; }
+        public DatItemRemover? DatItemRemover { get; set; }
 
         #endregion
 
@@ -113,7 +113,10 @@ namespace SabreTools.Filtering
             {
                 Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
                 {
-                    ConcurrentList<DatItem> items = datFile.Items[key];
+                    ConcurrentList<DatItem>? items = datFile.Items[key];
+                    if (items == null)
+                        return;
+
                     for (int j = 0; j < items.Count; j++)
                     {
                         DatItemRemover.RemoveFields(items[j]);

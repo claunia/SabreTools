@@ -9,7 +9,7 @@ namespace SabreTools.Core
     /// </summary>
     public class ConcurrentList<T> : ICollection<T>, IEnumerable<T>, IEnumerable, IList<T>, IReadOnlyCollection<T>, IReadOnlyList<T>, ICollection, IList
     {
-        private List<T> _list = new();
+        private List<T> _list = [];
         private readonly object _lock = new();
 
         public T this[int index]

@@ -10,19 +10,19 @@ namespace Compress.SevenZip
 {
     public partial class SevenZ
     {
-        private Stream _compressStream;
+        private Stream? _compressStream;
 
         public class outStreams
         {
             public SevenZipCompressType compType;
-            public byte[] Method;
-            public byte[] Properties;
+            public byte[]? Method;
+            public byte[]? Properties;
             public ulong packedStart;
             public ulong packedSize;
-            public List<UnpackedStreamInfo> unpackedStreams;
+            public List<UnpackedStreamInfo>? unpackedStreams;
         }
 
-        public List<outStreams> _packedOutStreams;
+        public List<outStreams>? _packedOutStreams;
 
         public ZipReturn ZipFileCreate(string newFilename)
         {
@@ -133,8 +133,8 @@ namespace Compress.SevenZip
 
 
 
-        UnpackedStreamInfo unpackedStreamInfo;
-        public ZipReturn ZipFileOpenWriteStream(bool raw, bool trrntzip, string filename, ulong uncompressedSize, ushort compressionMethod, out Stream stream, TimeStamps dateTime)
+        UnpackedStreamInfo? unpackedStreamInfo;
+        public ZipReturn ZipFileOpenWriteStream(bool raw, bool trrntzip, string filename, ulong uncompressedSize, ushort compressionMethod, out Stream? stream, TimeStamps? dateTime)
         {
             // check if we are writing a directory
             if (uncompressedSize == 0 && filename.Substring(filename.Length - 1, 1) == "/")

@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
@@ -76,7 +75,7 @@ namespace SabreTools.DatTools
             InternalStopwatch watch = new($"Rebuilding all files to {format}");
 
             // Now loop through and get only directories from the input paths
-            List<string> directories = new();
+            List<string> directories = [];
             Parallel.ForEach(inputs, Globals.ParallelOptions, input =>
             {
                 // Add to the list if the input is a directory
@@ -108,10 +107,12 @@ namespace SabreTools.DatTools
                 logger.User($"Checking hash '{hash}'");
 
                 // Get the extension path for the hash
-                string subpath = Utilities.GetDepotPath(hash, datFile.Header.InputDepot.Depth);
+                string? subpath = Utilities.GetDepotPath(hash, datFile.Header.InputDepot?.Depth ?? 0);
+                if (subpath == null)
+                    continue;
 
                 // Find the first depot that includes the hash
-                string foundpath = null;
+                string? foundpath = null;
                 foreach (string directory in directories)
                 {
                     if (System.IO.File.Exists(Path.Combine(directory, subpath)))
@@ -127,7 +128,7 @@ namespace SabreTools.DatTools
 
                 // If we have a path, we want to try to get the rom information
                 GZipArchive archive = new(foundpath);
-                BaseFile fileinfo = archive.GetTorrentGZFileInfo();
+                BaseFile? fileinfo = archive.GetTorrentGZFileInfo();
 
                 // If the file information is null, then we continue
                 if (fileinfo == null)
@@ -137,16 +138,17 @@ namespace SabreTools.DatTools
                 datFile.Items.BucketBy(ItemKey.SHA1, DedupeType.None);
 
                 // If there are no items in the hash, we continue
-                if (datFile.Items[hash] == null || datFile.Items[hash].Count == 0)
+                var items = datFile.Items[hash];
+                if (items == null || items.Count == 0)
                     continue;
 
                 // Otherwise, we rebuild that file to all locations that we need to
                 bool usedInternally;
-                if (datFile.Items[hash][0].ItemType == ItemType.Disk)
+                if (items[0].ItemType == ItemType.Disk)
                     usedInternally = RebuildIndividualFile(datFile, new Disk(fileinfo), foundpath, outDir, date, inverse, outputFormat, isZip: false);
-                else if (datFile.Items[hash][0].ItemType == ItemType.File)
+                else if (items[0].ItemType == ItemType.File)
                     usedInternally = RebuildIndividualFile(datFile, new DatItems.Formats.File(fileinfo), foundpath, outDir, date, inverse, outputFormat, isZip: false);
-                else if (datFile.Items[hash][0].ItemType == ItemType.Media)
+                else if (items[0].ItemType == ItemType.Media)
                     usedInternally = RebuildIndividualFile(datFile, new Media(fileinfo), foundpath, outDir, date, inverse, outputFormat, isZip: false);
                 else
                     usedInternally = RebuildIndividualFile(datFile, new Rom(fileinfo), foundpath, outDir, date, inverse, outputFormat, isZip: false);
@@ -284,7 +286,7 @@ namespace SabreTools.DatTools
             bool usedExternally = false, usedInternally = false;
 
             // Create an empty list of BaseFile for archive entries
-            List<BaseFile> entries = null;
+            List<BaseFile>? entries = null;
 
             // Get the TGZ and TXZ status for later
             GZipArchive tgz = new(file);
@@ -292,7 +294,7 @@ namespace SabreTools.DatTools
             bool isSingleTorrent = tgz.IsTorrent() || txz.IsTorrent();
 
             // Get the base archive first
-            BaseArchive archive = BaseArchive.Create(file);
+            BaseArchive? archive = BaseArchive.Create(file);
 
             // Now get all extracted items from the archive
             if (archive != null)
@@ -304,25 +306,31 @@ namespace SabreTools.DatTools
             // If the entries list is null, we encountered an error or have a file and should scan externally
             if (entries == null && System.IO.File.Exists(file))
             {
-                BaseFile internalFileInfo = BaseFile.GetInfo(file, asFiles: asFiles);
+                BaseFile? internalFileInfo = BaseFile.GetInfo(file, asFiles: asFiles);
 
                 // Create the correct DatItem
-                DatItem internalDatItem;
-                if (internalFileInfo.Type == FileType.AaruFormat && !asFiles.HasFlag(TreatAsFile.AaruFormat))
+                DatItem? internalDatItem;
+                if (internalFileInfo == null)
+                    internalDatItem = null;
+                else if (internalFileInfo.Type == FileType.AaruFormat && !asFiles.HasFlag(TreatAsFile.AaruFormat))
                     internalDatItem = new Media(internalFileInfo);
                 else if (internalFileInfo.Type == FileType.CHD && !asFiles.HasFlag(TreatAsFile.CHD))
                     internalDatItem = new Disk(internalFileInfo);
                 else
                     internalDatItem = new Rom(internalFileInfo);
 
-                usedExternally = RebuildIndividualFile(datFile, internalDatItem, file, outDir, date, inverse, outputFormat);
+                if (internalDatItem != null)
+                    usedExternally = RebuildIndividualFile(datFile, internalDatItem, file, outDir, date, inverse, outputFormat);
             }
             // Otherwise, loop through the entries and try to match
-            else
+            else if (entries != null)
             {
                 foreach (BaseFile entry in entries)
                 {
-                    DatItem internalDatItem = DatItem.Create(entry);
+                    DatItem? internalDatItem = DatItem.Create(entry);
+                    if (internalDatItem == null)
+                        continue;
+
                     usedInternally |= RebuildIndividualFile(datFile, internalDatItem, file, outDir, date, inverse, outputFormat, !isSingleTorrent /* isZip */);
                 }
             }
@@ -364,18 +372,18 @@ namespace SabreTools.DatTools
             }
 
             // If we have a Disk, File, or Media, change it into a Rom for later use
-            if (datItem.ItemType == ItemType.Disk)
-                datItem = (datItem as Disk).ConvertToRom();
-            else if (datItem.ItemType == ItemType.File)
-                datItem = (datItem as DatItems.Formats.File).ConvertToRom();
-            else if (datItem.ItemType == ItemType.Media)
-                datItem = (datItem as Media).ConvertToRom();
+            if (datItem is Disk disk)
+                datItem = disk.ConvertToRom();
+            else if (datItem is DatItems.Formats.File fileItem)
+                datItem = fileItem.ConvertToRom();
+            else if (datItem is Media media)
+                datItem = media.ConvertToRom();
 
             // Prepopluate a key string
-            string crc = (datItem as Rom).CRC ?? string.Empty;
+            string crc = (datItem as Rom)!.CRC ?? string.Empty;
 
             // Try to get the stream for the file
-            if (!GetFileStream(datItem, file, isZip, out Stream fileStream))
+            if (!GetFileStream(datItem, file, isZip, out Stream? fileStream))
                 return false;
 
             // If either we have duplicates or we're filtering
@@ -403,17 +411,22 @@ namespace SabreTools.DatTools
                 // Now loop through the list and rebuild accordingly
                 foreach (DatItem item in dupes)
                 {
+                    // If we don't have a proper machine
+                    if (item.Machine?.Name == null || !datFile.Items.ContainsKey(item.Machine.Name))
+                        continue;
+
                     // If we should check for the items in the machine
-                    if (shouldCheck && datFile.Items[item.Machine.Name].Count > 1)
+                    var items = datFile.Items[item.Machine.Name];
+                    if (shouldCheck && items!.Count > 1)
                         outputFormat = OutputFormat.Folder;
-                    else if (shouldCheck && datFile.Items[item.Machine.Name].Count == 1)
+                    else if (shouldCheck && items!.Count == 1)
                         outputFormat = OutputFormat.ParentFolder;
 
                     // Get the output archive, if possible
-                    Folder outputArchive = GetPreconfiguredFolder(datFile, date, outputFormat);
+                    Folder? outputArchive = GetPreconfiguredFolder(datFile, date, outputFormat);
 
                     // Now rebuild to the output file
-                    outputArchive.Write(fileStream, outDir, (item as Rom).ConvertToBaseFile());
+                    outputArchive!.Write(fileStream, outDir, (item as Rom)!.ConvertToBaseFile());
                 }
 
                 // Close the input stream
@@ -451,12 +464,12 @@ namespace SabreTools.DatTools
                                 datItem.SetName($"{datItem.GetName()}_{crc}");
 
                                 // Get the output archive, if possible
-                                Folder outputArchive = GetPreconfiguredFolder(datFile, date, outputFormat);
+                                Folder? outputArchive = GetPreconfiguredFolder(datFile, date, outputFormat);
 
                                 // Now rebuild to the output file
                                 bool eitherSuccess = false;
-                                eitherSuccess |= outputArchive.Write(transformStream, outDir, (item as Rom).ConvertToBaseFile());
-                                eitherSuccess |= outputArchive.Write(fileStream, outDir, (datItem as Rom).ConvertToBaseFile());
+                                eitherSuccess |= outputArchive!.Write(transformStream, outDir, (item as Rom)!.ConvertToBaseFile());
+                                eitherSuccess |= outputArchive.Write(fileStream, outDir, (datItem as Rom)!.ConvertToBaseFile());
 
                                 // Now add the success of either rebuild
                                 rebuilt &= eitherSuccess;
@@ -484,7 +497,7 @@ namespace SabreTools.DatTools
         /// <param name="inverse">True if the DAT should be used as a filter instead of a template, false otherwise</param>
         /// <param name="dupes">Output list of duplicate items to rebuild to</param>
         /// <returns>True if the item should be rebuilt, false otherwise</returns>
-        private static bool ShouldRebuild(DatFile datFile, DatItem datItem, Stream stream, bool inverse, out ConcurrentList<DatItem> dupes)
+        private static bool ShouldRebuild(DatFile datFile, DatItem datItem, Stream? stream, bool inverse, out ConcurrentList<DatItem> dupes)
         {
             // Find if the file has duplicates in the DAT
             dupes = datFile.Items.GetDuplicates(datItem);
@@ -505,7 +518,7 @@ namespace SabreTools.DatTools
             // If we have no duplicates and we're filtering
             else if (!hasDuplicates && inverse)
             {
-                string machinename = null;
+                string? machinename = null;
 
                 // Get the item from the current file
                 Rom item = new(BaseFile.GetInfo(stream, keepReadOpen: true));
@@ -544,20 +557,22 @@ namespace SabreTools.DatTools
         {
             // If we have a very specific TGZ->TGZ case, just copy it accordingly
             GZipArchive tgz = new(file);
-            BaseFile tgzRom = tgz.GetTorrentGZFileInfo();
+            BaseFile? tgzRom = tgz.GetTorrentGZFileInfo();
             if (isZip == false && tgzRom != null && (outputFormat == OutputFormat.TorrentGzip || outputFormat == OutputFormat.TorrentGzipRomba))
             {
                 logger.User($"Matches found for '{Path.GetFileName(datItem.GetName() ?? string.Empty)}', rebuilding accordingly...");
 
                 // Get the proper output path
-                string sha1 = (datItem as Rom).SHA1 ?? string.Empty;
+                string sha1 = (datItem as Rom)!.SHA1 ?? string.Empty;
                 if (outputFormat == OutputFormat.TorrentGzipRomba)
-                    outDir = Path.Combine(outDir, Utilities.GetDepotPath(sha1, datFile.Header.OutputDepot.Depth));
+                    outDir = Path.Combine(outDir, Utilities.GetDepotPath(sha1, datFile.Header.OutputDepot?.Depth ?? 0) ?? string.Empty);
                 else
                     outDir = Path.Combine(outDir, sha1 + ".gz");
 
                 // Make sure the output folder is created
-                Directory.CreateDirectory(Path.GetDirectoryName(outDir));
+                string? dir = Path.GetDirectoryName(outDir);
+                if (dir != null)
+                    Directory.CreateDirectory(dir);
 
                 // Now copy the file over
                 try
@@ -588,20 +603,22 @@ namespace SabreTools.DatTools
         {
             // If we have a very specific TGZ->TGZ case, just copy it accordingly
             XZArchive txz = new(file);
-            BaseFile txzRom = txz.GetTorrentXZFileInfo();
+            BaseFile? txzRom = txz.GetTorrentXZFileInfo();
             if (isZip == false && txzRom != null && (outputFormat == OutputFormat.TorrentXZ || outputFormat == OutputFormat.TorrentXZRomba))
             {
                 logger.User($"Matches found for '{Path.GetFileName(datItem.GetName() ?? string.Empty)}', rebuilding accordingly...");
 
                 // Get the proper output path
-                string sha1 = (datItem as Rom).SHA1 ?? string.Empty;
+                string sha1 = (datItem as Rom)!.SHA1 ?? string.Empty;
                 if (outputFormat == OutputFormat.TorrentXZRomba)
-                    outDir = Path.Combine(outDir, Utilities.GetDepotPath(sha1, datFile.Header.OutputDepot.Depth)).Replace(".gz", ".xz");
+                    outDir = Path.Combine(outDir, Utilities.GetDepotPath(sha1, datFile.Header.OutputDepot?.Depth ?? 0) ?? string.Empty).Replace(".gz", ".xz");
                 else
                     outDir = Path.Combine(outDir, sha1 + ".xz");
 
                 // Make sure the output folder is created
-                Directory.CreateDirectory(Path.GetDirectoryName(outDir));
+                string? dir = Path.GetDirectoryName(outDir);
+                if (dir != null)
+                    Directory.CreateDirectory(dir);
 
                 // Now copy the file over
                 try
@@ -626,7 +643,7 @@ namespace SabreTools.DatTools
         /// <param name="isZip">Non-null if the input file is an archive</param>
         /// <param name="stream">Output stream representing the opened file</param>
         /// <returns>True if the stream opening succeeded, false otherwise</returns>
-        private static bool GetFileStream(DatItem datItem, string file, bool? isZip, out Stream stream)
+        private static bool GetFileStream(DatItem datItem, string file, bool? isZip, out Stream? stream)
         {
             // Get a generic stream for the file
             stream = null;
@@ -634,7 +651,7 @@ namespace SabreTools.DatTools
             // If we have a zipfile, extract the stream to memory
             if (isZip != null)
             {
-                BaseArchive archive = BaseArchive.Create(file);
+                BaseArchive? archive = BaseArchive.Create(file);
                 if (archive != null)
                     (stream, _) = archive.CopyToStream(datItem.GetName() ?? datItem.ItemType.ToString());
             }
@@ -678,17 +695,17 @@ namespace SabreTools.DatTools
         /// <param name="date">True if the date from the DAT should be used if available, false otherwise</param>
         /// <param name="outputFormat">Output format that files should be written to</param>
         /// <returns>Folder configured with proper flags</returns>
-        private static Folder GetPreconfiguredFolder(DatFile datFile, bool date, OutputFormat outputFormat)
+        private static Folder? GetPreconfiguredFolder(DatFile datFile, bool date, OutputFormat outputFormat)
         {
-            Folder outputArchive = Folder.Create(outputFormat);
+            Folder? outputArchive = Folder.Create(outputFormat);
             if (outputArchive is BaseArchive baseArchive && date)
                 baseArchive.UseDates = date;
 
             // Set the depth fields where appropriate
             if (outputArchive is GZipArchive gzipArchive)
-                gzipArchive.Depth = datFile.Header.OutputDepot.Depth;
+                gzipArchive.Depth = datFile.Header.OutputDepot?.Depth ?? 0;
             else if (outputArchive is XZArchive xzArchive)
-                xzArchive.Depth = datFile.Header.OutputDepot.Depth;
+                xzArchive.Depth = datFile.Header.OutputDepot?.Depth ?? 0;
 
             return outputArchive;
         }
@@ -698,7 +715,7 @@ namespace SabreTools.DatTools
         /// </summary>
         /// <param name="itemType">OutputFormat to get value from</param>
         /// <returns>String value corresponding to the OutputFormat</returns>
-        private static string FromOutputFormat(OutputFormat itemType)
+        private static string? FromOutputFormat(OutputFormat itemType)
         {
             return itemType switch
             {

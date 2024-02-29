@@ -15,10 +15,10 @@ namespace SabreTools.DatFiles.Formats
         /// <inheritdoc/>
         protected override ItemType[] GetSupportedTypes()
         {
-            return new ItemType[]
-            {
+            return
+            [
                 ItemType.Rom
-            };
+            ];
         }
 
         /// <inheritdoc/>
@@ -137,11 +137,11 @@ namespace SabreTools.DatFiles.Formats
                     }
                 }
 
-                software.Dump = dumps.ToArray();
+                software.Dump = [.. dumps];
                 softwares.Add(software);
             }
 
-            return softwares.ToArray();
+            return [.. softwares];
         }
 
         /// <summary>

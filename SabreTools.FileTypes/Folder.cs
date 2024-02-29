@@ -17,7 +17,7 @@ namespace SabreTools.FileTypes
     {
         #region Protected instance variables
 
-        protected List<BaseFile> _children;
+        protected List<BaseFile>? _children;
 
         /// <summary>
         /// Logging object
@@ -68,7 +68,7 @@ namespace SabreTools.FileTypes
         /// </summary>
         /// <param name="outputFormat">OutputFormat representing the archive to create</param>
         /// <returns>Archive object representing the inputs</returns>
-        public static Folder Create(OutputFormat outputFormat)
+        public static Folder? Create(OutputFormat outputFormat)
         {
             return outputFormat switch
             {
@@ -101,6 +101,10 @@ namespace SabreTools.FileTypes
         /// <returns>True if the extraction was a success, false otherwise</returns>
         public virtual bool CopyAll(string outDir)
         {
+            // If we have an invalid filename
+            if (this.Filename == null)
+                return false;
+
             // Copy all files from the current folder to the output directory recursively
             try
             {
@@ -164,9 +168,13 @@ namespace SabreTools.FileTypes
         /// <param name="entryName">Name of the entry to be extracted</param>
         /// <param name="outDir">Output directory for archive extraction</param>
         /// <returns>Name of the extracted file, null on error</returns>
-        public virtual string CopyToFile(string entryName, string outDir)
+        public virtual string? CopyToFile(string entryName, string outDir)
         {
-            string realentry = null;
+            string? realentry = null;
+            
+            // If we have an invalid filename
+            if (this.Filename == null)
+                return null;
 
             // Copy single file from the current folder to the output directory, if exists
             try
@@ -179,7 +187,7 @@ namespace SabreTools.FileTypes
                 List<string> files = PathTool.GetFilesOrdered(this.Filename);
 
                 // Now sort through to find the first file that matches
-                string match = files.Where(s => s.EndsWith(entryName)).FirstOrDefault();
+                string? match = files.Where(s => s.EndsWith(entryName)).FirstOrDefault();
 
                 // If we had a file, copy that over to the new name
                 if (!string.IsNullOrWhiteSpace(match))
@@ -202,10 +210,14 @@ namespace SabreTools.FileTypes
         /// </summary>
         /// <param name="entryName">Name of the entry to be extracted</param>
         /// <returns>MemoryStream representing the entry, null on error</returns>
-        public virtual (MemoryStream, string) CopyToStream(string entryName)
+        public virtual (MemoryStream?, string?) CopyToStream(string entryName)
         {
             MemoryStream ms = new();
-            string realentry = null;
+            string? realentry = null;
+
+            // If we have an invalid filename
+            if (this.Filename == null)
+                return (null, null);
 
             // Copy single file from the current folder to the output directory, if exists
             try
@@ -217,7 +229,7 @@ namespace SabreTools.FileTypes
                 List<string> files = PathTool.GetFilesOrdered(this.Filename);
 
                 // Now sort through to find the first file that matches
-                string match = files.Where(s => s.EndsWith(entryName)).FirstOrDefault();
+                string? match = files.Where(s => s.EndsWith(entryName)).FirstOrDefault();
 
                 // If we had a file, copy that over to the new name
                 if (!string.IsNullOrWhiteSpace(match))
@@ -243,15 +255,20 @@ namespace SabreTools.FileTypes
         /// Generate a list of immediate children from the current folder
         /// </summary>
         /// <returns>List of BaseFile objects representing the found data</returns>
-        public virtual List<BaseFile> GetChildren()
+        public virtual List<BaseFile>? GetChildren()
         {
+            // If we have an invalid filename
+            if (this.Filename == null)
+                return null;
+
             if (_children == null || _children.Count == 0)
             {
-                _children = new List<BaseFile>();
+                _children = [];
                 foreach (string file in Directory.EnumerateFiles(this.Filename, "*", SearchOption.TopDirectoryOnly))
                 {
-                    BaseFile nf = GetInfo(file, hashes: this.AvailableHashes);
-                    _children.Add(nf);
+                    BaseFile? nf = GetInfo(file, hashes: this.AvailableHashes);
+                    if (nf != null)
+                        _children.Add(nf);
                 }
 
                 foreach (string dir in Directory.EnumerateDirectories(this.Filename, "*", SearchOption.TopDirectoryOnly))
@@ -269,7 +286,7 @@ namespace SabreTools.FileTypes
         /// </summary>
         /// <param name="input">Input file to get data from</param>
         /// <returns>List of empty folders in the folder</returns>
-        public virtual List<string> GetEmptyFolders()
+        public virtual List<string>? GetEmptyFolders()
         {
             return this.Filename.ListEmpty();
         }
@@ -286,7 +303,7 @@ namespace SabreTools.FileTypes
         /// <param name="baseFile">BaseFile representing the new information</param>
         /// <returns>True if the write was a success, false otherwise</returns>
         /// <remarks>This works for now, but it can be sped up by using Ionic.Zip or another zlib wrapper that allows for header values built-in. See edc's code.</remarks>
-        public virtual bool Write(string inputFile, string outDir, BaseFile baseFile)
+        public virtual bool Write(string inputFile, string outDir, BaseFile? baseFile)
         {
             FileStream fs = File.OpenRead(inputFile);
             return Write(fs, outDir, baseFile);
@@ -300,7 +317,7 @@ namespace SabreTools.FileTypes
         /// <param name="baseFile">BaseFile representing the new information</param>
         /// <returns>True if the write was a success, false otherwise</returns>
         /// <remarks>This works for now, but it can be sped up by using Ionic.Zip or another zlib wrapper that allows for header values built-in. See edc's code.</remarks>
-        public virtual bool Write(Stream inputStream, string outDir, BaseFile baseFile)
+        public virtual bool Write(Stream? inputStream, string outDir, BaseFile? baseFile)
         {
             bool success = false;
 
@@ -313,20 +330,21 @@ namespace SabreTools.FileTypes
                 return success;
 
             // Set internal variables
-            FileStream outputStream = null;
+            FileStream? outputStream = null;
 
             // Get the output folder name from the first rebuild rom
             string fileName;
             if (writeToParent)
-                fileName = Path.Combine(outDir, TextHelper.RemovePathUnsafeCharacters(baseFile.Filename));
+                fileName = Path.Combine(outDir, TextHelper.RemovePathUnsafeCharacters(baseFile.Filename) ?? string.Empty);
             else
-                fileName = Path.Combine(outDir, TextHelper.RemovePathUnsafeCharacters(baseFile.Parent), TextHelper.RemovePathUnsafeCharacters(baseFile.Filename));
+                fileName = Path.Combine(outDir, TextHelper.RemovePathUnsafeCharacters(baseFile.Parent) ?? string.Empty, TextHelper.RemovePathUnsafeCharacters(baseFile.Filename) ?? string.Empty);
 
             try
             {
                 // If the full output path doesn't exist, create it
-                if (!Directory.Exists(Path.GetDirectoryName(fileName)))
-                    Directory.CreateDirectory(Path.GetDirectoryName(fileName));
+                string? dir = Path.GetDirectoryName(fileName);
+                if (dir != null && !Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
 
                 // Overwrite output files by default
                 outputStream = File.Create(fileName);
@@ -373,7 +391,7 @@ namespace SabreTools.FileTypes
         /// <param name="outDir">Output directory to build to</param>
         /// <param name="baseFiles">BaseFiles representing the new information</param>
         /// <returns>True if the inputs were written properly, false otherwise</returns>
-        public virtual bool Write(List<string> inputFiles, string outDir, List<BaseFile> baseFiles)
+        public virtual bool Write(List<string> inputFiles, string outDir, List<BaseFile>? baseFiles)
         {
             throw new NotImplementedException();
         }

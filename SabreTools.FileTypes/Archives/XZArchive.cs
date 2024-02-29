@@ -75,8 +75,8 @@ namespace SabreTools.FileTypes.Archives
                 Directory.CreateDirectory(outDir);
 
                 // Decompress the _filename stream
-                FileStream outstream = File.Create(Path.Combine(outDir, Path.GetFileNameWithoutExtension(this.Filename)));
-                var xz = new XZStream(File.OpenRead(this.Filename));
+                FileStream outstream = File.Create(Path.Combine(outDir, Path.GetFileNameWithoutExtension(this.Filename)!));
+                var xz = new XZStream(File.OpenRead(this.Filename!));
                 xz.CopyTo(outstream);
 
                 // Dispose of the streams
@@ -105,10 +105,10 @@ namespace SabreTools.FileTypes.Archives
         }
 
         /// <inheritdoc/>
-        public override string CopyToFile(string entryName, string outDir)
+        public override string? CopyToFile(string entryName, string outDir)
         {
             // Try to extract a stream using the given information
-            (MemoryStream ms, string realEntry) = CopyToStream(entryName);
+            (MemoryStream? ms, string? realEntry) = CopyToStream(entryName);
 
             // If the memory stream and the entry name are both non-null, we write to file
             if (ms != null && realEntry != null)
@@ -116,7 +116,7 @@ namespace SabreTools.FileTypes.Archives
                 realEntry = Path.Combine(outDir, realEntry);
 
                 // Create the output subfolder now
-                Directory.CreateDirectory(Path.GetDirectoryName(realEntry));
+                Directory.CreateDirectory(Path.GetDirectoryName(realEntry)!);
 
                 // Now open and write the file if possible
                 FileStream fs = File.Create(realEntry);
@@ -146,16 +146,16 @@ namespace SabreTools.FileTypes.Archives
         }
 
         /// <inheritdoc/>
-        public override (MemoryStream, string) CopyToStream(string entryName)
+        public override (MemoryStream?, string?) CopyToStream(string entryName)
         {
-            MemoryStream ms = new();
-            string realEntry;
+            MemoryStream? ms = new();
+            string? realEntry;
 
             try
             {
                 // Decompress the _filename stream
                 realEntry = Path.GetFileNameWithoutExtension(this.Filename);
-                var xz = new XZStream(File.OpenRead(this.Filename));
+                var xz = new XZStream(File.OpenRead(this.Filename!));
 
                 // Write the file out
                 byte[] xbuffer = new byte[_bufferSize];
@@ -185,15 +185,15 @@ namespace SabreTools.FileTypes.Archives
         #region Information
 
         /// <inheritdoc/>
-        public override List<BaseFile> GetChildren()
+        public override List<BaseFile>? GetChildren()
         {
             if (_children == null || _children.Count == 0)
             {
                 _children = new List<BaseFile>();
 
-                string gamename = Path.GetFileNameWithoutExtension(this.Filename);
+                string? gamename = Path.GetFileNameWithoutExtension(this.Filename);
 
-                BaseFile possibleTxz = GetTorrentXZFileInfo();
+                BaseFile? possibleTxz = GetTorrentXZFileInfo();
 
                 // If it was, then add it to the outputs and continue
                 if (possibleTxz != null && possibleTxz.Filename != null)
@@ -212,7 +212,7 @@ namespace SabreTools.FileTypes.Archives
                         {
                             xzEntryRom.Filename = gamename;
                             
-                            using BinaryReader br = new(File.OpenRead(this.Filename));
+                            using BinaryReader br = new(File.OpenRead(this.Filename!));
                             br.BaseStream.Seek(-8, SeekOrigin.End);
                             xzEntryRom.CRC = br.ReadBytesBigEndian(4);
                             xzEntryRom.Size = br.ReadInt32BigEndian();
@@ -220,7 +220,7 @@ namespace SabreTools.FileTypes.Archives
                         // Otherwise, use the stream directly
                         else
                         {
-                            var xzStream = new XZStream(File.OpenRead(this.Filename));
+                            var xzStream = new XZStream(File.OpenRead(this.Filename!));
                             xzEntryRom = GetInfo(xzStream, hashes: this.AvailableHashes);
                             xzEntryRom.Filename = gamename;
                             xzStream.Dispose();
@@ -245,7 +245,7 @@ namespace SabreTools.FileTypes.Archives
         public override List<string> GetEmptyFolders()
         {
             // XZ files don't contain directories
-            return new List<string>();
+            return [];
         }
 
         /// <inheritdoc/>
@@ -271,7 +271,7 @@ namespace SabreTools.FileTypes.Archives
         /// Retrieve file information for a single torrent XZ file
         /// </summary>
         /// <returns>Populated DatItem object if success, empty one on error</returns>
-        public BaseFile GetTorrentXZFileInfo()
+        public BaseFile? GetTorrentXZFileInfo()
         {
             // Check for the file existing first
             if (!File.Exists(this.Filename))
@@ -302,7 +302,7 @@ namespace SabreTools.FileTypes.Archives
         #region Writing
 
         /// <inheritdoc/>
-        public override bool Write(string inputFile, string outDir, BaseFile baseFile)
+        public override bool Write(string inputFile, string outDir, BaseFile? baseFile)
         {
             // Check that the input file exists
             if (!File.Exists(inputFile))
@@ -318,12 +318,12 @@ namespace SabreTools.FileTypes.Archives
         }
 
         /// <inheritdoc/>
-        public override bool Write(Stream inputStream, string outDir, BaseFile baseFile)
+        public override bool Write(Stream? inputStream, string outDir, BaseFile? baseFile)
         {
             bool success = false;
 
             // If the stream is not readable, return
-            if (!inputStream.CanRead)
+            if (inputStream == null || !inputStream.CanRead)
                 return success;
 
             // Make sure the output directory exists
@@ -336,12 +336,12 @@ namespace SabreTools.FileTypes.Archives
             baseFile = GetInfo(inputStream, keepReadOpen: true);
 
             // Get the output file name
-            string outfile = Path.Combine(outDir, Utilities.GetDepotPath(TextHelper.ByteArrayToString(baseFile.SHA1), Depth));
+            string outfile = Path.Combine(outDir, Utilities.GetDepotPath(TextHelper.ByteArrayToString(baseFile.SHA1), Depth)!);
             outfile = outfile.Replace(".gz", ".xz");
 
             // Check to see if the folder needs to be created
             if (!Directory.Exists(Path.GetDirectoryName(outfile)))
-                Directory.CreateDirectory(Path.GetDirectoryName(outfile));
+                Directory.CreateDirectory(Path.GetDirectoryName(outfile)!);
 
             // If the output file exists, don't try to write again
             if (!File.Exists(outfile))
@@ -358,7 +358,7 @@ namespace SabreTools.FileTypes.Archives
         }
 
         /// <inheritdoc/>
-        public override bool Write(List<string> inputFiles, string outDir, List<BaseFile> baseFiles)
+        public override bool Write(List<string> inputFiles, string outDir, List<BaseFile>? baseFiles)
         {
             throw new NotImplementedException();
         }

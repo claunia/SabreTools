@@ -34,7 +34,7 @@ namespace SabreTools.FileTypes.CHD
         /// Create a new CHDFile from an input file
         /// </summary>
         /// <param name="filename">Filename respresenting the CHD file</param>
-        public static CHDFile Create(string filename)
+        public static CHDFile? Create(string filename)
         {
             using FileStream fs = File.OpenRead(filename);
             return Create(fs);
@@ -44,7 +44,7 @@ namespace SabreTools.FileTypes.CHD
         /// Create a new CHDFile from an input stream
         /// </summary>
         /// <param name="chdstream">Stream representing the CHD file</param>
-        public static CHDFile Create(Stream chdstream)
+        public static CHDFile? Create(Stream chdstream)
         {
             try
             {
@@ -58,7 +58,7 @@ namespace SabreTools.FileTypes.CHD
                     return null;
 
                 // Read and retrun the current CHD
-                CHDFile generated = ReadAsVersion(chdstream, version);
+                CHDFile? generated = ReadAsVersion(chdstream, version);
                 if (generated != null)
                     generated.Type = FileType.CHD;
 
@@ -130,7 +130,7 @@ namespace SabreTools.FileTypes.CHD
         /// <param name="stream">CHD file as a stream</param>
         /// <param name="version">CHD version to parse</param>
         /// <returns>Populated CHD file, null on failure</returns>
-        private static CHDFile ReadAsVersion(Stream stream, uint version)
+        private static CHDFile? ReadAsVersion(Stream stream, uint version)
         {
             return version switch
             {

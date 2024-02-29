@@ -25,7 +25,7 @@ namespace SabreTools.Core.Tools
             string? valueStr = value.ToString();
             if (string.IsNullOrWhiteSpace(valueStr))
                 return null;
-            
+
             // Get the member info array
             var memberInfos = enumType?.GetMember(valueStr);
             if (memberInfos == null)
@@ -35,12 +35,12 @@ namespace SabreTools.Core.Tools
             var enumValueMemberInfo = memberInfos.FirstOrDefault(m => m.DeclaringType == enumType);
             if (enumValueMemberInfo == null)
                 return null;
-            
+
             // Try to get the relevant attribute
             var attributes = enumValueMemberInfo.GetCustomAttributes(typeof(MappingAttribute), true);
             if (attributes == null)
                 return null;
-            
+
             // Return the first attribute, if possible
             return (MappingAttribute?)attributes.FirstOrDefault();
         }

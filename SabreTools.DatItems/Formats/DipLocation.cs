@@ -90,7 +90,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Metadata.DipLocation ?? new Models.Metadata.DipLocation(),
+                _internal = this._internal?.Clone() as Models.Metadata.DipLocation ?? [],
             };
         }
 

@@ -27,14 +27,14 @@ namespace SabreTools.Reports.Formats
         }
 
         /// <inheritdoc/>
-        public override bool WriteToFile(string outfile, bool baddumpCol, bool nodumpCol, bool throwOnError = false)
+        public override bool WriteToFile(string? outfile, bool baddumpCol, bool nodumpCol, bool throwOnError = false)
         {
             InternalStopwatch watch = new($"Writing statistics to '{outfile}");
 
             try
             {
                 // Try to create the output file
-                FileStream fs = File.Create(outfile);
+                FileStream fs = File.Create(outfile ?? string.Empty);
                 if (fs == null)
                 {
                     logger.Warning($"File '{outfile}' could not be created for writing! Please check to see if the file is writable");
@@ -97,8 +97,8 @@ namespace SabreTools.Reports.Formats
         /// <param name="nodumpCol">True if nodumps should be included in output, false otherwise</param>
         private void WriteHeader(SeparatedValueWriter svw, bool baddumpCol, bool nodumpCol)
         {
-            string[] headers = new string[]
-            {
+            string[] headers =
+            [
                 "File Name",
                 "Total Size",
                 "Games",
@@ -112,7 +112,7 @@ namespace SabreTools.Reports.Formats
                 "# with SHA-512",
                 baddumpCol ? "BadDumps" : string.Empty,
                 nodumpCol ? "Nodumps" : string.Empty,
-            };
+            ];
             svw.WriteHeader(headers);
             svw.Flush();
         }
@@ -126,10 +126,10 @@ namespace SabreTools.Reports.Formats
         /// <param name="nodumpCol">True if nodumps should be included in output, false otherwise</param>
         private void WriteIndividual(SeparatedValueWriter svw, DatStatistics stat, bool baddumpCol, bool nodumpCol)
         {
-            string[] values = new string[]
-            {
-                stat.DisplayName,
-                stat.Statistics.TotalSize.ToString(),
+            string[] values =
+            [
+                stat.DisplayName!,
+                stat.Statistics!.TotalSize.ToString(),
                 stat.MachineCount.ToString(),
                 stat.Statistics.RomCount.ToString(),
                 stat.Statistics.DiskCount.ToString(),
@@ -141,7 +141,7 @@ namespace SabreTools.Reports.Formats
                 stat.Statistics.SHA512Count.ToString(),
                 baddumpCol ? stat.Statistics.BaddumpCount.ToString() : string.Empty,
                 nodumpCol ? stat.Statistics.NodumpCount.ToString() : string.Empty,
-            };
+            ];
             svw.WriteValues(values);
             svw.Flush();
         }

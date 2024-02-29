@@ -22,7 +22,7 @@ namespace SabreTools.DatFiles.Formats
                 var dat = new Serialization.Files.OfflineList().Deserialize(filename);
 
                 // Convert the header to the internal format
-                ConvertHeader(dat);
+                OfflineList.ConvertHeader(dat);
 
                 // Convert the configuration to the internal format
                 ConvertConfiguration(dat?.Configuration, keep);
@@ -46,7 +46,7 @@ namespace SabreTools.DatFiles.Formats
         /// Convert header information
         /// </summary>
         /// <param name="dat">Deserialized model to convert</param>
-        private void ConvertHeader(Models.OfflineList.Dat? dat)
+        private static void ConvertHeader(Models.OfflineList.Dat? dat)
         {
             // If the datafile is missing, we can't do anything
             if (dat == null)
@@ -260,7 +260,7 @@ namespace SabreTools.DatFiles.Formats
         /// Convert search information
         /// </summary>
         /// <param name="search">Deserialized model to convert</param>
-        private void ConvertSearch(Models.OfflineList.Search? search)
+        private static void ConvertSearch(Models.OfflineList.Search? search)
         {
             // If the search or to array is missing, we can't do anything
             if (search?.To == null)
@@ -391,7 +391,7 @@ namespace SabreTools.DatFiles.Formats
         /// Convert GUI information
         /// </summary>
         /// <param name="gui">Deserialized model to convert</param>
-        private void ConvertGUI(Models.OfflineList.GUI? gui)
+        private static void ConvertGUI(Models.OfflineList.GUI? gui)
         {
             // If the gui or Images are missing, we can't do anything
             if (gui?.Images?.Image == null || !gui.Images.Image.Any())

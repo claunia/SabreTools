@@ -184,7 +184,7 @@ namespace SabreTools.Filtering
         /// <param name="key">Key for the filter to be set</param>
         /// <param name="value">Value of the filter</param>
         /// <param name="negate">True if negative filter, false otherwise</param>
-        public void SetFilter(DatItemField key, string value, bool negate)
+        public void SetFilter(DatItemField key, string? value, bool negate)
         {
             switch (key)
             {
@@ -834,7 +834,7 @@ namespace SabreTools.Filtering
             // Filter on individual conditions
             if (adjuster.ConditionsSpecified)
             {
-                foreach (Condition condition in adjuster.Conditions)
+                foreach (Condition condition in adjuster.Conditions!)
                 {
                     if (!PassesFilters(condition, true))
                         return false;
@@ -1016,7 +1016,7 @@ namespace SabreTools.Filtering
             // Filter on individual conditions
             if (configuration.ConditionsSpecified)
             {
-                foreach (Condition subCondition in configuration.Conditions)
+                foreach (Condition subCondition in configuration.Conditions!)
                 {
                     if (!PassesFilters(subCondition, true))
                         return false;
@@ -1026,7 +1026,7 @@ namespace SabreTools.Filtering
             // Filter on individual locations
             if (configuration.LocationsSpecified)
             {
-                foreach (ConfLocation subLocation in configuration.Locations)
+                foreach (ConfLocation subLocation in configuration.Locations!)
                 {
                     if (!PassesFilters(subLocation))
                         return false;
@@ -1036,7 +1036,7 @@ namespace SabreTools.Filtering
             // Filter on individual settings
             if (configuration.SettingsSpecified)
             {
-                foreach (ConfSetting subSetting in configuration.Settings)
+                foreach (ConfSetting subSetting in configuration.Settings!)
                 {
                     if (!PassesFilters(subSetting))
                         return false;
@@ -1090,7 +1090,7 @@ namespace SabreTools.Filtering
             // Filter on individual conditions
             if (confSetting.ConditionsSpecified)
             {
-                foreach (Condition subCondition in confSetting.Conditions)
+                foreach (Condition subCondition in confSetting.Conditions!)
                 {
                     if (!PassesFilters(subCondition, true))
                         return false;
@@ -1220,7 +1220,7 @@ namespace SabreTools.Filtering
             // Filter on individual extensions
             if (device.ExtensionsSpecified)
             {
-                foreach (Extension subExtension in device.Extensions)
+                foreach (Extension subExtension in device.Extensions!)
                 {
                     if (!PassesFilters(subExtension))
                         return false;
@@ -1230,7 +1230,7 @@ namespace SabreTools.Filtering
             // Filter on individual instances
             if (device.InstancesSpecified)
             {
-                foreach (Instance subInstance in device.Instances)
+                foreach (Instance subInstance in device.Instances!)
                 {
                     if (!PassesFilters(subInstance))
                         return false;
@@ -1280,7 +1280,7 @@ namespace SabreTools.Filtering
             // Filter on individual conditions
             if (dipSwitch.ConditionsSpecified)
             {
-                foreach (Condition subCondition in dipSwitch.Conditions)
+                foreach (Condition subCondition in dipSwitch.Conditions!)
                 {
                     if (!PassesFilters(subCondition, true))
                         return false;
@@ -1290,7 +1290,7 @@ namespace SabreTools.Filtering
             // Filter on individual locations
             if (dipSwitch.LocationsSpecified)
             {
-                foreach (DipLocation subLocation in dipSwitch.Locations)
+                foreach (DipLocation subLocation in dipSwitch.Locations!)
                 {
                     if (!PassesFilters(subLocation))
                         return false;
@@ -1300,7 +1300,7 @@ namespace SabreTools.Filtering
             // Filter on individual values
             if (dipSwitch.ValuesSpecified)
             {
-                foreach (DipValue subValue in dipSwitch.Values)
+                foreach (DipValue subValue in dipSwitch.Values!)
                 {
                     if (!PassesFilters(subValue))
                         return false;
@@ -1310,7 +1310,7 @@ namespace SabreTools.Filtering
             // Filter on Part
             if (dipSwitch.PartSpecified)
             {
-                if (!PassesFilters(dipSwitch.Part))
+                if (!PassesFilters(dipSwitch.Part!))
                     return false;
             }
 
@@ -1339,7 +1339,7 @@ namespace SabreTools.Filtering
             // Filter on individual conditions
             if (dipValue.ConditionsSpecified)
             {
-                foreach (Condition subCondition in dipValue.Conditions)
+                foreach (Condition subCondition in dipValue.Conditions!)
                 {
                     if (!PassesFilters(subCondition, true))
                         return false;
@@ -1393,14 +1393,14 @@ namespace SabreTools.Filtering
             // Filter on DiskArea
             if (disk.DiskAreaSpecified)
             {
-                if (!PassesFilters(disk.DiskArea))
+                if (!PassesFilters(disk.DiskArea!))
                     return false;
             }
 
             // Filter on Part
             if (disk.PartSpecified)
             {
-                if (!PassesFilters(disk.Part))
+                if (!PassesFilters(disk.Part!))
                     return false;
             }
 
@@ -1621,7 +1621,7 @@ namespace SabreTools.Filtering
             // Filter on individual controls
             if (input.ControlsSpecified)
             {
-                foreach (Control subControl in input.Controls)
+                foreach (Control subControl in input.Controls!)
                 {
                     if (!PassesFilters(subControl))
                         return false;
@@ -1693,7 +1693,7 @@ namespace SabreTools.Filtering
             // Filter on features
             if (part.FeaturesSpecified)
             {
-                foreach (PartFeature subPartFeature in part.Features)
+                foreach (PartFeature subPartFeature in part.Features!)
                 {
                     if (!PassesFilters(subPartFeature))
                         return false;
@@ -1735,7 +1735,7 @@ namespace SabreTools.Filtering
             // Filter on individual analogs
             if (port.AnalogsSpecified)
             {
-                foreach (Analog subAnalog in port.Analogs)
+                foreach (Analog subAnalog in port.Analogs!)
                 {
                     if (!PassesFilters(subAnalog))
                         return false;
@@ -1929,14 +1929,14 @@ namespace SabreTools.Filtering
             // Filter on DataArea
             if (rom.DataAreaSpecified)
             {
-                if (!PassesFilters(rom.DataArea))
+                if (!PassesFilters(rom.DataArea!))
                     return false;
             }
 
             // Filter on Part
             if (rom.PartSpecified)
             {
-                if (!PassesFilters(rom.Part))
+                if (!PassesFilters(rom.Part!))
                     return false;
             }
 
@@ -1967,7 +1967,7 @@ namespace SabreTools.Filtering
             // Filter on individual slot options
             if (slot.SlotOptionsSpecified)
             {
-                foreach (SlotOption subSlotOption in slot.SlotOptions)
+                foreach (SlotOption subSlotOption in slot.SlotOptions!)
                 {
                     if (!PassesFilters(subSlotOption))
                         return false;

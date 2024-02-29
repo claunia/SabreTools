@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-
 using SabreTools.Core;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
@@ -87,7 +86,7 @@ namespace SabreTools.DatTools
                 totalSize = new FileInfo(basePath).Length;
                 logger.User(totalSize, currentSize);
 
-                string parentPath = Path.GetDirectoryName(Path.GetDirectoryName(basePath));
+                string? parentPath = Path.GetDirectoryName(Path.GetDirectoryName(basePath));
                 CheckFileForHashes(datFile, basePath, parentPath, asFiles, skipFileType, addBlanks, hashes);
                 logger.User(totalSize, totalSize, basePath);
             }
@@ -109,7 +108,7 @@ namespace SabreTools.DatTools
         private static void CheckFileForHashes(
             DatFile datFile,
             string item,
-            string basePath,
+            string? basePath,
             TreatAsFile asFiles,
             SkipFileType skipFileType,
             bool addBlanks,
@@ -120,7 +119,7 @@ namespace SabreTools.DatTools
                 return;
 
             // Initialize possible archive variables
-            BaseArchive archive = BaseArchive.Create(item);
+            BaseArchive? archive = BaseArchive.Create(item);
 
             // Process archives according to flags
             if (archive != null)
@@ -188,7 +187,7 @@ namespace SabreTools.DatTools
 
             // Check the file as if it were in a depot
             GZipArchive gzarc = new(item);
-            BaseFile baseFile = gzarc.GetTorrentGZFileInfo();
+            BaseFile? baseFile = gzarc.GetTorrentGZFileInfo();
 
             // If the rom is valid, add it
             if (baseFile != null && baseFile.Filename != null)
@@ -214,15 +213,18 @@ namespace SabreTools.DatTools
         /// <param name="item">File to be added</param>
         /// <param name="basePath">Path the represents the parent directory</param>
         /// <param name="extracted">List of BaseFiles representing the internal files</param>
-        private static void ProcessArchive(DatFile datFile, string item, string basePath, List<BaseFile> extracted)
+        private static void ProcessArchive(DatFile datFile, string item, string? basePath, List<BaseFile> extracted)
         {
             // Get the parent path for all items
-            string parent = (Path.GetDirectoryName(Path.GetFullPath(item)) + Path.DirectorySeparatorChar).Remove(0, basePath.Length) + Path.GetFileNameWithoutExtension(item);
+            string parent = (Path.GetDirectoryName(Path.GetFullPath(item)) + Path.DirectorySeparatorChar).Remove(0, basePath?.Length ?? 0) + Path.GetFileNameWithoutExtension(item);
 
             // First take care of the found items
             Parallel.ForEach(extracted, Globals.ParallelOptions, baseFile =>
             {
-                DatItem datItem = DatItem.Create(baseFile);
+                DatItem? datItem = DatItem.Create(baseFile);
+                if (datItem == null)
+                    return;
+
                 ProcessFileHelper(datFile, item, datItem, basePath, parent);
             });
         }
@@ -234,12 +236,12 @@ namespace SabreTools.DatTools
         /// <param name="item">File containing the blanks</param>
         /// <param name="basePath">Path the represents the parent directory</param>
         /// <param name="archive">BaseArchive to get blanks from</param>
-        private static void ProcessArchiveBlanks(DatFile datFile, string item, string basePath, BaseArchive archive)
+        private static void ProcessArchiveBlanks(DatFile datFile, string item, string? basePath, BaseArchive archive)
         {
-            List<string> empties = new();
+            List<string> empties = [];
 
             // Get the parent path for all items
-            string parent = (Path.GetDirectoryName(Path.GetFullPath(item)) + Path.DirectorySeparatorChar).Remove(0, basePath.Length) + Path.GetFileNameWithoutExtension(item);
+            string parent = (Path.GetDirectoryName(Path.GetFullPath(item)) + Path.DirectorySeparatorChar).Remove(0, basePath?.Length ?? 0) + Path.GetFileNameWithoutExtension(item);
 
             // Now get all blank folders from the archive
             if (archive != null)
@@ -258,13 +260,13 @@ namespace SabreTools.DatTools
         /// </summary>
         /// <param name="datFile">Current DatFile object to add to</param>
         /// <param name="basePath">Path the represents the parent directory</param>
-        private static void ProcessDirectoryBlanks(DatFile datFile, string basePath)
+        private static void ProcessDirectoryBlanks(DatFile datFile, string? basePath)
         {
             // If we're in depot mode, we don't process blanks
             if (datFile.Header.OutputDepot?.IsActive == true)
                 return;
 
-            List<string> empties = basePath.ListEmpty();
+            List<string> empties = basePath.ListEmpty() ?? [];
             Parallel.ForEach(empties, Globals.ParallelOptions, dir =>
             {
                 // Get the full path for the directory
@@ -277,15 +279,27 @@ namespace SabreTools.DatTools
                 // If we have a SuperDAT, we want anything that's not the base path as the game, and the file as the rom
                 if (datFile.Header.Type == "SuperDAT")
                 {
-                    gamename = fulldir.Remove(0, basePath.Length + 1);
+                    if (basePath != null)
+                        gamename = fulldir.Remove(0, basePath.Length + 1);
+                    else
+                        gamename = fulldir;
+
                     romname = "_";
                 }
 
                 // Otherwise, we want just the top level folder as the game, and the file as everything else
                 else
                 {
-                    gamename = fulldir.Remove(0, basePath.Length + 1).Split(Path.DirectorySeparatorChar)[0];
-                    romname = Path.Combine(fulldir.Remove(0, basePath.Length + 1 + gamename.Length), "_");
+                    if (basePath != null)
+                    {
+                        gamename = fulldir.Remove(0, basePath.Length + 1).Split(Path.DirectorySeparatorChar)[0];
+                        romname = Path.Combine(fulldir.Remove(0, basePath.Length + 1 + gamename.Length), "_");
+                    }
+                    else
+                    {
+                        gamename = fulldir;
+                        romname = Path.Combine(fulldir, "_");
+                    }
                 }
 
                 // Sanitize the names
@@ -293,7 +307,7 @@ namespace SabreTools.DatTools
                 romname = romname.Trim(Path.DirectorySeparatorChar);
 
                 logger.Verbose($"Adding blank empty folder: {gamename}");
-                datFile.Items["null"].Add(new Rom(romname, gamename));
+                datFile.Items["null"]?.Add(new Rom(romname, gamename));
             });
         }
 
@@ -305,12 +319,13 @@ namespace SabreTools.DatTools
         /// <param name="basePath">Path the represents the parent directory</param>
         /// <param name="hashes">Hashes to include in the information</param>
         /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
-        private static void ProcessFile(DatFile datFile, string item, string basePath, Hash hashes, TreatAsFile asFiles)
+        private static void ProcessFile(DatFile datFile, string item, string? basePath, Hash hashes, TreatAsFile asFiles)
         {
             logger.Verbose($"'{Path.GetFileName(item)}' treated like a file");
-            BaseFile baseFile = BaseFile.GetInfo(item, header: datFile.Header.HeaderSkipper, hashes: hashes, asFiles: asFiles);
-            DatItem datItem = DatItem.Create(baseFile);
-            ProcessFileHelper(datFile, item, datItem, basePath, string.Empty);
+            BaseFile? baseFile = BaseFile.GetInfo(item, header: datFile.Header.HeaderSkipper, hashes: hashes, asFiles: asFiles);
+            DatItem? datItem = DatItem.Create(baseFile);
+            if (datItem != null)
+                ProcessFileHelper(datFile, item, datItem, basePath, string.Empty);
         }
 
         /// <summary>
@@ -321,17 +336,17 @@ namespace SabreTools.DatTools
         /// <param name="item">Rom data to be used to write to file</param>
         /// <param name="basepath">Path the represents the parent directory</param>
         /// <param name="parent">Parent game to be used</param>
-        private static void ProcessFileHelper(DatFile datFile, string item, DatItem datItem, string basepath, string parent)
+        private static void ProcessFileHelper(DatFile datFile, string item, DatItem datItem, string? basepath, string parent)
         {
             // If we didn't get an accepted parsed type somehow, cancel out
-            List<ItemType> parsed = new() { ItemType.Disk, ItemType.File, ItemType.Media, ItemType.Rom };
+            List<ItemType> parsed = [ItemType.Disk, ItemType.File, ItemType.Media, ItemType.Rom];
             if (!parsed.Contains(datItem.ItemType))
                 return;
 
             try
             {
                 // If the basepath doesn't end with a directory separator, add it
-                if (!basepath.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                if (basepath != null && !basepath.EndsWith(Path.DirectorySeparatorChar.ToString()))
                     basepath += Path.DirectorySeparatorChar.ToString();
 
                 // Make sure we have the full item path
@@ -361,10 +376,10 @@ namespace SabreTools.DatTools
         /// <param name="item">Item name to use</param>
         /// <param name="parent">Parent name to use</param>
         /// <param name="basepath">Base path to use</param>
-        private static void SetDatItemInfo(DatFile datFile, DatItem datItem, string item, string parent, string basepath)
+        private static void SetDatItemInfo(DatFile datFile, DatItem datItem, string item, string parent, string? basepath)
         {
             // Get the data to be added as game and item names
-            string machineName, itemName;
+            string? machineName, itemName;
 
             // If the parent is blank, then we have a non-archive file
             if (string.IsNullOrWhiteSpace(parent))
@@ -372,15 +387,18 @@ namespace SabreTools.DatTools
                 // If we have a SuperDAT, we want anything that's not the base path as the game, and the file as the rom
                 if (datFile.Header.Type == "SuperDAT")
                 {
-                    machineName = Path.GetDirectoryName(item.Remove(0, basepath.Length));
+                    machineName = Path.GetDirectoryName(item.Remove(0, basepath?.Length ?? 0));
                     itemName = Path.GetFileName(item);
                 }
 
                 // Otherwise, we want just the top level folder as the game, and the file as everything else
                 else
                 {
-                    machineName = item.Remove(0, basepath.Length).Split(Path.DirectorySeparatorChar)[0];
-                    itemName = item.Remove(0, (Path.Combine(basepath, machineName).Length));
+                    machineName = item.Remove(0, basepath?.Length ?? 0).Split(Path.DirectorySeparatorChar)[0];
+                    if (basepath != null)
+                        itemName = item.Remove(0, (Path.Combine(basepath, machineName).Length));
+                    else
+                        itemName = item.Remove(0, (machineName.Length));
                 }
             }
 
@@ -403,7 +421,7 @@ namespace SabreTools.DatTools
             }
 
             // Sanitize the names
-            machineName = machineName.Trim(Path.DirectorySeparatorChar);
+            machineName = machineName?.Trim(Path.DirectorySeparatorChar);
             itemName = itemName?.Trim(Path.DirectorySeparatorChar) ?? string.Empty;
 
             if (!string.IsNullOrWhiteSpace(machineName) && string.IsNullOrWhiteSpace(itemName))

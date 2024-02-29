@@ -85,42 +85,42 @@ namespace SabreTools.Filtering
 
             #region Item-Specific
 
-            if (datItem is Adjuster) RemoveFields(datItem as Adjuster);
-            else if (datItem is Analog) RemoveFields(datItem as Analog);
-            else if (datItem is Archive) RemoveFields(datItem as Archive);
-            else if (datItem is BiosSet) RemoveFields(datItem as BiosSet);
-            else if (datItem is Chip) RemoveFields(datItem as Chip);
-            else if (datItem is Condition) RemoveFields(datItem as Condition);
-            else if (datItem is Configuration) RemoveFields(datItem as Configuration);
-            else if (datItem is ConfLocation) RemoveFields(datItem as ConfLocation);
-            else if (datItem is ConfSetting) RemoveFields(datItem as ConfSetting);
-            else if (datItem is Control) RemoveFields(datItem as Control);
-            else if (datItem is DataArea) RemoveFields(datItem as DataArea);
-            else if (datItem is Device) RemoveFields(datItem as Device);
-            else if (datItem is DipLocation) RemoveFields(datItem as DipLocation);
-            else if (datItem is DipSwitch) RemoveFields(datItem as DipSwitch);
-            else if (datItem is DipValue) RemoveFields(datItem as DipValue);
-            else if (datItem is Disk) RemoveFields(datItem as Disk);
-            else if (datItem is DiskArea) RemoveFields(datItem as DiskArea);
-            else if (datItem is Display) RemoveFields(datItem as Display);
-            else if (datItem is Driver) RemoveFields(datItem as Driver);
-            else if (datItem is Extension) RemoveFields(datItem as Extension);
-            else if (datItem is Feature) RemoveFields(datItem as Feature);
-            else if (datItem is Info) RemoveFields(datItem as Info);
-            else if (datItem is Input) RemoveFields(datItem as Input);
-            else if (datItem is Instance) RemoveFields(datItem as Instance);
-            else if (datItem is Media) RemoveFields(datItem as Media);
-            else if (datItem is Part) RemoveFields(datItem as Part);
-            else if (datItem is PartFeature) RemoveFields(datItem as PartFeature);
-            else if (datItem is Port) RemoveFields(datItem as Port);
-            else if (datItem is RamOption) RemoveFields(datItem as RamOption);
-            else if (datItem is Release) RemoveFields(datItem as Release);
-            else if (datItem is Rom) RemoveFields(datItem as Rom);
-            else if (datItem is SharedFeature) RemoveFields(datItem as SharedFeature);
-            else if (datItem is Slot) RemoveFields(datItem as Slot);
-            else if (datItem is SlotOption) RemoveFields(datItem as SlotOption);
-            else if (datItem is SoftwareList) RemoveFields(datItem as SoftwareList);
-            else if (datItem is Sound) RemoveFields(datItem as Sound);
+            if (datItem is Adjuster adjuster) RemoveFields(adjuster);
+            else if (datItem is Analog analog) RemoveFields(analog);
+            else if (datItem is Archive archive) RemoveFields(archive);
+            else if (datItem is BiosSet biosSet) RemoveFields(biosSet);
+            else if (datItem is Chip chip) RemoveFields(chip);
+            else if (datItem is Condition condition) RemoveFields(condition);
+            else if (datItem is Configuration configuration) RemoveFields(configuration);
+            else if (datItem is ConfLocation confLocation) RemoveFields(confLocation);
+            else if (datItem is ConfSetting confSetting) RemoveFields(confSetting);
+            else if (datItem is Control control) RemoveFields(control);
+            else if (datItem is DataArea dataArea) RemoveFields(dataArea);
+            else if (datItem is Device device) RemoveFields(device);
+            else if (datItem is DipLocation dipLocation) RemoveFields(dipLocation);
+            else if (datItem is DipSwitch dipSwitch) RemoveFields(dipSwitch);
+            else if (datItem is DipValue dipValue) RemoveFields(dipValue);
+            else if (datItem is Disk disk) RemoveFields(disk);
+            else if (datItem is DiskArea diskArea) RemoveFields(diskArea);
+            else if (datItem is Display display) RemoveFields(display);
+            else if (datItem is Driver driver) RemoveFields(driver);
+            else if (datItem is Extension extension) RemoveFields(extension);
+            else if (datItem is Feature feature) RemoveFields(feature);
+            else if (datItem is Info info) RemoveFields(info);
+            else if (datItem is Input input) RemoveFields(input);
+            else if (datItem is Instance instance) RemoveFields(instance);
+            else if (datItem is Media media) RemoveFields(media);
+            else if (datItem is Part part) RemoveFields(part);
+            else if (datItem is PartFeature partFeature) RemoveFields(partFeature);
+            else if (datItem is Port port) RemoveFields(port);
+            else if (datItem is RamOption ramOption) RemoveFields(ramOption);
+            else if (datItem is Release release) RemoveFields(release);
+            else if (datItem is Rom rom) RemoveFields(rom);
+            else if (datItem is SharedFeature sharedFeature) RemoveFields(sharedFeature);
+            else if (datItem is Slot slot) RemoveFields(slot);
+            else if (datItem is SlotOption slotOption) RemoveFields(slotOption);
+            else if (datItem is SoftwareList softwareList) RemoveFields(softwareList);
+            else if (datItem is Sound sound) RemoveFields(sound);
 
             #endregion
         }
@@ -257,7 +257,7 @@ namespace SabreTools.Filtering
 
             if (adjuster.ConditionsSpecified)
             {
-                foreach (Condition subCondition in adjuster.Conditions)
+                foreach (Condition subCondition in adjuster.Conditions!)
                 {
                     RemoveFields(subCondition, true);
                 }
@@ -388,7 +388,7 @@ namespace SabreTools.Filtering
 
             if (configuration.ConditionsSpecified)
             {
-                foreach (Condition subCondition in configuration.Conditions)
+                foreach (Condition subCondition in configuration.Conditions!)
                 {
                     RemoveFields(subCondition, true);
                 }
@@ -396,7 +396,7 @@ namespace SabreTools.Filtering
 
             if (configuration.LocationsSpecified)
             {
-                foreach (ConfLocation subLocation in configuration.Locations)
+                foreach (ConfLocation subLocation in configuration.Locations!)
                 {
                     RemoveFields(subLocation);
                 }
@@ -404,7 +404,7 @@ namespace SabreTools.Filtering
 
             if (configuration.SettingsSpecified)
             {
-                foreach (ConfSetting subSetting in configuration.Settings)
+                foreach (ConfSetting subSetting in configuration.Settings!)
                 {
                     RemoveFields(subSetting);
                 }
@@ -444,7 +444,7 @@ namespace SabreTools.Filtering
 
             if (confsetting.ConditionsSpecified)
             {
-                foreach (Condition subCondition in confsetting.Conditions)
+                foreach (Condition subCondition in confsetting.Conditions!)
                 {
                     RemoveFields(subCondition, true);
                 }
@@ -536,7 +536,7 @@ namespace SabreTools.Filtering
 
             if (device.ExtensionsSpecified)
             {
-                foreach (Extension subExtension in device.Extensions)
+                foreach (Extension subExtension in device.Extensions!)
                 {
                     RemoveFields(subExtension);
                 }
@@ -544,7 +544,7 @@ namespace SabreTools.Filtering
 
             if (device.InstancesSpecified)
             {
-                foreach (Instance subInstance in device.Instances)
+                foreach (Instance subInstance in device.Instances!)
                 {
                     RemoveFields(subInstance);
                 }
@@ -581,7 +581,7 @@ namespace SabreTools.Filtering
 
             if (dipSwitch.ConditionsSpecified)
             {
-                foreach (Condition subCondition in dipSwitch.Conditions)
+                foreach (Condition subCondition in dipSwitch.Conditions!)
                 {
                     RemoveFields(subCondition, true);
                 }
@@ -589,7 +589,7 @@ namespace SabreTools.Filtering
 
             if (dipSwitch.LocationsSpecified)
             {
-                foreach (DipLocation subLocation in dipSwitch.Locations)
+                foreach (DipLocation subLocation in dipSwitch.Locations!)
                 {
                     RemoveFields(subLocation);
                 }
@@ -597,14 +597,14 @@ namespace SabreTools.Filtering
 
             if (dipSwitch.ValuesSpecified)
             {
-                foreach (DipValue subValue in dipSwitch.Values)
+                foreach (DipValue subValue in dipSwitch.Values!)
                 {
                     RemoveFields(subValue);
                 }
             }
 
             if (dipSwitch.PartSpecified)
-                RemoveFields(dipSwitch.Part);
+                RemoveFields(dipSwitch.Part!);
         }
 
         /// <summary>
@@ -624,7 +624,7 @@ namespace SabreTools.Filtering
 
             if (dipValue.ConditionsSpecified)
             {
-                foreach (Condition subCondition in dipValue.Conditions)
+                foreach (Condition subCondition in dipValue.Conditions!)
                 {
                     RemoveFields(subCondition, true);
                 }
@@ -662,10 +662,10 @@ namespace SabreTools.Filtering
                 disk.Writable = null;
 
             if (disk.DiskAreaSpecified)
-                RemoveFields(disk.DiskArea);
+                RemoveFields(disk.DiskArea!);
 
             if (disk.PartSpecified)
-                RemoveFields(disk.Part);
+                RemoveFields(disk.Part!);
         }
 
         /// <summary>
@@ -814,7 +814,7 @@ namespace SabreTools.Filtering
 
             if (input.ControlsSpecified)
             {
-                foreach (Control subControl in input.Controls)
+                foreach (Control subControl in input.Controls!)
                 {
                     RemoveFields(subControl);
                 }
@@ -867,7 +867,7 @@ namespace SabreTools.Filtering
 
             if (part.FeaturesSpecified)
             {
-                foreach (PartFeature subPartFeature in part.Features)
+                foreach (PartFeature subPartFeature in part.Features!)
                 {
                     RemoveFields(subPartFeature);
                 }
@@ -898,7 +898,7 @@ namespace SabreTools.Filtering
 
             if (port.AnalogsSpecified)
             {
-                foreach (Analog subAnalog in port.Analogs)
+                foreach (Analog subAnalog in port.Analogs!)
                 {
                     RemoveFields(subAnalog);
                 }
@@ -1037,10 +1037,10 @@ namespace SabreTools.Filtering
                 rom.Value = null;
 
             if (rom.DataAreaSpecified)
-                RemoveFields(rom.DataArea);
+                RemoveFields(rom.DataArea!);
 
             if (rom.PartSpecified)
-                RemoveFields(rom.Part);
+                RemoveFields(rom.Part!);
         }
 
         /// <summary>
@@ -1061,7 +1061,7 @@ namespace SabreTools.Filtering
         {
             if (slot.SlotOptionsSpecified)
             {
-                foreach (SlotOption subSlotOption in slot.SlotOptions)
+                foreach (SlotOption subSlotOption in slot.SlotOptions!)
                 {
                     RemoveFields(subSlotOption);
                 }

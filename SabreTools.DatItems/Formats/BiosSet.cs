@@ -87,7 +87,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                _internal = this._internal?.Clone() as Models.Metadata.BiosSet ?? new Models.Metadata.BiosSet(),
+                _internal = this._internal?.Clone() as Models.Metadata.BiosSet ?? [],
             };
         }
 

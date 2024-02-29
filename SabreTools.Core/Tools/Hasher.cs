@@ -110,7 +110,7 @@ namespace SabreTools.Core.Tools
             if (_hasher == null)
                 return;
 
-            byte[] emptyBuffer = Array.Empty<byte>();
+            byte[] emptyBuffer = [];
             switch (_hasher)
             {
                 case OptimizedCRC.OptimizedCRC crc:

@@ -470,7 +470,7 @@ namespace SabreTools.DatItems
         /// Internal Machine model
         /// </summary>
         [JsonIgnore]
-        private Models.Metadata.Machine _machine = new();
+        private Models.Metadata.Machine _machine = [];
 
         #endregion // Fields
 
@@ -508,7 +508,7 @@ namespace SabreTools.DatItems
             {
                 #region Common
 
-                _machine = this._machine.Clone() as Models.Metadata.Machine ?? new Models.Metadata.Machine(),
+                _machine = this._machine.Clone() as Models.Metadata.Machine ?? [],
 
                 #endregion
 

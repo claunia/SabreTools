@@ -106,7 +106,7 @@ namespace SabreTools.Filtering
         /// <param name="key">Key for the filter to be set</param>
         /// <param name="value">Value of the filter</param>
         /// <param name="negate">True if negative filter, false otherwise</param>
-        public void SetFilter(MachineField key, string value, bool negate)
+        public void SetFilter(MachineField key, string? value, bool negate)
         {
             switch (key)
             {

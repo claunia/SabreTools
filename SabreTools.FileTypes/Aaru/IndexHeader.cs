@@ -23,9 +23,9 @@ namespace SabreTools.FileTypes.Aaru
         /// <returns>Populated IndexHeader, null on failure</returns>
         public static IndexHeader Deserialize(Stream stream)
         {
-            IndexHeader indexHeader = new IndexHeader();
+            var indexHeader = new IndexHeader();
 
-            using (BinaryReader br = new BinaryReader(stream, Encoding.Default, true))
+            using (var br = new BinaryReader(stream, Encoding.Default, true))
             {
                 indexHeader.identifier = (AaruBlockType)br.ReadUInt32();
                 indexHeader.entries = br.ReadUInt16();

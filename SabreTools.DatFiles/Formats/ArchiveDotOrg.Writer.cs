@@ -15,16 +15,16 @@ namespace SabreTools.DatFiles.Formats
         /// <inheritdoc/>
         protected override ItemType[] GetSupportedTypes()
         {
-            return new ItemType[]
-            {
+            return
+            [
                 ItemType.Rom,
-            };
+            ];
         }
 
         /// <inheritdoc/>
         protected override List<DatItemField>? GetMissingRequiredFields(DatItem datItem)
         {
-            List<DatItemField> missingFields = new();
+            List<DatItemField> missingFields = [];
 
             // Check item name
             if (string.IsNullOrWhiteSpace(datItem.GetName()))
@@ -115,7 +115,7 @@ namespace SabreTools.DatFiles.Formats
                 }
             }
 
-            return new Models.ArchiveDotOrg.Files { File = files.ToArray() };
+            return new Models.ArchiveDotOrg.Files { File = [.. files] };
         }
 
         /// <summary>

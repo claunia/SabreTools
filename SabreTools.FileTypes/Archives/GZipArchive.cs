@@ -35,7 +35,7 @@ namespace SabreTools.FileTypes.Archives
                 1C-1F	CRC hash
                 20-27	Int64 size (mirrored)
         */
-        private readonly static byte[] TorrentGZHeader = new byte[] { 0x1f, 0x8b, 0x08, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1c, 0x00 };
+        private readonly static byte[] TorrentGZHeader = [0x1f, 0x8b, 0x08, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1c, 0x00];
 
         #endregion
 
@@ -80,6 +80,10 @@ namespace SabreTools.FileTypes.Archives
         {
             bool encounteredErrors = true;
 
+            // If we have an invalid file
+            if (this.Filename == null)
+                return true;
+
             try
             {
                 // Create the temp directory
@@ -114,15 +118,15 @@ namespace SabreTools.FileTypes.Archives
                 logger.Error(ex);
                 encounteredErrors = true;
             }
-            
+
             return encounteredErrors;
         }
 
         /// <inheritdoc/>
-        public override string CopyToFile(string entryName, string outDir)
+        public override string? CopyToFile(string entryName, string outDir)
         {
             // Try to extract a stream using the given information
-            (MemoryStream ms, string realEntry) = CopyToStream(entryName);
+            (MemoryStream? ms, string? realEntry) = CopyToStream(entryName);
 
             // If the memory stream and the entry name are both non-null, we write to file
             if (ms != null && realEntry != null)
@@ -130,7 +134,9 @@ namespace SabreTools.FileTypes.Archives
                 realEntry = Path.Combine(outDir, realEntry);
 
                 // Create the output subfolder now
-                Directory.CreateDirectory(Path.GetDirectoryName(realEntry));
+                string? dir = Path.GetDirectoryName(realEntry);
+                if (dir != null)
+                    Directory.CreateDirectory(dir);
 
                 // Now open and write the file if possible
                 FileStream fs = File.Create(realEntry);
@@ -160,10 +166,14 @@ namespace SabreTools.FileTypes.Archives
         }
 
         /// <inheritdoc/>
-        public override (MemoryStream, string) CopyToStream(string entryName)
+        public override (MemoryStream?, string?) CopyToStream(string entryName)
         {
-            MemoryStream ms = new();
-            string realEntry;
+            MemoryStream? ms = new();
+            string? realEntry;
+
+            // If we have an invalid file
+            if (this.Filename == null)
+                return (null, null);
 
             try
             {
@@ -201,15 +211,19 @@ namespace SabreTools.FileTypes.Archives
         #region Information
 
         /// <inheritdoc/>
-        public override List<BaseFile> GetChildren()
+        public override List<BaseFile>? GetChildren()
         {
+            // If we have an invalid file
+            if (this.Filename == null)
+                return null;
+
             if (_children == null || _children.Count == 0)
             {
-                _children = new List<BaseFile>();
+                _children = [];
 
                 string gamename = Path.GetFileNameWithoutExtension(this.Filename);
 
-                BaseFile possibleTgz = GetTorrentGZFileInfo();
+                BaseFile? possibleTgz = GetTorrentGZFileInfo();
 
                 // If it was, then add it to the outputs and continue
                 if (possibleTgz != null && possibleTgz.Filename != null)
@@ -227,7 +241,7 @@ namespace SabreTools.FileTypes.Archives
                         if (this.AvailableHashes == Hash.CRC)
                         {
                             gzipEntryRom.Filename = gamename;
-                            
+
                             using BinaryReader br = new(File.OpenRead(this.Filename));
                             br.BaseStream.Seek(-8, SeekOrigin.End);
                             gzipEntryRom.CRC = br.ReadBytesBigEndian(4);
@@ -265,7 +279,7 @@ namespace SabreTools.FileTypes.Archives
         public override List<string> GetEmptyFolders()
         {
             // GZip files don't contain directories
-            return new List<string>();
+            return [];
         }
 
         /// <inheritdoc/>
@@ -328,13 +342,11 @@ namespace SabreTools.FileTypes.Archives
         /// Retrieve file information for a single torrent GZ file
         /// </summary>
         /// <returns>Populated DatItem object if success, empty one on error</returns>
-        public BaseFile GetTorrentGZFileInfo()
+        public BaseFile? GetTorrentGZFileInfo()
         {
             // Check for the file existing first
             if (!File.Exists(this.Filename))
-            {
                 return null;
-            }
 
             string datum = Path.GetFileName(this.Filename).ToLowerInvariant();
             long filesize = new FileInfo(this.Filename).Length;
@@ -383,10 +395,9 @@ namespace SabreTools.FileTypes.Archives
                 }
                 correct &= (header[i] == TorrentGZHeader[i]);
             }
+
             if (!correct)
-            {
                 return null;
-            }
 
             // Now convert the data and get the right position
             long extractedsize = (long)headersz;
@@ -410,7 +421,7 @@ namespace SabreTools.FileTypes.Archives
         #region Writing
 
         /// <inheritdoc/>
-        public override bool Write(string inputFile, string outDir, BaseFile baseFile = null)
+        public override bool Write(string inputFile, string outDir, BaseFile? baseFile = null)
         {
             // Check that the input file exists
             if (!File.Exists(inputFile))
@@ -426,12 +437,12 @@ namespace SabreTools.FileTypes.Archives
         }
 
         /// <inheritdoc/>
-        public override bool Write(Stream inputStream, string outDir, BaseFile baseFile = null)
+        public override bool Write(Stream? inputStream, string outDir, BaseFile? baseFile = null)
         {
             bool success = false;
 
             // If the stream is not readable, return
-            if (!inputStream.CanRead)
+            if (inputStream == null || !inputStream.CanRead)
                 return success;
 
             // Make sure the output directory exists
@@ -444,11 +455,11 @@ namespace SabreTools.FileTypes.Archives
             baseFile = GetInfo(inputStream, keepReadOpen: true);
 
             // Get the output file name
-            string outfile = Path.Combine(outDir, Utilities.GetDepotPath(TextHelper.ByteArrayToString(baseFile.SHA1), Depth));
+            string outfile = Path.Combine(outDir, Utilities.GetDepotPath(TextHelper.ByteArrayToString(baseFile.SHA1), Depth) ?? string.Empty);
 
             // Check to see if the folder needs to be created
             if (!Directory.Exists(Path.GetDirectoryName(outfile)))
-                Directory.CreateDirectory(Path.GetDirectoryName(outfile));
+                Directory.CreateDirectory(Path.GetDirectoryName(outfile)!);
 
             // If the output file exists, don't try to write again
             if (!File.Exists(outfile))
@@ -461,8 +472,8 @@ namespace SabreTools.FileTypes.Archives
 
                 // Write standard header and TGZ info
                 byte[] data = TorrentGZHeader
-                            .Concat(baseFile.MD5) // MD5
-                            .Concat(baseFile.CRC) // CRC
+                            .Concat(baseFile.MD5!) // MD5
+                            .Concat(baseFile.CRC!) // CRC
                             .ToArray();
                 sw.Write(data);
                 sw.Write((ulong)(baseFile.Size ?? 0)); // Long size (Unsigned, Mirrored)
@@ -482,7 +493,7 @@ namespace SabreTools.FileTypes.Archives
                 ds.Dispose();
 
                 // Now write the standard footer
-                sw.Write(baseFile.CRC.Reverse().ToArray());
+                sw.Write(baseFile.CRC!.Reverse().ToArray());
                 sw.Write((uint)(baseFile.Size ?? 0));
 
                 // Dispose of everything
@@ -494,7 +505,7 @@ namespace SabreTools.FileTypes.Archives
         }
 
         /// <inheritdoc/>
-        public override bool Write(List<string> inputFiles, string outDir, List<BaseFile> baseFile)
+        public override bool Write(List<string> inputFiles, string outDir, List<BaseFile>? baseFile)
         {
             throw new NotImplementedException();
         }

@@ -7,7 +7,7 @@ namespace SabreTools.Logging
     /// <summary>
     /// Generic delegate type for log events
     /// </summary>
-    public delegate void LogEventHandler(object sender, LogEventArgs args);
+    public delegate void LogEventHandler(object? sender, LogEventArgs args);
 
     /// <summary>
     /// Logging specific event arguments
@@ -22,12 +22,12 @@ namespace SabreTools.Logging
         /// <summary>
         /// Log statement to be printed
         /// </summary>
-        public string Statement { get; set; } = null;
+        public string? Statement { get; set; } = null;
 
         /// <summary>
         /// Exception to be passed along to the event handler
         /// </summary>
-        public Exception Exception { get; set; } = null;
+        public Exception? Exception { get; set; } = null;
 
         /// <summary>
         /// Total count for progress log events
@@ -42,7 +42,7 @@ namespace SabreTools.Logging
         /// <summary>
         /// Statement and exception constructor
         /// </summary>
-        public LogEventArgs(LogLevel logLevel = LogLevel.VERBOSE, string statement = null, Exception exception = null)
+        public LogEventArgs(LogLevel logLevel = LogLevel.VERBOSE, string? statement = null, Exception? exception = null)
         {
             this.LogLevel = logLevel;
             this.Statement = statement;
@@ -52,7 +52,7 @@ namespace SabreTools.Logging
         /// <summary>
         /// Progress constructor
         /// </summary>
-        public LogEventArgs(long total, long current, LogLevel logLevel = LogLevel.VERBOSE, string statement = null)
+        public LogEventArgs(long total, long current, LogLevel logLevel = LogLevel.VERBOSE, string? statement = null)
         {
             this.LogLevel = logLevel;
             this.Statement = statement;

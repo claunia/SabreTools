@@ -9,7 +9,7 @@ namespace SabreTools.Help
         #region Private variables
 
         private readonly List<string> _header;
-        private Dictionary<string, Feature> _features;
+        private Dictionary<string, Feature?> _features;
         private const string _barrier = "-----------------------------------------";
 
         #endregion
@@ -18,25 +18,25 @@ namespace SabreTools.Help
 
         public FeatureSet()
         {
-            _header = new List<string>();
-            _features = new Dictionary<string, Feature>();
+            _header = [];
+            _features = [];
         }
 
         public FeatureSet(List<string> header)
         {
             _header = header;
-            _features = new Dictionary<string, Feature>();
+            _features = [];
         }
 
         #endregion
 
         #region Accessors
 
-        public Feature this[string name]
+        public Feature? this[string name]
         {
             get
             {
-                _features ??= new Dictionary<string, Feature>();
+                _features ??= [];
                 if (!_features.ContainsKey(name))
                     return null;
 
@@ -44,16 +44,19 @@ namespace SabreTools.Help
             }
             set
             {
-                _features ??= new Dictionary<string, Feature>();
+                _features ??= [];
                 _features[name] = value;
             }
         }
 
-        public Feature this[Feature subfeature]
+        public Feature? this[Feature subfeature]
         {
             get
             {
-                _features ??= new Dictionary<string, Feature>();
+                if (subfeature.Name == null)
+                    return null;
+
+                _features ??= [];
                 if (!_features.ContainsKey(subfeature.Name))
                     return null;
 
@@ -61,8 +64,9 @@ namespace SabreTools.Help
             }
             set
             {
-                _features ??= new Dictionary<string, Feature>();
-                _features[subfeature.Name] = value;
+                _features ??= [];
+                if (subfeature.Name != null)
+                    _features[subfeature.Name] = value;
             }
         }
 
@@ -72,7 +76,10 @@ namespace SabreTools.Help
         /// <param name="feature">Feature object to map to</param>
         public void Add(Feature feature)
         {
-            _features ??= new Dictionary<string, Feature>();
+            if (feature.Name == null)
+                return;
+
+            _features ??= [];
             lock (_features)
             {
                 _features.Add(feature.Name, feature);
@@ -89,7 +96,7 @@ namespace SabreTools.Help
         /// <returns>Feature name</returns>
         public string GetFeatureName(string name)
         {
-            return _features.Keys.FirstOrDefault(f => _features[f].ValidateInput(name, exact: true, ignore: true)) ?? string.Empty;
+            return _features.Keys.FirstOrDefault(f => _features[f]?.ValidateInput(name, exact: true, ignore: true) ?? false) ?? string.Empty;
         }
 
         /// <summary>
@@ -98,7 +105,7 @@ namespace SabreTools.Help
         public void OutputGenericHelp()
         {
             // Start building the output list
-            List<string> output = new();
+            List<string> output = [];
 
             // Append the header first
             output.AddRange(_header);
@@ -107,7 +114,9 @@ namespace SabreTools.Help
             output.Add("Available options:");
             foreach (string feature in _features.Keys)
             {
-                output.AddRange(_features[feature].Output(pre: 2, midpoint: 30));
+                var outputs = _features[feature]?.Output(pre: 2, midpoint: 30);
+                if (outputs != null)
+                    output.AddRange(outputs);
             }
 
             // And append the generic ending
@@ -124,7 +133,7 @@ namespace SabreTools.Help
         public void OutputAllHelp()
         {
             // Start building the output list
-            List<string> output = new();
+            List<string> output = [];
 
             // Append the header first
             output.AddRange(_header);
@@ -133,7 +142,9 @@ namespace SabreTools.Help
             output.Add("Available options:");
             foreach (string feature in _features.Keys)
             {
-                output.AddRange(_features[feature].OutputRecursive(0, pre: 2, midpoint: 30, includeLongDescription: true));
+                var outputs = _features[feature]?.OutputRecursive(0, pre: 2, midpoint: 30, includeLongDescription: true);
+                if (outputs != null)
+                    output.AddRange(outputs);
             }
 
             // Now write out everything in a staged manner
@@ -145,8 +156,8 @@ namespace SabreTools.Help
         /// </summary>
         public static void OutputCredits()
         {
-            List<string> credits = new()
-            {
+            List<string> credits =
+            [
                 _barrier,
                 "Credits",
                 _barrier,
@@ -156,7 +167,7 @@ namespace SabreTools.Help
                 "Testing:		emuLOAD, @tractivo, Kludge, Obiwantje, edc",
                 "Suggestions:		edc, AcidX, Amiga12, EliUmniCk",
                 "Based on work by:	The Wizard of DATz"
-            };
+            ];
             WriteOutWithPauses(credits);
         }
 
@@ -165,10 +176,10 @@ namespace SabreTools.Help
         /// </summary>
         /// <param name="featurename">Name of the feature to output information for, if possible</param>
         /// <param name="includeLongDescription">True if the long description should be formatted and output, false otherwise</param>
-        public void OutputIndividualFeature(string featurename, bool includeLongDescription = false)
+        public void OutputIndividualFeature(string? featurename, bool includeLongDescription = false)
         {
             // Start building the output list
-            List<string> output = new();
+            List<string> output = [];
 
             // If the feature name is null, empty, or just consisting of `-` characters, just show everything
             if (string.IsNullOrEmpty(featurename?.TrimStart('-')))
@@ -178,8 +189,8 @@ namespace SabreTools.Help
             }
 
             // Now try to find the feature that has the name included
-            string realname = null;
-            List<string> startsWith = new();
+            string? realname = null;
+            List<string> startsWith = [];
             foreach (string feature in _features.Keys)
             {
                 // If we have a match to the feature name somehow
@@ -189,15 +200,21 @@ namespace SabreTools.Help
                     break;
                 }
 
+                // If we have an invalid feature
+                else if (!_features.ContainsKey(feature) || _features[feature] == null)
+                {
+                    startsWith.Add(feature);
+                }
+
                 // If we have a match within the flags
-                else if (_features[feature].ContainsFlag(featurename))
+                else if (_features[feature]!.ContainsFlag(featurename))
                 {
                     realname = feature;
                     break;
                 }
 
                 // Otherwise, we want to get features with the same start
-                else if (_features[feature].StartsWith(featurename.TrimStart('-')[0]))
+                else if (_features[feature]!.StartsWith(featurename.TrimStart('-')[0]))
                 {
                     startsWith.Add(feature);
                 }
@@ -207,7 +224,7 @@ namespace SabreTools.Help
             if (realname != null)
             {
                 output.Add($"Available options for {realname}:");
-                output.AddRange(_features[realname].OutputRecursive(0, pre: 2, midpoint: 30, includeLongDescription: includeLongDescription));
+                output.AddRange(_features[realname]!.OutputRecursive(0, pre: 2, midpoint: 30, includeLongDescription: includeLongDescription));
             }
 
             // If no name was found but we have possible matches, show them
@@ -216,7 +233,7 @@ namespace SabreTools.Help
                 output.Add($"\"{featurename}\" not found. Did you mean:");
                 foreach (string possible in startsWith)
                 {
-                    output.AddRange(_features[possible].Output(pre: 2, midpoint: 30, includeLongDescription: includeLongDescription));
+                    output.AddRange(_features[possible]!.Output(pre: 2, midpoint: 30, includeLongDescription: includeLongDescription));
                 }
             }
 
@@ -231,22 +248,22 @@ namespace SabreTools.Help
         /// <returns>True if the feature was found, false otherwise</returns>
         public bool TopLevelFlag(string flag)
         {
-            return _features.Keys.Any(f => _features[f].ValidateInput(flag, exact: true));
+            return _features.Keys.Any(f => _features[f]?.ValidateInput(flag, exact: true) ?? false);
         }
 
         /// <summary>
         /// Retrieve a list of enabled features
         /// </summary>
         /// <returns>List of Features representing what is enabled</returns>
-        public Dictionary<string, Feature> GetEnabledFeatures()
+        public Dictionary<string, Feature?> GetEnabledFeatures()
         {
-            Dictionary<string, Feature> enabled = new();
+            Dictionary<string, Feature?> enabled = [];
 
             // Loop through the features
-            foreach (KeyValuePair<string, Feature> feature in _features)
+            foreach (var feature in _features)
             {
-                Dictionary<string, Feature> temp = GetEnabledSubfeatures(feature.Key, feature.Value);
-                foreach (KeyValuePair<string, Feature> tempfeat in temp)
+                var temp = GetEnabledSubfeatures(feature.Key, feature.Value);
+                foreach (var tempfeat in temp)
                 {
                     if (!enabled.ContainsKey(tempfeat.Key))
                         enabled.Add(tempfeat.Key, null);
@@ -264,19 +281,23 @@ namespace SabreTools.Help
         /// <param name="key">Name that should be assigned to the feature</param>
         /// <param name="feature">Feature with possible subfeatures to test</param>
         /// <returns>List of Features representing what is enabled</returns>
-        private Dictionary<string, Feature> GetEnabledSubfeatures(string key, Feature feature)
+        private Dictionary<string, Feature?> GetEnabledSubfeatures(string key, Feature? feature)
         {
-            Dictionary<string, Feature> enabled = new();
+            Dictionary<string, Feature?> enabled = [];
+            
+            // If the feature is invalid
+            if (feature == null)
+                return enabled;
 
             // First determine if the current feature is enabled
             if (feature.IsEnabled())
                 enabled.Add(key, feature);
 
             // Now loop through the subfeatures recursively
-            foreach (KeyValuePair<string, Feature> sub in feature.Features)
+            foreach (KeyValuePair<string, Feature?> sub in feature.Features)
             {
-                Dictionary<string, Feature> temp = GetEnabledSubfeatures(sub.Key, sub.Value);
-                foreach (KeyValuePair<string, Feature> tempfeat in temp)
+                var temp = GetEnabledSubfeatures(sub.Key, sub.Value);
+                foreach (var tempfeat in temp)
                 {
                     if (!enabled.ContainsKey(tempfeat.Key))
                         enabled.Add(tempfeat.Key, null);

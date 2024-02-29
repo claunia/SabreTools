@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
@@ -40,7 +39,7 @@ namespace SabreTools.DatTools
             InternalStopwatch watch = new("Verifying all from supplied depots");
 
             // Now loop through and get only directories from the input paths
-            List<string> directories = new();
+            List<string> directories = [];
             foreach (string input in inputs)
             {
                 // Add to the list if the input is a directory
@@ -69,10 +68,12 @@ namespace SabreTools.DatTools
                 logger.User($"Checking hash '{hash}'");
 
                 // Get the extension path for the hash
-                string subpath = Utilities.GetDepotPath(hash, datFile.Header.InputDepot.Depth);
+                string? subpath = Utilities.GetDepotPath(hash, datFile.Header.InputDepot?.Depth ?? 0);
+                if (subpath == null)
+                    continue;
 
                 // Find the first depot that includes the hash
-                string foundpath = null;
+                string? foundpath = null;
                 foreach (string directory in directories)
                 {
                     if (System.IO.File.Exists(Path.Combine(directory, subpath)))
@@ -88,7 +89,7 @@ namespace SabreTools.DatTools
 
                 // If we have a path, we want to try to get the rom information
                 GZipArchive tgz = new(foundpath);
-                BaseFile fileinfo = tgz.GetTorrentGZFileInfo();
+                BaseFile? fileinfo = tgz.GetTorrentGZFileInfo();
 
                 // If the file information is null, then we continue
                 if (fileinfo == null)
@@ -133,11 +134,14 @@ namespace SabreTools.DatTools
             var keys = datFile.Items.SortedKeys.ToList();
             foreach (string key in keys)
             {
-                ConcurrentList<DatItem> items = datFile.Items[key];
+                ConcurrentList<DatItem>? items = datFile.Items[key];
+                if (items == null)
+                    continue;
+
                 for (int i = 0; i < items.Count; i++)
                 {
                     // Unmatched items will have a source ID of int.MaxValue, remove all others
-                    if (items[i].Source.Index != int.MaxValue)
+                    if (items[i].Source?.Index != int.MaxValue)
                         items[i].Remove = true;
                 }
 

@@ -10,17 +10,17 @@ namespace SabreTools.Help
 
         protected ParameterType _featureType;
         protected bool _foundOnce = false;
-        protected object _value = null;
+        protected object? _value = null;
 
         #endregion
 
         #region Publicly facing variables
 
-        public string Name { get; protected set; }
+        public string? Name { get; protected set; }
         public List<string> Flags { get; protected set; }
-        public string Description { get; protected set; }
-        public string LongDescription { get; protected set; }
-        public Dictionary<string, Feature> Features { get; protected set; }
+        public string? Description { get; protected set; }
+        public string? LongDescription { get; protected set; }
+        public Dictionary<string, Feature?> Features { get; protected set; }
 
         #endregion
 
@@ -29,34 +29,34 @@ namespace SabreTools.Help
         public Feature()
         {
             this.Name = null;
-            this.Flags = new List<string>();
+            this.Flags = [];
             this.Description = null;
             this.LongDescription = null;
             this._featureType = ParameterType.Flag;
-            this.Features = new Dictionary<string, Feature>();
+            this.Features = [];
         }
 
-        public Feature(string name, string flag, string description, ParameterType featureType, string longDescription = null)
+        public Feature(string name, string flag, string description, ParameterType featureType, string? longDescription = null)
         {
             this.Name = name;
-            this.Flags = new List<string>
-            {
+            this.Flags =
+            [
                 flag
-            };
+            ];
             this.Description = description;
             this.LongDescription = longDescription;
             this._featureType = featureType;
-            this.Features = new Dictionary<string, Feature>();
+            this.Features = [];
         }
 
-        public Feature(string name, List<string> flags, string description, ParameterType featureType, string longDescription = null)
+        public Feature(string name, List<string> flags, string description, ParameterType featureType, string? longDescription = null)
         {
             this.Name = name;
             this.Flags = flags;
             this.Description = description;
             this.LongDescription = longDescription;
             this._featureType = featureType;
-            this.Features = new Dictionary<string, Feature>();
+            this.Features = [];
         }
 
         #endregion
@@ -66,7 +66,7 @@ namespace SabreTools.Help
         /// <summary>
         /// Directly address a given subfeature
         /// </summary>
-        public Feature this[string name]
+        public Feature? this[string name]
         {
             get { return this.Features.ContainsKey(name) ? this.Features[name] : null; }
             set { this.Features[name] = value; }
@@ -75,10 +75,10 @@ namespace SabreTools.Help
         /// <summary>
         /// Directly address a given subfeature
         /// </summary>
-        public Feature this[Feature subfeature]
+        public Feature? this[Feature? subfeature]
         {
-            get { return this.Features.ContainsKey(subfeature.Name) ? this.Features[subfeature.Name] : null; }
-            set { this.Features[subfeature.Name] = value; }
+            get { return this.Features.ContainsKey(subfeature?.Name ?? string.Empty) ? this.Features[subfeature?.Name ?? string.Empty] : null; }
+            set { this.Features[subfeature?.Name ?? string.Empty] = value; }
         }
 
         /// <summary>
@@ -87,10 +87,10 @@ namespace SabreTools.Help
         /// <param name="feature"></param>
         public void AddFeature(Feature feature)
         {
-            this.Features ??= new Dictionary<string, Feature>();
+            this.Features ??= [];
             lock (this.Features)
             {
-                this.Features[feature.Name] = feature;
+                this.Features[feature.Name ?? string.Empty] = feature;
             }
         }
 
@@ -100,7 +100,7 @@ namespace SabreTools.Help
         /// <param name="flag">Flag to add for this feature</param>
         public void AddFlag(string flag)
         {
-            this.Flags ??= new List<string>();
+            this.Flags ??= [];
             lock (this.Flags)
             {
                 this.Flags.Add(flag);
@@ -113,7 +113,7 @@ namespace SabreTools.Help
         /// <param name="flags">List of flags to add to this feature</param>
         public void AddFlags(List<string> flags)
         {
-            this.Flags ??= new List<string>();
+            this.Flags ??= [];
             lock (this.Flags)
             {
                 this.Flags.AddRange(flags);
@@ -153,7 +153,7 @@ namespace SabreTools.Help
         public List<string> Output(int pre = 0, int midpoint = 0, bool includeLongDescription = false)
         {
             // Create the output list
-            List<string> outputList = new();
+            List<string> outputList = [];
 
             // Build the output string first
             string output = string.Empty;
@@ -206,7 +206,10 @@ namespace SabreTools.Help
                 output = CreatePadding(pre + 4);
 
                 // Now split the input description and start processing
-                string[] split = this.LongDescription.Split(' ');
+                string[]? split = this.LongDescription?.Split(' ');
+                if (split == null)
+                    return outputList;
+
                 for (int i = 0; i < split.Length; i++)
                 {
                     // If we have a newline character, reset the line and continue
@@ -340,7 +343,10 @@ namespace SabreTools.Help
                 output = CreatePadding(preAdjusted + 4);
 
                 // Now split the input description and start processing
-                string[] split = this.LongDescription.Split(' ');
+                string[]? split = this.LongDescription?.Split(' ');
+                if (split == null)
+                    return outputList;
+
                 for (int i = 0; i < split.Length; i++)
                 {
                     // If we have a newline character, reset the line and continue
@@ -392,7 +398,7 @@ namespace SabreTools.Help
             // Now let's append all subfeatures
             foreach (string feature in this.Features.Keys)
             {
-                outputList.AddRange(this.Features[feature].OutputRecursive(tabLevel + 1, pre, midpoint, includeLongDescription));
+                outputList.AddRange(this.Features[feature]!.OutputRecursive(tabLevel + 1, pre, midpoint, includeLongDescription));
             }
 
             return outputList;
@@ -472,7 +478,7 @@ namespace SabreTools.Help
                     if (valid)
                     {
                         _value ??= new List<string>();
-                        (_value as List<string>).Add(input.Split('=')[1]);
+                        (_value as List<string>)?.Add(input.Split('=')[1]);
                     }
 
                     break;
@@ -495,7 +501,7 @@ namespace SabreTools.Help
 
             // If we haven't found a valid flag and we're not looking for just this feature, check to see if any of the subfeatures are valid
             if (!valid && !exact)
-                valid = this.Features.Keys.Any(k => this.Features[k].ValidateInput(input));
+                valid = this.Features.Keys.Any(k => this.Features[k]!.ValidateInput(input));
 
             return valid;
         }
@@ -514,12 +520,12 @@ namespace SabreTools.Help
         /// <summary>
         /// Get the string value associated with this feature
         /// </summary>
-        public string GetStringValue()
+        public string? GetStringValue()
         {
             if (_featureType != ParameterType.String)
                 throw new ArgumentException("Feature is not a string");
 
-            return (_value as string);
+            return _value as string;
         }
 
         /// <summary>
@@ -552,7 +558,7 @@ namespace SabreTools.Help
             if (_featureType != ParameterType.List)
                 throw new ArgumentException("Feature is not a list");
 
-            return (_value as List<string>) ?? new List<string>();
+            return (_value as List<string>) ?? [];
         }
 
         /// <summary>
@@ -565,8 +571,8 @@ namespace SabreTools.Help
             {
                 ParameterType.Flag => (_value as bool?) == true,
                 ParameterType.String => (_value as string) != null,
-                ParameterType.Int32 => (_value as int?).HasValue && (_value as int?).Value != int.MinValue,
-                ParameterType.Int64 => (_value as long?).HasValue && (_value as long?).Value != long.MinValue,
+                ParameterType.Int32 => (_value as int?).HasValue && (_value as int?)!.Value != int.MinValue,
+                ParameterType.Int64 => (_value as long?).HasValue && (_value as long?)!.Value != long.MinValue,
                 ParameterType.List => (_value as List<string>) != null,
                 _ => false,
             };

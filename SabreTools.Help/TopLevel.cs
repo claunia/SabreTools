@@ -128,15 +128,15 @@ namespace SabreTools.Help
         protected static List<string> GetList(Dictionary<string, Feature> features, string key)
         {
             if (!features.ContainsKey(key))
-                return new List<string>();
+                return [];
 
-            return features[key].GetListValue() ?? new List<string>();
+            return features[key].GetListValue() ?? [];
         }
 
         /// <summary>
         /// Get string value from nullable feature
         /// </summary>
-        protected static string GetString(Dictionary<string, Feature> features, string key)
+        protected static string? GetString(Dictionary<string, Feature> features, string key)
         {
             if (!features.ContainsKey(key))
                 return null;

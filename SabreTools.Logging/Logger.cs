@@ -11,12 +11,12 @@ namespace SabreTools.Logging
         /// Instance associated with this logger
         /// </summary>
         /// TODO: Derive class name for this object, if possible
-        private readonly object instance;
+        private readonly object? instance;
         
         /// <summary>
         /// Constructor
         /// </summary>
-        public Logger(object instance = null)
+        public Logger(object? instance = null)
         {
             this.instance = instance;
         }
@@ -29,7 +29,7 @@ namespace SabreTools.Logging
         /// <param name="ex">Exception to be written log</param>
         /// <param name="output">String to be written log</param>
         /// <returns>True if the output could be written, false otherwise</returns>
-        public void Verbose(Exception ex, string output = null)
+        public void Verbose(Exception ex, string? output = null)
         {
             LoggerImpl.Verbose(this.instance, ex, output);
         }
@@ -50,7 +50,7 @@ namespace SabreTools.Logging
         /// <param name="total">Total count for progress</param>
         /// <param name="current">Current count for progres</param>
         /// <param name="output">String to be written log</param>
-        public void Verbose(long total, long current, string output = null)
+        public void Verbose(long total, long current, string? output = null)
         {
             LoggerImpl.Verbose(instance, total, current, output);
         }
@@ -61,7 +61,7 @@ namespace SabreTools.Logging
         /// <param name="ex">Exception to be written log</param>
         /// <param name="output">String to be written log</param>
         /// <returns>True if the output could be written, false otherwise</returns>
-        public void User(Exception ex, string output = null)
+        public void User(Exception ex, string? output = null)
         {
             LoggerImpl.User(this.instance, ex, output);
         }
@@ -82,7 +82,7 @@ namespace SabreTools.Logging
         /// <param name="total">Total count for progress</param>
         /// <param name="current">Current count for progres</param>
         /// <param name="output">String to be written log</param>
-        public void User(long total, long current, string output = null)
+        public void User(long total, long current, string? output = null)
         {
             LoggerImpl.User(instance, total, current, output);
         }
@@ -93,7 +93,7 @@ namespace SabreTools.Logging
         /// <param name="ex">Exception to be written log</param>
         /// <param name="output">String to be written log</param>
         /// <returns>True if the output could be written, false otherwise</returns>
-        public void Warning(Exception ex, string output = null)
+        public void Warning(Exception ex, string? output = null)
         {
             LoggerImpl.Warning(this.instance, ex, output);
         }
@@ -114,7 +114,7 @@ namespace SabreTools.Logging
         /// <param name="total">Total count for progress</param>
         /// <param name="current">Current count for progres</param>
         /// <param name="output">String to be written log</param>
-        public void Warning(long total, long current, string output = null)
+        public void Warning(long total, long current, string? output = null)
         {
             LoggerImpl.Warning(instance, total, current, output);
         }
@@ -125,7 +125,7 @@ namespace SabreTools.Logging
         /// <param name="ex">Exception to be written log</param>
         /// <param name="output">String to be written log</param>
         /// <returns>True if the output could be written, false otherwise</returns>
-        public void Error(Exception ex, string output = null)
+        public void Error(Exception ex, string? output = null)
         {
             LoggerImpl.Error(this.instance, ex, output);
         }
@@ -146,7 +146,7 @@ namespace SabreTools.Logging
         /// <param name="total">Total count for progress</param>
         /// <param name="current">Current count for progres</param>
         /// <param name="output">String to be written log</param>
-        public void Error(long total, long current, string output = null)
+        public void Error(long total, long current, string? output = null)
         {
             LoggerImpl.Error(instance, total, current, output);
         }

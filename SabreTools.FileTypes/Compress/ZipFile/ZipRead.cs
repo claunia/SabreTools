@@ -64,7 +64,7 @@ namespace Compress.ZipFile
         }
 
 
-        public ZipReturn ZipFileOpen(Stream inStream)
+        public ZipReturn ZipFileOpen(Stream? inStream)
         {
             ZipFileClose();
             ZipStatus = ZipStatus.None;

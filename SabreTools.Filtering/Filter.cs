@@ -20,12 +20,12 @@ namespace SabreTools.Filtering
         /// <summary>
         /// Filter for DatItem fields
         /// </summary>
-        public DatItemFilter DatItemFilter { get; set; }
+        public DatItemFilter? DatItemFilter { get; set; }
 
         /// <summary>
         /// Filter for Machine fields
         /// </summary>
-        public MachineFilter MachineFilter { get; set; }
+        public MachineFilter? MachineFilter { get; set; }
 
         #endregion
 
@@ -70,7 +70,7 @@ namespace SabreTools.Filtering
 
             foreach (string filterPair in filters)
             {
-                (string field, string value, bool negate) = ProcessFilterPair(filterPair);
+                (string? field, string? value, bool negate) = ProcessFilterPair(filterPair);
                 
                 // If we don't even have a possible filter pair
                 if (field == null && value == null)
@@ -105,7 +105,7 @@ namespace SabreTools.Filtering
         /// Split the parts of a filter statement
         /// </summary>
         /// <param name="filter">key:value where ~key/!key is negated</param>
-        protected (string field, string value, bool negate) ProcessFilterPair(string filter)
+        protected (string? field, string? value, bool negate) ProcessFilterPair(string filter)
         {
             // If we don't even have a possible filter pair
             if (!filter.Contains(':'))
@@ -133,9 +133,9 @@ namespace SabreTools.Filtering
         /// <param name="filterItem">FilterItem to populate</param>
         /// <param name="value">String value to add</param>
         /// <param name="negate">True to set negative filter, false otherwise</param>
-        protected static void SetBooleanFilter(FilterItem<bool?> filterItem, string value, bool negate)
+        protected static void SetBooleanFilter(FilterItem<bool?> filterItem, string? value, bool negate)
         {
-            if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+            if (negate || (value?.Equals("false", StringComparison.OrdinalIgnoreCase) ?? false))
                 filterItem.Neutral = false;
             else
                 filterItem.Neutral = true;
@@ -147,17 +147,17 @@ namespace SabreTools.Filtering
         /// <param name="filterItem">FilterItem to populate</param>
         /// <param name="value">String value to add</param>
         /// <param name="negate">True to set negative filter, false otherwise</param>
-        protected static void SetDoubleFilter(FilterItem<double?> filterItem, string value, bool negate)
+        protected static void SetDoubleFilter(FilterItem<double?> filterItem, string? value, bool negate)
         {
             bool? operation = null;
-            if (value.StartsWith(">"))
+            if (value?.StartsWith(">") == true)
                 operation = true;
-            else if (value.StartsWith("<"))
+            else if (value?.StartsWith("<") == true)
                 operation = false;
-            else if (value.StartsWith("="))
+            else if (value?.StartsWith("=") == true)
                 operation = null;
 
-            string valueString = value.TrimStart('>', '<', '=');
+            string? valueString = value?.TrimStart('>', '<', '=');
             if (!Double.TryParse(valueString, out double valueDouble))
                 return;
 
@@ -205,17 +205,17 @@ namespace SabreTools.Filtering
         /// <param name="filterItem">FilterItem to populate</param>
         /// <param name="value">String value to add</param>
         /// <param name="negate">True to set negative filter, false otherwise</param>
-        protected static void SetLongFilter(FilterItem<long?> filterItem, string value, bool negate)
+        protected static void SetLongFilter(FilterItem<long?> filterItem, string? value, bool negate)
         {
             bool? operation = null;
-            if (value.StartsWith(">"))
+            if (value?.StartsWith(">") == true)
                 operation = true;
-            else if (value.StartsWith("<"))
+            else if (value?.StartsWith("<") == true)
                 operation = false;
-            else if (value.StartsWith("="))
+            else if (value?.StartsWith("=") == true)
                 operation = null;
 
-            string valueString = value.TrimStart('>', '<', '=');
+            string? valueString = value?.TrimStart('>', '<', '=');
             long? valueLong = NumberHelper.ConvertToInt64(valueString);
             if (valueLong == null)
                 return;
@@ -264,7 +264,7 @@ namespace SabreTools.Filtering
         /// <param name="filterItem">FilterItem to populate</param>
         /// <param name="value">String value to add</param>
         /// <param name="negate">True to set negative filter, false otherwise</param>
-        protected static void SetStringFilter(FilterItem<string> filterItem, string value, bool negate)
+        protected static void SetStringFilter(FilterItem<string> filterItem, string? value, bool negate)
         {
             if (negate)
                 filterItem.NegativeSet.Add(value);
@@ -302,12 +302,15 @@ namespace SabreTools.Filtering
             try
             {
                 // Loop over every key in the dictionary
-                List<string> keys = datFile.Items.Keys.ToList();
+                List<string> keys = [.. datFile.Items.Keys];
                 foreach (string key in keys)
                 {
                     // For every item in the current key
                     bool machinePass = true;
-                    ConcurrentList<DatItem> items = datFile.Items[key];
+                    var items = datFile.Items[key];
+                    if (items == null)
+                        continue;
+
                     foreach (DatItem item in items)
                     {
                         // If we have a null item, we can't pass it
@@ -370,11 +373,11 @@ namespace SabreTools.Filtering
                 return false;
 
             // Filter on Machine fields
-            if (MachineFilter.HasFilters && !MachineFilter.PassesFilters(datItem.Machine))
+            if (MachineFilter == null || (MachineFilter.HasFilters && !MachineFilter.PassesFilters(datItem.Machine)))
                 return false;
 
             // If we have no DatItemFilters set, just return true
-            if (!DatItemFilter.HasFilters)
+            if (DatItemFilter == null || !DatItemFilter.HasFilters)
                 return true;
 
             // Filter on DatItem fields
@@ -437,7 +440,7 @@ namespace SabreTools.Filtering
         /// <param name="filterItem">Filter item to check</param>
         /// <param name="value">Value to check</param>
         /// <returns>True if the value passes, false otherwise</returns>
-        protected static bool PassStringFilter(FilterItem<string> filterItem, string value)
+        protected static bool PassStringFilter(FilterItem<string> filterItem, string? value)
         {
             if (filterItem.MatchesPositiveSet(value) == false)
                 return false;

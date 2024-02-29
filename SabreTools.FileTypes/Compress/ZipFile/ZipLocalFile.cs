@@ -32,7 +32,7 @@ namespace Compress.ZipFile
         {
         }
 
-        internal ZipLocalFile(string filename, TimeStamps dateTime = null)
+        internal ZipLocalFile(string filename, TimeStamps? dateTime = null)
         {
             SetStatus(LocalFileStatus.Zip64, false);
             GeneralPurposeBitFlag = 2; // Maximum Compression Deflating
@@ -231,8 +231,11 @@ namespace Compress.ZipFile
             bw.Write(_extraField, 0, extraFieldLength);
             // No File Comment
         }
-        internal ZipReturn LocalFileHeaderRead(Stream zipFs)
+        internal ZipReturn LocalFileHeaderRead(Stream? zipFs)
         {
+            if (zipFs == null)
+                return ZipReturn.ZipErrorFileNotFound;
+
             try
             {
                 using (BinaryReader br = new(zipFs, Encoding.UTF8, true))
@@ -358,8 +361,11 @@ namespace Compress.ZipFile
             }
         }
 
-        internal ZipReturn LocalFileHeaderReadQuick(Stream zipFs)
+        internal ZipReturn LocalFileHeaderReadQuick(Stream? zipFs)
         {
+            if (zipFs == null)
+                return ZipReturn.ZipErrorOpeningFile;
+
             try
             {
                 using BinaryReader br = new(zipFs, Encoding.UTF8, true);
@@ -568,12 +574,16 @@ namespace Compress.ZipFile
 
             bw.Write(_extraField);
         }
-        internal ZipReturn LocalFileOpenReadStream(Stream zipFs, bool raw, out Stream readStream, out ulong streamSize, out ushort compressionMethod)
+        internal ZipReturn LocalFileOpenReadStream(Stream? zipFs, bool raw, out Stream? readStream, out ulong streamSize, out ushort compressionMethod)
         {
             streamSize = 0;
             compressionMethod = _compressionMethod;
 
             readStream = null;
+            
+            if (zipFs == null)
+                return ZipReturn.ZipErrorFileNotFound;
+
             zipFs.Seek((long)_dataLocation, SeekOrigin.Begin);
 
             switch (_compressionMethod)
@@ -644,7 +654,7 @@ namespace Compress.ZipFile
             return readStream == null ? ZipReturn.ZipErrorGettingDataStream : ZipReturn.ZipGood;
         }
 
-        internal ZipReturn LocalFileOpenWriteStream(Stream zipFs, bool raw, ulong uncompressedSize, ushort compressionMethod, out Stream writeStream)
+        internal ZipReturn LocalFileOpenWriteStream(Stream? zipFs, bool raw, ulong uncompressedSize, ushort compressionMethod, out Stream? writeStream)
         {
             UncompressedSize = uncompressedSize;
             _compressedSize = 0;
@@ -678,10 +688,10 @@ namespace Compress.ZipFile
             return writeStream == null ? ZipReturn.ZipErrorGettingDataStream : ZipReturn.ZipGood;
         }
 
-        internal ZipReturn LocalFileCloseWriteStream(Stream zipFs, byte[] crc32)
+        internal ZipReturn LocalFileCloseWriteStream(Stream? zipFs, byte[] crc32)
         {
 
-            _compressedSize = (ulong)zipFs.Position - _dataLocation;
+            _compressedSize = (ulong)zipFs!.Position - _dataLocation;
 
             if (_compressedSize == 0 && UncompressedSize == 0)
             {
@@ -734,8 +744,11 @@ namespace Compress.ZipFile
             }
         }
 
-        internal static void LocalFileAddZeroLengthFile(Stream zipFs)
+        internal static void LocalFileAddZeroLengthFile(Stream? zipFs)
         {
+            if (zipFs == null)
+                return;
+
             zipFs.WriteByte(03);
             zipFs.WriteByte(00);
         }

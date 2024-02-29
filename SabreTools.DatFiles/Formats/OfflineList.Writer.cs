@@ -15,10 +15,10 @@ namespace SabreTools.DatFiles.Formats
         /// <inheritdoc/>
         protected override ItemType[] GetSupportedTypes()
         {
-            return new ItemType[]
-            {
+            return
+            [
                 ItemType.Rom
-            };
+            ];
         }
 
         /// <inheritdoc/>
@@ -261,7 +261,7 @@ namespace SabreTools.DatFiles.Formats
 
             var canOpen = new Models.OfflineList.CanOpen
             {
-                Extension = Header.CanOpen.ToArray(),
+                Extension = [.. Header.CanOpen],
             };
 
             return canOpen;
@@ -321,7 +321,7 @@ namespace SabreTools.DatFiles.Formats
 
                 // Get the first item for game information
                 var machine = items[0].Machine;
-                var game = CreateGame(machine!);
+                var game = OfflineList.CreateGame(machine!);
 
                 // Create holders for all item types
                 var romCRCs = new List<Models.OfflineList.FileRomCRC>();
@@ -348,19 +348,19 @@ namespace SabreTools.DatFiles.Formats
                 }
 
                 // Assign the values to the game
-                game.Files = new Models.OfflineList.Files { RomCRC = romCRCs.ToArray() };
+                game.Files = new Models.OfflineList.Files { RomCRC = [.. romCRCs] };
 
                 // Add the game to the list
                 games.Add(game);
             }
 
-            return new Models.OfflineList.Games { Game = games.ToArray() };
+            return new Models.OfflineList.Games { Game = [.. games] };
         }
 
         /// <summary>
         /// Create a Machine from the current internal information
         /// <summary>
-        private Models.OfflineList.Game CreateGame(Machine machine)
+        private static Models.OfflineList.Game CreateGame(Machine machine)
         {
             
             var game = new Models.OfflineList.Game

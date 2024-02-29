@@ -51,9 +51,9 @@ namespace SabreTools.DatFiles
         public void PopulateSettersFromList(List<string> headers, List<string> fields)
         {
             // Instantiate the setters, if necessary
-            DatHeaderMappings ??= new Dictionary<DatHeaderField, string>();
-            MachineMappings ??= new Dictionary<MachineField, string>();
-            DatItemMappings ??= new Dictionary<DatItemField, string>();
+            DatHeaderMappings ??= [];
+            MachineMappings ??= [];
+            DatItemMappings ??= [];
 
             // If the list is null or empty, just return
             if (fields == null || fields.Count == 0)

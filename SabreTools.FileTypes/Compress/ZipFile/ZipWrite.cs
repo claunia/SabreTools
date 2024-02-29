@@ -43,6 +43,9 @@ namespace Compress.ZipFile
         {
             bool lTrrntzip = true;
 
+            if (_zipFs == null)
+                return;
+
             _centralDirStart = (ulong)_zipFs.Position;
 
             using (CrcCalculatorStream crcCs = new CrcCalculatorStream(_zipFs, true))
@@ -79,7 +82,7 @@ namespace Compress.ZipFile
             _zipFs.Flush();
             _zipFs.Close();
             _zipFs.Dispose();
-            _zipFileInfo = new FileInfo(_zipFileInfo.FullName);
+            _zipFileInfo = new FileInfo(_zipFileInfo?.FullName ?? string.Empty);
             ZipOpen = ZipOpenType.Closed;
         }
 
@@ -98,9 +101,9 @@ namespace Compress.ZipFile
                     }
                     break;
                 case ZipOpenType.OpenWrite:
-                    _zipFs.Flush();
-                    _zipFs.Close();
-                    _zipFs.Dispose();
+                    _zipFs?.Flush();
+                    _zipFs?.Close();
+                    _zipFs?.Dispose();
                     if (_zipFileInfo != null)
                         RVIO.File.Delete(_zipFileInfo.FullName);
                     _zipFileInfo = null;

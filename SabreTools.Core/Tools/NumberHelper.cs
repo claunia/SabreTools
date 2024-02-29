@@ -64,7 +64,7 @@ namespace SabreTools.Core.Tools
 
             // Get the multiplication modifier and trim characters
             long multiplier = DetermineMultiplier(numeric);
-            numeric = numeric.TrimEnd(new char[] { 'k', 'm', 'g', 't', 'p', 'e', 'z', 'y', 'i', 'b', ' ' });
+            numeric = numeric.TrimEnd(['k', 'm', 'g', 't', 'p', 'e', 'z', 'y', 'i', 'b', ' ']);
 
             // Parse the numeric string, if possible
             long value;
@@ -123,7 +123,7 @@ namespace SabreTools.Core.Tools
 
             return multiplier;
         }
-    
+
         /// <summary>
         /// Determine if a string is fully numeric or not
         /// </summary>
@@ -139,12 +139,12 @@ namespace SabreTools.Core.Tools
                 value = value[2..];
 
             if (DetermineMultiplier(value) > 1)
-                value = value.TrimEnd(new char[] { 'k', 'm', 'g', 't', 'p', 'e', 'z', 'y', 'i', 'b', ' ' });
+                value = value.TrimEnd(['k', 'm', 'g', 't', 'p', 'e', 'z', 'y', 'i', 'b', ' ']);
 
 #if NET7_0_OR_GREATER
             return value.All(c => char.IsAsciiHexDigit(c) || c == '.' || c == ',');
 #else
-            return value.All(c => c.IsAsciiHexDigit()|| c == '.' || c == ',');
+            return value.All(c => c.IsAsciiHexDigit() || c == '.' || c == ',');
 #endif
         }
 

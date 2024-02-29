@@ -25,14 +25,14 @@ namespace SabreTools.Reports.Formats
         }
 
         /// <inheritdoc/>
-        public override bool WriteToFile(string outfile, bool baddumpCol, bool nodumpCol, bool throwOnError = false)
+        public override bool WriteToFile(string? outfile, bool baddumpCol, bool nodumpCol, bool throwOnError = false)
         {
             InternalStopwatch watch = new($"Writing statistics to '{outfile}");
 
             try
             {
                 // Try to create the output file
-                Stream fs = _writeToConsole ? Console.OpenStandardOutput() : File.Create(outfile);
+                Stream fs = _writeToConsole ? Console.OpenStandardOutput() : File.Create(outfile ?? string.Empty);
                 if (fs == null)
                 {
                     logger.Warning($"File '{outfile}' could not be created for writing! Please check to see if the file is writable");
@@ -91,7 +91,7 @@ namespace SabreTools.Reports.Formats
         {
             string line = @"'" + stat.DisplayName + @"':
 --------------------------------------------------
-    Uncompressed size:       " + GetBytesReadable(stat.Statistics.TotalSize) + @"
+    Uncompressed size:       " + GetBytesReadable(stat.Statistics!.TotalSize) + @"
     Games found:             " + stat.MachineCount + @"
     Roms found:              " + stat.Statistics.RomCount + @"
     Disks found:             " + stat.Statistics.DiskCount + @"

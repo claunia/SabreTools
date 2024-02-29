@@ -16,18 +16,18 @@ namespace SabreTools.DatFiles.Formats
         /// <inheritdoc/>
         protected override ItemType[] GetSupportedTypes()
         {
-            return new ItemType[]
-            {
+            return
+            [
                 ItemType.Disk,
                 ItemType.Media,
                 ItemType.Rom
-            };
+            ];
         }
 
         /// <inheritdoc/>
         protected override List<DatItemField>? GetMissingRequiredFields(DatItem datItem)
         {
-            List<DatItemField> missingFields = new();
+            List<DatItemField> missingFields = [];
 
             // Check item name
             if (string.IsNullOrWhiteSpace(datItem.GetName()))
@@ -259,7 +259,7 @@ namespace SabreTools.DatFiles.Formats
                 }
             }
 
-            return sfvs.ToArray();
+            return [.. sfvs];
         }
 
         /// <summary>
@@ -326,7 +326,7 @@ namespace SabreTools.DatFiles.Formats
                 }
             }
 
-            return md5s.ToArray();
+            return [.. md5s];
         }
 
         /// <summary>
@@ -393,7 +393,7 @@ namespace SabreTools.DatFiles.Formats
                 }
             }
 
-            return sha1s.ToArray();
+            return [.. sha1s];
         }
 
         /// <summary>
@@ -452,7 +452,7 @@ namespace SabreTools.DatFiles.Formats
                 }
             }
 
-            return sha256s.ToArray();
+            return [.. sha256s];
         }
 
         /// <summary>
@@ -503,7 +503,7 @@ namespace SabreTools.DatFiles.Formats
                 }
             }
 
-            return sha384s.ToArray();
+            return [.. sha384s];
         }
 
         /// <summary>
@@ -554,7 +554,7 @@ namespace SabreTools.DatFiles.Formats
                 }
             }
 
-            return sha512s.ToArray();
+            return [.. sha512s];
         }
 
         /// <summary>
@@ -613,7 +613,7 @@ namespace SabreTools.DatFiles.Formats
                 }
             }
 
-            return spamsums.ToArray();
+            return [.. spamsums];
         }
 
         #endregion

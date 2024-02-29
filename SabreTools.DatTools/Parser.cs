@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
-
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
@@ -130,7 +129,7 @@ namespace SabreTools.DatTools
                 return 0;
 
             // Get the extension from the filename
-            string ext = filename.GetNormalizedExtension();
+            string? ext = filename.GetNormalizedExtension();
 
             // Check if file exists
             if (!File.Exists(filename))
@@ -232,7 +231,7 @@ namespace SabreTools.DatTools
             else if (first.Contains("doscenter"))
                 return DatFormat.DOSCenter;
 
-            else if (first.Contains("#Name;Title;Emulator;CloneOf;Year;Manufacturer;Category;Players;Rotation;Control;Status;DisplayCount;DisplayType;AltRomname;AltTitle;Extra".ToLowerInvariant()))
+            else if (first.Contains("#Name;Title;Emulator;CloneOf;Year;Manufacturer;Category;Players;Rotation;Control;Status;DisplayCount;DisplayType;AltRomname;AltTitle;Extra", StringComparison.InvariantCultureIgnoreCase))
                 return DatFormat.AttractMode;
 
             else
@@ -251,42 +250,49 @@ namespace SabreTools.DatTools
                 return string.Empty;
 
             // Find the first line that's not whitespace or an XML comment
-            string line = sr.ReadLine().ToLowerInvariant().Trim();
-            bool inComment = line.StartsWith("<!--");
+            string? line = sr.ReadLine()?.ToLowerInvariant()?.Trim();
+            bool inComment = line?.StartsWith("<!--") ?? false;
             while ((string.IsNullOrWhiteSpace(line) || inComment) && !sr.EndOfStream)
             {
+                // Null lines should not happen
+                if (line == null)
+                {
+                    line = sr.ReadLine()?.ToLowerInvariant()?.Trim();
+                    continue;
+                }
+
                 // Self-contained comment lines
                 if (line.StartsWith("<!--") && line.EndsWith("-->"))
                 {
                     inComment = false;
-                    line = sr.ReadLine().ToLowerInvariant().Trim();
+                    line = sr.ReadLine()?.ToLowerInvariant()?.Trim();
                 }
 
                 // Start of block comments
                 else if (line.StartsWith("<!--"))
                 {
                     inComment = true;
-                    line = sr.ReadLine().ToLowerInvariant().Trim();
+                    line = sr.ReadLine()?.ToLowerInvariant()?.Trim();
                 }
 
                 // End of block comments
                 else if (inComment && line.EndsWith("-->"))
                 {
-                    line = sr.ReadLine().ToLowerInvariant().Trim();
-                    inComment = line.StartsWith("<!--");
+                    line = sr.ReadLine()?.ToLowerInvariant()?.Trim();
+                    inComment = line?.StartsWith("<!--") ?? false;
                 }
 
                 // Empty lines are just skipped
                 else if (string.IsNullOrWhiteSpace(line))
                 {
-                    line = sr.ReadLine().ToLowerInvariant().Trim();
-                    inComment |= line.StartsWith("<!--");
+                    line = sr.ReadLine()?.ToLowerInvariant()?.Trim();
+                    inComment |= line?.StartsWith("<!--") ?? false;
                 }
 
                 // In-comment lines
                 else if (inComment)
                 {
-                    line = sr.ReadLine().ToLowerInvariant().Trim();
+                    line = sr.ReadLine()?.ToLowerInvariant()?.Trim();
                 }
             }
 
@@ -294,7 +300,7 @@ namespace SabreTools.DatTools
             if (inComment)
                 return string.Empty;
 
-            return line;
+            return line ?? string.Empty;
         }
     }
 }

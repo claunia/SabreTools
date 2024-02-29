@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-
 using SabreTools.Core;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
@@ -33,16 +32,22 @@ namespace SabreTools.DatTools
         /// <param name="inputs">List of inputs to use for renaming</param>
         public static void ApplySuperDAT(DatFile datFile, List<ParentablePath> inputs)
         {
-            List<string> keys = datFile.Items.Keys.ToList();
+            List<string> keys = [.. datFile.Items.Keys];
             Parallel.ForEach(keys, Globals.ParallelOptions, key =>
             {
-                ConcurrentList<DatItem> items = datFile.Items[key];
-                ConcurrentList<DatItem> newItems = new();
+                ConcurrentList<DatItem>? items = datFile.Items[key];
+                if (items == null)
+                    return;
+
+                ConcurrentList<DatItem> newItems = [];
                 foreach (DatItem item in items)
                 {
                     DatItem newItem = item;
+                    if (newItem.Source == null)
+                        continue;
+
                     string filename = inputs[newItem.Source.Index].CurrentPath;
-                    string rootpath = inputs[newItem.Source.Index].ParentPath;
+                    string? rootpath = inputs[newItem.Source.Index].ParentPath;
 
                     if (!string.IsNullOrWhiteSpace(rootpath)
                         && !rootpath.EndsWith(Path.DirectorySeparatorChar)
@@ -51,7 +56,7 @@ namespace SabreTools.DatTools
                         rootpath += Path.DirectorySeparatorChar.ToString();
                     }
 
-                    filename = filename.Remove(0, rootpath.Length);
+                    filename = filename.Remove(0, rootpath?.Length ?? 0);
                     newItem.Machine.Name = Path.GetDirectoryName(filename) + Path.DirectorySeparatorChar
                         + Path.GetFileNameWithoutExtension(filename) + Path.DirectorySeparatorChar
                         + newItem.Machine.Name;
@@ -91,12 +96,16 @@ namespace SabreTools.DatTools
                 // Then we do a hashwise comparison against the base DAT
                 Parallel.ForEach(intDat.Items.Keys, Globals.ParallelOptions, key =>
                 {
-                    ConcurrentList<DatItem> datItems = intDat.Items[key];
-                    ConcurrentList<DatItem> newDatItems = new();
+                    ConcurrentList<DatItem>? datItems = intDat.Items[key];
+                    if (datItems == null)
+                        return;
+
+                    ConcurrentList<DatItem> newDatItems = [];
                     foreach (DatItem datItem in datItems)
                     {
                         ConcurrentList<DatItem> dupes = datFile.Items.GetDuplicates(datItem, sorted: true);
-                        DatItem newDatItem = datItem.Clone() as DatItem;
+                        if (datItem.Clone() is not DatItem newDatItem)
+                            continue;
 
                         // Replace fields from the first duplicate, if we have one
                         if (dupes.Count > 0)
@@ -121,13 +130,21 @@ namespace SabreTools.DatTools
                 // Then we do a namewise comparison against the base DAT
                 Parallel.ForEach(intDat.Items.Keys, Globals.ParallelOptions, key =>
                 {
-                    ConcurrentList<DatItem> datItems = intDat.Items[key];
-                    ConcurrentList<DatItem> newDatItems = new();
+                    ConcurrentList<DatItem>? datItems = intDat.Items[key];
+                    if (datItems == null)
+                        return;
+
+                    ConcurrentList<DatItem> newDatItems = [];
                     foreach (DatItem datItem in datItems)
                     {
-                        DatItem newDatItem = datItem.Clone() as DatItem;
-                        if (datFile.Items.ContainsKey(key) && datFile.Items[key].Count > 0)
-                            Replacer.ReplaceFields(newDatItem.Machine, datFile.Items[key][0].Machine, machineFields, onlySame);
+                        if (datItem.Clone() is not DatItem newDatItem)
+                            continue;
+
+                        if (!datFile.Items.TryGetValue(key, out var list) || list == null)
+                            continue;
+
+                        if (datFile.Items.ContainsKey(key) && list.Count > 0)
+                            Replacer.ReplaceFields(newDatItem.Machine, list[0].Machine, machineFields, onlySame);
 
                         newDatItems.Add(newDatItem);
                     }
@@ -164,26 +181,30 @@ namespace SabreTools.DatTools
                 intDat.Items.BucketBy(ItemKey.CRC, DedupeType.Full);
 
             // Then we compare against the base DAT
-            List<string> keys = intDat.Items.Keys.ToList();
+            List<string> keys = [.. intDat.Items.Keys];
             Parallel.ForEach(keys, Globals.ParallelOptions, key =>
             {
                 // Game Against uses game names
                 if (useGames)
                 {
+                    // If the key is null, keep it
+                    if (!intDat.Items.TryGetValue(key, out var intList) || intList == null)
+                        return;
+
                     // If the base DAT doesn't contain the key, keep it
-                    if (!datFile.Items.ContainsKey(key))
+                    if (!datFile.Items.TryGetValue(key, out var list) || list == null)
                         return;
 
                     // If the number of items is different, then keep it
-                    if (datFile.Items[key].Count != intDat.Items[key].Count)
+                    if (list.Count != intList.Count)
                         return;
 
                     // Otherwise, compare by name and hash the remaining files
                     bool exactMatch = true;
-                    foreach (DatItem item in intDat.Items[key])
+                    foreach (DatItem item in intList)
                     {
                         // TODO: Make this granular to name as well
-                        if (!datFile.Items[key].Contains(item))
+                        if (!list.Contains(item))
                         {
                             exactMatch = false;
                             break;
@@ -198,8 +219,11 @@ namespace SabreTools.DatTools
                 // Standard Against uses hashes
                 else
                 {
-                    ConcurrentList<DatItem> datItems = intDat.Items[key];
-                    ConcurrentList<DatItem> keepDatItems = new();
+                    ConcurrentList<DatItem>? datItems = intDat.Items[key];
+                    if (datItems == null)
+                        return;
+
+                    ConcurrentList<DatItem> keepDatItems = [];
                     foreach (DatItem datItem in datItems)
                     {
                         if (!datFile.Items.HasDuplicates(datItem, true))
@@ -224,7 +248,7 @@ namespace SabreTools.DatTools
         public static List<DatFile> DiffCascade(DatFile datFile, List<DatHeader> datHeaders)
         {
             // Create a list of DatData objects representing output files
-            List<DatFile> outDats = new();
+            List<DatFile> outDats = [];
 
             // Ensure the current DatFile is sorted optimally
             datFile.Items.BucketBy(ItemKey.CRC, DedupeType.None);
@@ -237,12 +261,12 @@ namespace SabreTools.DatTools
             Parallel.For(0, datHeaders.Count, Globals.ParallelOptions, j =>
             {
                 DatFile diffData = DatFile.Create(datHeaders[j]);
-                diffData.Items = new ItemDictionary();
+                diffData.Items = [];
                 FillWithSourceIndex(datFile, diffData, j);
                 outDatsArray[j] = diffData;
             });
 
-            outDats = outDatsArray.ToList();
+            outDats = [.. outDatsArray];
             watch.Stop();
 
             return outDats;
@@ -283,7 +307,7 @@ namespace SabreTools.DatTools
             dupeData.Header.FileName += post;
             dupeData.Header.Name += post;
             dupeData.Header.Description += post;
-            dupeData.Items = new ItemDictionary();
+            dupeData.Items = [];
 
             watch.Stop();
 
@@ -303,8 +327,11 @@ namespace SabreTools.DatTools
                 {
                     if (item.DupeType.HasFlag(DupeType.External))
                     {
-                        DatItem newrom = item.Clone() as DatItem;
-                        newrom.Machine.Name += $" ({Path.GetFileNameWithoutExtension(inputs[item.Source.Index].CurrentPath)})";
+                        if (item.Clone() is not DatItem newrom)
+                            continue;
+
+                        if (item.Source != null)
+                            newrom.Machine.Name += $" ({Path.GetFileNameWithoutExtension(inputs[item.Source.Index].CurrentPath)})";
 
                         dupeData.Items.Add(key, newrom);
                     }
@@ -356,12 +383,12 @@ namespace SabreTools.DatTools
                 diffData.Header.FileName += innerpost;
                 diffData.Header.Name += innerpost;
                 diffData.Header.Description += innerpost;
-                diffData.Items = new ItemDictionary();
+                diffData.Items = [];
                 outDatsArray[j] = diffData;
             });
 
             // Create a list of DatData objects representing individual output files
-            List<DatFile> outDats = outDatsArray.ToList();
+            List<DatFile> outDats = [.. outDatsArray];
 
             watch.Stop();
 
@@ -379,6 +406,9 @@ namespace SabreTools.DatTools
                 // Loop through and add the items correctly
                 foreach (DatItem item in items)
                 {
+                    if (item.Source == null)
+                        continue;
+
                     if (item.DupeType.HasFlag(DupeType.Internal) || item.DupeType == 0x00)
                         outDats[item.Source.Index].Items.Add(key, item);
                 }
@@ -386,7 +416,7 @@ namespace SabreTools.DatTools
 
             watch.Stop();
 
-            return outDats.ToList();
+            return [.. outDats];
         }
 
         /// <summary>
@@ -424,7 +454,7 @@ namespace SabreTools.DatTools
             outerDiffData.Header.FileName += post;
             outerDiffData.Header.Name += post;
             outerDiffData.Header.Description += post;
-            outerDiffData.Items = new ItemDictionary();
+            outerDiffData.Items = [];
 
             watch.Stop();
 
@@ -444,8 +474,10 @@ namespace SabreTools.DatTools
                 {
                     if (item.DupeType.HasFlag(DupeType.Internal) || item.DupeType == 0x00)
                     {
-                        DatItem newrom = item.Clone() as DatItem;
-                        newrom.Machine.Name += $" ({Path.GetFileNameWithoutExtension(inputs[item.Source.Index].CurrentPath)})";
+                        if (item.Clone() is not DatItem newrom || newrom.Source == null)
+                            continue;
+
+                        newrom.Machine.Name += $" ({Path.GetFileNameWithoutExtension(inputs[newrom.Source.Index].CurrentPath)})";
                         outerDiffData.Items.Add(key, newrom);
                     }
                 }
@@ -523,7 +555,7 @@ namespace SabreTools.DatTools
 
             // Now remove the file dictionary from the source DAT
             if (delete)
-                addFrom.Items = null;
+                addFrom.Items = [];
         }
 
         /// <summary>
@@ -546,7 +578,7 @@ namespace SabreTools.DatTools
 
                 foreach (DatItem item in items)
                 {
-                    if (item.Source.Index == index)
+                    if (item.Source != null && item.Source.Index == index)
                         indexDat.Items.Add(key, item);
                 }
             });

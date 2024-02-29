@@ -16,8 +16,8 @@ namespace SabreTools.DatFiles.Formats
         /// <inheritdoc/>
         protected override ItemType[] GetSupportedTypes()
         {
-            return new ItemType[]
-            {
+            return
+            [
                 ItemType.Archive,
                 ItemType.BiosSet,
                 ItemType.Disk,
@@ -25,7 +25,7 @@ namespace SabreTools.DatFiles.Formats
                 ItemType.Release,
                 ItemType.Rom,
                 ItemType.Sample,
-            };
+            ];
         }
 
         /// <inheritdoc/>
@@ -365,21 +365,21 @@ namespace SabreTools.DatFiles.Formats
                 }
 
                 // Assign the values to the game
-                game.Release = releases.ToArray();
-                game.BiosSet = biossets.ToArray();
-                game.Rom = roms.ToArray();
-                game.Disk = disks.ToArray();
-                game.Media = medias.ToArray();
-                game.Sample = samples.ToArray();
-                game.Archive = archives.ToArray();
-                game.DeviceRef = devicerefs.ToArray();
-                game.SoftwareList = softwarelists.ToArray();
+                game.Release = [.. releases];
+                game.BiosSet = [.. biossets];
+                game.Rom = [.. roms];
+                game.Disk = [.. disks];
+                game.Media = [.. medias];
+                game.Sample = [.. samples];
+                game.Archive = [.. archives];
+                game.DeviceRef = [.. devicerefs];
+                game.SoftwareList = [.. softwarelists];
 
                 // Add the game to the list
                 games.Add(game);
             }
 
-            return games.ToArray();
+            return [.. games];
         }
 
         /// <summary>
@@ -410,7 +410,7 @@ namespace SabreTools.DatFiles.Formats
                 if (machine.Comment.Contains(';'))
                     game.Comment = machine.Comment.Split(';');
                 else
-                    game.Comment = new[] { machine.Comment };
+                    game.Comment = [machine.Comment];
             }
             game.Description = machine.Description;
             game.Year = machine.Year;
@@ -421,7 +421,7 @@ namespace SabreTools.DatFiles.Formats
                 if (machine.Category.Contains(';'))
                     game.Category = machine.Category.Split(';');
                 else
-                    game.Category = new[] { machine.Category };
+                    game.Category = [machine.Category];
             }
             game.Trurip = CreateTrurip(machine);
 

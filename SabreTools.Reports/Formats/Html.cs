@@ -25,14 +25,14 @@ namespace SabreTools.Reports.Formats
         }
 
         /// <inheritdoc/>
-        public override bool WriteToFile(string outfile, bool baddumpCol, bool nodumpCol, bool throwOnError = false)
+        public override bool WriteToFile(string? outfile, bool baddumpCol, bool nodumpCol, bool throwOnError = false)
         {
             InternalStopwatch watch = new($"Writing statistics to '{outfile}");
 
             try
             {
                 // Try to create the output file
-                FileStream fs = File.Create(outfile);
+                FileStream fs = File.Create(outfile ?? string.Empty);
                 if (fs == null)
                 {
                     logger.Warning($"File '{outfile}' could not be created for writing! Please check to see if the file is writable");
@@ -211,7 +211,7 @@ body {
         /// <param name="nodumpCol">True if nodumps should be included in output, false otherwise</param>
         private void WriteIndividual(XmlTextWriter xtw, DatStatistics stat, bool baddumpCol, bool nodumpCol)
         {
-            bool isDirectory = stat.DisplayName.StartsWith("DIR: ");
+            bool isDirectory = stat.DisplayName!.StartsWith("DIR: ");
 
             xtw.WriteStartElement("tr");
             if (isDirectory)
@@ -221,7 +221,7 @@ body {
 
             xtw.WriteStartElement("td");
             xtw.WriteAttributeString("align", "right");
-            xtw.WriteString(GetBytesReadable(stat.Statistics.TotalSize));
+            xtw.WriteString(GetBytesReadable(stat.Statistics!.TotalSize));
             xtw.WriteEndElement(); // td
 
             xtw.WriteStartElement("td");

@@ -16,8 +16,8 @@ namespace SabreTools.DatFiles.Formats
         /// <inheritdoc/>
         protected override ItemType[] GetSupportedTypes()
         {
-            return new ItemType[]
-            {
+            return
+            [
                 ItemType.Archive,
                 ItemType.BiosSet,
                 ItemType.Chip,
@@ -31,7 +31,7 @@ namespace SabreTools.DatFiles.Formats
                 ItemType.Rom,
                 ItemType.Sample,
                 ItemType.Sound,
-            };
+            ];
         }
 
         /// <inheritdoc/>
@@ -312,22 +312,22 @@ namespace SabreTools.DatFiles.Formats
                 }
 
                 // Assign the values to the game
-                game.Release = releases.ToArray();
-                game.BiosSet = biossets.ToArray();
-                game.Rom = roms.ToArray();
-                game.Disk = disks.ToArray();
-                game.Media = medias.ToArray();
-                game.Sample = samples.ToArray();
-                game.Archive = archives.ToArray();
-                game.Chip = chips.ToArray();
-                game.Video = videos.ToArray();
-                game.DipSwitch = dipswitches.ToArray();
+                game.Release = [.. releases];
+                game.BiosSet = [.. biossets];
+                game.Rom = [.. roms];
+                game.Disk = [.. disks];
+                game.Media = [.. medias];
+                game.Sample = [.. samples];
+                game.Archive = [.. archives];
+                game.Chip = [.. chips];
+                game.Video = [.. videos];
+                game.DipSwitch = [.. dipswitches];
 
                 // Add the game to the list
                 games.Add(game);
             }
 
-            return games.ToArray();
+            return [.. games];
         }
 
         /// <summary>
@@ -560,7 +560,7 @@ namespace SabreTools.DatFiles.Formats
                         dipswitch.Default = setting.Value;
                 }
 
-                dipswitch.Entry = entries.ToArray();
+                dipswitch.Entry = [.. entries];
             }
 
             return dipswitch;

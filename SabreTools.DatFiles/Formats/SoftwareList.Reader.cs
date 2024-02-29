@@ -101,7 +101,7 @@ namespace SabreTools.DatFiles.Formats
             };
 
             // Add all Info objects
-            foreach (var info in software.Info ?? Array.Empty<Models.SoftwareList.Info>())
+            foreach (var info in software.Info ?? [])
             {
                 var infoItem = new Info
                 {
@@ -120,7 +120,7 @@ namespace SabreTools.DatFiles.Formats
             }
 
             // Add all SharedFeat objects
-            foreach (var sharedfeat in software.SharedFeat ?? Array.Empty<Models.SoftwareList.SharedFeat>())
+            foreach (var sharedfeat in software.SharedFeat ?? [])
             {
                 var sharedfeatItem = new SharedFeature
                 {

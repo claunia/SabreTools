@@ -88,7 +88,7 @@ namespace SabreTools.DatFiles.Formats
                 return;
             }
 
-            foreach (var row in set.Row ?? Array.Empty<Models.Listrom.Row>())
+            foreach (var row in set.Row ?? [])
             {
                 ConvertRow(row, machine, filename, indexId, statsOnly);
             }

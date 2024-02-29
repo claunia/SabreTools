@@ -236,31 +236,38 @@ namespace SabreTools.Filtering
             List<string> games = datFile.Items.Keys.OrderBy(g => g).ToList();
             foreach (string game in games)
             {
+                var items = datFile.Items[game];
+                if (items == null)
+                    continue;
+
                 // If the game has no items in it, we want to continue
-                if (datFile.Items[game].Count == 0)
+                if (items.Count == 0)
                     continue;
 
                 // Determine if the game has a parent or not
-                string parent = null;
-                if (!string.IsNullOrWhiteSpace(datFile.Items[game][0].Machine.RomOf))
-                    parent = datFile.Items[game][0].Machine.RomOf;
+                string? parent = null;
+                if (!string.IsNullOrWhiteSpace(items[0].Machine.RomOf))
+                    parent = items[0].Machine.RomOf;
 
                 // If the parent doesnt exist, we want to continue
                 if (string.IsNullOrWhiteSpace(parent))
                     continue;
 
                 // If the parent doesn't have any items, we want to continue
-                if (datFile.Items[parent].Count == 0)
+                if (datFile.Items[parent]!.Count == 0)
                     continue;
 
                 // If the parent exists and has items, we copy the items from the parent to the current game
-                DatItem copyFrom = datFile.Items[game][0];
-                ConcurrentList<DatItem> parentItems = datFile.Items[parent];
+                DatItem copyFrom = items[0];
+                var parentItems = datFile.Items[parent];
+                if (parentItems == null)
+                    continue;
+
                 foreach (DatItem item in parentItems)
                 {
                     DatItem datItem = (DatItem)item.Clone();
                     datItem.CopyMachineInformation(copyFrom);
-                    if (!datFile.Items[game].Where(i => i.GetName() == datItem.GetName()).Any() && !datFile.Items[game].Contains(datItem))
+                    if (!items.Where(i => i.GetName() == datItem.GetName()).Any() && !items.Contains(datItem))
                         datFile.Items.Add(game, datItem);
                 }
             }
@@ -279,27 +286,27 @@ namespace SabreTools.Filtering
             foreach (string machine in machines)
             {
                 // If the machine doesn't have items, we continue
-                if (datFile.Items[machine] == null || datFile.Items[machine].Count == 0)
+                if (datFile.Items[machine] == null || datFile.Items[machine]!.Count == 0)
                     continue;
 
                 // If the machine (is/is not) a device, we want to continue
-                if (dev ^ (datFile.Items[machine][0].Machine.MachineType.HasFlag(MachineType.Device)))
+                if (dev ^ (datFile.Items[machine]![0].Machine.MachineType.HasFlag(MachineType.Device)))
                     continue;
 
                 // Get all device reference names from the current machine
-                List<string> deviceReferences = datFile.Items[machine]
+                List<string?> deviceReferences = datFile.Items[machine]!
                     .Where(i => i.ItemType == ItemType.DeviceReference)
                     .Select(i => i as DeviceReference)
-                    .Select(dr => dr.Name)
+                    .Select(dr => dr!.Name)
                     .Distinct()
                     .ToList();
 
                 // Get all slot option names from the current machine
-                List<string> slotOptions = datFile.Items[machine]
+                List<string?> slotOptions = datFile.Items[machine]!
                     .Where(i => i.ItemType == ItemType.Slot)
                     .Select(i => i as Slot)
-                    .Where(s => s.SlotOptionsSpecified)
-                    .SelectMany(s => s.SlotOptions)
+                    .Where(s => s!.SlotOptionsSpecified)
+                    .SelectMany(s => s!.SlotOptions!)
                     .Select(so => so.DeviceName)
                     .Distinct()
                     .ToList();
@@ -308,25 +315,28 @@ namespace SabreTools.Filtering
                 if (deviceReferences.Any())
                 {
                     // Loop through all names and check the corresponding machines
-                    List<string> newDeviceReferences = new();
-                    foreach (string deviceReference in deviceReferences)
+                    List<string> newDeviceReferences = [];
+                    foreach (string? deviceReference in deviceReferences)
                     {
                         // If the machine doesn't exist then we continue
-                        if (datFile.Items[deviceReference] == null || datFile.Items[deviceReference].Count == 0)
+                        if (deviceReference == null || datFile.Items[deviceReference] == null || datFile.Items[deviceReference]!.Count == 0)
                             continue;
 
                         // Add to the list of new device reference names
-                        ConcurrentList<DatItem> devItems = datFile.Items[deviceReference];
+                        var devItems = datFile.Items[deviceReference];
+                        if (devItems == null)
+                            continue;
+
                         newDeviceReferences.AddRange(devItems
                             .Where(i => i.ItemType == ItemType.DeviceReference)
-                            .Select(i => (i as DeviceReference).Name));
+                            .Select(i => (i as DeviceReference)!.Name!));
 
                         // Set new machine information and add to the current machine
-                        DatItem copyFrom = datFile.Items[machine][0];
+                        DatItem copyFrom = datFile.Items[machine]![0];
                         foreach (DatItem item in devItems)
                         {
                             // If the parent machine doesn't already contain this item, add it
-                            if (!datFile.Items[machine].Any(i => i.ItemType == item.ItemType && i.GetName() == item.GetName()))
+                            if (!datFile.Items[machine]!.Any(i => i.ItemType == item.ItemType && i.GetName() == item.GetName()))
                             {
                                 // Set that we found new items
                                 foundnew = true;
@@ -343,7 +353,7 @@ namespace SabreTools.Filtering
                     foreach (string deviceReference in newDeviceReferences.Distinct())
                     {
                         if (!deviceReferences.Contains(deviceReference))
-                            datFile.Items[machine].Add(new DeviceReference() { Name = deviceReference });
+                            datFile.Items[machine]!.Add(new DeviceReference() { Name = deviceReference });
                     }
                 }
 
@@ -352,26 +362,29 @@ namespace SabreTools.Filtering
                 {
                     // Loop through all names and check the corresponding machines
                     List<string> newSlotOptions = new();
-                    foreach (string slotOption in slotOptions)
+                    foreach (string? slotOption in slotOptions)
                     {
                         // If the machine doesn't exist then we continue
-                        if (datFile.Items[slotOption] == null || datFile.Items[slotOption].Count == 0)
+                        if (slotOption == null || datFile.Items[slotOption] == null || datFile.Items[slotOption]!.Count == 0)
                             continue;
 
                         // Add to the list of new slot option names
-                        ConcurrentList<DatItem> slotItems = datFile.Items[slotOption];
+                        var slotItems = datFile.Items[slotOption];
+                        if (slotItems == null)
+                            continue;
+
                         newSlotOptions.AddRange(slotItems
                             .Where(i => i.ItemType == ItemType.Slot)
-                            .Where(s => (s as Slot).SlotOptionsSpecified)
-                            .SelectMany(s => (s as Slot).SlotOptions)
-                            .Select(o => o.DeviceName));
+                            .Where(s => (s as Slot)!.SlotOptionsSpecified)
+                            .SelectMany(s => (s as Slot)!.SlotOptions!)
+                            .Select(o => o.DeviceName!));
 
                         // Set new machine information and add to the current machine
-                        DatItem copyFrom = datFile.Items[machine][0];
+                        DatItem copyFrom = datFile.Items[machine]![0];
                         foreach (DatItem item in slotItems)
                         {
                             // If the parent machine doesn't already contain this item, add it
-                            if (!datFile.Items[machine].Any(i => i.ItemType == item.ItemType && i.GetName() == item.GetName()))
+                            if (!datFile.Items[machine]!.Any(i => i.ItemType == item.ItemType && i.GetName() == item.GetName()))
                             {
                                 // Set that we found new items
                                 foundnew = true;
@@ -388,7 +401,7 @@ namespace SabreTools.Filtering
                     foreach (string slotOption in newSlotOptions.Distinct())
                     {
                         if (!slotOptions.Contains(slotOption))
-                            datFile.Items[machine].Add(new Slot() { SlotOptions = new List<SlotOption> { new SlotOption { DeviceName = slotOption } } });
+                            datFile.Items[machine]!.Add(new Slot() { SlotOptions = new List<SlotOption> { new SlotOption { DeviceName = slotOption } } });
                     }
                 }
             }
@@ -406,40 +419,41 @@ namespace SabreTools.Filtering
             foreach (string game in games)
             {
                 // If the game has no items in it, we want to continue
-                if (datFile.Items[game].Count == 0)
+                var items = datFile.Items[game];
+                if (items == null || items.Count == 0)
                     continue;
 
                 // Determine if the game has a parent or not
-                string parent = null;
-                if (!string.IsNullOrWhiteSpace(datFile.Items[game][0].Machine.CloneOf))
-                    parent = datFile.Items[game][0].Machine.CloneOf;
+                string? parent = null;
+                if (!string.IsNullOrWhiteSpace(items[0].Machine.CloneOf))
+                    parent = items[0].Machine.CloneOf;
 
                 // If the parent doesnt exist, we want to continue
                 if (string.IsNullOrWhiteSpace(parent))
                     continue;
 
                 // If the parent doesn't have any items, we want to continue
-                if (datFile.Items[parent].Count == 0)
+                if (datFile.Items[parent]!.Count == 0)
                     continue;
 
                 // If the parent exists and has items, we copy the items from the parent to the current game
-                DatItem copyFrom = datFile.Items[game][0];
-                ConcurrentList<DatItem> parentItems = datFile.Items[parent];
-                foreach (DatItem item in parentItems)
+                DatItem copyFrom = items[0];
+                var parentItems = datFile.Items[parent];
+                foreach (DatItem item in parentItems!)
                 {
                     DatItem datItem = (DatItem)item.Clone();
                     datItem.CopyMachineInformation(copyFrom);
-                    if (!datFile.Items[game].Where(i => i.GetName()?.ToLowerInvariant() == datItem.GetName()?.ToLowerInvariant()).Any()
-                        && !datFile.Items[game].Contains(datItem))
+                    if (!items.Where(i => i.GetName()?.ToLowerInvariant() == datItem.GetName()?.ToLowerInvariant()).Any()
+                        && !items.Contains(datItem))
                     {
                         datFile.Items.Add(game, datItem);
                     }
                 }
 
                 // Now we want to get the parent romof tag and put it in each of the items
-                ConcurrentList<DatItem> items = datFile.Items[game];
-                string romof = datFile.Items[parent][0].Machine.RomOf;
-                foreach (DatItem item in items)
+                items = datFile.Items[game];
+                string? romof = datFile.Items[parent]![0].Machine.RomOf;
+                foreach (DatItem item in items!)
                 {
                     item.Machine.RomOf = romof;
                 }
@@ -458,13 +472,14 @@ namespace SabreTools.Filtering
             foreach (string game in games)
             {
                 // If the game has no items in it, we want to continue
-                if (datFile.Items[game].Count == 0)
+                var items = datFile.Items[game];
+                if (items == null || items.Count == 0)
                     continue;
 
                 // Determine if the game has a parent or not
-                string parent = null;
-                if (!string.IsNullOrWhiteSpace(datFile.Items[game][0].Machine.CloneOf))
-                    parent = datFile.Items[game][0].Machine.CloneOf;
+                string? parent = null;
+                if (!string.IsNullOrWhiteSpace(items[0].Machine.CloneOf))
+                    parent = items[0].Machine.CloneOf;
 
                 // If there is no parent, then we continue
                 if (string.IsNullOrWhiteSpace(parent))
@@ -472,7 +487,7 @@ namespace SabreTools.Filtering
 
                 // Otherwise, move the items from the current game to a subfolder of the parent game
                 DatItem copyFrom;
-                if (datFile.Items[parent].Count == 0)
+                if (datFile.Items[parent]!.Count == 0)
                 {
                     copyFrom = new Rom();
                     copyFrom.Machine.Name = parent;
@@ -480,25 +495,25 @@ namespace SabreTools.Filtering
                 }
                 else
                 {
-                    copyFrom = datFile.Items[parent][0];
+                    copyFrom = datFile.Items[parent]![0];
                 }
 
-                ConcurrentList<DatItem> items = datFile.Items[game];
-                foreach (DatItem item in items)
+                items = datFile.Items[game];
+                foreach (DatItem item in items!)
                 {
                     // Special disk handling
                     if (item.ItemType == ItemType.Disk)
                     {
-                        Disk disk = item as Disk;
+                        Disk disk = (item as Disk)!;
 
                         // If the merge tag exists and the parent already contains it, skip
-                        if (disk.MergeTag != null && datFile.Items[parent].Where(i => i.ItemType == ItemType.Disk).Select(i => (i as Disk).Name).Contains(disk.MergeTag))
+                        if (disk.MergeTag != null && datFile.Items[parent]!.Where(i => i.ItemType == ItemType.Disk).Select(i => (i as Disk)!.Name).Contains(disk.MergeTag))
                         {
                             continue;
                         }
 
                         // If the merge tag exists but the parent doesn't contain it, add to parent
-                        else if (disk.MergeTag != null && !datFile.Items[parent].Where(i => i.ItemType == ItemType.Disk).Select(i => (i as Disk).Name).Contains(disk.MergeTag))
+                        else if (disk.MergeTag != null && !datFile.Items[parent]!.Where(i => i.ItemType == ItemType.Disk).Select(i => (i as Disk)!.Name).Contains(disk.MergeTag))
                         {
                             disk.CopyMachineInformation(copyFrom);
                             datFile.Items.Add(parent, disk);
@@ -515,16 +530,16 @@ namespace SabreTools.Filtering
                     // Special rom handling
                     else if (item.ItemType == ItemType.Rom)
                     {
-                        Rom rom = item as Rom;
+                        Rom rom = (item as Rom)!;
 
                         // If the merge tag exists and the parent already contains it, skip
-                        if (rom.MergeTag != null && datFile.Items[parent].Where(i => i.ItemType == ItemType.Rom).Select(i => (i as Rom).Name).Contains(rom.MergeTag))
+                        if (rom.MergeTag != null && datFile.Items[parent]!.Where(i => i.ItemType == ItemType.Rom).Select(i => (i as Rom)!.Name).Contains(rom.MergeTag))
                         {
                             continue;
                         }
 
                         // If the merge tag exists but the parent doesn't contain it, add to subfolder of parent
-                        else if (rom.MergeTag != null && !datFile.Items[parent].Where(i => i.ItemType == ItemType.Rom).Select(i => (i as Rom).Name).Contains(rom.MergeTag))
+                        else if (rom.MergeTag != null && !datFile.Items[parent]!.Where(i => i.ItemType == ItemType.Rom).Select(i => (i as Rom)!.Name).Contains(rom.MergeTag))
                         {
                             if (subfolder)
                                 rom.Name = $"{rom.Machine.Name}\\{rom.Name}";
@@ -534,7 +549,7 @@ namespace SabreTools.Filtering
                         }
 
                         // If the parent doesn't already contain this item, add to subfolder of parent
-                        else if (!datFile.Items[parent].Contains(item) || skipDedup)
+                        else if (!datFile.Items[parent]!.Contains(item) || skipDedup)
                         {
                             if (subfolder)
                                 rom.Name = $"{item.Machine.Name}\\{rom.Name}";
@@ -545,7 +560,7 @@ namespace SabreTools.Filtering
                     }
 
                     // All other that would be missing to subfolder of parent
-                    else if (!datFile.Items[parent].Contains(item))
+                    else if (!datFile.Items[parent]!.Contains(item))
                     {
                         if (subfolder)
                             item.SetName($"{item.Machine.Name}\\{item.GetName()}");
@@ -569,9 +584,13 @@ namespace SabreTools.Filtering
             List<string> games = datFile.Items.Keys.OrderBy(g => g).ToList();
             foreach (string game in games)
             {
-                if (datFile.Items[game].Count > 0
-                    && (datFile.Items[game][0].Machine.MachineType.HasFlag(MachineType.Bios)
-                        || datFile.Items[game][0].Machine.MachineType.HasFlag(MachineType.Device)))
+                var items = datFile.Items[game];
+                if (items == null)
+                    continue;
+
+                if (items.Count > 0
+                    && (items[0].Machine.MachineType.HasFlag(MachineType.Bios)
+                        || items[0].Machine.MachineType.HasFlag(MachineType.Device)))
                 {
                     datFile.Items.Remove(game);
                 }
@@ -590,32 +609,36 @@ namespace SabreTools.Filtering
             foreach (string game in games)
             {
                 // If the game has no items in it, we want to continue
-                if (datFile.Items[game].Count == 0)
+                var items = datFile.Items[game];
+                if (items == null || items.Count == 0)
                     continue;
 
                 // If the game (is/is not) a bios, we want to continue
-                if (bios ^ datFile.Items[game][0].Machine.MachineType.HasFlag(MachineType.Bios))
+                if (bios ^ items[0].Machine.MachineType.HasFlag(MachineType.Bios))
                     continue;
 
                 // Determine if the game has a parent or not
-                string parent = null;
-                if (!string.IsNullOrWhiteSpace(datFile.Items[game][0].Machine.RomOf))
-                    parent = datFile.Items[game][0].Machine.RomOf;
+                string? parent = null;
+                if (!string.IsNullOrWhiteSpace(items[0].Machine.RomOf))
+                    parent = items[0].Machine.RomOf;
 
                 // If the parent doesnt exist, we want to continue
                 if (string.IsNullOrWhiteSpace(parent))
                     continue;
 
                 // If the parent doesn't have any items, we want to continue
-                if (datFile.Items[parent].Count == 0)
+                if (datFile.Items[parent]!.Count == 0)
                     continue;
 
                 // If the parent exists and has items, we remove the items that are in the parent from the current game
-                ConcurrentList<DatItem> parentItems = datFile.Items[parent];
+                var parentItems = datFile.Items[parent];
+                if (parentItems == null)
+                    continue;
+
                 foreach (DatItem item in parentItems)
                 {
                     DatItem datItem = (DatItem)item.Clone();
-                    while (datFile.Items[game].Contains(datItem))
+                    while (items.Contains(datItem))
                     {
                         datFile.Items.Remove(game, datItem);
                     }
@@ -632,38 +655,42 @@ namespace SabreTools.Filtering
             List<string> games = datFile.Items.Keys.OrderBy(g => g).ToList();
             foreach (string game in games)
             {
+                var items = datFile.Items[game];
+                if (items == null)
+                    continue;
+
                 // If the game has no items in it, we want to continue
-                if (datFile.Items[game].Count == 0)
+                if (items.Count == 0)
                     continue;
 
                 // Determine if the game has a parent or not
-                string parent = null;
-                if (!string.IsNullOrWhiteSpace(datFile.Items[game][0].Machine.CloneOf))
-                    parent = datFile.Items[game][0].Machine.CloneOf;
+                string? parent = null;
+                if (!string.IsNullOrWhiteSpace(items[0].Machine.CloneOf))
+                    parent = items[0].Machine.CloneOf;
 
                 // If the parent doesnt exist, we want to continue
                 if (string.IsNullOrWhiteSpace(parent))
                     continue;
 
                 // If the parent doesn't have any items, we want to continue
-                if (datFile.Items[parent].Count == 0)
+                if (datFile.Items[parent] == null || datFile.Items[parent]!.Count == 0)
                     continue;
 
                 // If the parent exists and has items, we remove the parent items from the current game
-                ConcurrentList<DatItem> parentItems = datFile.Items[parent];
-                foreach (DatItem item in parentItems)
+                var parentItems = datFile.Items[parent];
+                foreach (DatItem item in parentItems!)
                 {
                     DatItem datItem = (DatItem)item.Clone();
-                    while (datFile.Items[game].Contains(datItem))
+                    while (items.Contains(datItem))
                     {
                         datFile.Items.Remove(game, datItem);
                     }
                 }
 
                 // Now we want to get the parent romof tag and put it in each of the remaining items
-                ConcurrentList<DatItem> items = datFile.Items[game];
-                string romof = datFile.Items[parent][0].Machine.RomOf;
-                foreach (DatItem item in items)
+                items = datFile.Items[game];
+                string? romof = datFile.Items[parent]![0].Machine.RomOf;
+                foreach (DatItem item in items!)
                 {
                     item.Machine.RomOf = romof;
                 }
@@ -679,7 +706,10 @@ namespace SabreTools.Filtering
             List<string> games = datFile.Items.Keys.OrderBy(g => g).ToList();
             foreach (string game in games)
             {
-                ConcurrentList<DatItem> items = datFile.Items[game];
+                var items = datFile.Items[game];
+                if (items == null)
+                    continue;
+
                 foreach (DatItem item in items)
                 {
                     item.Machine.CloneOf = null;
