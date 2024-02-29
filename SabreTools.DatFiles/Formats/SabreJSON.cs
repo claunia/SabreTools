@@ -457,8 +457,8 @@ namespace SabreTools.DatFiles.Formats
         private static void WriteStartGame(JsonTextWriter jtw, DatItem datItem)
         {
             // No game should start with a path separator
-            if (!string.IsNullOrWhiteSpace(datItem.Machine.Name))
-                datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar) ?? string.Empty;
+            if (!string.IsNullOrEmpty(datItem.Machine.Name))
+                datItem.Machine.Name = datItem.Machine.Name!.TrimStart(Path.DirectorySeparatorChar);
 
             // Build the state
             jtw.WriteStartObject();

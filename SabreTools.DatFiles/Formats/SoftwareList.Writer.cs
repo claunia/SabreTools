@@ -41,22 +41,22 @@ namespace SabreTools.DatFiles.Formats
                     }
                     else
                     {
-                        if (string.IsNullOrWhiteSpace(dipSwitch.Part!.Name))
+                        if (string.IsNullOrEmpty(dipSwitch.Part!.Name))
                             missingFields.Add(DatItemField.Part_Name);
-                        if (string.IsNullOrWhiteSpace(dipSwitch.Part.Interface))
+                        if (string.IsNullOrEmpty(dipSwitch.Part.Interface))
                             missingFields.Add(DatItemField.Part_Interface);
                     }
-                    if (string.IsNullOrWhiteSpace(dipSwitch.Name))
+                    if (string.IsNullOrEmpty(dipSwitch.Name))
                         missingFields.Add(DatItemField.Name);
-                    if (string.IsNullOrWhiteSpace(dipSwitch.Tag))
+                    if (string.IsNullOrEmpty(dipSwitch.Tag))
                         missingFields.Add(DatItemField.Tag);
-                    if (string.IsNullOrWhiteSpace(dipSwitch.Mask))
+                    if (string.IsNullOrEmpty(dipSwitch.Mask))
                         missingFields.Add(DatItemField.Mask);
                     if (dipSwitch.ValuesSpecified)
                     {
-                        if (dipSwitch.Values!.Any(dv => string.IsNullOrWhiteSpace(dv.Name)))
+                        if (dipSwitch.Values!.Any(dv => string.IsNullOrEmpty(dv.Name)))
                             missingFields.Add(DatItemField.Part_Feature_Name);
-                        if (dipSwitch.Values!.Any(dv => string.IsNullOrWhiteSpace(dv.Value)))
+                        if (dipSwitch.Values!.Any(dv => string.IsNullOrEmpty(dv.Value)))
                             missingFields.Add(DatItemField.Part_Feature_Value);
                     }
 
@@ -70,9 +70,9 @@ namespace SabreTools.DatFiles.Formats
                     }
                     else
                     {
-                        if (string.IsNullOrWhiteSpace(disk.Part!.Name))
+                        if (string.IsNullOrEmpty(disk.Part!.Name))
                             missingFields.Add(DatItemField.Part_Name);
-                        if (string.IsNullOrWhiteSpace(disk.Part.Interface))
+                        if (string.IsNullOrEmpty(disk.Part.Interface))
                             missingFields.Add(DatItemField.Part_Interface);
                     }
                     if (!disk.DiskAreaSpecified)
@@ -81,15 +81,15 @@ namespace SabreTools.DatFiles.Formats
                     }
                     else
                     {
-                        if (string.IsNullOrWhiteSpace(disk.DiskArea!.Name))
+                        if (string.IsNullOrEmpty(disk.DiskArea!.Name))
                             missingFields.Add(DatItemField.AreaName);
                     }
-                    if (string.IsNullOrWhiteSpace(disk.Name))
+                    if (string.IsNullOrEmpty(disk.Name))
                         missingFields.Add(DatItemField.Name);
                     break;
 
                 case Info info:
-                    if (string.IsNullOrWhiteSpace(info.Name))
+                    if (string.IsNullOrEmpty(info.Name))
                         missingFields.Add(DatItemField.Name);
                     break;
 
@@ -101,9 +101,9 @@ namespace SabreTools.DatFiles.Formats
                     }
                     else
                     {
-                        if (string.IsNullOrWhiteSpace(rom.Part!.Name))
+                        if (string.IsNullOrEmpty(rom.Part!.Name))
                             missingFields.Add(DatItemField.Part_Name);
-                        if (string.IsNullOrWhiteSpace(rom.Part.Interface))
+                        if (string.IsNullOrEmpty(rom.Part.Interface))
                             missingFields.Add(DatItemField.Part_Interface);
                     }
                     if (!rom.DataAreaSpecified)
@@ -113,7 +113,7 @@ namespace SabreTools.DatFiles.Formats
                     }
                     else
                     {
-                        if (string.IsNullOrWhiteSpace(rom.DataArea!.Name))
+                        if (string.IsNullOrEmpty(rom.DataArea!.Name))
                             missingFields.Add(DatItemField.AreaName);
                         if (!rom.DataArea.SizeSpecified)
                             missingFields.Add(DatItemField.AreaSize);
@@ -121,7 +121,7 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case SharedFeature sharedFeat:
-                    if (string.IsNullOrWhiteSpace(sharedFeat.Name))
+                    if (string.IsNullOrEmpty(sharedFeat.Name))
                         missingFields.Add(DatItemField.Name);
                     break;
                 default:

@@ -76,7 +76,13 @@ namespace SabreTools.DatTools
 
             // Now loop through and get only directories from the input paths
             List<string> directories = [];
+#if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(inputs, Globals.ParallelOptions, input =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(inputs, input =>
+#else
+            foreach (var input in inputs)
+#endif
             {
                 // Add to the list if the input is a directory
                 if (Directory.Exists(input))
@@ -316,9 +322,17 @@ namespace SabreTools.DatTools
                 DatItem? internalDatItem;
                 if (internalFileInfo == null)
                     internalDatItem = null;
+#if NETFRAMEWORK
+                else if (internalFileInfo.Type == FileType.AaruFormat && (asFiles & TreatAsFile.AaruFormat) == 0)
+#else
                 else if (internalFileInfo.Type == FileType.AaruFormat && !asFiles.HasFlag(TreatAsFile.AaruFormat))
+#endif
                     internalDatItem = new Media(internalFileInfo);
+#if NETFRAMEWORK
+                else if (internalFileInfo.Type == FileType.CHD && (asFiles & TreatAsFile.CHD) == 0)
+#else
                 else if (internalFileInfo.Type == FileType.CHD && !asFiles.HasFlag(TreatAsFile.CHD))
+#endif
                     internalDatItem = new Disk(internalFileInfo);
                 else
                     internalDatItem = new Rom(internalFileInfo);
@@ -713,7 +727,7 @@ namespace SabreTools.DatTools
 
             return outputArchive;
         }
-    
+
         /// <summary>
         /// Get string value from input OutputFormat
         /// </summary>

@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if NET462_OR_GREATER || NETCOREAPP
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -63,11 +65,11 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Item dictionary file name
         /// </summary>
-        public string ItemDictionaryFileName
+        public string? ItemDictionaryFileName
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(itemDictionaryFileName))
+                if (string.IsNullOrEmpty(itemDictionaryFileName))
                     itemDictionaryFileName = Path.Combine(PathTool.GetRuntimeDirectory(), $"itemDictionary{Guid.NewGuid()}.sqlite");
 
                 return itemDictionaryFileName;
@@ -622,8 +624,8 @@ namespace SabreTools.DatFiles
                         DiskCount++;
                         if (disk.ItemStatus != ItemStatus.Nodump)
                         {
-                            MD5Count += (string.IsNullOrWhiteSpace(disk.MD5) ? 0 : 1);
-                            SHA1Count += (string.IsNullOrWhiteSpace(disk.SHA1) ? 0 : 1);
+                            MD5Count += (string.IsNullOrEmpty(disk.MD5) ? 0 : 1);
+                            SHA1Count += (string.IsNullOrEmpty(disk.SHA1) ? 0 : 1);
                         }
 
                         BaddumpCount += (disk.ItemStatus == ItemStatus.BadDump ? 1 : 0);
@@ -651,10 +653,10 @@ namespace SabreTools.DatFiles
                         break;
                     case Media media:
                         MediaCount++;
-                        MD5Count += (string.IsNullOrWhiteSpace(media.MD5) ? 0 : 1);
-                        SHA1Count += (string.IsNullOrWhiteSpace(media.SHA1) ? 0 : 1);
-                        SHA256Count += (string.IsNullOrWhiteSpace(media.SHA256) ? 0 : 1);
-                        SpamSumCount += (string.IsNullOrWhiteSpace(media.SpamSum) ? 0 : 1);
+                        MD5Count += (string.IsNullOrEmpty(media.MD5) ? 0 : 1);
+                        SHA1Count += (string.IsNullOrEmpty(media.SHA1) ? 0 : 1);
+                        SHA256Count += (string.IsNullOrEmpty(media.SHA256) ? 0 : 1);
+                        SpamSumCount += (string.IsNullOrEmpty(media.SpamSum) ? 0 : 1);
                         break;
                     case Part:
                         PartCount++;
@@ -679,13 +681,13 @@ namespace SabreTools.DatFiles
                         if (rom.ItemStatus != ItemStatus.Nodump)
                         {
                             TotalSize += rom.Size ?? 0;
-                            CRCCount += (string.IsNullOrWhiteSpace(rom.CRC) ? 0 : 1);
-                            MD5Count += (string.IsNullOrWhiteSpace(rom.MD5) ? 0 : 1);
-                            SHA1Count += (string.IsNullOrWhiteSpace(rom.SHA1) ? 0 : 1);
-                            SHA256Count += (string.IsNullOrWhiteSpace(rom.SHA256) ? 0 : 1);
-                            SHA384Count += (string.IsNullOrWhiteSpace(rom.SHA384) ? 0 : 1);
-                            SHA512Count += (string.IsNullOrWhiteSpace(rom.SHA512) ? 0 : 1);
-                            SpamSumCount += (string.IsNullOrWhiteSpace(rom.SpamSum) ? 0 : 1);
+                            CRCCount += (string.IsNullOrEmpty(rom.CRC) ? 0 : 1);
+                            MD5Count += (string.IsNullOrEmpty(rom.MD5) ? 0 : 1);
+                            SHA1Count += (string.IsNullOrEmpty(rom.SHA1) ? 0 : 1);
+                            SHA256Count += (string.IsNullOrEmpty(rom.SHA256) ? 0 : 1);
+                            SHA384Count += (string.IsNullOrEmpty(rom.SHA384) ? 0 : 1);
+                            SHA512Count += (string.IsNullOrEmpty(rom.SHA512) ? 0 : 1);
+                            SpamSumCount += (string.IsNullOrEmpty(rom.SpamSum) ? 0 : 1);
                         }
 
                         BaddumpCount += (rom.ItemStatus == ItemStatus.BadDump ? 1 : 0);
@@ -1025,8 +1027,8 @@ namespace SabreTools.DatFiles
                         DiskCount--;
                         if (disk.ItemStatus != ItemStatus.Nodump)
                         {
-                            MD5Count -= (string.IsNullOrWhiteSpace(disk.MD5) ? 0 : 1);
-                            SHA1Count -= (string.IsNullOrWhiteSpace(disk.SHA1) ? 0 : 1);
+                            MD5Count -= (string.IsNullOrEmpty(disk.MD5) ? 0 : 1);
+                            SHA1Count -= (string.IsNullOrEmpty(disk.SHA1) ? 0 : 1);
                         }
 
                         BaddumpCount -= (disk.ItemStatus == ItemStatus.BadDump ? 1 : 0);
@@ -1054,9 +1056,9 @@ namespace SabreTools.DatFiles
                         break;
                     case Media media:
                         MediaCount--;
-                        MD5Count -= (string.IsNullOrWhiteSpace(media.MD5) ? 0 : 1);
-                        SHA1Count -= (string.IsNullOrWhiteSpace(media.SHA1) ? 0 : 1);
-                        SHA256Count -= (string.IsNullOrWhiteSpace(media.SHA256) ? 0 : 1);
+                        MD5Count -= (string.IsNullOrEmpty(media.MD5) ? 0 : 1);
+                        SHA1Count -= (string.IsNullOrEmpty(media.SHA1) ? 0 : 1);
+                        SHA256Count -= (string.IsNullOrEmpty(media.SHA256) ? 0 : 1);
                         break;
                     case Part:
                         PartCount--;
@@ -1078,12 +1080,12 @@ namespace SabreTools.DatFiles
                         if (rom.ItemStatus != ItemStatus.Nodump)
                         {
                             TotalSize -= rom.Size ?? 0;
-                            CRCCount -= (string.IsNullOrWhiteSpace(rom.CRC) ? 0 : 1);
-                            MD5Count -= (string.IsNullOrWhiteSpace(rom.MD5) ? 0 : 1);
-                            SHA1Count -= (string.IsNullOrWhiteSpace(rom.SHA1) ? 0 : 1);
-                            SHA256Count -= (string.IsNullOrWhiteSpace(rom.SHA256) ? 0 : 1);
-                            SHA384Count -= (string.IsNullOrWhiteSpace(rom.SHA384) ? 0 : 1);
-                            SHA512Count -= (string.IsNullOrWhiteSpace(rom.SHA512) ? 0 : 1);
+                            CRCCount -= (string.IsNullOrEmpty(rom.CRC) ? 0 : 1);
+                            MD5Count -= (string.IsNullOrEmpty(rom.MD5) ? 0 : 1);
+                            SHA1Count -= (string.IsNullOrEmpty(rom.SHA1) ? 0 : 1);
+                            SHA256Count -= (string.IsNullOrEmpty(rom.SHA256) ? 0 : 1);
+                            SHA384Count -= (string.IsNullOrEmpty(rom.SHA384) ? 0 : 1);
+                            SHA512Count -= (string.IsNullOrEmpty(rom.SHA512) ? 0 : 1);
                         }
 
                         BaddumpCount -= (rom.ItemStatus == ItemStatus.BadDump ? 1 : 0);
@@ -1135,7 +1137,7 @@ namespace SabreTools.DatFiles
         protected void EnsureDatabase()
         {
             // Make sure the file exists
-            if (!System.IO.File.Exists(ItemDictionaryFileName))
+            if (ItemDictionaryFileName != null && !System.IO.File.Exists(ItemDictionaryFileName))
                 System.IO.File.Create(ItemDictionaryFileName);
 
             // If we have no database connection, we can't do anything
@@ -1197,7 +1199,13 @@ CREATE TABLE IF NOT EXISTS groups (
 
                 // First do the initial sort of all of the roms inplace
                 List<string> oldkeys = Keys.ToList();
+#if NET452_OR_GREATER || NETCOREAPP
                 Parallel.For(0, oldkeys.Count, Globals.ParallelOptions, k =>
+#elif NET40_OR_GREATER
+                Parallel.For(0, oldkeys.Count, k =>
+#else
+                for (int k = 0; k < oldkeys.Count; k++)
+#endif
                 {
                     string key = oldkeys[k];
                     if (this[key] == null)
@@ -1225,7 +1233,11 @@ CREATE TABLE IF NOT EXISTS groups (
                     // If the key is now empty, remove it
                     if (this[key]!.Count == 0)
                         Remove(key);
+#if NET40_OR_GREATER || NETCOREAPP
                 });
+#else
+                }
+#endif
             }
 
             // If the merge type isn't the same, we want to merge the dictionary accordingly
@@ -1237,7 +1249,13 @@ CREATE TABLE IF NOT EXISTS groups (
                 mergedBy = dedupeType;
 
                 List<string> keys = Keys.ToList();
+#if NET452_OR_GREATER || NETCOREAPP
                 Parallel.ForEach(keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+                Parallel.ForEach(keys, key =>
+#else
+                foreach (var key in keys)
+#endif
                 {
                     // Get the possibly unsorted list
                     ConcurrentList<DatItem>? sortedlist = this[key]?.ToConcurrentList();
@@ -1264,7 +1282,13 @@ CREATE TABLE IF NOT EXISTS groups (
             else
             {
                 List<string> keys = Keys.ToList();
+#if NET452_OR_GREATER || NETCOREAPP
                 Parallel.ForEach(keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+                Parallel.ForEach(keys, key =>
+#else
+                foreach (var key in keys)
+#endif
                 {
                     // Get the possibly unsorted list
                     ConcurrentList<DatItem>? sortedlist = this[key];
@@ -1530,3 +1554,5 @@ CREATE TABLE IF NOT EXISTS groups (
         #endregion
     }
 }
+
+#endif

@@ -656,46 +656,46 @@ namespace SabreTools.DatFiles
             if (datHeader == null)
                 return;
 
-            if (!string.IsNullOrWhiteSpace(datHeader.FileName))
+            if (!string.IsNullOrEmpty(datHeader.FileName))
                 FileName = datHeader.FileName;
 
-            if (!string.IsNullOrWhiteSpace(datHeader.Name))
+            if (!string.IsNullOrEmpty(datHeader.Name))
                 Name = datHeader.Name;
 
-            if (!string.IsNullOrWhiteSpace(datHeader.Description))
+            if (!string.IsNullOrEmpty(datHeader.Description))
                 Description = datHeader.Description;
 
-            if (!string.IsNullOrWhiteSpace(datHeader.RootDir))
+            if (!string.IsNullOrEmpty(datHeader.RootDir))
                 RootDir = datHeader.RootDir;
 
-            if (!string.IsNullOrWhiteSpace(datHeader.Category))
+            if (!string.IsNullOrEmpty(datHeader.Category))
                 Category = datHeader.Category;
 
-            if (!string.IsNullOrWhiteSpace(datHeader.Version))
+            if (!string.IsNullOrEmpty(datHeader.Version))
                 Version = datHeader.Version;
 
-            if (!string.IsNullOrWhiteSpace(datHeader.Date))
+            if (!string.IsNullOrEmpty(datHeader.Date))
                 Date = datHeader.Date;
 
-            if (!string.IsNullOrWhiteSpace(datHeader.Author))
+            if (!string.IsNullOrEmpty(datHeader.Author))
                 Author = datHeader.Author;
 
-            if (!string.IsNullOrWhiteSpace(datHeader.Email))
+            if (!string.IsNullOrEmpty(datHeader.Email))
                 Email = datHeader.Email;
 
-            if (!string.IsNullOrWhiteSpace(datHeader.Homepage))
+            if (!string.IsNullOrEmpty(datHeader.Homepage))
                 Homepage = datHeader.Homepage;
 
-            if (!string.IsNullOrWhiteSpace(datHeader.Url))
+            if (!string.IsNullOrEmpty(datHeader.Url))
                 Url = datHeader.Url;
 
-            if (!string.IsNullOrWhiteSpace(datHeader.Comment))
+            if (!string.IsNullOrEmpty(datHeader.Comment))
                 Comment = datHeader.Comment;
 
-            if (!string.IsNullOrWhiteSpace(datHeader.HeaderSkipper))
+            if (!string.IsNullOrEmpty(datHeader.HeaderSkipper))
                 HeaderSkipper = datHeader.HeaderSkipper;
 
-            if (!string.IsNullOrWhiteSpace(datHeader.Type))
+            if (!string.IsNullOrEmpty(datHeader.Type))
                 Type = datHeader.Type;
 
             if (datHeader.ForceMerging != MergingFlag.None)
@@ -710,16 +710,16 @@ namespace SabreTools.DatFiles
             if (datHeader.DatFormat != 0x00)
                 DatFormat = datHeader.DatFormat;
 
-            if (!string.IsNullOrWhiteSpace(datHeader.Prefix))
+            if (!string.IsNullOrEmpty(datHeader.Prefix))
                 Prefix = datHeader.Prefix;
 
-            if (!string.IsNullOrWhiteSpace(datHeader.Postfix))
+            if (!string.IsNullOrEmpty(datHeader.Postfix))
                 Postfix = datHeader.Postfix;
 
-            if (!string.IsNullOrWhiteSpace(datHeader.AddExtension))
+            if (!string.IsNullOrEmpty(datHeader.AddExtension))
                 AddExtension = datHeader.AddExtension;
 
-            if (!string.IsNullOrWhiteSpace(datHeader.ReplaceExtension))
+            if (!string.IsNullOrEmpty(datHeader.ReplaceExtension))
                 ReplaceExtension = datHeader.ReplaceExtension;
 
             RemoveExtension = datHeader.RemoveExtension;
@@ -757,7 +757,11 @@ namespace SabreTools.DatFiles
             #region .csv
 
             // CSV
+#if NETFRAMEWORK
+            if ((DatFormat & DatFormat.CSV) != 0)
+#else
             if (DatFormat.HasFlag(DatFormat.CSV))
+#endif
             {
                 outfileNames.Add(DatFormat.CSV, CreateOutFileNamesHelper(outDir, ".csv", overwrite));
                 usedExtensions.Add(".csv");
@@ -768,14 +772,22 @@ namespace SabreTools.DatFiles
             #region .dat
 
             // ClrMamePro
+#if NETFRAMEWORK
+            if ((DatFormat & DatFormat.ClrMamePro) != 0)
+#else
             if (DatFormat.HasFlag(DatFormat.ClrMamePro))
+#endif
             {
                 outfileNames.Add(DatFormat.ClrMamePro, CreateOutFileNamesHelper(outDir, ".dat", overwrite));
                 usedExtensions.Add(".dat");
             };
 
             // RomCenter
+#if NETFRAMEWORK
+            if ((DatFormat & DatFormat.RomCenter) != 0)
+#else
             if (DatFormat.HasFlag(DatFormat.RomCenter))
+#endif
             {
                 if (usedExtensions.Contains(".dat"))
                 {
@@ -790,7 +802,11 @@ namespace SabreTools.DatFiles
             }
 
             // DOSCenter
+#if NETFRAMEWORK
+            if ((DatFormat & DatFormat.DOSCenter) != 0)
+#else
             if (DatFormat.HasFlag(DatFormat.DOSCenter))
+#endif
             {
                 if (usedExtensions.Contains(".dat"))
                 {
@@ -809,7 +825,11 @@ namespace SabreTools.DatFiles
             #region .json
 
             // JSON
+#if NETFRAMEWORK
+            if ((DatFormat & DatFormat.SabreJSON) != 0)
+#else
             if (DatFormat.HasFlag(DatFormat.SabreJSON))
+#endif
             {
                 outfileNames.Add(DatFormat.SabreJSON, CreateOutFileNamesHelper(outDir, ".json", overwrite));
                 usedExtensions.Add(".json");
@@ -820,7 +840,11 @@ namespace SabreTools.DatFiles
             #region .md5
 
             // Redump MD5
+#if NETFRAMEWORK
+            if ((DatFormat & DatFormat.RedumpMD5) != 0)
+#else
             if (DatFormat.HasFlag(DatFormat.RedumpMD5))
+#endif
             {
                 outfileNames.Add(DatFormat.RedumpMD5, CreateOutFileNamesHelper(outDir, ".md5", overwrite));
                 usedExtensions.Add(".md5");
@@ -831,7 +855,11 @@ namespace SabreTools.DatFiles
             #region .sfv
 
             // Redump SFV
+#if NETFRAMEWORK
+            if ((DatFormat & DatFormat.RedumpSFV) != 0)
+#else
             if (DatFormat.HasFlag(DatFormat.RedumpSFV))
+#endif
             {
                 outfileNames.Add(DatFormat.RedumpSFV, CreateOutFileNamesHelper(outDir, ".sfv", overwrite));
                 usedExtensions.Add(".sfv");
@@ -842,7 +870,11 @@ namespace SabreTools.DatFiles
             #region .sha1
 
             // Redump SHA-1
+#if NETFRAMEWORK
+            if ((DatFormat & DatFormat.RedumpSHA1) != 0)
+#else
             if (DatFormat.HasFlag(DatFormat.RedumpSHA1))
+#endif
             {
                 outfileNames.Add(DatFormat.RedumpSHA1, CreateOutFileNamesHelper(outDir, ".sha1", overwrite));
                 usedExtensions.Add(".sha1");
@@ -853,7 +885,11 @@ namespace SabreTools.DatFiles
             #region .sha256
 
             // Redump SHA-256
+#if NETFRAMEWORK
+            if ((DatFormat & DatFormat.RedumpSHA256) != 0)
+#else
             if (DatFormat.HasFlag(DatFormat.RedumpSHA256))
+#endif
             {
                 outfileNames.Add(DatFormat.RedumpSHA256, CreateOutFileNamesHelper(outDir, ".sha256", overwrite));
                 usedExtensions.Add(".sha256");
@@ -864,7 +900,11 @@ namespace SabreTools.DatFiles
             #region .sha384
 
             // Redump SHA-384
+#if NETFRAMEWORK
+            if ((DatFormat & DatFormat.RedumpSHA384) != 0)
+#else
             if (DatFormat.HasFlag(DatFormat.RedumpSHA384))
+#endif
             {
                 outfileNames.Add(DatFormat.RedumpSHA384, CreateOutFileNamesHelper(outDir, ".sha384", overwrite));
                 usedExtensions.Add(".sha384");
@@ -875,7 +915,11 @@ namespace SabreTools.DatFiles
             #region .sha512
 
             // Redump SHA-512
+#if NETFRAMEWORK
+            if ((DatFormat & DatFormat.RedumpSHA512) != 0)
+#else
             if (DatFormat.HasFlag(DatFormat.RedumpSHA512))
+#endif
             {
                 outfileNames.Add(DatFormat.RedumpSHA512, CreateOutFileNamesHelper(outDir, ".sha512", overwrite));
                 usedExtensions.Add(".sha512");
@@ -886,7 +930,11 @@ namespace SabreTools.DatFiles
             #region .spamsum
 
             // Redump SpamSum
+#if NETFRAMEWORK
+            if ((DatFormat & DatFormat.RedumpSpamSum) != 0)
+#else
             if (DatFormat.HasFlag(DatFormat.RedumpSpamSum))
+#endif
             {
                 outfileNames.Add(DatFormat.RedumpSpamSum, CreateOutFileNamesHelper(outDir, ".spamsum", overwrite));
                 usedExtensions.Add(".spamsum");
@@ -897,7 +945,11 @@ namespace SabreTools.DatFiles
             #region .ssv
 
             // SSV
+#if NETFRAMEWORK
+            if ((DatFormat & DatFormat.SSV) != 0)
+#else
             if (DatFormat.HasFlag(DatFormat.SSV))
+#endif
             {
                 outfileNames.Add(DatFormat.SSV, CreateOutFileNamesHelper(outDir, ".ssv", overwrite));
                 usedExtensions.Add(".ssv");
@@ -908,7 +960,11 @@ namespace SabreTools.DatFiles
             #region .tsv
 
             // TSV
+#if NETFRAMEWORK
+            if ((DatFormat & DatFormat.TSV) != 0)
+#else
             if (DatFormat.HasFlag(DatFormat.TSV))
+#endif
             {
                 outfileNames.Add(DatFormat.TSV, CreateOutFileNamesHelper(outDir, ".tsv", overwrite));
                 usedExtensions.Add(".tsv");
@@ -919,14 +975,22 @@ namespace SabreTools.DatFiles
             #region .txt
 
             // AttractMode
+#if NETFRAMEWORK
+            if ((DatFormat & DatFormat.AttractMode) != 0)
+#else
             if (DatFormat.HasFlag(DatFormat.AttractMode))
+#endif
             {
                 outfileNames.Add(DatFormat.AttractMode, CreateOutFileNamesHelper(outDir, ".txt", overwrite));
                 usedExtensions.Add(".txt");
             }
 
             // MAME Listroms
+#if NETFRAMEWORK
+            if ((DatFormat & DatFormat.Listrom) != 0)
+#else
             if (DatFormat.HasFlag(DatFormat.Listrom))
+#endif
             {
                 if (usedExtensions.Contains(".txt"))
                 {
@@ -941,7 +1005,11 @@ namespace SabreTools.DatFiles
             }
 
             // Missfile
+#if NETFRAMEWORK
+            if ((DatFormat & DatFormat.MissFile) != 0)
+#else
             if (DatFormat.HasFlag(DatFormat.MissFile))
+#endif
             {
                 if (usedExtensions.Contains(".txt"))
                 {
@@ -956,7 +1024,11 @@ namespace SabreTools.DatFiles
             }
 
             // Everdrive SMDB
+#if NETFRAMEWORK
+            if ((DatFormat & DatFormat.EverdriveSMDB) != 0)
+#else
             if (DatFormat.HasFlag(DatFormat.EverdriveSMDB))
+#endif
             {
                 if (usedExtensions.Contains(".txt"))
                 {
@@ -975,19 +1047,31 @@ namespace SabreTools.DatFiles
             #region .xml
 
             // Logiqx XML
+#if NETFRAMEWORK
+            if ((DatFormat & DatFormat.Logiqx) != 0)
+#else
             if (DatFormat.HasFlag(DatFormat.Logiqx))
+#endif
             {
                 outfileNames.Add(DatFormat.Logiqx, CreateOutFileNamesHelper(outDir, ".xml", overwrite));
                 usedExtensions.Add(".xml");
             }
+#if NETFRAMEWORK
+            if ((DatFormat & DatFormat.LogiqxDeprecated) != 0)
+#else
             if (DatFormat.HasFlag(DatFormat.LogiqxDeprecated))
+#endif
             {
                 outfileNames.Add(DatFormat.LogiqxDeprecated, CreateOutFileNamesHelper(outDir, ".xml", overwrite));
                 usedExtensions.Add(".xml");
             }
 
             // SabreDAT
+#if NETFRAMEWORK
+            if ((DatFormat & DatFormat.SabreXML) != 0)
+#else
             if (DatFormat.HasFlag(DatFormat.SabreXML))
+#endif
             {
                 if (usedExtensions.Contains(".xml"))
                 {
@@ -1002,7 +1086,11 @@ namespace SabreTools.DatFiles
             }
 
             // Software List
+#if NETFRAMEWORK
+            if ((DatFormat & DatFormat.SoftwareList) != 0)
+#else
             if (DatFormat.HasFlag(DatFormat.SoftwareList))
+#endif
             {
                 if (usedExtensions.Contains(".xml"))
                 {
@@ -1017,7 +1105,11 @@ namespace SabreTools.DatFiles
             }
 
             // MAME Listxml
+#if NETFRAMEWORK
+            if ((DatFormat & DatFormat.Listxml) != 0)
+#else
             if (DatFormat.HasFlag(DatFormat.Listxml))
+#endif
             {
                 if (usedExtensions.Contains(".xml"))
                 {
@@ -1032,7 +1124,11 @@ namespace SabreTools.DatFiles
             }
 
             // OfflineList
+#if NETFRAMEWORK
+            if ((DatFormat & DatFormat.OfflineList) != 0)
+#else
             if (DatFormat.HasFlag(DatFormat.OfflineList))
+#endif
             {
                 if (usedExtensions.Contains(".xml"))
                 {
@@ -1047,7 +1143,11 @@ namespace SabreTools.DatFiles
             }
 
             // openMSX
+#if NETFRAMEWORK
+            if ((DatFormat & DatFormat.OpenMSX) != 0)
+#else
             if (DatFormat.HasFlag(DatFormat.OpenMSX))
+#endif
             {
                 if (usedExtensions.Contains(".xml"))
                 {
@@ -1062,7 +1162,11 @@ namespace SabreTools.DatFiles
             }
 
             // Archive.org
+#if NETFRAMEWORK
+            if ((DatFormat & DatFormat.ArchiveDotOrg) != 0)
+#else
             if (DatFormat.HasFlag(DatFormat.ArchiveDotOrg))
+#endif
             {
                 if (usedExtensions.Contains(".xml"))
                 {
@@ -1090,7 +1194,7 @@ namespace SabreTools.DatFiles
         /// <returns>String containing the new filename</returns>
         private string CreateOutFileNamesHelper(string outDir, string extension, bool overwrite)
         {
-            string? filename = string.IsNullOrWhiteSpace(FileName) ? Description : FileName;
+            string? filename = string.IsNullOrEmpty(FileName) ? Description : FileName;
 
             // Strip off the extension if it's a holdover from the DAT
             if (Utilities.HasValidDatExtension(filename))

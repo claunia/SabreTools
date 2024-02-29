@@ -30,7 +30,9 @@ namespace SabreTools.DatFiles.Formats
             XmlReader? xtr = XmlReader.Create(filename, new XmlReaderSettings
             {
                 CheckCharacters = false,
+#if NET40_OR_GREATER
                 DtdProcessing = DtdProcessing.Ignore,
+#endif
                 IgnoreComments = true,
                 IgnoreWhitespace = true,
                 ValidationFlags = XmlSchemaValidationFlags.None,
@@ -83,7 +85,9 @@ namespace SabreTools.DatFiles.Formats
                 xtr?.Read();
             }
 
+#if NET452_OR_GREATER
             xtr?.Dispose();
+#endif
         }
 
         /// <summary>
@@ -246,7 +250,9 @@ namespace SabreTools.DatFiles.Formats
                 WriteFooter(xtw);
 
                 logger.User($"'{outfile}' written!{Environment.NewLine}");
+#if NET452_OR_GREATER
                 xtw.Dispose();
+#endif
                 fs.Dispose();
             }
             catch (Exception ex) when (!throwOnError)

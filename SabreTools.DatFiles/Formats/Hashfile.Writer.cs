@@ -30,7 +30,7 @@ namespace SabreTools.DatFiles.Formats
             List<DatItemField> missingFields = [];
 
             // Check item name
-            if (string.IsNullOrWhiteSpace(datItem.GetName()))
+            if (string.IsNullOrEmpty(datItem.GetName()))
                 missingFields.Add(DatItemField.Name);
 
             // Check hash linked to specific Hashfile type

@@ -30,14 +30,14 @@ namespace SabreTools.DatFiles.Formats
             List<DatItemField> missingFields = [];
 
             // Check item name
-            if (string.IsNullOrWhiteSpace(datItem.GetName()))
+            if (string.IsNullOrEmpty(datItem.GetName()))
                 missingFields.Add(DatItemField.Name);
 
             switch (datItem)
             {
                 case Disk disk:
-                    if (string.IsNullOrWhiteSpace(disk.MD5)
-                        && string.IsNullOrWhiteSpace(disk.SHA1))
+                    if (string.IsNullOrEmpty(disk.MD5)
+                        && string.IsNullOrEmpty(disk.SHA1))
                     {
                         missingFields.Add(DatItemField.SHA1);
                     }
@@ -46,13 +46,13 @@ namespace SabreTools.DatFiles.Formats
                 case Rom rom:
                     if (rom.Size == null || rom.Size < 0)
                         missingFields.Add(DatItemField.Size);
-                    if (string.IsNullOrWhiteSpace(rom.CRC)
-                        && string.IsNullOrWhiteSpace(rom.MD5)
-                        && string.IsNullOrWhiteSpace(rom.SHA1)
-                        && string.IsNullOrWhiteSpace(rom.SHA256)
-                        && string.IsNullOrWhiteSpace(rom.SHA384)
-                        && string.IsNullOrWhiteSpace(rom.SHA512)
-                        && string.IsNullOrWhiteSpace(rom.SpamSum))
+                    if (string.IsNullOrEmpty(rom.CRC)
+                        && string.IsNullOrEmpty(rom.MD5)
+                        && string.IsNullOrEmpty(rom.SHA1)
+                        && string.IsNullOrEmpty(rom.SHA256)
+                        && string.IsNullOrEmpty(rom.SHA384)
+                        && string.IsNullOrEmpty(rom.SHA512)
+                        && string.IsNullOrEmpty(rom.SpamSum))
                     {
                         missingFields.Add(DatItemField.SHA1);
                     }

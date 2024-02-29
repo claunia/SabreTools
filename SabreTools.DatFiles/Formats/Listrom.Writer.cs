@@ -28,14 +28,14 @@ namespace SabreTools.DatFiles.Formats
             List<DatItemField> missingFields = [];
 
             // Check item name
-            if (string.IsNullOrWhiteSpace(datItem.GetName()))
+            if (string.IsNullOrEmpty(datItem.GetName()))
                 missingFields.Add(DatItemField.Name);
 
             switch (datItem)
             {
                 case Disk disk:
-                    if (string.IsNullOrWhiteSpace(disk.MD5)
-                        && string.IsNullOrWhiteSpace(disk.SHA1))
+                    if (string.IsNullOrEmpty(disk.MD5)
+                        && string.IsNullOrEmpty(disk.SHA1))
                     {
                         missingFields.Add(DatItemField.SHA1);
                     }
@@ -44,9 +44,9 @@ namespace SabreTools.DatFiles.Formats
                 case Rom rom:
                     if (rom.Size == null || rom.Size < 0)
                         missingFields.Add(DatItemField.Size);
-                    if (string.IsNullOrWhiteSpace(rom.CRC))
+                    if (string.IsNullOrEmpty(rom.CRC))
                         missingFields.Add(DatItemField.CRC);
-                    if (string.IsNullOrWhiteSpace(rom.SHA1))
+                    if (string.IsNullOrEmpty(rom.SHA1))
                         missingFields.Add(DatItemField.SHA1);
                     break;
             }
@@ -116,8 +116,13 @@ namespace SabreTools.DatFiles.Formats
 
                 var set = new Models.Listrom.Set
                 {
+#if NETFRAMEWORK
+                    Driver = (items[0]!.Machine!.MachineType & MachineType.Device) != 0 ? items[0]!.Machine!.Name : null,
+                    Device = (items[0]!.Machine!.MachineType & MachineType.Device) != 0 ? items[0]!.Machine!.Name : null,
+#else
                     Driver = items[0]!.Machine!.MachineType.HasFlag(MachineType.Device) ? items[0]!.Machine!.Name : null,
                     Device = items[0]!.Machine!.MachineType.HasFlag(MachineType.Device) ? items[0]!.Machine!.Name : null,
+#endif
                 };
 
                 // Loop through and convert the items to respective lists
@@ -177,7 +182,7 @@ namespace SabreTools.DatFiles.Formats
                     Bad = true,
                 };
 
-                if (!string.IsNullOrWhiteSpace(disk.MD5))
+                if (!string.IsNullOrEmpty(disk.MD5))
                     row.MD5 = disk.MD5;
                 else
                     row.SHA1 = disk.SHA1;
@@ -191,7 +196,7 @@ namespace SabreTools.DatFiles.Formats
                     Name = disk.Name,
                 };
 
-                if (!string.IsNullOrWhiteSpace(disk.MD5))
+                if (!string.IsNullOrEmpty(disk.MD5))
                     row.MD5 = disk.MD5;
                 else
                     row.SHA1 = disk.SHA1;

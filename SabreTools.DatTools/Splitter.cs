@@ -63,7 +63,13 @@ namespace SabreTools.DatTools
             extBDat.Header.Description += $" ({newExtBString})";
 
             // Now separate the roms accordingly
+#if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(datFile.Items.Keys, key =>
+#else
+            foreach (var key in datFile.Items.Keys)
+#endif
             {
                 ConcurrentList<DatItem>? items = datFile.Items[key];
                 if (items == null)
@@ -151,7 +157,13 @@ namespace SabreTools.DatTools
             fieldDats[DatItemField.NULL].Header.Description += " (Other)";
 
             // Now populate each of the DAT objects in turn
+#if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(datFile.Items.Keys, key =>
+#else
+            foreach (var key in datFile.Items.Keys)
+#endif
             {
                 ConcurrentList<DatItem>? items = datFile.Items[key];
                 if (items == null)
@@ -250,7 +262,13 @@ namespace SabreTools.DatTools
             keys.Sort(SplitByLevelSort);
 
             // Then, we loop over the games
+#if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(keys, key =>
+#else
+            foreach (var key in keys)
+#endif
             {
                 // Here, the key is the name of the game to be used for comparison
                 if (tempDat.Header.Name != null && tempDat.Header.Name != Path.GetDirectoryName(key))
@@ -354,7 +372,13 @@ namespace SabreTools.DatTools
             greaterThan.Header.Description += $" (equal-greater than {radix})";
 
             // Now populate each of the DAT objects in turn
+#if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(datFile.Items.Keys, key =>
+#else
+            foreach (var key in datFile.Items.Keys)
+#endif
             {
                 ConcurrentList<DatItem>? items = datFile.Items[key];
                 if (items == null)
@@ -510,7 +534,13 @@ namespace SabreTools.DatTools
             }
 
             // Now populate each of the DAT objects in turn
+#if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(outputTypes, Globals.ParallelOptions, itemType =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(outputTypes, itemType =>
+#else
+            foreach (var itemType in outputTypes)
+#endif
             {
                 FillWithItemType(datFile, typeDats[itemType], itemType);
 #if NET40_OR_GREATER || NETCOREAPP
@@ -533,7 +563,13 @@ namespace SabreTools.DatTools
         private static void FillWithItemType(DatFile datFile, DatFile indexDat, ItemType itemType)
         {
             // Loop through and add the items for this index to the output
+#if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(datFile.Items.Keys, key =>
+#else
+            foreach (var key in datFile.Items.Keys)
+#endif
             {
                 ConcurrentList<DatItem> items = DatItem.Merge(datFile.Items[key]);
 

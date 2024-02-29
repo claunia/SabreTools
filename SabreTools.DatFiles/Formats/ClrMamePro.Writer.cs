@@ -41,60 +41,60 @@ namespace SabreTools.DatFiles.Formats
             switch (datItem)
             {
                 case Release release:
-                    if (string.IsNullOrWhiteSpace(release.Name))
+                    if (string.IsNullOrEmpty(release.Name))
                         missingFields.Add(DatItemField.Name);
-                    if (string.IsNullOrWhiteSpace(release.Region))
+                    if (string.IsNullOrEmpty(release.Region))
                         missingFields.Add(DatItemField.Region);
                     break;
 
                 case BiosSet biosset:
-                    if (string.IsNullOrWhiteSpace(biosset.Name))
+                    if (string.IsNullOrEmpty(biosset.Name))
                         missingFields.Add(DatItemField.Name);
-                    if (string.IsNullOrWhiteSpace(biosset.Description))
+                    if (string.IsNullOrEmpty(biosset.Description))
                         missingFields.Add(DatItemField.Description);
                     break;
 
                 case Rom rom:
-                    if (string.IsNullOrWhiteSpace(rom.Name))
+                    if (string.IsNullOrEmpty(rom.Name))
                         missingFields.Add(DatItemField.Name);
                     if (rom.Size == null || rom.Size < 0)
                         missingFields.Add(DatItemField.Size);
-                    if (string.IsNullOrWhiteSpace(rom.CRC)
-                        && string.IsNullOrWhiteSpace(rom.MD5)
-                        && string.IsNullOrWhiteSpace(rom.SHA1)
-                        && string.IsNullOrWhiteSpace(rom.SHA256)
-                        && string.IsNullOrWhiteSpace(rom.SHA384)
-                        && string.IsNullOrWhiteSpace(rom.SHA512)
-                        && string.IsNullOrWhiteSpace(rom.SpamSum))
+                    if (string.IsNullOrEmpty(rom.CRC)
+                        && string.IsNullOrEmpty(rom.MD5)
+                        && string.IsNullOrEmpty(rom.SHA1)
+                        && string.IsNullOrEmpty(rom.SHA256)
+                        && string.IsNullOrEmpty(rom.SHA384)
+                        && string.IsNullOrEmpty(rom.SHA512)
+                        && string.IsNullOrEmpty(rom.SpamSum))
                     {
                         missingFields.Add(DatItemField.SHA1);
                     }
                     break;
 
                 case Disk disk:
-                    if (string.IsNullOrWhiteSpace(disk.Name))
+                    if (string.IsNullOrEmpty(disk.Name))
                         missingFields.Add(DatItemField.Name);
-                    if (string.IsNullOrWhiteSpace(disk.MD5)
-                        && string.IsNullOrWhiteSpace(disk.SHA1))
+                    if (string.IsNullOrEmpty(disk.MD5)
+                        && string.IsNullOrEmpty(disk.SHA1))
                     {
                         missingFields.Add(DatItemField.SHA1);
                     }
                     break;
 
                 case Sample sample:
-                    if (string.IsNullOrWhiteSpace(sample.Name))
+                    if (string.IsNullOrEmpty(sample.Name))
                         missingFields.Add(DatItemField.Name);
                     break;
 
                 case Archive archive:
-                    if (string.IsNullOrWhiteSpace(archive.Name))
+                    if (string.IsNullOrEmpty(archive.Name))
                         missingFields.Add(DatItemField.Name);
                     break;
 
                 case Chip chip:
                     if (!chip.ChipTypeSpecified)
                         missingFields.Add(DatItemField.ChipType);
-                    if (string.IsNullOrWhiteSpace(chip.Name))
+                    if (string.IsNullOrEmpty(chip.Name))
                         missingFields.Add(DatItemField.Name);
                     break;
 
@@ -118,7 +118,7 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case DipSwitch dipswitch:
-                    if (string.IsNullOrWhiteSpace(dipswitch.Name))
+                    if (string.IsNullOrEmpty(dipswitch.Name))
                         missingFields.Add(DatItemField.Name);
                     break;
 

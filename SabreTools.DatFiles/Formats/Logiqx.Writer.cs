@@ -35,70 +35,70 @@ namespace SabreTools.DatFiles.Formats
             switch (datItem)
             {
                 case Release release:
-                    if (string.IsNullOrWhiteSpace(release.Name))
+                    if (string.IsNullOrEmpty(release.Name))
                         missingFields.Add(DatItemField.Name);
-                    if (string.IsNullOrWhiteSpace(release.Region))
+                    if (string.IsNullOrEmpty(release.Region))
                         missingFields.Add(DatItemField.Region);
                     break;
 
                 case BiosSet biosset:
-                    if (string.IsNullOrWhiteSpace(biosset.Name))
+                    if (string.IsNullOrEmpty(biosset.Name))
                         missingFields.Add(DatItemField.Name);
-                    if (string.IsNullOrWhiteSpace(biosset.Description))
+                    if (string.IsNullOrEmpty(biosset.Description))
                         missingFields.Add(DatItemField.Description);
                     break;
 
                 case Rom rom:
-                    if (string.IsNullOrWhiteSpace(rom.Name))
+                    if (string.IsNullOrEmpty(rom.Name))
                         missingFields.Add(DatItemField.Name);
                     if (rom.Size == null || rom.Size < 0)
                         missingFields.Add(DatItemField.Size);
-                    if (string.IsNullOrWhiteSpace(rom.CRC)
-                        && string.IsNullOrWhiteSpace(rom.MD5)
-                        && string.IsNullOrWhiteSpace(rom.SHA1)
-                        && string.IsNullOrWhiteSpace(rom.SHA256)
-                        && string.IsNullOrWhiteSpace(rom.SHA384)
-                        && string.IsNullOrWhiteSpace(rom.SHA512)
-                        && string.IsNullOrWhiteSpace(rom.SpamSum))
+                    if (string.IsNullOrEmpty(rom.CRC)
+                        && string.IsNullOrEmpty(rom.MD5)
+                        && string.IsNullOrEmpty(rom.SHA1)
+                        && string.IsNullOrEmpty(rom.SHA256)
+                        && string.IsNullOrEmpty(rom.SHA384)
+                        && string.IsNullOrEmpty(rom.SHA512)
+                        && string.IsNullOrEmpty(rom.SpamSum))
                     {
                         missingFields.Add(DatItemField.SHA1);
                     }
                     break;
 
                 case Disk disk:
-                    if (string.IsNullOrWhiteSpace(disk.Name))
+                    if (string.IsNullOrEmpty(disk.Name))
                         missingFields.Add(DatItemField.Name);
-                    if (string.IsNullOrWhiteSpace(disk.MD5)
-                        && string.IsNullOrWhiteSpace(disk.SHA1))
+                    if (string.IsNullOrEmpty(disk.MD5)
+                        && string.IsNullOrEmpty(disk.SHA1))
                     {
                         missingFields.Add(DatItemField.SHA1);
                     }
                     break;
 
                 case Media media:
-                    if (string.IsNullOrWhiteSpace(media.Name))
+                    if (string.IsNullOrEmpty(media.Name))
                         missingFields.Add(DatItemField.Name);
-                    if (string.IsNullOrWhiteSpace(media.MD5)
-                        && string.IsNullOrWhiteSpace(media.SHA1)
-                        && string.IsNullOrWhiteSpace(media.SHA256)
-                        && string.IsNullOrWhiteSpace(media.SpamSum))
+                    if (string.IsNullOrEmpty(media.MD5)
+                        && string.IsNullOrEmpty(media.SHA1)
+                        && string.IsNullOrEmpty(media.SHA256)
+                        && string.IsNullOrEmpty(media.SpamSum))
                     {
                         missingFields.Add(DatItemField.SHA1);
                     }
                     break;
 
                 case DeviceReference deviceref:
-                    if (string.IsNullOrWhiteSpace(deviceref.Name))
+                    if (string.IsNullOrEmpty(deviceref.Name))
                         missingFields.Add(DatItemField.Name);
                     break;
 
                 case Sample sample:
-                    if (string.IsNullOrWhiteSpace(sample.Name))
+                    if (string.IsNullOrEmpty(sample.Name))
                         missingFields.Add(DatItemField.Name);
                     break;
 
                 case Archive archive:
-                    if (string.IsNullOrWhiteSpace(archive.Name))
+                    if (string.IsNullOrEmpty(archive.Name))
                         missingFields.Add(DatItemField.Name);
                     break;
 
@@ -114,9 +114,9 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case DatItems.Formats.SoftwareList softwarelist:
-                    if (string.IsNullOrWhiteSpace(softwarelist.Tag))
+                    if (string.IsNullOrEmpty(softwarelist.Tag))
                         missingFields.Add(DatItemField.Tag);
-                    if (string.IsNullOrWhiteSpace(softwarelist.Name))
+                    if (string.IsNullOrEmpty(softwarelist.Name))
                         missingFields.Add(DatItemField.Name);
                     if (!softwarelist.StatusSpecified)
                         missingFields.Add(DatItemField.SoftwareListStatus);
@@ -137,7 +137,7 @@ namespace SabreTools.DatFiles.Formats
 
                 // Only write the doctype if we don't have No-Intro data
                 bool success;
-                if (string.IsNullOrWhiteSpace(Header.NoIntroID))
+                if (string.IsNullOrEmpty(Header.NoIntroID))
                     success = new Serialization.Files.Logiqx().SerializeToFileWithDocType(datafile, outfile);
                 else
                     success = new Serialization.Files.Logiqx().Serialize(datafile, outfile);
@@ -222,7 +222,7 @@ namespace SabreTools.DatFiles.Formats
             if (!Header.ForceMergingSpecified
                 && !Header.ForceNodumpSpecified
                 && !Header.ForcePackingSpecified
-                && string.IsNullOrWhiteSpace(Header.HeaderSkipper))
+                && string.IsNullOrEmpty(Header.HeaderSkipper))
             {
                 return null;
             }
@@ -248,7 +248,7 @@ namespace SabreTools.DatFiles.Formats
         private Models.Logiqx.RomCenter? CreateRomCenter()
         {
             // If we don't have subheader values, we can't do anything
-            if (string.IsNullOrWhiteSpace(Header.System)
+            if (string.IsNullOrEmpty(Header.System)
                 && !Header.RomModeSpecified
                 && !Header.BiosModeSpecified
                 && !Header.SampleModeSpecified
@@ -391,12 +391,21 @@ namespace SabreTools.DatFiles.Formats
 
             game.Name = machine.Name;
             game.SourceFile = machine.SourceFile;
+#if NETFRAMEWORK
+            if ((machine.MachineType & MachineType.Bios) != 0)
+                game.IsBios = "yes";
+            if ((machine.MachineType & MachineType.Device) != 0)
+                game.IsDevice = "yes";
+            if ((machine.MachineType & MachineType.Mechanical) != 0)
+                game.IsMechanical = "yes";
+#else
             if (machine.MachineType.HasFlag(MachineType.Bios))
                 game.IsBios = "yes";
             if (machine.MachineType.HasFlag(MachineType.Device))
                 game.IsDevice = "yes";
             if (machine.MachineType.HasFlag(MachineType.Mechanical))
                 game.IsMechanical = "yes";
+#endif
             game.CloneOf = machine.CloneOf;
             game.RomOf = machine.RomOf;
             game.SampleOf = machine.SampleOf;
@@ -434,15 +443,15 @@ namespace SabreTools.DatFiles.Formats
         private static Models.Logiqx.Trurip? CreateTrurip(Machine machine)
         {
             // If we don't have subheader values, we can't do anything
-            if (string.IsNullOrWhiteSpace(machine.TitleID)
-                && string.IsNullOrWhiteSpace(machine.Developer)
-                && string.IsNullOrWhiteSpace(machine.Genre)
-                && string.IsNullOrWhiteSpace(machine.Subgenre)
-                && string.IsNullOrWhiteSpace(machine.Ratings)
-                && string.IsNullOrWhiteSpace(machine.Score)
-                && string.IsNullOrWhiteSpace(machine.Enabled)
+            if (string.IsNullOrEmpty(machine.TitleID)
+                && string.IsNullOrEmpty(machine.Developer)
+                && string.IsNullOrEmpty(machine.Genre)
+                && string.IsNullOrEmpty(machine.Subgenre)
+                && string.IsNullOrEmpty(machine.Ratings)
+                && string.IsNullOrEmpty(machine.Score)
+                && string.IsNullOrEmpty(machine.Enabled)
                 && !machine.CrcSpecified
-                && string.IsNullOrWhiteSpace(machine.RelatedTo))
+                && string.IsNullOrEmpty(machine.RelatedTo))
             {
                 return null;
             }

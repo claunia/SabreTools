@@ -226,7 +226,7 @@ namespace SabreTools.DatFiles.Formats
                 Publisher = game.Publisher,
             };
 
-            if (!string.IsNullOrWhiteSpace(dirname))
+            if (!string.IsNullOrEmpty(dirname))
                 machine.Name = $"{dirname}/{machine.Name}";
 
             if (game.IsBios.AsYesNo() == true)
@@ -236,10 +236,17 @@ namespace SabreTools.DatFiles.Formats
             if (game.IsMechanical.AsYesNo() == true)
                 machine.MachineType |= MachineType.Mechanical;
 
+#if NETFRAMEWORK
+            if (game.Comment != null && game.Comment.Any())
+                machine.Comment = string.Join(";", game.Comment);
+            if (game.Category != null && game.Category.Any())
+                machine.Category = string.Join(";", game.Category);
+#else
             if (game.Comment != null && game.Comment.Any())
                 machine.Comment = string.Join(';', game.Comment);
             if (game.Category != null && game.Category.Any())
                 machine.Category = string.Join(';', game.Category);
+#endif
 
             if (game.Trurip != null)
             {

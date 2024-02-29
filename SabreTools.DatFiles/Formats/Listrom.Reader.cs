@@ -67,7 +67,7 @@ namespace SabreTools.DatFiles.Formats
 
             // Create the machine
             Machine machine;
-            if (!string.IsNullOrWhiteSpace(set.Device))
+            if (!string.IsNullOrEmpty(set.Device))
             {
                 machine = new Machine
                 {
@@ -75,7 +75,7 @@ namespace SabreTools.DatFiles.Formats
                     MachineType = MachineType.Device,
                 };
             }
-            else if (!string.IsNullOrWhiteSpace(set.Driver))
+            else if (!string.IsNullOrEmpty(set.Driver))
             {
                 machine = new Machine
                 {
@@ -111,8 +111,8 @@ namespace SabreTools.DatFiles.Formats
             if (row.Size == null
                 && !row.NoGoodDumpKnown
                 && !row.Bad
-                && (!string.IsNullOrWhiteSpace(row.MD5)
-                    || !string.IsNullOrWhiteSpace(row.SHA1)))
+                && (!string.IsNullOrEmpty(row.MD5)
+                    || !string.IsNullOrEmpty(row.SHA1)))
             {
                 var disk = new Disk
                 {
@@ -126,7 +126,7 @@ namespace SabreTools.DatFiles.Formats
                     },
                 };
 
-                if (!string.IsNullOrWhiteSpace(row.MD5))
+                if (!string.IsNullOrEmpty(row.MD5))
                     disk.MD5 = row.MD5;
                 else
                     disk.SHA1 = row.SHA1;
@@ -165,8 +165,8 @@ namespace SabreTools.DatFiles.Formats
             else if (row.Size == null
                 && !row.NoGoodDumpKnown
                 && row.Bad
-                && (!string.IsNullOrWhiteSpace(row.MD5)
-                    || !string.IsNullOrWhiteSpace(row.SHA1)))
+                && (!string.IsNullOrEmpty(row.MD5)
+                    || !string.IsNullOrEmpty(row.SHA1)))
             {
                 var disk = new Disk
                 {
@@ -180,7 +180,7 @@ namespace SabreTools.DatFiles.Formats
                     },
                 };
 
-                if (!string.IsNullOrWhiteSpace(row.MD5))
+                if (!string.IsNullOrEmpty(row.MD5))
                     disk.MD5 = row.MD5;
                 else
                     disk.SHA1 = row.SHA1;

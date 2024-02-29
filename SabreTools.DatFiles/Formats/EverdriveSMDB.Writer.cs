@@ -27,19 +27,19 @@ namespace SabreTools.DatFiles.Formats
             List<DatItemField> missingFields = [];
 
             // Check item name
-            if (string.IsNullOrWhiteSpace(datItem.GetName()))
+            if (string.IsNullOrEmpty(datItem.GetName()))
                 missingFields.Add(DatItemField.Name);
 
             switch (datItem)
             {
                 case Rom rom:
-                    if (string.IsNullOrWhiteSpace(rom.SHA256))
+                    if (string.IsNullOrEmpty(rom.SHA256))
                         missingFields.Add(DatItemField.SHA256);
-                    if (string.IsNullOrWhiteSpace(rom.SHA1))
+                    if (string.IsNullOrEmpty(rom.SHA1))
                         missingFields.Add(DatItemField.SHA1);
-                    if (string.IsNullOrWhiteSpace(rom.MD5))
+                    if (string.IsNullOrEmpty(rom.MD5))
                         missingFields.Add(DatItemField.MD5);
-                    if (string.IsNullOrWhiteSpace(rom.CRC))
+                    if (string.IsNullOrEmpty(rom.CRC))
                         missingFields.Add(DatItemField.CRC);
                     break;
             }

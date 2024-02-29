@@ -290,7 +290,11 @@ namespace SabreTools.Filtering
                     continue;
 
                 // If the machine (is/is not) a device, we want to continue
+#if NETFRAMEWORK
+                if (dev ^ ((datFile.Items[machine]![0].Machine.MachineType & MachineType.Device) != 0))
+#else
                 if (dev ^ (datFile.Items[machine]![0].Machine.MachineType.HasFlag(MachineType.Device)))
+#endif
                     continue;
 
                 // Get all device reference names from the current machine
@@ -589,8 +593,13 @@ namespace SabreTools.Filtering
                     continue;
 
                 if (items.Count > 0
+#if NETFRAMEWORK
+                    && ((items[0].Machine.MachineType & MachineType.Bios) != 0
+                        || (items[0].Machine.MachineType & MachineType.Device) != 0))
+#else
                     && (items[0].Machine.MachineType.HasFlag(MachineType.Bios)
                         || items[0].Machine.MachineType.HasFlag(MachineType.Device)))
+#endif
                 {
                     datFile.Items.Remove(game);
                 }
@@ -614,7 +623,11 @@ namespace SabreTools.Filtering
                     continue;
 
                 // If the game (is/is not) a bios, we want to continue
+#if NETFRAMEWORK
+                if (bios ^ (items[0].Machine.MachineType & MachineType.Bios) != 0)
+#else
                 if (bios ^ items[0].Machine.MachineType.HasFlag(MachineType.Bios))
+#endif
                     continue;
 
                 // Determine if the game has a parent or not

@@ -61,7 +61,13 @@ namespace SabreTools.DatTools
                 List<string> files = Directory.EnumerateFiles(basePath, "*", SearchOption.AllDirectories).ToList();
 
                 // Loop through and add the file sizes
+#if NET452_OR_GREATER || NETCOREAPP
                 Parallel.ForEach(files, Globals.ParallelOptions, item =>
+#elif NET40_OR_GREATER
+                Parallel.ForEach(files, item =>
+#else
+                foreach (var item in files)
+#endif
                 {
                     Interlocked.Add(ref totalSize, new FileInfo(item).Length);
 #if NET40_OR_GREATER || NETCOREAPP
@@ -132,7 +138,11 @@ namespace SabreTools.DatTools
                 archive.AvailableHashes = hashes;
 
                 // Skip if we're treating archives as files and skipping files
+#if NETFRAMEWORK
+                if ((asFiles & TreatAsFile.Archive) != 0 && skipFileType == SkipFileType.File)
+#else
                 if (asFiles.HasFlag(TreatAsFile.Archive) && skipFileType == SkipFileType.File)
+#endif
                 {
                     return;
                 }
@@ -144,7 +154,11 @@ namespace SabreTools.DatTools
                 }
 
                 // Process as archive if we're not treating archives as files
+#if NETFRAMEWORK
+                else if ((!asFiles & TreatAsFile.Archive) != 0)
+#else
                 else if (!asFiles.HasFlag(TreatAsFile.Archive))
+#endif
                 {
                     var extracted = archive.GetChildren();
 
@@ -223,7 +237,13 @@ namespace SabreTools.DatTools
             string parent = (Path.GetDirectoryName(Path.GetFullPath(item)) + Path.DirectorySeparatorChar).Remove(0, basePath?.Length ?? 0) + Path.GetFileNameWithoutExtension(item);
 
             // First take care of the found items
+#if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(extracted, Globals.ParallelOptions, baseFile =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(extracted, baseFile =>
+#else
+            foreach (var baseFile in extracted)
+#endif
             {
                 DatItem? datItem = DatItem.Create(baseFile);
                 if (datItem == null)
@@ -256,7 +276,13 @@ namespace SabreTools.DatTools
                 empties = archive.GetEmptyFolders();
 
             // Add add all of the found empties to the DAT
+#if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(empties, Globals.ParallelOptions, empty =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(empties, empty =>
+#else
+            foreach (var empty in empties)
+#endif
             {
                 Rom emptyRom = new(Path.Combine(empty, "_"), item);
                 ProcessFileHelper(datFile, item, emptyRom, basePath, parent);
@@ -279,7 +305,13 @@ namespace SabreTools.DatTools
                 return;
 
             List<string> empties = basePath.ListEmpty() ?? [];
+#if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(empties, Globals.ParallelOptions, dir =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(empties, dir =>
+#else
+            foreach (var dir in empties)
+#endif
             {
                 // Get the full path for the directory
                 string fulldir = Path.GetFullPath(dir);

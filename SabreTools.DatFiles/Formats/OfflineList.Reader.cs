@@ -364,7 +364,7 @@ namespace SabreTools.DatFiles.Formats
             foreach (var crc in files.RomCRC)
             {
                 string name = string.Empty;
-                if (!string.IsNullOrWhiteSpace(releaseNumber) && releaseNumber != "0")
+                if (!string.IsNullOrEmpty(releaseNumber) && releaseNumber != "0")
                     name += $"{releaseNumber} - ";
                 name += $"{machine.Name}{crc.Extension}";
 

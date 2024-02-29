@@ -140,7 +140,7 @@ namespace SabreTools.DatFiles.Formats
 
                 var rom = dump.Rom;
 
-                string name = $"{machine.Name}_{index++}{(!string.IsNullOrWhiteSpace(rom.Remark) ? $" {rom.Remark}" : string.Empty)}";
+                string name = $"{machine.Name}_{index++}{(!string.IsNullOrEmpty(rom.Remark) ? $" {rom.Remark}" : string.Empty)}";
                 var item = new Rom
                 {
                     Name = name,

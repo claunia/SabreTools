@@ -33,7 +33,13 @@ namespace SabreTools.DatTools
         public static void ApplySuperDAT(DatFile datFile, List<ParentablePath> inputs)
         {
             List<string> keys = [.. datFile.Items.Keys];
+#if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(keys, key =>
+#else
+            foreach (var key in keys)
+#endif
             {
                 ConcurrentList<DatItem>? items = datFile.Items[key];
                 if (items == null)
@@ -98,7 +104,13 @@ namespace SabreTools.DatTools
                 intDat.Items.BucketBy(ItemKey.CRC, DedupeType.None);
 
                 // Then we do a hashwise comparison against the base DAT
+#if NET452_OR_GREATER || NETCOREAPP
                 Parallel.ForEach(intDat.Items.Keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+                Parallel.ForEach(intDat.Items.Keys, key =>
+#else
+                foreach (var key in intDat.Items.Keys)
+#endif
                 {
                     ConcurrentList<DatItem>? datItems = intDat.Items[key];
                     if (datItems == null)
@@ -136,7 +148,13 @@ namespace SabreTools.DatTools
                 intDat.Items.BucketBy(ItemKey.Machine, DedupeType.None);
 
                 // Then we do a namewise comparison against the base DAT
+#if NET452_OR_GREATER || NETCOREAPP
                 Parallel.ForEach(intDat.Items.Keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+                Parallel.ForEach(intDat.Items.Keys, key =>
+#else
+                foreach (var key in intDat.Items.Keys)
+#endif
                 {
                     ConcurrentList<DatItem>? datItems = intDat.Items[key];
                     if (datItems == null)
@@ -194,7 +212,13 @@ namespace SabreTools.DatTools
 
             // Then we compare against the base DAT
             List<string> keys = [.. intDat.Items.Keys];
+#if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(keys, key =>
+#else
+            foreach (var key in keys)
+#endif
             {
                 // Game Against uses game names
                 if (useGames)
@@ -274,13 +298,23 @@ namespace SabreTools.DatTools
 
             // Create the DatFiles from the set of headers
             DatFile[] outDatsArray = new DatFile[datHeaders.Count];
+#if NET452_OR_GREATER || NETCOREAPP
             Parallel.For(0, datHeaders.Count, Globals.ParallelOptions, j =>
+#elif NET40_OR_GREATER
+            Parallel.For(0, datHeaders.Count, j =>
+#else
+            for (int j = 0; j < datHeaders.Count; j++)
+#endif
             {
                 DatFile diffData = DatFile.Create(datHeaders[j]);
                 diffData.Items = [];
                 FillWithSourceIndex(datFile, diffData, j);
                 outDatsArray[j] = diffData;
+#if NET40_OR_GREATER || NETCOREAPP
             });
+#else
+            }
+#endif
 
             outDats = [.. outDatsArray];
             watch.Stop();
@@ -330,7 +364,13 @@ namespace SabreTools.DatTools
             // Now, loop through the dictionary and populate the correct DATs
             watch.Start("Populating duplicate DAT");
 
+#if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(datFile.Items.Keys, key =>
+#else
+            foreach (var key in datFile.Items.Keys)
+#endif
             {
                 ConcurrentList<DatItem> items = DatItem.Merge(datFile.Items[key]);
 
@@ -341,7 +381,11 @@ namespace SabreTools.DatTools
                 // Loop through and add the items correctly
                 foreach (DatItem item in items)
                 {
+#if NETFRAMEWORK
+                    if ((item.DupeType & DupeType.External) != 0)
+#else
                     if (item.DupeType.HasFlag(DupeType.External))
+#endif
                     {
                         if (item.Clone() is not DatItem newrom)
                             continue;
@@ -396,7 +440,13 @@ namespace SabreTools.DatTools
             // Loop through each of the inputs and get or create a new DatData object
             DatFile[] outDatsArray = new DatFile[inputs.Count];
 
+#if NET452_OR_GREATER || NETCOREAPP
             Parallel.For(0, inputs.Count, Globals.ParallelOptions, j =>
+#elif NET40_OR_GREATER
+            Parallel.For(0, inputs.Count, j =>
+#else
+            for (int j = 0; j < inputs.Count; j++)
+#endif
             {
                 string innerpost = $" ({j} - {inputs[j].GetNormalizedFileName(true)} Only)";
                 DatFile diffData = DatFile.Create(datFile.Header);
@@ -405,7 +455,11 @@ namespace SabreTools.DatTools
                 diffData.Header.Description += innerpost;
                 diffData.Items = [];
                 outDatsArray[j] = diffData;
+#if NET40_OR_GREATER || NETCOREAPP
             });
+#else
+            }
+#endif
 
             // Create a list of DatData objects representing individual output files
             List<DatFile> outDats = [.. outDatsArray];
@@ -415,7 +469,13 @@ namespace SabreTools.DatTools
             // Now, loop through the dictionary and populate the correct DATs
             watch.Start("Populating all individual DATs");
 
+#if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(datFile.Items.Keys, key =>
+#else
+            foreach (var key in datFile.Items.Keys)
+#endif
             {
                 ConcurrentList<DatItem> items = DatItem.Merge(datFile.Items[key]);
 
@@ -429,7 +489,11 @@ namespace SabreTools.DatTools
                     if (item.Source == null)
                         continue;
 
+#if NETFRAMEWORK
+                    if ((item.DupeType & DupeType.Internal) != 0 || item.DupeType == 0x00)
+#else
                     if (item.DupeType.HasFlag(DupeType.Internal) || item.DupeType == 0x00)
+#endif
                         outDats[item.Source.Index].Items.Add(key, item);
                 }
 #if NET40_OR_GREATER || NETCOREAPP
@@ -485,7 +549,13 @@ namespace SabreTools.DatTools
             // Now, loop through the dictionary and populate the correct DATs
             watch.Start("Populating no duplicate DAT");
 
+#if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(datFile.Items.Keys, key =>
+#else
+            foreach (var key in datFile.Items.Keys)
+#endif
             {
                 ConcurrentList<DatItem> items = DatItem.Merge(datFile.Items[key]);
 
@@ -496,7 +566,11 @@ namespace SabreTools.DatTools
                 // Loop through and add the items correctly
                 foreach (DatItem item in items)
                 {
+#if NETFRAMEWORK
+                    if ((item.DupeType & DupeType.Internal) != 0 || item.DupeType == 0x00)
+#else
                     if (item.DupeType.HasFlag(DupeType.Internal) || item.DupeType == 0x00)
+#endif
                     {
                         if (item.Clone() is not DatItem newrom || newrom.Source == null)
                             continue;
@@ -540,13 +614,23 @@ namespace SabreTools.DatTools
             InternalStopwatch watch = new("Processing individual DATs");
 
             // Parse all of the DATs into their own DatFiles in the array
+#if NET452_OR_GREATER || NETCOREAPP
             Parallel.For(0, inputs.Count, Globals.ParallelOptions, i =>
+#elif NET40_OR_GREATER
+            Parallel.For(0, inputs.Count, i =>
+#else
+            for (int i = 0; i < inputs.Count; i++)
+#endif
             {
                 var input = inputs[i];
                 logger.User($"Adding DAT: {input.CurrentPath}");
                 datFiles[i] = DatFile.Create(datFile.Header.CloneFiltering());
                 Parser.ParseInto(datFiles[i], input, i, keep: true);
+#if NET40_OR_GREATER || NETCOREAPP
             });
+#else
+            }
+#endif
 
             watch.Stop();
 
@@ -560,7 +644,7 @@ namespace SabreTools.DatTools
 
             return datFiles.Select(d => d.Header).ToList();
         }
-    
+
         /// <summary>
         /// Add items from another DatFile to the existing DatFile
         /// </summary>
@@ -596,7 +680,13 @@ namespace SabreTools.DatTools
         private static void FillWithSourceIndex(DatFile datFile, DatFile indexDat, int index)
         {
             // Loop through and add the items for this index to the output
+#if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(datFile.Items.Keys, key =>
+#else
+            foreach (var key in datFile.Items.Keys)
+#endif
             {
                 ConcurrentList<DatItem> items = DatItem.Merge(datFile.Items[key]);
 

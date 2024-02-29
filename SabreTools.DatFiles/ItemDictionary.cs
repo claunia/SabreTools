@@ -1,5 +1,7 @@
 ﻿using System.Collections;
+#if NET40_OR_GREATER || NETCOREAPP
 using System.Collections.Concurrent;
+#endif
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -39,7 +41,11 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Internal dictionary for the class
         /// </summary>
+#if NET40_OR_GREATER || NETCOREAPP
         private readonly ConcurrentDictionary<string, ConcurrentList<DatItem>?> items;
+#else
+        private readonly Dictionary<string, ConcurrentList<DatItem>?> items;
+#endif
 
         /// <summary>
         /// Lock for statistics calculation
@@ -499,8 +505,8 @@ namespace SabreTools.DatFiles
                         DiskCount++;
                         if (disk.ItemStatus != ItemStatus.Nodump)
                         {
-                            MD5Count += (string.IsNullOrWhiteSpace(disk.MD5) ? 0 : 1);
-                            SHA1Count += (string.IsNullOrWhiteSpace(disk.SHA1) ? 0 : 1);
+                            MD5Count += (string.IsNullOrEmpty(disk.MD5) ? 0 : 1);
+                            SHA1Count += (string.IsNullOrEmpty(disk.SHA1) ? 0 : 1);
                         }
 
                         BaddumpCount += (disk.ItemStatus == ItemStatus.BadDump ? 1 : 0);
@@ -528,10 +534,10 @@ namespace SabreTools.DatFiles
                         break;
                     case Media media:
                         MediaCount++;
-                        MD5Count += (string.IsNullOrWhiteSpace(media.MD5) ? 0 : 1);
-                        SHA1Count += (string.IsNullOrWhiteSpace(media.SHA1) ? 0 : 1);
-                        SHA256Count += (string.IsNullOrWhiteSpace(media.SHA256) ? 0 : 1);
-                        SpamSumCount += (string.IsNullOrWhiteSpace(media.SpamSum) ? 0 : 1);
+                        MD5Count += (string.IsNullOrEmpty(media.MD5) ? 0 : 1);
+                        SHA1Count += (string.IsNullOrEmpty(media.SHA1) ? 0 : 1);
+                        SHA256Count += (string.IsNullOrEmpty(media.SHA256) ? 0 : 1);
+                        SpamSumCount += (string.IsNullOrEmpty(media.SpamSum) ? 0 : 1);
                         break;
                     case Part:
                         PartCount++;
@@ -556,13 +562,13 @@ namespace SabreTools.DatFiles
                         if (rom.ItemStatus != ItemStatus.Nodump)
                         {
                             TotalSize += rom.Size ?? 0;
-                            CRCCount += (string.IsNullOrWhiteSpace(rom.CRC) ? 0 : 1);
-                            MD5Count += (string.IsNullOrWhiteSpace(rom.MD5) ? 0 : 1);
-                            SHA1Count += (string.IsNullOrWhiteSpace(rom.SHA1) ? 0 : 1);
-                            SHA256Count += (string.IsNullOrWhiteSpace(rom.SHA256) ? 0 : 1);
-                            SHA384Count += (string.IsNullOrWhiteSpace(rom.SHA384) ? 0 : 1);
-                            SHA512Count += (string.IsNullOrWhiteSpace(rom.SHA512) ? 0 : 1);
-                            SpamSumCount += (string.IsNullOrWhiteSpace(rom.SpamSum) ? 0 : 1);
+                            CRCCount += (string.IsNullOrEmpty(rom.CRC) ? 0 : 1);
+                            MD5Count += (string.IsNullOrEmpty(rom.MD5) ? 0 : 1);
+                            SHA1Count += (string.IsNullOrEmpty(rom.SHA1) ? 0 : 1);
+                            SHA256Count += (string.IsNullOrEmpty(rom.SHA256) ? 0 : 1);
+                            SHA384Count += (string.IsNullOrEmpty(rom.SHA384) ? 0 : 1);
+                            SHA512Count += (string.IsNullOrEmpty(rom.SHA512) ? 0 : 1);
+                            SpamSumCount += (string.IsNullOrEmpty(rom.SpamSum) ? 0 : 1);
                         }
 
                         BaddumpCount += (rom.ItemStatus == ItemStatus.BadDump ? 1 : 0);
@@ -709,7 +715,11 @@ namespace SabreTools.DatFiles
         {
             // If the key is missing from the dictionary, add it
             if (!items.ContainsKey(key))
+#if NET40_OR_GREATER || NETCOREAPP
                 items.TryAdd(key, []);
+#else
+                items[key] = [];
+#endif
         }
 
         /// <summary>
@@ -753,7 +763,11 @@ namespace SabreTools.DatFiles
                 }
 
                 // Remove the key from the dictionary
+#if NET40_OR_GREATER || NETCOREAPP
                 return items.TryRemove(key, out _);
+#else
+                return items.Remove(key);
+#endif
             }
         }
 
@@ -867,8 +881,8 @@ namespace SabreTools.DatFiles
                         DiskCount--;
                         if (disk.ItemStatus != ItemStatus.Nodump)
                         {
-                            MD5Count -= (string.IsNullOrWhiteSpace(disk.MD5) ? 0 : 1);
-                            SHA1Count -= (string.IsNullOrWhiteSpace(disk.SHA1) ? 0 : 1);
+                            MD5Count -= (string.IsNullOrEmpty(disk.MD5) ? 0 : 1);
+                            SHA1Count -= (string.IsNullOrEmpty(disk.SHA1) ? 0 : 1);
                         }
 
                         BaddumpCount -= (disk.ItemStatus == ItemStatus.BadDump ? 1 : 0);
@@ -896,9 +910,9 @@ namespace SabreTools.DatFiles
                         break;
                     case Media media:
                         MediaCount--;
-                        MD5Count -= (string.IsNullOrWhiteSpace(media.MD5) ? 0 : 1);
-                        SHA1Count -= (string.IsNullOrWhiteSpace(media.SHA1) ? 0 : 1);
-                        SHA256Count -= (string.IsNullOrWhiteSpace(media.SHA256) ? 0 : 1);
+                        MD5Count -= (string.IsNullOrEmpty(media.MD5) ? 0 : 1);
+                        SHA1Count -= (string.IsNullOrEmpty(media.SHA1) ? 0 : 1);
+                        SHA256Count -= (string.IsNullOrEmpty(media.SHA256) ? 0 : 1);
                         break;
                     case Part:
                         PartCount--;
@@ -920,12 +934,12 @@ namespace SabreTools.DatFiles
                         if (rom.ItemStatus != ItemStatus.Nodump)
                         {
                             TotalSize -= rom.Size ?? 0;
-                            CRCCount -= (string.IsNullOrWhiteSpace(rom.CRC) ? 0 : 1);
-                            MD5Count -= (string.IsNullOrWhiteSpace(rom.MD5) ? 0 : 1);
-                            SHA1Count -= (string.IsNullOrWhiteSpace(rom.SHA1) ? 0 : 1);
-                            SHA256Count -= (string.IsNullOrWhiteSpace(rom.SHA256) ? 0 : 1);
-                            SHA384Count -= (string.IsNullOrWhiteSpace(rom.SHA384) ? 0 : 1);
-                            SHA512Count -= (string.IsNullOrWhiteSpace(rom.SHA512) ? 0 : 1);
+                            CRCCount -= (string.IsNullOrEmpty(rom.CRC) ? 0 : 1);
+                            MD5Count -= (string.IsNullOrEmpty(rom.MD5) ? 0 : 1);
+                            SHA1Count -= (string.IsNullOrEmpty(rom.SHA1) ? 0 : 1);
+                            SHA256Count -= (string.IsNullOrEmpty(rom.SHA256) ? 0 : 1);
+                            SHA384Count -= (string.IsNullOrEmpty(rom.SHA384) ? 0 : 1);
+                            SHA512Count -= (string.IsNullOrEmpty(rom.SHA512) ? 0 : 1);
                         }
 
                         BaddumpCount -= (rom.ItemStatus == ItemStatus.BadDump ? 1 : 0);
@@ -963,7 +977,11 @@ namespace SabreTools.DatFiles
         {
             bucketedBy = ItemKey.NULL;
             mergedBy = DedupeType.None;
+#if NET40_OR_GREATER || NETCOREAPP
             items = new ConcurrentDictionary<string, ConcurrentList<DatItem>?>();
+#else
+            items = new Dictionary<string, ConcurrentList<DatItem>?>();
+#endif
             logger = new Logger(this);
         }
 
@@ -981,7 +999,11 @@ namespace SabreTools.DatFiles
         public void BucketBy(ItemKey bucketBy, DedupeType dedupeType, bool lower = true, bool norename = true)
         {
             // If we have a situation where there's no dictionary or no keys at all, we skip
+#if NET40_OR_GREATER || NETCOREAPP
             if (items == null || items.IsEmpty)
+#else
+            if (items == null || items.Count == 0)
+#endif
                 return;
 
             // If the sorted type isn't the same, we want to sort the dictionary accordingly
@@ -997,7 +1019,14 @@ namespace SabreTools.DatFiles
 
                 // First do the initial sort of all of the roms inplace
                 List<string> oldkeys = [.. Keys];
+
+#if NET452_OR_GREATER || NETCOREAPP
                 Parallel.For(0, oldkeys.Count, Globals.ParallelOptions, k =>
+#elif NET40_OR_GREATER
+                Parallel.For(0, oldkeys.Count, k =>
+#else
+                for (int k = 0; k < oldkeys.Count; k++)
+#endif
                 {
                     string key = oldkeys[k];
                     if (this[key] == null)
@@ -1025,7 +1054,11 @@ namespace SabreTools.DatFiles
                     // If the key is now empty, remove it
                     if (this[key]!.Count == 0)
                         Remove(key);
+#if NET40_OR_GREATER || NETCOREAPP
                 });
+#else
+                }
+#endif
             }
 
             // If the merge type isn't the same, we want to merge the dictionary accordingly
@@ -1037,7 +1070,13 @@ namespace SabreTools.DatFiles
                 mergedBy = dedupeType;
 
                 List<string> keys = [.. Keys];
+#if NET452_OR_GREATER || NETCOREAPP
                 Parallel.ForEach(keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+                Parallel.ForEach(keys, key =>
+#else
+                foreach (var key in keys)
+#endif
                 {
                     // Get the possibly unsorted list
                     ConcurrentList<DatItem>? sortedlist = this[key]?.ToConcurrentList();
@@ -1064,7 +1103,13 @@ namespace SabreTools.DatFiles
             else
             {
                 List<string> keys = [.. Keys];
+#if NET452_OR_GREATER || NETCOREAPP
                 Parallel.ForEach(keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+                Parallel.ForEach(keys, key =>
+#else
+                foreach (var key in keys)
+#endif
                 {
                     // Get the possibly unsorted list
                     ConcurrentList<DatItem>? sortedlist = this[key];
@@ -1094,11 +1139,19 @@ namespace SabreTools.DatFiles
 
                 // If the value is null, remove
                 else if (items[key] == null)
+#if NET40_OR_GREATER || NETCOREAPP
                     items.TryRemove(key, out _);
+#else
+                    items.Remove(key);
+#endif
 
                 // If there are no non-blank items, remove
                 else if (!items[key]!.Any(i => i != null && i.ItemType != ItemType.Blank))
+#if NET40_OR_GREATER || NETCOREAPP
                     items.TryRemove(key, out _);
+#else
+                    items.Remove(key);
+#endif
             }
         }
 

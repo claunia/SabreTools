@@ -25,7 +25,7 @@ namespace SabreTools.Features
 
             // Common Features
             AddCommonFeatures();
-            
+
             AddFeature(OutputTypeListInput);
             this[OutputTypeListInput].AddFeature(DeprecatedFlag);
             AddFeature(OutputDirStringInput);
@@ -94,7 +94,13 @@ namespace SabreTools.Features
                     InternalStopwatch watch = new("Outputting hash-split DATs");
 
                     // Loop through each type DatFile
+#if NET452_OR_GREATER || NETCOREAPP
                     Parallel.ForEach(typeDats.Keys, Globals.ParallelOptions, itemType =>
+#elif NET40_OR_GREATER
+                    Parallel.ForEach(typeDats.Keys, itemType =>
+#else
+                    foreach (var itemType in typeDats.Keys)
+#endif
                     {
                         Writer.Write(typeDats[itemType], OutputDir);
 #if NET40_OR_GREATER || NETCOREAPP
@@ -140,7 +146,13 @@ namespace SabreTools.Features
                     InternalStopwatch watch = new("Outputting total-size-split DATs");
 
                     // Loop through each type DatFile
+#if NET452_OR_GREATER || NETCOREAPP
                     Parallel.ForEach(sizedDats, Globals.ParallelOptions, sizedDat =>
+#elif NET40_OR_GREATER
+                    Parallel.ForEach(sizedDats, sizedDat =>
+#else
+                    foreach (var sizedDat in sizedDats)
+#endif
                     {
                         Writer.Write(sizedDat, OutputDir);
 #if NET40_OR_GREATER || NETCOREAPP
@@ -160,7 +172,13 @@ namespace SabreTools.Features
                     InternalStopwatch watch = new("Outputting ItemType DATs");
 
                     // Loop through each type DatFile
+#if NET452_OR_GREATER || NETCOREAPP
                     Parallel.ForEach(typeDats.Keys, Globals.ParallelOptions, itemType =>
+#elif NET40_OR_GREATER
+                    Parallel.ForEach(typeDats.Keys, itemType =>
+#else
+                    foreach (var itemType in typeDats.Keys)
+#endif
                     {
                         Writer.Write(typeDats[itemType], OutputDir);
 #if NET40_OR_GREATER || NETCOREAPP

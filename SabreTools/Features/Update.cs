@@ -153,7 +153,13 @@ namespace SabreTools.Features
             if (updateMode == UpdateMode.None)
             {
                 // Loop through each input and update
+#if NET452_OR_GREATER || NETCOREAPP
                 Parallel.ForEach(inputPaths, Globals.ParallelOptions, inputPath =>
+#elif NET40_OR_GREATER
+                Parallel.ForEach(inputPaths, inputPath =>
+#else
+                foreach (var inputPath in inputPaths)
+#endif
                 {
                     // Create a new base DatFile
                     DatFile datFile = DatFile.Create(Header);
@@ -242,13 +248,23 @@ namespace SabreTools.Features
                 // Loop through and output the new DatFiles
                 InternalStopwatch watch = new("Outputting all individual DATs");
 
+#if NET452_OR_GREATER || NETCOREAPP
                 Parallel.For(0, inputPaths.Count, Globals.ParallelOptions, j =>
+#elif NET40_OR_GREATER
+                Parallel.For(0, inputPaths.Count, j =>
+#else
+                for (int j = 0; j < inputPaths.Count; j++)
+#endif
                 {
                     string path = inputPaths[j].GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
 
                     // Try to output the file
                     Writer.Write(datFiles[j], path, overwrite: GetBoolean(features, InplaceValue));
+#if NET40_OR_GREATER || NETCOREAPP
                 });
+#else
+                }
+#endif
 
                 watch.Stop();
             }
@@ -257,7 +273,13 @@ namespace SabreTools.Features
             if (updateMode.HasFlag(UpdateMode.DiffCascade))
             {
                 // Preprocess the DatHeaders
+#if NET452_OR_GREATER || NETCOREAPP
                 Parallel.For(0, datHeaders.Count, Globals.ParallelOptions, j =>
+#elif NET40_OR_GREATER
+                Parallel.For(0, datHeaders.Count, j =>
+#else
+                for (int j = 0; j < datHeaders.Count; j++)
+#endif
                 {
                     // If we're outputting to the runtime folder, rename
                     if (!GetBoolean(features, InplaceValue) && OutputDir == Environment.CurrentDirectory)
@@ -269,7 +291,11 @@ namespace SabreTools.Features
                         datHeaders[j].Name += innerpost;
                         datHeaders[j].Description += innerpost;
                     }
+#if NET40_OR_GREATER || NETCOREAPP
                 });
+#else
+                }
+#endif
 
                 // Get all of the output DatFiles
                 List<DatFile> datFiles = DatFileTool.DiffCascade(userInputDat, datHeaders);
@@ -278,13 +304,23 @@ namespace SabreTools.Features
                 InternalStopwatch watch = new("Outputting all created DATs");
 
                 int startIndex = GetBoolean(features, SkipFirstOutputValue) ? 1 : 0;
+#if NET452_OR_GREATER || NETCOREAPP
                 Parallel.For(startIndex, inputPaths.Count, Globals.ParallelOptions, j =>
+#elif NET40_OR_GREATER
+                Parallel.For(startIndex, inputPaths.Count, j =>
+#else
+                for (int j = startIndex; j < inputPaths.Count; j++)
+#endif
                 {
                     string path = inputPaths[j].GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
 
                     // Try to output the file
                     Writer.Write(datFiles[j], path, overwrite: GetBoolean(features, InplaceValue));
+#if NET40_OR_GREATER || NETCOREAPP
                 });
+#else
+                }
+#endif
 
                 watch.Stop();
             }
@@ -293,7 +329,13 @@ namespace SabreTools.Features
             if (updateMode.HasFlag(UpdateMode.DiffAgainst))
             {
                 // Loop through each input and diff against the base
+#if NET452_OR_GREATER || NETCOREAPP
                 Parallel.ForEach(inputPaths, Globals.ParallelOptions, inputPath =>
+#elif NET40_OR_GREATER
+                Parallel.ForEach(inputPaths, inputPath =>
+#else
+                foreach (var inputPath in inputPaths)
+#endif
                 {
                     // Parse the path to a new DatFile
                     DatFile repDat = DatFile.Create(Header);
@@ -323,7 +365,13 @@ namespace SabreTools.Features
             if (updateMode.HasFlag(UpdateMode.BaseReplace))
             {
                 // Loop through each input and apply the base DatFile
+#if NET452_OR_GREATER || NETCOREAPP
                 Parallel.ForEach(inputPaths, Globals.ParallelOptions, inputPath =>
+#elif NET40_OR_GREATER
+                Parallel.ForEach(inputPaths, inputPath =>
+#else
+                foreach (var inputPath in inputPaths)
+#endif
                 {
                     // Parse the path to a new DatFile
                     DatFile repDat = DatFile.Create(Header);

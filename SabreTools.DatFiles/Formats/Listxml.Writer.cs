@@ -48,46 +48,46 @@ namespace SabreTools.DatFiles.Formats
             switch (datItem)
             {
                 case BiosSet biosset:
-                    if (string.IsNullOrWhiteSpace(biosset.Name))
+                    if (string.IsNullOrEmpty(biosset.Name))
                         missingFields.Add(DatItemField.Name);
-                    if (string.IsNullOrWhiteSpace(biosset.Description))
+                    if (string.IsNullOrEmpty(biosset.Description))
                         missingFields.Add(DatItemField.Description);
                     break;
 
                 case Rom rom:
-                    if (string.IsNullOrWhiteSpace(rom.Name))
+                    if (string.IsNullOrEmpty(rom.Name))
                         missingFields.Add(DatItemField.Name);
                     if (rom.Size == null || rom.Size < 0)
                         missingFields.Add(DatItemField.Size);
-                    if (string.IsNullOrWhiteSpace(rom.CRC)
-                        && string.IsNullOrWhiteSpace(rom.SHA1))
+                    if (string.IsNullOrEmpty(rom.CRC)
+                        && string.IsNullOrEmpty(rom.SHA1))
                     {
                         missingFields.Add(DatItemField.SHA1);
                     }
                     break;
 
                 case Disk disk:
-                    if (string.IsNullOrWhiteSpace(disk.Name))
+                    if (string.IsNullOrEmpty(disk.Name))
                         missingFields.Add(DatItemField.Name);
-                    if (string.IsNullOrWhiteSpace(disk.MD5)
-                        && string.IsNullOrWhiteSpace(disk.SHA1))
+                    if (string.IsNullOrEmpty(disk.MD5)
+                        && string.IsNullOrEmpty(disk.SHA1))
                     {
                         missingFields.Add(DatItemField.SHA1);
                     }
                     break;
 
                 case DeviceReference deviceref:
-                    if (string.IsNullOrWhiteSpace(deviceref.Name))
+                    if (string.IsNullOrEmpty(deviceref.Name))
                         missingFields.Add(DatItemField.Name);
                     break;
 
                 case Sample sample:
-                    if (string.IsNullOrWhiteSpace(sample.Name))
+                    if (string.IsNullOrEmpty(sample.Name))
                         missingFields.Add(DatItemField.Name);
                     break;
 
                 case Chip chip:
-                    if (string.IsNullOrWhiteSpace(chip.Name))
+                    if (string.IsNullOrEmpty(chip.Name))
                         missingFields.Add(DatItemField.Name);
                     if (!chip.ChipTypeSpecified)
                         missingFields.Add(DatItemField.ChipType);
@@ -111,26 +111,26 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case DipSwitch dipswitch:
-                    if (string.IsNullOrWhiteSpace(dipswitch.Name))
+                    if (string.IsNullOrEmpty(dipswitch.Name))
                         missingFields.Add(DatItemField.Name);
-                    if (string.IsNullOrWhiteSpace(dipswitch.Tag))
+                    if (string.IsNullOrEmpty(dipswitch.Tag))
                         missingFields.Add(DatItemField.Tag);
                     break;
 
                 case Configuration configuration:
-                    if (string.IsNullOrWhiteSpace(configuration.Name))
+                    if (string.IsNullOrEmpty(configuration.Name))
                         missingFields.Add(DatItemField.Name);
-                    if (string.IsNullOrWhiteSpace(configuration.Tag))
+                    if (string.IsNullOrEmpty(configuration.Tag))
                         missingFields.Add(DatItemField.Tag);
                     break;
 
                 case Port port:
-                    if (string.IsNullOrWhiteSpace(port.Tag))
+                    if (string.IsNullOrEmpty(port.Tag))
                         missingFields.Add(DatItemField.Tag);
                     break;
 
                 case Adjuster adjuster:
-                    if (string.IsNullOrWhiteSpace(adjuster.Name))
+                    if (string.IsNullOrEmpty(adjuster.Name))
                         missingFields.Add(DatItemField.Name);
                     break;
 
@@ -156,21 +156,21 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case Slot slot:
-                    if (string.IsNullOrWhiteSpace(slot.Name))
+                    if (string.IsNullOrEmpty(slot.Name))
                         missingFields.Add(DatItemField.Name);
                     break;
 
                 case DatItems.Formats.SoftwareList softwarelist:
-                    if (string.IsNullOrWhiteSpace(softwarelist.Tag))
+                    if (string.IsNullOrEmpty(softwarelist.Tag))
                         missingFields.Add(DatItemField.Tag);
-                    if (string.IsNullOrWhiteSpace(softwarelist.Name))
+                    if (string.IsNullOrEmpty(softwarelist.Name))
                         missingFields.Add(DatItemField.Name);
                     if (!softwarelist.StatusSpecified)
                         missingFields.Add(DatItemField.SoftwareListStatus);
                     break;
 
                 case RamOption ramoption:
-                    if (string.IsNullOrWhiteSpace(ramoption.Name))
+                    if (string.IsNullOrEmpty(ramoption.Name))
                         missingFields.Add(DatItemField.Name);
                     break;
             }
@@ -384,12 +384,21 @@ namespace SabreTools.DatFiles.Formats
                 History = machine.History,
             };
 
+#if NETFRAMEWORK
+            if ((machine.MachineType & MachineType.Bios) != 0)
+                game.IsBios = "yes";
+            if ((machine.MachineType & MachineType.Device) != 0)
+                game.IsDevice = "yes";
+            if ((machine.MachineType & MachineType.Mechanical) != 0)
+                game.IsMechanical = "yes";
+#else
             if (machine.MachineType.HasFlag(MachineType.Bios))
                 game.IsBios = "yes";
             if (machine.MachineType.HasFlag(MachineType.Device))
                 game.IsDevice = "yes";
             if (machine.MachineType.HasFlag(MachineType.Mechanical))
                 game.IsMechanical = "yes";
+#endif
 
             return game;
         }

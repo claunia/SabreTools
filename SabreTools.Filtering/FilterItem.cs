@@ -117,7 +117,11 @@ namespace SabreTools.Filtering
                 return null;
 
             // If we have a flag
+#if NETFRAMEWORK
+            if (typeof(T).IsEnum && ((single as Enum)! & (value as Enum)!) != 0)
+#else
             if (typeof(T).IsEnum && (single as Enum)!.HasFlag((value as Enum)!))
+#endif
                 return true;
 
             return single.Equals(value);

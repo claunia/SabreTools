@@ -41,21 +41,21 @@ namespace SabreTools.DatFiles.Formats
         private static (Machine?, string?) DeriveMachine(string? filename)
         {
             // If the filename is missing, we can't do anything
-            if (string.IsNullOrWhiteSpace(filename))
+            if (string.IsNullOrEmpty(filename))
                 return (null, null);
 
             string machineName = Path.GetFileNameWithoutExtension(filename);
             if (filename.Contains('/'))
             {
-                string[] split = filename.Split('/');
+                string[] split = filename!.Split('/');
                 machineName = split[0];
-                filename = filename[(machineName.Length + 1)..];
+                filename = filename.Substring(machineName.Length + 1);
             }
             else if (filename.Contains('\\'))
             {
-                string[] split = filename.Split('\\');
+                string[] split = filename!.Split('\\');
                 machineName = split[0];
-                filename = filename[(machineName.Length + 1)..];
+                filename = filename.Substring(machineName.Length + 1);
             }
 
             var machine = new Machine { Name = machineName };

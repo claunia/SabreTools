@@ -78,8 +78,13 @@ namespace SabreTools.DatTools
             try
             {
                 // Write out all required formats
-                
+#if NET452_OR_GREATER || NETCOREAPP
                 Parallel.ForEach(outfiles.Keys, Globals.ParallelOptions, datFormat =>
+#elif NET40_OR_GREATER
+                Parallel.ForEach(outfiles.Keys, datFormat =>
+#else
+                foreach (var datFormat in outfiles.Keys)
+#endif
                 {
                     string outfile = outfiles[datFormat];
                     try
@@ -122,7 +127,7 @@ namespace SabreTools.DatTools
 
             var statsList = new List<DatStatistics>
             {
-                new() 
+                new()
                 {
                     Statistics = datFile.Items,
                     DisplayName = datFile.Header.FileName,
@@ -189,6 +194,6 @@ namespace SabreTools.DatTools
                 return false;
 
             return true;
-        }    
+        }
     }
 }

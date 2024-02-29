@@ -123,19 +123,19 @@ namespace SabreTools.DatFiles
         public void FillHeaderFromPath(string path, bool bare)
         {
             // If the description is defined but not the name, set the name from the description
-            if (string.IsNullOrWhiteSpace(Header.Name) && !string.IsNullOrWhiteSpace(Header.Description))
+            if (string.IsNullOrEmpty(Header.Name) && !string.IsNullOrEmpty(Header.Description))
             {
                 Header.Name = Header.Description;
             }
 
             // If the name is defined but not the description, set the description from the name
-            else if (!string.IsNullOrWhiteSpace(Header.Name) && string.IsNullOrWhiteSpace(Header.Description))
+            else if (!string.IsNullOrEmpty(Header.Name) && string.IsNullOrEmpty(Header.Description))
             {
                 Header.Description = Header.Name + (bare ? string.Empty : $" ({Header.Date})");
             }
 
             // If neither the name or description are defined, set them from the automatic values
-            else if (string.IsNullOrWhiteSpace(Header.Name) && string.IsNullOrWhiteSpace(Header.Description))
+            else if (string.IsNullOrEmpty(Header.Name) && string.IsNullOrEmpty(Header.Description))
             {
                 string[] splitpath = path.TrimEnd(Path.DirectorySeparatorChar).Split(Path.DirectorySeparatorChar);
                 Header.Name = splitpath.Last();
@@ -172,8 +172,8 @@ namespace SabreTools.DatFiles
             {
                 // If the file has aboslutely no hashes, skip and log
                 if (disk.ItemStatus != ItemStatus.Nodump
-                    && string.IsNullOrWhiteSpace(disk.MD5)
-                    && string.IsNullOrWhiteSpace(disk.SHA1))
+                    && string.IsNullOrEmpty(disk.MD5)
+                    && string.IsNullOrEmpty(disk.SHA1))
                 {
                     logger.Verbose($"Incomplete entry for '{disk.Name}' will be output as nodump");
                     disk.ItemStatus = ItemStatus.Nodump;
@@ -184,10 +184,10 @@ namespace SabreTools.DatFiles
             if (item.ItemType == ItemType.Media && item is Media media)
             {
                 // If the file has aboslutely no hashes, skip and log
-                if (string.IsNullOrWhiteSpace(media.MD5)
-                    && string.IsNullOrWhiteSpace(media.SHA1)
-                    && string.IsNullOrWhiteSpace(media.SHA256)
-                    && string.IsNullOrWhiteSpace(media.SpamSum))
+                if (string.IsNullOrEmpty(media.MD5)
+                    && string.IsNullOrEmpty(media.SHA1)
+                    && string.IsNullOrEmpty(media.SHA256)
+                    && string.IsNullOrEmpty(media.SpamSum))
                 {
                     logger.Verbose($"Incomplete entry for '{media.Name}' will be output as nodump");
                 }
@@ -205,7 +205,7 @@ namespace SabreTools.DatFiles
 
                 // If we have a rom and it's missing size AND the hashes match a 0-byte file, fill in the rest of the info
                 else if ((rom.Size == 0 || rom.Size == null)
-                    && (string.IsNullOrWhiteSpace(rom.CRC) || rom.HasZeroHash()))
+                    && (string.IsNullOrEmpty(rom.CRC) || rom.HasZeroHash()))
                 {
                     // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
                     rom.Size = Constants.SizeZero;
@@ -262,7 +262,7 @@ namespace SabreTools.DatFiles
         protected static string? CleanDate(string? input)
         {
             // Null in, null out
-            if (string.IsNullOrWhiteSpace(input))
+            if (string.IsNullOrEmpty(input))
                 return null;
 
             string date = string.Empty;
@@ -409,7 +409,7 @@ namespace SabreTools.DatFiles
                 if (item.ItemType == ItemType.Disk && item is Disk disk)
                 {
                     // We can only write out if there's a SHA-1
-                    if (!string.IsNullOrWhiteSpace(disk.SHA1))
+                    if (!string.IsNullOrEmpty(disk.SHA1))
                     {
                         name = Utilities.GetDepotPath(disk.SHA1, Header.OutputDepot.Depth)?.Replace('\\', '/');
                         item.SetName($"{pre}{name}{post}");
@@ -418,7 +418,7 @@ namespace SabreTools.DatFiles
                 else if (item.ItemType == ItemType.Media && item is Media media)
                 {
                     // We can only write out if there's a SHA-1
-                    if (!string.IsNullOrWhiteSpace(media.SHA1))
+                    if (!string.IsNullOrEmpty(media.SHA1))
                     {
                         name = Utilities.GetDepotPath(media.SHA1, Header.OutputDepot.Depth)?.Replace('\\', '/');
                         item.SetName($"{pre}{name}{post}");
@@ -427,7 +427,7 @@ namespace SabreTools.DatFiles
                 else if (item.ItemType == ItemType.Rom && item is Rom rom)
                 {
                     // We can only write out if there's a SHA-1
-                    if (!string.IsNullOrWhiteSpace(rom.SHA1))
+                    if (!string.IsNullOrEmpty(rom.SHA1))
                     {
                         name = Utilities.GetDepotPath(rom.SHA1, Header.OutputDepot.Depth)?.Replace('\\', '/');
                         item.SetName($"{pre}{name}{post}");
@@ -437,7 +437,7 @@ namespace SabreTools.DatFiles
                 return;
             }
 
-            if (!string.IsNullOrWhiteSpace(Header.ReplaceExtension) || Header.RemoveExtension)
+            if (!string.IsNullOrEmpty(Header.ReplaceExtension) || Header.RemoveExtension)
             {
                 if (Header.RemoveExtension)
                     Header.ReplaceExtension = string.Empty;
@@ -450,7 +450,7 @@ namespace SabreTools.DatFiles
                 }
             }
 
-            if (!string.IsNullOrWhiteSpace(Header.AddExtension))
+            if (!string.IsNullOrEmpty(Header.AddExtension))
                 name += Header.AddExtension;
 
             if (Header.UseRomName && Header.GameName)
@@ -597,7 +597,11 @@ namespace SabreTools.DatFiles
             if (missingFields != null && missingFields.Count != 0)
             {
                 string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
+#if NET20 || NET35
+                logger?.Verbose($"Item '{itemString}' was skipped because it was missing required fields for {Header?.DatFormat}: {string.Join(", ", missingFields.Select(f => f.ToString()).ToArray())}");
+#else
                 logger?.Verbose($"Item '{itemString}' was skipped because it was missing required fields for {Header?.DatFormat}: {string.Join(", ", missingFields)}");
+#endif
                 return true;
             }
 
