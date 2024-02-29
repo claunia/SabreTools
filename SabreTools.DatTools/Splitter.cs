@@ -45,10 +45,10 @@ namespace SabreTools.DatTools
             InternalStopwatch watch = new($"Splitting DAT by extension");
 
             // Make sure all of the extensions don't have a dot at the beginning
-            var newExtA = extA.Select(s => s.TrimStart('.').ToLowerInvariant());
+            var newExtA = extA.Select(s => s.TrimStart('.').ToLowerInvariant()).ToArray();
             string newExtAString = string.Join(",", newExtA);
 
-            var newExtB = extB.Select(s => s.TrimStart('.').ToLowerInvariant());
+            var newExtB = extB.Select(s => s.TrimStart('.').ToLowerInvariant()).ToArray();
             string newExtBString = string.Join(",", newExtB);
 
             // Set all of the appropriate outputs for each of the subsets
@@ -71,9 +71,13 @@ namespace SabreTools.DatTools
             foreach (var key in datFile.Items.Keys)
 #endif
             {
-                ConcurrentList<DatItem>? items = datFile.Items[key];
+                var items = datFile.Items[key];
                 if (items == null)
+#if NET40_OR_GREATER || NETCOREAPP
                     return;
+#else
+                    continue;
+#endif
 
                 foreach (DatItem item in items)
                 {
@@ -165,15 +169,18 @@ namespace SabreTools.DatTools
             foreach (var key in datFile.Items.Keys)
 #endif
             {
-                ConcurrentList<DatItem>? items = datFile.Items[key];
+                var items = datFile.Items[key];
                 if (items == null)
+#if NET40_OR_GREATER || NETCOREAPP
                     return;
-
+#else
+                    continue;
+#endif
                 foreach (DatItem item in items)
                 {
                     // If the file is not a Disk, Media, or Rom, continue
                     if (item.ItemType != ItemType.Disk && item.ItemType != ItemType.Media && item.ItemType != ItemType.Rom)
-                        return;
+                        continue;
 
                     // If the file is a nodump
                     if ((item.ItemType == ItemType.Rom && (item as Rom)!.ItemStatus == ItemStatus.Nodump)
@@ -183,42 +190,42 @@ namespace SabreTools.DatTools
                     }
 
                     // If the file has a SHA-512
-                    else if ((item.ItemType == ItemType.Rom && !string.IsNullOrWhiteSpace((item as Rom)!.SHA512)))
+                    else if ((item.ItemType == ItemType.Rom && !string.IsNullOrEmpty((item as Rom)!.SHA512)))
                     {
                         fieldDats[DatItemField.SHA512].Items.Add(key, item);
                     }
 
                     // If the file has a SHA-384
-                    else if ((item.ItemType == ItemType.Rom && !string.IsNullOrWhiteSpace((item as Rom)!.SHA384)))
+                    else if ((item.ItemType == ItemType.Rom && !string.IsNullOrEmpty((item as Rom)!.SHA384)))
                     {
                         fieldDats[DatItemField.SHA384].Items.Add(key, item);
                     }
 
                     // If the file has a SHA-256
-                    else if ((item.ItemType == ItemType.Media && !string.IsNullOrWhiteSpace((item as Media)!.SHA256))
-                        || (item.ItemType == ItemType.Rom && !string.IsNullOrWhiteSpace((item as Rom)!.SHA256)))
+                    else if ((item.ItemType == ItemType.Media && !string.IsNullOrEmpty((item as Media)!.SHA256))
+                        || (item.ItemType == ItemType.Rom && !string.IsNullOrEmpty((item as Rom)!.SHA256)))
                     {
                         fieldDats[DatItemField.SHA256].Items.Add(key, item);
                     }
 
                     // If the file has a SHA-1
-                    else if ((item.ItemType == ItemType.Disk && !string.IsNullOrWhiteSpace((item as Disk)!.SHA1))
-                        || (item.ItemType == ItemType.Media && !string.IsNullOrWhiteSpace((item as Media)!.SHA1))
-                        || (item.ItemType == ItemType.Rom && !string.IsNullOrWhiteSpace((item as Rom)!.SHA1)))
+                    else if ((item.ItemType == ItemType.Disk && !string.IsNullOrEmpty((item as Disk)!.SHA1))
+                        || (item.ItemType == ItemType.Media && !string.IsNullOrEmpty((item as Media)!.SHA1))
+                        || (item.ItemType == ItemType.Rom && !string.IsNullOrEmpty((item as Rom)!.SHA1)))
                     {
                         fieldDats[DatItemField.SHA1].Items.Add(key, item);
                     }
 
                     // If the file has an MD5
-                    else if ((item.ItemType == ItemType.Disk && !string.IsNullOrWhiteSpace((item as Disk)!.MD5))
-                        || (item.ItemType == ItemType.Media && !string.IsNullOrWhiteSpace((item as Media)!.MD5))
-                        || (item.ItemType == ItemType.Rom && !string.IsNullOrWhiteSpace((item as Rom)!.MD5)))
+                    else if ((item.ItemType == ItemType.Disk && !string.IsNullOrEmpty((item as Disk)!.MD5))
+                        || (item.ItemType == ItemType.Media && !string.IsNullOrEmpty((item as Media)!.MD5))
+                        || (item.ItemType == ItemType.Rom && !string.IsNullOrEmpty((item as Rom)!.MD5)))
                     {
                         fieldDats[DatItemField.MD5].Items.Add(key, item);
                     }
 
                     // If the file has a CRC
-                    else if ((item.ItemType == ItemType.Rom && !string.IsNullOrWhiteSpace((item as Rom)!.CRC)))
+                    else if ((item.ItemType == ItemType.Rom && !string.IsNullOrEmpty((item as Rom)!.CRC)))
                     {
                         fieldDats[DatItemField.CRC].Items.Add(key, item);
                     }
@@ -281,8 +288,11 @@ namespace SabreTools.DatTools
                 // Clean the input list and set all games to be pathless
                 ConcurrentList<DatItem>? items = datFile.Items[key];
                 if (items == null)
+#if NET40_OR_GREATER || NETCOREAPP
                     return;
-
+#else
+                    continue;
+#endif
                 items.ForEach(item => item.Machine.Name = Path.GetFileName(item.Machine.Name));
                 items.ForEach(item => item.Machine.Description = Path.GetFileName(item.Machine.Description));
 
@@ -334,16 +344,25 @@ namespace SabreTools.DatTools
             string? expName = name?.Replace("/", " - ")?.Replace("\\", " - ");
 
             // Now set the new output values
-            newDatFile.Header.FileName = WebUtility.HtmlDecode(string.IsNullOrWhiteSpace(name)
+#if NET20 || NET35
+            newDatFile.Header.FileName = string.IsNullOrEmpty(name)
+                ? datFile.Header.FileName
+                : (shortname
+                    ? Path.GetFileName(name)
+                    : expName
+                    );
+#else
+            newDatFile.Header.FileName = WebUtility.HtmlDecode(string.IsNullOrEmpty(name)
                 ? datFile.Header.FileName
                 : (shortname
                     ? Path.GetFileName(name)
                     : expName
                     )
                 );
+#endif
             newDatFile.Header.FileName = restore ? $"{datFile.Header.FileName} ({newDatFile.Header.FileName})" : newDatFile.Header.FileName;
             newDatFile.Header.Name = $"{datFile.Header.Name} ({expName})";
-            newDatFile.Header.Description = string.IsNullOrWhiteSpace(datFile.Header.Description) ? newDatFile.Header.Name : $"{datFile.Header.Description} ({expName})";
+            newDatFile.Header.Description = string.IsNullOrEmpty(datFile.Header.Description) ? newDatFile.Header.Name : $"{datFile.Header.Description} ({expName})";
             newDatFile.Header.Type = null;
 
             // Write out the temporary DAT to the proper directory
@@ -382,8 +401,11 @@ namespace SabreTools.DatTools
             {
                 ConcurrentList<DatItem>? items = datFile.Items[key];
                 if (items == null)
+#if NET40_OR_GREATER || NETCOREAPP
                     return;
-
+#else
+                    continue;
+#endif
                 foreach (DatItem item in items)
                 {
                     // If the file is not a Rom, it automatically goes in the "lesser" dat

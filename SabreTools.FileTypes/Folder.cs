@@ -274,7 +274,7 @@ namespace SabreTools.FileTypes
             if (_children == null || _children.Count == 0)
             {
                 _children = [];
-#if NETFRAMEWORK
+#if NET20 || NET35
                 foreach (string file in Directory.GetFiles(this.Filename, "*"))
 #else
                 foreach (string file in Directory.EnumerateFiles(this.Filename, "*", SearchOption.TopDirectoryOnly))
@@ -285,7 +285,7 @@ namespace SabreTools.FileTypes
                         _children.Add(nf);
                 }
 
-#if NETFRAMEWORK
+#if NET20 || NET35
                 foreach (string dir in Directory.GetDirectories(this.Filename, "*"))
 #else
                 foreach (string dir in Directory.EnumerateDirectories(this.Filename, "*", SearchOption.TopDirectoryOnly))

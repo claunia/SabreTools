@@ -247,7 +247,11 @@ namespace SabreTools.DatTools
                 else if (Directory.Exists(input))
                 {
                     logger.Verbose($"Checking directory: {input}");
+#if NET20 || NET35
+                    foreach (string file in Directory.GetFiles(input, "*"))
+#else
                     foreach (string file in Directory.EnumerateFiles(input, "*", SearchOption.AllDirectories))
+#endif
                     {
                         logger.User($"Checking file: {file}");
                         bool rebuilt = RebuildGenericHelper(datFile, file, outDir, quickScan, date, inverse, outputFormat, asFiles);

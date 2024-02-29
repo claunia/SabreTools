@@ -90,7 +90,7 @@ namespace SabreTools.DatTools
                 return;
 
             // If the output filename isn't set already, get the internal filename
-            datFile.Header.FileName = string.IsNullOrWhiteSpace(datFile.Header.FileName)
+            datFile.Header.FileName = string.IsNullOrEmpty(datFile.Header.FileName)
                 ? (keepext
                     ? Path.GetFileName(currentPath)
                     : Path.GetFileNameWithoutExtension(currentPath))
@@ -100,7 +100,7 @@ namespace SabreTools.DatTools
             DatFormat currentPathFormat = GetDatFormat(currentPath);
             datFile.Header.DatFormat = datFile.Header.DatFormat == 0 ? currentPathFormat : datFile.Header.DatFormat;
             datFile.Items.SetBucketedBy(ItemKey.CRC); // Setting this because it can reduce issues later
-            
+
             InternalStopwatch watch = new($"Parsing '{currentPath}' into internal DAT");
 
             // Now parse the correct type of DAT
@@ -134,7 +134,7 @@ namespace SabreTools.DatTools
             // Check if file exists
             if (!File.Exists(filename))
                 return 0;
-            
+
             // Some formats should only require the extension to know
             switch (ext)
             {
@@ -200,7 +200,7 @@ namespace SabreTools.DatTools
                 else if ((second.StartsWith("<dat") && !second.StartsWith("<datafile"))
                     || second.StartsWith("<?xml-stylesheet"))
                     return DatFormat.OfflineList;
-                
+
                 else if (second.StartsWith("<files"))
                     return DatFormat.ArchiveDotOrg;
 
@@ -214,7 +214,11 @@ namespace SabreTools.DatTools
                 return DatFormat.EverdriveSMDB;
 
             // If we have an INI-based DAT
+#if NETFRAMEWORK
+            else if (first.Contains("[") && first.Contains("]"))
+#else
             else if (first.Contains('[') && first.Contains(']'))
+#endif
                 return DatFormat.RomCenter;
 
             // If we have a listroms DAT
@@ -231,7 +235,11 @@ namespace SabreTools.DatTools
             else if (first.Contains("doscenter"))
                 return DatFormat.DOSCenter;
 
+#if NETFRAMEWORK
+            else if (first.ToLowerInvariant().Contains("#name;title;emulator;cloneof;year;manufacturer;category;players;rotation;control;status;displaycount;displaytype;altromname;alttitle;extra"))
+#else
             else if (first.Contains("#Name;Title;Emulator;CloneOf;Year;Manufacturer;Category;Players;Rotation;Control;Status;DisplayCount;DisplayType;AltRomname;AltTitle;Extra", StringComparison.InvariantCultureIgnoreCase))
+#endif
                 return DatFormat.AttractMode;
 
             else
@@ -252,7 +260,7 @@ namespace SabreTools.DatTools
             // Find the first line that's not whitespace or an XML comment
             string? line = sr.ReadLine()?.ToLowerInvariant()?.Trim();
             bool inComment = line?.StartsWith("<!--") ?? false;
-            while ((string.IsNullOrWhiteSpace(line) || inComment) && !sr.EndOfStream)
+            while ((string.IsNullOrEmpty(line) || inComment) && !sr.EndOfStream)
             {
                 // Null lines should not happen
                 if (line == null)
@@ -283,7 +291,7 @@ namespace SabreTools.DatTools
                 }
 
                 // Empty lines are just skipped
-                else if (string.IsNullOrWhiteSpace(line))
+                else if (string.IsNullOrEmpty(line))
                 {
                     line = sr.ReadLine()?.ToLowerInvariant()?.Trim();
                     inComment |= line?.StartsWith("<!--") ?? false;

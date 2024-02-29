@@ -55,9 +55,14 @@ namespace SabreTools.DatTools
                     string filename = inputs[newItem.Source.Index].CurrentPath;
                     string? rootpath = inputs[newItem.Source.Index].ParentPath;
 
-                    if (!string.IsNullOrWhiteSpace(rootpath)
+                    if (!string.IsNullOrEmpty(rootpath)
+#if NETFRAMEWORK
+                        && !rootpath!.EndsWith(Path.DirectorySeparatorChar.ToString())
+                        && !rootpath!.EndsWith(Path.AltDirectorySeparatorChar.ToString()))
+#else
                         && !rootpath.EndsWith(Path.DirectorySeparatorChar)
                         && !rootpath.EndsWith(Path.AltDirectorySeparatorChar))
+#endif
                     {
                         rootpath += Path.DirectorySeparatorChar.ToString();
                     }
@@ -343,13 +348,13 @@ namespace SabreTools.DatTools
             InternalStopwatch watch = new("Initializing duplicate DAT");
 
             // Fill in any information not in the base DAT
-            if (string.IsNullOrWhiteSpace(datFile.Header.FileName))
+            if (string.IsNullOrEmpty(datFile.Header.FileName))
                 datFile.Header.FileName = "All DATs";
 
-            if (string.IsNullOrWhiteSpace(datFile.Header.Name))
+            if (string.IsNullOrEmpty(datFile.Header.Name))
                 datFile.Header.Name = "datFile.All DATs";
 
-            if (string.IsNullOrWhiteSpace(datFile.Header.Description))
+            if (string.IsNullOrEmpty(datFile.Header.Description))
                 datFile.Header.Description = "datFile.All DATs";
 
             string post = " (Duplicates)";
@@ -376,7 +381,11 @@ namespace SabreTools.DatTools
 
                 // If the rom list is empty or null, just skip it
                 if (items == null || items.Count == 0)
+#if NET40_OR_GREATER || NETCOREAPP
                     return;
+#else
+                    continue;
+#endif
 
                 // Loop through and add the items correctly
                 foreach (DatItem item in items)
@@ -428,13 +437,13 @@ namespace SabreTools.DatTools
             InternalStopwatch watch = new("Initializing all individual DATs");
 
             // Fill in any information not in the base DAT
-            if (string.IsNullOrWhiteSpace(datFile.Header.FileName))
+            if (string.IsNullOrEmpty(datFile.Header.FileName))
                 datFile.Header.FileName = "All DATs";
 
-            if (string.IsNullOrWhiteSpace(datFile.Header.Name))
+            if (string.IsNullOrEmpty(datFile.Header.Name))
                 datFile.Header.Name = "All DATs";
 
-            if (string.IsNullOrWhiteSpace(datFile.Header.Description))
+            if (string.IsNullOrEmpty(datFile.Header.Description))
                 datFile.Header.Description = "All DATs";
 
             // Loop through each of the inputs and get or create a new DatData object
@@ -481,7 +490,11 @@ namespace SabreTools.DatTools
 
                 // If the rom list is empty or null, just skip it
                 if (items == null || items.Count == 0)
+#if NET40_OR_GREATER || NETCOREAPP
                     return;
+#else
+                    continue;
+#endif
 
                 // Loop through and add the items correctly
                 foreach (DatItem item in items)
@@ -528,13 +541,13 @@ namespace SabreTools.DatTools
             InternalStopwatch watch = new("Initializing no duplicate DAT");
 
             // Fill in any information not in the base DAT
-            if (string.IsNullOrWhiteSpace(datFile.Header.FileName))
+            if (string.IsNullOrEmpty(datFile.Header.FileName))
                 datFile.Header.FileName = "All DATs";
 
-            if (string.IsNullOrWhiteSpace(datFile.Header.Name))
+            if (string.IsNullOrEmpty(datFile.Header.Name))
                 datFile.Header.Name = "All DATs";
 
-            if (string.IsNullOrWhiteSpace(datFile.Header.Description))
+            if (string.IsNullOrEmpty(datFile.Header.Description))
                 datFile.Header.Description = "All DATs";
 
             string post = " (No Duplicates)";
@@ -561,7 +574,11 @@ namespace SabreTools.DatTools
 
                 // If the rom list is empty or null, just skip it
                 if (items == null || items.Count == 0)
+#if NET40_OR_GREATER || NETCOREAPP
                     return;
+#else
+                    continue;
+#endif
 
                 // Loop through and add the items correctly
                 foreach (DatItem item in items)
@@ -692,7 +709,11 @@ namespace SabreTools.DatTools
 
                 // If the rom list is empty or null, just skip it
                 if (items == null || items.Count == 0)
+#if NET40_OR_GREATER || NETCOREAPP
                     return;
+#else
+                    continue;
+#endif
 
                 foreach (DatItem item in items)
                 {

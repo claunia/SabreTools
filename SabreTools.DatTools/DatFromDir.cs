@@ -58,7 +58,11 @@ namespace SabreTools.DatTools
                 logger.Verbose($"Folder found: {basePath}");
 
                 // Get a list of all files to process
+#if NET20 || NET35
+                List<string> files = Directory.GetFiles(basePath, "*").ToList();
+#else
                 List<string> files = Directory.EnumerateFiles(basePath, "*", SearchOption.AllDirectories).ToList();
+#endif
 
                 // Loop through and add the file sizes
 #if NET452_OR_GREATER || NETCOREAPP
@@ -155,7 +159,7 @@ namespace SabreTools.DatTools
 
                 // Process as archive if we're not treating archives as files
 #if NETFRAMEWORK
-                else if ((!asFiles & TreatAsFile.Archive) != 0)
+                else if ((asFiles & TreatAsFile.Archive) == 0)
 #else
                 else if (!asFiles.HasFlag(TreatAsFile.Archive))
 #endif
@@ -430,7 +434,7 @@ namespace SabreTools.DatTools
             string? machineName, itemName;
 
             // If the parent is blank, then we have a non-archive file
-            if (string.IsNullOrWhiteSpace(parent))
+            if (string.IsNullOrEmpty(parent))
             {
                 // If we have a SuperDAT, we want anything that's not the base path as the game, and the file as the rom
                 if (datFile.Header.Type == "SuperDAT")
@@ -472,7 +476,7 @@ namespace SabreTools.DatTools
             machineName = machineName?.Trim(Path.DirectorySeparatorChar);
             itemName = itemName?.Trim(Path.DirectorySeparatorChar) ?? string.Empty;
 
-            if (!string.IsNullOrWhiteSpace(machineName) && string.IsNullOrWhiteSpace(itemName))
+            if (!string.IsNullOrEmpty(machineName) && string.IsNullOrEmpty(itemName))
             {
                 itemName = machineName;
                 machineName = "Default";
@@ -483,24 +487,24 @@ namespace SabreTools.DatTools
             datItem.Machine.Description = machineName;
 
             // If we have a Disk, then the ".chd" extension needs to be removed
-            if (datItem.ItemType == ItemType.Disk && itemName.EndsWith(".chd"))
+            if (datItem.ItemType == ItemType.Disk && itemName!.EndsWith(".chd"))
             {
-                itemName = itemName[0..^4];
+                itemName = itemName.Substring(0, itemName.Length - 4);
             }
 
             // If we have a Media, then the extension needs to be removed
             else if (datItem.ItemType == ItemType.Media)
             {
-                if (itemName.EndsWith(".dicf"))
-                    itemName = itemName[0..^5];
+                if (itemName!.EndsWith(".dicf"))
+                    itemName = itemName.Substring(0, itemName.Length - 5);
                 else if (itemName.EndsWith(".aaru"))
-                    itemName = itemName[0..^5];
+                    itemName = itemName.Substring(0, itemName.Length - 5);
                 else if (itemName.EndsWith(".aaruformat"))
-                    itemName = itemName[0..^11];
+                    itemName = itemName.Substring(0, itemName.Length - 11);
                 else if (itemName.EndsWith(".aaruf"))
-                    itemName = itemName[0..^6];
+                    itemName = itemName.Substring(0, itemName.Length - 6);
                 else if (itemName.EndsWith(".aif"))
-                    itemName = itemName[0..^4];
+                    itemName = itemName.Substring(0, itemName.Length - 4);
             }
 
             // Set the item name back

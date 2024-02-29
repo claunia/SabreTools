@@ -547,7 +547,11 @@ CREATE TABLE IF NOT EXISTS dat (
         internal Dictionary<string, string> GetValidDats(List<string> inputs)
         {
             // Get a dictionary of filenames that actually exist in the DATRoot, logging which ones are not
+#if NET20 || NET35
+            List<string> datRootDats = Directory.GetFiles(_dats, "*").ToList();
+#else
             List<string> datRootDats = Directory.EnumerateFiles(_dats, "*", SearchOption.AllDirectories).ToList();
+#endif
             List<string> lowerCaseDats = datRootDats.ConvertAll(i => Path.GetFileName(i).ToLowerInvariant());
             Dictionary<string, string> foundDats = new Dictionary<string, string>();
             foreach (string input in inputs)

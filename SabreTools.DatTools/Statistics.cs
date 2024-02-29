@@ -72,7 +72,11 @@ namespace SabreTools.DatTools
                 // If we don't have the first file and the directory has changed, show the previous directory stats and reset
                 if (lastdir != null && thisdir != lastdir && single)
                 {
+#if NET20 || NET35
+                    dirStats.DisplayName = $"DIR: {lastdir}";
+#else
                     dirStats.DisplayName = $"DIR: {WebUtility.HtmlEncode(lastdir)}";
+#endif
                     dirStats.MachineCount = dirStats.Statistics.GameCount;
                     stats.Add(dirStats);
                     dirStats = new DatStatistics
@@ -118,7 +122,11 @@ namespace SabreTools.DatTools
             // Add last directory stats
             if (single)
             {
+#if NET20 || NET35
+                dirStats.DisplayName = $"DIR: {lastdir}";
+#else
                 dirStats.DisplayName = $"DIR: {WebUtility.HtmlEncode(lastdir)}";
+#endif
                 dirStats.MachineCount = dirStats.Statistics.GameCount;
                 stats.Add(dirStats);
             }
@@ -157,7 +165,7 @@ namespace SabreTools.DatTools
             }
 
             // Get the proper output file name
-            if (string.IsNullOrWhiteSpace(reportName))
+            if (string.IsNullOrEmpty(reportName))
                 reportName = "report";
 
             // Get the proper output directory name

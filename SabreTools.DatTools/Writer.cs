@@ -146,31 +146,31 @@ namespace SabreTools.DatTools
         private static void EnsureHeaderFields(DatFile datFile)
         {
             // Empty FileName
-            if (string.IsNullOrWhiteSpace(datFile.Header.FileName))
+            if (string.IsNullOrEmpty(datFile.Header.FileName))
             {
-                if (string.IsNullOrWhiteSpace(datFile.Header.Name) && string.IsNullOrWhiteSpace(datFile.Header.Description))
+                if (string.IsNullOrEmpty(datFile.Header.Name) && string.IsNullOrEmpty(datFile.Header.Description))
                     datFile.Header.FileName = datFile.Header.Name = datFile.Header.Description = "Default";
 
-                else if (string.IsNullOrWhiteSpace(datFile.Header.Name) && !string.IsNullOrWhiteSpace(datFile.Header.Description))
+                else if (string.IsNullOrEmpty(datFile.Header.Name) && !string.IsNullOrEmpty(datFile.Header.Description))
                     datFile.Header.FileName = datFile.Header.Name = datFile.Header.Description;
 
-                else if (!string.IsNullOrWhiteSpace(datFile.Header.Name) && string.IsNullOrWhiteSpace(datFile.Header.Description))
+                else if (!string.IsNullOrEmpty(datFile.Header.Name) && string.IsNullOrEmpty(datFile.Header.Description))
                     datFile.Header.FileName = datFile.Header.Description = datFile.Header.Name;
 
-                else if (!string.IsNullOrWhiteSpace(datFile.Header.Name) && !string.IsNullOrWhiteSpace(datFile.Header.Description))
+                else if (!string.IsNullOrEmpty(datFile.Header.Name) && !string.IsNullOrEmpty(datFile.Header.Description))
                     datFile.Header.FileName = datFile.Header.Description;
             }
 
             // Filled FileName
             else
             {
-                if (string.IsNullOrWhiteSpace(datFile.Header.Name) && string.IsNullOrWhiteSpace(datFile.Header.Description))
+                if (string.IsNullOrEmpty(datFile.Header.Name) && string.IsNullOrEmpty(datFile.Header.Description))
                     datFile.Header.Name = datFile.Header.Description = datFile.Header.FileName;
 
-                else if (string.IsNullOrWhiteSpace(datFile.Header.Name) && !string.IsNullOrWhiteSpace(datFile.Header.Description))
+                else if (string.IsNullOrEmpty(datFile.Header.Name) && !string.IsNullOrEmpty(datFile.Header.Description))
                     datFile.Header.Name = datFile.Header.Description;
 
-                else if (!string.IsNullOrWhiteSpace(datFile.Header.Name) && string.IsNullOrWhiteSpace(datFile.Header.Description))
+                else if (!string.IsNullOrEmpty(datFile.Header.Name) && string.IsNullOrEmpty(datFile.Header.Description))
                     datFile.Header.Description = datFile.Header.Name;
             }
         }
