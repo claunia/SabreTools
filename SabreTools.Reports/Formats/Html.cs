@@ -60,7 +60,7 @@ namespace SabreTools.Reports.Formats
                     {
                         WriteMidSeparator(xtw, baddumpCol, nodumpCol);
                         WriteIndividual(xtw, stat, baddumpCol, nodumpCol);
-                        
+
                         // If we have anything but the last value, write the separator
                         if (i < Statistics.Count - 1)
                         {
@@ -77,7 +77,9 @@ namespace SabreTools.Reports.Formats
                 }
 
                 WriteFooter(xtw);
+#if NET452_OR_GREATER
                 xtw.Dispose();
+#endif
                 fs.Dispose();
             }
             catch (Exception ex) when (!throwOnError)
@@ -216,8 +218,12 @@ body {
             xtw.WriteStartElement("tr");
             if (isDirectory)
                 xtw.WriteAttributeString("class", "dir");
-            
+
+#if NET20 || NET35
+            xtw.WriteElementString("td", isDirectory ? stat.DisplayName.Remove(0, 5) : stat.DisplayName);
+#else
             xtw.WriteElementString("td", isDirectory ? WebUtility.HtmlEncode(stat.DisplayName.Remove(0, 5)) : WebUtility.HtmlEncode(stat.DisplayName));
+#endif
 
             xtw.WriteStartElement("td");
             xtw.WriteAttributeString("align", "right");
