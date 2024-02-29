@@ -16,6 +16,22 @@ namespace SabreTools.Core.Tools
         {
             List<DatItemField> fields = [];
 
+#if NET20 || NET35
+            if ((hash & Hash.CRC) != 0)
+                fields.Add(DatItemField.CRC);
+            if ((hash & Hash.MD5) != 0)
+                fields.Add(DatItemField.MD5);
+            if ((hash & Hash.SHA1) != 0)
+                fields.Add(DatItemField.SHA1);
+            if ((hash & Hash.SHA256) != 0)
+                fields.Add(DatItemField.SHA256);
+            if ((hash & Hash.SHA384) != 0)
+                fields.Add(DatItemField.SHA384);
+            if ((hash & Hash.SHA512) != 0)
+                fields.Add(DatItemField.SHA512);
+            if ((hash & Hash.SpamSum) != 0)
+                fields.Add(DatItemField.SpamSum);
+#else
             if (hash.HasFlag(Hash.CRC))
                 fields.Add(DatItemField.CRC);
             if (hash.HasFlag(Hash.MD5))
@@ -30,6 +46,7 @@ namespace SabreTools.Core.Tools
                 fields.Add(DatItemField.SHA512);
             if (hash.HasFlag(Hash.SpamSum))
                 fields.Add(DatItemField.SpamSum);
+#endif
 
             return fields;
         }
@@ -66,7 +83,7 @@ namespace SabreTools.Core.Tools
                 return DatHeaderField.NULL;
 
             // Normalize the input
-            input = input.ToLowerInvariant();
+            input = input!.ToLowerInvariant();
 
             // Create regex
             string headerRegex = @"^(dat|header|datheader)[.\-_\s]";
@@ -96,7 +113,7 @@ namespace SabreTools.Core.Tools
                 return DatItemField.NULL;
 
             // Normalize the input
-            input = input.ToLowerInvariant();
+            input = input!.ToLowerInvariant();
 
             // Create regex
             string datItemRegex = @"^(item|datitem)[.\-_\s]";
@@ -198,7 +215,7 @@ namespace SabreTools.Core.Tools
                 return MachineField.NULL;
 
             // Normalize the input
-            input = input.ToLowerInvariant();
+            input = input!.ToLowerInvariant();
 
             // Create regex
             string machineRegex = @"^(game|machine)[.\-_\s]";
@@ -349,8 +366,12 @@ namespace SabreTools.Core.Tools
 
                 // Build the output dictionary
                 Dictionary<string, T> mappings = [];
-                foreach (T value in values)
+                foreach (T? value in values)
                 {
+                    // If the value is null
+                    if (value == null)
+                        continue;
+
                     // Try to get the mapping attribute
                     MappingAttribute? attr = AttributeHelper<T>.GetAttribute(value);
                     if (attr?.Mappings == null || !attr.Mappings.Any())
@@ -593,8 +614,12 @@ namespace SabreTools.Core.Tools
 
                 // Build the output dictionary
                 Dictionary<T, string> mappings = [];
-                foreach (T value in values)
+                foreach (T? value in values)
                 {
+                    // If the value is null
+                    if (value == null)
+                        continue;
+
                     // Try to get the mapping attribute
                     MappingAttribute? attr = AttributeHelper<T>.GetAttribute(value);
                     if (attr?.Mappings == null || !attr.Mappings.Any())

@@ -41,7 +41,7 @@ namespace SabreTools.Core.Tools
         public static double? ConvertToDouble(string? numeric)
         {
             // If we don't have a valid string, we can't do anything
-            if (string.IsNullOrWhiteSpace(numeric))
+            if (string.IsNullOrEmpty(numeric))
                 return null;
 
             if (!double.TryParse(numeric, out double doubleValue))
@@ -56,11 +56,11 @@ namespace SabreTools.Core.Tools
         public static long? ConvertToInt64(string? numeric)
         {
             // If we don't have a valid string, we can't do anything
-            if (string.IsNullOrWhiteSpace(numeric))
+            if (string.IsNullOrEmpty(numeric))
                 return null;
 
             // Normalize the string for easier comparison
-            numeric = numeric.ToLowerInvariant();
+            numeric = numeric!.ToLowerInvariant();
 
             // Get the multiplication modifier and trim characters
             long multiplier = DetermineMultiplier(numeric);
@@ -84,11 +84,11 @@ namespace SabreTools.Core.Tools
         /// </summary>
         public static long DetermineMultiplier(string? numeric)
         {
-            if (string.IsNullOrWhiteSpace(numeric))
+            if (string.IsNullOrEmpty(numeric))
                 return 0;
 
             long multiplier = 1;
-            if (numeric.EndsWith("k") || numeric.EndsWith("kb"))
+            if (numeric!.EndsWith("k") || numeric.EndsWith("kb"))
                 multiplier = KiloByte;
             else if (numeric.EndsWith("ki") || numeric.EndsWith("kib"))
                 multiplier = KibiByte;
@@ -130,18 +130,20 @@ namespace SabreTools.Core.Tools
         public static bool IsNumeric(string? value)
         {
             // If we have no value, it is not numeric
-            if (string.IsNullOrWhiteSpace(value))
+            if (string.IsNullOrEmpty(value))
                 return false;
 
             // If we have a hex value
-            value = value.ToLowerInvariant();
+            value = value!.ToLowerInvariant();
             if (value.StartsWith("0x"))
-                value = value[2..];
+                value = value.Substring(2);
 
             if (DetermineMultiplier(value) > 1)
                 value = value.TrimEnd(['k', 'm', 'g', 't', 'p', 'e', 'z', 'y', 'i', 'b', ' ']);
 
-#if NET7_0_OR_GREATER
+#if NETFRAMEWORK || NETCOREAPP3_1 || NET5_0
+            return value.All(c => char.IsNumber(c) || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F') || c == '.' || c == ',');
+#elif NET7_0_OR_GREATER
             return value.All(c => char.IsAsciiHexDigit(c) || c == '.' || c == ',');
 #else
             return value.All(c => c.IsAsciiHexDigit() || c == '.' || c == ',');

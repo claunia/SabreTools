@@ -32,7 +32,7 @@ namespace SabreTools.Core.Tools
         public static bool ConditionalHashEquals(string? firstHash, string? secondHash)
         {
             // If either hash is empty, we say they're equal for merging
-            if (string.IsNullOrWhiteSpace(firstHash) || string.IsNullOrWhiteSpace(secondHash))
+            if (string.IsNullOrEmpty(firstHash) || string.IsNullOrEmpty(secondHash))
                 return true;
 
             // If they're different sizes, they can't match
@@ -56,7 +56,7 @@ namespace SabreTools.Core.Tools
                 return null;
 
             // If the hash isn't the right size, then we return null
-            if (hash.Length != Constants.SHA1Length)
+            if (hash!.Length != Constants.SHA1Length)
                 return null;
 
             // Cap the depth between 0 and 20, for now

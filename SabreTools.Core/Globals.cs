@@ -15,6 +15,7 @@ namespace SabreTools.Core
         /// </summary>
         public static int MaxThreads { get; set; } = Environment.ProcessorCount;
 
+#if NET452_OR_GREATER || NETCOREAPP
         /// <summary>
         /// ParallelOptions object for use in parallel operations
         /// </summary>
@@ -22,6 +23,7 @@ namespace SabreTools.Core
         {
             MaxDegreeOfParallelism = MaxThreads
         };
+#endif
 
         #endregion
     }

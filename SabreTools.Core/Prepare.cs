@@ -27,6 +27,7 @@ namespace SabreTools.Core
             mid = $"|{mid.PadLeft(((width - mid.Length) / 2) + mid.Length).PadRight(width)}|";
 
             // If we're outputting to console, do fancy things
+#if NET452_OR_GREATER || NETCOREAPP
             if (!Console.IsOutputRedirected)
             {
                 // Set the console to ready state
@@ -47,6 +48,7 @@ namespace SabreTools.Core
                 Console.ForegroundColor = formertext;
                 Console.BackgroundColor = formerback;
             }
+#endif
         }
     }
 }

@@ -7,7 +7,11 @@ namespace SabreTools.Core
     /// <summary>
     /// Thread-safe list class
     /// </summary>
+#if NET20 || NET35 || NET40
+    public class ConcurrentList<T> : ICollection<T>, IEnumerable<T>, IEnumerable, IList<T>, ICollection, IList
+#else
     public class ConcurrentList<T> : ICollection<T>, IEnumerable<T>, IEnumerable, IList<T>, IReadOnlyCollection<T>, IReadOnlyList<T>, ICollection, IList
+#endif
     {
         private List<T> _list = [];
         private readonly object _lock = new();

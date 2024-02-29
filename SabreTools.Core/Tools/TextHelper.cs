@@ -36,12 +36,12 @@ namespace SabreTools.Core.Tools
         public static byte[]? StringToByteArray(string? hex)
         {
             // If we get null in, we send null out
-            if (string.IsNullOrWhiteSpace(hex))
+            if (string.IsNullOrEmpty(hex))
                 return null;
 
             try
             {
-                int NumberChars = hex.Length;
+                int NumberChars = hex!.Length;
                 byte[] bytes = new byte[NumberChars / 2];
                 for (int i = 0; i < NumberChars; i += 2)
                 {
@@ -65,11 +65,11 @@ namespace SabreTools.Core.Tools
         /// </summary>
         public static string? NormalizeCharacters(string? input)
         {
-            if (string.IsNullOrWhiteSpace(input))
+            if (string.IsNullOrEmpty(input))
                 return input;
 
             ///Run the name through the filters to make sure that it's correct
-            input = NormalizeChars(input);
+            input = NormalizeChars(input!);
             input = RussianToLatin(input);
             input = SearchPattern(input);
 
@@ -119,10 +119,10 @@ namespace SabreTools.Core.Tools
         /// </summary>
         public static string? RemovePathUnsafeCharacters(string? input)
         {
-            if (string.IsNullOrWhiteSpace(input))
+            if (string.IsNullOrEmpty(input))
                 return input;
 
-            input = input.ToLowerInvariant();
+            input = input!.ToLowerInvariant();
 
             List<char> invalidPath = [.. Path.GetInvalidPathChars()];
             return new string(input.Where(c => !invalidPath.Contains(c)).ToArray());
@@ -133,7 +133,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         public static string? RemoveUnicodeCharacters(string? input)
         {
-            if (string.IsNullOrWhiteSpace(input))
+            if (string.IsNullOrEmpty(input))
                 return input;
 
             return new string(input.Where(c => c <= 255).ToArray());
@@ -200,16 +200,16 @@ namespace SabreTools.Core.Tools
         private static string? NormalizeHashData(string? hash, int expectedLength)
         {
             // If we have a known blank hash, return blank
-            if (string.IsNullOrWhiteSpace(hash))
+            if (string.IsNullOrEmpty(hash))
                 return null;
             else if (hash == "-" || hash == "_")
                 return string.Empty;
 
             // Check to see if it's a "hex" hash
-            hash = hash.Trim().Replace("0x", string.Empty);
+            hash = hash!.Trim().Replace("0x", string.Empty);
 
             // If we have a blank hash now, return blank
-            if (string.IsNullOrWhiteSpace(hash))
+            if (string.IsNullOrEmpty(hash))
                 return string.Empty;
 
             // If the hash shorter than the required length, pad it
