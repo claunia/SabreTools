@@ -14,17 +14,29 @@ namespace SabreTools.Filter
         /// <summary>
         /// Key name for the filter
         /// </summary>
+#if NETFRAMEWORK || NETCOREAPP3_1
+        public string[] Key { get; private set; }
+#else
         public string[] Key { get; init; }
+#endif
 
         /// <summary>
         /// Value to match in the filter
         /// </summary>
+#if NETFRAMEWORK || NETCOREAPP3_1
+        public string? Value { get; private set; }
+#else
         public string? Value { get; init; }
+#endif
 
         /// <summary>
         /// Operation on how to match the filter
         /// </summary>
+#if NETFRAMEWORK || NETCOREAPP3_1
+        public Operation Operation { get; private set; }
+#else
         public Operation Operation { get; init; }
+#endif
 
         public FilterObject(string filterString)
         {
@@ -322,11 +334,19 @@ namespace SabreTools.Filter
                 return false;
 
             // If we find a special character, try parsing as regex
+#if NETFRAMEWORK
+            if (value.Contains("^")
+                || value.Contains("$")
+                || value.Contains("*")
+                || value.Contains("?")
+                || value.Contains("+"))
+#else
             if (value.Contains('^')
                 || value.Contains('$')
                 || value.Contains('*')
                 || value.Contains('?')
                 || value.Contains('+'))
+#endif
             {
                 try
                 {
@@ -348,10 +368,10 @@ namespace SabreTools.Filter
         private bool? ConvertToBoolean(string? value)
         {
             // If we don't have a valid string, we can't do anything
-            if (string.IsNullOrWhiteSpace(value))
+            if (string.IsNullOrEmpty(value))
                 return null;
 
-            return value.ToLowerInvariant() switch
+            return value!.ToLowerInvariant() switch
             {
                 "true" or "yes" => true,
                 "false" or "no" => false,

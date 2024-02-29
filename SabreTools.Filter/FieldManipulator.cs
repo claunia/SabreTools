@@ -36,15 +36,15 @@ namespace SabreTools.Filter
         public static bool RemoveField(DictionaryBase? dictionaryBase, string? fieldName)
         {
             // If the item or field name are missing, we can't do anything
-            if (dictionaryBase == null || string.IsNullOrWhiteSpace(fieldName))
+            if (dictionaryBase == null || string.IsNullOrEmpty(fieldName))
                 return false;
 
             // If the key doesn't exist, then it's already removed
-            if (!dictionaryBase.ContainsKey(fieldName))
+            if (!dictionaryBase.ContainsKey(fieldName!))
                 return true;
 
             // Remove the key
-            dictionaryBase.Remove(fieldName);
+            dictionaryBase.Remove(fieldName!);
             return true;
         }
 
@@ -54,7 +54,7 @@ namespace SabreTools.Filter
         public static bool SetField(DictionaryBase? dictionaryBase, string? fieldName, object value)
         {
             // If the item or field name are missing, we can't do anything
-            if (dictionaryBase == null || string.IsNullOrWhiteSpace(fieldName))
+            if (dictionaryBase == null || string.IsNullOrEmpty(fieldName))
                 return false;
 
             // Retrieve the list of valid fields for the item and validate
@@ -63,7 +63,7 @@ namespace SabreTools.Filter
                 return false;
 
             // Set the field with the new value
-            dictionaryBase[fieldName] = value;
+            dictionaryBase[fieldName!] = value;
             return true;
         }
 

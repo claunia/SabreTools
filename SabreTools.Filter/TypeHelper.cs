@@ -21,12 +21,18 @@ namespace SabreTools.Filter
             if (fields == null)
                 return null;
 
+#if NET20 || NET35 || NET40
+            // TODO: Figure out how to do this, try using the following:
+            // https://learn.microsoft.com/en-us/dotnet/api/system.reflection.customattributedata?view=net-8.0
+            return null;
+#else
             return fields
                 .Where(f => f.IsLiteral && !f.IsInitOnly)
                 .Where(f => f.CustomAttributes.Any(a => a.AttributeType == typeof(NoFilterAttribute)))
                 .Select(f => f.GetRawConstantValue() as string)
                 .Where(v => v != null)
                 .ToArray()!;
+#endif
         }
 
         /// <summary>
@@ -34,7 +40,7 @@ namespace SabreTools.Filter
         /// </summary>
         public static Type? GetDatItemType(string? itemType)
         {
-            if (string.IsNullOrWhiteSpace(itemType))
+            if (string.IsNullOrEmpty(itemType))
                 return null;
 
             return AppDomain.CurrentDomain.GetAssemblies()
@@ -51,7 +57,13 @@ namespace SabreTools.Filter
             if (type == null)
                 return null;
 
+#if NET20 || NET35 || NET40
+            // TODO: Figure out how to do this, try using the following:
+            // https://learn.microsoft.com/en-us/dotnet/api/system.reflection.customattributedata?view=net-8.0
+            return null;
+#else
             return type.GetCustomAttribute<XmlRootAttribute>()?.ElementName;
+#endif
         }
     }
 }

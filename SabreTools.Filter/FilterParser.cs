@@ -12,7 +12,7 @@ namespace SabreTools.Filter
         public static (string?, string?) ParseFilterId(string itemFieldString)
         {
             // If we don't have a filter ID, we can't do anything
-            if (string.IsNullOrWhiteSpace(itemFieldString))
+            if (string.IsNullOrEmpty(itemFieldString))
                 return (null, null);
 
             // If we only have one part, we can't do anything
@@ -29,23 +29,23 @@ namespace SabreTools.Filter
         public static (string?, string?) ParseFilterId(string itemName, string? fieldName)
         {
             // If we don't have a filter ID, we can't do anything
-            if (string.IsNullOrWhiteSpace(itemName) || string.IsNullOrWhiteSpace(fieldName))
+            if (string.IsNullOrEmpty(itemName) || string.IsNullOrEmpty(fieldName))
                 return (null, null);
 
             // Return santized values based on the split ID
             return itemName.ToLowerInvariant() switch
             {
                 // Header
-                "header" => ParseHeaderFilterId(fieldName),
+                "header" => ParseHeaderFilterId(fieldName!),
 
                 // Machine
-                "game" => ParseMachineFilterId(fieldName),
-                "machine" => ParseMachineFilterId(fieldName),
-                "resource" => ParseMachineFilterId(fieldName),
-                "set" => ParseMachineFilterId(fieldName),
+                "game" => ParseMachineFilterId(fieldName!),
+                "machine" => ParseMachineFilterId(fieldName!),
+                "resource" => ParseMachineFilterId(fieldName!),
+                "set" => ParseMachineFilterId(fieldName!),
 
                 // DatItem
-                _ => ParseDatItemFilterId(itemName, fieldName),
+                _ => ParseDatItemFilterId(itemName, fieldName!),
             };
         }
 
