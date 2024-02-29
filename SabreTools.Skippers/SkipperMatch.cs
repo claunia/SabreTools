@@ -1,9 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
-using SabreTools.IO;
 
 namespace SabreTools.Skippers
 {
@@ -30,91 +26,16 @@ namespace SabreTools.Skippers
         private static List<Detector>? Skippers = null;
 
         /// <summary>
-        /// Local paths
-        /// </summary>
-        private static readonly string LocalPath = Path.Combine(PathTool.GetRuntimeDirectory(), "Skippers") + Path.DirectorySeparatorChar;
-
-        /// <summary>
         /// Initialize static fields
         /// </summary>
-        /// <param name="experimental">True to enable internal header skipper generation, false to use file-based generation (default)</param>
-        public static void Init(bool experimental = false)
+        public static void Init()
         {
             // If the list is populated, don't add to it
             if (Skippers != null)
                 return;
 
-            // If we're using internal skipper generation
-            if (experimental)
-                PopulateSkippersInternal();
-
-            // If we're using file-based skipper generation
-            else
-                PopulateSkippers();
-        }
-
-        /// <summary>
-        /// Populate the entire list of header skippers from physical files
-        /// </summary>
-        /// <remarks>
-        /// http://mamedev.emulab.it/clrmamepro/docs/xmlheaders.txt
-        /// http://www.emulab.it/forum/index.php?topic=127.0
-        /// </remarks>
-        private static void PopulateSkippers()
-        {
-            // Ensure the list exists
-            Skippers ??= [];
-
-            // Create the XML serializer
-            var xts = new XmlSerializer(typeof(Detector));
-
-            // Get skippers for each known header type
-#if NET20 || NET35
-            foreach (string skipperPath in Directory.GetFiles(LocalPath, "*"))
-#else
-            foreach (string skipperPath in Directory.EnumerateFiles(LocalPath, "*", SearchOption.AllDirectories))
-#endif
-            {
-                try
-                {
-                    // Create the XML reader
-                    var xtr = XmlReader.Create(skipperPath, new XmlReaderSettings
-                    {
-                        CheckCharacters = false,
-#if NET40_OR_GREATER
-                        DtdProcessing = DtdProcessing.Ignore,
-#endif
-                        IgnoreComments = true,
-                        IgnoreWhitespace = true,
-                        ValidationFlags = XmlSchemaValidationFlags.None,
-                        ValidationType = ValidationType.None,
-                    });
-
-                    // Deserialize the detector, if possible
-                    if (xts.Deserialize(xtr) is not Detector detector || detector == null)
-                        continue;
-
-                    // Set the source file on the detector
-                    string sourceFile = Path.GetFileNameWithoutExtension(skipperPath);
-                    detector.SourceFile = sourceFile;
-
-                    // Set the source file on the rules
-                    if (detector.Rules != null)
-                    {
-                        for (int i = 0; i < detector.Rules.Length; i++)
-                        {
-                            if (detector.Rules[i] == null)
-                                continue;
-
-                            detector.Rules[i].SourceFile = sourceFile;
-                        }
-                    }
-
-                    // Add the skipper to the set
-                    Skippers.Add(detector);
-                }
-                catch { }
-            }
+            // Generate header skippers internally
+            PopulateSkippers();
         }
 
         /// <summary>
@@ -124,7 +45,7 @@ namespace SabreTools.Skippers
         /// http://mamedev.emulab.it/clrmamepro/docs/xmlheaders.txt
         /// http://www.emulab.it/forum/index.php?topic=127.0
         /// </remarks>
-        private static void PopulateSkippersInternal()
+        private static void PopulateSkippers()
         {
             // Ensure the list exists
             Skippers ??= [];
