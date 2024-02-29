@@ -1,5 +1,6 @@
 using System;
 
+// Ported to SabreTools.Matching. Remove once published.
 namespace SabreTools.Core
 {
     public static class ArrayExtensions
