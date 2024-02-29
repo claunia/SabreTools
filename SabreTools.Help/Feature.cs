@@ -235,7 +235,7 @@ namespace SabreTools.Help
                             output = CreatePadding(pre + 4);
                         }
 
-                        output += subsplit[^1];
+                        output += subsplit[subsplit.Length - 1];
                         continue;
                     }
 
@@ -372,7 +372,7 @@ namespace SabreTools.Help
                             output = CreatePadding(preAdjusted + 4);
                         }
 
-                        output += subsplit[^1];
+                        output += subsplit[subsplit.Length - 1];
                         continue;
                     }
 

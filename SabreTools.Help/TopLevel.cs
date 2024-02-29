@@ -60,7 +60,11 @@ namespace SabreTools.Help
                     }
 
                     // Special precautions for wildcarded inputs (potential paths)
+#if NETFRAMEWORK
+                    else if (args[i].Contains("*") || args[i].Contains("?"))
+#else
                     else if (args[i].Contains('*') || args[i].Contains('?'))
+#endif
                     {
                         Inputs.Add(args[i]);
                     }

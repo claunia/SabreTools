@@ -207,14 +207,14 @@ namespace SabreTools.Help
                 }
 
                 // If we have a match within the flags
-                else if (_features[feature]!.ContainsFlag(featurename))
+                else if (_features[feature]!.ContainsFlag(featurename!))
                 {
                     realname = feature;
                     break;
                 }
 
                 // Otherwise, we want to get features with the same start
-                else if (_features[feature]!.StartsWith(featurename.TrimStart('-')[0]))
+                else if (_features[feature]!.StartsWith(featurename!.TrimStart('-')[0]))
                 {
                     startsWith.Add(feature);
                 }
@@ -284,7 +284,7 @@ namespace SabreTools.Help
         private Dictionary<string, Feature?> GetEnabledSubfeatures(string key, Feature? feature)
         {
             Dictionary<string, Feature?> enabled = [];
-            
+
             // If the feature is invalid
             if (feature == null)
                 return enabled;
@@ -340,7 +340,9 @@ namespace SabreTools.Help
         /// </summary>
         private static void Pause()
         {
+#if NET452_OR_GREATER || NETCOREAPP
             if (!Console.IsOutputRedirected)
+#endif
             {
                 Console.WriteLine();
                 Console.WriteLine("Press enter to continue...");
