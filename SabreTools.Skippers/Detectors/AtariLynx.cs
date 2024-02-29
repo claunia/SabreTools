@@ -31,10 +31,10 @@ namespace SabreTools.Skippers.Detectors
                 StartOffset = "40",
                 EndOffset = "EOF",
                 Operation = HeaderSkipOperation.None,
-                Tests = new Test[]
-                {
+                Tests =
+                [
                     rule1Test1,
-                }
+                ]
             };
 
             var rule2 = new Rule
@@ -42,10 +42,10 @@ namespace SabreTools.Skippers.Detectors
                 StartOffset = "40",
                 EndOffset = "EOF",
                 Operation = HeaderSkipOperation.None,
-                Tests = new Test[]
-                {
+                Tests =
+                [
                     rule2Test1,
-                }
+                ]
             };
 
             // Create file
@@ -53,11 +53,11 @@ namespace SabreTools.Skippers.Detectors
             Author = "Roman Scherzer";
             Version = "1.0";
             SourceFile = "lynx";
-            Rules = new Rule[]
-            {
+            Rules =
+            [
                 rule1,
                 rule2,
-            };
+            ];
         }
     }
 }

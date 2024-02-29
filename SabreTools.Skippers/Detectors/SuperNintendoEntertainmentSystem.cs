@@ -34,30 +34,30 @@ namespace SabreTools.Skippers.Detectors
             {
                 StartOffset = "200",
                 Operation = HeaderSkipOperation.None,
-                Tests = new Test[]
-                {
+                Tests =
+                [
                     rule1Test1,
-                }
+                ]
             };
 
             var rule2 = new Rule
             {
                 StartOffset = "200",
                 Operation = HeaderSkipOperation.None,
-                Tests = new Test[]
-                {
+                Tests =
+                [
                     rule2Test1,
-                }
+                ]
             };
 
             var rule3 = new Rule
             {
                 StartOffset = "200",
                 Operation = HeaderSkipOperation.None,
-                Tests = new Test[]
-                {
+                Tests =
+                [
                     rule3Test1,
-                }
+                ]
             };
 
             // Create file
@@ -65,12 +65,12 @@ namespace SabreTools.Skippers.Detectors
             Author = "Matt Nadareski (darksabre76)";
             Version = "1.0";
             SourceFile = "snes";
-            Rules = new Rule[]
-            {
+            Rules =
+            [
                 rule1, // FIG
                 rule2, // SMC
                 rule3, // UFO
-            };
+            ];
         }
     }
 }

@@ -40,40 +40,40 @@ namespace SabreTools.Skippers.Detectors
             {
                 StartOffset = "10",
                 Operation = HeaderSkipOperation.None,
-                Tests = new Test[]
-                {
+                Tests =
+                [
                     rule1Test1,
-                }
+                ]
             };
 
             var rule2 = new Rule
             {
                 StartOffset = "10",
                 Operation = HeaderSkipOperation.None,
-                Tests = new Test[]
-                {
+                Tests =
+                [
                     rule2Test1,
-                }
+                ]
             };
 
             var rule3 = new Rule
             {
                 StartOffset = "10",
                 Operation = HeaderSkipOperation.None,
-                Tests = new Test[]
-                {
+                Tests =
+                [
                     rule3Test1,
-                }
+                ]
             };
 
             var rule4 = new Rule
             {
                 StartOffset = "10",
                 Operation = HeaderSkipOperation.None,
-                Tests = new Test[]
-                {
+                Tests =
+                [
                     rule4Test1,
-                }
+                ]
             };
 
             // Create file
@@ -81,13 +81,13 @@ namespace SabreTools.Skippers.Detectors
             Author = "Yori Yoshizuki";
             Version = "1.0";
             SourceFile = "fds";
-            Rules = new Rule[]
-            {
+            Rules =
+            [
                 rule1,
                 rule2,
                 rule3,
                 rule4,
-            };
+            ];
         }
     }
 }

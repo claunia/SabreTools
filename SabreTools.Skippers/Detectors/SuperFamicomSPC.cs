@@ -24,10 +24,10 @@ namespace SabreTools.Skippers.Detectors
                 StartOffset = "00100",
                 EndOffset = "EOF",
                 Operation = HeaderSkipOperation.None,
-                Tests = new Test[]
-                {
+                Tests =
+                [
                     rule1Test1,
-                }
+                ]
             };
 
             // Create file
@@ -35,10 +35,10 @@ namespace SabreTools.Skippers.Detectors
             Author = "Yori Yoshizuki";
             Version = "1.0";
             SourceFile = "spc";
-            Rules = new Rule[]
-            {
+            Rules =
+            [
                 rule1,
-            };
+            ];
         }
     }
 }

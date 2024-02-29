@@ -52,10 +52,10 @@ namespace SabreTools.Skippers.Detectors
                 StartOffset = "76",
                 EndOffset = "EOF",
                 Operation = HeaderSkipOperation.None,
-                Tests = new Test[]
-                {
+                Tests =
+                [
                     rule1Test1,
-                }
+                ]
             };
 
             var rule2 = new Rule
@@ -63,10 +63,10 @@ namespace SabreTools.Skippers.Detectors
                 StartOffset = "76",
                 EndOffset = "EOF",
                 Operation = HeaderSkipOperation.None,
-                Tests = new Test[]
-                {
+                Tests =
+                [
                     rule2Test1,
-                }
+                ]
             };
 
             var rule3 = new Rule
@@ -74,10 +74,10 @@ namespace SabreTools.Skippers.Detectors
                 StartOffset = "7c",
                 EndOffset = "EOF",
                 Operation = HeaderSkipOperation.None,
-                Tests = new Test[]
-                {
+                Tests =
+                [
                     rule3Test1,
-                }
+                ]
             };
 
             var rule4 = new Rule
@@ -85,10 +85,10 @@ namespace SabreTools.Skippers.Detectors
                 StartOffset = "7c",
                 EndOffset = "EOF",
                 Operation = HeaderSkipOperation.None,
-                Tests = new Test[]
-                {
+                Tests =
+                [
                     rule4Test1,
-                }
+                ]
             };
 
             var rule5 = new Rule
@@ -96,10 +96,10 @@ namespace SabreTools.Skippers.Detectors
                 StartOffset = "7c",
                 EndOffset = "EOF",
                 Operation = HeaderSkipOperation.None,
-                Tests = new Test[]
-                {
+                Tests =
+                [
                     rule5Test1,
-                }
+                ]
             };
 
             // Create file
@@ -107,14 +107,14 @@ namespace SabreTools.Skippers.Detectors
             Author = "Yori Yoshizuki";
             Version = "1.2";
             SourceFile = "psid";
-            Rules = new Rule[]
-            {
+            Rules =
+            [
                 rule1,
                 rule2,
                 rule3,
                 rule4,
                 rule5,
-            };
+            ];
         }
     }
 }

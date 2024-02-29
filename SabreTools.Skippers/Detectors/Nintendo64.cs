@@ -38,10 +38,10 @@ namespace SabreTools.Skippers.Detectors
                 StartOffset = "0",
                 EndOffset = "EOF",
                 Operation = HeaderSkipOperation.None,
-                Tests = new Test[]
-                {
+                Tests =
+                [
                     rule1Test1,
-                }
+                ]
             };
 
             var rule2 = new Rule
@@ -49,10 +49,10 @@ namespace SabreTools.Skippers.Detectors
                 StartOffset = "0",
                 EndOffset = "EOF",
                 Operation = HeaderSkipOperation.Byteswap,
-                Tests = new Test[]
-                {
+                Tests =
+                [
                     rule2Test1,
-                }
+                ]
             };
 
             var rule3 = new Rule
@@ -60,10 +60,10 @@ namespace SabreTools.Skippers.Detectors
                 StartOffset = "0",
                 EndOffset = "EOF",
                 Operation = HeaderSkipOperation.Wordswap,
-                Tests = new Test[]
-                {
+                Tests =
+                [
                     rule3Test1,
-                }
+                ]
             };
 
             // Create file
@@ -71,12 +71,12 @@ namespace SabreTools.Skippers.Detectors
             Author = "CUE";
             Version = "1.1";
             SourceFile = "n64";
-            Rules = new Rule[]
-            {
+            Rules =
+            [
                 rule1, // V64
                 rule2, // Z64
                 rule3, // N64
-            };
+            ];
         }
     }
 }

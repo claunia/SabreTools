@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 namespace SabreTools.Skippers
 {
     [XmlRoot("detector")]
-    public class Detector
+    public abstract class Detector
     {
         #region Fields
 
@@ -14,31 +14,31 @@ namespace SabreTools.Skippers
         /// Detector name
         /// </summary>
         [XmlElement("name")]
-        public string? Name { get; set; }
+        public string? Name { get; protected set; }
 
         /// <summary>
         /// Author names
         /// </summary>
         [XmlElement("author")]
-        public string? Author { get; set; }
+        public string? Author { get; protected set; }
 
         /// <summary>
         /// File version
         /// </summary>
         [XmlElement("version")]
-        public string? Version { get; set; }
+        public string? Version { get; protected set; }
 
         /// <summary>
         /// Set of all rules in the skipper
         /// </summary>
         [XmlElement("rule")]
-        public Rule[]? Rules { get; set; }
+        public Rule[]? Rules { get; protected set; }
 
         /// <summary>
         /// Filename the skipper lives in
         /// </summary>
         [XmlIgnore]
-        public string? SourceFile { get; set; }
+        public string? SourceFile { get; protected set; }
 
         #endregion
 

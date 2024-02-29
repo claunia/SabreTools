@@ -23,10 +23,10 @@ namespace SabreTools.Skippers.Detectors
             {
                 StartOffset = "200",
                 Operation = HeaderSkipOperation.None,
-                Tests = new Test[]
-                {
+                Tests =
+                [
                     rule1Test1,
-                }
+                ]
             };
 
             // Create file
@@ -34,10 +34,10 @@ namespace SabreTools.Skippers.Detectors
             Author = "Matt Nadareski (darksabre76)";
             Version = "1.0";
             SourceFile = "pce";
-            Rules = new Rule[]
-            {
+            Rules =
+            [
                 rule1,
-            };
+            ];
         }
     }
 }
