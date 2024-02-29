@@ -22,7 +22,7 @@ namespace SabreTools.Logging
         /// <summary>
         /// Determines if we're logging to file or not
         /// </summary>
-        public static bool LogToFile { get { return !string.IsNullOrWhiteSpace(Filename); } }
+        public static bool LogToFile { get { return !string.IsNullOrEmpty(Filename); } }
 
         /// <summary>
         /// Optional output log directory
@@ -118,7 +118,11 @@ namespace SabreTools.Logging
                     Directory.CreateDirectory(LogDirectory);
 
                 FileStream logfile = File.Create(Path.Combine(LogDirectory ?? string.Empty, Filename ?? string.Empty));
+#if NET20 || NET35 || NET40
+                _log = new StreamWriter(logfile, Encoding.UTF8, 4096)
+#else
                 _log = new StreamWriter(logfile, Encoding.UTF8, 4096, true)
+#endif
                 {
                     AutoFlush = true
                 };
@@ -151,12 +155,16 @@ namespace SabreTools.Logging
 
                 TimeSpan span = DateTime.Now.Subtract(StartTime);
 
+#if NET20 || NET35
+                string total = span.ToString();
+#else
                 // Special case for multi-day runs
                 string total;
                 if (span >= TimeSpan.FromDays(1))
                     total = span.ToString(@"d\:hh\:mm\:ss");
                 else
                     total = span.ToString(@"hh\:mm\:ss");
+#endif
 
                 if (!LogToFile)
                 {
