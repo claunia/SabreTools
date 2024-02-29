@@ -73,7 +73,7 @@ namespace SabreTools.Skippers
         {
             // If the file doesn't exist, return a blank skipper rule
             if (!File.Exists(input))
-                return new Rule();
+                return new Rule(null, null, HeaderSkipOperation.None, null, null);
 
             return GetMatchingRule(File.OpenRead(input), skipperName);
         }
@@ -87,7 +87,7 @@ namespace SabreTools.Skippers
         /// <returns>The Rule that matched the file</returns>
         public static Rule GetMatchingRule(Stream? input, string skipperName, bool keepOpen = false)
         {
-            var skipperRule = new Rule();
+            var skipperRule = new Rule(null, null, HeaderSkipOperation.None, null, null);
 
             // If we have an invalid input
             if (input == null || !input.CanRead)
@@ -114,7 +114,7 @@ namespace SabreTools.Skippers
                 input?.Dispose();
 
             // If the Rule is null, make it empty
-            skipperRule ??= new Rule();
+            skipperRule ??= new Rule(null, null, HeaderSkipOperation.None, null, null);
             return skipperRule;
         }
     }
