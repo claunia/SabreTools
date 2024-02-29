@@ -11,54 +11,14 @@ namespace SabreTools.Skippers.Detectors
         public SuperNintendoEntertainmentSystem()
         {
             // Create tests
-            var rule1Test1 = new DataTest
-            {
-                Offset = "16",
-                Value = "0000000000000000",
-            };
-
-            var rule2Test1 = new DataTest
-            {
-                Offset = "16",
-                Value = "AABB040000000000",
-            };
-
-            var rule3Test1 = new DataTest
-            {
-                Offset = "16",
-                Value = "535550455255464F",
-            };
+            var figTest = new DataTest("16", "0000000000000000", true);
+            var smcTest = new DataTest("16", "AABB040000000000", true);
+            var ufoTest = new DataTest("16", "535550455255464F", true);
 
             // Create rules
-            var rule1 = new Rule
-            {
-                StartOffset = "200",
-                Operation = HeaderSkipOperation.None,
-                Tests =
-                [
-                    rule1Test1,
-                ]
-            };
-
-            var rule2 = new Rule
-            {
-                StartOffset = "200",
-                Operation = HeaderSkipOperation.None,
-                Tests =
-                [
-                    rule2Test1,
-                ]
-            };
-
-            var rule3 = new Rule
-            {
-                StartOffset = "200",
-                Operation = HeaderSkipOperation.None,
-                Tests =
-                [
-                    rule3Test1,
-                ]
-            };
+            var figRule = new Rule("200", null, HeaderSkipOperation.None, [figTest], "snes");
+            var smcRule = new Rule("200", null, HeaderSkipOperation.None, [smcTest], "snes");
+            var ufoRule = new Rule("200", null, HeaderSkipOperation.None, [ufoTest], "snes");
 
             // Create file
             Name = "Nintendo Super Famicom/SNES";
@@ -67,9 +27,9 @@ namespace SabreTools.Skippers.Detectors
             SourceFile = "snes";
             Rules =
             [
-                rule1, // FIG
-                rule2, // SMC
-                rule3, // UFO
+                figRule,
+                smcRule,
+                ufoRule,
             ];
         }
     }

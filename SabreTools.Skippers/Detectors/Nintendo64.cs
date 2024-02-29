@@ -11,60 +11,14 @@ namespace SabreTools.Skippers.Detectors
         public Nintendo64()
         {
             // Create tests
-            var rule1Test1 = new DataTest
-            {
-                Offset = "0",
-                Value = "80371240",
-                Result = true,
-            };
-
-            var rule2Test1 = new DataTest
-            {
-                Offset = "0",
-                Value = "37804012",
-                Result = true,
-            };
-
-            var rule3Test1 = new DataTest
-            {
-                Offset = "0",
-                Value = "40123780",
-                Result = true,
-            };
+            var v64Test = new DataTest("0", "80371240", true);
+            var z64Test = new DataTest("0", "37804012", true);
+            var n64Test = new DataTest("0", "40123780", true);
 
             // Create rules
-            var rule1 = new Rule
-            {
-                StartOffset = "0",
-                EndOffset = "EOF",
-                Operation = HeaderSkipOperation.None,
-                Tests =
-                [
-                    rule1Test1,
-                ]
-            };
-
-            var rule2 = new Rule
-            {
-                StartOffset = "0",
-                EndOffset = "EOF",
-                Operation = HeaderSkipOperation.Byteswap,
-                Tests =
-                [
-                    rule2Test1,
-                ]
-            };
-
-            var rule3 = new Rule
-            {
-                StartOffset = "0",
-                EndOffset = "EOF",
-                Operation = HeaderSkipOperation.Wordswap,
-                Tests =
-                [
-                    rule3Test1,
-                ]
-            };
+            var v64Rule = new Rule("0", "EOF", HeaderSkipOperation.None, [v64Test], "n64");
+            var z64Rule = new Rule("0", "EOF", HeaderSkipOperation.Byteswap, [z64Test], "n64");
+            var n64Rule = new Rule("0", "EOF", HeaderSkipOperation.Wordswap, [n64Test], "n64");
 
             // Create file
             Name = "Nintendo 64 - ABCD";
@@ -73,9 +27,9 @@ namespace SabreTools.Skippers.Detectors
             SourceFile = "n64";
             Rules =
             [
-                rule1, // V64
-                rule2, // Z64
-                rule3, // N64
+                v64Rule,
+                z64Rule,
+                n64Rule,
             ];
         }
     }

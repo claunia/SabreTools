@@ -24,7 +24,7 @@ namespace SabreTools.Skippers.Tests
         /// </summary>
         /// <remarks>Either numeric or the literal "po2"</remarks>
         [XmlAttribute("size")]
-        public string Size
+        public string? Size
         {
             get => _size == null ? "po2" : _size.Value.ToString();
             set
@@ -53,6 +53,16 @@ namespace SabreTools.Skippers.Tests
         private long? _size;
 
         #endregion
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public FileTest(bool result, string? size, HeaderSkipTestFileOperator opr)
+        {
+            Result = result;
+            Size = size;
+            Operator = opr;
+        }
 
         /// <inheritdoc/>
         public override bool Passes(Stream input)

@@ -85,6 +85,18 @@ namespace SabreTools.Skippers
         #endregion
 
         /// <summary>
+        /// Constructor
+        /// </summary>
+        public Rule(string? startOffset, string? endOffset, HeaderSkipOperation operation, Test[]? tests, string? sourceFile)
+        {
+            StartOffset = startOffset;
+            EndOffset = endOffset;
+            Operation = operation;
+            Tests = tests;
+            SourceFile = sourceFile;
+        }
+
+        /// <summary>
         /// Check if a Stream passes all tests in the Rule
         /// </summary>
         /// <param name="input">Stream to check</param>

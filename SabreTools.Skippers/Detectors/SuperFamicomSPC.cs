@@ -11,24 +11,10 @@ namespace SabreTools.Skippers.Detectors
         public SuperFamicomSPC()
         {
             // Create tests
-            var rule1Test1 = new DataTest
-            {
-                Offset = "0",
-                Value = "534E45532D535043",
-                Result = true,
-            };
+            var rule1Test1 = new DataTest("0", "534E45532D535043", true);
 
             // Create rules
-            var rule1 = new Rule
-            {
-                StartOffset = "00100",
-                EndOffset = "EOF",
-                Operation = HeaderSkipOperation.None,
-                Tests =
-                [
-                    rule1Test1,
-                ]
-            };
+            var rule1 = new Rule("00100", "EOF", HeaderSkipOperation.None, [rule1Test1], "spc");
 
             // Create file
             Name = "Nintendo Super Famicon SPC";

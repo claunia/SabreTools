@@ -80,6 +80,17 @@ namespace SabreTools.Skippers.Tests
 
         #endregion
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public XorTest(string? offset, string? value, bool result, string? mask)
+        {
+            Offset = offset;
+            Value = value;
+            Result = result;
+            Mask = mask;
+        }
+
         /// <inheritdoc/>
         public override bool Passes(Stream input)
         {

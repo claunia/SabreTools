@@ -11,70 +11,16 @@ namespace SabreTools.Skippers.Detectors
         public NintendoFamicomDiskSystem()
         {
             // Create tests
-            var rule1Test1 = new DataTest
-            {
-                Offset = "0",
-                Value = "4644531A010000000000000000000000",
-            };
-
-            var rule2Test1 = new DataTest
-            {
-                Offset = "0",
-                Value = "4644531A020000000000000000000000",
-            };
-
-            var rule3Test1 = new DataTest
-            {
-                Offset = "0",
-                Value = "4644531A030000000000000000000000",
-            };
-
-            var rule4Test1 = new DataTest
-            {
-                Offset = "0",
-                Value = "4644531A040000000000000000000000",
-            };
+            var rule1Test1 = new DataTest("0", "4644531A010000000000000000000000", true);
+            var rule2Test1 = new DataTest("0", "4644531A020000000000000000000000", true);
+            var rule3Test1 = new DataTest("0", "4644531A030000000000000000000000", true);
+            var rule4Test1 = new DataTest("0", "4644531A040000000000000000000000", true);
 
             // Create rules
-            var rule1 = new Rule
-            {
-                StartOffset = "10",
-                Operation = HeaderSkipOperation.None,
-                Tests =
-                [
-                    rule1Test1,
-                ]
-            };
-
-            var rule2 = new Rule
-            {
-                StartOffset = "10",
-                Operation = HeaderSkipOperation.None,
-                Tests =
-                [
-                    rule2Test1,
-                ]
-            };
-
-            var rule3 = new Rule
-            {
-                StartOffset = "10",
-                Operation = HeaderSkipOperation.None,
-                Tests =
-                [
-                    rule3Test1,
-                ]
-            };
-
-            var rule4 = new Rule
-            {
-                StartOffset = "10",
-                Operation = HeaderSkipOperation.None,
-                Tests =
-                [
-                    rule4Test1,
-                ]
-            };
+            var rule1 = new Rule("10", null, HeaderSkipOperation.None, [rule1Test1], "fds");
+            var rule2 = new Rule("10", null, HeaderSkipOperation.None, [rule2Test1], "fds");
+            var rule3 = new Rule("10", null, HeaderSkipOperation.None, [rule3Test1], "fds");
+            var rule4 = new Rule("10", null, HeaderSkipOperation.None, [rule4Test1], "fds");
 
             // Create file
             Name = "fds";

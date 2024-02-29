@@ -11,24 +11,10 @@ namespace SabreTools.Skippers.Detectors
         public NintendoEntertainmentSystem()
         {
             // Create tests
-            var rule1Test1 = new DataTest
-            {
-                Offset = "0",
-                Value = "4E45531A",
-                Result = true,
-            };
+            var inesTest = new DataTest("0", "4E45531A", true);
 
             // Create rules
-            var rule1 = new Rule
-            {
-                StartOffset = "10",
-                EndOffset = "EOF",
-                Operation = HeaderSkipOperation.None,
-                Tests =
-                [
-                    rule1Test1,
-                ]
-            };
+            var inesRule = new Rule("10", "EOF", HeaderSkipOperation.None, [inesTest], "nes");
 
             // Create file
             Name = "Nintendo Famicon/NES";
@@ -37,7 +23,7 @@ namespace SabreTools.Skippers.Detectors
             SourceFile = "nes";
             Rules =
             [
-                rule1,
+                inesRule,
             ];
         }
     }
