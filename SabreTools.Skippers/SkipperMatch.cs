@@ -4,7 +4,6 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using SabreTools.IO;
-using SabreTools.Logging;
 
 namespace SabreTools.Skippers
 {
@@ -34,15 +33,6 @@ namespace SabreTools.Skippers
         /// Local paths
         /// </summary>
         private static readonly string LocalPath = Path.Combine(PathTool.GetRuntimeDirectory(), "Skippers") + Path.DirectorySeparatorChar;
-
-        #region Logging
-
-        /// <summary>
-        /// Logging object
-        /// </summary>
-        private static readonly Logger logger = new();
-
-        #endregion
 
         /// <summary>
         /// Initialize static fields
@@ -162,10 +152,7 @@ namespace SabreTools.Skippers
         {
             // If the file doesn't exist, return a blank skipper rule
             if (!File.Exists(input))
-            {
-                logger.Error($"The file '{input}' does not exist so it cannot be tested");
                 return new Rule();
-            }
 
             return GetMatchingRule(File.OpenRead(input), skipperName);
         }
@@ -189,9 +176,6 @@ namespace SabreTools.Skippers
             if (Skippers == null || skipperName == null)
                 return skipperRule;
 
-            // Loop through and find a Skipper that has the right name
-            logger.Verbose("Beginning search for matching header skip rules");
-
             // Loop through all known Detectors
             foreach (Detector? skipper in Skippers)
             {
@@ -210,13 +194,6 @@ namespace SabreTools.Skippers
 
             // If the Rule is null, make it empty
             skipperRule ??= new Rule();
-
-            // If we have a blank rule, inform the user
-            if (skipperRule.Tests == null)
-                logger.Verbose("No matching rule found!");
-            else
-                logger.User("Matching rule found!");
-
             return skipperRule;
         }
     }

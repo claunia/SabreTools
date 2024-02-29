@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Xml.Serialization;
-using SabreTools.Logging;
 using SabreTools.Skippers.Tests;
 
 namespace SabreTools.Skippers
@@ -85,20 +84,6 @@ namespace SabreTools.Skippers
 
         #endregion
 
-        #region Logging
-
-        /// <summary>
-        /// Logging object
-        /// </summary>
-        private readonly Logger logger;
-
-        #endregion
-
-        public Rule()
-        {
-            logger = new Logger(this);
-        }
-
         /// <summary>
         /// Check if a Stream passes all tests in the Rule
         /// </summary>
@@ -131,17 +116,11 @@ namespace SabreTools.Skippers
         {
             // If the input file doesn't exist
             if (string.IsNullOrEmpty(input) || !File.Exists(input))
-            {
-                logger.Error($"'{input}' doesn't exist and cannot be transformed!");
                 return false;
-            }
 
             // If we have an invalid output directory name
             if (string.IsNullOrEmpty(output))
-            {
-                logger.Error($"Output path was null or empty, cannot write transformed file!");
                 return false;
-            }
 
             // Create the output directory if it doesn't already
             string parentDirectory = Path.GetDirectoryName(output) ?? string.Empty;
@@ -174,10 +153,7 @@ namespace SabreTools.Skippers
 
             // If the input stream isn't valid
             if (input == null || !input.CanRead)
-            {
-                logger.Error("The stream was invalid!");
                 return false;
-            }
 
             // If the sizes are wrong for the values, fail
             long extsize = input.Length;
@@ -185,7 +161,6 @@ namespace SabreTools.Skippers
                 || (Operation > HeaderSkipOperation.Byteswap && (extsize % 4) != 0)
                 || (Operation > HeaderSkipOperation.Bitswap && (_startOffset == null || _startOffset % 2 != 0)))
             {
-                logger.Error("The stream did not have the correct size to be transformed!");
                 return false;
             }
 
@@ -194,7 +169,6 @@ namespace SabreTools.Skippers
             BinaryReader? br = null;
             try
             {
-                logger.User("Applying found rule to input stream");
                 bw = new BinaryWriter(output);
                 br = new BinaryReader(input);
 
@@ -277,30 +251,21 @@ namespace SabreTools.Skippers
                     }
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                logger.Error(ex);
                 return false;
             }
             finally
             {
+#if NET40_OR_GREATER
                 // If we're not keeping the read stream open, dispose of the binary reader
                 if (!keepReadOpen)
-                {
-#if NET40_OR_GREATER
                     br?.Dispose();
-#endif
-                }
-
 
                 // If we're not keeping the write stream open, dispose of the binary reader
                 if (!keepWriteOpen)
-                {
-#if NET40_OR_GREATER
                     bw?.Dispose();
 #endif
-                }
-
             }
 
             return success;

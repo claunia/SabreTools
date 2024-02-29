@@ -21,10 +21,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SabreTools.Logging\SabreTools.Logging.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="Skippers\*" />
   </ItemGroup>
 
