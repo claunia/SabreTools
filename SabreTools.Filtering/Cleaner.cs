@@ -1,5 +1,7 @@
 ﻿using System;
+#if NET40_OR_GREATER || NETCOREAPP
 using System.Collections.Concurrent;
+#endif
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -215,7 +217,7 @@ namespace SabreTools.Filtering
                 if (datItem.GetName()!.Length > usableLength)
                 {
                     string ext = Path.GetExtension(datItem.GetName()!);
-                    datItem.SetName(datItem.GetName()![..(usableLength - ext.Length)] + ext);
+                    datItem.SetName(datItem.GetName()!.Substring(0, usableLength - ext.Length) + ext);
                 }
             }
         }
@@ -230,8 +232,13 @@ namespace SabreTools.Filtering
             try
             {
                 // First we want to get a mapping for all games to description
+#if NET40_OR_GREATER || NETCOREAPP
                 ConcurrentDictionary<string, string> concurrentDictionary = new();
                 ConcurrentDictionary<string, string> mapping = concurrentDictionary;
+#else
+                Dictionary<string, string> concurrentDictionary = [];
+                Dictionary<string, string> mapping = concurrentDictionary;
+#endif
 #if NET452_OR_GREATER || NETCOREAPP
                 Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
@@ -247,7 +254,11 @@ namespace SabreTools.Filtering
                     foreach (DatItem item in items)
                     {
                         // If the key mapping doesn't exist, add it
+#if NET40_OR_GREATER || NETCOREAPP
                         mapping.TryAdd(item.Machine.Name!, item.Machine.Description!.Replace('/', '_').Replace("\"", "''").Replace(":", " -"));
+#else
+                        mapping[item.Machine.Name!] = item.Machine.Description!.Replace('/', '_').Replace("\"", "''").Replace(":", " -");
+#endif
                     }
 #if NET40_OR_GREATER || NETCOREAPP
                 });
@@ -272,20 +283,20 @@ namespace SabreTools.Filtering
                     foreach (DatItem item in items)
                     {
                         // Update machine name
-                        if (!string.IsNullOrWhiteSpace(item.Machine.Name) && mapping.ContainsKey(item.Machine.Name))
-                            item.Machine.Name = mapping[item.Machine.Name];
+                        if (!string.IsNullOrEmpty(item.Machine.Name) && mapping.ContainsKey(item.Machine.Name!))
+                            item.Machine.Name = mapping[item.Machine.Name!];
 
                         // Update cloneof
-                        if (!string.IsNullOrWhiteSpace(item.Machine.CloneOf) && mapping.ContainsKey(item.Machine.CloneOf))
-                            item.Machine.CloneOf = mapping[item.Machine.CloneOf];
+                        if (!string.IsNullOrEmpty(item.Machine.CloneOf) && mapping.ContainsKey(item.Machine.CloneOf!))
+                            item.Machine.CloneOf = mapping[item.Machine.CloneOf!];
 
                         // Update romof
-                        if (!string.IsNullOrWhiteSpace(item.Machine.RomOf) && mapping.ContainsKey(item.Machine.RomOf))
-                            item.Machine.RomOf = mapping[item.Machine.RomOf];
+                        if (!string.IsNullOrEmpty(item.Machine.RomOf) && mapping.ContainsKey(item.Machine.RomOf!))
+                            item.Machine.RomOf = mapping[item.Machine.RomOf!];
 
                         // Update sampleof
-                        if (!string.IsNullOrWhiteSpace(item.Machine.SampleOf) && mapping.ContainsKey(item.Machine.SampleOf))
-                            item.Machine.SampleOf = mapping[item.Machine.SampleOf];
+                        if (!string.IsNullOrEmpty(item.Machine.SampleOf) && mapping.ContainsKey(item.Machine.SampleOf!))
+                            item.Machine.SampleOf = mapping[item.Machine.SampleOf!];
 
                         // Add the new item to the output list
                         newItems.Add(item);
@@ -337,7 +348,7 @@ namespace SabreTools.Filtering
                 // Match on CloneOf first
                 if (!string.IsNullOrEmpty(item.Machine.CloneOf))
                 {
-                    if (!parents.ContainsKey(item.Machine.CloneOf.ToLowerInvariant()))
+                    if (!parents.ContainsKey(item.Machine.CloneOf!.ToLowerInvariant()))
                         parents.Add(item.Machine.CloneOf.ToLowerInvariant(), new List<string>());
 
                     parents[item.Machine.CloneOf.ToLowerInvariant()].Add(item.Machine.Name!.ToLowerInvariant());
@@ -346,7 +357,7 @@ namespace SabreTools.Filtering
                 // Then by RomOf
                 else if (!string.IsNullOrEmpty(item.Machine.RomOf))
                 {
-                    if (!parents.ContainsKey(item.Machine.RomOf.ToLowerInvariant()))
+                    if (!parents.ContainsKey(item.Machine.RomOf!.ToLowerInvariant()))
                         parents.Add(item.Machine.RomOf.ToLowerInvariant(), new List<string>());
 
                     parents[item.Machine.RomOf.ToLowerInvariant()].Add(item.Machine.Name!.ToLowerInvariant());
@@ -356,7 +367,7 @@ namespace SabreTools.Filtering
                 else
                 {
                     if (!parents.ContainsKey(item.Machine.Name!.ToLowerInvariant()))
-                        parents.Add(item.Machine.Name.ToLowerInvariant(), new List<string>());
+                        parents.Add(item.Machine.Name!.ToLowerInvariant(), new List<string>());
 
                     parents[item.Machine.Name.ToLowerInvariant()].Add(item.Machine.Name.ToLowerInvariant());
                 }
@@ -432,7 +443,11 @@ namespace SabreTools.Filtering
                 return;
 
             string[] splitname = datItem.GetName()!.Split('.');
+#if NET20 || NET35
+            datItem.Machine.Name += $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1).ToArray())}";
+#else
             datItem.Machine.Name += $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1))}";
+#endif
             datItem.SetName(Path.GetFileName(datItem.GetName()));
         }
 

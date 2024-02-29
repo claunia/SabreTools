@@ -119,10 +119,10 @@ namespace SabreTools.Filtering
                 || filterTrimmed.StartsWith("~")
                 || filterTrimmed.StartsWith("not-");
             filterTrimmed = filterTrimmed.TrimStart('!', '~');
-            filterTrimmed = filterTrimmed.StartsWith("not-") ? filterTrimmed[4..] : filterTrimmed;
+            filterTrimmed = filterTrimmed.StartsWith("not-") ? filterTrimmed.Substring(4) : filterTrimmed;
 
             string filterFieldString = filterTrimmed.Split(':')[0].ToLowerInvariant().Trim('"', ' ', '\t');
-            string filterValue = filterTrimmed[(filterFieldString.Length + 1)..].Trim('"', ' ', '\t');
+            string filterValue = filterTrimmed.Substring(filterFieldString.Length + 1).Trim('"', ' ', '\t');
         
             return (filterFieldString, filterValue, negate);
         }

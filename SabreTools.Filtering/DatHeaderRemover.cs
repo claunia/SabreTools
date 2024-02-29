@@ -29,7 +29,7 @@ namespace SabreTools.Filtering
         public bool SetRemover(string field)
         {
             // If the key is null or empty, return false
-            if (string.IsNullOrWhiteSpace(field))
+            if (string.IsNullOrEmpty(field))
                 return false;
 
             // If we have a DatHeader field

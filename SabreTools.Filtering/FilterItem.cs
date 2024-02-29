@@ -116,13 +116,13 @@ namespace SabreTools.Filtering
             if (single == null || single.Equals(def))
                 return null;
 
-            // If we have a flag
 #if NETFRAMEWORK
-            if (typeof(T).IsEnum && ((single as Enum)! & (value as Enum)!) != 0)
+            // TODO: Fix flag matching
 #else
+            // If we have a flag
             if (typeof(T).IsEnum && (single as Enum)!.HasFlag((value as Enum)!))
-#endif
                 return true;
+#endif
 
             return single.Equals(value);
         }
@@ -157,7 +157,7 @@ namespace SabreTools.Filtering
             {
                 if (straw is string strawString)
                 {
-                    if (!string.IsNullOrWhiteSpace(strawString) && needle is string needleString)
+                    if (!string.IsNullOrEmpty(strawString) && needle is string needleString)
                     {
                         string regexStraw = strawString;
 

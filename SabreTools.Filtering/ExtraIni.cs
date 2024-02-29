@@ -69,7 +69,7 @@ namespace SabreTools.Filtering
 
                 string inputTrimmed = input.Trim('"', ' ', '\t');
                 string fieldString = inputTrimmed.Split(':')[0].ToLowerInvariant().Trim('"', ' ', '\t');
-                string fileString = inputTrimmed[(fieldString.Length + 1)..].Trim('"', ' ', '\t');
+                string fileString = inputTrimmed.Substring(fieldString.Length + 1).Trim('"', ' ', '\t');
 
                 item.DatItemField = fieldString.AsDatItemField();
                 item.MachineField = fieldString.AsMachineField();

@@ -246,20 +246,20 @@ namespace SabreTools.Filtering
 
                 // Determine if the game has a parent or not
                 string? parent = null;
-                if (!string.IsNullOrWhiteSpace(items[0].Machine.RomOf))
+                if (!string.IsNullOrEmpty(items[0].Machine.RomOf))
                     parent = items[0].Machine.RomOf;
 
                 // If the parent doesnt exist, we want to continue
-                if (string.IsNullOrWhiteSpace(parent))
+                if (string.IsNullOrEmpty(parent))
                     continue;
 
                 // If the parent doesn't have any items, we want to continue
-                if (datFile.Items[parent]!.Count == 0)
+                if (datFile.Items[parent!]!.Count == 0)
                     continue;
 
                 // If the parent exists and has items, we copy the items from the parent to the current game
                 DatItem copyFrom = items[0];
-                var parentItems = datFile.Items[parent];
+                var parentItems = datFile.Items[parent!];
                 if (parentItems == null)
                     continue;
 
@@ -429,20 +429,20 @@ namespace SabreTools.Filtering
 
                 // Determine if the game has a parent or not
                 string? parent = null;
-                if (!string.IsNullOrWhiteSpace(items[0].Machine.CloneOf))
+                if (!string.IsNullOrEmpty(items[0].Machine.CloneOf))
                     parent = items[0].Machine.CloneOf;
 
                 // If the parent doesnt exist, we want to continue
-                if (string.IsNullOrWhiteSpace(parent))
+                if (string.IsNullOrEmpty(parent))
                     continue;
 
                 // If the parent doesn't have any items, we want to continue
-                if (datFile.Items[parent]!.Count == 0)
+                if (datFile.Items[parent!]!.Count == 0)
                     continue;
 
                 // If the parent exists and has items, we copy the items from the parent to the current game
                 DatItem copyFrom = items[0];
-                var parentItems = datFile.Items[parent];
+                var parentItems = datFile.Items[parent!];
                 foreach (DatItem item in parentItems!)
                 {
                     DatItem datItem = (DatItem)item.Clone();
@@ -456,7 +456,7 @@ namespace SabreTools.Filtering
 
                 // Now we want to get the parent romof tag and put it in each of the items
                 items = datFile.Items[game];
-                string? romof = datFile.Items[parent]![0].Machine.RomOf;
+                string? romof = datFile.Items[parent!]![0].Machine.RomOf;
                 foreach (DatItem item in items!)
                 {
                     item.Machine.RomOf = romof;
@@ -482,16 +482,16 @@ namespace SabreTools.Filtering
 
                 // Determine if the game has a parent or not
                 string? parent = null;
-                if (!string.IsNullOrWhiteSpace(items[0].Machine.CloneOf))
+                if (!string.IsNullOrEmpty(items[0].Machine.CloneOf))
                     parent = items[0].Machine.CloneOf;
 
                 // If there is no parent, then we continue
-                if (string.IsNullOrWhiteSpace(parent))
+                if (string.IsNullOrEmpty(parent))
                     continue;
 
                 // Otherwise, move the items from the current game to a subfolder of the parent game
                 DatItem copyFrom;
-                if (datFile.Items[parent]!.Count == 0)
+                if (datFile.Items[parent!]!.Count == 0)
                 {
                     copyFrom = new Rom();
                     copyFrom.Machine.Name = parent;
@@ -499,7 +499,7 @@ namespace SabreTools.Filtering
                 }
                 else
                 {
-                    copyFrom = datFile.Items[parent]![0];
+                    copyFrom = datFile.Items[parent!]![0];
                 }
 
                 items = datFile.Items[game];
@@ -511,23 +511,23 @@ namespace SabreTools.Filtering
                         Disk disk = (item as Disk)!;
 
                         // If the merge tag exists and the parent already contains it, skip
-                        if (disk.MergeTag != null && datFile.Items[parent]!.Where(i => i.ItemType == ItemType.Disk).Select(i => (i as Disk)!.Name).Contains(disk.MergeTag))
+                        if (disk.MergeTag != null && datFile.Items[parent!]!.Where(i => i.ItemType == ItemType.Disk).Select(i => (i as Disk)!.Name).Contains(disk.MergeTag))
                         {
                             continue;
                         }
 
                         // If the merge tag exists but the parent doesn't contain it, add to parent
-                        else if (disk.MergeTag != null && !datFile.Items[parent]!.Where(i => i.ItemType == ItemType.Disk).Select(i => (i as Disk)!.Name).Contains(disk.MergeTag))
+                        else if (disk.MergeTag != null && !datFile.Items[parent!]!.Where(i => i.ItemType == ItemType.Disk).Select(i => (i as Disk)!.Name).Contains(disk.MergeTag))
                         {
                             disk.CopyMachineInformation(copyFrom);
-                            datFile.Items.Add(parent, disk);
+                            datFile.Items.Add(parent!, disk);
                         }
 
                         // If there is no merge tag, add to parent
                         else if (disk.MergeTag == null)
                         {
                             disk.CopyMachineInformation(copyFrom);
-                            datFile.Items.Add(parent, disk);
+                            datFile.Items.Add(parent!, disk);
                         }
                     }
 
@@ -537,40 +537,40 @@ namespace SabreTools.Filtering
                         Rom rom = (item as Rom)!;
 
                         // If the merge tag exists and the parent already contains it, skip
-                        if (rom.MergeTag != null && datFile.Items[parent]!.Where(i => i.ItemType == ItemType.Rom).Select(i => (i as Rom)!.Name).Contains(rom.MergeTag))
+                        if (rom.MergeTag != null && datFile.Items[parent!]!.Where(i => i.ItemType == ItemType.Rom).Select(i => (i as Rom)!.Name).Contains(rom.MergeTag))
                         {
                             continue;
                         }
 
                         // If the merge tag exists but the parent doesn't contain it, add to subfolder of parent
-                        else if (rom.MergeTag != null && !datFile.Items[parent]!.Where(i => i.ItemType == ItemType.Rom).Select(i => (i as Rom)!.Name).Contains(rom.MergeTag))
+                        else if (rom.MergeTag != null && !datFile.Items[parent!]!.Where(i => i.ItemType == ItemType.Rom).Select(i => (i as Rom)!.Name).Contains(rom.MergeTag))
                         {
                             if (subfolder)
                                 rom.Name = $"{rom.Machine.Name}\\{rom.Name}";
 
                             rom.CopyMachineInformation(copyFrom);
-                            datFile.Items.Add(parent, rom);
+                            datFile.Items.Add(parent!, rom);
                         }
 
                         // If the parent doesn't already contain this item, add to subfolder of parent
-                        else if (!datFile.Items[parent]!.Contains(item) || skipDedup)
+                        else if (!datFile.Items[parent!]!.Contains(item) || skipDedup)
                         {
                             if (subfolder)
                                 rom.Name = $"{item.Machine.Name}\\{rom.Name}";
 
                             rom.CopyMachineInformation(copyFrom);
-                            datFile.Items.Add(parent, rom);
+                            datFile.Items.Add(parent!, rom);
                         }
                     }
 
                     // All other that would be missing to subfolder of parent
-                    else if (!datFile.Items[parent]!.Contains(item))
+                    else if (!datFile.Items[parent!]!.Contains(item))
                     {
                         if (subfolder)
                             item.SetName($"{item.Machine.Name}\\{item.GetName()}");
 
                         item.CopyMachineInformation(copyFrom);
-                        datFile.Items.Add(parent, item);
+                        datFile.Items.Add(parent!, item);
                     }
                 }
 
@@ -632,19 +632,19 @@ namespace SabreTools.Filtering
 
                 // Determine if the game has a parent or not
                 string? parent = null;
-                if (!string.IsNullOrWhiteSpace(items[0].Machine.RomOf))
+                if (!string.IsNullOrEmpty(items[0].Machine.RomOf))
                     parent = items[0].Machine.RomOf;
 
                 // If the parent doesnt exist, we want to continue
-                if (string.IsNullOrWhiteSpace(parent))
+                if (string.IsNullOrEmpty(parent))
                     continue;
 
                 // If the parent doesn't have any items, we want to continue
-                if (datFile.Items[parent]!.Count == 0)
+                if (datFile.Items[parent!]!.Count == 0)
                     continue;
 
                 // If the parent exists and has items, we remove the items that are in the parent from the current game
-                var parentItems = datFile.Items[parent];
+                var parentItems = datFile.Items[parent!];
                 if (parentItems == null)
                     continue;
 
@@ -678,19 +678,19 @@ namespace SabreTools.Filtering
 
                 // Determine if the game has a parent or not
                 string? parent = null;
-                if (!string.IsNullOrWhiteSpace(items[0].Machine.CloneOf))
+                if (!string.IsNullOrEmpty(items[0].Machine.CloneOf))
                     parent = items[0].Machine.CloneOf;
 
                 // If the parent doesnt exist, we want to continue
-                if (string.IsNullOrWhiteSpace(parent))
+                if (string.IsNullOrEmpty(parent))
                     continue;
 
                 // If the parent doesn't have any items, we want to continue
-                if (datFile.Items[parent] == null || datFile.Items[parent]!.Count == 0)
+                if (datFile.Items[parent!] == null || datFile.Items[parent!]!.Count == 0)
                     continue;
 
                 // If the parent exists and has items, we remove the parent items from the current game
-                var parentItems = datFile.Items[parent];
+                var parentItems = datFile.Items[parent!];
                 foreach (DatItem item in parentItems!)
                 {
                     DatItem datItem = (DatItem)item.Clone();
@@ -702,7 +702,7 @@ namespace SabreTools.Filtering
 
                 // Now we want to get the parent romof tag and put it in each of the remaining items
                 items = datFile.Items[game];
-                string? romof = datFile.Items[parent]![0].Machine.RomOf;
+                string? romof = datFile.Items[parent!]![0].Machine.RomOf;
                 foreach (DatItem item in items!)
                 {
                     item.Machine.RomOf = romof;
