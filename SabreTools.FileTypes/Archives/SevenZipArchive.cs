@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
-using SabreTools.Core;
-using SabreTools.Core.Tools;
 using Compress;
 using Compress.SevenZip;
-using NaturalSort;
+using SabreTools.Core;
+using SabreTools.Core.Tools;
+using SabreTools.Matching;
 
 namespace SabreTools.FileTypes.Archives
 {

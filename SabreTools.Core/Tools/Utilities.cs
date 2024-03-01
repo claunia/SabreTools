@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using SabreTools.Matching;
 
 namespace SabreTools.Core.Tools
 {

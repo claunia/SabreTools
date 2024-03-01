@@ -8,6 +8,7 @@ using SabreTools.FileTypes.Aaru;
 using SabreTools.FileTypes.CHD;
 using SabreTools.IO;
 using SabreTools.Logging;
+using SabreTools.Matching;
 using SabreTools.Skippers;
 
 namespace SabreTools.FileTypes

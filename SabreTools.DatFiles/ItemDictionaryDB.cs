@@ -8,13 +8,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Microsoft.Data.Sqlite;
-using NaturalSort;
 using Newtonsoft.Json;
 using SabreTools.Core;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using SabreTools.IO;
 using SabreTools.Logging;
+using SabreTools.Matching;
 
 namespace SabreTools.DatFiles
 {

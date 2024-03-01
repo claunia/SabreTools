@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Compress;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
-using Compress;
+using SabreTools.Matching;
 #if NET462_OR_GREATER || NETCOREAPP
 using SharpCompress.Archives;
 using SharpCompress.Archives.Tar;
@@ -231,7 +232,7 @@ namespace SabreTools.FileTypes.Archives
             try
             {
                 TarArchive ta = TarArchive.Open(this.Filename!, new ReaderOptions { LeaveStreamOpen = false });
-                List<TarArchiveEntry> tarEntries = ta.Entries.OrderBy(e => e.Key, new NaturalSort.NaturalReversedComparer()).ToList();
+                List<TarArchiveEntry> tarEntries = ta.Entries.OrderBy(e => e.Key, new NaturalReversedComparer()).ToList();
                 string? lastTarEntry = null;
                 foreach (TarArchiveEntry entry in tarEntries)
                 {

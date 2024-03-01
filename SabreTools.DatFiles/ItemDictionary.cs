@@ -6,13 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-
+using Newtonsoft.Json;
 using SabreTools.Core;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using SabreTools.Logging;
-using NaturalSort;
-using Newtonsoft.Json;
+using SabreTools.Matching;
 
 namespace SabreTools.DatFiles
 {

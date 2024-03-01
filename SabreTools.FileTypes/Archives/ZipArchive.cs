@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using Compress;
 using Compress.ZipFile;
-using NaturalSort;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
+using SabreTools.Matching;
 
 namespace SabreTools.FileTypes.Archives
 {

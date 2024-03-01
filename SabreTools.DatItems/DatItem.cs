@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Xml.Serialization;
-using NaturalSort;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using SabreTools.Core;
@@ -9,6 +8,7 @@ using SabreTools.Core.Tools;
 using SabreTools.DatItems.Formats;
 using SabreTools.FileTypes;
 using SabreTools.Logging;
+using SabreTools.Matching;
 
 namespace SabreTools.DatItems
 {

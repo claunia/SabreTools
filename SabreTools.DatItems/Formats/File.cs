@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.FileTypes;
+using SabreTools.Matching;
 
 // TODO: Add item mappings for all fields
 namespace SabreTools.DatItems.Formats

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using SabreTools.Core;
+using SabreTools.Matching;
 #if NET462_OR_GREATER || NETCOREAPP
 using SharpCompress.Archives;
 using SharpCompress.Archives.Rar;
@@ -242,7 +243,7 @@ namespace SabreTools.FileTypes.Archives
             try
             {
                 SharpCompress.Archives.Rar.RarArchive ra = SharpCompress.Archives.Rar.RarArchive.Open(this.Filename, new ReaderOptions { LeaveStreamOpen = false });
-                List<RarArchiveEntry> rarEntries = ra.Entries.OrderBy(e => e.Key, new NaturalSort.NaturalReversedComparer()).ToList();
+                List<RarArchiveEntry> rarEntries = ra.Entries.OrderBy(e => e.Key, new NaturalReversedComparer()).ToList();
                 string? lastRarEntry = null;
                 foreach (RarArchiveEntry entry in rarEntries)
                 {
