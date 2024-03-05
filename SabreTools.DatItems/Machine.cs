@@ -543,6 +543,13 @@ namespace SabreTools.DatItems
         #region Manipulation
 
         /// <summary>
+        /// Runs a filter and determines if it passes or not
+        /// </summary>
+        /// <param name="filterRunner">Filter runner to use for checking</param>
+        /// <returns>True if the Machine passes the filter, false otherwise</returns>
+        public bool PassesFilter(FilterRunner filterRunner) => filterRunner.Run(_machine);
+
+        /// <summary>
         /// Remove a field from the Machine
         /// </summary>
         /// <param name="machineField">Machine field to remove</param>

@@ -7,6 +7,7 @@ using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems.Formats;
 using SabreTools.FileTypes;
+using SabreTools.Filter;
 using SabreTools.Logging;
 using SabreTools.Matching;
 
@@ -374,6 +375,19 @@ namespace SabreTools.DatItems
         // TODO: These should not take a field enum
         // TODO: These should be item-specific for better filtering
         #region Manipulation
+
+        /// <summary>
+        /// Runs a filter and determines if it passes or not
+        /// </summary>
+        /// <param name="filterRunner">Filter runner to use for checking</param>
+        /// <returns>True if the item passes the filter, false otherwise</returns>
+        public bool PassesFilter(FilterRunner filterRunner)
+        {
+            if (!Machine.PassesFilter(filterRunner))
+                return false;
+
+            return filterRunner.Run(_internal);
+        }
 
         /// <summary>
         /// Remove a field from the DatItem
