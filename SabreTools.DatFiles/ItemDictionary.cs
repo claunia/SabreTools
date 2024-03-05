@@ -118,40 +118,22 @@ namespace SabreTools.DatFiles
         public long TotalSize { get; private set; } = 0;
 
         /// <summary>
-        /// Number of hashes for each hash type
+        /// Number of items for each hash type
         /// </summary>
         [JsonIgnore, XmlIgnore]
         public Dictionary<Hash, long> HashCounts { get; private set; } = [];
 
         /// <summary>
-        /// Number of items with the baddump status
+        /// Number of items for each item status
         /// </summary>
         [JsonIgnore, XmlIgnore]
-        public long BaddumpCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of items with the good status
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long GoodCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of items with the nodump status
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long NodumpCount { get; private set; } = 0;
+        public Dictionary<ItemStatus, long> StatusCounts { get; private set; } = [];
 
         /// <summary>
         /// Number of items with the remove flag
         /// </summary>
         [JsonIgnore, XmlIgnore]
         public long RemovedCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of items with the verified status
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long VerifiedCount { get; private set; } = 0;
 
         #endregion
 
@@ -250,10 +232,10 @@ namespace SabreTools.DatFiles
                             AddHashCount(Hash.SHA1, string.IsNullOrEmpty(disk.SHA1) ? 0 : 1);
                         }
 
-                        BaddumpCount += (disk.ItemStatus == ItemStatus.BadDump ? 1 : 0);
-                        GoodCount += (disk.ItemStatus == ItemStatus.Good ? 1 : 0);
-                        NodumpCount += (disk.ItemStatus == ItemStatus.Nodump ? 1 : 0);
-                        VerifiedCount += (disk.ItemStatus == ItemStatus.Verified ? 1 : 0);
+                        AddStatusCount(ItemStatus.BadDump, disk.ItemStatus == ItemStatus.BadDump ? 1 : 0);
+                        AddStatusCount(ItemStatus.Good, disk.ItemStatus == ItemStatus.Good ? 1 : 0);
+                        AddStatusCount(ItemStatus.Nodump, disk.ItemStatus == ItemStatus.Nodump ? 1 : 0);
+                        AddStatusCount(ItemStatus.Verified, disk.ItemStatus == ItemStatus.Verified ? 1 : 0);
                         break;
                     case Media media:
                         AddHashCount(Hash.MD5, string.IsNullOrEmpty(media.MD5) ? 0 : 1);
@@ -274,10 +256,10 @@ namespace SabreTools.DatFiles
                             AddHashCount(Hash.SpamSum, string.IsNullOrEmpty(rom.SpamSum) ? 0 : 1);
                         }
 
-                        BaddumpCount += (rom.ItemStatus == ItemStatus.BadDump ? 1 : 0);
-                        GoodCount += (rom.ItemStatus == ItemStatus.Good ? 1 : 0);
-                        NodumpCount += (rom.ItemStatus == ItemStatus.Nodump ? 1 : 0);
-                        VerifiedCount += (rom.ItemStatus == ItemStatus.Verified ? 1 : 0);
+                        AddStatusCount(ItemStatus.BadDump, rom.ItemStatus == ItemStatus.BadDump ? 1 : 0);
+                        AddStatusCount(ItemStatus.Good, rom.ItemStatus == ItemStatus.Good ? 1 : 0);
+                        AddStatusCount(ItemStatus.Nodump, rom.ItemStatus == ItemStatus.Nodump ? 1 : 0);
+                        AddStatusCount(ItemStatus.Verified, rom.ItemStatus == ItemStatus.Verified ? 1 : 0);
                         break;
                 }
             }
@@ -336,11 +318,12 @@ namespace SabreTools.DatFiles
             }
 
             // Individual status counts
-            BaddumpCount += stats.BaddumpCount;
-            GoodCount += stats.GoodCount;
-            NodumpCount += stats.NodumpCount;
+            foreach (var statusCountKvp in stats.StatusCounts)
+            {
+                AddStatusCount(statusCountKvp.Key, statusCountKvp.Value);
+            }
+
             RemovedCount += stats.RemovedCount;
-            VerifiedCount += stats.VerifiedCount;
         }
 
         /// <summary>
@@ -530,10 +513,10 @@ namespace SabreTools.DatFiles
                             RemoveHashCount(Hash.SHA1, string.IsNullOrEmpty(disk.SHA1) ? 0 : 1);
                         }
 
-                        BaddumpCount -= (disk.ItemStatus == ItemStatus.BadDump ? 1 : 0);
-                        GoodCount -= (disk.ItemStatus == ItemStatus.Good ? 1 : 0);
-                        NodumpCount -= (disk.ItemStatus == ItemStatus.Nodump ? 1 : 0);
-                        VerifiedCount -= (disk.ItemStatus == ItemStatus.Verified ? 1 : 0);
+                        RemoveStatusCount(ItemStatus.BadDump, disk.ItemStatus == ItemStatus.BadDump ? 1 : 0);
+                        RemoveStatusCount(ItemStatus.Good, disk.ItemStatus == ItemStatus.Good ? 1 : 0);
+                        RemoveStatusCount(ItemStatus.Nodump, disk.ItemStatus == ItemStatus.Nodump ? 1 : 0);
+                        RemoveStatusCount(ItemStatus.Verified, disk.ItemStatus == ItemStatus.Verified ? 1 : 0);
                         break;
                     case Media media:
                         RemoveHashCount(Hash.MD5, string.IsNullOrEmpty(media.MD5) ? 0 : 1);
@@ -554,10 +537,10 @@ namespace SabreTools.DatFiles
                             RemoveHashCount(Hash.SpamSum, string.IsNullOrEmpty(rom.SpamSum) ? 0 : 1);
                         }
 
-                        BaddumpCount -= (rom.ItemStatus == ItemStatus.BadDump ? 1 : 0);
-                        GoodCount -= (rom.ItemStatus == ItemStatus.Good ? 1 : 0);
-                        NodumpCount -= (rom.ItemStatus == ItemStatus.Nodump ? 1 : 0);
-                        VerifiedCount -= (rom.ItemStatus == ItemStatus.Verified ? 1 : 0);
+                        RemoveStatusCount(ItemStatus.BadDump, rom.ItemStatus == ItemStatus.BadDump ? 1 : 0);
+                        RemoveStatusCount(ItemStatus.Good, rom.ItemStatus == ItemStatus.Good ? 1 : 0);
+                        RemoveStatusCount(ItemStatus.Nodump, rom.ItemStatus == ItemStatus.Nodump ? 1 : 0);
+                        RemoveStatusCount(ItemStatus.Verified, rom.ItemStatus == ItemStatus.Verified ? 1 : 0);
                         break;
                 }
             }
@@ -592,6 +575,22 @@ namespace SabreTools.DatFiles
                     return 0;
 
                 return ItemCounts[itemType];
+            }
+        }
+
+        /// <summary>
+        /// Get the item count for a given item status, defaulting to 0 if it does not exist
+        /// </summary>
+        /// <param name="itemStatus">Item status to retrieve</param>
+        /// <returns>The number of items of that type, if it exists</returns>
+        public long GetStatusCount(ItemStatus itemStatus)
+        {
+            lock (StatusCounts)
+            {
+                if (!StatusCounts.ContainsKey(itemStatus))
+                    return 0;
+
+                return StatusCounts[itemStatus];
             }
         }
 
@@ -664,6 +663,42 @@ namespace SabreTools.DatFiles
                 ItemCounts[itemType] -= interval;
                 if (ItemCounts[itemType] < 0)
                     ItemCounts[itemType] = 0;
+            }
+        }
+
+        /// <summary>
+        /// Increment the item count for a given item status
+        /// </summary>
+        /// <param name="itemStatus">Item type to increment</param>
+        /// <param name="interval">Amount to increment by, defaults to 1</param>
+        private void AddStatusCount(ItemStatus itemStatus, long interval = 1)
+        {
+            lock (StatusCounts)
+            {
+                if (!StatusCounts.ContainsKey(itemStatus))
+                    StatusCounts[itemStatus] = 0;
+
+                StatusCounts[itemStatus] += interval;
+                if (StatusCounts[itemStatus] < 0)
+                    StatusCounts[itemStatus] = 0;
+            }
+        }
+
+        /// <summary>
+        /// Decrement the item count for a given item status
+        /// </summary>
+        /// <param name="itemStatus">Item type to decrement</param>
+        /// <param name="interval">Amount to increment by, defaults to 1</param>
+        private void RemoveStatusCount(ItemStatus itemStatus, long interval = 1)
+        {
+            lock (StatusCounts)
+            {
+                if (!StatusCounts.ContainsKey(itemStatus))
+                    return;
+
+                StatusCounts[itemStatus] -= interval;
+                if (StatusCounts[itemStatus] < 0)
+                    StatusCounts[itemStatus] = 0;
             }
         }
 
@@ -984,12 +1019,8 @@ namespace SabreTools.DatFiles
             GameCount = 0;
             TotalSize = 0;
             HashCounts = [];
-
-            BaddumpCount = 0;
-            GoodCount = 0;
-            NodumpCount = 0;
+            StatusCounts = [];
             RemovedCount = 0;
-            VerifiedCount = 0;
         }
 
         /// <summary>
@@ -997,29 +1028,30 @@ namespace SabreTools.DatFiles
         /// </summary>
         private ItemKey GetBestAvailable()
         {
-            // Get the item counts for the 3 hashable types
+            // Get the required counts
             long diskCount = GetItemCount(ItemType.Disk);
             long mediaCount = GetItemCount(ItemType.Media);
             long romCount = GetItemCount(ItemType.Rom);
+            long nodumpCount = GetStatusCount(ItemStatus.Nodump);
 
             // If all items are supposed to have a SHA-512, we bucket by that
-            if (diskCount + mediaCount + romCount - NodumpCount == GetHashCount(Hash.SHA512))
+            if (diskCount + mediaCount + romCount - nodumpCount == GetHashCount(Hash.SHA512))
                 return ItemKey.SHA512;
 
             // If all items are supposed to have a SHA-384, we bucket by that
-            else if (diskCount + mediaCount + romCount - NodumpCount == GetHashCount(Hash.SHA384))
+            else if (diskCount + mediaCount + romCount - nodumpCount == GetHashCount(Hash.SHA384))
                 return ItemKey.SHA384;
 
             // If all items are supposed to have a SHA-256, we bucket by that
-            else if (diskCount + mediaCount + romCount - NodumpCount == GetHashCount(Hash.SHA256))
+            else if (diskCount + mediaCount + romCount - nodumpCount == GetHashCount(Hash.SHA256))
                 return ItemKey.SHA256;
 
             // If all items are supposed to have a SHA-1, we bucket by that
-            else if (diskCount + mediaCount + romCount - NodumpCount == GetHashCount(Hash.SHA1))
+            else if (diskCount + mediaCount + romCount - nodumpCount == GetHashCount(Hash.SHA1))
                 return ItemKey.SHA1;
 
             // If all items are supposed to have a MD5, we bucket by that
-            else if (diskCount + mediaCount + romCount - NodumpCount == GetHashCount(Hash.MD5))
+            else if (diskCount + mediaCount + romCount - nodumpCount == GetHashCount(Hash.MD5))
                 return ItemKey.MD5;
 
             // Otherwise, we bucket by CRC

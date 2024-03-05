@@ -269,7 +269,7 @@ body {
             {
                 xtw.WriteStartElement("td");
                 xtw.WriteAttributeString("align", "right");
-                xtw.WriteString(stat.Statistics.BaddumpCount.ToString());
+                xtw.WriteString(stat.Statistics.GetStatusCount(Core.ItemStatus.BadDump).ToString());
                 xtw.WriteEndElement(); // td
             }
 
@@ -277,7 +277,7 @@ body {
             {
                 xtw.WriteStartElement("td");
                 xtw.WriteAttributeString("align", "right");
-                xtw.WriteString(stat.Statistics.NodumpCount.ToString());
+                xtw.WriteString(stat.Statistics.GetStatusCount(Core.ItemStatus.Nodump).ToString());
                 xtw.WriteEndElement(); // td
             }
 

@@ -139,8 +139,8 @@ namespace SabreTools.Reports.Formats
                 stat.Statistics.GetHashCount(Core.Hash.SHA256).ToString(),
                 stat.Statistics.GetHashCount(Core.Hash.SHA384).ToString(),
                 stat.Statistics.GetHashCount(Core.Hash.SHA512).ToString(),
-                baddumpCol ? stat.Statistics.BaddumpCount.ToString() : string.Empty,
-                nodumpCol ? stat.Statistics.NodumpCount.ToString() : string.Empty,
+                baddumpCol ? stat.Statistics.GetStatusCount(Core.ItemStatus.BadDump).ToString() : string.Empty,
+                nodumpCol ? stat.Statistics.GetStatusCount(Core.ItemStatus.Nodump).ToString() : string.Empty,
             ];
             svw.WriteValues(values);
             svw.Flush();

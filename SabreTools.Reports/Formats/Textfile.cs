@@ -103,10 +103,10 @@ namespace SabreTools.Reports.Formats
     Roms with SHA-512:       " + stat.Statistics.GetHashCount(Core.Hash.SHA512) + "\n";
 
             if (baddumpCol)
-                line += "	Roms with BadDump status: " + stat.Statistics.BaddumpCount + "\n";
+                line += "	Roms with BadDump status: " + stat.Statistics.GetStatusCount(Core.ItemStatus.BadDump) + "\n";
 
             if (nodumpCol)
-                line += "	Roms with Nodump status: " + stat.Statistics.NodumpCount + "\n";
+                line += "	Roms with Nodump status: " + stat.Statistics.GetStatusCount(Core.ItemStatus.Nodump) + "\n";
 
             // For spacing between DATs
             line += "\n\n";
