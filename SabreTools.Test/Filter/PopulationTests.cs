@@ -59,7 +59,7 @@ namespace SabreTools.Test.Filter
             string[] filters =
             [
                 "rom.name:foo",
-                "rom.name!:bar"
+                "datitem.name!:bar"
             ];
 
             // Setup the filter
@@ -70,7 +70,7 @@ namespace SabreTools.Test.Filter
             Assert.Equal("foo", filter.Filters[0].Value);
             Assert.Equal(Operation.Equals, filter.Filters[0].Operation);
 
-            Assert.Equal(new string[] { "rom", "name"}, filter.Filters[1].Key);
+            Assert.Equal(new string[] { "item", "name"}, filter.Filters[1].Key);
             Assert.Equal("bar", filter.Filters[1].Value);
             Assert.Equal(Operation.NotEquals, filter.Filters[1].Operation);
         }

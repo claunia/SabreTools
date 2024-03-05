@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using SabreTools.Models.Metadata;
 
 namespace SabreTools.Filter
@@ -57,7 +58,7 @@ namespace SabreTools.Filter
             foreach (var filter in this.Filters)
             {
                 // If the filter isn't for this object type, skip
-                if (filter.Key[0] != itemName)
+                if (filter.Key[0] != itemName || (filter.Key[0] == "item" && TypeHelper.GetDatItemTypeNames().Contains(itemName)))
                     continue;
 
                 // If we don't get a match, it's a failure

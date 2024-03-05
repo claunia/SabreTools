@@ -45,6 +45,8 @@ namespace SabreTools.Filter
                 "set" => ParseMachineFilterId(fieldName!),
 
                 // DatItem
+                "datitem" => ParseDatItemFilterId(fieldName!),
+                "item" => ParseDatItemFilterId(fieldName!),
                 _ => ParseDatItemFilterId(itemName, fieldName!),
             };
         }
@@ -85,6 +87,23 @@ namespace SabreTools.Filter
 
             // Return the sanitized ID
             return (MetadataFile.MachineKey, constantMatch);
+        }
+
+        /// <summary>
+        /// Parse and validate item fields
+        /// </summary>
+        private static (string?, string?) ParseDatItemFilterId(string fieldName)
+        {
+            // Get all item types
+            var itemTypes = TypeHelper.GetDatItemTypeNames();
+
+            // If we get any matches
+            string? match = itemTypes.FirstOrDefault(t => t != null && ParseDatItemFilterId(t, fieldName) != (null, null));
+            if (match != null)
+                return ("item", ParseDatItemFilterId(match, fieldName).Item2);
+
+            // Nothing was found
+            return (null, null);
         }
 
         /// <summary>

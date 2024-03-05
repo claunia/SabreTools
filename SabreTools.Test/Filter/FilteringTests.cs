@@ -11,7 +11,7 @@ namespace SabreTools.Test.Filter
         public void PassesFiltersDatItemFilterPass()
         {
             // Setup filter
-            var filter = new FilterRunner(["rom.name:foo"]);
+            var filter = new FilterRunner(["rom.name:foo", "item.name:foo"]);
 
             // Setup DatItem
             var datItem = CreateDatItem();
@@ -25,7 +25,7 @@ namespace SabreTools.Test.Filter
         public void PassesFiltersDatItemFilterFail()
         {
             // Setup filter
-            var filter = new FilterRunner(["rom.name:bar"]);
+            var filter = new FilterRunner(["rom.name:bar", "item.name:bar"]);
 
             // Setup DatItem
             var datItem = CreateDatItem();

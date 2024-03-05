@@ -38,6 +38,18 @@ namespace SabreTools.Filter
         }
 
         /// <summary>
+        /// Attempt to get all DatItem types
+        /// </summary>
+        public static string?[] GetDatItemTypeNames()
+        {
+            return AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(a => a.GetTypes())
+                .Where(t => typeof(DatItem).IsAssignableFrom(t) && t.IsClass)
+                .Select(GetXmlRootAttributeElementName)
+                .ToArray();
+        }
+
+        /// <summary>
         /// Attempt to get the DatItem type from the name
         /// </summary>
         public static Type? GetDatItemType(string? itemType)
