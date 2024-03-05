@@ -946,7 +946,11 @@ CREATE TABLE IF NOT EXISTS groups (
                 {
                     string key = oldkeys[k];
                     if (this[key] == null)
+#if NET40_OR_GREATER || NETCOREAPP
                         return;
+#else
+                        continue;
+#endif
 
                     // Now add each of the roms to their respective keys
                     for (int i = 0; i < this[key]!.Count; i++)

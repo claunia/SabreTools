@@ -249,7 +249,11 @@ namespace SabreTools.Filtering
                 {
                     var items = datFile.Items[key];
                     if (items == null)
+#if NET40_OR_GREATER || NETCOREAPP
                         return;
+#else
+                        continue;
+#endif
 
                     foreach (DatItem item in items)
                     {
@@ -277,7 +281,11 @@ namespace SabreTools.Filtering
                 {
                     var items = datFile.Items[key];
                     if (items == null)
+#if NET40_OR_GREATER || NETCOREAPP
                         return;
+#else
+                        continue;
+#endif
 
                     ConcurrentList<DatItem> newItems = [];
                     foreach (DatItem item in items)
@@ -420,7 +428,11 @@ namespace SabreTools.Filtering
             {
                 var items = datFile.Items[key];
                 if (items == null)
+#if NET40_OR_GREATER || NETCOREAPP
                     return;
+#else
+                    continue;
+#endif
 
                 for (int i = 0; i < items.Count; i++)
                 {
@@ -474,7 +486,11 @@ namespace SabreTools.Filtering
             {
                 var items = datFile.Items[key];
                 if (items == null)
+#if NET40_OR_GREATER || NETCOREAPP
                     return;
+#else
+                    continue;
+#endif
 
                 for (int j = 0; j < items.Count; j++)
                 {

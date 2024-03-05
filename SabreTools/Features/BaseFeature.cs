@@ -1787,6 +1787,11 @@ Some special strings that can be used:
         protected Filtering.Filter Filter { get; set; }
 
         /// <summary>
+        /// Preonfigured FilterRunner
+        /// </summary>
+        protected Filter.FilterRunner FilterRunner { get; set; }
+
+        /// <summary>
         /// Pre-configured DatHeader
         /// </summary>
         /// <remarks>Public because it's an indicator something went wrong</remarks>
@@ -1894,6 +1899,7 @@ Some special strings that can be used:
             Cleaner = GetCleaner(features);
             Extras = GetExtras(features);
             Filter = GetFilter(features);
+            FilterRunner = GetFilterRunner(features);
             Header = GetDatHeader(features);
             LogLevel = GetString(features, LogLevelStringValue).AsLogLevel();
             OutputDir = GetString(features, OutputDirStringValue)?.Trim('"');
@@ -2241,6 +2247,22 @@ Some special strings that can be used:
             filter.MachineFilter.IncludeOfInGame = GetBoolean(features, MatchOfTagsValue);
 
             return filter;
+        }
+
+        /// <summary>
+        /// Get FilterRunner from feature list
+        /// </summary>
+        private static Filter.FilterRunner GetFilterRunner(Dictionary<string, Feature> features)
+        {
+            // Populate filters
+            List<string> filterPairs = GetList(features, FilterListValue);
+            var filterRunner = new Filter.FilterRunner(filterPairs.ToArray());
+
+            // TODO: Support this use case somehow
+            // Include 'of" in game filters
+            //filter.MachineFilter.IncludeOfInGame = GetBoolean(features, MatchOfTagsValue);
+
+            return filterRunner;
         }
 
         /// <summary>

@@ -9,6 +9,7 @@ using SabreTools.Core.Tools;
 using SabreTools.DatFiles.Formats;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
+using SabreTools.Filter;
 using SabreTools.Hashing;
 using SabreTools.Logging;
 
@@ -142,6 +143,41 @@ namespace SabreTools.DatFiles
                 Header.Name = splitpath.Last();
                 Header.Description = Header.Name + (bare ? string.Empty : $" ({Header.Date})");
             }
+        }
+
+        #endregion
+
+        #region Filtering
+
+        /// <summary>
+        /// Execute all filters in a filter runner on the items in the dictionary
+        /// </summary>
+        /// <param name="filterRunner">Preconfigured filter runner to use</param>
+        public void ExecuteFilters(FilterRunner filterRunner)
+        {
+            List<string> keys = [.. Items.Keys];
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(keys, key =>
+#else
+            foreach (var key in keys)
+#endif
+            {
+                ConcurrentList<DatItem>? items = Items[key];
+                if (items == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                    return;
+#else
+                    continue;
+#endif
+
+                // TODO: Implement filtering
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
         }
 
         #endregion

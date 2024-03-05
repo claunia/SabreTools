@@ -818,7 +818,11 @@ namespace SabreTools.DatFiles
                     // Get the possibly unsorted list
                     ConcurrentList<DatItem>? sortedlist = this[key]?.ToConcurrentList();
                     if (sortedlist == null)
+#if NET40_OR_GREATER || NETCOREAPP
                         return;
+#else
+                        continue;
+#endif
 
                     // Sort the list of items to be consistent
                     DatItem.Sort(ref sortedlist, false);

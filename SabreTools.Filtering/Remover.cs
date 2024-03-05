@@ -121,7 +121,11 @@ namespace SabreTools.Filtering
                 {
                     ConcurrentList<DatItem>? items = datFile.Items[key];
                     if (items == null)
+#if NET40_OR_GREATER || NETCOREAPP
                         return;
+#else
+                        continue;
+#endif
 
                     for (int j = 0; j < items.Count; j++)
                     {

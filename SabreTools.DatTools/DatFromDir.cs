@@ -255,7 +255,11 @@ namespace SabreTools.DatTools
             {
                 DatItem? datItem = DatItem.Create(baseFile);
                 if (datItem == null)
+#if NET40_OR_GREATER || NETCOREAPP
                     return;
+#else
+                    continue;
+#endif
 
                 ProcessFileHelper(datFile, item, datItem, basePath, parent);
 #if NET40_OR_GREATER || NETCOREAPP

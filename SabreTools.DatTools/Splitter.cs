@@ -597,7 +597,11 @@ namespace SabreTools.DatTools
 
                 // If the rom list is empty or null, just skip it
                 if (items == null || items.Count == 0)
+#if NET40_OR_GREATER || NETCOREAPP
                     return;
+#else
+                    continue;
+#endif
 
                 foreach (DatItem item in items)
                 {

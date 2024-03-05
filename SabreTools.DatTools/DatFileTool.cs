@@ -43,7 +43,11 @@ namespace SabreTools.DatTools
             {
                 ConcurrentList<DatItem>? items = datFile.Items[key];
                 if (items == null)
+#if NET40_OR_GREATER || NETCOREAPP
                     return;
+#else
+                    continue;
+#endif
 
                 ConcurrentList<DatItem> newItems = [];
                 foreach (DatItem item in items)
@@ -119,7 +123,11 @@ namespace SabreTools.DatTools
                 {
                     ConcurrentList<DatItem>? datItems = intDat.Items[key];
                     if (datItems == null)
+#if NET40_OR_GREATER || NETCOREAPP
                         return;
+#else
+                        continue;
+#endif
 
                     ConcurrentList<DatItem> newDatItems = [];
                     foreach (DatItem datItem in datItems)
@@ -163,7 +171,11 @@ namespace SabreTools.DatTools
                 {
                     ConcurrentList<DatItem>? datItems = intDat.Items[key];
                     if (datItems == null)
+#if NET40_OR_GREATER || NETCOREAPP
                         return;
+#else
+                        continue;
+#endif
 
                     ConcurrentList<DatItem> newDatItems = [];
                     foreach (DatItem datItem in datItems)
@@ -230,15 +242,27 @@ namespace SabreTools.DatTools
                 {
                     // If the key is null, keep it
                     if (!intDat.Items.TryGetValue(key, out var intList) || intList == null)
+#if NET40_OR_GREATER || NETCOREAPP
                         return;
+#else
+                        continue;
+#endif
 
                     // If the base DAT doesn't contain the key, keep it
                     if (!datFile.Items.TryGetValue(key, out var list) || list == null)
+#if NET40_OR_GREATER || NETCOREAPP
                         return;
+#else
+                        continue;
+#endif
 
                     // If the number of items is different, then keep it
                     if (list.Count != intList.Count)
+#if NET40_OR_GREATER || NETCOREAPP
                         return;
+#else
+                        continue;
+#endif
 
                     // Otherwise, compare by name and hash the remaining files
                     bool exactMatch = true;
@@ -262,7 +286,11 @@ namespace SabreTools.DatTools
                 {
                     ConcurrentList<DatItem>? datItems = intDat.Items[key];
                     if (datItems == null)
+#if NET40_OR_GREATER || NETCOREAPP
                         return;
+#else
+                        continue;
+#endif
 
                     ConcurrentList<DatItem> keepDatItems = [];
                     foreach (DatItem datItem in datItems)
