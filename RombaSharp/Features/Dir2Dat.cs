@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-
-using SabreTools.Core;
 using SabreTools.DatFiles;
 using SabreTools.DatTools;
 using SabreTools.FileTypes;
+using SabreTools.Hashing;
 using SabreTools.Help;
 using SabreTools.IO;
 
@@ -58,7 +57,7 @@ namespace RombaSharp.Features
             DatFile datfile = DatFile.Create();
             datfile.Header.Name = string.IsNullOrWhiteSpace(name) ? "untitled" : name;
             datfile.Header.Description = description;
-            DatFromDir.PopulateFromDir(datfile, source, asFiles: TreatAsFile.NonArchive, hashes: Hash.Standard);
+            DatFromDir.PopulateFromDir(datfile, source, asFiles: TreatAsFile.NonArchive, hashes: [HashType.CRC32, HashType.MD5, HashType.SHA1]);
             Writer.Write(datfile, outdat);
             return true;
         }

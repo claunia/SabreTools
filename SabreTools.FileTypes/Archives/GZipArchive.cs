@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-
-using SabreTools.Core;
-using SabreTools.Core.Tools;
-using SabreTools.IO;
 using Compress;
 using Compress.gZip;
 using Compress.Support.Compression.Deflate;
+using SabreTools.Core;
+using SabreTools.Core.Tools;
+using SabreTools.Hashing;
+using SabreTools.IO;
 
 namespace SabreTools.FileTypes.Archives
 {
@@ -247,7 +247,7 @@ namespace SabreTools.FileTypes.Archives
                         BaseFile gzipEntryRom = new();
 
                         // Perform a quickscan, if flagged to
-                        if (this.AvailableHashes == Hash.CRC)
+                    if (this.AvailableHashTypes.Length == 1 && this.AvailableHashTypes[0] == HashType.CRC32)
                         {
                             gzipEntryRom.Filename = gamename;
 
@@ -262,7 +262,7 @@ namespace SabreTools.FileTypes.Archives
                             var gz = new gZip();
                             ZipReturn ret = gz.ZipFileOpen(this.Filename);
                             ret = gz.ZipFileOpenReadStream(0, out Stream gzstream, out ulong streamSize);
-                            gzipEntryRom = GetInfo(gzstream, hashes: this.AvailableHashes);
+                            gzipEntryRom = GetInfo(gzstream, hashes: this.AvailableHashTypes);
                             gzipEntryRom.Filename = gz.GetLocalFile(0).Filename;
                             gzipEntryRom.Parent = gamename;
                             gzipEntryRom.Date = (gz.TimeStamp > 0 ? gz.TimeStamp.ToString() : null);

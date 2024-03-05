@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
+using Microsoft.Data.Sqlite;
 using SabreTools.Core;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using SabreTools.DatTools;
 using SabreTools.FileTypes;
+using SabreTools.Hashing;
 using SabreTools.Help;
-using Microsoft.Data.Sqlite;
 
 namespace RombaSharp.Features
 {
@@ -73,8 +73,8 @@ have a current entry in the DAT index.";
             DatFile df = DatFile.Create();
             foreach (string dir in onlyDirs)
             {
-                DatFromDir.PopulateFromDir(df, dir, asFiles: TreatAsFile.NonArchive, hashes: Hash.Standard);
-                DatFromDir.PopulateFromDir(df, dir, asFiles: TreatAsFile.All, hashes: Hash.Standard);
+                DatFromDir.PopulateFromDir(df, dir, asFiles: TreatAsFile.NonArchive, hashes: [HashType.CRC32, HashType.MD5, HashType.SHA1]);
+                DatFromDir.PopulateFromDir(df, dir, asFiles: TreatAsFile.All, hashes: [HashType.CRC32, HashType.MD5, HashType.SHA1]);
             }
 
             // Create an empty Dat for files that need to be rebuilt

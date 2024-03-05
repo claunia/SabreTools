@@ -280,7 +280,7 @@ namespace SabreTools.FileTypes
                 foreach (string file in Directory.EnumerateFiles(this.Filename, "*", SearchOption.TopDirectoryOnly))
 #endif
                 {
-                    BaseFile? nf = GetInfo(file, hashes: this.AvailableHashes);
+                    BaseFile? nf = GetInfo(file, hashes: this.AvailableHashTypes);
                     if (nf != null)
                         _children.Add(nf);
                 }

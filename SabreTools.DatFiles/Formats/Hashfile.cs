@@ -1,4 +1,4 @@
-﻿using SabreTools.Core;
+﻿using SabreTools.Hashing;
 
 namespace SabreTools.DatFiles.Formats
 {
@@ -15,7 +15,7 @@ namespace SabreTools.DatFiles.Formats
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
         /// <param name="hash">Type of hash that is associated with this DAT</param> 
-        public Hashfile(DatFile? datFile, Hash hash)
+        public Hashfile(DatFile? datFile, HashType hash)
             : base(datFile)
         {
             _hash = ConvertHash(hash);
@@ -24,17 +24,17 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         /// Convert hash types between internal and Serialization
         /// </summary>
-        private static Serialization.Hash ConvertHash(Hash hash)
+        private static Serialization.Hash ConvertHash(HashType hash)
         {
             return hash switch
             {
-                Hash.CRC => Serialization.Hash.CRC,
-                Hash.MD5 => Serialization.Hash.MD5,
-                Hash.SHA1 => Serialization.Hash.SHA1,
-                Hash.SHA256 => Serialization.Hash.SHA256,
-                Hash.SHA384 => Serialization.Hash.SHA384,
-                Hash.SHA512 => Serialization.Hash.SHA512,
-                Hash.SpamSum => Serialization.Hash.SpamSum,
+                HashType.CRC32 => Serialization.Hash.CRC,
+                HashType.MD5 => Serialization.Hash.MD5,
+                HashType.SHA1 => Serialization.Hash.SHA1,
+                HashType.SHA256 => Serialization.Hash.SHA256,
+                HashType.SHA384 => Serialization.Hash.SHA384,
+                HashType.SHA512 => Serialization.Hash.SHA512,
+                HashType.SpamSum => Serialization.Hash.SpamSum,
                 _ => throw new System.ArgumentOutOfRangeException(nameof(hash)),
             };
         }

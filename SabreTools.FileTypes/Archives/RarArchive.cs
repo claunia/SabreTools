@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using SabreTools.Core;
+using SabreTools.Hashing;
 using SabreTools.Matching;
 #if NET462_OR_GREATER || NETCOREAPP
 using SharpCompress.Archives;
@@ -195,7 +196,7 @@ namespace SabreTools.FileTypes.Archives
                     BaseFile rarEntryRom = new();
 
                     // Perform a quickscan, if flagged to
-                    if (this.AvailableHashes == Hash.CRC)
+                    if (this.AvailableHashTypes.Length == 1 && this.AvailableHashTypes[0] == HashType.CRC32)
                     {
                         rarEntryRom.Size = entry.Size;
                         rarEntryRom.CRC = BitConverter.GetBytes(entry.Crc);
@@ -204,7 +205,7 @@ namespace SabreTools.FileTypes.Archives
                     else
                     {
                         using Stream entryStream = entry.OpenEntryStream();
-                        rarEntryRom = GetInfo(entryStream, size: entry.Size, hashes: this.AvailableHashes);
+                        rarEntryRom = GetInfo(entryStream, size: entry.Size, hashes: this.AvailableHashTypes);
                     }
 
                     // Fill in comon details and add to the list

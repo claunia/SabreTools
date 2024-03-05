@@ -9,6 +9,7 @@ using SabreTools.Core.Tools;
 using SabreTools.DatFiles.Formats;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
+using SabreTools.Hashing;
 using SabreTools.Logging;
 
 namespace SabreTools.DatFiles
@@ -85,13 +86,13 @@ namespace SabreTools.DatFiles
                 DatFormat.MissFile => new Missfile(baseDat),
                 DatFormat.OfflineList => new OfflineList(baseDat),
                 DatFormat.OpenMSX => new OpenMSX(baseDat),
-                DatFormat.RedumpMD5 => new Hashfile(baseDat, Hash.MD5),
-                DatFormat.RedumpSFV => new Hashfile(baseDat, Hash.CRC),
-                DatFormat.RedumpSHA1 => new Hashfile(baseDat, Hash.SHA1),
-                DatFormat.RedumpSHA256 => new Hashfile(baseDat, Hash.SHA256),
-                DatFormat.RedumpSHA384 => new Hashfile(baseDat, Hash.SHA384),
-                DatFormat.RedumpSHA512 => new Hashfile(baseDat, Hash.SHA512),
-                DatFormat.RedumpSpamSum => new Hashfile(baseDat, Hash.SpamSum),
+                DatFormat.RedumpMD5 => new Hashfile(baseDat, HashType.MD5),
+                DatFormat.RedumpSFV => new Hashfile(baseDat, HashType.CRC32),
+                DatFormat.RedumpSHA1 => new Hashfile(baseDat, HashType.SHA1),
+                DatFormat.RedumpSHA256 => new Hashfile(baseDat, HashType.SHA256),
+                DatFormat.RedumpSHA384 => new Hashfile(baseDat, HashType.SHA384),
+                DatFormat.RedumpSHA512 => new Hashfile(baseDat, HashType.SHA512),
+                DatFormat.RedumpSpamSum => new Hashfile(baseDat, HashType.SpamSum),
                 DatFormat.RomCenter => new RomCenter(baseDat),
                 DatFormat.SabreJSON => new SabreJSON(baseDat),
                 DatFormat.SabreXML => new SabreXML(baseDat),

@@ -9,6 +9,7 @@ using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using SabreTools.FileTypes;
 using SabreTools.FileTypes.Archives;
+using SabreTools.Hashing;
 using SabreTools.IO;
 using SabreTools.Logging;
 using SabreTools.Skippers;
@@ -313,7 +314,7 @@ namespace SabreTools.DatTools
             // Now get all extracted items from the archive
             if (archive != null)
             {
-                archive.AvailableHashes = quickScan ? Hash.CRC : Hash.Standard;
+                archive.AvailableHashTypes = quickScan ? [HashType.CRC32] : [HashType.CRC32, HashType.MD5, HashType.SHA1];
                 entries = archive.GetChildren();
             }
 

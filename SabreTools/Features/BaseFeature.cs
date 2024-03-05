@@ -13,6 +13,7 @@ using SabreTools.IO;
 using SabreTools.Logging;
 using SabreTools.Reports;
 using Microsoft.Data.Sqlite;
+using SabreTools.Hashing;
 
 namespace SabreTools.Features
 {
@@ -1916,30 +1917,30 @@ Some special strings that can be used:
         /// <summary>
         /// Get include from scan from feature list
         /// </summary>
-        protected static Hash GetIncludeInScan(Dictionary<string, Feature> features)
+        protected static HashType[] GetIncludeInScan(Dictionary<string, Feature> features)
         {
-            Hash includeInScan = 0x00;
+            List<HashType> includeInScan = [];
 
             if (GetBoolean(features, IncludeCrcValue))
-                includeInScan |= Hash.CRC;
+                includeInScan.Add(HashType.CRC32);
             if (GetBoolean(features, IncludeMd5Value))
-                includeInScan |= Hash.MD5;
+                includeInScan.Add(HashType.MD5);
             if (GetBoolean(features, IncludeSha1Value))
-                includeInScan |= Hash.SHA1;
+                includeInScan.Add(HashType.SHA1);
             if (GetBoolean(features, IncludeSha256Value))
-                includeInScan |= Hash.SHA256;
+                includeInScan.Add(HashType.SHA256);
             if (GetBoolean(features, IncludeSha384Value))
-                includeInScan |= Hash.SHA384;
+                includeInScan.Add(HashType.SHA384);
             if (GetBoolean(features, IncludeSha512Value))
-                includeInScan |= Hash.SHA512;
+                includeInScan.Add(HashType.SHA512);
             if (GetBoolean(features, IncludeSpamSumValue))
-                includeInScan |= Hash.SpamSum;
+                includeInScan.Add(HashType.SpamSum);
 
             // Fallback to "Standard" if no flags are set
-            if (includeInScan == 0x00)
-                includeInScan = Hash.Standard;
+            if (includeInScan.Count == 0)
+                includeInScan = [HashType.CRC32, HashType.MD5, HashType.SHA1];
 
-            return includeInScan;
+            return includeInScan.ToArray();
         }
 
         /// <summary>

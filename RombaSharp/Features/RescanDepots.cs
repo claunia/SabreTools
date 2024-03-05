@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-
+using Microsoft.Data.Sqlite;
 using SabreTools.Core;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using SabreTools.DatTools;
 using SabreTools.FileTypes;
+using SabreTools.Hashing;
 using SabreTools.Help;
-using Microsoft.Data.Sqlite;
 
 namespace RombaSharp.Features
 {
@@ -73,7 +73,7 @@ namespace RombaSharp.Features
 
                 // Now rescan the depot itself
                 DatFile depot = DatFile.Create();
-                DatFromDir.PopulateFromDir(depot, depotname, asFiles: TreatAsFile.NonArchive, hashes: Hash.Standard);
+                DatFromDir.PopulateFromDir(depot, depotname, asFiles: TreatAsFile.NonArchive, hashes: [HashType.CRC32, HashType.MD5, HashType.SHA1]);
                 depot.Items.BucketBy(ItemKey.SHA1, DedupeType.None);
 
                 // Set the base queries to use

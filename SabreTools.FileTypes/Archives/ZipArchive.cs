@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 using Compress;
 using Compress.ZipFile;
-using SabreTools.Core;
 using SabreTools.Core.Tools;
+using SabreTools.Hashing;
 using SabreTools.Matching;
 
 namespace SabreTools.FileTypes.Archives
@@ -305,7 +305,7 @@ namespace SabreTools.FileTypes.Archives
                     BaseFile zipEntryRom = new();
 
                     // Perform a quickscan, if flagged to
-                    if (this.AvailableHashes == Hash.CRC)
+                    if (this.AvailableHashTypes.Length == 1 && this.AvailableHashTypes[0] == HashType.CRC32)
                     {
                         zipEntryRom.Size = (long)zf.GetLocalFile(i).UncompressedSize;
                         zipEntryRom.CRC = zf.GetLocalFile(i).CRC;
@@ -313,7 +313,7 @@ namespace SabreTools.FileTypes.Archives
                     // Otherwise, use the stream directly
                     else
                     {
-                        zipEntryRom = GetInfo(readStream, size: (long)zf.GetLocalFile(i).UncompressedSize, hashes: this.AvailableHashes, keepReadOpen: true);
+                        zipEntryRom = GetInfo(readStream, size: (long)zf.GetLocalFile(i).UncompressedSize, hashes: this.AvailableHashTypes, keepReadOpen: true);
                     }
 
                     // Fill in comon details and add to the list
@@ -450,7 +450,7 @@ namespace SabreTools.FileTypes.Archives
                     ulong istreamSize = (ulong)(inputStream.Length);
 
                     DateTime dt = DateTime.Now;
-                    if (UseDates && !string.IsNullOrEmpty(baseFile.Date) && DateTime.TryParse(baseFile.Date.Replace('\\', '/'), out dt))
+                    if (UseDates && !string.IsNullOrEmpty(baseFile.Date) && DateTime.TryParse(baseFile.Date!.Replace('\\', '/'), out dt))
                     {
                         long msDosDateTime = DateTimeHelper.ConvertToMsDosTimeFormat(dt);
                         TimeStamps ts = new() { ModTime = msDosDateTime };
@@ -524,7 +524,7 @@ namespace SabreTools.FileTypes.Archives
                             ulong istreamSize = (ulong)(inputStream.Length);
 
                             DateTime dt = DateTime.Now;
-                            if (UseDates && !string.IsNullOrEmpty(baseFile.Date) && DateTime.TryParse(baseFile.Date.Replace('\\', '/'), out dt))
+                            if (UseDates && !string.IsNullOrEmpty(baseFile.Date) && DateTime.TryParse(baseFile.Date!.Replace('\\', '/'), out dt))
                             {
                                 long msDosDateTime = DateTimeHelper.ConvertToMsDosTimeFormat(dt);
                                 TimeStamps ts = new() { ModTime = msDosDateTime };

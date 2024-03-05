@@ -4,6 +4,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
+using SabreTools.Hashing;
 using SabreTools.IO;
 #if NET462_OR_GREATER || NETCOREAPP
 using SharpCompress.Compressors.Xz;
@@ -220,7 +221,7 @@ namespace SabreTools.FileTypes.Archives
                         BaseFile xzEntryRom = new();
 
                         // Perform a quickscan, if flagged to
-                        if (this.AvailableHashes == Hash.CRC)
+                    if (this.AvailableHashTypes.Length == 1 && this.AvailableHashTypes[0] == HashType.CRC32)
                         {
                             xzEntryRom.Filename = gamename;
                             
@@ -233,7 +234,7 @@ namespace SabreTools.FileTypes.Archives
                         else
                         {
                             var xzStream = new XZStream(File.OpenRead(this.Filename!));
-                            xzEntryRom = GetInfo(xzStream, hashes: this.AvailableHashes);
+                            xzEntryRom = GetInfo(xzStream, hashes: this.AvailableHashTypes);
                             xzEntryRom.Filename = gamename;
                             xzStream.Dispose();
                         }

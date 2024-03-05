@@ -7,52 +7,6 @@ namespace SabreTools.Core.Tools
 {
     public static class Converters
     {
-        #region Enum to Enum
-
-        /// <summary>
-        /// Get the DatItemFields associated with each hash type
-        /// </summary>
-        public static List<DatItemField> AsDatItemFields(this Hash hash)
-        {
-            List<DatItemField> fields = [];
-
-#if NET20 || NET35
-            if ((hash & Hash.CRC) != 0)
-                fields.Add(DatItemField.CRC);
-            if ((hash & Hash.MD5) != 0)
-                fields.Add(DatItemField.MD5);
-            if ((hash & Hash.SHA1) != 0)
-                fields.Add(DatItemField.SHA1);
-            if ((hash & Hash.SHA256) != 0)
-                fields.Add(DatItemField.SHA256);
-            if ((hash & Hash.SHA384) != 0)
-                fields.Add(DatItemField.SHA384);
-            if ((hash & Hash.SHA512) != 0)
-                fields.Add(DatItemField.SHA512);
-            if ((hash & Hash.SpamSum) != 0)
-                fields.Add(DatItemField.SpamSum);
-#else
-            if (hash.HasFlag(Hash.CRC))
-                fields.Add(DatItemField.CRC);
-            if (hash.HasFlag(Hash.MD5))
-                fields.Add(DatItemField.MD5);
-            if (hash.HasFlag(Hash.SHA1))
-                fields.Add(DatItemField.SHA1);
-            if (hash.HasFlag(Hash.SHA256))
-                fields.Add(DatItemField.SHA256);
-            if (hash.HasFlag(Hash.SHA384))
-                fields.Add(DatItemField.SHA384);
-            if (hash.HasFlag(Hash.SHA512))
-                fields.Add(DatItemField.SHA512);
-            if (hash.HasFlag(Hash.SpamSum))
-                fields.Add(DatItemField.SpamSum);
-#endif
-
-            return fields;
-        }
-
-        #endregion
-
         #region String to Enum
 
         /// <summary>

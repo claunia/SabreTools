@@ -5,6 +5,7 @@ using System.Linq;
 using Compress;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
+using SabreTools.Hashing;
 using SabreTools.Matching;
 #if NET462_OR_GREATER || NETCOREAPP
 using SharpCompress.Archives;
@@ -188,7 +189,7 @@ namespace SabreTools.FileTypes.Archives
                     BaseFile tarEntryRom = new();
 
                     // Perform a quickscan, if flagged to
-                    if (this.AvailableHashes == Hash.CRC)
+                    if (this.AvailableHashTypes.Length == 1 && this.AvailableHashTypes[0] == HashType.CRC32)
                     {
                         tarEntryRom.Size = entry.Size;
                         tarEntryRom.CRC = BitConverter.GetBytes(entry.Crc);
@@ -197,7 +198,7 @@ namespace SabreTools.FileTypes.Archives
                     else
                     {
                         using Stream entryStream = entry.OpenEntryStream();
-                        tarEntryRom = GetInfo(entryStream, size: entry.Size, hashes: this.AvailableHashes);
+                        tarEntryRom = GetInfo(entryStream, size: entry.Size, hashes: this.AvailableHashTypes);
                     }
 
                     // Fill in comon details and add to the list

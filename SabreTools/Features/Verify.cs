@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-
-using SabreTools.Core;
 using SabreTools.DatFiles;
 using SabreTools.DatTools;
 using SabreTools.FileTypes;
+using SabreTools.Hashing;
 using SabreTools.Help;
 using SabreTools.IO;
 using SabreTools.Logging;
@@ -90,7 +89,7 @@ namespace SabreTools.Features
                         logger.User("Processing files:\n");
                         foreach (string input in Inputs)
                         {
-                            DatTools.DatFromDir.PopulateFromDir(datdata, input, asFiles: asFiles, hashes: quickScan ? Hash.CRC : Hash.Standard);
+                            DatTools.DatFromDir.PopulateFromDir(datdata, input, asFiles: asFiles, hashes: quickScan ? [HashType.CRC32] : [HashType.CRC32, HashType.MD5, HashType.SHA1]);
                         }
 
                         Verification.VerifyGeneric(datdata, hashOnly);
@@ -140,7 +139,7 @@ namespace SabreTools.Features
                     logger.User("Processing files:\n");
                     foreach (string input in Inputs)
                     {
-                        DatTools.DatFromDir.PopulateFromDir(datdata, input, asFiles: asFiles, hashes: quickScan ? Hash.CRC : Hash.Standard);
+                        DatTools.DatFromDir.PopulateFromDir(datdata, input, asFiles: asFiles, hashes: quickScan ? [HashType.CRC32] : [HashType.CRC32, HashType.MD5, HashType.SHA1]);
                     }
 
                     Verification.VerifyGeneric(datdata, hashOnly);

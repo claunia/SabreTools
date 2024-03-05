@@ -1,12 +1,12 @@
 ﻿using System.IO;
 using System.Collections.Generic;
-
+using Microsoft.Data.Sqlite;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.FileTypes;
+using SabreTools.Hashing;
 using SabreTools.Help;
 using SabreTools.IO;
-using Microsoft.Data.Sqlite;
 
 namespace SabreTools.Features
 {
@@ -68,7 +68,7 @@ The following systems have headers that this program can work with:
                 Directory.CreateDirectory(outDir);
 
             // First, get the SHA-1 hash of the file
-            BaseFile baseFile = BaseFile.GetInfo(file, hashes: Hash.SHA1, asFiles: TreatAsFile.NonArchive);
+            BaseFile baseFile = BaseFile.GetInfo(file, hashes: [HashType.SHA1], asFiles: TreatAsFile.NonArchive);
 
             // Retrieve a list of all related headers from the database
             List<string> headers = RetrieveHeadersFromDatabase(TextHelper.ByteArrayToString(baseFile.SHA1));

@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Schema;
-
+using Microsoft.Data.Sqlite;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
@@ -12,9 +12,9 @@ using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using SabreTools.DatTools;
 using SabreTools.FileTypes;
+using SabreTools.Hashing;
 using SabreTools.Help;
 using SabreTools.Logging;
-using Microsoft.Data.Sqlite;
 
 namespace RombaSharp.Features
 {
@@ -553,13 +553,13 @@ CREATE TABLE IF NOT EXISTS dat (
             List<string> datRootDats = Directory.EnumerateFiles(_dats, "*", SearchOption.AllDirectories).ToList();
 #endif
             List<string> lowerCaseDats = datRootDats.ConvertAll(i => Path.GetFileName(i).ToLowerInvariant());
-            Dictionary<string, string> foundDats = new Dictionary<string, string>();
+            Dictionary<string, string> foundDats = [];
             foreach (string input in inputs)
             {
                 if (lowerCaseDats.Contains(input.ToLowerInvariant()))
                 {
                     string fullpath = Path.GetFullPath(datRootDats[lowerCaseDats.IndexOf(input.ToLowerInvariant())]);
-                    string sha1 = TextHelper.ByteArrayToString(BaseFile.GetInfo(fullpath, hashes: Hash.SHA1).SHA1);
+                    string sha1 = TextHelper.ByteArrayToString(BaseFile.GetInfo(fullpath, hashes: [HashType.SHA1]).SHA1);
                     foundDats.Add(sha1, fullpath);
                 }
                 else

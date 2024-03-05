@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-
-using SabreTools.Core;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using SabreTools.DatTools;
 using SabreTools.FileTypes;
+using SabreTools.Hashing;
 using SabreTools.Help;
 using SabreTools.IO;
 using SabreTools.Logging;
@@ -71,7 +70,7 @@ contents of any changed dats.";
             // First get a list of SHA-1's from the input DATs
             DatFile datroot = DatFile.Create();
             datroot.Header.Type = "SuperDAT";
-            DatFromDir.PopulateFromDir(datroot, _dats, asFiles: TreatAsFile.NonArchive, hashes: Hash.Standard);
+            DatFromDir.PopulateFromDir(datroot, _dats, asFiles: TreatAsFile.NonArchive, hashes: [HashType.CRC32, HashType.MD5, HashType.SHA1]);
             datroot.Items.BucketBy(ItemKey.SHA1, DedupeType.None);
 
             // Create a List of dat hashes in the database (SHA-1)

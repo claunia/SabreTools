@@ -9,6 +9,7 @@ using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using SabreTools.FileTypes;
 using SabreTools.FileTypes.Archives;
+using SabreTools.Hashing;
 using SabreTools.IO;
 using SabreTools.Logging;
 
@@ -44,8 +45,11 @@ namespace SabreTools.DatTools
             TreatAsFile asFiles = 0x00,
             SkipFileType skipFileType = SkipFileType.None,
             bool addBlanks = false,
-            Hash hashes = Hash.Standard)
+            HashType[]? hashes = null)
         {
+            // If no hashes are set, use the standard array
+            hashes ??= [HashType.CRC32, HashType.MD5, HashType.SHA1];
+
             // Set the progress variables
             long totalSize = 0;
             long currentSize = 0;
@@ -126,7 +130,7 @@ namespace SabreTools.DatTools
             TreatAsFile asFiles,
             SkipFileType skipFileType,
             bool addBlanks,
-            Hash hashes)
+            HashType[] hashes)
         {
             // If we're in depot mode, process it separately
             if (CheckDepotFile(datFile, item))
@@ -139,7 +143,7 @@ namespace SabreTools.DatTools
             if (archive != null)
             {
                 // Set the archive flags
-                archive.AvailableHashes = hashes;
+                archive.AvailableHashTypes = hashes;
 
                 // Skip if we're treating archives as files and skipping files
 #if NETFRAMEWORK
@@ -371,7 +375,7 @@ namespace SabreTools.DatTools
         /// <param name="basePath">Path the represents the parent directory</param>
         /// <param name="hashes">Hashes to include in the information</param>
         /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
-        private static void ProcessFile(DatFile datFile, string item, string? basePath, Hash hashes, TreatAsFile asFiles)
+        private static void ProcessFile(DatFile datFile, string item, string? basePath, HashType[] hashes, TreatAsFile asFiles)
         {
             logger.Verbose($"'{Path.GetFileName(item)}' treated like a file");
             BaseFile? baseFile = BaseFile.GetInfo(item, header: datFile.Header.HeaderSkipper, hashes: hashes, asFiles: asFiles);

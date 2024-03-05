@@ -4,6 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
     <RuntimeIdentifiers>win-x86;win-x64;linux-x64;osx-x64</RuntimeIdentifiers>
+    <LangVersion>latest</LangVersion>
     <Authors>Matt Nadareski</Authors>
     <Copyright>Copyright (c)2016-2024 Matt Nadareski</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

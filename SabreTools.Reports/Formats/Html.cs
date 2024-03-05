@@ -4,7 +4,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Xml;
-
+using SabreTools.Hashing;
 using SabreTools.Logging;
 
 namespace SabreTools.Reports.Formats
@@ -247,22 +247,22 @@ body {
 
             xtw.WriteStartElement("td");
             xtw.WriteAttributeString("align", "right");
-            xtw.WriteString(stat.Statistics.GetHashCount(Core.Hash.CRC).ToString());
+            xtw.WriteString(stat.Statistics.GetHashCount(HashType.CRC32).ToString());
             xtw.WriteEndElement(); // td
 
             xtw.WriteStartElement("td");
             xtw.WriteAttributeString("align", "right");
-            xtw.WriteString(stat.Statistics.GetHashCount(Core.Hash.MD5).ToString());
+            xtw.WriteString(stat.Statistics.GetHashCount(HashType.MD5).ToString());
             xtw.WriteEndElement(); // td
 
             xtw.WriteStartElement("td");
             xtw.WriteAttributeString("align", "right");
-            xtw.WriteString(stat.Statistics.GetHashCount(Core.Hash.SHA1).ToString());
+            xtw.WriteString(stat.Statistics.GetHashCount(HashType.SHA1).ToString());
             xtw.WriteEndElement(); // td
 
             xtw.WriteStartElement("td");
             xtw.WriteAttributeString("align", "right");
-            xtw.WriteString(stat.Statistics.GetHashCount(Core.Hash.SHA256).ToString());
+            xtw.WriteString(stat.Statistics.GetHashCount(HashType.SHA256).ToString());
             xtw.WriteEndElement(); // td
 
             if (baddumpCol)

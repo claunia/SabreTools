@@ -9,6 +9,7 @@ using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatTools;
 using SabreTools.Filtering;
+using SabreTools.Hashing;
 using SabreTools.Help;
 using SabreTools.IO;
 using SabreTools.Logging;
@@ -282,7 +283,7 @@ Reset the internal state:           reset();";
                 // Assume there could be multiple
                 foreach (string input in Arguments)
                 {
-                    DatTools.DatFromDir.PopulateFromDir(batchState.DatFile, input, hashes: Hash.Standard);
+                    DatTools.DatFromDir.PopulateFromDir(batchState.DatFile, input, hashes: [HashType.CRC32, HashType.MD5, HashType.SHA1]);
                 }
 
                 // TODO: We might not want to remove dates in the future

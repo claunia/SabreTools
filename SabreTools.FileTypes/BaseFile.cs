@@ -76,7 +76,7 @@ namespace SabreTools.FileTypes
         /// <summary>
         /// Hashes that are available for the file
         /// </summary>
-        public Hash AvailableHashes { get; set; } = Hash.Standard;
+        public HashType[] AvailableHashTypes { get; set; } = [HashType.CRC32, HashType.MD5, HashType.SHA1];
 
         /// <summary>
         /// CRC32 hash of the file
@@ -135,7 +135,7 @@ namespace SabreTools.FileTypes
 
             if (getHashes)
             {
-                BaseFile? temp = GetInfo(this.Filename, hashes: this.AvailableHashes);
+                BaseFile? temp = GetInfo(this.Filename, hashes: this.AvailableHashTypes);
                 if (temp != null)
                 {
                     this.Parent = temp.Parent;
@@ -163,7 +163,7 @@ namespace SabreTools.FileTypes
 
             if (getHashes)
             {
-                BaseFile temp = GetInfo(stream, hashes: this.AvailableHashes);
+                BaseFile temp = GetInfo(stream, hashes: this.AvailableHashTypes);
                 if (temp != null)
                 {
                     this.Parent = temp.Parent;
@@ -275,11 +275,14 @@ namespace SabreTools.FileTypes
         /// <param name="hashes">Hashes to include in the information</param>
         /// <param name="asFiles">TreatAsFiles representing special format scanning</param>
         /// <returns>Populated BaseFile object if success, empty one on error</returns>
-        public static BaseFile? GetInfo(string input, string? header = null, Hash hashes = Hash.Standard, TreatAsFile asFiles = 0x00)
+        public static BaseFile? GetInfo(string input, string? header = null, HashType[]? hashes = null, TreatAsFile asFiles = 0x00)
         {
             // Add safeguard if file doesn't exist
             if (!File.Exists(input))
                 return null;
+
+            // If no hashes are set, use the standard array
+            hashes ??= [HashType.CRC32, HashType.MD5, HashType.SHA1];
 
             // Get input information
             var fileType = GetFileType(input);
@@ -337,39 +340,21 @@ namespace SabreTools.FileTypes
         /// <param name="hashes">Hashes to include in the information</param>
         /// <param name="keepReadOpen">True if the underlying read stream should be kept open, false otherwise</param>
         /// <returns>Populated BaseFile object if success, empty one on error</returns>
-        public static BaseFile GetInfo(Stream? input, long size = -1, Hash hashes = Hash.Standard, bool keepReadOpen = false)
+        public static BaseFile GetInfo(Stream? input, long size = -1, HashType[]? hashes = null, bool keepReadOpen = false)
         {
             // If we have no stream
             if (input == null)
                 return new BaseFile();
 
+            // If no hashes are set, use the standard array
+            hashes ??= [HashType.CRC32, HashType.MD5, HashType.SHA1];
+
             // If we want to automatically set the size
             if (size == -1)
                 size = input.Length;
 
-            // Get a list of hash types to run
-            List<HashType> hashTypes = [];
-
-#if NETFRAMEWORK
-            if ((hashes & Hash.CRC) != 0) hashTypes.Add(HashType.CRC32);
-            if ((hashes & Hash.MD5) != 0) hashTypes.Add(HashType.MD5);
-            if ((hashes & Hash.SHA1) != 0) hashTypes.Add(HashType.SHA1);
-            if ((hashes & Hash.SHA256) != 0) hashTypes.Add(HashType.SHA256);
-            if ((hashes & Hash.SHA384) != 0) hashTypes.Add(HashType.SHA384);
-            if ((hashes & Hash.SHA512) != 0) hashTypes.Add(HashType.SHA512);
-            if ((hashes & Hash.SpamSum) != 0) hashTypes.Add(HashType.SpamSum);
-#else
-            if (hashes.HasFlag(Hash.CRC)) hashTypes.Add(HashType.CRC32);
-            if (hashes.HasFlag(Hash.MD5)) hashTypes.Add(HashType.MD5);
-            if (hashes.HasFlag(Hash.SHA1)) hashTypes.Add(HashType.SHA1);
-            if (hashes.HasFlag(Hash.SHA256)) hashTypes.Add(HashType.SHA256);
-            if (hashes.HasFlag(Hash.SHA384)) hashTypes.Add(HashType.SHA384);
-            if (hashes.HasFlag(Hash.SHA512)) hashTypes.Add(HashType.SHA512);
-            if (hashes.HasFlag(Hash.SpamSum)) hashTypes.Add(HashType.SpamSum);
-#endif
-
             // Run the hashing on the input stream
-            var hashDict = HashTool.GetStreamHashes(input, hashTypes.ToArray());
+            var hashDict = HashTool.GetStreamHashes(input, hashes);
             if (hashDict == null)
                 return new BaseFile();
 
@@ -377,23 +362,13 @@ namespace SabreTools.FileTypes
             var baseFile = new BaseFile()
             {
                 Size = size,
-#if NETFRAMEWORK
-                CRC = (hashes & Hash.CRC) != 0 ? TextHelper.StringToByteArray(hashDict[HashType.CRC32]) : null,
-                MD5 = (hashes & Hash.MD5) != 0 ? TextHelper.StringToByteArray(hashDict[HashType.MD5]) : null,
-                SHA1 = (hashes & Hash.SHA1) != 0 ? TextHelper.StringToByteArray(hashDict[HashType.SHA1]) : null,
-                SHA256 = (hashes & Hash.SHA256) != 0 ? TextHelper.StringToByteArray(hashDict[HashType.SHA256]) : null,
-                SHA384 = (hashes & Hash.SHA384) != 0 ? TextHelper.StringToByteArray(hashDict[HashType.SHA384]) : null,
-                SHA512 = (hashes & Hash.SHA512) != 0 ? TextHelper.StringToByteArray(hashDict[HashType.SHA512]) : null,
-                SpamSum = (hashes & Hash.SpamSum) != 0 ? TextHelper.StringToByteArray(hashDict[HashType.SpamSum]) : null,
-#else
-                CRC = hashes.HasFlag(Hash.CRC) ? TextHelper.StringToByteArray(hashDict[HashType.CRC32]) : null,
-                MD5 = hashes.HasFlag(Hash.MD5) ? TextHelper.StringToByteArray(hashDict[HashType.MD5]) : null,
-                SHA1 = hashes.HasFlag(Hash.SHA1) ? TextHelper.StringToByteArray(hashDict[HashType.SHA1]) : null,
-                SHA256 = hashes.HasFlag(Hash.SHA256) ? TextHelper.StringToByteArray(hashDict[HashType.SHA256]) : null,
-                SHA384 = hashes.HasFlag(Hash.SHA384) ? TextHelper.StringToByteArray(hashDict[HashType.SHA384]) : null,
-                SHA512 = hashes.HasFlag(Hash.SHA512) ? TextHelper.StringToByteArray(hashDict[HashType.SHA512]) : null,
-                SpamSum = hashes.HasFlag(Hash.SpamSum) ? TextHelper.StringToByteArray(hashDict[HashType.SpamSum]) : null,
-#endif
+                CRC = hashes.Contains(HashType.CRC32) ? TextHelper.StringToByteArray(hashDict[HashType.CRC32]) : null,
+                MD5 = hashes.Contains(HashType.MD5) ? TextHelper.StringToByteArray(hashDict[HashType.MD5]) : null,
+                SHA1 = hashes.Contains(HashType.SHA1) ? TextHelper.StringToByteArray(hashDict[HashType.SHA1]) : null,
+                SHA256 = hashes.Contains(HashType.SHA256) ? TextHelper.StringToByteArray(hashDict[HashType.SHA256]) : null,
+                SHA384 = hashes.Contains(HashType.SHA384) ? TextHelper.StringToByteArray(hashDict[HashType.SHA384]) : null,
+                SHA512 = hashes.Contains(HashType.SHA512) ? TextHelper.StringToByteArray(hashDict[HashType.SHA512]) : null,
+                SpamSum = hashes.Contains(HashType.SpamSum) ? TextHelper.StringToByteArray(hashDict[HashType.SpamSum]) : null,
             };
 
             // Deal with the input stream
