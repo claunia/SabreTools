@@ -247,22 +247,22 @@ body {
 
             xtw.WriteStartElement("td");
             xtw.WriteAttributeString("align", "right");
-            xtw.WriteString(stat.Statistics.CRCCount.ToString());
+            xtw.WriteString(stat.Statistics.GetHashCount(Core.Hash.CRC).ToString());
             xtw.WriteEndElement(); // td
 
             xtw.WriteStartElement("td");
             xtw.WriteAttributeString("align", "right");
-            xtw.WriteString(stat.Statistics.MD5Count.ToString());
+            xtw.WriteString(stat.Statistics.GetHashCount(Core.Hash.MD5).ToString());
             xtw.WriteEndElement(); // td
 
             xtw.WriteStartElement("td");
             xtw.WriteAttributeString("align", "right");
-            xtw.WriteString(stat.Statistics.SHA1Count.ToString());
+            xtw.WriteString(stat.Statistics.GetHashCount(Core.Hash.SHA1).ToString());
             xtw.WriteEndElement(); // td
 
             xtw.WriteStartElement("td");
             xtw.WriteAttributeString("align", "right");
-            xtw.WriteString(stat.Statistics.SHA256Count.ToString());
+            xtw.WriteString(stat.Statistics.GetHashCount(Core.Hash.SHA256).ToString());
             xtw.WriteEndElement(); // td
 
             if (baddumpCol)

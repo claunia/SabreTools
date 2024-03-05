@@ -95,12 +95,12 @@ namespace SabreTools.Reports.Formats
     Games found:             " + stat.MachineCount + @"
     Roms found:              " + stat.Statistics.GetItemCount(Core.ItemType.Rom) + @"
     Disks found:             " + stat.Statistics.GetItemCount(Core.ItemType.Disk) + @"
-    Roms with CRC:           " + stat.Statistics.CRCCount + @"
-    Roms with MD5:           " + stat.Statistics.MD5Count + @"
-    Roms with SHA-1:         " + stat.Statistics.SHA1Count + @"
-    Roms with SHA-256:       " + stat.Statistics.SHA256Count + @"
-    Roms with SHA-384:       " + stat.Statistics.SHA384Count + @"
-    Roms with SHA-512:       " + stat.Statistics.SHA512Count + "\n";
+    Roms with CRC:           " + stat.Statistics.GetHashCount(Core.Hash.CRC) + @"
+    Roms with MD5:           " + stat.Statistics.GetHashCount(Core.Hash.MD5) + @"
+    Roms with SHA-1:         " + stat.Statistics.GetHashCount(Core.Hash.SHA1) + @"
+    Roms with SHA-256:       " + stat.Statistics.GetHashCount(Core.Hash.SHA256) + @"
+    Roms with SHA-384:       " + stat.Statistics.GetHashCount(Core.Hash.SHA384) + @"
+    Roms with SHA-512:       " + stat.Statistics.GetHashCount(Core.Hash.SHA512) + "\n";
 
             if (baddumpCol)
                 line += "	Roms with BadDump status: " + stat.Statistics.BaddumpCount + "\n";
