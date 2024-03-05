@@ -392,18 +392,27 @@ namespace SabreTools.DatItems
         /// <summary>
         /// Remove a field from the DatItem
         /// </summary>
-        /// <param name="datItemField">Item field to remove</param>
+        /// <param name="fieldName">Field to remove</param>
         /// <returns>True if the removal was successful, false otherwise</returns>
-        public abstract bool RemoveField(DatItemField datItemField);
+        public bool RemoveField(string? fieldName) => FieldManipulator.RemoveField(_internal, fieldName);
 
         /// <summary>
         /// Set a field in the DatItem from a mapping string
         /// </summary>
-        /// <param name="machineField">Item field to set</param>
+        /// <param name="fieldName">Item field to set</param>
         /// <param name="value">String representing the value to set</param>
         /// <returns>True if the setting was successful, false otherwise</returns>
         /// <remarks>This only performs minimal validation before setting</remarks>
         public abstract bool SetField(DatItemField datItemField, string value);
+
+        /// <summary>
+        /// Set a field in the DatItem from a mapping string
+        /// </summary>
+        /// <param name="fieldName">Field to set</param>
+        /// <param name="value">String representing the value to set</param>
+        /// <returns>True if the removal was successful, false otherwise</returns>
+        /// <remarks>This only performs minimal validation before setting</remarks>
+        public bool SetField(string? fieldName, string value) => FieldManipulator.SetField(_internal, fieldName, value);
 
         #endregion
 

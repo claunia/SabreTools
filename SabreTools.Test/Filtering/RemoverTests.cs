@@ -11,8 +11,8 @@ namespace SabreTools.Test.Filtering
         public void RemoveFieldsDatItemTest()
         {
             var datItem = CreateDatItem();
-            var remover = new DatItemRemover();
-            remover.SetRemover("DatItem.Name");
+            var remover = new Remover();
+            remover.PopulateExclusions("DatItem.Name");
             remover.RemoveFields(datItem);
             Assert.Null(datItem.GetName());
         }
@@ -21,8 +21,8 @@ namespace SabreTools.Test.Filtering
         public void RemoveFieldsMachineTest()
         {
             var datItem = CreateDatItem();
-            var remover = new DatItemRemover();
-            remover.SetRemover("Machine.Name");
+            var remover = new Remover();
+            remover.PopulateExclusions("Machine.Name");
             remover.RemoveFields(datItem);
             Assert.Null(datItem.Machine.Name);
         }

@@ -4,7 +4,7 @@ using SabreTools.Models.Metadata;
 
 namespace SabreTools.Filter
 {
-    internal static class FilterParser
+    public static class FilterParser
     {
         /// <summary>
         /// Parse a filter ID string into the item name and field name, if possible

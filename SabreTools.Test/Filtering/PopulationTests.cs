@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-
 using SabreTools.Filtering;
 using Xunit;
 
@@ -18,29 +17,25 @@ namespace SabreTools.Test.Filtering
             remover.PopulateExclusionsFromList(exclusions);
 
             // Check the exclusion lists
-            Assert.NotNull(remover.DatHeaderRemover);
-            Assert.NotNull(remover.DatItemRemover);
-            Assert.Empty(remover.DatHeaderRemover.DatHeaderFields);
-            Assert.Empty(remover.DatItemRemover.MachineFields);
-            Assert.Empty(remover.DatItemRemover.DatItemFields);
+            Assert.Empty(remover.HeaderFieldNames);
+            Assert.Empty(remover.MachineFieldNames);
+            Assert.Empty(remover.ItemFieldNames);
         }
 
         [Fact]
         public void PopulateExclusionEmptyListTest()
         {
             // Setup the list
-            List<string> exclusions = new();
+            List<string> exclusions = [];
 
             // Setup the remover
             var remover = new Remover();
             remover.PopulateExclusionsFromList(exclusions);
 
             // Check the exclusion lists
-            Assert.NotNull(remover.DatHeaderRemover);
-            Assert.NotNull(remover.DatItemRemover);
-            Assert.Empty(remover.DatHeaderRemover.DatHeaderFields);
-            Assert.Empty(remover.DatItemRemover.MachineFields);
-            Assert.Empty(remover.DatItemRemover.DatItemFields);
+            Assert.Empty(remover.HeaderFieldNames);
+            Assert.Empty(remover.MachineFieldNames);
+            Assert.Empty(remover.ItemFieldNames);
         }
 
         [Fact]
@@ -57,11 +52,9 @@ namespace SabreTools.Test.Filtering
             remover.PopulateExclusionsFromList(exclusions);
 
             // Check the exclusion lists
-            Assert.NotNull(remover.DatHeaderRemover);
-            Assert.NotNull(remover.DatItemRemover);
-            Assert.Single(remover.DatHeaderRemover.DatHeaderFields);
-            Assert.Empty(remover.DatItemRemover.MachineFields);
-            Assert.Empty(remover.DatItemRemover.DatItemFields);
+            Assert.Empty(remover.HeaderFieldNames);
+            Assert.Empty(remover.MachineFieldNames);
+            Assert.Empty(remover.ItemFieldNames);
         }
 
         [Fact]
@@ -78,11 +71,9 @@ namespace SabreTools.Test.Filtering
             remover.PopulateExclusionsFromList(exclusions);
 
             // Check the exclusion lists
-            Assert.NotNull(remover.DatHeaderRemover);
-            Assert.NotNull(remover.DatItemRemover);
-            Assert.Empty(remover.DatHeaderRemover.DatHeaderFields);
-            Assert.Single(remover.DatItemRemover.MachineFields);
-            Assert.Empty(remover.DatItemRemover.DatItemFields);
+            Assert.Empty(remover.HeaderFieldNames);
+            Assert.Single(remover.MachineFieldNames);
+            Assert.Empty(remover.ItemFieldNames);
         }
 
         [Fact]
@@ -99,11 +90,9 @@ namespace SabreTools.Test.Filtering
             remover.PopulateExclusionsFromList(exclusions);
 
             // Check the exclusion lists
-            Assert.NotNull(remover.DatHeaderRemover);
-            Assert.NotNull(remover.DatItemRemover);
-            Assert.Empty(remover.DatHeaderRemover.DatHeaderFields);
-            Assert.Empty(remover.DatItemRemover.MachineFields);
-            Assert.Single(remover.DatItemRemover.DatItemFields);
+            Assert.Empty(remover.HeaderFieldNames);
+            Assert.Empty(remover.MachineFieldNames);
+            Assert.Single(remover.ItemFieldNames);
         }
     
         [Fact]

@@ -120,23 +120,6 @@ namespace SabreTools.DatItems.Formats
         #region Manipulation
 
         /// <inheritdoc/>
-        public override bool RemoveField(DatItemField datItemField)
-        {
-            // Get the correct internal field name
-            string? fieldName = datItemField switch
-            {
-                DatItemField.Coins => Models.Metadata.Input.CoinsKey,
-                DatItemField.Players => Models.Metadata.Input.PlayersKey,
-                DatItemField.Service => Models.Metadata.Input.ServiceKey,
-                DatItemField.Tilt => Models.Metadata.Input.TiltKey,
-                _ => null,
-            };
-
-            // Remove the field and return
-            return FieldManipulator.RemoveField(_internal, fieldName);
-        }
-
-        /// <inheritdoc/>
         public override bool SetField(DatItemField datItemField, string value)
         {
             // Get the correct internal field name

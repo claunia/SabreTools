@@ -115,22 +115,6 @@ namespace SabreTools.DatItems.Formats
         #region Manipulation
 
         /// <inheritdoc/>
-        public override bool RemoveField(DatItemField datItemField)
-        {
-            // Get the correct internal field name
-            string? fieldName = datItemField switch
-            {
-                DatItemField.AreaEndianness => Models.Metadata.DataArea.EndiannessKey,
-                DatItemField.AreaSize => Models.Metadata.DataArea.SizeKey,
-                DatItemField.AreaWidth => Models.Metadata.DataArea.WidthKey,
-                _ => null,
-            };
-
-            // Remove the field and return
-            return FieldManipulator.RemoveField(_internal, fieldName);
-        }
-
-        /// <inheritdoc/>
         public override bool SetField(DatItemField datItemField, string value)
         {
             // Get the correct internal field name

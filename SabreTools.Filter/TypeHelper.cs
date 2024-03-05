@@ -9,7 +9,7 @@ using SabreTools.Models.Metadata;
 
 namespace SabreTools.Filter
 {
-    internal static class TypeHelper
+    public static class TypeHelper
     {
         /// <summary>
         /// Get constant values for the given type, if possible

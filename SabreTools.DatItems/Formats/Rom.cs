@@ -600,60 +600,6 @@ namespace SabreTools.DatItems.Formats
         #region Manipulation
 
         /// <inheritdoc/>
-        public override bool RemoveField(DatItemField datItemField)
-        {
-            // Get the correct internal field name
-            string? fieldName = datItemField switch
-            {
-                DatItemField.AltName => Models.Metadata.Rom.AltRomnameKey,
-                DatItemField.AltTitle => Models.Metadata.Rom.AltTitleKey,
-                DatItemField.ArchiveDotOrgFormat => Models.Metadata.Rom.FormatKey,
-                DatItemField.ArchiveDotOrgSource => Models.Metadata.Rom.SourceKey,
-                DatItemField.Bios => Models.Metadata.Rom.BiosKey,
-                //DatItemField.Boot => Models.Metadata.Rom.BootKey,
-                DatItemField.CRC => Models.Metadata.Rom.CRCKey,
-                DatItemField.Date => Models.Metadata.Rom.DateKey,
-                DatItemField.Inverted => Models.Metadata.Rom.InvertedKey,
-                DatItemField.LoadFlag => Models.Metadata.Rom.LoadFlagKey,
-                DatItemField.MD5 => Models.Metadata.Rom.MD5Key,
-                DatItemField.Merge => Models.Metadata.Rom.MergeKey,
-                DatItemField.MIA => Models.Metadata.Rom.MIAKey,
-                DatItemField.Offset => Models.Metadata.Rom.OffsetKey,
-                DatItemField.OpenMSXSubType => Models.Metadata.Rom.OpenMSXMediaType, // TODO: Fix with Key suffix
-                DatItemField.OpenMSXType => Models.Metadata.Rom.OpenMSXType, // TODO: Fix with Key suffix
-                DatItemField.Optional => Models.Metadata.Rom.OptionalKey,
-                //DatItemField.Original => Models.Metadata.Rom.OriginalKey,
-                DatItemField.OriginalFilename => Models.Metadata.Rom.OriginalKey,
-                DatItemField.Region => Models.Metadata.Rom.RegionKey,
-                DatItemField.Remark => Models.Metadata.Rom.RemarkKey,
-                DatItemField.Rotation => Models.Metadata.Rom.RotationKey,
-                DatItemField.SHA1 => Models.Metadata.Rom.SHA1Key,
-                DatItemField.SHA256 => Models.Metadata.Rom.SHA256Key,
-                DatItemField.SHA384 => Models.Metadata.Rom.SHA384Key,
-                DatItemField.SHA512 => Models.Metadata.Rom.SHA512Key,
-                DatItemField.Size => Models.Metadata.Rom.SizeKey,
-                DatItemField.SpamSum => Models.Metadata.Rom.SpamSumKey,
-                DatItemField.Status => Models.Metadata.Rom.StatusKey,
-                DatItemField.Summation => Models.Metadata.Rom.SummationKey,
-                DatItemField.Value => Models.Metadata.Rom.ValueKey,
-                _ => null,
-            };
-
-            // A null value means special handling is needed
-            if (fieldName == null)
-            {
-                switch (datItemField)
-                {
-                    case DatItemField.Boot: Boot = null; return true;
-                    case DatItemField.Original: Original = null; return true;
-                }
-            }
-
-            // Remove the field and return
-            return FieldManipulator.RemoveField(_internal, fieldName);
-        }
-
-        /// <inheritdoc/>
         public override bool SetField(DatItemField datItemField, string value)
         {
             // Get the correct internal field name
