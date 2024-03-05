@@ -5,6 +5,8 @@ namespace SabreTools.Core
 {
     #region DatFiles
 
+    // TODO: Replace with SabreTools.Hashing.HashType
+
     /// <summary>
     /// Available hashing types
     /// </summary>
@@ -1588,7 +1590,7 @@ namespace SabreTools.Core
         Year,
     }
 
-#endregion
+    #endregion
 
     #region Logging
 
