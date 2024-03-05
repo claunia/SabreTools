@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+#if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
+#endif
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
@@ -173,7 +175,17 @@ namespace SabreTools.DatFiles
                     continue;
 #endif
 
-                // TODO: Implement filtering
+                // Filter all items in the current key
+                var newItems = new ConcurrentList<DatItem>();
+                foreach (var item in items)
+                {
+                    if (item.PassesFilter(filterRunner))
+                        newItems.Add(item);
+                }
+
+                // Set the value in the key to the new set
+                Items[key] = newItems;
+
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else

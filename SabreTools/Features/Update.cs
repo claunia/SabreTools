@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-
 using SabreTools.Core;
 using SabreTools.DatFiles;
 using SabreTools.DatTools;
@@ -173,6 +172,7 @@ namespace SabreTools.Features
                     Extras.ApplyExtras(datFile);
                     Splitter.ApplySplitting(datFile, useTags: false);
                     Filter.ApplyFilters(datFile);
+                    // datFile.ExecuteFilters(FilterRunner); // TODO: Replace Filter.ApplyFilters with this
                     Cleaner.ApplyCleaning(datFile);
                     Remover.ApplyRemovals(datFile);
 
@@ -216,6 +216,7 @@ namespace SabreTools.Features
             Extras.ApplyExtras(userInputDat);
             Splitter.ApplySplitting(userInputDat, useTags: false);
             Filter.ApplyFilters(userInputDat);
+            // userInputDat.ExecuteFilters(FilterRunner); // TODO: Replace Filter.ApplyFilters with this
             Cleaner.ApplyCleaning(userInputDat);
             Remover.ApplyRemovals(userInputDat);
 
@@ -345,6 +346,7 @@ namespace SabreTools.Features
                     Extras.ApplyExtras(repDat);
                     Splitter.ApplySplitting(repDat, useTags: false);
                     Filter.ApplyFilters(repDat);
+                    // repDat.ExecuteFilters(FilterRunner); // TODO: Replace Filter.ApplyFilters with this
                     Cleaner.ApplyCleaning(repDat);
                     Remover.ApplyRemovals(repDat);
 
@@ -381,6 +383,7 @@ namespace SabreTools.Features
                     Extras.ApplyExtras(repDat);
                     Splitter.ApplySplitting(repDat, useTags: false);
                     Filter.ApplyFilters(repDat);
+                    // repDat.ExecuteFilters(FilterRunner); // TODO: Replace Filter.ApplyFilters with this
                     Cleaner.ApplyCleaning(repDat);
                     Remover.ApplyRemovals(repDat);
 

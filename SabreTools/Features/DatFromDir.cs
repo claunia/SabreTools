@@ -101,7 +101,7 @@ namespace SabreTools.Features
                         Extras.ApplyExtras(datdata);
                         Splitter.ApplySplitting(datdata, useTags: false);
                         Filter.ApplyFilters(datdata);
-                        //FilterRunner.Run(datdata); // TODO: Create helper method to run over entire DAT
+                        // datdata.ExecuteFilters(FilterRunner); // TODO: Replace Filter.ApplyFilters with this
                         Cleaner.ApplyCleaning(datdata);
                         Remover.ApplyRemovals(datdata);
 

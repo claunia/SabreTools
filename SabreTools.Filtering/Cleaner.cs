@@ -7,7 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+#if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
+#endif
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;

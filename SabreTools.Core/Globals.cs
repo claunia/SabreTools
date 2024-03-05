@@ -1,5 +1,7 @@
 ﻿using System;
+#if NET452_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
+#endif
 
 namespace SabreTools.Core
 {

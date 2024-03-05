@@ -5,7 +5,9 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+#if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
+#endif
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
