@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
+using SabreTools.Filter;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -195,6 +196,35 @@ namespace SabreTools.DatItems.Formats
 
                 _internal = this._internal?.Clone() as Models.Metadata.Control ?? [],
             };
+        }
+
+        #endregion
+    
+        #region Manipulation
+
+        /// <inheritdoc/>
+        public override bool RemoveField(DatItemField datItemField)
+        {
+            // Get the correct internal field name
+            string? fieldName = datItemField switch
+            {
+                DatItemField.Control_Buttons => Models.Metadata.Control.ButtonsKey,
+                DatItemField.Control_KeyDelta => Models.Metadata.Control.KeyDeltaKey,
+                DatItemField.Control_Maximum => Models.Metadata.Control.MaximumKey,
+                DatItemField.Control_Minimum => Models.Metadata.Control.MinimumKey,
+                DatItemField.Control_Player => Models.Metadata.Control.PlayerKey,
+                DatItemField.Control_RequiredButtons => Models.Metadata.Control.ReqButtonsKey,
+                DatItemField.Control_Reverse => Models.Metadata.Control.ReverseKey,
+                DatItemField.Control_Sensitivity => Models.Metadata.Control.SensitivityKey,
+                DatItemField.Control_Type => Models.Metadata.Control.ControlTypeKey,
+                DatItemField.Control_Ways => Models.Metadata.Control.WaysKey,
+                DatItemField.Control_Ways2 => Models.Metadata.Control.Ways2Key,
+                DatItemField.Control_Ways3 => Models.Metadata.Control.Ways3Key,
+                _ => null,
+            };
+
+            // Remove the field and return
+            return FieldManipulator.RemoveField(_internal, fieldName);
         }
 
         #endregion

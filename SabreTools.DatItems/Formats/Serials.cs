@@ -1,6 +1,7 @@
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
+using SabreTools.Filter;
 
 // TODO: Add item mappings for all fields
 namespace SabreTools.DatItems.Formats
@@ -171,6 +172,24 @@ namespace SabreTools.DatItems.Formats
                 && BoxSerial == newOther.BoxSerial
                 && MediaStamp == newOther.MediaStamp
                 && BoxBarcode == newOther.BoxBarcode);
+        }
+
+        #endregion
+    
+        #region Manipulation
+
+        /// <inheritdoc/>
+        public override bool RemoveField(DatItemField datItemField)
+        {
+            // Get the correct internal field name
+            string? fieldName = datItemField switch
+            {
+                // TODO: Figure out what fields go here
+                _ => null,
+            };
+
+            // Remove the field and return
+            return FieldManipulator.RemoveField(_internal, fieldName);
         }
 
         #endregion

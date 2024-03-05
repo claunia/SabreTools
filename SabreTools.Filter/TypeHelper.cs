@@ -1,8 +1,10 @@
 using System;
 using System.Linq;
 using System.Reflection;
+#if NET452_OR_GREATER || NETCOREAPP
 using System.Xml.Serialization;
 using SabreTools.Models;
+#endif
 using SabreTools.Models.Metadata;
 
 namespace SabreTools.Filter

@@ -25,6 +25,12 @@ namespace SabreTools.Filter
             string? name = machine.ReadString(Header.NameKey);
             string? description = machine.ReadString(Header.DescriptionKey);
 
+            // Sanitize the description string
+            description = description?
+                .Replace('/', '_')
+                .Replace("\"", "''")
+                .Replace(":", " -");
+
             // Replace the name with the description
             machine[Header.NameKey] = description;
             return (true, name);

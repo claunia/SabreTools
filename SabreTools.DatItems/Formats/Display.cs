@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
+using SabreTools.Filter;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -227,6 +228,37 @@ namespace SabreTools.DatItems.Formats
 
                 _internal = this._internal?.Clone() as Models.Metadata.Display ?? [],
             };
+        }
+
+        #endregion
+    
+        #region Manipulation
+
+        /// <inheritdoc/>
+        public override bool RemoveField(DatItemField datItemField)
+        {
+            // Get the correct internal field name
+            string? fieldName = datItemField switch
+            {
+                DatItemField.DisplayType => Models.Metadata.Display.DisplayTypeKey,
+                DatItemField.FlipX => Models.Metadata.Display.FlipXKey,
+                DatItemField.HBEnd => Models.Metadata.Display.HBEndKey,
+                DatItemField.HBStart => Models.Metadata.Display.HBStartKey,
+                DatItemField.Height => Models.Metadata.Display.HeightKey,
+                DatItemField.HTotal => Models.Metadata.Display.HTotalKey,
+                DatItemField.PixClock => Models.Metadata.Display.PixClockKey,
+                DatItemField.Refresh => Models.Metadata.Display.RefreshKey,
+                DatItemField.Rotate => Models.Metadata.Display.RotateKey,
+                DatItemField.Tag => Models.Metadata.Display.TagKey,
+                DatItemField.VBEnd => Models.Metadata.Display.VBEndKey,
+                DatItemField.VBStart => Models.Metadata.Display.VBStartKey,
+                DatItemField.VTotal => Models.Metadata.Display.VTotalKey,
+                DatItemField.Width => Models.Metadata.Display.WidthKey,
+                _ => null,
+            };
+
+            // Remove the field and return
+            return FieldManipulator.RemoveField(_internal, fieldName);
         }
 
         #endregion

@@ -1,10 +1,10 @@
-using System;
 using System.Linq;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.FileTypes;
+using SabreTools.Filter;
 using SabreTools.Matching;
 
 // TODO: Add item mappings for all fields
@@ -322,6 +322,24 @@ namespace SabreTools.DatItems.Formats
                 && Utilities.ConditionalHashEquals(_md5, other._md5)
                 && Utilities.ConditionalHashEquals(_sha1, other._sha1)
                 && Utilities.ConditionalHashEquals(_sha256, other._sha256);
+        }
+
+        #endregion
+
+        #region Manipulation
+
+        /// <inheritdoc/>
+        public override bool RemoveField(DatItemField datItemField)
+        {
+            // Get the correct internal field name
+            string? fieldName = datItemField switch
+            {
+                // TODO: Figure out what fields go here
+                _ => null,
+            };
+
+            // Remove the field and return
+            return FieldManipulator.RemoveField(_internal, fieldName);
         }
 
         #endregion

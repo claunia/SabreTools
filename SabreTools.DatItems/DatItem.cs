@@ -371,6 +371,17 @@ namespace SabreTools.DatItems
 
         #endregion
 
+        #region Manipulation
+
+        /// <summary>
+        /// Remove a field from the DatItem
+        /// </summary>
+        /// <param name="datItemField">Item field to remove</param>
+        /// <returns>True if the removal was successful, false otherwise</returns>
+        public abstract bool RemoveField(DatItemField datItemField);
+
+        #endregion
+
         #region Sorting and Merging
 
         /// <summary>

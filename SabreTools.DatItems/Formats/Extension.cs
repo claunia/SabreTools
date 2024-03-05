@@ -1,6 +1,7 @@
 ﻿using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
+using SabreTools.Filter;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -66,6 +67,23 @@ namespace SabreTools.DatItems.Formats
 
                 _internal = this._internal?.Clone() as Models.Metadata.Extension ?? [],
             };
+        }
+
+        #endregion
+    
+        #region Manipulation
+
+        /// <inheritdoc/>
+        public override bool RemoveField(DatItemField datItemField)
+        {
+            // Get the correct internal field name
+            string? fieldName = datItemField switch
+            {
+                _ => null,
+            };
+
+            // Remove the field and return
+            return FieldManipulator.RemoveField(_internal, fieldName);
         }
 
         #endregion

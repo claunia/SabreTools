@@ -1,9 +1,9 @@
-﻿using System;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.FileTypes;
+using SabreTools.Filter;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -181,6 +181,27 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         /// <returns>String representing the suffix</returns>
         public string GetDuplicateSuffix() => _internal.GetDuplicateSuffix();
+
+        #endregion
+
+        #region Manipulation
+
+        /// <inheritdoc/>
+        public override bool RemoveField(DatItemField datItemField)
+        {
+            // Get the correct internal field name
+            string? fieldName = datItemField switch
+            {
+                DatItemField.MD5 => Models.Metadata.Media.MD5Key,
+                DatItemField.SHA1 => Models.Metadata.Media.SHA1Key,
+                DatItemField.SHA256 => Models.Metadata.Media.SHA256Key,
+                DatItemField.SpamSum => Models.Metadata.Media.SpamSumKey,
+                _ => null,
+            };
+
+            // Remove the field and return
+            return FieldManipulator.RemoveField(_internal, fieldName);
+        }
 
         #endregion
 

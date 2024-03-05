@@ -57,5 +57,12 @@ namespace SabreTools.DatItems.Formats
         }
 
         #endregion
+    
+        #region Manipulation
+
+        /// <inheritdoc/>
+        public override bool RemoveField(DatItemField datItemField) => true;
+
+        #endregion
     }
 }

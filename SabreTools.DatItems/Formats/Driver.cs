@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
+using SabreTools.Filter;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -158,6 +159,31 @@ namespace SabreTools.DatItems.Formats
 
                 _internal = this._internal?.Clone() as Models.Metadata.Driver ?? [],
             };
+        }
+
+        #endregion
+    
+        #region Manipulation
+
+        /// <inheritdoc/>
+        public override bool RemoveField(DatItemField datItemField)
+        {
+            // Get the correct internal field name
+            string? fieldName = datItemField switch
+            {
+                DatItemField.CocktailStatus => Models.Metadata.Driver.CocktailKey,
+                DatItemField.EmulationStatus => Models.Metadata.Driver.EmulationKey,
+                DatItemField.Incomplete => Models.Metadata.Driver.IncompleteKey,
+                DatItemField.NoSoundHardware => Models.Metadata.Driver.NoSoundHardwareKey,
+                DatItemField.RequiresArtwork => Models.Metadata.Driver.RequiresArtworkKey,
+                DatItemField.SaveStateStatus => Models.Metadata.Driver.SaveStateKey,
+                DatItemField.SupportStatus => Models.Metadata.Driver.StatusKey,
+                DatItemField.Unofficial => Models.Metadata.Driver.UnofficialKey,
+                _ => null,
+            };
+
+            // Remove the field and return
+            return FieldManipulator.RemoveField(_internal, fieldName);
         }
 
         #endregion

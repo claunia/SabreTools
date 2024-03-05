@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
+using SabreTools.Filter;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -133,6 +134,28 @@ namespace SabreTools.DatItems.Formats
 
                 _internal = this._internal?.Clone() as Models.Metadata.Device ?? [],
             };
+        }
+
+        #endregion
+    
+        #region Manipulation
+
+        /// <inheritdoc/>
+        public override bool RemoveField(DatItemField datItemField)
+        {
+            // Get the correct internal field name
+            string? fieldName = datItemField switch
+            {
+                DatItemField.DeviceType => Models.Metadata.Device.DeviceTypeKey,
+                DatItemField.FixedImage => Models.Metadata.Device.FixedImageKey,
+                DatItemField.Interface => Models.Metadata.Device.InterfaceKey,
+                DatItemField.Mandatory => Models.Metadata.Device.MandatoryKey,
+                DatItemField.Tag => Models.Metadata.Device.TagKey,
+                _ => null,
+            };
+
+            // Remove the field and return
+            return FieldManipulator.RemoveField(_internal, fieldName);
         }
 
         #endregion
