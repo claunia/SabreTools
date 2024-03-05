@@ -48,7 +48,7 @@ namespace SabreTools.Filter
             if (itemName == null || fieldName == null)
                 throw new ArgumentOutOfRangeException(nameof(filterString));
 
-            this.Key = new string[] { itemName, fieldName };
+            this.Key = [itemName, fieldName];
             this.Value = value;
             this.Operation = operation;
         }
@@ -59,7 +59,7 @@ namespace SabreTools.Filter
             if (itemName == null || fieldName == null)
                 throw new ArgumentOutOfRangeException(nameof(value));
 
-            this.Key = new string[] { itemName, fieldName };
+            this.Key = [itemName, fieldName];
             this.Value = value;
             this.Operation = GetOperation(operation);
         }
@@ -70,7 +70,7 @@ namespace SabreTools.Filter
             if (itemName == null || fieldName == null)
                 throw new ArgumentOutOfRangeException(nameof(value));
 
-            this.Key = new string[] { itemName, fieldName };
+            this.Key = [itemName, fieldName];
             this.Value = value;
             this.Operation = operation;
         }

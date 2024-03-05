@@ -30,7 +30,7 @@ namespace SabreTools.Filter
 #else
             return fields
                 .Where(f => f.IsLiteral && !f.IsInitOnly)
-                .Where(f => f.CustomAttributes.Any(a => a.AttributeType == typeof(NoFilterAttribute)))
+                .Where(f => !f.CustomAttributes.Any(a => a.AttributeType == typeof(NoFilterAttribute)))
                 .Select(f => f.GetRawConstantValue() as string)
                 .Where(v => v != null)
                 .ToArray()!;
@@ -47,8 +47,8 @@ namespace SabreTools.Filter
 
             return AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(a => a.GetTypes())
-                .Where(t => t.IsAssignableFrom(typeof(DatItem)) && t.IsClass)
-                .FirstOrDefault(t => GetXmlRootAttributeElementName(t) == itemType);
+                .Where(t => typeof(DatItem).IsAssignableFrom(t) && t.IsClass)
+                .FirstOrDefault(t => string.Equals(GetXmlRootAttributeElementName(t), itemType, StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>
