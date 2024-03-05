@@ -237,12 +237,12 @@ body {
 
             xtw.WriteStartElement("td");
             xtw.WriteAttributeString("align", "right");
-            xtw.WriteString(stat.Statistics.RomCount.ToString());
+            xtw.WriteString(stat.Statistics.GetItemCount(Core.ItemType.Rom).ToString());
             xtw.WriteEndElement(); // td
 
             xtw.WriteStartElement("td");
             xtw.WriteAttributeString("align", "right");
-            xtw.WriteString(stat.Statistics.DiskCount.ToString());
+            xtw.WriteString(stat.Statistics.GetItemCount(Core.ItemType.Disk).ToString());
             xtw.WriteEndElement(); // td
 
             xtw.WriteStartElement("td");

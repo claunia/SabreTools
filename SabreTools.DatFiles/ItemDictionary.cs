@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 #endif
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
@@ -98,202 +99,10 @@ namespace SabreTools.DatFiles
         public long TotalCount { get; private set; } = 0;
 
         /// <summary>
-        /// Number of Adjuster items
+        /// Number of items for each item type
         /// </summary>
         [JsonIgnore, XmlIgnore]
-        public long AdjusterCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of Analog items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long AnalogCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of Archive items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long ArchiveCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of BiosSet items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long BiosSetCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of Chip items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long ChipCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of top-level Condition items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long ConditionCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of Configuration items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long ConfigurationCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of DataArea items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long DataAreaCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of Device items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long DeviceCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of Device Reference items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long DeviceReferenceCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of DIP Switch items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long DipSwitchCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of Disk items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long DiskCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of DiskArea items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long DiskAreaCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of Display items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long DisplayCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of Driver items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long DriverCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of Feature items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long FeatureCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of Info items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long InfoCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of Input items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long InputCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of Media items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long MediaCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of Part items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long PartCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of PartFeature items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long PartFeatureCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of Port items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long PortCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of RamOption items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long RamOptionCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of Release items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long ReleaseCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of ReleaseDetails items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long ReleaseDetailsCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of Rom items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long RomCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of Sample items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long SampleCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of Serials items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long SerialsCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of SharedFeature items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long SharedFeatureCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of Slot items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long SlotCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of SoftwareList items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long SoftwareListCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of Sound items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long SoundCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of SourceDetails items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long SourceDetailsCount { get; private set; } = 0;
+        public Dictionary<ItemType, long> ItemCounts { get; private set; } = [];
 
         /// <summary>
         /// Number of machines
@@ -464,44 +273,13 @@ namespace SabreTools.DatFiles
                 if (item.Remove)
                     RemovedCount++;
 
-                // Now we do different things for each item type
+                // Increment the item count for the type
+                AddItemCount(item.ItemType);
+
+                // Some item types require special processing
                 switch (item)
                 {
-                    case Adjuster:
-                        AdjusterCount++;
-                        break;
-                    case Analog:
-                        AnalogCount++;
-                        break;
-                    case Archive:
-                        ArchiveCount++;
-                        break;
-                    case BiosSet:
-                        BiosSetCount++;
-                        break;
-                    case Chip:
-                        ChipCount++;
-                        break;
-                    case Condition:
-                        ConditionCount++;
-                        break;
-                    case Configuration:
-                        ConfigurationCount++;
-                        break;
-                    case DataArea:
-                        DataAreaCount++;
-                        break;
-                    case Device:
-                        DeviceCount++;
-                        break;
-                    case DeviceReference:
-                        DeviceReferenceCount++;
-                        break;
-                    case DipSwitch:
-                        DipSwitchCount++;
-                        break;
                     case Disk disk:
-                        DiskCount++;
                         if (disk.ItemStatus != ItemStatus.Nodump)
                         {
                             MD5Count += (string.IsNullOrEmpty(disk.MD5) ? 0 : 1);
@@ -513,51 +291,13 @@ namespace SabreTools.DatFiles
                         NodumpCount += (disk.ItemStatus == ItemStatus.Nodump ? 1 : 0);
                         VerifiedCount += (disk.ItemStatus == ItemStatus.Verified ? 1 : 0);
                         break;
-                    case DiskArea:
-                        DiskAreaCount++;
-                        break;
-                    case Display:
-                        DisplayCount++;
-                        break;
-                    case Driver:
-                        DriverCount++;
-                        break;
-                    case Feature:
-                        FeatureCount++;
-                        break;
-                    case Info:
-                        InfoCount++;
-                        break;
-                    case Input:
-                        InputCount++;
-                        break;
                     case Media media:
-                        MediaCount++;
                         MD5Count += (string.IsNullOrEmpty(media.MD5) ? 0 : 1);
                         SHA1Count += (string.IsNullOrEmpty(media.SHA1) ? 0 : 1);
                         SHA256Count += (string.IsNullOrEmpty(media.SHA256) ? 0 : 1);
                         SpamSumCount += (string.IsNullOrEmpty(media.SpamSum) ? 0 : 1);
                         break;
-                    case Part:
-                        PartCount++;
-                        break;
-                    case PartFeature:
-                        PartFeatureCount++;
-                        break;
-                    case Port:
-                        PortCount++;
-                        break;
-                    case RamOption:
-                        RamOptionCount++;
-                        break;
-                    case Release:
-                        ReleaseCount++;
-                        break;
-                    case ReleaseDetails:
-                        ReleaseDetailsCount++;
-                        break;
                     case Rom rom:
-                        RomCount++;
                         if (rom.ItemStatus != ItemStatus.Nodump)
                         {
                             TotalSize += rom.Size ?? 0;
@@ -574,27 +314,6 @@ namespace SabreTools.DatFiles
                         GoodCount += (rom.ItemStatus == ItemStatus.Good ? 1 : 0);
                         NodumpCount += (rom.ItemStatus == ItemStatus.Nodump ? 1 : 0);
                         VerifiedCount += (rom.ItemStatus == ItemStatus.Verified ? 1 : 0);
-                        break;
-                    case Sample:
-                        SampleCount++;
-                        break;
-                    case Serials:
-                        SerialsCount++;
-                        break;
-                    case SharedFeature:
-                        SharedFeatureCount++;
-                        break;
-                    case Slot:
-                        SlotCount++;
-                        break;
-                    case SoftwareList:
-                        SoftwareListCount++;
-                        break;
-                    case Sound:
-                        SoundCount++;
-                        break;
-                    case SourceDetails:
-                        SourceDetailsCount++;
                         break;
                 }
             }
@@ -636,14 +355,11 @@ namespace SabreTools.DatFiles
         {
             TotalCount += stats.Count;
 
-            ArchiveCount += stats.ArchiveCount;
-            BiosSetCount += stats.BiosSetCount;
-            ChipCount += stats.ChipCount;
-            DiskCount += stats.DiskCount;
-            MediaCount += stats.MediaCount;
-            ReleaseCount += stats.ReleaseCount;
-            RomCount += stats.RomCount;
-            SampleCount += stats.SampleCount;
+            // Loop through and add stats for all items
+            foreach (var itemCountKvp in stats.ItemCounts)
+            {
+                AddItemCount(itemCountKvp.Key, itemCountKvp.Value);
+            }
 
             GameCount += stats.GameCount;
 
@@ -840,44 +556,13 @@ namespace SabreTools.DatFiles
                 if (item.Remove)
                     RemovedCount--;
 
-                // Now we do different things for each item type
+                // Decrement the item count for the type
+                RemoveItemCount(item.ItemType);
+
+                // Some item types require special processing
                 switch (item)
                 {
-                    case Adjuster:
-                        AdjusterCount--;
-                        break;
-                    case Analog:
-                        AnalogCount--;
-                        break;
-                    case Archive:
-                        ArchiveCount--;
-                        break;
-                    case BiosSet:
-                        BiosSetCount--;
-                        break;
-                    case Chip:
-                        ChipCount--;
-                        break;
-                    case Condition:
-                        ConditionCount--;
-                        break;
-                    case Configuration:
-                        ConfigurationCount--;
-                        break;
-                    case DataArea:
-                        DataAreaCount--;
-                        break;
-                    case Device:
-                        DeviceCount--;
-                        break;
-                    case DeviceReference:
-                        DeviceReferenceCount--;
-                        break;
-                    case DipSwitch:
-                        DipSwitchCount--;
-                        break;
                     case Disk disk:
-                        DiskCount--;
                         if (disk.ItemStatus != ItemStatus.Nodump)
                         {
                             MD5Count -= (string.IsNullOrEmpty(disk.MD5) ? 0 : 1);
@@ -889,47 +574,12 @@ namespace SabreTools.DatFiles
                         NodumpCount -= (disk.ItemStatus == ItemStatus.Nodump ? 1 : 0);
                         VerifiedCount -= (disk.ItemStatus == ItemStatus.Verified ? 1 : 0);
                         break;
-                    case DiskArea:
-                        DiskAreaCount--;
-                        break;
-                    case Display:
-                        DisplayCount--;
-                        break;
-                    case Driver:
-                        DriverCount--;
-                        break;
-                    case Feature:
-                        FeatureCount--;
-                        break;
-                    case Info:
-                        InfoCount--;
-                        break;
-                    case Input:
-                        InputCount--;
-                        break;
                     case Media media:
-                        MediaCount--;
                         MD5Count -= (string.IsNullOrEmpty(media.MD5) ? 0 : 1);
                         SHA1Count -= (string.IsNullOrEmpty(media.SHA1) ? 0 : 1);
                         SHA256Count -= (string.IsNullOrEmpty(media.SHA256) ? 0 : 1);
                         break;
-                    case Part:
-                        PartCount--;
-                        break;
-                    case PartFeature:
-                        PartFeatureCount--;
-                        break;
-                    case Port:
-                        PortCount--;
-                        break;
-                    case RamOption:
-                        RamOptionCount--;
-                        break;
-                    case Release:
-                        ReleaseCount--;
-                        break;
                     case Rom rom:
-                        RomCount--;
                         if (rom.ItemStatus != ItemStatus.Nodump)
                         {
                             TotalSize -= rom.Size ?? 0;
@@ -946,22 +596,59 @@ namespace SabreTools.DatFiles
                         NodumpCount -= (rom.ItemStatus == ItemStatus.Nodump ? 1 : 0);
                         VerifiedCount -= (rom.ItemStatus == ItemStatus.Verified ? 1 : 0);
                         break;
-                    case Sample:
-                        SampleCount--;
-                        break;
-                    case SharedFeature:
-                        SharedFeatureCount--;
-                        break;
-                    case Slot:
-                        SlotCount--;
-                        break;
-                    case SoftwareList:
-                        SoftwareListCount--;
-                        break;
-                    case Sound:
-                        SoundCount--;
-                        break;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Get the item count for a given item type, defaulting to 0 if it does not exist
+        /// </summary>
+        /// <param name="itemType">Item type to retrieve</param>
+        /// <returns>The number of items of that type, if it exists</returns>
+        public long GetItemCount(ItemType itemType)
+        {
+            lock (ItemCounts)
+            {
+                if (!ItemCounts.ContainsKey(itemType))
+                    return 0;
+
+                return ItemCounts[itemType];
+            }
+        }
+
+        /// <summary>
+        /// Increment the item count for a given item type
+        /// </summary>
+        /// <param name="itemType">Item type to increment</param>
+        /// <param name="interval">Amount to increment by, defaults to 1</param>
+        private void AddItemCount(ItemType itemType, long interval = 1)
+        {
+            lock (ItemCounts)
+            {
+                if (!ItemCounts.ContainsKey(itemType))
+                    ItemCounts[itemType] = 0;
+
+                ItemCounts[itemType] += interval;
+                if (ItemCounts[itemType] < 0)
+                    ItemCounts[itemType] = 0;
+            }
+        }
+
+        /// <summary>
+        /// Decrement the item count for a given item type
+        /// </summary>
+        /// <param name="itemType">Item type to decrement</param>
+        /// <param name="interval">Amount to increment by, defaults to 1</param>
+        private void RemoveItemCount(ItemType itemType, long interval = 1)
+        {
+            lock (ItemCounts)
+            {
+                if (!ItemCounts.ContainsKey(itemType))
+                    return;
+
+                ItemCounts[itemType] -= interval;
+                if (ItemCounts[itemType] < 0)
+                    ItemCounts[itemType] = 0;
             }
         }
 
@@ -1279,14 +966,7 @@ namespace SabreTools.DatFiles
         {
             TotalCount = 0;
 
-            ArchiveCount = 0;
-            BiosSetCount = 0;
-            ChipCount = 0;
-            DiskCount = 0;
-            MediaCount = 0;
-            ReleaseCount = 0;
-            RomCount = 0;
-            SampleCount = 0;
+            ItemCounts = [];
 
             GameCount = 0;
 
@@ -1312,24 +992,29 @@ namespace SabreTools.DatFiles
         /// </summary>
         private ItemKey GetBestAvailable()
         {
+            // Get the item counts for the 3 hashable types
+            long diskCount = GetItemCount(ItemType.Disk);
+            long mediaCount = GetItemCount(ItemType.Media);
+            long romCount = GetItemCount(ItemType.Rom);
+
             // If all items are supposed to have a SHA-512, we bucket by that
-            if (DiskCount + MediaCount + RomCount - NodumpCount == SHA512Count)
+            if (diskCount + mediaCount + romCount - NodumpCount == SHA512Count)
                 return ItemKey.SHA512;
 
             // If all items are supposed to have a SHA-384, we bucket by that
-            else if (DiskCount + MediaCount + RomCount - NodumpCount == SHA384Count)
+            else if (diskCount + mediaCount + romCount - NodumpCount == SHA384Count)
                 return ItemKey.SHA384;
 
             // If all items are supposed to have a SHA-256, we bucket by that
-            else if (DiskCount + MediaCount + RomCount - NodumpCount == SHA256Count)
+            else if (diskCount + mediaCount + romCount - NodumpCount == SHA256Count)
                 return ItemKey.SHA256;
 
             // If all items are supposed to have a SHA-1, we bucket by that
-            else if (DiskCount + MediaCount + RomCount - NodumpCount == SHA1Count)
+            else if (diskCount + mediaCount + romCount - NodumpCount == SHA1Count)
                 return ItemKey.SHA1;
 
             // If all items are supposed to have a MD5, we bucket by that
-            else if (DiskCount + MediaCount + RomCount - NodumpCount == MD5Count)
+            else if (diskCount + mediaCount + romCount - NodumpCount == MD5Count)
                 return ItemKey.MD5;
 
             // Otherwise, we bucket by CRC

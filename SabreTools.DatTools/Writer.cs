@@ -120,7 +120,11 @@ namespace SabreTools.DatTools
         /// <param name="datFile">Current DatFile object to write from</param>
         public static void WriteStatsToConsole(DatFile datFile)
         {
-            if (datFile.Items.RomCount + datFile.Items.DiskCount == 0)
+            long diskCount = datFile.Items.GetItemCount(ItemType.Disk);
+            long mediaCount = datFile.Items.GetItemCount(ItemType.Media);
+            long romCount = datFile.Items.GetItemCount(ItemType.Rom);
+
+            if (diskCount + mediaCount + romCount == 0)
                 datFile.Items.RecalculateStats();
 
             datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);

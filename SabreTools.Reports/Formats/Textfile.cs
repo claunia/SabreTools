@@ -93,8 +93,8 @@ namespace SabreTools.Reports.Formats
 --------------------------------------------------
     Uncompressed size:       " + GetBytesReadable(stat.Statistics!.TotalSize) + @"
     Games found:             " + stat.MachineCount + @"
-    Roms found:              " + stat.Statistics.RomCount + @"
-    Disks found:             " + stat.Statistics.DiskCount + @"
+    Roms found:              " + stat.Statistics.GetItemCount(Core.ItemType.Rom) + @"
+    Disks found:             " + stat.Statistics.GetItemCount(Core.ItemType.Disk) + @"
     Roms with CRC:           " + stat.Statistics.CRCCount + @"
     Roms with MD5:           " + stat.Statistics.MD5Count + @"
     Roms with SHA-1:         " + stat.Statistics.SHA1Count + @"
