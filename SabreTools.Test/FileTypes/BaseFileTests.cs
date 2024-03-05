@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Text;
-
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems.Formats;

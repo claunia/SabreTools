@@ -2,10 +2,12 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Compress.Support.Compression.LZMA;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.FileTypes.Aaru;
 using SabreTools.FileTypes.CHD;
+using SabreTools.Hashing;
 using SabreTools.IO;
 using SabreTools.Logging;
 using SabreTools.Matching;
@@ -345,139 +347,62 @@ namespace SabreTools.FileTypes
             if (size == -1)
                 size = input.Length;
 
-            try
-            {
-                // Get a list of hashers to run over the buffer
-                List<Hasher> hashers = [];
+            // Get a list of hash types to run
+            List<HashType> hashTypes = [];
 
 #if NETFRAMEWORK
-                if ((hashes & Hash.CRC) != 0)
-                    hashers.Add(new Hasher(Hash.CRC));
-                if ((hashes & Hash.MD5) != 0)
-                    hashers.Add(new Hasher(Hash.MD5));
-                if ((hashes & Hash.SHA1) != 0)
-                    hashers.Add(new Hasher(Hash.SHA1));
-                if ((hashes & Hash.SHA256) != 0)
-                    hashers.Add(new Hasher(Hash.SHA256));
-                if ((hashes & Hash.SHA384) != 0)
-                    hashers.Add(new Hasher(Hash.SHA384));
-                if ((hashes & Hash.SHA512) != 0)
-                    hashers.Add(new Hasher(Hash.SHA512));
-                if ((hashes & Hash.SpamSum) != 0)
-                    hashers.Add(new Hasher(Hash.SpamSum));
+            if ((hashes & Hash.CRC) != 0) hashTypes.Add(HashType.CRC32);
+            if ((hashes & Hash.MD5) != 0) hashTypes.Add(HashType.MD5);
+            if ((hashes & Hash.SHA1) != 0) hashTypes.Add(HashType.SHA1);
+            if ((hashes & Hash.SHA256) != 0) hashTypes.Add(HashType.SHA256);
+            if ((hashes & Hash.SHA384) != 0) hashTypes.Add(HashType.SHA384);
+            if ((hashes & Hash.SHA512) != 0) hashTypes.Add(HashType.SHA512);
+            if ((hashes & Hash.SpamSum) != 0) hashTypes.Add(HashType.SpamSum);
 #else
-                if (hashes.HasFlag(Hash.CRC))
-                    hashers.Add(new Hasher(Hash.CRC));
-                if (hashes.HasFlag(Hash.MD5))
-                    hashers.Add(new Hasher(Hash.MD5));
-                if (hashes.HasFlag(Hash.SHA1))
-                    hashers.Add(new Hasher(Hash.SHA1));
-                if (hashes.HasFlag(Hash.SHA256))
-                    hashers.Add(new Hasher(Hash.SHA256));
-                if (hashes.HasFlag(Hash.SHA384))
-                    hashers.Add(new Hasher(Hash.SHA384));
-                if (hashes.HasFlag(Hash.SHA512))
-                    hashers.Add(new Hasher(Hash.SHA512));
-                if (hashes.HasFlag(Hash.SpamSum))
-                    hashers.Add(new Hasher(Hash.SpamSum));
+            if (hashes.HasFlag(Hash.CRC)) hashTypes.Add(HashType.CRC32);
+            if (hashes.HasFlag(Hash.MD5)) hashTypes.Add(HashType.MD5);
+            if (hashes.HasFlag(Hash.SHA1)) hashTypes.Add(HashType.SHA1);
+            if (hashes.HasFlag(Hash.SHA256)) hashTypes.Add(HashType.SHA256);
+            if (hashes.HasFlag(Hash.SHA384)) hashTypes.Add(HashType.SHA384);
+            if (hashes.HasFlag(Hash.SHA512)) hashTypes.Add(HashType.SHA512);
+            if (hashes.HasFlag(Hash.SpamSum)) hashTypes.Add(HashType.SpamSum);
 #endif
 
-                // Initialize the hashing helpers
-                int buffersize = 3 * 1024 * 1024;
-                byte[] buffer = new byte[buffersize];
-
-                /*
-                Please note that some of the following code is adapted from
-                RomVault. This is a modified version of how RomVault does
-                threaded hashing. As such, some of the terminology and code
-                is the same, though variable names and comments may have
-                been tweaked to better fit this code base.
-                */
-
-                // Pre load the buffer
-                int next = buffersize > size ? (int)size : buffersize;
-                int current = input.Read(buffer, 0, next);
-                long refsize = size;
-
-                while (refsize > 0)
-                {
-                    // Run hashes in parallel
-                    if (current > 0)
-#if NET452_OR_GREATER || NETCOREAPP
-                        Parallel.ForEach(hashers, Globals.ParallelOptions, h => h.Process(buffer, current));
-#elif NET40_OR_GREATER
-                        Parallel.ForEach(hashers, h => h.Process(buffer, current));
-#else
-                        foreach (var h in hashers)
-                        {
-                            h.Process(buffer, current);
-                        }
-#endif
-
-                    // Load the next buffer
-                    refsize -= current;
-                    next = buffersize > refsize ? (int)refsize : buffersize;
-
-                    if (next > 0)
-                    {
-                        current = input.Read(buffer, 0, next);
-                        if (current == 0)
-                            break;
-                    }
-                }
-
-                // Finalize all hashing helpers
-#if NET452_OR_GREATER || NETCOREAPP
-                Parallel.ForEach(hashers, Globals.ParallelOptions, h => h.Terminate());
-#elif NET40_OR_GREATER
-                Parallel.ForEach(hashers, h => h.Terminate());
-#else
-                foreach (var h in hashers)
-                {
-                    h.Terminate();
-                }
-#endif
-
-                // Get the results
-                BaseFile baseFile = new()
-                {
-                    Size = size,
-#if NETFRAMEWORK
-                    CRC = (hashes & Hash.CRC) != 0 ? hashers.First(h => h.HashType == Hash.CRC).GetHash() : null,
-                    MD5 = (hashes & Hash.MD5) != 0 ? hashers.First(h => h.HashType == Hash.MD5).GetHash() : null,
-                    SHA1 = (hashes & Hash.SHA1) != 0 ? hashers.First(h => h.HashType == Hash.SHA1).GetHash() : null,
-                    SHA256 = (hashes & Hash.SHA256) != 0 ? hashers.First(h => h.HashType == Hash.SHA256).GetHash() : null,
-                    SHA384 = (hashes & Hash.SHA384) != 0 ? hashers.First(h => h.HashType == Hash.SHA384).GetHash() : null,
-                    SHA512 = (hashes & Hash.SHA512) != 0 ? hashers.First(h => h.HashType == Hash.SHA512).GetHash() : null,
-                    SpamSum = (hashes & Hash.SpamSum) != 0 ? hashers.First(h => h.HashType == Hash.SpamSum).GetHash() : null,
-#else
-                    CRC = hashes.HasFlag(Hash.CRC) ? hashers.First(h => h.HashType == Hash.CRC).GetHash() : null,
-                    MD5 = hashes.HasFlag(Hash.MD5) ? hashers.First(h => h.HashType == Hash.MD5).GetHash() : null,
-                    SHA1 = hashes.HasFlag(Hash.SHA1) ? hashers.First(h => h.HashType == Hash.SHA1).GetHash() : null,
-                    SHA256 = hashes.HasFlag(Hash.SHA256) ? hashers.First(h => h.HashType == Hash.SHA256).GetHash() : null,
-                    SHA384 = hashes.HasFlag(Hash.SHA384) ? hashers.First(h => h.HashType == Hash.SHA384).GetHash() : null,
-                    SHA512 = hashes.HasFlag(Hash.SHA512) ? hashers.First(h => h.HashType == Hash.SHA512).GetHash() : null,
-                    SpamSum = hashes.HasFlag(Hash.SpamSum) ? hashers.First(h => h.HashType == Hash.SpamSum).GetHash() : null,
-#endif
-                };
-
-                // Dispose of the hashers
-                hashers.ForEach(h => h.Dispose());
-
-                return baseFile;
-            }
-            catch (IOException ex)
-            {
-                LoggerImpl.Warning(ex, "An exception occurred during hashing.");
+            // Run the hashing on the input stream
+            var hashDict = HashTool.GetStreamHashes(input, hashTypes.ToArray());
+            if (hashDict == null)
                 return new BaseFile();
-            }
-            finally
+
+            // Create a base file with the resulting hashes
+            var baseFile = new BaseFile()
             {
-                if (!keepReadOpen)
-                    input.Dispose();
-                else
-                    input.SeekIfPossible();
-            }
+                Size = size,
+#if NETFRAMEWORK
+                CRC = (hashes & Hash.CRC) != 0 ? TextHelper.StringToByteArray(hashDict[HashType.CRC32]) : null,
+                MD5 = (hashes & Hash.MD5) != 0 ? TextHelper.StringToByteArray(hashDict[HashType.MD5]) : null,
+                SHA1 = (hashes & Hash.SHA1) != 0 ? TextHelper.StringToByteArray(hashDict[HashType.SHA1]) : null,
+                SHA256 = (hashes & Hash.SHA256) != 0 ? TextHelper.StringToByteArray(hashDict[HashType.SHA256]) : null,
+                SHA384 = (hashes & Hash.SHA384) != 0 ? TextHelper.StringToByteArray(hashDict[HashType.SHA384]) : null,
+                SHA512 = (hashes & Hash.SHA512) != 0 ? TextHelper.StringToByteArray(hashDict[HashType.SHA512]) : null,
+                SpamSum = (hashes & Hash.SpamSum) != 0 ? TextHelper.StringToByteArray(hashDict[HashType.SpamSum]) : null,
+#else
+                CRC = hashes.HasFlag(Hash.CRC) ? TextHelper.StringToByteArray(hashDict[HashType.CRC32]) : null,
+                MD5 = hashes.HasFlag(Hash.MD5) ? TextHelper.StringToByteArray(hashDict[HashType.MD5]) : null,
+                SHA1 = hashes.HasFlag(Hash.SHA1) ? TextHelper.StringToByteArray(hashDict[HashType.SHA1]) : null,
+                SHA256 = hashes.HasFlag(Hash.SHA256) ? TextHelper.StringToByteArray(hashDict[HashType.SHA256]) : null,
+                SHA384 = hashes.HasFlag(Hash.SHA384) ? TextHelper.StringToByteArray(hashDict[HashType.SHA384]) : null,
+                SHA512 = hashes.HasFlag(Hash.SHA512) ? TextHelper.StringToByteArray(hashDict[HashType.SHA512]) : null,
+                SpamSum = hashes.HasFlag(Hash.SpamSum) ? TextHelper.StringToByteArray(hashDict[HashType.SpamSum]) : null,
+#endif
+            };
+
+            // Deal with the input stream
+            if (!keepReadOpen)
+                input.Dispose();
+            else
+                input.SeekIfPossible();
+
+            return baseFile;
         }
 
         /// <summary>
