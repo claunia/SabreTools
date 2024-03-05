@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-
-using SabreTools.Core;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -14,10 +11,8 @@ namespace SabreTools.Test.DatFiles
         public void SetFieldsDatItemTest()
         {
             var datItem = CreateDatItem();
-            Setter setter = new()
-            {
-                ItemFieldMappings = new Dictionary<DatItemField, string> { [DatItemField.Name] = "bar" }
-            };
+            var setter = new Setter();
+            setter.PopulateSetters("datitem.name", "bar");
             setter.SetFields(datItem);
             Assert.Equal("bar", datItem.GetName());
         }
@@ -26,10 +21,8 @@ namespace SabreTools.Test.DatFiles
         public void SetFieldsMachineTest()
         {
             var datItem = CreateDatItem();
-            Setter setter = new()
-            {
-                MachineFieldMappings = new Dictionary<MachineField, string> { [MachineField.Name] = "foo" }
-            };
+            var setter = new Setter();
+            setter.PopulateSetters("machine.name", "foo");
             setter.SetFields(datItem.Machine);
             Assert.Equal("foo", datItem.Machine.Name);
         }

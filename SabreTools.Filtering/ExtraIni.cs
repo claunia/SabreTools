@@ -77,7 +77,7 @@ namespace SabreTools.Filtering
         }
 
         #endregion
-    
+
         #region Running
 
         /// <summary>
@@ -100,11 +100,8 @@ namespace SabreTools.Filtering
                 datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None);
 
                 // Create mappings based on the extra items
-                var combinedMachineMaps = CombineMachineExtras();
-                var combinedDatItemMaps = CombineDatItemExtras();
-
-                // Now get the combined set of keys
-                var machines = combinedMachineMaps.Keys.Concat(combinedDatItemMaps.Keys).Distinct();
+                var combinedMaps = CombineExtras();
+                var machines = combinedMaps.Keys;
 
                 // Apply the mappings
                 foreach (string machine in machines)
@@ -119,16 +116,11 @@ namespace SabreTools.Filtering
                         continue;
 
                     // Try to get the map values, if possible
-                    combinedMachineMaps.TryGetValue(machine, out var machineMappings);
-                    combinedDatItemMaps.TryGetValue(machine, out var datItemMappings);
+                    combinedMaps.TryGetValue(machine, out var mappings);
 
                     // Create a setter with the new mappings
                     var setter = new Setter();
-                    setter.PopulateSettersFromList()
-                    {
-                        MachineFieldMappings = machineMappings,
-                        ItemFieldMappings = datItemMappings,
-                    };
+                    setter.PopulateSettersFromDictionary(mappings);
 
                     // Loop through and set the fields accordingly
                     foreach (var datItem in datItems)
@@ -155,81 +147,26 @@ namespace SabreTools.Filtering
         /// Combine ExtraIni fields
         /// </summary>
         /// <returns>Mapping dictionary from machine name to field mapping</returns>
-        private (List<string> Keys, List<string> Values) CombineExtras()
+        private Dictionary<string, Dictionary<(string, string), string>> CombineExtras()
         {
-            var keys = new List<string>();
-            var values = new List<string>();
+            var machineMap = new Dictionary<string, Dictionary<(string, string), string>>();
 
             // Loop through each of the extras
             foreach (ExtraIniItem item in Items)
             {
-                
-
                 foreach (var mapping in item.Mappings)
                 {
                     string machineName = mapping.Key;
                     string value = mapping.Value;
-                        
-                    mapping[machineName] = new Dictionary<string, string>
-                    {
-                        [item.FieldName!] = value,
-                    };
-                }
-            }
 
-            return mapping;
-        }
+                    if (!machineMap.ContainsKey(machineName))
+                        machineMap[machineName] = [];
 
-        /// <summary>
-        /// Combine MachineField-based ExtraIni fields
-        /// </summary>
-        /// <returns>Mapping dictionary from machine name to field mapping</returns>
-        private Dictionary<string, Dictionary<string, string>> CombineMachineExtras()
-        {
-            var machineMap = new Dictionary<string, Dictionary<string, string>>();
-
-            // Loop through each of the extras
-            foreach (ExtraIniItem item in Items.Where(i => i.MachineField != null))
-            {
-                foreach (var mapping in item.Mappings)
-                {
-                    string machineName = mapping.Key;
-                    string value = mapping.Value;
-                        
-                    machineMap[machineName] = new Dictionary<string, string>
-                    {
-                        [item.MachineField!] = value,
-                    };
+                    machineMap[machineName][item.FieldName!] = value;
                 }
             }
 
             return machineMap;
-        }
-
-        /// <summary>
-        /// Combine DatItemField-based ExtraIni fields
-        /// </summary>
-        /// <returns>Mapping dictionary from machine name to field mapping</returns>
-        private Dictionary<string, Dictionary<string, string>> CombineDatItemExtras()
-        {
-            var datItemMap = new Dictionary<string, Dictionary<string, string>>();
-
-            // Loop through each of the extras
-            foreach (ExtraIniItem item in Items.Where(i => i.ItemField != null))
-            {
-                foreach (var mapping in item.Mappings)
-                {
-                    string machineName = mapping.Key;
-                    string value = mapping.Value;
-                        
-                    datItemMap[machineName] = new Dictionary<string, string>()
-                    {
-                        [item.ItemField!] = value,
-                    };
-                }
-            }
-
-            return datItemMap;
         }
 
         #endregion

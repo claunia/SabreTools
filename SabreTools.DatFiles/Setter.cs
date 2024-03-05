@@ -80,6 +80,31 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Populate the setters using a set of field names
+        /// </summary>
+        /// <param name="mappings">Dictionary of mappings</param>
+        public void PopulateSettersFromDictionary(Dictionary<(string, string), string>? mappings)
+        {
+            // If the dictionary is null or empty, just return
+            if (mappings == null || mappings.Count == 0)
+                return;
+
+            var watch = new InternalStopwatch("Populating setters from dictionary");
+
+            // Now we loop through and get values for everything
+            foreach (var mapping in mappings)
+            {
+                string field = $"{mapping.Key.Item1}.{mapping.Key.Item2}";
+                string value = mapping.Value;
+
+                if (!SetSetter(field, value))
+                    logger.Warning($"The value {value} did not match any known field names. Please check the wiki for more details on supported field names.");
+            }
+
+            watch.Stop();
+        }
+
+        /// <summary>
         /// Set remover from a value
         /// </summary>
         /// <param name="field">Key for the remover to be set</param>

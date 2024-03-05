@@ -179,7 +179,7 @@ Reset the internal state:           reset();";
 
                 return commandName.ToLowerInvariant() switch
                 {
-                    "1g1r" => new OneGamePerRegionCommand(arguments), 
+                    "1g1r" => new OneGamePerRegionCommand(arguments),
                     "d2d" => new DFDCommand(arguments),
                     "dfd" => new DFDCommand(arguments),
                     "descname" => new DescriptionAsNameCommand(arguments),
@@ -292,7 +292,7 @@ Reset the internal state:           reset();";
                 dfdRemover.ApplyRemovals(batchState.DatFile);
             }
         }
-    
+
         /// <summary>
         /// Apply an extra INI
         /// </summary>
@@ -341,17 +341,12 @@ Reset the internal state:           reset();";
             public override void Process(BatchState batchState)
             {
                 // Read in the individual arguments
-                MachineField extraMachineField = Arguments[0].AsMachineField();
-                DatItemField extraDatItemField = Arguments[0].AsDatItemField();
+                (string?, string?) fieldName = SabreTools.Filter.FilterParser.ParseFilterId(Arguments[0]);
                 string extraFile = Arguments[1];
 
                 // Create the extra INI
-                ExtraIni extraIni = new();
-                ExtraIniItem extraIniItem = new()
-                {
-                    MachineField = extraMachineField,
-                    ItemField = extraDatItemField,
-                };
+                var extraIni = new ExtraIni();
+                var extraIniItem = new ExtraIniItem() { FieldName = fieldName };
                 extraIniItem.PopulateFromFile(extraFile);
                 extraIni.Items.Add(extraIniItem);
 
@@ -446,7 +441,7 @@ Reset the internal state:           reset();";
 
                 // Cleanup after the filter
                 // TODO: We might not want to remove immediately
-                batchState.DatFile.Items.ClearMarked(); 
+                batchState.DatFile.Items.ClearMarked();
                 batchState.DatFile.Items.ClearEmpty();
             }
         }
@@ -621,7 +616,7 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override void Process(BatchState batchState)
             {
-                Cleaner ogorCleaner = new() { OneGamePerRegion = true, RegionList = Arguments }; 
+                Cleaner ogorCleaner = new() { OneGamePerRegion = true, RegionList = Arguments };
                 ogorCleaner.ApplyCleaning(batchState.DatFile);
             }
         }
@@ -655,7 +650,7 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override void Process(BatchState batchState)
             {
-                Cleaner orpgCleaner = new() { OneRomPerGame = true }; 
+                Cleaner orpgCleaner = new() { OneRomPerGame = true };
                 orpgCleaner.ApplyCleaning(batchState.DatFile);
             }
         }
@@ -790,7 +785,7 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override void Process(BatchState batchState)
             {
-                Cleaner stripCleaner = new() { SceneDateStrip = true }; 
+                Cleaner stripCleaner = new() { SceneDateStrip = true };
                 stripCleaner.ApplyCleaning(batchState.DatFile);
             }
         }
@@ -836,7 +831,7 @@ Reset the internal state:           reset();";
                 // Read in the individual arguments
                 DatHeaderField field = Arguments[0].AsDatHeaderField();
                 string value = Arguments[1];
-                
+
                 // Set the header field
                 batchState.DatFile.Header.SetFields(new Dictionary<DatHeaderField, string> { [field] = value });
             }
