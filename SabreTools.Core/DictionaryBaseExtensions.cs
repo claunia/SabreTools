@@ -46,7 +46,7 @@ namespace SabreTools.Core
         #endregion
 
         #region Conversion
-        
+
         /// <summary>
         /// Convert a DatItem to a Rom
         /// </summary>
@@ -255,10 +255,11 @@ namespace SabreTools.Core
 
             // If we have a file that has no known size, rely on the hashes only
             if (selfSize == null && self.HashMatch(other))
+                return true;
 
-                // If we get a partial match
-                if (selfSize == otherSize && self.HashMatch(other))
-                    return true;
+            // If we get a partial match
+            if (selfSize == otherSize && self.HashMatch(other))
+                return true;
 
             // All other cases fail
             return false;
@@ -524,7 +525,7 @@ namespace SabreTools.Core
         }
 
         #endregion
-    
+
         #region Information Filling
 
         /// <summary>
@@ -647,7 +648,7 @@ namespace SabreTools.Core
         }
 
         #endregion
-    
+
         #region Suffix Generation
 
         /// <summary>
