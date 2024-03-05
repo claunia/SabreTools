@@ -615,6 +615,81 @@ namespace SabreTools.DatItems
             return FieldManipulator.RemoveField(_machine, fieldName);
         }
 
+        /// <summary>
+        /// Set a field in the Machine from a mapping string
+        /// </summary>
+        /// <param name="machineField">Machine field to set</param>
+        /// <param name="value">String representing the value to set</param>
+        /// <returns>True if the setting was successful, false otherwise</returns>
+        /// <remarks>This only performs minimal validation before setting</remarks>
+        public bool SetField(MachineField machineField, string value)
+        {
+            // Get the correct internal field name
+            string? fieldName = machineField switch
+            {
+                MachineField.Board => Models.Metadata.Machine.BoardKey,
+                MachineField.Buttons => Models.Metadata.Machine.ButtonsKey,
+                MachineField.Category => Models.Metadata.Machine.CategoryKey,
+                MachineField.CloneOf => Models.Metadata.Machine.CloneOfKey,
+                MachineField.CloneOfID => Models.Metadata.Machine.CloneOfIdKey,
+                MachineField.Comment => Models.Metadata.Machine.CommentKey,
+                MachineField.Control => Models.Metadata.Machine.ControlKey,
+                MachineField.Country => Models.Metadata.Machine.CountryKey,
+                //MachineField.CRC => Models.Metadata.Machine.CRCKey,
+                MachineField.Description => Models.Metadata.Machine.DescriptionKey,
+                //MachineField.Developer => Models.Metadata.Machine.DeveloperKey,
+                MachineField.DisplayCount => Models.Metadata.Machine.DisplayCountKey,
+                MachineField.DisplayType => Models.Metadata.Machine.DisplayTypeKey,
+                //MachineField.Enabled => Models.Metadata.Machine.EnabledKey,
+                MachineField.GenMSXID => Models.Metadata.Machine.GenMSXIDKey,
+                //MachineField.Genre => Models.Metadata.Machine.GenreKey,
+                MachineField.History => Models.Metadata.Machine.HistoryKey,
+                MachineField.ID => Models.Metadata.Machine.IdKey,
+                MachineField.Manufacturer => Models.Metadata.Machine.ManufacturerKey,
+                MachineField.Name => Models.Metadata.Machine.NameKey,
+                MachineField.Players => Models.Metadata.Machine.PlayersKey,
+                MachineField.Publisher => Models.Metadata.Machine.PublisherKey,
+                //MachineField.Ratings => Models.Metadata.Machine.RatingsKey,
+                MachineField.RebuildTo => Models.Metadata.Machine.RebuildToKey,
+                //MachineField.RelatedTo => Models.Metadata.Machine.RelatedToKey,
+                MachineField.RomOf => Models.Metadata.Machine.RomOfKey,
+                MachineField.Rotation => Models.Metadata.Machine.RotationKey,
+                MachineField.Runnable => Models.Metadata.Machine.RunnableKey,
+                MachineField.SampleOf => Models.Metadata.Machine.SampleOfKey,
+                //MachineField.Score => Models.Metadata.Machine.ScoreKey,
+                MachineField.SourceFile => Models.Metadata.Machine.SourceFileKey,
+                MachineField.Status => Models.Metadata.Machine.StatusKey,
+                //MachineField.Subgenre => Models.Metadata.Machine.SubgenreKey,
+                MachineField.Supported => Models.Metadata.Machine.SupportedKey,
+                MachineField.System => Models.Metadata.Machine.SystemKey,
+                //MachineField.TitleID => Models.Metadata.Machine.TitleIDKey,
+                //MachineField.Type => Models.Metadata.Machine.TypeKey,
+                MachineField.Year => Models.Metadata.Machine.YearKey,
+                _ => null,
+            };
+
+            // A null value means special handling is needed
+            if (fieldName == null)
+            {
+                switch (machineField)
+                {
+                    case MachineField.CRC: Crc = value.AsYesNo(); return true;
+                    case MachineField.Developer: Developer = value; return true;
+                    case MachineField.Enabled: Enabled = value; return true;
+                    case MachineField.Genre: Genre = value; return true;
+                    case MachineField.Ratings: Ratings = value; return true;
+                    case MachineField.RelatedTo: RelatedTo = value; return true;
+                    case MachineField.Score: Score = value; return true;
+                    case MachineField.Subgenre: Subgenre = value; return true;
+                    case MachineField.TitleID: TitleID = value; return true;
+                    case MachineField.Type: MachineType = value.AsMachineType(); return true;
+                }
+            }
+
+            // Remove the field and return
+            return FieldManipulator.SetField(_machine, fieldName, value);
+        }
+
         #endregion
     }
 }

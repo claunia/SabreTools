@@ -371,6 +371,8 @@ namespace SabreTools.DatItems
 
         #endregion
 
+        // TODO: These should not take a field enum
+        // TODO: These should be item-specific for better filtering
         #region Manipulation
 
         /// <summary>
@@ -379,6 +381,15 @@ namespace SabreTools.DatItems
         /// <param name="datItemField">Item field to remove</param>
         /// <returns>True if the removal was successful, false otherwise</returns>
         public abstract bool RemoveField(DatItemField datItemField);
+
+        /// <summary>
+        /// Set a field in the DatItem from a mapping string
+        /// </summary>
+        /// <param name="machineField">Item field to set</param>
+        /// <param name="value">String representing the value to set</param>
+        /// <returns>True if the setting was successful, false otherwise</returns>
+        /// <remarks>This only performs minimal validation before setting</remarks>
+        public abstract bool SetField(DatItemField datItemField, string value);
 
         #endregion
 

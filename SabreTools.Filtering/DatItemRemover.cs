@@ -102,6 +102,7 @@ namespace SabreTools.Filtering
                 case DipValue dipValue: RemoveFields(dipValue); break;
                 case Disk disk: RemoveFields(disk); break;
                 case Input input: RemoveFields(input); break;
+                case Part part: RemoveFields(part); break;
                 case Port port: RemoveFields(port); break;
                 case Rom rom: RemoveFields(rom); break;
                 case Slot slot: RemoveFields(slot); break;
@@ -114,8 +115,11 @@ namespace SabreTools.Filtering
         /// Remove fields with given values
         /// </summary>
         /// <param name="machine">Machine to remove fields from</param>
-        private void RemoveFields(Machine machine)
+        private void RemoveFields(Machine? machine)
         {
+            if (machine == null)
+                return;
+
             foreach (var machineField in MachineFields)
             {
                 machine.RemoveField(machineField);
@@ -323,7 +327,7 @@ namespace SabreTools.Filtering
                 RemoveFields(rom.DataArea!);
 
             if (rom.PartSpecified)
-                RemoveFields(rom.Part!);
+                RemoveFields(rom.Part! as DatItem);
         }
 
         /// <summary>

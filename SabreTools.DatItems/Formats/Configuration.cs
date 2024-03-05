@@ -149,6 +149,21 @@ namespace SabreTools.DatItems.Formats
             return FieldManipulator.RemoveField(_internal, fieldName);
         }
 
+        /// <inheritdoc/>
+        public override bool SetField(DatItemField datItemField, string value)
+        {
+           // Get the correct internal field name
+            string? fieldName = datItemField switch
+            {
+                DatItemField.Mask => Models.Metadata.Configuration.MaskKey,
+                DatItemField.Tag => Models.Metadata.Configuration.TagKey,
+                _ => null,
+            };
+
+            // Set the field and return
+            return FieldManipulator.SetField(_internal, fieldName, value);
+        }
+
         #endregion
     }
 }

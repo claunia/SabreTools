@@ -63,6 +63,9 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc/>
         public override bool RemoveField(DatItemField datItemField) => true;
 
+        /// <inheritdoc/>
+        public override bool SetField(DatItemField datItemField, string value) => true;
+
         #endregion
     }
 }

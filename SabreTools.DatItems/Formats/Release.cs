@@ -137,6 +137,23 @@ namespace SabreTools.DatItems.Formats
             return FieldManipulator.RemoveField(_internal, fieldName);
         }
 
+        /// <inheritdoc/>
+        public override bool SetField(DatItemField datItemField, string value)
+        {
+            // Get the correct internal field name
+            string? fieldName = datItemField switch
+            {
+                DatItemField.Date => Models.Metadata.Release.DateKey,
+                DatItemField.Default => Models.Metadata.Release.DefaultKey,
+                DatItemField.Language => Models.Metadata.Release.LanguageKey,
+                DatItemField.Region => Models.Metadata.Release.RegionKey,
+                _ => null,
+            };
+
+            // Set the field and return
+            return FieldManipulator.SetField(_internal, fieldName, value);
+        }
+
         #endregion
     }
 }

@@ -309,6 +309,27 @@ namespace SabreTools.DatItems.Formats
             return FieldManipulator.RemoveField(_internal, fieldName);
         }
 
+        /// <inheritdoc/>
+        public override bool SetField(DatItemField datItemField, string value)
+        {
+            // Get the correct internal field name
+            string? fieldName = datItemField switch
+            {
+                DatItemField.Index => Models.Metadata.Disk.IndexKey,
+                DatItemField.MD5 => Models.Metadata.Disk.MD5Key,
+                DatItemField.Merge => Models.Metadata.Disk.MergeKey,
+                DatItemField.Optional => Models.Metadata.Disk.OptionalKey,
+                DatItemField.Region => Models.Metadata.Disk.RegionKey,
+                DatItemField.SHA1 => Models.Metadata.Disk.SHA1Key,
+                DatItemField.Status => Models.Metadata.Disk.StatusKey,
+                DatItemField.Writable => Models.Metadata.Disk.WritableKey,
+                _ => null,
+            };
+
+            // Set the field and return
+            return FieldManipulator.SetField(_internal, fieldName, value);
+        }
+
         #endregion
     
         #region Sorting and Merging
