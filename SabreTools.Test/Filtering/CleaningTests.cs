@@ -75,7 +75,7 @@ namespace SabreTools.Test.Filtering
         [InlineData("", "name")]
         [InlineData("C:\\Normal\\Depth\\Path", "name")]
         [InlineData("C:\\AbnormalFolderLengthPath\\ThatReallyPushesTheLimit\\OfHowLongYou\\ReallyShouldNameThings\\AndItGetsEvenWorse\\TheMoreSubfoldersThatYouTraverse\\BecauseWhyWouldYouStop\\AtSomethingReasonable\\LikeReallyThisIsGettingDumb\\AndIKnowItsJustATest\\ButNotAsMuchAsMe", "nam")]
-        public void CleanDatItemTrimTest(string root, string expected)
+        public void CleanDatItemTrimTest(string? root, string expected)
         {
             // Setup cleaner
             var cleaner = new Cleaner

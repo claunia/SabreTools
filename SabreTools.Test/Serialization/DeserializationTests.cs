@@ -33,6 +33,7 @@ namespace SabreTools.Test.Parser
             Assert.Null(dat.ADDITIONAL_ELEMENTS);
             foreach (var file in dat.File)
             {
+                Assert.NotNull(file);
                 Assert.Null(file.ADDITIONAL_ATTRIBUTES);
                 Assert.Null(file.ADDITIONAL_ELEMENTS);
             }
@@ -55,6 +56,7 @@ namespace SabreTools.Test.Parser
             // Validate we're not missing any attributes or elements
             foreach (var file in dat.Row)
             {
+                Assert.NotNull(file);
                 Assert.Null(file.ADDITIONAL_ELEMENTS);
             }
         }
@@ -80,75 +82,92 @@ namespace SabreTools.Test.Parser
             {
                 Assert.Null(dat?.ClrMamePro);
             }
+
+            Assert.NotNull(dat?.Game);
             Assert.Equal(count, dat.Game.Length);
 
             // Validate we're not missing any attributes or elements
+            Assert.NotNull(dat?.ADDITIONAL_ELEMENTS);
             Assert.Empty(dat.ADDITIONAL_ELEMENTS);
             foreach (var game in dat.Game)
             {
+                Assert.NotNull(game?.ADDITIONAL_ELEMENTS);
                 Assert.Empty(game.ADDITIONAL_ELEMENTS);
                 foreach (var release in game.Release ?? Array.Empty<Models.ClrMamePro.Release>())
                 {
+                    Assert.NotNull(release?.ADDITIONAL_ELEMENTS);
                     Assert.Empty(release.ADDITIONAL_ELEMENTS);
                 }
 
                 foreach (var biosset in game.BiosSet ?? Array.Empty<Models.ClrMamePro.BiosSet>())
                 {
+                    Assert.NotNull(biosset?.ADDITIONAL_ELEMENTS);
                     Assert.Empty(biosset.ADDITIONAL_ELEMENTS);
                 }
 
                 foreach (var rom in game.Rom ?? Array.Empty<Models.ClrMamePro.Rom>())
                 {
+                    Assert.NotNull(rom?.ADDITIONAL_ELEMENTS);
                     Assert.Empty(rom.ADDITIONAL_ELEMENTS);
                 }
 
                 foreach (var disk in game.Disk ?? Array.Empty<Models.ClrMamePro.Disk>())
                 {
+                    Assert.NotNull(disk?.ADDITIONAL_ELEMENTS);
                     Assert.Empty(disk.ADDITIONAL_ELEMENTS);
                 }
 
                 foreach (var media in game.Media ?? Array.Empty<Models.ClrMamePro.Media>())
                 {
+                    Assert.NotNull(media?.ADDITIONAL_ELEMENTS);
                     Assert.Empty(media.ADDITIONAL_ELEMENTS);
                 }
 
                 foreach (var sample in game.Sample ?? Array.Empty<Models.ClrMamePro.Sample>())
                 {
+                    Assert.NotNull(sample?.ADDITIONAL_ELEMENTS);
                     Assert.Empty(sample.ADDITIONAL_ELEMENTS);
                 }
 
                 foreach (var archive in game.Archive ?? Array.Empty<Models.ClrMamePro.Archive>())
                 {
+                    Assert.NotNull(archive?.ADDITIONAL_ELEMENTS);
                     Assert.Empty(archive.ADDITIONAL_ELEMENTS);
                 }
 
                 foreach (var chip in game.Chip ?? Array.Empty<Models.ClrMamePro.Chip>())
                 {
+                    Assert.NotNull(chip?.ADDITIONAL_ELEMENTS);
                     Assert.Empty(chip.ADDITIONAL_ELEMENTS);
                 }
 
                 foreach (var video in game.Video ?? Array.Empty<Models.ClrMamePro.Video>())
                 {
+                    Assert.NotNull(video?.ADDITIONAL_ELEMENTS);
                     Assert.Empty(video.ADDITIONAL_ELEMENTS);
                 }
 
                 if (game.Sound != null)
                 {
+                    Assert.NotNull(game.Sound?.ADDITIONAL_ELEMENTS);
                     Assert.Empty(game.Sound.ADDITIONAL_ELEMENTS);
                 }
 
                 if (game.Input != null)
                 {
+                    Assert.NotNull(game.Input?.ADDITIONAL_ELEMENTS);
                     Assert.Empty(game.Input.ADDITIONAL_ELEMENTS);
                 }
 
                 foreach (var dipswitch in game.DipSwitch ?? Array.Empty<Models.ClrMamePro.DipSwitch>())
                 {
+                    Assert.NotNull(dipswitch?.ADDITIONAL_ELEMENTS);
                     Assert.Empty(dipswitch.ADDITIONAL_ELEMENTS);
                 }
 
                 if (game.Driver != null)
                 {
+                    Assert.NotNull(game.Driver?.ADDITIONAL_ELEMENTS);
                     Assert.Empty(game.Driver.ADDITIONAL_ELEMENTS);
                 }
             }
@@ -167,16 +186,25 @@ namespace SabreTools.Test.Parser
 
             // Validate the values
             Assert.NotNull(dat?.DosCenter);
+
+            Assert.NotNull(dat?.Game);
             Assert.Equal(count, dat.Game.Length);
 
             // Validate we're not missing any attributes or elements
+            Assert.NotNull(dat?.ADDITIONAL_ELEMENTS);
             Assert.Empty(dat.ADDITIONAL_ELEMENTS);
+
+            Assert.NotNull(dat.DosCenter?.ADDITIONAL_ELEMENTS);
             Assert.Empty(dat.DosCenter.ADDITIONAL_ELEMENTS);
             foreach (var game in dat.Game)
             {
+                Assert.NotNull(game?.ADDITIONAL_ELEMENTS);
                 Assert.Empty(game.ADDITIONAL_ELEMENTS);
+
+                Assert.NotNull(game.File);
                 foreach (var file in game.File)
                 {
+                    Assert.NotNull(file?.ADDITIONAL_ELEMENTS);
                     Assert.Empty(file.ADDITIONAL_ELEMENTS);
                 }
             }
@@ -225,24 +253,31 @@ namespace SabreTools.Test.Parser
             switch (hash)
             {
                 case Serialization.Hash.CRC:
+                    Assert.NotNull(dat.SFV);
                     Assert.Equal(count, dat.SFV.Length);
                     break;
                 case Serialization.Hash.MD5:
+                    Assert.NotNull(dat.MD5);
                     Assert.Equal(count, dat.MD5.Length);
                     break;
                 case Serialization.Hash.SHA1:
+                    Assert.NotNull(dat.SHA1);
                     Assert.Equal(count, dat.SHA1.Length);
                     break;
                 case Serialization.Hash.SHA256:
+                    Assert.NotNull(dat.SHA256);
                     Assert.Equal(count, dat.SHA256.Length);
                     break;
                 case Serialization.Hash.SHA384:
+                    Assert.NotNull(dat.SHA384);
                     Assert.Equal(count, dat.SHA384.Length);
                     break;
                 case Serialization.Hash.SHA512:
+                    Assert.NotNull(dat.SHA512);
                     Assert.Equal(count, dat.SHA512.Length);
                     break;
                 case Serialization.Hash.SpamSum:
+                    Assert.NotNull(dat.SpamSum);
                     Assert.Equal(count, dat.SpamSum.Length);
                     break;
                 default:
@@ -265,6 +300,7 @@ namespace SabreTools.Test.Parser
             Assert.Equal(count, dat.Set.Length);
 
             // Validate we're not missing any attributes or elements
+            Assert.NotNull(dat.ADDITIONAL_ELEMENTS);
             Assert.Empty(dat.ADDITIONAL_ELEMENTS);
         }
 
@@ -611,70 +647,71 @@ namespace SabreTools.Test.Parser
 
             foreach (var dir in dat.Dir ?? Array.Empty<Models.Logiqx.Dir>())
             {
+                Assert.NotNull(dir.Game);
                 foreach (var game in dir.Game)
                 {
                     Assert.Null(game.ADDITIONAL_ATTRIBUTES);
                     Assert.Null(game.ADDITIONAL_ELEMENTS);
 
                     foreach (var item in game.Release ?? Array.Empty<Models.Logiqx.Release>())
-                {
-                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
-                    Assert.Null(item.ADDITIONAL_ELEMENTS);
-                }
+                    {
+                        Assert.Null(item.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(item.ADDITIONAL_ELEMENTS);
+                    }
 
-                foreach (var item in game.BiosSet ?? Array.Empty<Models.Logiqx.BiosSet>())
-                {
-                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
-                    Assert.Null(item.ADDITIONAL_ELEMENTS);
-                }
+                    foreach (var item in game.BiosSet ?? Array.Empty<Models.Logiqx.BiosSet>())
+                    {
+                        Assert.Null(item.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(item.ADDITIONAL_ELEMENTS);
+                    }
 
-                foreach (var item in game.Rom ?? Array.Empty<Models.Logiqx.Rom>())
-                {
-                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
-                    Assert.Null(item.ADDITIONAL_ELEMENTS);
-                }
+                    foreach (var item in game.Rom ?? Array.Empty<Models.Logiqx.Rom>())
+                    {
+                        Assert.Null(item.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(item.ADDITIONAL_ELEMENTS);
+                    }
 
-                foreach (var item in game.Disk ?? Array.Empty<Models.Logiqx.Disk>())
-                {
-                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
-                    Assert.Null(item.ADDITIONAL_ELEMENTS);
-                }
+                    foreach (var item in game.Disk ?? Array.Empty<Models.Logiqx.Disk>())
+                    {
+                        Assert.Null(item.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(item.ADDITIONAL_ELEMENTS);
+                    }
 
-                foreach (var item in game.Media ?? Array.Empty<Models.Logiqx.Media>())
-                {
-                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
-                    Assert.Null(item.ADDITIONAL_ELEMENTS);
-                }
+                    foreach (var item in game.Media ?? Array.Empty<Models.Logiqx.Media>())
+                    {
+                        Assert.Null(item.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(item.ADDITIONAL_ELEMENTS);
+                    }
 
-                foreach (var item in game.DeviceRef ?? Array.Empty<Models.Logiqx.DeviceRef>())
-                {
-                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
-                    Assert.Null(item.ADDITIONAL_ELEMENTS);
-                }
+                    foreach (var item in game.DeviceRef ?? Array.Empty<Models.Logiqx.DeviceRef>())
+                    {
+                        Assert.Null(item.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(item.ADDITIONAL_ELEMENTS);
+                    }
 
-                foreach (var item in game.Sample ?? Array.Empty<Models.Logiqx.Sample>())
-                {
-                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
-                    Assert.Null(item.ADDITIONAL_ELEMENTS);
-                }
+                    foreach (var item in game.Sample ?? Array.Empty<Models.Logiqx.Sample>())
+                    {
+                        Assert.Null(item.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(item.ADDITIONAL_ELEMENTS);
+                    }
 
-                foreach (var item in game.Archive ?? Array.Empty<Models.Logiqx.Archive>())
-                {
-                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
-                    Assert.Null(item.ADDITIONAL_ELEMENTS);
-                }
+                    foreach (var item in game.Archive ?? Array.Empty<Models.Logiqx.Archive>())
+                    {
+                        Assert.Null(item.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(item.ADDITIONAL_ELEMENTS);
+                    }
 
-                if (game.Driver != null)
-                {
-                    Assert.Null(game.Driver.ADDITIONAL_ATTRIBUTES);
-                    Assert.Null(game.Driver.ADDITIONAL_ELEMENTS);
-                }
+                    if (game.Driver != null)
+                    {
+                        Assert.Null(game.Driver.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(game.Driver.ADDITIONAL_ELEMENTS);
+                    }
 
-                foreach (var item in game.SoftwareList ?? Array.Empty<Models.Logiqx.SoftwareList>())
-                {
-                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
-                    Assert.Null(item.ADDITIONAL_ELEMENTS);
-                }
+                    foreach (var item in game.SoftwareList ?? Array.Empty<Models.Logiqx.SoftwareList>())
+                    {
+                        Assert.Null(item.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(item.ADDITIONAL_ELEMENTS);
+                    }
 
                     if (game.Trurip != null)
                     {
@@ -949,18 +986,29 @@ namespace SabreTools.Test.Parser
             Assert.Equal(count, dat.Games.Rom.Length);
 
             // Validate we're not missing any attributes or elements
+            Assert.NotNull(dat.ADDITIONAL_ELEMENTS);
             Assert.Empty(dat.ADDITIONAL_ELEMENTS);
             if (dat.Credits != null)
+            {
+                Assert.NotNull(dat.Credits.ADDITIONAL_ELEMENTS);
                 Assert.Empty(dat.Credits.ADDITIONAL_ELEMENTS);
+            }
 
             if (dat.Dat != null)
+            {
+                Assert.NotNull(dat.Dat.ADDITIONAL_ELEMENTS);
                 Assert.Empty(dat.Dat.ADDITIONAL_ELEMENTS);
+            }
 
             if (dat.Emulator != null)
+            {
+                Assert.NotNull(dat.Emulator.ADDITIONAL_ELEMENTS);
                 Assert.Empty(dat.Emulator.ADDITIONAL_ELEMENTS);
+            }
 
             if (dat.Games != null)
             {
+                Assert.NotNull(dat.Games.ADDITIONAL_ELEMENTS);
                 Assert.Empty(dat.Games.ADDITIONAL_ELEMENTS);
                 foreach (var rom in dat.Games.Rom ?? Array.Empty<Models.RomCenter.Rom>())
                 {
@@ -985,7 +1033,7 @@ namespace SabreTools.Test.Parser
             var dat = new Serialization.Files.SeparatedValue().Deserialize(filename, delim);
 
             // Validate the values
-            Assert.NotNull(dat);
+            Assert.NotNull(dat?.Row);
             Assert.Equal(count, dat.Row.Length);
 
             // Validate we're not missing any attributes or elements

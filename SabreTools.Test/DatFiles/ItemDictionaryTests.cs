@@ -108,8 +108,10 @@ namespace SabreTools.Test.DatFiles
             };
 
             dict.ClearMarked();
-            Assert.Single(dict.Keys);
-            Assert.Single(dict["game-1"]);
+            string key = Assert.Single(dict.Keys);
+            Assert.Equal("game-1", key);
+            Assert.NotNull(dict[key]);
+            Assert.Single(dict[key]!);
         }
     
         [Theory]

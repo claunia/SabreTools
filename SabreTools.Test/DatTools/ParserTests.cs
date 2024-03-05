@@ -35,7 +35,7 @@ namespace SabreTools.Test.DatTools
         [InlineData("test-sha384.sha384", DatFormat.RedumpSHA384, 1)]
         [InlineData("test-sha512.sha512", DatFormat.RedumpSHA512, 1)]
         [InlineData("test-spamsum.spamsum", DatFormat.RedumpSpamSum, 1)]
-        public void CreateAndParseTest(string filename, DatFormat datFormat, int totalCount)
+        public void CreateAndParseTest(string? filename, DatFormat datFormat, int totalCount)
         {
             // For all filenames, add the local path for test data
             if (filename != null)

@@ -29,8 +29,12 @@ namespace SabreTools.DatTools
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
-        public static DatFile CreateAndParse(string filename, bool statsOnly = false, bool throwOnError = false)
+        public static DatFile CreateAndParse(string? filename, bool statsOnly = false, bool throwOnError = false)
         {
+            // Null filenames are invalid
+            if (filename == null)
+                return DatFile.Create();
+
             DatFile datFile = DatFile.Create();
             ParseInto(datFile, new ParentablePath(filename), statsOnly: statsOnly, throwOnError: throwOnError);
             return datFile;

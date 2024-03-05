@@ -11,13 +11,15 @@ namespace SabreTools.Test.Filtering
         public void PopulateExclusionNullListTest()
         {
             // Setup the list
-            List<string> exclusions = null;
+            List<string>? exclusions = null;
 
             // Setup the remover
             var remover = new Remover();
             remover.PopulateExclusionsFromList(exclusions);
 
             // Check the exclusion lists
+            Assert.NotNull(remover.DatHeaderRemover);
+            Assert.NotNull(remover.DatItemRemover);
             Assert.Empty(remover.DatHeaderRemover.DatHeaderFields);
             Assert.Empty(remover.DatItemRemover.MachineFields);
             Assert.Empty(remover.DatItemRemover.DatItemFields);
@@ -34,6 +36,8 @@ namespace SabreTools.Test.Filtering
             remover.PopulateExclusionsFromList(exclusions);
 
             // Check the exclusion lists
+            Assert.NotNull(remover.DatHeaderRemover);
+            Assert.NotNull(remover.DatItemRemover);
             Assert.Empty(remover.DatHeaderRemover.DatHeaderFields);
             Assert.Empty(remover.DatItemRemover.MachineFields);
             Assert.Empty(remover.DatItemRemover.DatItemFields);
@@ -43,16 +47,18 @@ namespace SabreTools.Test.Filtering
         public void PopulateExclusionHeaderFieldTest()
         {
             // Setup the list
-            List<string> exclusions = new()
-            {
+            List<string> exclusions =
+            [
                 "header.datname",
-            };
+            ];
 
             // Setup the remover
             var remover = new Remover();
             remover.PopulateExclusionsFromList(exclusions);
 
             // Check the exclusion lists
+            Assert.NotNull(remover.DatHeaderRemover);
+            Assert.NotNull(remover.DatItemRemover);
             Assert.Single(remover.DatHeaderRemover.DatHeaderFields);
             Assert.Empty(remover.DatItemRemover.MachineFields);
             Assert.Empty(remover.DatItemRemover.DatItemFields);
@@ -62,16 +68,18 @@ namespace SabreTools.Test.Filtering
         public void PopulateExclusionMachineFieldTest()
         {
             // Setup the list
-            List<string> exclusions = new()
-            {
+            List<string> exclusions =
+            [
                 "machine.name",
-            };
+            ];
 
             // Setup the remover
             var remover = new Remover();
             remover.PopulateExclusionsFromList(exclusions);
 
             // Check the exclusion lists
+            Assert.NotNull(remover.DatHeaderRemover);
+            Assert.NotNull(remover.DatItemRemover);
             Assert.Empty(remover.DatHeaderRemover.DatHeaderFields);
             Assert.Single(remover.DatItemRemover.MachineFields);
             Assert.Empty(remover.DatItemRemover.DatItemFields);
@@ -81,16 +89,18 @@ namespace SabreTools.Test.Filtering
         public void PopulateExclusionDatItemFieldTest()
         {
             // Setup the list
-            List<string> exclusions = new()
-            {
+            List<string> exclusions =
+            [
                 "item.name",
-            };
+            ];
 
             // Setup the remover
             var remover = new Remover();
             remover.PopulateExclusionsFromList(exclusions);
 
             // Check the exclusion lists
+            Assert.NotNull(remover.DatHeaderRemover);
+            Assert.NotNull(remover.DatItemRemover);
             Assert.Empty(remover.DatHeaderRemover.DatHeaderFields);
             Assert.Empty(remover.DatItemRemover.MachineFields);
             Assert.Single(remover.DatItemRemover.DatItemFields);
@@ -100,7 +110,7 @@ namespace SabreTools.Test.Filtering
         public void PopulateFilterNullListTest()
         {
             // Setup the list
-            List<string> filters = null;
+            List<string>? filters = null;
 
             // Setup the filter
             var filter = new SabreTools.Filtering.Filter();
@@ -115,7 +125,7 @@ namespace SabreTools.Test.Filtering
         public void PopulateFilterEmptyListTest()
         {
             // Setup the list
-            List<string> filters = new();
+            List<string> filters = [];
 
             // Setup the filter
             var filter = new SabreTools.Filtering.Filter();
@@ -130,31 +140,11 @@ namespace SabreTools.Test.Filtering
         public void PopulateFilterMachineFieldTest()
         {
             // Setup the list
-            List<string> filters = new()
-            {
+            List<string> filters =
+            [
                 "machine.name:foo",
                 "!machine.name:bar",
-            };
-
-            // Setup the filter
-            var filter = new SabreTools.Filtering.Filter();
-            filter.PopulateFiltersFromList(filters);
-
-            // Check the filters
-            Assert.Contains("foo", filter.MachineFilter.Name.PositiveSet);
-            Assert.Contains("bar", filter.MachineFilter.Name.NegativeSet);
-            Assert.NotNull(filter.DatItemFilter);
-        }
-
-        [Fact]
-        public void PopulateFilterDatItemFieldTest()
-        {
-            // Setup the list
-            List<string> filters = new()
-            {
-                "item.name:foo",
-                "!item.name:bar"
-            };
+            ];
 
             // Setup the filter
             var filter = new SabreTools.Filtering.Filter();
@@ -162,6 +152,28 @@ namespace SabreTools.Test.Filtering
 
             // Check the filters
             Assert.NotNull(filter.MachineFilter);
+            Assert.NotNull(filter.DatItemFilter);
+            Assert.Contains("foo", filter.MachineFilter.Name.PositiveSet);
+            Assert.Contains("bar", filter.MachineFilter.Name.NegativeSet);
+        }
+
+        [Fact]
+        public void PopulateFilterDatItemFieldTest()
+        {
+            // Setup the list
+            List<string> filters =
+            [
+                "item.name:foo",
+                "!item.name:bar"
+            ];
+
+            // Setup the filter
+            var filter = new SabreTools.Filtering.Filter();
+            filter.PopulateFiltersFromList(filters);
+
+            // Check the filters
+            Assert.NotNull(filter.MachineFilter);
+            Assert.NotNull(filter.DatItemFilter);
             Assert.Contains("foo", filter.DatItemFilter.Name.PositiveSet);
             Assert.Contains("bar", filter.DatItemFilter.Name.NegativeSet);
         }

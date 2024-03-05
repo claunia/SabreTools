@@ -12,7 +12,7 @@ namespace SabreTools.Test.Core
         [InlineData(null, ChipType.NULL)]
         [InlineData("cpu", ChipType.CPU)]
         [InlineData("audio", ChipType.Audio)]
-        public void AsChipTypeTest(string field, ChipType expected)
+        public void AsChipTypeTest(string? field, ChipType expected)
         {
             ChipType actual = field.AsChipType();
             Assert.Equal(expected, actual);
@@ -35,7 +35,7 @@ namespace SabreTools.Test.Core
         [InlineData("mahjong", ControlType.Mahjong)]
         [InlineData("hanafuda", ControlType.Hanafuda)]
         [InlineData("gambling", ControlType.Gambling)]
-        public void AsControlTypeTest(string field, ControlType expected)
+        public void AsControlTypeTest(string? field, ControlType expected)
         {
             ControlType actual = field.AsControlType();
             Assert.Equal(expected, actual);
@@ -58,7 +58,7 @@ namespace SabreTools.Test.Core
         [InlineData("header datname", DatHeaderField.Name)]
         [InlineData("DAT.DATNAME", DatHeaderField.Name)]
         [InlineData("dAt.DAtnamE", DatHeaderField.Name)]
-        public void AsDatHeaderFieldProcessingTest(string field, DatHeaderField expected)
+        public void AsDatHeaderFieldProcessingTest(string? field, DatHeaderField expected)
         {
             // TODO: Write new test for all supported fields
             DatHeaderField actual = field.AsDatHeaderField();
@@ -78,7 +78,7 @@ namespace SabreTools.Test.Core
         [InlineData("datitem name", DatItemField.Name)]
         [InlineData("ITEM.NAME", DatItemField.Name)]
         [InlineData("iTeM.namE", DatItemField.Name)]
-        public void AsDatItemFieldProcessingTest(string field, DatItemField expected)
+        public void AsDatItemFieldProcessingTest(string? field, DatItemField expected)
         {
             // TODO: Write new test for all supported fields
             DatItemField actual = field.AsDatItemField();
@@ -108,7 +108,7 @@ namespace SabreTools.Test.Core
         [InlineData("midiout", DeviceType.MIDIOut)]
         [InlineData("picture", DeviceType.Picture)]
         [InlineData("vidfile", DeviceType.VidFile)]
-        public void AsDeviceTypeTest(string field, DeviceType expected)
+        public void AsDeviceTypeTest(string? field, DeviceType expected)
         {
             DeviceType actual = field.AsDeviceType();
             Assert.Equal(expected, actual);
@@ -121,7 +121,7 @@ namespace SabreTools.Test.Core
         [InlineData("lcd", DisplayType.LCD)]
         [InlineData("svg", DisplayType.SVG)]
         [InlineData("unknown", DisplayType.Unknown)]
-        public void AsDisplayTypeTest(string field, DisplayType expected)
+        public void AsDisplayTypeTest(string? field, DisplayType expected)
         {
             DisplayType actual = field.AsDisplayType();
             Assert.Equal(expected, actual);
@@ -131,7 +131,7 @@ namespace SabreTools.Test.Core
         [InlineData(null, Endianness.NULL)]
         [InlineData("big", Endianness.Big)]
         [InlineData("little", Endianness.Little)]
-        public void AsEndiannessTest(string field, Endianness expected)
+        public void AsEndiannessTest(string? field, Endianness expected)
         {
             Endianness actual = field.AsEndianness();
             Assert.Equal(expected, actual);
@@ -141,7 +141,7 @@ namespace SabreTools.Test.Core
         [InlineData(null, FeatureStatus.NULL)]
         [InlineData("unemulated", FeatureStatus.Unemulated)]
         [InlineData("imperfect", FeatureStatus.Imperfect)]
-        public void AsFeatureStatusTest(string field, FeatureStatus expected)
+        public void AsFeatureStatusTest(string? field, FeatureStatus expected)
         {
             FeatureStatus actual = field.AsFeatureStatus();
             Assert.Equal(expected, actual);
@@ -163,7 +163,7 @@ namespace SabreTools.Test.Core
         [InlineData("lan", FeatureType.Lan)]
         [InlineData("wan", FeatureType.Wan)]
         [InlineData("timing", FeatureType.Timing)]
-        public void AsFeatureTypeTest(string field, FeatureType expected)
+        public void AsFeatureTypeTest(string? field, FeatureType expected)
         {
             FeatureType actual = field.AsFeatureType();
             Assert.Equal(expected, actual);
@@ -178,7 +178,7 @@ namespace SabreTools.Test.Core
         [InlineData("nodump", ItemStatus.Nodump)]
         [InlineData("yes", ItemStatus.Nodump)]
         [InlineData("verified", ItemStatus.Verified)]
-        public void AsItemStatusTest(string field, ItemStatus expected)
+        public void AsItemStatusTest(string? field, ItemStatus expected)
         {
             ItemStatus actual = field.AsItemStatus();
             Assert.Equal(expected, actual);
@@ -239,7 +239,7 @@ namespace SabreTools.Test.Core
         [InlineData("sound", ItemType.Sound)]
         [InlineData("sourcedetails", ItemType.SourceDetails)]
         [InlineData("source_details", ItemType.SourceDetails)]
-        public void AsItemTypeTest(string field, ItemType expected)
+        public void AsItemTypeTest(string? field, ItemType expected)
         {
             ItemType actual = field.AsItemType();
             Assert.Equal(expected, actual);
@@ -261,7 +261,7 @@ namespace SabreTools.Test.Core
         [InlineData("continue", LoadFlag.Continue)]
         [InlineData("reload_plain", LoadFlag.ReloadPlain)]
         [InlineData("ignore", LoadFlag.Ignore)]
-        public void AsLoadFlagTest(string field, LoadFlag expected)
+        public void AsLoadFlagTest(string? field, LoadFlag expected)
         {
             LoadFlag actual = field.AsLoadFlag();
             Assert.Equal(expected, actual);
@@ -273,7 +273,7 @@ namespace SabreTools.Test.Core
         [InlineData("user", LogLevel.USER)]
         [InlineData("warning", LogLevel.WARNING)]
         [InlineData("error", LogLevel.ERROR)]
-        public void AsLogLevelTest(string field, LogLevel expected)
+        public void AsLogLevelTest(string? field, LogLevel expected)
         {
             LogLevel actual = field.AsLogLevel();
             Assert.Equal(expected, actual);
@@ -292,7 +292,7 @@ namespace SabreTools.Test.Core
         [InlineData("machine name", MachineField.Name)]
         [InlineData("GAME.NAME", MachineField.Name)]
         [InlineData("gAmE.namE", MachineField.Name)]
-        public void AsMachineFieldProcessingTest(string field, MachineField expected)
+        public void AsMachineFieldProcessingTest(string? field, MachineField expected)
         {
             MachineField actual = field.AsMachineField();
             Assert.Equal(expected, actual);
@@ -368,7 +368,7 @@ namespace SabreTools.Test.Core
         [InlineData("game.title_id", MachineField.TitleID)]
         [InlineData("game.type", MachineField.Type)]
         [InlineData("game.year", MachineField.Year)]
-        public void AsMachineFieldTest(string field, MachineField expected)
+        public void AsMachineFieldTest(string? field, MachineField expected)
         {
             MachineField actual = field.AsMachineField();
             Assert.Equal(expected, actual);
@@ -382,7 +382,7 @@ namespace SabreTools.Test.Core
         [InlineData("device", MachineType.Device)]
         [InlineData("mech", MachineType.Mechanical)]
         [InlineData("mechanical", MachineType.Mechanical)]
-        public void AsMachineTypeTest(string field, MachineType expected)
+        public void AsMachineTypeTest(string? field, MachineType expected)
         {
             MachineType actual = field.AsMachineType();
             Assert.Equal(expected, actual);
@@ -402,7 +402,7 @@ namespace SabreTools.Test.Core
         [InlineData("full", MergingFlag.FullNonMerged)]
         [InlineData("fullnonmerged", MergingFlag.FullNonMerged)]
         [InlineData("fullunmerged", MergingFlag.FullNonMerged)]
-        public void AsMergingFlagTest(string field, MergingFlag expected)
+        public void AsMergingFlagTest(string? field, MergingFlag expected)
         {
             MergingFlag actual = field.AsMergingFlag();
             Assert.Equal(expected, actual);
@@ -414,7 +414,7 @@ namespace SabreTools.Test.Core
         [InlineData("obsolete", NodumpFlag.Obsolete)]
         [InlineData("required", NodumpFlag.Required)]
         [InlineData("ignore", NodumpFlag.Ignore)]
-        public void AsNodumpFlagTest(string field, NodumpFlag expected)
+        public void AsNodumpFlagTest(string? field, NodumpFlag expected)
         {
             NodumpFlag actual = field.AsNodumpFlag();
             Assert.Equal(expected, actual);
@@ -425,7 +425,7 @@ namespace SabreTools.Test.Core
         [InlineData("rom", OpenMSXSubType.Rom)]
         [InlineData("megarom", OpenMSXSubType.MegaRom)]
         [InlineData("sccpluscart", OpenMSXSubType.SCCPlusCart)]
-        public void AsOpenMSXSubTypeTest(string field, OpenMSXSubType expected)
+        public void AsOpenMSXSubTypeTest(string? field, OpenMSXSubType expected)
         {
             OpenMSXSubType actual = field.AsOpenMSXSubType();
             Assert.Equal(expected, actual);
@@ -440,7 +440,7 @@ namespace SabreTools.Test.Core
         [InlineData("unzip", PackingFlag.Unzip)]
         [InlineData("partial", PackingFlag.Partial)]
         [InlineData("flat", PackingFlag.Flat)]
-        public void AsPackingFlagTest(string field, PackingFlag expected)
+        public void AsPackingFlagTest(string? field, PackingFlag expected)
         {
             PackingFlag actual = field.AsPackingFlag();
             Assert.Equal(expected, actual);
@@ -454,7 +454,7 @@ namespace SabreTools.Test.Core
         [InlineData("le", Relation.LessThanOrEqual)]
         [InlineData("lt", Relation.LessThan)]
         [InlineData("ge", Relation.GreaterThanOrEqual)]
-        public void AsRelationTest(string field, Relation expected)
+        public void AsRelationTest(string? field, Relation expected)
         {
             Relation actual = field.AsRelation();
             Assert.Equal(expected, actual);
@@ -465,7 +465,7 @@ namespace SabreTools.Test.Core
         [InlineData("no", Runnable.No)]
         [InlineData("partial", Runnable.Partial)]
         [InlineData("yes", Runnable.Yes)]
-        public void AsRunnableTest(string field, Runnable expected)
+        public void AsRunnableTest(string? field, Runnable expected)
         {
             Runnable actual = field.AsRunnable();
             Assert.Equal(expected, actual);
@@ -476,7 +476,7 @@ namespace SabreTools.Test.Core
         [InlineData("none", SoftwareListStatus.None)]
         [InlineData("original", SoftwareListStatus.Original)]
         [InlineData("compatible", SoftwareListStatus.Compatible)]
-        public void AsSoftwareListStatusTest(string field, SoftwareListStatus expected)
+        public void AsSoftwareListStatusTest(string? field, SoftwareListStatus expected)
         {
             SoftwareListStatus actual = field.AsSoftwareListStatus();
             Assert.Equal(expected, actual);
@@ -489,7 +489,7 @@ namespace SabreTools.Test.Core
         [InlineData("partial", Supported.Partial)]
         [InlineData("yes", Supported.Yes)]
         [InlineData("supported", Supported.Yes)]
-        public void AsSupportedTest(string field, Supported expected)
+        public void AsSupportedTest(string? field, Supported expected)
         {
             Supported actual = field.AsSupported();
             Assert.Equal(expected, actual);
@@ -500,7 +500,7 @@ namespace SabreTools.Test.Core
         [InlineData("good", SupportStatus.Good)]
         [InlineData("imperfect", SupportStatus.Imperfect)]
         [InlineData("preliminary", SupportStatus.Preliminary)]
-        public void AsSupportStatusTest(string field, SupportStatus expected)
+        public void AsSupportStatusTest(string? field, SupportStatus expected)
         {
             SupportStatus actual = field.AsSupportStatus();
             Assert.Equal(expected, actual);
@@ -514,9 +514,9 @@ namespace SabreTools.Test.Core
         [InlineData(ChipType.NULL, null)]
         [InlineData(ChipType.CPU, "cpu")]
         [InlineData(ChipType.Audio, "audio")]
-        public void FromChipTypeTest(ChipType field, string expected)
+        public void FromChipTypeTest(ChipType field, string? expected)
         {
-            string actual = field.FromChipType();
+            string? actual = field.FromChipType();
             Assert.Equal(expected, actual);
         }
 
@@ -537,9 +537,9 @@ namespace SabreTools.Test.Core
         [InlineData(ControlType.Mahjong, "mahjong")]
         [InlineData(ControlType.Hanafuda, "hanafuda")]
         [InlineData(ControlType.Gambling, "gambling")]
-        public void FromControlTypeTest(ControlType field, string expected)
+        public void FromControlTypeTest(ControlType field, string? expected)
         {
-            string actual = field.FromControlType();
+            string? actual = field.FromControlType();
             Assert.Equal(expected, actual);
         }
 
@@ -569,9 +569,9 @@ namespace SabreTools.Test.Core
         [InlineData(DeviceType.MIDIOut, "midiout")]
         [InlineData(DeviceType.Picture, "picture")]
         [InlineData(DeviceType.VidFile, "vidfile")]
-        public void FromDeviceTypeTest(DeviceType field, string expected)
+        public void FromDeviceTypeTest(DeviceType field, string? expected)
         {
-            string actual = field.FromDeviceType();
+            string? actual = field.FromDeviceType();
             Assert.Equal(expected, actual);
         }
 
@@ -582,9 +582,9 @@ namespace SabreTools.Test.Core
         [InlineData(DisplayType.LCD, "lcd")]
         [InlineData(DisplayType.SVG, "svg")]
         [InlineData(DisplayType.Unknown, "unknown")]
-        public void FromDisplayTypeTest(DisplayType field, string expected)
+        public void FromDisplayTypeTest(DisplayType field, string? expected)
         {
-            string actual = field.FromDisplayType();
+            string? actual = field.FromDisplayType();
             Assert.Equal(expected, actual);
         }
 
@@ -592,9 +592,9 @@ namespace SabreTools.Test.Core
         [InlineData(Endianness.NULL, null)]
         [InlineData(Endianness.Big, "big")]
         [InlineData(Endianness.Little, "little")]
-        public void FromEndiannessTest(Endianness field, string expected)
+        public void FromEndiannessTest(Endianness field, string? expected)
         {
-            string actual = field.FromEndianness();
+            string? actual = field.FromEndianness();
             Assert.Equal(expected, actual);
         }
 
@@ -602,9 +602,9 @@ namespace SabreTools.Test.Core
         [InlineData(FeatureStatus.NULL, null)]
         [InlineData(FeatureStatus.Unemulated, "unemulated")]
         [InlineData(FeatureStatus.Imperfect, "imperfect")]
-        public void FromFeatureStatusTest(FeatureStatus field, string expected)
+        public void FromFeatureStatusTest(FeatureStatus field, string? expected)
         {
-            string actual = field.FromFeatureStatus();
+            string? actual = field.FromFeatureStatus();
             Assert.Equal(expected, actual);
         }
 
@@ -624,9 +624,9 @@ namespace SabreTools.Test.Core
         [InlineData(FeatureType.Lan, "lan")]
         [InlineData(FeatureType.Wan, "wan")]
         [InlineData(FeatureType.Timing, "timing")]
-        public void FromFeatureTypeTest(FeatureType field, string expected)
+        public void FromFeatureTypeTest(FeatureType field, string? expected)
         {
-            string actual = field.FromFeatureType();
+            string? actual = field.FromFeatureType();
             Assert.Equal(expected, actual);
         }
 
@@ -643,9 +643,9 @@ namespace SabreTools.Test.Core
         [InlineData(ItemStatus.Nodump, false, "nodump")]
         [InlineData(ItemStatus.Verified, true, "verified")]
         [InlineData(ItemStatus.Verified, false, "verified")]
-        public void FromItemStatusTest(ItemStatus field, bool yesno, string expected)
+        public void FromItemStatusTest(ItemStatus field, bool yesno, string? expected)
         {
-            string actual = field.FromItemStatus(yesno);
+            string? actual = field.FromItemStatus(yesno);
             Assert.Equal(expected, actual);
         }
 
@@ -694,9 +694,9 @@ namespace SabreTools.Test.Core
         [InlineData(ItemType.SoftwareList, "softwarelist")]
         [InlineData(ItemType.Sound, "sound")]
         [InlineData(ItemType.SourceDetails, "source_details")]
-        public void FromItemTypeTest(ItemType field, string expected)
+        public void FromItemTypeTest(ItemType field, string? expected)
         {
-            string actual = field.FromItemType();
+            string? actual = field.FromItemType();
             Assert.Equal(expected, actual);
         }
 
@@ -716,9 +716,9 @@ namespace SabreTools.Test.Core
         [InlineData(LoadFlag.Continue, "continue")]
         [InlineData(LoadFlag.ReloadPlain, "reload_plain")]
         [InlineData(LoadFlag.Ignore, "ignore")]
-        public void FromLoadFlagTest(LoadFlag field, string expected)
+        public void FromLoadFlagTest(LoadFlag field, string? expected)
         {
-            string actual = field.FromLoadFlag();
+            string? actual = field.FromLoadFlag();
             Assert.Equal(expected, actual);
         }
 
@@ -733,9 +733,9 @@ namespace SabreTools.Test.Core
         [InlineData(MachineType.Device, false, "device")]
         [InlineData(MachineType.Mechanical, true, "mech")]
         [InlineData(MachineType.Mechanical, false, "mechanical")]
-        public void FromMachineTypeTest(MachineType field, bool old, string expected)
+        public void FromMachineTypeTest(MachineType field, bool old, string? expected)
         {
-            string actual = field.FromMachineType(old);
+            string? actual = field.FromMachineType(old);
             Assert.Equal(expected, actual);
         }
 
@@ -754,9 +754,9 @@ namespace SabreTools.Test.Core
         [InlineData(MergingFlag.DeviceNonMerged, false, "device")]
         [InlineData(MergingFlag.FullNonMerged, true, "fullunmerged")]
         [InlineData(MergingFlag.FullNonMerged, false, "full")]
-        public void FromMergingFlagTest(MergingFlag field, bool romcenter, string expected)
+        public void FromMergingFlagTest(MergingFlag field, bool romcenter, string? expected)
         {
-            string actual = field.FromMergingFlag(romcenter);
+            string? actual = field.FromMergingFlag(romcenter);
             Assert.Equal(expected, actual);
         }
 
@@ -765,9 +765,9 @@ namespace SabreTools.Test.Core
         [InlineData(NodumpFlag.Obsolete, "obsolete")]
         [InlineData(NodumpFlag.Required, "required")]
         [InlineData(NodumpFlag.Ignore, "ignore")]
-        public void FromNodumpFlagTest(NodumpFlag field, string expected)
+        public void FromNodumpFlagTest(NodumpFlag field, string? expected)
         {
-            string actual = field.FromNodumpFlag();
+            string? actual = field.FromNodumpFlag();
             Assert.Equal(expected, actual);
         }
 
@@ -776,9 +776,9 @@ namespace SabreTools.Test.Core
         [InlineData(OpenMSXSubType.Rom, "rom")]
         [InlineData(OpenMSXSubType.MegaRom, "megarom")]
         [InlineData(OpenMSXSubType.SCCPlusCart, "sccpluscart")]
-        public void FromOpenMSXSubTypeTest(OpenMSXSubType field, string expected)
+        public void FromOpenMSXSubTypeTest(OpenMSXSubType field, string? expected)
         {
-            string actual = field.FromOpenMSXSubType();
+            string? actual = field.FromOpenMSXSubType();
             Assert.Equal(expected, actual);
         }
 
@@ -793,9 +793,9 @@ namespace SabreTools.Test.Core
         [InlineData(PackingFlag.Partial, false, "partial")]
         [InlineData(PackingFlag.Flat, true, "flat")]
         [InlineData(PackingFlag.Flat, false, "flat")]
-        public void FromPackingFlagTest(PackingFlag field, bool yesno, string expected)
+        public void FromPackingFlagTest(PackingFlag field, bool yesno, string? expected)
         {
-            string actual = field.FromPackingFlag(yesno);
+            string? actual = field.FromPackingFlag(yesno);
             Assert.Equal(expected, actual);
         }
 
@@ -807,9 +807,9 @@ namespace SabreTools.Test.Core
         [InlineData(Relation.LessThanOrEqual, "le")]
         [InlineData(Relation.LessThan, "lt")]
         [InlineData(Relation.GreaterThanOrEqual, "ge")]
-        public void FromRelationTest(Relation field, string expected)
+        public void FromRelationTest(Relation field, string? expected)
         {
-            string actual = field.FromRelation();
+            string? actual = field.FromRelation();
             Assert.Equal(expected, actual);
         }
 
@@ -818,9 +818,9 @@ namespace SabreTools.Test.Core
         [InlineData(Runnable.No, "no")]
         [InlineData(Runnable.Partial, "partial")]
         [InlineData(Runnable.Yes, "yes")]
-        public void FromRunnableTest(Runnable field, string expected)
+        public void FromRunnableTest(Runnable field, string? expected)
         {
-            string actual = field.FromRunnable();
+            string? actual = field.FromRunnable();
             Assert.Equal(expected, actual);
         }
 
@@ -828,9 +828,9 @@ namespace SabreTools.Test.Core
         [InlineData(SoftwareListStatus.None, "none")]
         [InlineData(SoftwareListStatus.Original, "original")]
         [InlineData(SoftwareListStatus.Compatible, "compatible")]
-        public void FromSoftwareListStatusTest(SoftwareListStatus field, string expected)
+        public void FromSoftwareListStatusTest(SoftwareListStatus field, string? expected)
         {
-            string actual = field.FromSoftwareListStatus();
+            string? actual = field.FromSoftwareListStatus();
             Assert.Equal(expected, actual);
         }
 
@@ -843,9 +843,9 @@ namespace SabreTools.Test.Core
         [InlineData(Supported.Partial, false, "partial")]
         [InlineData(Supported.Yes, true, "supported")]
         [InlineData(Supported.Yes, false, "yes")]
-        public void FromSupportedTest(Supported field, bool verbose, string expected)
+        public void FromSupportedTest(Supported field, bool verbose, string? expected)
         {
-            string actual = field.FromSupported(verbose);
+            string? actual = field.FromSupported(verbose);
             Assert.Equal(expected, actual);
         }
 
@@ -854,9 +854,9 @@ namespace SabreTools.Test.Core
         [InlineData(SupportStatus.Good, "good")]
         [InlineData(SupportStatus.Imperfect, "imperfect")]
         [InlineData(SupportStatus.Preliminary, "preliminary")]
-        public void FromSupportStatusTest(SupportStatus field, string expected)
+        public void FromSupportStatusTest(SupportStatus field, string? expected)
         {
-            string actual = field.FromSupportStatus();
+            string? actual = field.FromSupportStatus();
             Assert.Equal(expected, actual);
         }
 

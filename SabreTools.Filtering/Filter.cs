@@ -56,7 +56,7 @@ namespace SabreTools.Filtering
         /// Populate the filters objects using a set of key:value filters
         /// </summary>
         /// <param name="filters">List of key:value where ~key/!key is negated</param>
-        public void PopulateFiltersFromList(List<string> filters)
+        public void PopulateFiltersFromList(List<string>? filters)
         {
             // Instantiate the filters, if necessary
             MachineFilter ??= new MachineFilter();

@@ -56,7 +56,7 @@ namespace SabreTools.Filtering
         /// Populate the exclusion objects using a set of field names
         /// </summary>
         /// <param name="fields">List of field names</param>
-        public void PopulateExclusionsFromList(List<string> fields)
+        public void PopulateExclusionsFromList(List<string>? fields)
         {
             // Instantiate the removers, if necessary
             DatHeaderRemover ??= new DatHeaderRemover();

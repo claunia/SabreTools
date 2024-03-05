@@ -14,7 +14,7 @@ namespace SabreTools.Test.Core
         [InlineData("10h", null)]
         [InlineData("0x10", 16L)]
         [InlineData(" 12345 ", 12345L)]
-        public void CleanLongTest(string input, long? expected)
+        public void CleanLongTest(string? input, long? expected)
         {
             long? actual = NumberHelper.ConvertToInt64(input);
             Assert.Equal(expected, actual);
@@ -28,9 +28,9 @@ namespace SabreTools.Test.Core
         [InlineData("da39a3ee5e6b4b0d3255bfef95601890afd80709", -1, "da39a3ee5e6b4b0d3255bfef95601890afd80709.gz")]
         [InlineData("da39a3ee5e6b4b0d3255bfef95601890afd80709", 0, "da39a3ee5e6b4b0d3255bfef95601890afd80709.gz")]
         [InlineData("da39a3ee5e6b4b0d3255bfef95601890afd80709", 1, "da\\da39a3ee5e6b4b0d3255bfef95601890afd80709.gz")]
-        public void GetDepotPathTest(string hash, int depth, string expected)
+        public void GetDepotPathTest(string? hash, int depth, string? expected)
         {
-            string actual = Utilities.GetDepotPath(hash, depth);
+            string? actual = Utilities.GetDepotPath(hash, depth);
             Assert.Equal(expected, actual);
         }
 
@@ -42,7 +42,7 @@ namespace SabreTools.Test.Core
         [InlineData("INVALID.EXT", false)]
         [InlineData("valid_extension.dat", true)]
         [InlineData("valid_extension.DAT", true)]
-        public void HasValidDatExtensionTest(string path, bool expected)
+        public void HasValidDatExtensionTest(string? path, bool expected)
         {
             bool actual = Utilities.HasValidDatExtension(path);
             Assert.Equal(expected, actual);
