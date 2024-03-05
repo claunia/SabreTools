@@ -16,7 +16,7 @@ namespace SabreTools.Test.DatFiles
             var datItem = CreateDatItem();
             Setter setter = new()
             {
-                DatItemMappings = new Dictionary<DatItemField, string> { [DatItemField.Name] = "bar" }
+                ItemFieldMappings = new Dictionary<DatItemField, string> { [DatItemField.Name] = "bar" }
             };
             setter.SetFields(datItem);
             Assert.Equal("bar", datItem.GetName());
@@ -28,7 +28,7 @@ namespace SabreTools.Test.DatFiles
             var datItem = CreateDatItem();
             Setter setter = new()
             {
-                MachineMappings = new Dictionary<MachineField, string> { [MachineField.Name] = "foo" }
+                MachineFieldMappings = new Dictionary<MachineField, string> { [MachineField.Name] = "foo" }
             };
             setter.SetFields(datItem.Machine);
             Assert.Equal("foo", datItem.Machine.Name);

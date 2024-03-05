@@ -63,7 +63,7 @@ namespace SabreTools.Filtering
         /// <summary>
         /// Populate the exclusion objects using a field name
         /// </summary>
-        /// <param name="field">Field names</param>
+        /// <param name="field">Field name</param>
         public void PopulateExclusions(string field)
             => PopulateExclusionsFromList([field]);
 
@@ -100,29 +100,27 @@ namespace SabreTools.Filtering
                 return false;
 
             // Get the parser pair out of it, if possible
-            (string? key, string? value) = FilterParser.ParseFilterId(field);
-            if (key != null && value != null)
+            (string? type, string? key) = FilterParser.ParseFilterId(field);
+            if (type == null || key == null)
+                return false;
+
+            switch (type)
             {
-                switch (key)
-                {
-                    case Models.Metadata.MetadataFile.HeaderKey:
-                        HeaderFieldNames.Add(value);
-                        return true;
+                case Models.Metadata.MetadataFile.HeaderKey:
+                    HeaderFieldNames.Add(key);
+                    return true;
 
-                    case Models.Metadata.MetadataFile.MachineKey:
-                        MachineFieldNames.Add(value);
-                        return true;
+                case Models.Metadata.MetadataFile.MachineKey:
+                    MachineFieldNames.Add(key);
+                    return true;
 
-                    default:
-                        if (!ItemFieldNames.ContainsKey(key))
-                            ItemFieldNames[key] = [];
+                default:
+                    if (!ItemFieldNames.ContainsKey(type))
+                        ItemFieldNames[type] = [];
 
-                        ItemFieldNames[key].Add(value);
-                        return true;
-                }
+                    ItemFieldNames[type].Add(key);
+                    return true;
             }
-
-            return false;
         }
 
         #endregion
@@ -183,11 +181,8 @@ namespace SabreTools.Filtering
         /// <param name="datItem">DatHeader to remove fields from</param>
         public void RemoveFields(DatHeader datHeader)
         {
-            if (datHeader == null)
-                return;
-
-            // If there are no field names, return
-            if (HeaderFieldNames == null || !HeaderFieldNames.Any())
+            // If we have an invalid input, return
+            if (datHeader == null || !HeaderFieldNames.Any())
                 return;
 
             foreach (var fieldName in HeaderFieldNames)
@@ -203,11 +198,8 @@ namespace SabreTools.Filtering
         /// <param name="machine">Machine to remove fields from</param>
         public void RemoveFields(Machine? machine)
         {
-            if (machine == null)
-                return;
-
-            // If there are no field names, return
-            if (MachineFieldNames == null || !MachineFieldNames.Any())
+            // If we have an invalid input, return
+            if (machine == null || !MachineFieldNames.Any())
                 return;
 
             foreach (var fieldName in MachineFieldNames)
@@ -228,7 +220,7 @@ namespace SabreTools.Filtering
             #region Common
 
             // Handle Machine fields
-            if (MachineFieldNames != null && MachineFieldNames.Any() && datItem.Machine != null)
+            if (MachineFieldNames.Any() && datItem.Machine != null)
                 RemoveFields(datItem.Machine);
 
             // If there are no field names, return

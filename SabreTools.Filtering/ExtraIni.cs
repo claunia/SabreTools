@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
-using SabreTools.Core;
-using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.Logging;
@@ -17,7 +14,7 @@ namespace SabreTools.Filtering
         /// <summary>
         /// List of extras to apply
         /// </summary>
-        public List<ExtraIniItem> Items { get; set; } = new List<ExtraIniItem>();
+        public List<ExtraIniItem> Items { get; set; } = [];
 
         #endregion
 
@@ -71,8 +68,7 @@ namespace SabreTools.Filtering
                 string fieldString = inputTrimmed.Split(':')[0].ToLowerInvariant().Trim('"', ' ', '\t');
                 string fileString = inputTrimmed.Substring(fieldString.Length + 1).Trim('"', ' ', '\t');
 
-                item.DatItemField = fieldString.AsDatItemField();
-                item.MachineField = fieldString.AsMachineField();
+                item.FieldName = SabreTools.Filter.FilterParser.ParseFilterId(fieldString);
                 if (item.PopulateFromFile(fileString))
                     Items.Add(item);
             }
@@ -96,7 +92,7 @@ namespace SabreTools.Filtering
             if (Items == null || !Items.Any())
                 return true;
 
-            InternalStopwatch watch = new("Applying extra mappings to DAT");
+            var watch = new InternalStopwatch("Applying extra mappings to DAT");
 
             try
             {
@@ -127,10 +123,11 @@ namespace SabreTools.Filtering
                     combinedDatItemMaps.TryGetValue(machine, out var datItemMappings);
 
                     // Create a setter with the new mappings
-                    Setter setter = new()
+                    var setter = new Setter();
+                    setter.PopulateSettersFromList()
                     {
-                        MachineMappings = machineMappings,
-                        DatItemMappings = datItemMappings,
+                        MachineFieldMappings = machineMappings,
+                        ItemFieldMappings = datItemMappings,
                     };
 
                     // Loop through and set the fields accordingly
@@ -155,24 +152,53 @@ namespace SabreTools.Filtering
         }
 
         /// <summary>
+        /// Combine ExtraIni fields
+        /// </summary>
+        /// <returns>Mapping dictionary from machine name to field mapping</returns>
+        private (List<string> Keys, List<string> Values) CombineExtras()
+        {
+            var keys = new List<string>();
+            var values = new List<string>();
+
+            // Loop through each of the extras
+            foreach (ExtraIniItem item in Items)
+            {
+                
+
+                foreach (var mapping in item.Mappings)
+                {
+                    string machineName = mapping.Key;
+                    string value = mapping.Value;
+                        
+                    mapping[machineName] = new Dictionary<string, string>
+                    {
+                        [item.FieldName!] = value,
+                    };
+                }
+            }
+
+            return mapping;
+        }
+
+        /// <summary>
         /// Combine MachineField-based ExtraIni fields
         /// </summary>
         /// <returns>Mapping dictionary from machine name to field mapping</returns>
-        private Dictionary<string, Dictionary<MachineField, string>> CombineMachineExtras()
+        private Dictionary<string, Dictionary<string, string>> CombineMachineExtras()
         {
-            var machineMap = new Dictionary<string, Dictionary<MachineField, string>>();
+            var machineMap = new Dictionary<string, Dictionary<string, string>>();
 
             // Loop through each of the extras
-            foreach (ExtraIniItem item in Items.Where(i => i.MachineField != MachineField.NULL))
+            foreach (ExtraIniItem item in Items.Where(i => i.MachineField != null))
             {
                 foreach (var mapping in item.Mappings)
                 {
                     string machineName = mapping.Key;
                     string value = mapping.Value;
                         
-                    machineMap[machineName] = new Dictionary<MachineField, string>
+                    machineMap[machineName] = new Dictionary<string, string>
                     {
-                        [item.MachineField] = value,
+                        [item.MachineField!] = value,
                     };
                 }
             }
@@ -184,21 +210,21 @@ namespace SabreTools.Filtering
         /// Combine DatItemField-based ExtraIni fields
         /// </summary>
         /// <returns>Mapping dictionary from machine name to field mapping</returns>
-        private Dictionary<string, Dictionary<DatItemField, string>> CombineDatItemExtras()
+        private Dictionary<string, Dictionary<string, string>> CombineDatItemExtras()
         {
-            var datItemMap = new Dictionary<string, Dictionary<DatItemField, string>>();
+            var datItemMap = new Dictionary<string, Dictionary<string, string>>();
 
             // Loop through each of the extras
-            foreach (ExtraIniItem item in Items.Where(i => i.DatItemField != DatItemField.NULL))
+            foreach (ExtraIniItem item in Items.Where(i => i.ItemField != null))
             {
                 foreach (var mapping in item.Mappings)
                 {
                     string machineName = mapping.Key;
                     string value = mapping.Value;
                         
-                    datItemMap[machineName] = new Dictionary<DatItemField, string>()
+                    datItemMap[machineName] = new Dictionary<string, string>()
                     {
-                        [item.DatItemField] = value,
+                        [item.ItemField!] = value,
                     };
                 }
             }

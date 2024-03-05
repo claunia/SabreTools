@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-
-using SabreTools.Core;
 using SabreTools.IO.Readers;
 using SabreTools.Logging;
 
@@ -12,19 +10,14 @@ namespace SabreTools.Filtering
         #region Fields
 
         /// <summary>
-        /// MachineField to update with INI information
+        /// Type and field to update with INI information
         /// </summary>
-        public MachineField MachineField { get; set; } = MachineField.NULL;
-
-        /// <summary>
-        /// DatItemField to update with INI information
-        /// </summary>
-        public DatItemField DatItemField { get; set; } = DatItemField.NULL;
+        public (string?, string?) FieldName { get; set; } = (null, null);
 
         /// <summary>
         /// Mappings from machine names to value
         /// </summary>
-        public Dictionary<string, string> Mappings { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, string> Mappings { get; } = [];
 
         #endregion
 

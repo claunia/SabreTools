@@ -93,25 +93,5 @@ namespace SabreTools.DatItems.Formats
         }
 
         #endregion
-    
-        #region Manipulation
-
-        /// <inheritdoc/>
-        public override bool SetField(DatItemField datItemField, string value)
-        {
-            // Get the correct internal field name
-            string? fieldName = datItemField switch
-            {
-                DatItemField.FeatureOverall => Models.Metadata.Feature.OverallKey,
-                DatItemField.FeatureStatus => Models.Metadata.Feature.StatusKey,
-                DatItemField.FeatureType => Models.Metadata.Feature.FeatureTypeKey,
-                _ => null,
-            };
-
-            // Set the field and return
-            return FieldManipulator.SetField(_internal, fieldName, value);
-        }
-
-        #endregion
     }
 }

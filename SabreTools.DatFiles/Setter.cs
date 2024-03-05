@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
+using SabreTools.Filter;
 using SabreTools.Logging;
 
 namespace SabreTools.DatFiles
@@ -18,17 +20,17 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Mappings to set DatHeader fields
         /// </summary>
-        public Dictionary<DatHeaderField, string>? DatHeaderMappings { get; set; }
+        public Dictionary<string, string> HeaderFieldMappings { get; } = [];
 
         /// <summary>
         /// Mappings to set Machine fields
         /// </summary>
-        public Dictionary<MachineField, string>? MachineMappings { get; set; }
+        public Dictionary<string, string> MachineFieldMappings { get; } = [];
 
         /// <summary>
         /// Mappings to set DatItem fields
         /// </summary>
-        public Dictionary<DatItemField, string>? DatItemMappings { get; set; }
+        public Dictionary<(string, string), string> ItemFieldMappings { get; } = [];
 
         #endregion
 
@@ -44,48 +46,67 @@ namespace SabreTools.DatFiles
         #region Population
 
         /// <summary>
+        /// Populate the setters using a field name and a value
+        /// </summary>
+        /// <param name="field">Field name</param>
+        /// <param name="value">Field value</param>
+        public void PopulateSetters(string field, string value)
+            => PopulateSettersFromList([field], [value]);
+
+        /// <summary>
         /// Populate the setters using a set of field names
         /// </summary>
-        /// <param name="headers">List of header names</param>
         /// <param name="fields">List of field names</param>
-        public void PopulateSettersFromList(List<string> headers, List<string> fields)
+        /// <param name="values">List of field values</param>
+        public void PopulateSettersFromList(List<string> fields, List<string> values)
         {
-            // Instantiate the setters, if necessary
-            DatHeaderMappings ??= [];
-            MachineMappings ??= [];
-            DatItemMappings ??= [];
-
             // If the list is null or empty, just return
-            if (fields == null || fields.Count == 0)
+            if (values == null || values.Count == 0)
                 return;
 
+            var watch = new InternalStopwatch("Populating setters from list");
+
             // Now we loop through and get values for everything
-            for (int i = 0; i < headers.Count; i++)
+            for (int i = 0; i < fields.Count; i++)
             {
                 string field = fields[i];
-                DatHeaderField dhf = headers[i].AsDatHeaderField();
-                if (dhf != DatHeaderField.NULL)
-                {
-                    DatHeaderMappings[dhf] = field;
-                    continue;
-                }
+                string value = values[i];
 
-                MachineField mf = headers[i].AsMachineField();
-                if (mf != MachineField.NULL)
-                {
-                    MachineMappings[mf] = field;
-                    continue;
-                }
+                if (!SetSetter(field, value))
+                    logger.Warning($"The value {value} did not match any known field names. Please check the wiki for more details on supported field names.");
+            }
 
-                DatItemField dif = headers[i].AsDatItemField();
-                if (dif != DatItemField.NULL)
-                {
-                    DatItemMappings[dif] = field;
-                    continue;
-                }
+            watch.Stop();
+        }
 
-                // If we didn't match anything, log an error
-                logger.Warning($"The value {field} did not match any known field names. Please check the wiki for more details on supported field names.");
+        /// <summary>
+        /// Set remover from a value
+        /// </summary>
+        /// <param name="field">Key for the remover to be set</param>
+        private bool SetSetter(string field, string value)
+        {
+            // If the key is null or empty, return false
+            if (string.IsNullOrEmpty(field))
+                return false;
+
+            // Get the parser pair out of it, if possible
+            (string? type, string? key) = FilterParser.ParseFilterId(field);
+            if (type == null || key == null)
+                return false;
+
+            switch (type)
+            {
+                case Models.Metadata.MetadataFile.HeaderKey:
+                    HeaderFieldMappings[key] = value;
+                    return true;
+
+                case Models.Metadata.MetadataFile.MachineKey:
+                    MachineFieldMappings[key] = value;
+                    return true;
+
+                default:
+                    ItemFieldMappings[(type, key)] = value;
+                    return true;
             }
         }
 
@@ -97,111 +118,31 @@ namespace SabreTools.DatFiles
         /// <param name="datHeader">DatHeader to set fields on</param>
         public void SetFields(DatHeader datHeader)
         {
-            if (datHeader == null || DatHeaderMappings == null)
+            // If we have an invalid input, return
+            if (datHeader == null || !HeaderFieldMappings.Any())
                 return;
 
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.Author))
-                datHeader.Author = DatHeaderMappings[DatHeaderField.Author];
+            foreach (var fieldName in HeaderFieldMappings.Keys)
+            {
+                // TODO: Impelement in DatHeader
+                //datHeader.SetField(fieldName);
+            }
+        }
 
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.BiosMode))
-                datHeader.BiosMode = DatHeaderMappings[DatHeaderField.BiosMode].AsEnumValue<MergingFlag>();
+        /// <summary>
+        /// Set fields with given values
+        /// </summary>
+        /// <param name="machine">Machine to set fields on</param>
+        public void SetFields(Machine? machine)
+        {
+            // If we have an invalid input, return
+            if (machine == null || !MachineFieldMappings.Any())
+                return;
 
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.Build))
-                datHeader.Build = DatHeaderMappings[DatHeaderField.Build];
-
-            // TODO: Support CanOpen
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.Category))
-                datHeader.Category = DatHeaderMappings[DatHeaderField.Category];
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.Comment))
-                datHeader.Comment = DatHeaderMappings[DatHeaderField.Comment];
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.Date))
-                datHeader.Date = DatHeaderMappings[DatHeaderField.Date];
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.Debug))
-                datHeader.Debug = DatHeaderMappings[DatHeaderField.Debug].AsYesNo();
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.Description))
-                datHeader.Description = DatHeaderMappings[DatHeaderField.Description];
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.Email))
-                datHeader.Email = DatHeaderMappings[DatHeaderField.Email];
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.FileName))
-                datHeader.FileName = DatHeaderMappings[DatHeaderField.FileName];
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.ForceMerging))
-                datHeader.ForceMerging = DatHeaderMappings[DatHeaderField.ForceMerging].AsEnumValue<MergingFlag>();
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.ForceNodump))
-                datHeader.ForceNodump = DatHeaderMappings[DatHeaderField.ForceNodump].AsEnumValue<NodumpFlag>();
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.ForcePacking))
-                datHeader.ForcePacking = DatHeaderMappings[DatHeaderField.ForcePacking].AsEnumValue<PackingFlag>();
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.HeaderSkipper))
-                datHeader.HeaderSkipper = DatHeaderMappings[DatHeaderField.HeaderSkipper];
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.Homepage))
-                datHeader.Homepage = DatHeaderMappings[DatHeaderField.Homepage];
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.ID))
-                datHeader.NoIntroID = DatHeaderMappings[DatHeaderField.ID];
-
-            // TODO: Support Info_Default
-            // TODO: Support Info_IsNamingOption
-            // TODO: Support Info_Name
-            // TODO: Support Info_Visible
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.LockBiosMode))
-                datHeader.LockBiosMode = DatHeaderMappings[DatHeaderField.LockBiosMode].AsYesNo();
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.LockRomMode))
-                datHeader.LockRomMode = DatHeaderMappings[DatHeaderField.LockRomMode].AsYesNo();
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.LockSampleMode))
-                datHeader.LockSampleMode = DatHeaderMappings[DatHeaderField.LockSampleMode].AsYesNo();
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.MameConfig))
-                datHeader.MameConfig = DatHeaderMappings[DatHeaderField.MameConfig];
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.Name))
-                datHeader.Name = DatHeaderMappings[DatHeaderField.Name];
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.RomCenterVersion))
-                datHeader.RomCenterVersion = DatHeaderMappings[DatHeaderField.RomCenterVersion];
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.RomMode))
-                datHeader.RomMode = DatHeaderMappings[DatHeaderField.RomMode].AsEnumValue<MergingFlag>();
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.RomTitle))
-                datHeader.RomTitle = DatHeaderMappings[DatHeaderField.RomTitle];
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.RootDir))
-                datHeader.RootDir = DatHeaderMappings[DatHeaderField.RootDir];
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.SampleMode))
-                datHeader.SampleMode = DatHeaderMappings[DatHeaderField.SampleMode].AsEnumValue<MergingFlag>();
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.ScreenshotsHeight))
-                datHeader.ScreenshotsHeight = DatHeaderMappings[DatHeaderField.ScreenshotsHeight];
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.ScreenshotsWidth))
-                datHeader.ScreenshotsWidth = DatHeaderMappings[DatHeaderField.ScreenshotsWidth];
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.System))
-                datHeader.System = DatHeaderMappings[DatHeaderField.System];
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.Type))
-                datHeader.Type = DatHeaderMappings[DatHeaderField.Type];
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.Url))
-                datHeader.Url = DatHeaderMappings[DatHeaderField.Url];
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.Version))
-                datHeader.Version = DatHeaderMappings[DatHeaderField.Version];
+            foreach (var kvp in MachineFieldMappings)
+            {
+                machine.SetField(kvp.Key, kvp.Value);
+            }
         }
 
         /// <summary>
@@ -210,24 +151,49 @@ namespace SabreTools.DatFiles
         /// <param name="datItem">DatItem to set fields on</param>
         public void SetFields(DatItem datItem)
         {
-            if (datItem == null || DatItemMappings == null)
+            if (datItem == null)
                 return;
 
             #region Common
 
-            if (DatItemMappings!.ContainsKey(DatItemField.Name))
-                datItem.SetName(DatItemMappings[DatItemField.Name]);
+            // Handle Machine fields
+            if (MachineFieldMappings.Any() && datItem.Machine != null)
+                SetFields(datItem.Machine);
+
+            // If there are no field names, return
+            if (ItemFieldMappings == null || !ItemFieldMappings.Any())
+                return;
+
+            // If there are no field names for this type or generic, return
+            string? itemType = datItem.ItemType.AsStringValue<ItemType>();
+            if (itemType == null || (!ItemFieldMappings.Keys.Any(kvp => kvp.Item1 == itemType) && !ItemFieldMappings.Keys.Any(kvp => kvp.Item1 == "item")))
+                return;
+
+            // Get the combined list of fields to remove
+            var fieldMappings = new Dictionary<string, string>();
+            foreach (var mapping in ItemFieldMappings.Where(kvp => kvp.Key.Item1 == "item").ToDictionary(kvp => kvp.Key.Item2, kvp => kvp.Value))
+            {
+                fieldMappings[mapping.Key] = mapping.Value;
+            }
+            foreach (var mapping in ItemFieldMappings.Where(kvp => kvp.Key.Item1 == itemType).ToDictionary(kvp => kvp.Key.Item2, kvp => kvp.Value))
+            {
+                fieldMappings[mapping.Key] = mapping.Value;
+            }
+
+            // If the field specifically contains Name, set it separately
+            if (fieldMappings.Keys.Contains(Models.Metadata.Rom.NameKey))
+                datItem.SetName(fieldMappings[Models.Metadata.Rom.NameKey]);
 
             #endregion
 
             #region Item-Specific
 
             // Handle unnested sets first
-            foreach (var kvp in DatItemMappings)
+            foreach (var kvp in fieldMappings)
             {
                 datItem.SetField(kvp.Key, kvp.Value);
             }
-            
+
             // Handle nested sets
             switch (datItem)
             {
@@ -246,21 +212,6 @@ namespace SabreTools.DatFiles
             }
 
             #endregion
-        }
-
-        /// <summary>
-        /// Set fields with given values
-        /// </summary>
-        /// <param name="machine">Machine to set fields on</param>
-        public void SetFields(Machine? machine)
-        {
-            if (machine == null || MachineMappings == null)
-                return;
-
-            foreach (var kvp in MachineMappings)
-            {
-                machine.SetField(kvp.Key, kvp.Value);
-            }
         }
 
         /// <summary>

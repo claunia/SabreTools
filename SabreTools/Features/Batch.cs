@@ -350,7 +350,7 @@ Reset the internal state:           reset();";
                 ExtraIniItem extraIniItem = new()
                 {
                     MachineField = extraMachineField,
-                    DatItemField = extraDatItemField,
+                    ItemField = extraDatItemField,
                 };
                 extraIniItem.PopulateFromFile(extraFile);
                 extraIni.Items.Add(extraIniItem);

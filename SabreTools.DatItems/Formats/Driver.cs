@@ -162,30 +162,5 @@ namespace SabreTools.DatItems.Formats
         }
 
         #endregion
-    
-        #region Manipulation
-
-        /// <inheritdoc/>
-        public override bool SetField(DatItemField datItemField, string value)
-        {
-            // Get the correct internal field name
-            string? fieldName = datItemField switch
-            {
-                DatItemField.CocktailStatus => Models.Metadata.Driver.CocktailKey,
-                DatItemField.EmulationStatus => Models.Metadata.Driver.EmulationKey,
-                DatItemField.Incomplete => Models.Metadata.Driver.IncompleteKey,
-                DatItemField.NoSoundHardware => Models.Metadata.Driver.NoSoundHardwareKey,
-                DatItemField.RequiresArtwork => Models.Metadata.Driver.RequiresArtworkKey,
-                DatItemField.SaveStateStatus => Models.Metadata.Driver.SaveStateKey,
-                DatItemField.SupportStatus => Models.Metadata.Driver.StatusKey,
-                DatItemField.Unofficial => Models.Metadata.Driver.UnofficialKey,
-                _ => null,
-            };
-
-            // Set the field and return
-            return FieldManipulator.SetField(_internal, fieldName, value);
-        }
-
-        #endregion
     }
 }
