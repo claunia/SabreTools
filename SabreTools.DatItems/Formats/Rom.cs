@@ -168,8 +168,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public ItemStatus ItemStatus
         {
-            get => _internal.ReadString(Models.Metadata.Rom.StatusKey).AsItemStatus();
-            set => _internal[Models.Metadata.Rom.StatusKey] = value.FromItemStatus(yesno: false);
+            get => _internal.ReadString(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>();
+            set => _internal[Models.Metadata.Rom.StatusKey] = value.AsStringValue<ItemStatus>(useSecond: false);
         }
 
         [JsonIgnore]
@@ -324,8 +324,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public OpenMSXSubType OpenMSXSubType
         {
-            get => _internal.ReadString(Models.Metadata.Rom.OpenMSXMediaType).AsOpenMSXSubType();
-            set => _internal[Models.Metadata.Rom.OpenMSXMediaType] = value.FromOpenMSXSubType();
+            get => _internal.ReadString(Models.Metadata.Rom.OpenMSXMediaType).AsEnumValue<OpenMSXSubType>();
+            set => _internal[Models.Metadata.Rom.OpenMSXMediaType] = value.AsStringValue<OpenMSXSubType>();
         }
 
         [JsonIgnore]
@@ -398,8 +398,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public LoadFlag LoadFlag
         {
-            get => _internal.ReadString(Models.Metadata.Rom.LoadFlagKey).AsLoadFlag();
-            set => _internal[Models.Metadata.Rom.LoadFlagKey] = value.FromLoadFlag();
+            get => _internal.ReadString(Models.Metadata.Rom.LoadFlagKey).AsEnumValue<LoadFlag>();
+            set => _internal[Models.Metadata.Rom.LoadFlagKey] = value.AsStringValue<LoadFlag>();
         }
 
         [JsonIgnore]

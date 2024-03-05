@@ -102,11 +102,11 @@ namespace SabreTools.DatFiles.Formats
             Header.HeaderSkipper ??= clrMamePro.Header;
 
             if (Header.ForceMerging == MergingFlag.None)
-                Header.ForceMerging = clrMamePro.ForceMerging.AsMergingFlag();
+                Header.ForceMerging = clrMamePro.ForceMerging.AsEnumValue<MergingFlag>();
             if (Header.ForceNodump == NodumpFlag.None)
-                Header.ForceNodump = clrMamePro.ForceNodump.AsNodumpFlag();
+                Header.ForceNodump = clrMamePro.ForceNodump.AsEnumValue<NodumpFlag>();
             if (Header.ForcePacking == PackingFlag.None)
-                Header.ForcePacking = clrMamePro.ForcePacking.AsPackingFlag();
+                Header.ForcePacking = clrMamePro.ForcePacking.AsEnumValue<PackingFlag>();
         }
 
         /// <summary>
@@ -122,11 +122,11 @@ namespace SabreTools.DatFiles.Formats
             Header.System ??= romCenter.Plugin;
 
             if (Header.RomMode == MergingFlag.None)
-                Header.RomMode = romCenter.RomMode.AsMergingFlag();
+                Header.RomMode = romCenter.RomMode.AsEnumValue<MergingFlag>();
             if (Header.BiosMode == MergingFlag.None)
-                Header.BiosMode = romCenter.BiosMode.AsMergingFlag();
+                Header.BiosMode = romCenter.BiosMode.AsEnumValue<MergingFlag>();
             if (Header.SampleMode == MergingFlag.None)
-                Header.SampleMode = romCenter.SampleMode.AsMergingFlag();
+                Header.SampleMode = romCenter.SampleMode.AsEnumValue<MergingFlag>();
 
             Header.LockRomMode ??= romCenter.LockRomMode.AsYesNo();
             Header.LockBiosMode ??= romCenter.LockBiosMode.AsYesNo();
@@ -218,7 +218,7 @@ namespace SabreTools.DatFiles.Formats
                 RebuildTo = game.RebuildTo,
                 NoIntroId = game.Id,
                 NoIntroCloneOfId = game.CloneOfId,
-                Runnable = game.Runnable.AsRunnable(),
+                Runnable = game.Runnable.AsEnumValue<Runnable>(),
 
                 Description = game.Description,
                 Year = game.Year,
@@ -406,7 +406,7 @@ namespace SabreTools.DatFiles.Formats
                     //xxHash364 = rom.xxHash364, // TODO: Add to internal model
                     //xxHash3128 = rom.xxHash3128, // TODO: Add to internal model
                     MergeTag = rom.Merge,
-                    ItemStatus = rom.Status?.AsItemStatus() ?? ItemStatus.NULL,
+                    ItemStatus = rom.Status?.AsEnumValue<ItemStatus>() ?? ItemStatus.NULL,
                     //Serial = rom.Serial, // TODO: Add to internal model
                     //Header = rom.Header, // TODO: Add to internal model
                     Date = rom.Date,
@@ -449,7 +449,7 @@ namespace SabreTools.DatFiles.Formats
                     MD5 = disk.MD5,
                     SHA1 = disk.SHA1,
                     MergeTag = disk.Merge,
-                    ItemStatus = disk.Status?.AsItemStatus() ?? ItemStatus.NULL,
+                    ItemStatus = disk.Status?.AsEnumValue<ItemStatus>() ?? ItemStatus.NULL,
 
                     Source = new Source
                     {
@@ -621,10 +621,10 @@ namespace SabreTools.DatFiles.Formats
             containsItems = true;
             var item = new Driver
             {
-                Status = driver.Status?.AsSupportStatus() ?? SupportStatus.NULL,
-                Emulation = driver.Emulation?.AsSupportStatus() ?? SupportStatus.NULL,
-                Cocktail = driver.Cocktail?.AsSupportStatus() ?? SupportStatus.NULL,
-                SaveState = driver.SaveState?.AsSupported() ?? Supported.NULL,
+                Status = driver.Status?.AsEnumValue<SupportStatus>() ?? SupportStatus.NULL,
+                Emulation = driver.Emulation?.AsEnumValue<SupportStatus>() ?? SupportStatus.NULL,
+                Cocktail = driver.Cocktail?.AsEnumValue<SupportStatus>() ?? SupportStatus.NULL,
+                SaveState = driver.SaveState?.AsEnumValue<Supported>() ?? Supported.NULL,
                 RequiresArtwork = driver.RequiresArtwork?.AsYesNo(),
                 Unofficial = driver.Unofficial?.AsYesNo(),
                 NoSoundHardware = driver.NoSoundHardware?.AsYesNo(),
@@ -663,7 +663,7 @@ namespace SabreTools.DatFiles.Formats
                 {
                     Tag = softwarelist.Tag,
                     Name = softwarelist.Name,
-                    Status = softwarelist.Status?.AsSoftwareListStatus() ?? SoftwareListStatus.None,
+                    Status = softwarelist.Status?.AsEnumValue<SoftwareListStatus>() ?? SoftwareListStatus.None,
                     Filter = softwarelist.Filter,
 
                     Source = new Source

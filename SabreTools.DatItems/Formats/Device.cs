@@ -24,8 +24,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public DeviceType DeviceType
         {
-            get => _internal.ReadString(Models.Metadata.Device.DeviceTypeKey).AsDeviceType();
-            set => _internal[Models.Metadata.Device.DeviceTypeKey] = value.FromDeviceType();
+            get => _internal.ReadString(Models.Metadata.Device.DeviceTypeKey).AsEnumValue<DeviceType>();
+            set => _internal[Models.Metadata.Device.DeviceTypeKey] = value.AsStringValue<DeviceType>();
         }
 
         [JsonIgnore]

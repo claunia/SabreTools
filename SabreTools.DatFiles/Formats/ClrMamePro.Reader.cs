@@ -60,11 +60,11 @@ namespace SabreTools.DatFiles.Formats
             Header.HeaderSkipper ??= cmp.Header;
             Header.Type ??= cmp.Type;
             if (Header.ForceMerging == MergingFlag.None)
-                Header.ForceMerging = cmp.ForceMerging?.AsMergingFlag() ?? MergingFlag.None;
+                Header.ForceMerging = cmp.ForceMerging?.AsEnumValue<MergingFlag>() ?? MergingFlag.None;
             if (Header.ForcePacking == PackingFlag.None)
-                Header.ForcePacking = cmp.ForceZipping?.AsPackingFlag() ?? PackingFlag.None;
+                Header.ForcePacking = cmp.ForceZipping?.AsEnumValue<PackingFlag>() ?? PackingFlag.None;
             if (Header.ForcePacking == PackingFlag.None)
-                Header.ForcePacking = cmp.ForcePacking?.AsPackingFlag() ?? PackingFlag.None;
+                Header.ForcePacking = cmp.ForcePacking?.AsEnumValue<PackingFlag>() ?? PackingFlag.None;
 
             // Handle implied SuperDAT
             if (cmp.Name?.Contains(" - SuperDAT") == true && keep)
@@ -258,7 +258,7 @@ namespace SabreTools.DatFiles.Formats
                     //xxHash364 = rom.xxHash364, // TODO: Add to internal model
                     //xxHash3128 = rom.xxHash3128, // TODO: Add to internal model
                     MergeTag = rom.Merge,
-                    ItemStatus = rom.Status?.AsItemStatus() ?? ItemStatus.NULL,
+                    ItemStatus = rom.Status?.AsEnumValue<ItemStatus>() ?? ItemStatus.NULL,
                     Region = rom.Region,
                     //Flags = rom.Flags, // TODO: Add to internal model
                     Offset = rom.Offs,
@@ -304,7 +304,7 @@ namespace SabreTools.DatFiles.Formats
                     MD5 = disk.MD5,
                     SHA1 = disk.SHA1,
                     MergeTag = disk.Merge,
-                    ItemStatus = disk.Status?.AsItemStatus() ?? ItemStatus.NULL,
+                    ItemStatus = disk.Status?.AsEnumValue<ItemStatus>() ?? ItemStatus.NULL,
                     //Flags = disk.Flags, // TODO: Add to internal model
 
                     Source = new Source
@@ -411,7 +411,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Chip
                 {
-                    ChipType = chip.Type?.AsChipType() ?? ChipType.NULL,
+                    ChipType = chip.Type?.AsEnumValue<ChipType>() ?? ChipType.NULL,
                     Name = chip.Name,
                     //Flags = chip.Flags, // TODO: Add to internal model
                     Clock = NumberHelper.ConvertToInt64(chip.Clock),
@@ -448,7 +448,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Display
                 {
-                    DisplayType = video.Screen?.AsDisplayType() ?? DisplayType.NULL,
+                    DisplayType = video.Screen?.AsEnumValue<DisplayType>() ?? DisplayType.NULL,
                     Width = NumberHelper.ConvertToInt64(video.X),
                     Height = NumberHelper.ConvertToInt64(video.Y),
                     //AspectX = video.AspectX, // TODO: Add to internal model or find mapping
@@ -614,7 +614,7 @@ namespace SabreTools.DatFiles.Formats
             containsItems = true;
             var item = new Driver
             {
-                Status = driver.Status?.AsSupportStatus() ?? SupportStatus.NULL,
+                Status = driver.Status?.AsEnumValue<SupportStatus>() ?? SupportStatus.NULL,
                 //Color = driver.Color, // TODO: Add to internal model or find mapping
                 //Sound = driver.Sound, // TODO: Add to internal model or find mapping
                 //PaletteSize = driver.PaletteSize, // TODO: Add to internal model or find mapping

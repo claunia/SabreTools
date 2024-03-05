@@ -48,8 +48,8 @@ namespace SabreTools.DatItems.Formats
         [XmlElement("status")]
         public SoftwareListStatus Status
         {
-            get => _internal.ReadString(Models.Metadata.SoftwareList.StatusKey).AsSoftwareListStatus();
-            set => _internal[Models.Metadata.SoftwareList.StatusKey] = value.FromSoftwareListStatus();
+            get => _internal.ReadString(Models.Metadata.SoftwareList.StatusKey).AsEnumValue<SoftwareListStatus>();
+            set => _internal[Models.Metadata.SoftwareList.StatusKey] = value.AsStringValue<SoftwareListStatus>();
         }
 
         [JsonIgnore]

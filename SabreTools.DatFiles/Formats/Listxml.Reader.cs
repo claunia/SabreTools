@@ -97,7 +97,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 Name = game.Name,
                 SourceFile = game.SourceFile,
-                Runnable = game.Runnable.AsRunnable(),
+                Runnable = game.Runnable.AsEnumValue<Runnable>(),
                 CloneOf = game.CloneOf,
                 RomOf = game.RomOf,
                 SampleOf = game.SampleOf,
@@ -220,7 +220,7 @@ namespace SabreTools.DatFiles.Formats
                     MergeTag = rom.Merge,
                     Region = rom.Region,
                     Offset = rom.Offset,
-                    ItemStatus = rom.Status.AsItemStatus(),
+                    ItemStatus = rom.Status.AsEnumValue<ItemStatus>(),
                     Optional = rom.Optional.AsYesNo(),
                     //Dispose = rom.Dispose.AsYesNo(), // TODO: Add to internal model
                     //SoundOnly = rom.SoundOnly.AsYesNo(), // TODO: Add to internal model
@@ -264,7 +264,7 @@ namespace SabreTools.DatFiles.Formats
                     Region = disk.Region,
                     Index = disk.Index,
                     Writable = disk.Writable.AsYesNo(),
-                    ItemStatus = disk.Status.AsItemStatus(),
+                    ItemStatus = disk.Status.AsEnumValue<ItemStatus>(),
                     Optional = disk.Optional.AsYesNo(),
 
                     Source = new Source
@@ -369,7 +369,7 @@ namespace SabreTools.DatFiles.Formats
                 {
                     Name = chip.Name,
                     Tag = chip.Tag,
-                    ChipType = chip.Type.AsChipType(),
+                    ChipType = chip.Type.AsEnumValue<ChipType>(),
                     //SoundOnly = chip.SoundOnly, // TODO: Add to internal model
                     Clock = NumberHelper.ConvertToInt64(chip.Clock),
 
@@ -406,7 +406,7 @@ namespace SabreTools.DatFiles.Formats
                 var item = new Display
                 {
                     Tag = display.Tag,
-                    DisplayType = display.Type.AsDisplayType(),
+                    DisplayType = display.Type.AsEnumValue<DisplayType>(),
                     Rotate = NumberHelper.ConvertToInt64(display.Rotate),
                     FlipX = display.FlipX.AsYesNo(),
                     Width = NumberHelper.ConvertToInt64(display.Width),
@@ -452,7 +452,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Display
                 {
-                    DisplayType = video.Screen?.AsDisplayType() ?? DisplayType.NULL,
+                    DisplayType = video.Screen?.AsEnumValue<DisplayType>() ?? DisplayType.NULL,
                     Width = NumberHelper.ConvertToInt64(video.Width),
                     Height = NumberHelper.ConvertToInt64(video.Height),
                     //AspectX = video.AspectX, // TODO: Add to internal model or find mapping
@@ -549,7 +549,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 var controlItem = new Control
                 {
-                    ControlType = control.Type.AsControlType(),
+                    ControlType = control.Type.AsEnumValue<ControlType>(),
                     Player = NumberHelper.ConvertToInt64(control.Player),
                     Buttons = NumberHelper.ConvertToInt64(control.Buttons),
                     RequiredButtons = NumberHelper.ConvertToInt64(control.ReqButtons),
@@ -609,7 +609,7 @@ namespace SabreTools.DatFiles.Formats
                     {
                         Tag = dipswitch.Condition.Tag,
                         Mask = dipswitch.Condition.Mask,
-                        Relation = dipswitch.Condition.Relation.AsRelation(),
+                        Relation = dipswitch.Condition.Relation.AsEnumValue<Relation>(),
                         Value = dipswitch.Condition.Value,
                     };
                     item.Conditions = [condition];
@@ -646,7 +646,7 @@ namespace SabreTools.DatFiles.Formats
                         {
                             Tag = dipvalue.Condition.Tag,
                             Mask = dipvalue.Condition.Mask,
-                            Relation = dipvalue.Condition.Relation.AsRelation(),
+                            Relation = dipvalue.Condition.Relation.AsEnumValue<Relation>(),
                             Value = dipvalue.Condition.Value,
                         };
                         dipValueItem.Conditions = [condition];
@@ -700,7 +700,7 @@ namespace SabreTools.DatFiles.Formats
                     {
                         Tag = configuration.Condition.Tag,
                         Mask = configuration.Condition.Mask,
-                        Relation = configuration.Condition.Relation.AsRelation(),
+                        Relation = configuration.Condition.Relation.AsEnumValue<Relation>(),
                         Value = configuration.Condition.Value,
                     };
                     item.Conditions = [condition];
@@ -737,7 +737,7 @@ namespace SabreTools.DatFiles.Formats
                         {
                             Tag = dipvalue.Condition.Tag,
                             Mask = dipvalue.Condition.Mask,
-                            Relation = dipvalue.Condition.Relation.AsRelation(),
+                            Relation = dipvalue.Condition.Relation.AsEnumValue<Relation>(),
                             Value = dipvalue.Condition.Value,
                         };
                         settingItem.Conditions = [condition];
@@ -837,7 +837,7 @@ namespace SabreTools.DatFiles.Formats
                     {
                         Tag = adjuster.Condition.Tag,
                         Mask = adjuster.Condition.Mask,
-                        Relation = adjuster.Condition.Relation.AsRelation(),
+                        Relation = adjuster.Condition.Relation.AsEnumValue<Relation>(),
                         Value = adjuster.Condition.Value,
                     };
                     item.Conditions = [condition];
@@ -866,13 +866,13 @@ namespace SabreTools.DatFiles.Formats
             containsItems = true;
             var item = new Driver
             {
-                Status = driver.Status.AsSupportStatus(),
-                //Color = driver.Color.AsSupportStatus(), // TODO: Add to internal model
-                //Sound = driver.Sound.AsSupportStatus(), // TODO: Add to internal model
+                Status = driver.Status.AsEnumValue<SupportStatus>(),
+                //Color = driver.Color.AsEnumValue<SupportStatus>(), // TODO: Add to internal model
+                //Sound = driver.Sound.AsEnumValue<SupportStatus>(), // TODO: Add to internal model
                 //PaletteSize = NumberHelper.ConvertToInt64(driver.PaletteSize), // TODO: Add to internal model
-                Emulation = driver.Emulation.AsSupportStatus(),
-                Cocktail = driver.Cocktail.AsSupportStatus(),
-                SaveState = driver.SaveState.AsSupported(),
+                Emulation = driver.Emulation.AsEnumValue<SupportStatus>(),
+                Cocktail = driver.Cocktail.AsEnumValue<SupportStatus>(),
+                SaveState = driver.SaveState.AsEnumValue<Supported>(),
                 RequiresArtwork = driver.RequiresArtwork.AsYesNo(),
                 Unofficial = driver.Unofficial.AsYesNo(),
                 NoSoundHardware = driver.NoSoundHardware.AsYesNo(),
@@ -909,9 +909,9 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Feature
                 {
-                    Type = feature.Type.AsFeatureType(),
-                    Status = feature.Status.AsFeatureStatus(),
-                    Overall = feature.Overall.AsFeatureStatus(),
+                    Type = feature.Type.AsEnumValue<FeatureType>(),
+                    Status = feature.Status.AsEnumValue<FeatureStatus>(),
+                    Overall = feature.Overall.AsEnumValue<FeatureStatus>(),
 
                     Source = new Source
                     {
@@ -945,7 +945,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Device
                 {
-                    DeviceType = device.Type.AsDeviceType(),
+                    DeviceType = device.Type.AsEnumValue<DeviceType>(),
                     Tag = device.Tag,
                     FixedImage = device.FixedImage,
                     Mandatory = NumberHelper.ConvertToInt64(device.Mandatory),
@@ -1057,7 +1057,7 @@ namespace SabreTools.DatFiles.Formats
                 {
                     Tag = softwarelist.Tag,
                     Name = softwarelist.Name,
-                    Status = softwarelist.Status.AsSoftwareListStatus(),
+                    Status = softwarelist.Status.AsEnumValue<SoftwareListStatus>(),
                     Filter = softwarelist.Filter,
 
                     Source = new Source

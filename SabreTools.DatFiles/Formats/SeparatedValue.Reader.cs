@@ -79,7 +79,7 @@ namespace SabreTools.DatFiles.Formats
 
             // Read item values
             DatItem? item = null;
-            switch (row.Type.AsItemType())
+            switch (row.Type.AsEnumValue<ItemType>())
             {
                 case ItemType.Disk:
                     item = new Disk
@@ -87,7 +87,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = row.DiskName,
                         MD5 = row.MD5,
                         SHA1 = row.SHA1,
-                        ItemStatus = row.Status.AsItemStatus(),
+                        ItemStatus = row.Status.AsEnumValue<ItemStatus>(),
 
                         Source = new Source
                         {
@@ -125,7 +125,7 @@ namespace SabreTools.DatFiles.Formats
                         SHA384 = row.SHA384,
                         SHA512 = row.SHA512,
                         SpamSum = row.SpamSum,
-                        ItemStatus = row.Status.AsItemStatus(),
+                        ItemStatus = row.Status.AsEnumValue<ItemStatus>(),
 
                         Source = new Source
                         {

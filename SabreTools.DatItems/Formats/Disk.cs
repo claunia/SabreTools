@@ -98,8 +98,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public ItemStatus ItemStatus
         {
-            get => _internal.ReadString(Models.Metadata.Disk.StatusKey).AsItemStatus();
-            set => _internal[Models.Metadata.Disk.StatusKey] = value.FromItemStatus(yesno: false);
+            get => _internal.ReadString(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>();
+            set => _internal[Models.Metadata.Disk.StatusKey] = value.AsStringValue<ItemStatus>(useSecond: false);
         }
 
         [JsonIgnore]

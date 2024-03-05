@@ -210,9 +210,9 @@ namespace SabreTools.Filtering
 
                 case DatItemField.AreaEndianness:
                     if (negate)
-                        AreaEndianness.Negative |= value.AsEndianness();
+                        AreaEndianness.Negative |= value.AsEnumValue<Endianness>();
                     else
-                        AreaEndianness.Positive |= value.AsEndianness();
+                        AreaEndianness.Positive |= value.AsEnumValue<Endianness>();
                     break;
 
                 case DatItemField.AreaName:
@@ -245,9 +245,9 @@ namespace SabreTools.Filtering
 
                 case DatItemField.ChipType:
                     if (negate)
-                        ChipType.Negative |= value.AsChipType();
+                        ChipType.Negative |= value.AsEnumValue<ChipType>();
                     else
-                        ChipType.Positive |= value.AsChipType();
+                        ChipType.Positive |= value.AsEnumValue<ChipType>();
                     break;
 
                 case DatItemField.Clock:
@@ -260,9 +260,9 @@ namespace SabreTools.Filtering
 
                 case DatItemField.CocktailStatus:
                     if (negate)
-                        CocktailStatus.Negative |= value.AsSupportStatus();
+                        CocktailStatus.Negative |= value.AsEnumValue<SupportStatus>();
                     else
-                        CocktailStatus.Positive |= value.AsSupportStatus();
+                        CocktailStatus.Positive |= value.AsEnumValue<SupportStatus>();
                     break;
 
                 case DatItemField.Coins:
@@ -279,9 +279,9 @@ namespace SabreTools.Filtering
 
                 case DatItemField.Condition_Relation:
                     if (negate)
-                        Condition_Relation.Negative |= value.AsRelation();
+                        Condition_Relation.Negative |= value.AsEnumValue<Relation>();
                     else
-                        Condition_Relation.Positive |= value.AsRelation();
+                        Condition_Relation.Positive |= value.AsEnumValue<Relation>();
                     break;
 
                 case DatItemField.Condition_Tag:
@@ -331,9 +331,9 @@ namespace SabreTools.Filtering
                 case DatItemField.Control_Type:
 
                     if (negate)
-                        Control_Type.Negative |= value.AsControlType();
+                        Control_Type.Negative |= value.AsEnumValue<ControlType>();
                     else
-                        Control_Type.Positive |= value.AsControlType();
+                        Control_Type.Positive |= value.AsEnumValue<ControlType>();
                     break;
 
                 case DatItemField.Control_Ways:
@@ -366,9 +366,9 @@ namespace SabreTools.Filtering
 
                 case DatItemField.DeviceType:
                     if (negate)
-                        DeviceType.Negative |= value.AsDeviceType();
+                        DeviceType.Negative |= value.AsEnumValue<DeviceType>();
                     else
-                        DeviceType.Positive |= value.AsDeviceType();
+                        DeviceType.Positive |= value.AsEnumValue<DeviceType>();
                     break;
 
                 case DatItemField.DevStatus:
@@ -377,16 +377,16 @@ namespace SabreTools.Filtering
 
                 case DatItemField.DisplayType:
                     if (negate)
-                        DisplayType.Negative |= value.AsDisplayType();
+                        DisplayType.Negative |= value.AsEnumValue<DisplayType>();
                     else
-                        DisplayType.Positive |= value.AsDisplayType();
+                        DisplayType.Positive |= value.AsEnumValue<DisplayType>();
                     break;
 
                 case DatItemField.EmulationStatus:
                     if (negate)
-                        EmulationStatus.Negative |= value.AsSupportStatus();
+                        EmulationStatus.Negative |= value.AsEnumValue<SupportStatus>();
                     else
-                        EmulationStatus.Positive |= value.AsSupportStatus();
+                        EmulationStatus.Positive |= value.AsEnumValue<SupportStatus>();
                     break;
 
                 case DatItemField.Extension_Name:
@@ -395,23 +395,23 @@ namespace SabreTools.Filtering
 
                 case DatItemField.FeatureOverall:
                     if (negate)
-                        FeatureOverall.Negative |= value.AsFeatureStatus();
+                        FeatureOverall.Negative |= value.AsEnumValue<FeatureStatus>();
                     else
-                        FeatureOverall.Positive |= value.AsFeatureStatus();
+                        FeatureOverall.Positive |= value.AsEnumValue<FeatureStatus>();
                     break;
 
                 case DatItemField.FeatureStatus:
                     if (negate)
-                        FeatureStatus.Negative |= value.AsFeatureStatus();
+                        FeatureStatus.Negative |= value.AsEnumValue<FeatureStatus>();
                     else
-                        FeatureStatus.Positive |= value.AsFeatureStatus();
+                        FeatureStatus.Positive |= value.AsEnumValue<FeatureStatus>();
                     break;
 
                 case DatItemField.FeatureType:
                     if (negate)
-                        FeatureType.Negative |= value.AsFeatureType();
+                        FeatureType.Negative |= value.AsEnumValue<FeatureType>();
                     else
-                        FeatureType.Positive |= value.AsFeatureType();
+                        FeatureType.Positive |= value.AsEnumValue<FeatureType>();
                     break;
 
                 case DatItemField.Filter:
@@ -476,9 +476,9 @@ namespace SabreTools.Filtering
 
                 case DatItemField.LoadFlag:
                     if (negate)
-                        LoadFlag.Negative |= value.AsLoadFlag();
+                        LoadFlag.Negative |= value.AsEnumValue<LoadFlag>();
                     else
-                        LoadFlag.Positive |= value.AsLoadFlag();
+                        LoadFlag.Positive |= value.AsEnumValue<LoadFlag>();
                     break;
 
                 case DatItemField.Location_Inverted:
@@ -531,9 +531,9 @@ namespace SabreTools.Filtering
 
                 case DatItemField.OpenMSXSubType:
                     if (negate)
-                        OpenMSXSubType.Negative |= value.AsOpenMSXSubType();
+                        OpenMSXSubType.Negative |= value.AsEnumValue<OpenMSXSubType>();
                     else
-                        OpenMSXSubType.Positive |= value.AsOpenMSXSubType();
+                        OpenMSXSubType.Positive |= value.AsEnumValue<OpenMSXSubType>();
                     break;
 
                 case DatItemField.OpenMSXType:
@@ -594,9 +594,9 @@ namespace SabreTools.Filtering
 
                 case DatItemField.Relation:
                     if (negate)
-                        Relation.Negative |= value.AsRelation();
+                        Relation.Negative |= value.AsEnumValue<Relation>();
                     else
-                        Relation.Positive |= value.AsRelation();
+                        Relation.Positive |= value.AsEnumValue<Relation>();
                     break;
 
                 case DatItemField.Remark:
@@ -617,9 +617,9 @@ namespace SabreTools.Filtering
 
                 case DatItemField.SaveStateStatus:
                     if (negate)
-                        SaveStateStatus.Negative |= value.AsSupported();
+                        SaveStateStatus.Negative |= value.AsEnumValue<Supported>();
                     else
-                        SaveStateStatus.Positive |= value.AsSupported();
+                        SaveStateStatus.Positive |= value.AsEnumValue<Supported>();
                     break;
 
                 case DatItemField.Service:
@@ -672,9 +672,9 @@ namespace SabreTools.Filtering
 
                 case DatItemField.SoftwareListStatus:
                     if (negate)
-                        SoftwareListStatus.Negative |= value.AsSoftwareListStatus();
+                        SoftwareListStatus.Negative |= value.AsEnumValue<SoftwareListStatus>();
                     else
-                        SoftwareListStatus.Positive |= value.AsSoftwareListStatus();
+                        SoftwareListStatus.Positive |= value.AsEnumValue<SoftwareListStatus>();
                     break;
 
                 case DatItemField.SpamSum:
@@ -683,9 +683,9 @@ namespace SabreTools.Filtering
 
                 case DatItemField.Status:
                     if (negate)
-                        Status.Negative |= value.AsItemStatus();
+                        Status.Negative |= value.AsEnumValue<ItemStatus>();
                     else
-                        Status.Positive |= value.AsItemStatus();
+                        Status.Positive |= value.AsEnumValue<ItemStatus>();
                     break;
 
                 case DatItemField.Summation:
@@ -694,9 +694,9 @@ namespace SabreTools.Filtering
 
                 case DatItemField.SupportStatus:
                     if (negate)
-                        SupportStatus.Negative |= value.AsSupportStatus();
+                        SupportStatus.Negative |= value.AsEnumValue<SupportStatus>();
                     else
-                        SupportStatus.Positive |= value.AsSupportStatus();
+                        SupportStatus.Positive |= value.AsEnumValue<SupportStatus>();
                     break;
 
                 case DatItemField.Tag:
@@ -708,7 +708,7 @@ namespace SabreTools.Filtering
                     break;
 
                 case DatItemField.Type:
-                    if (value.AsItemType() == ItemType.NULL)
+                    if (value.AsEnumValue<ItemType>() == ItemType.NULL)
                         return;
 
                     SetStringFilter(Type, value, negate);

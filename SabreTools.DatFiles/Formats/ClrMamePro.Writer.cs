@@ -199,9 +199,9 @@ namespace SabreTools.DatFiles.Formats
             };
 
             if (Header.ForceMergingSpecified)
-                clrMamePro.ForceMerging = Header.ForceMerging.FromMergingFlag(romCenter: false);
+                clrMamePro.ForceMerging = Header.ForceMerging.AsStringValue<MergingFlag>(useSecond: false);
             if (Header.ForcePackingSpecified)
-                clrMamePro.ForcePacking = Header.ForcePacking.FromPackingFlag(yesno: false);
+                clrMamePro.ForcePacking = Header.ForcePacking.AsStringValue<PackingFlag>(useSecond: false);
 
             return clrMamePro;
         }
@@ -394,7 +394,7 @@ namespace SabreTools.DatFiles.Formats
             };
 
             if (item.ItemStatusSpecified)
-                rom.Status = item.ItemStatus.FromItemStatus(yesno: false);
+                rom.Status = item.ItemStatus.AsStringValue<ItemStatus>(useSecond: false);
             if (item.InvertedSpecified)
                 rom.Inverted = item.Inverted.FromYesNo();
             if (item.MIASpecified)
@@ -418,7 +418,7 @@ namespace SabreTools.DatFiles.Formats
             };
 
             if (item.ItemStatusSpecified)
-                disk.Status = item.ItemStatus.FromItemStatus(yesno: false);
+                disk.Status = item.ItemStatus.AsStringValue<ItemStatus>(useSecond: false);
 
             return disk;
         }
@@ -470,7 +470,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var chip = new Models.ClrMamePro.Chip
             {
-                Type = item.ChipType.FromChipType(),
+                Type = item.ChipType.AsStringValue<ChipType>(),
                 Name = item.Name,
                 //Flags = item.Flags, // TODO: Add to internal model
                 Clock = item.Clock?.ToString(),
@@ -485,7 +485,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var video = new Models.ClrMamePro.Video
             {
-                Screen = item.DisplayType.FromDisplayType(),
+                Screen = item.DisplayType.AsStringValue<DisplayType>(),
                 X = item.Width?.ToString(),
                 Y = item.Height?.ToString(),
                 //AspectX = item.AspectX, // TODO: Add to internal model or find mapping
@@ -573,7 +573,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var driver = new Models.ClrMamePro.Driver
             {
-                Status = item.Status.FromSupportStatus(),
+                Status = item.Status.AsStringValue<SupportStatus>(),
                 //Color = item.Color, // TODO: Add to internal model or find mapping
                 //Sound = item.Sound, // TODO: Add to internal model or find mapping
                 //PaletteSize = item.PaletteSize, // TODO: Add to internal model or find mapping

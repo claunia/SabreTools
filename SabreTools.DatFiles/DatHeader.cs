@@ -458,13 +458,13 @@ namespace SabreTools.DatFiles
                 Type = mappings[DatHeaderField.Type];
 
             if (mappings.ContainsKey(DatHeaderField.ForceMerging))
-                ForceMerging = mappings[DatHeaderField.ForceMerging].AsMergingFlag();
+                ForceMerging = mappings[DatHeaderField.ForceMerging].AsEnumValue<MergingFlag>();
 
             if (mappings.ContainsKey(DatHeaderField.ForceNodump))
-                ForceNodump = mappings[DatHeaderField.ForceNodump].AsNodumpFlag();
+                ForceNodump = mappings[DatHeaderField.ForceNodump].AsEnumValue<NodumpFlag>();
 
             if (mappings.ContainsKey(DatHeaderField.ForcePacking))
-                ForcePacking = mappings[DatHeaderField.ForcePacking].AsPackingFlag();
+                ForcePacking = mappings[DatHeaderField.ForcePacking].AsEnumValue<PackingFlag>();
 
             #endregion
 
@@ -487,13 +487,13 @@ namespace SabreTools.DatFiles
                 Build = mappings[DatHeaderField.Build];
 
             if (mappings.ContainsKey(DatHeaderField.RomMode))
-                RomMode = mappings[DatHeaderField.RomMode].AsMergingFlag();
+                RomMode = mappings[DatHeaderField.RomMode].AsEnumValue<MergingFlag>();
 
             if (mappings.ContainsKey(DatHeaderField.BiosMode))
-                BiosMode = mappings[DatHeaderField.BiosMode].AsMergingFlag();
+                BiosMode = mappings[DatHeaderField.BiosMode].AsEnumValue<MergingFlag>();
 
             if (mappings.ContainsKey(DatHeaderField.SampleMode))
-                SampleMode = mappings[DatHeaderField.SampleMode].AsMergingFlag();
+                SampleMode = mappings[DatHeaderField.SampleMode].AsEnumValue<MergingFlag>();
 
             if (mappings.ContainsKey(DatHeaderField.LockRomMode))
                 LockRomMode = mappings[DatHeaderField.LockRomMode].AsYesNo();

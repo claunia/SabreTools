@@ -25,8 +25,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public SupportStatus Status
         {
-            get => _internal.ReadString(Models.Metadata.Driver.StatusKey).AsSupportStatus();
-            set => _internal[Models.Metadata.Driver.StatusKey] = value.FromSupportStatus();
+            get => _internal.ReadString(Models.Metadata.Driver.StatusKey).AsEnumValue<SupportStatus>();
+            set => _internal[Models.Metadata.Driver.StatusKey] = value.AsStringValue<SupportStatus>();
         }
 
         [JsonIgnore]
@@ -39,8 +39,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public SupportStatus Emulation
         {
-            get => _internal.ReadString(Models.Metadata.Driver.EmulationKey).AsSupportStatus();
-            set => _internal[Models.Metadata.Driver.EmulationKey] = value.FromSupportStatus();
+            get => _internal.ReadString(Models.Metadata.Driver.EmulationKey).AsEnumValue<SupportStatus>();
+            set => _internal[Models.Metadata.Driver.EmulationKey] = value.AsStringValue<SupportStatus>();
         }
 
         [JsonIgnore]
@@ -53,8 +53,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public SupportStatus Cocktail
         {
-            get => _internal.ReadString(Models.Metadata.Driver.CocktailKey).AsSupportStatus();
-            set => _internal[Models.Metadata.Driver.CocktailKey] = value.FromSupportStatus();
+            get => _internal.ReadString(Models.Metadata.Driver.CocktailKey).AsEnumValue<SupportStatus>();
+            set => _internal[Models.Metadata.Driver.CocktailKey] = value.AsStringValue<SupportStatus>();
         }
 
         [JsonIgnore]
@@ -67,8 +67,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public Supported SaveState
         {
-            get => _internal.ReadString(Models.Metadata.Driver.SaveStateKey).AsSupported();
-            set => _internal[Models.Metadata.Driver.SaveStateKey] = value.FromSupported(verbose: true);
+            get => _internal.ReadString(Models.Metadata.Driver.SaveStateKey).AsEnumValue<Supported>();
+            set => _internal[Models.Metadata.Driver.SaveStateKey] = value.AsStringValue<Supported>(useSecond: true);
         }
 
         [JsonIgnore]

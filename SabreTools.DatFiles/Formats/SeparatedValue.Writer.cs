@@ -164,7 +164,7 @@ namespace SabreTools.DatFiles.Formats
                 Description = Header.Description,
                 GameName = disk.Machine.Name,
                 GameDescription = disk.Machine.Description,
-                Type = disk.ItemType.FromItemType(),
+                Type = disk.ItemType.AsStringValue<ItemType>(),
                 RomName = string.Empty,
                 DiskName = disk.Name,
                 Size = string.Empty,
@@ -175,7 +175,7 @@ namespace SabreTools.DatFiles.Formats
                 SHA384 = string.Empty,
                 SHA512 = string.Empty,
                 SpamSum = string.Empty,
-                Status = disk.ItemStatus.FromItemStatus(yesno: false),
+                Status = disk.ItemStatus.AsStringValue<ItemStatus>(useSecond: false),
             };
             return row;
         }
@@ -192,7 +192,7 @@ namespace SabreTools.DatFiles.Formats
                 Description = Header.Description,
                 GameName = media.Machine.Name,
                 GameDescription = media.Machine.Description,
-                Type = media.ItemType.FromItemType(),
+                Type = media.ItemType.AsStringValue<ItemType>(),
                 RomName = string.Empty,
                 DiskName = media.Name,
                 Size = string.Empty,
@@ -220,7 +220,7 @@ namespace SabreTools.DatFiles.Formats
                 Description = Header.Description,
                 GameName = rom.Machine.Name,
                 GameDescription = rom.Machine.Description,
-                Type = rom.ItemType.FromItemType(),
+                Type = rom.ItemType.AsStringValue<ItemType>(),
                 RomName = rom.Name,
                 DiskName = string.Empty,
                 Size = rom.Size?.ToString(),
@@ -231,7 +231,7 @@ namespace SabreTools.DatFiles.Formats
                 SHA384 = rom.SHA384,
                 SHA512 = rom.SHA512,
                 SpamSum = rom.SpamSum,
-                Status = rom.ItemStatus.FromItemStatus(yesno: false),
+                Status = rom.ItemStatus.AsStringValue<ItemStatus>(useSecond: false),
             };
             return row;
         }

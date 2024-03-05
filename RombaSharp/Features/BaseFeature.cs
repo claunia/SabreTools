@@ -449,7 +449,7 @@ Possible values are: Verbose, User, Warning, Error");
 
         public override bool ProcessFeatures(Dictionary<string, SabreTools.Help.Feature> features)
         {
-            LogLevel = GetString(features, LogLevelStringValue).AsLogLevel();
+            LogLevel = GetString(features, LogLevelStringValue).AsEnumValue<LogLevel>();
             ScriptMode = GetBoolean(features, ScriptValue);
 
             InitializeConfiguration();

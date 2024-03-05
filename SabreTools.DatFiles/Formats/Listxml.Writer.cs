@@ -374,7 +374,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 Name = machine.Name,
                 SourceFile = machine.SourceFile,
-                Runnable = machine.Runnable.FromRunnable(),
+                Runnable = machine.Runnable.AsStringValue<Runnable>(),
                 CloneOf = machine.CloneOf,
                 RomOf = machine.RomOf,
                 SampleOf = machine.SampleOf,
@@ -435,7 +435,7 @@ namespace SabreTools.DatFiles.Formats
                 Merge = item.MergeTag,
                 Region = item.Region,
                 Offset = item.Offset,
-                Status = item.ItemStatus.FromItemStatus(yesno: false),
+                Status = item.ItemStatus.AsStringValue<ItemStatus>(useSecond: false),
                 Optional = item.Optional.FromYesNo(),
                 //Dispose = item.Dispose.FromYesNo(), // TODO: Add to internal model
                 //SoundOnly = item.SoundOnly.FromYesNo(), // TODO: Add to internal model
@@ -458,7 +458,7 @@ namespace SabreTools.DatFiles.Formats
                 Region = item.Region,
                 Index = item.Index,
                 Writable = item.Writable.FromYesNo(),
-                Status = item.ItemStatus.FromItemStatus(yesno: false),
+                Status = item.ItemStatus.AsStringValue<ItemStatus>(useSecond: false),
                 Optional = item.Optional.FromYesNo(),
             };
 
@@ -500,7 +500,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 Name = item.Name,
                 Tag = item.Tag,
-                Type = item.ChipType.FromChipType(),
+                Type = item.ChipType.AsStringValue<ChipType>(),
                 //SoundOnly = item.SoundOnly, // TODO: Add to internal model
                 Clock = item.Clock?.ToString(),
             };
@@ -516,7 +516,7 @@ namespace SabreTools.DatFiles.Formats
             var display = new Models.Listxml.Display
             {
                 Tag = item.Tag,
-                Type = item.DisplayType.FromDisplayType(),
+                Type = item.DisplayType.AsStringValue<DisplayType>(),
                 Rotate = item.Rotate?.ToString(),
                 FlipX = item.FlipX.FromYesNo(),
                 Width = item.Width?.ToString(),
@@ -582,7 +582,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var control = new Models.Listxml.Control
             {
-                Type = item.ControlType.FromControlType(),
+                Type = item.ControlType.AsStringValue<ControlType>(),
                 Player = item.Player?.ToString(),
                 Buttons = item.Buttons?.ToString(),
                 ReqButtons = item.RequiredButtons?.ToString(),
@@ -618,7 +618,7 @@ namespace SabreTools.DatFiles.Formats
                 {
                     Tag = conditionItem?.Tag,
                     Mask = conditionItem?.Mask,
-                    Relation = conditionItem?.Relation.FromRelation(),
+                    Relation = conditionItem?.Relation.AsStringValue<Relation>(),
                     Value = conditionItem?.Value,
                 };
                 dipswitch.Condition = condition;
@@ -681,7 +681,7 @@ namespace SabreTools.DatFiles.Formats
                 {
                     Tag = conditionItem?.Tag,
                     Mask = conditionItem?.Mask,
-                    Relation = conditionItem?.Relation.FromRelation(),
+                    Relation = conditionItem?.Relation.AsStringValue<Relation>(),
                     Value = conditionItem?.Value,
                 };
                 dipvalue.Condition = condition;
@@ -709,7 +709,7 @@ namespace SabreTools.DatFiles.Formats
                 {
                     Tag = conditionItem?.Tag,
                     Mask = conditionItem?.Mask,
-                    Relation = conditionItem?.Relation.FromRelation(),
+                    Relation = conditionItem?.Relation.AsStringValue<Relation>(),
                     Value = conditionItem?.Value,
                 };
                 configuration.Condition = condition;
@@ -772,7 +772,7 @@ namespace SabreTools.DatFiles.Formats
                 {
                     Tag = conditionItem?.Tag,
                     Mask = conditionItem?.Mask,
-                    Relation = conditionItem?.Relation.FromRelation(),
+                    Relation = conditionItem?.Relation.AsStringValue<Relation>(),
                     Value = conditionItem?.Value,
                 };
                 confsetting.Condition = condition;
@@ -812,7 +812,7 @@ namespace SabreTools.DatFiles.Formats
                 {
                     Tag = conditionItem?.Tag,
                     Mask = conditionItem?.Mask,
-                    Relation = conditionItem?.Relation.FromRelation(),
+                    Relation = conditionItem?.Relation.AsStringValue<Relation>(),
                     Value = conditionItem?.Value,
                 };
                 adjuster.Condition = condition;
@@ -828,13 +828,13 @@ namespace SabreTools.DatFiles.Formats
         {
             var driver = new Models.Listxml.Driver
             {
-                Status = item.Status.FromSupportStatus(),
-                //Color = item.Color.FromSupportStatus(), // TODO: Add to internal model
-                //Sound = item.Sound.FromSupportStatus(), // TODO: Add to internal model
+                Status = item.Status.AsStringValue<SupportStatus>(),
+                //Color = item.Color.AsStringValue<SupportStatus>(), // TODO: Add to internal model
+                //Sound = item.Sound.AsStringValue<SupportStatus>(), // TODO: Add to internal model
                 //PaletteSize = driver.PaletteSize?.ToString(), // TODO: Add to internal model
-                Emulation = item.Emulation.FromSupportStatus(),
-                Cocktail = item.Cocktail.FromSupportStatus(),
-                SaveState = item.SaveState.FromSupported(verbose: true),
+                Emulation = item.Emulation.AsStringValue<SupportStatus>(),
+                Cocktail = item.Cocktail.AsStringValue<SupportStatus>(),
+                SaveState = item.SaveState.AsStringValue<Supported>(useSecond: true),
                 RequiresArtwork = item.RequiresArtwork.FromYesNo(),
                 Unofficial = item.Unofficial.FromYesNo(),
                 NoSoundHardware = item.NoSoundHardware.FromYesNo(),
@@ -851,9 +851,9 @@ namespace SabreTools.DatFiles.Formats
         {
             var feature = new Models.Listxml.Feature
             {
-                Type = item.Type.FromFeatureType(),
-                Status = item.Status.FromFeatureStatus(),
-                Overall = item.Overall.FromFeatureStatus(),
+                Type = item.Type.AsStringValue<FeatureType>(),
+                Status = item.Status.AsStringValue<FeatureStatus>(),
+                Overall = item.Overall.AsStringValue<FeatureStatus>(),
             };
 
             return feature;
@@ -866,7 +866,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var device = new Models.Listxml.Device
             {
-                Type = item.DeviceType.FromDeviceType(),
+                Type = item.DeviceType.AsStringValue<DeviceType>(),
                 Tag = item.Tag,
                 FixedImage = item.FixedImage,
                 Mandatory = item.Mandatory?.ToString(),
@@ -937,7 +937,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 Tag = item.Tag,
                 Name = item.Name,
-                Status = item.Status.FromSoftwareListStatus(),
+                Status = item.Status.AsStringValue<SoftwareListStatus>(),
                 Filter = item.Filter,
             };
 

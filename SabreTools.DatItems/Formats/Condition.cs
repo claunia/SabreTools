@@ -42,8 +42,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public Relation Relation
         {
-            get => _internal.ReadString(Models.Metadata.Condition.RelationKey).AsRelation();
-            set => _internal[Models.Metadata.Condition.RelationKey] = value.FromRelation();
+            get => _internal.ReadString(Models.Metadata.Condition.RelationKey).AsEnumValue<Relation>();
+            set => _internal[Models.Metadata.Condition.RelationKey] = value.AsStringValue<Relation>();
         }
 
         [JsonIgnore]

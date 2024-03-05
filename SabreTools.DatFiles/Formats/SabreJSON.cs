@@ -209,7 +209,7 @@ namespace SabreTools.DatFiles.Formats
                 if (datItemObj == null)
                     return;
 
-                switch (datItemObj.Value<string>("type").AsItemType())
+                switch (datItemObj.Value<string>("type").AsEnumValue<ItemType>())
                 {
                     case ItemType.Adjuster:
                         datItem = datItemObj.ToObject<Adjuster>();

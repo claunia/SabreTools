@@ -233,11 +233,11 @@ namespace SabreTools.DatFiles.Formats
             };
 
             if (Header.ForceMergingSpecified)
-                subheader.ForceMerging = Header.ForceMerging.FromMergingFlag(romCenter: false);
+                subheader.ForceMerging = Header.ForceMerging.AsStringValue<MergingFlag>(useSecond: false);
             if (Header.ForceNodumpSpecified)
-                subheader.ForceNodump = Header.ForceNodump.FromNodumpFlag();
+                subheader.ForceNodump = Header.ForceNodump.AsStringValue<NodumpFlag>();
             if (Header.ForcePackingSpecified)
-                subheader.ForcePacking = Header.ForcePacking.FromPackingFlag(yesno: false);
+                subheader.ForcePacking = Header.ForcePacking.AsStringValue<PackingFlag>(useSecond: false);
 
             return subheader;
         }
@@ -265,11 +265,11 @@ namespace SabreTools.DatFiles.Formats
             };
 
             if (Header.RomModeSpecified)
-                subheader.RomMode = Header.RomMode.FromMergingFlag(romCenter: true);
+                subheader.RomMode = Header.RomMode.AsStringValue<MergingFlag>(useSecond: true);
             if (Header.BiosModeSpecified)
-                subheader.BiosMode = Header.BiosMode.FromMergingFlag(romCenter: true);
+                subheader.BiosMode = Header.BiosMode.AsStringValue<MergingFlag>(useSecond: true);
             if (Header.SampleModeSpecified)
-                subheader.SampleMode = Header.SampleMode.FromMergingFlag(romCenter: true);
+                subheader.SampleMode = Header.SampleMode.AsStringValue<MergingFlag>(useSecond: true);
 
             if (Header.LockRomModeSpecified)
                 subheader.LockRomMode = Header.LockRomMode.FromYesNo();
@@ -413,7 +413,7 @@ namespace SabreTools.DatFiles.Formats
             game.RebuildTo = machine.RebuildTo;
             game.Id = machine.NoIntroId;
             game.CloneOfId = machine.NoIntroCloneOfId;
-            game.Runnable = machine.Runnable.FromRunnable();
+            game.Runnable = machine.Runnable.AsStringValue<Runnable>();
             if (machine.Comment != null)
             {
                 if (machine.Comment.Contains(';'))
@@ -538,7 +538,7 @@ namespace SabreTools.DatFiles.Formats
             };
 
             if (item.ItemStatusSpecified)
-                rom.Status = item.ItemStatus.FromItemStatus(yesno: false);
+                rom.Status = item.ItemStatus.AsStringValue<ItemStatus>(useSecond: false);
             if (item.InvertedSpecified)
                 rom.Inverted = item.Inverted.FromYesNo();
             if (item.MIASpecified)
@@ -562,7 +562,7 @@ namespace SabreTools.DatFiles.Formats
             };
 
             if (item.ItemStatusSpecified)
-                disk.Status = item.ItemStatus.FromItemStatus(yesno: false);
+                disk.Status = item.ItemStatus.AsStringValue<ItemStatus>(useSecond: false);
 
             return disk;
         }
@@ -626,10 +626,10 @@ namespace SabreTools.DatFiles.Formats
         {
             var driver = new Models.Logiqx.Driver
             {
-                Status = item.Status.FromSupportStatus(),
-                Emulation = item.Emulation.FromSupportStatus(),
-                Cocktail = item.Cocktail.FromSupportStatus(),
-                SaveState = item.SaveState.FromSupported(true),
+                Status = item.Status.AsStringValue<SupportStatus>(),
+                Emulation = item.Emulation.AsStringValue<SupportStatus>(),
+                Cocktail = item.Cocktail.AsStringValue<SupportStatus>(),
+                SaveState = item.SaveState.AsStringValue<Supported>(useSecond: true),
             };
 
             if (item.RequiresArtworkSpecified)
@@ -657,7 +657,7 @@ namespace SabreTools.DatFiles.Formats
             };
 
             if (item.StatusSpecified)
-                softwarelist.Status = item.Status.FromSoftwareListStatus();
+                softwarelist.Status = item.Status.AsStringValue<SoftwareListStatus>();
 
             return softwarelist;
         }

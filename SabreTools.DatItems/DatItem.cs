@@ -73,8 +73,8 @@ namespace SabreTools.DatItems
         [XmlElement("itemtype")]
         public ItemType ItemType
         {
-            get => _internal.ReadString(Models.Metadata.DatItem.TypeKey).AsItemType();
-            set => _internal[Models.Metadata.DatItem.TypeKey] = value.FromItemType();
+            get => _internal.ReadString(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>();
+            set => _internal[Models.Metadata.DatItem.TypeKey] = value.AsStringValue<ItemType>();
         }
 
         /// <summary>

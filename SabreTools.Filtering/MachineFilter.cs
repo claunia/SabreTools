@@ -220,9 +220,9 @@ namespace SabreTools.Filtering
 
                 case MachineField.Runnable:
                     if (negate)
-                        Runnable.Negative |= value.AsRunnable();
+                        Runnable.Negative |= value.AsEnumValue<Runnable>();
                     else
-                        Runnable.Positive |= value.AsRunnable();
+                        Runnable.Positive |= value.AsEnumValue<Runnable>();
                     break;    
 
                 case MachineField.SampleOf:
@@ -247,9 +247,9 @@ namespace SabreTools.Filtering
 
                 case MachineField.Supported:
                     if (negate)
-                        Supported.Negative |= value.AsSupported();
+                        Supported.Negative |= value.AsEnumValue<Supported>();
                     else
-                        Supported.Positive |= value.AsSupported();
+                        Supported.Positive |= value.AsEnumValue<Supported>();
                     break;
 
                 case MachineField.System:
@@ -262,9 +262,9 @@ namespace SabreTools.Filtering
 
                 case MachineField.Type:
                     if (negate)
-                        Type.Negative |= value.AsMachineType();
+                        Type.Negative |= value.AsEnumValue<MachineType>();
                     else
-                        Type.Positive |= value.AsMachineType();
+                        Type.Positive |= value.AsEnumValue<MachineType>();
                     break;
 
                 case MachineField.Year:

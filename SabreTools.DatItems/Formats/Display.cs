@@ -32,8 +32,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public DisplayType DisplayType
         {
-            get => _internal.ReadString(Models.Metadata.Display.DisplayTypeKey).AsDisplayType();
-            set => _internal[Models.Metadata.Display.DisplayTypeKey] = value.FromDisplayType();
+            get => _internal.ReadString(Models.Metadata.Display.DisplayTypeKey).AsEnumValue<DisplayType>();
+            set => _internal[Models.Metadata.Display.DisplayTypeKey] = value.AsStringValue<DisplayType>();
         }
 
         [JsonIgnore]

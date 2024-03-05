@@ -1901,7 +1901,7 @@ Some special strings that can be used:
             Filter = GetFilter(features);
             FilterRunner = GetFilterRunner(features);
             Header = GetDatHeader(features);
-            LogLevel = GetString(features, LogLevelStringValue).AsLogLevel();
+            LogLevel = GetString(features, LogLevelStringValue).AsEnumValue<LogLevel>();
             OutputDir = GetString(features, OutputDirStringValue)?.Trim('"');
             Remover = GetRemover(features);
             ScriptMode = GetBoolean(features, ScriptValue);
@@ -2157,9 +2157,9 @@ Some special strings that can be used:
                 Description = GetString(features, DescriptionStringValue),
                 Email = GetString(features, EmailStringValue),
                 FileName = GetString(features, FilenameStringValue),
-                ForceMerging = GetString(features, ForceMergingStringValue).AsMergingFlag(),
-                ForceNodump = GetString(features, ForceNodumpStringValue).AsNodumpFlag(),
-                ForcePacking = GetString(features, ForcePackingStringValue).AsPackingFlag(),
+                ForceMerging = GetString(features, ForceMergingStringValue).AsEnumValue<MergingFlag>(),
+                ForceNodump = GetString(features, ForceNodumpStringValue).AsEnumValue<NodumpFlag>(),
+                ForcePacking = GetString(features, ForcePackingStringValue).AsEnumValue<PackingFlag>(),
                 GameName = GetBoolean(features, GamePrefixValue),
                 HeaderSkipper = GetString(features, HeaderStringValue),
                 Homepage = GetString(features, HomepageStringValue),

@@ -57,8 +57,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("endianness", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("endianness")]
         public Endianness Endianness
         {
-            get => _internal.ReadString(Models.Metadata.DataArea.WidthKey).AsEndianness();
-            set => _internal[Models.Metadata.DataArea.WidthKey] = value.FromEndianness();
+            get => _internal.ReadString(Models.Metadata.DataArea.WidthKey).AsEnumValue<Endianness>();
+            set => _internal[Models.Metadata.DataArea.WidthKey] = value.AsStringValue<Endianness>();
         }
 
         [JsonIgnore]

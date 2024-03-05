@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -93,7 +94,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 Name = software.Name,
                 CloneOf = software.CloneOf,
-                Supported = software.Supported.AsSupported(),
+                Supported = software.Supported.AsEnumValue<Supported>(),
                 Description = software.Description,
                 Year = software.Year,
                 Publisher = software.Publisher,
@@ -258,7 +259,7 @@ namespace SabreTools.DatFiles.Formats
                     Name = dataarea.Name,
                     Size = NumberHelper.ConvertToInt64(dataarea.Size),
                     Width = NumberHelper.ConvertToInt64(dataarea.Width),
-                    Endianness = dataarea.Endianness.AsEndianness(),
+                    Endianness = dataarea.Endianness.AsEnumValue<Endianness>(),
 
                     Source = new Source
                     {
@@ -300,8 +301,8 @@ namespace SabreTools.DatFiles.Formats
                     SHA1 = rom.SHA1,
                     Offset = rom.Offset,
                     Value = rom.Value,
-                    ItemStatus = rom.Status.AsItemStatus(),
-                    LoadFlag = rom.LoadFlag.AsLoadFlag(),
+                    ItemStatus = rom.Status.AsEnumValue<ItemStatus>(),
+                    LoadFlag = rom.LoadFlag.AsEnumValue<LoadFlag>(),
 
                     Part = part,
                     DataArea = dataarea,
@@ -377,7 +378,7 @@ namespace SabreTools.DatFiles.Formats
                     Name = rom.Name,
                     MD5 = rom.MD5,
                     SHA1 = rom.SHA1,
-                    ItemStatus = rom.Status.AsItemStatus(),
+                    ItemStatus = rom.Status.AsEnumValue<ItemStatus>(),
                     Writable = rom.Writeable.AsYesNo(),
 
                     Part = part,

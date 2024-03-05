@@ -22,8 +22,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public FeatureType Type
         {
-            get => _internal.ReadString(Models.Metadata.Feature.FeatureTypeKey).AsFeatureType();
-            set => _internal[Models.Metadata.Feature.FeatureTypeKey] = value.FromFeatureType();
+            get => _internal.ReadString(Models.Metadata.Feature.FeatureTypeKey).AsEnumValue<FeatureType>();
+            set => _internal[Models.Metadata.Feature.FeatureTypeKey] = value.AsStringValue<FeatureType>();
         }
 
         [JsonIgnore]
@@ -36,8 +36,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public FeatureStatus Status
         {
-            get => _internal.ReadString(Models.Metadata.Feature.StatusKey).AsFeatureStatus();
-            set => _internal[Models.Metadata.Feature.StatusKey] = value.FromFeatureStatus();
+            get => _internal.ReadString(Models.Metadata.Feature.StatusKey).AsEnumValue<FeatureStatus>();
+            set => _internal[Models.Metadata.Feature.StatusKey] = value.AsStringValue<FeatureStatus>();
         }
 
         [JsonIgnore]
@@ -50,8 +50,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public FeatureStatus Overall
         {
-            get => _internal.ReadString(Models.Metadata.Feature.OverallKey).AsFeatureStatus();
-            set => _internal[Models.Metadata.Feature.OverallKey] = value.FromFeatureStatus();
+            get => _internal.ReadString(Models.Metadata.Feature.OverallKey).AsEnumValue<FeatureStatus>();
+            set => _internal[Models.Metadata.Feature.OverallKey] = value.AsStringValue<FeatureStatus>();
         }
 
         [JsonIgnore]

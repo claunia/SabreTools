@@ -42,8 +42,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public ChipType ChipType
         {
-            get => _internal.ReadString(Models.Metadata.Chip.ChipTypeKey).AsChipType();
-            set => _internal[Models.Metadata.Chip.ChipTypeKey] = value.FromChipType();
+            get => _internal.ReadString(Models.Metadata.Chip.ChipTypeKey).AsEnumValue<ChipType>();
+            set => _internal[Models.Metadata.Chip.ChipTypeKey] = value.AsStringValue<ChipType>();
         }
 
         [JsonIgnore]

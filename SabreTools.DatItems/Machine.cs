@@ -293,8 +293,8 @@ namespace SabreTools.DatItems
         [XmlElement("runnable")]
         public Runnable Runnable
         {
-            get => _machine.ReadString(Models.Metadata.Machine.RunnableKey).AsRunnable();
-            set => _machine[Models.Metadata.Machine.RunnableKey] = value.FromRunnable();
+            get => _machine.ReadString(Models.Metadata.Machine.RunnableKey).AsEnumValue<Runnable>();
+            set => _machine[Models.Metadata.Machine.RunnableKey] = value.AsStringValue<Runnable>();
         }
 
         [JsonIgnore]
@@ -467,8 +467,8 @@ namespace SabreTools.DatItems
         [XmlElement("supported")]
         public Supported Supported
         {
-            get => _machine.ReadString(Models.Metadata.Machine.SupportedKey).AsSupported();
-            set => _machine[Models.Metadata.Machine.SupportedKey] = value.FromSupported(verbose: true);
+            get => _machine.ReadString(Models.Metadata.Machine.SupportedKey).AsEnumValue<Supported>();
+            set => _machine[Models.Metadata.Machine.SupportedKey] = value.AsStringValue<Supported>(useSecond: true);
         }
 
         [JsonIgnore]
@@ -689,7 +689,7 @@ namespace SabreTools.DatItems
                     case MachineField.Score: Score = value; return true;
                     case MachineField.Subgenre: Subgenre = value; return true;
                     case MachineField.TitleID: TitleID = value; return true;
-                    case MachineField.Type: MachineType = value.AsMachineType(); return true;
+                    case MachineField.Type: MachineType = value.AsEnumValue<MachineType>(); return true;
                 }
             }
 

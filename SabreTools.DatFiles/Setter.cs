@@ -104,7 +104,7 @@ namespace SabreTools.DatFiles
                 datHeader.Author = DatHeaderMappings[DatHeaderField.Author];
 
             if (DatHeaderMappings.ContainsKey(DatHeaderField.BiosMode))
-                datHeader.BiosMode = DatHeaderMappings[DatHeaderField.BiosMode].AsMergingFlag();
+                datHeader.BiosMode = DatHeaderMappings[DatHeaderField.BiosMode].AsEnumValue<MergingFlag>();
 
             if (DatHeaderMappings.ContainsKey(DatHeaderField.Build))
                 datHeader.Build = DatHeaderMappings[DatHeaderField.Build];
@@ -133,13 +133,13 @@ namespace SabreTools.DatFiles
                 datHeader.FileName = DatHeaderMappings[DatHeaderField.FileName];
 
             if (DatHeaderMappings.ContainsKey(DatHeaderField.ForceMerging))
-                datHeader.ForceMerging = DatHeaderMappings[DatHeaderField.ForceMerging].AsMergingFlag();
+                datHeader.ForceMerging = DatHeaderMappings[DatHeaderField.ForceMerging].AsEnumValue<MergingFlag>();
 
             if (DatHeaderMappings.ContainsKey(DatHeaderField.ForceNodump))
-                datHeader.ForceNodump = DatHeaderMappings[DatHeaderField.ForceNodump].AsNodumpFlag();
+                datHeader.ForceNodump = DatHeaderMappings[DatHeaderField.ForceNodump].AsEnumValue<NodumpFlag>();
 
             if (DatHeaderMappings.ContainsKey(DatHeaderField.ForcePacking))
-                datHeader.ForcePacking = DatHeaderMappings[DatHeaderField.ForcePacking].AsPackingFlag();
+                datHeader.ForcePacking = DatHeaderMappings[DatHeaderField.ForcePacking].AsEnumValue<PackingFlag>();
 
             if (DatHeaderMappings.ContainsKey(DatHeaderField.HeaderSkipper))
                 datHeader.HeaderSkipper = DatHeaderMappings[DatHeaderField.HeaderSkipper];
@@ -174,7 +174,7 @@ namespace SabreTools.DatFiles
                 datHeader.RomCenterVersion = DatHeaderMappings[DatHeaderField.RomCenterVersion];
 
             if (DatHeaderMappings.ContainsKey(DatHeaderField.RomMode))
-                datHeader.RomMode = DatHeaderMappings[DatHeaderField.RomMode].AsMergingFlag();
+                datHeader.RomMode = DatHeaderMappings[DatHeaderField.RomMode].AsEnumValue<MergingFlag>();
 
             if (DatHeaderMappings.ContainsKey(DatHeaderField.RomTitle))
                 datHeader.RomTitle = DatHeaderMappings[DatHeaderField.RomTitle];
@@ -183,7 +183,7 @@ namespace SabreTools.DatFiles
                 datHeader.RootDir = DatHeaderMappings[DatHeaderField.RootDir];
 
             if (DatHeaderMappings.ContainsKey(DatHeaderField.SampleMode))
-                datHeader.SampleMode = DatHeaderMappings[DatHeaderField.SampleMode].AsMergingFlag();
+                datHeader.SampleMode = DatHeaderMappings[DatHeaderField.SampleMode].AsEnumValue<MergingFlag>();
 
             if (DatHeaderMappings.ContainsKey(DatHeaderField.ScreenshotsHeight))
                 datHeader.ScreenshotsHeight = DatHeaderMappings[DatHeaderField.ScreenshotsHeight];

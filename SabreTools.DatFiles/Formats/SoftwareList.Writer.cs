@@ -261,7 +261,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 Name = machine.Name,
                 CloneOf = machine.CloneOf,
-                Supported = machine.Supported.FromSupported(verbose: true),
+                Supported = machine.Supported.AsStringValue<Supported>(useSecond: true),
                 Description = machine.Description,
                 Year = machine.Year,
                 Publisher = machine.Publisher,
@@ -381,7 +381,7 @@ namespace SabreTools.DatFiles.Formats
                 Name = item.DataArea?.Name,
                 Size = item.DataArea?.Size?.ToString(),
                 Width = item.DataArea?.Width?.ToString(),
-                Endianness = item.DataArea?.Endianness.FromEndianness(),
+                Endianness = item.DataArea?.Endianness.AsStringValue<Endianness>(),
                 Rom = CreateRom(item),
             };
             return [dataArea];
@@ -401,8 +401,8 @@ namespace SabreTools.DatFiles.Formats
                 SHA1 = item.SHA1,
                 Offset = item.Offset,
                 Value = item.Value,
-                Status = item.ItemStatus.FromItemStatus(yesno: false),
-                LoadFlag = item.LoadFlag.FromLoadFlag(),
+                Status = item.ItemStatus.AsStringValue<ItemStatus>(useSecond: false),
+                LoadFlag = item.LoadFlag.AsStringValue<LoadFlag>(),
             };
             return [rom];
         }
@@ -429,7 +429,7 @@ namespace SabreTools.DatFiles.Formats
                 Name = item.Name,
                 MD5 = item.MD5,
                 SHA1 = item.SHA1,
-                Status = item.ItemStatus.FromItemStatus(yesno: false),
+                Status = item.ItemStatus.AsStringValue<ItemStatus>(useSecond: false),
                 Writeable = item.Writable?.ToString(),
             };
             return [disk];

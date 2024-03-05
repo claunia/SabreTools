@@ -22,8 +22,8 @@ namespace SabreTools.DatItems.Formats
         [JsonConverter(typeof(StringEnumConverter))]
         public ControlType ControlType
         {
-            get => _internal.ReadString(Models.Metadata.Control.ControlTypeKey).AsControlType();
-            set => _internal[Models.Metadata.Control.ControlTypeKey] = value.FromControlType();
+            get => _internal.ReadString(Models.Metadata.Control.ControlTypeKey).AsEnumValue<ControlType>();
+            set => _internal[Models.Metadata.Control.ControlTypeKey] = value.AsStringValue<ControlType>();
         }
 
         [JsonIgnore]
