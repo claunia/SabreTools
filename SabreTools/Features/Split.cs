@@ -43,7 +43,7 @@ namespace SabreTools.Features
             AddFeature(TypeFlag);
         }
 
-        public override bool ProcessFeatures(Dictionary<string, Help.Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature?> features)
         {
             // If the base fails, just fail out
             if (!base.ProcessFeatures(features))
@@ -68,13 +68,13 @@ namespace SabreTools.Features
                 Parser.ParseInto(internalDat, file);
 
                 // Get the output directory
-                OutputDir = OutputDir.Ensure();
+                OutputDir = OutputDir?.Ensure();
                 OutputDir = file.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
 
                 // Extension splitting
                 if (splittingMode.HasFlag(SplittingMode.Extension))
                 {
-                    (DatFile extADat, DatFile extBDat) = DatTools.Splitter.SplitByExtension(internalDat, GetList(features, ExtAListValue), GetList(features, ExtBListValue));
+                    (DatFile? extADat, DatFile? extBDat) = DatTools.Splitter.SplitByExtension(internalDat, GetList(features, ExtAListValue), GetList(features, ExtBListValue));
 
                     InternalStopwatch watch = new("Outputting extension-split DATs");
 
@@ -88,7 +88,7 @@ namespace SabreTools.Features
                 // Hash splitting
                 if (splittingMode.HasFlag(SplittingMode.Hash))
                 {
-                    Dictionary<DatItemField, DatFile> typeDats = DatTools.Splitter.SplitByHash(internalDat);
+                    Dictionary<string, DatFile> typeDats = DatTools.Splitter.SplitByHash(internalDat);
 
                     InternalStopwatch watch = new("Outputting hash-split DATs");
 
@@ -101,7 +101,7 @@ namespace SabreTools.Features
                     foreach (var itemType in typeDats.Keys)
 #endif
                     {
-                        Writer.Write(typeDats[itemType], OutputDir);
+                        Writer.Write(typeDats[itemType], OutputDir!);
 #if NET40_OR_GREATER || NETCOREAPP
                     });
 #else

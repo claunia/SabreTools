@@ -29,30 +29,30 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <inheritdoc/>
-        protected override List<DatItemField>? GetMissingRequiredFields(DatItem datItem)
+        protected override List<string>? GetMissingRequiredFields(DatItem datItem)
         {
-            var missingFields = new List<DatItemField>();
+            var missingFields = new List<string>();
             switch (datItem)
             {
                 case Release release:
                     if (string.IsNullOrEmpty(release.Name))
-                        missingFields.Add(DatItemField.Name);
+                        missingFields.Add(Models.Metadata.Release.NameKey);
                     if (string.IsNullOrEmpty(release.Region))
-                        missingFields.Add(DatItemField.Region);
+                        missingFields.Add(Models.Metadata.Release.RegionKey);
                     break;
 
                 case BiosSet biosset:
                     if (string.IsNullOrEmpty(biosset.Name))
-                        missingFields.Add(DatItemField.Name);
+                        missingFields.Add(Models.Metadata.BiosSet.NameKey);
                     if (string.IsNullOrEmpty(biosset.Description))
-                        missingFields.Add(DatItemField.Description);
+                        missingFields.Add(Models.Metadata.BiosSet.DescriptionKey);
                     break;
 
                 case Rom rom:
                     if (string.IsNullOrEmpty(rom.Name))
-                        missingFields.Add(DatItemField.Name);
+                        missingFields.Add(Models.Metadata.Rom.NameKey);
                     if (rom.Size == null || rom.Size < 0)
-                        missingFields.Add(DatItemField.Size);
+                        missingFields.Add(Models.Metadata.Rom.SizeKey);
                     if (string.IsNullOrEmpty(rom.CRC)
                         && string.IsNullOrEmpty(rom.MD5)
                         && string.IsNullOrEmpty(rom.SHA1)
@@ -61,65 +61,65 @@ namespace SabreTools.DatFiles.Formats
                         && string.IsNullOrEmpty(rom.SHA512)
                         && string.IsNullOrEmpty(rom.SpamSum))
                     {
-                        missingFields.Add(DatItemField.SHA1);
+                        missingFields.Add(Models.Metadata.Rom.SHA1Key);
                     }
                     break;
 
                 case Disk disk:
                     if (string.IsNullOrEmpty(disk.Name))
-                        missingFields.Add(DatItemField.Name);
+                        missingFields.Add(Models.Metadata.Disk.NameKey);
                     if (string.IsNullOrEmpty(disk.MD5)
                         && string.IsNullOrEmpty(disk.SHA1))
                     {
-                        missingFields.Add(DatItemField.SHA1);
+                        missingFields.Add(Models.Metadata.Disk.SHA1Key);
                     }
                     break;
 
                 case Media media:
                     if (string.IsNullOrEmpty(media.Name))
-                        missingFields.Add(DatItemField.Name);
+                        missingFields.Add(Models.Metadata.Media.NameKey);
                     if (string.IsNullOrEmpty(media.MD5)
                         && string.IsNullOrEmpty(media.SHA1)
                         && string.IsNullOrEmpty(media.SHA256)
                         && string.IsNullOrEmpty(media.SpamSum))
                     {
-                        missingFields.Add(DatItemField.SHA1);
+                        missingFields.Add(Models.Metadata.Media.SHA1Key);
                     }
                     break;
 
                 case DeviceReference deviceref:
                     if (string.IsNullOrEmpty(deviceref.Name))
-                        missingFields.Add(DatItemField.Name);
+                        missingFields.Add(Models.Metadata.DeviceRef.NameKey);
                     break;
 
                 case Sample sample:
                     if (string.IsNullOrEmpty(sample.Name))
-                        missingFields.Add(DatItemField.Name);
+                        missingFields.Add(Models.Metadata.Sample.NameKey);
                     break;
 
                 case Archive archive:
                     if (string.IsNullOrEmpty(archive.Name))
-                        missingFields.Add(DatItemField.Name);
+                        missingFields.Add(Models.Metadata.Archive.NameKey);
                     break;
 
                 case Driver driver:
                     if (!driver.StatusSpecified)
-                        missingFields.Add(DatItemField.SupportStatus);
+                        missingFields.Add(Models.Metadata.Driver.StatusKey);
                     if (!driver.EmulationSpecified)
-                        missingFields.Add(DatItemField.EmulationStatus);
+                        missingFields.Add(Models.Metadata.Driver.EmulationKey);
                     if (!driver.CocktailSpecified)
-                        missingFields.Add(DatItemField.CocktailStatus);
+                        missingFields.Add(Models.Metadata.Driver.CocktailKey);
                     if (!driver.SaveStateSpecified)
-                        missingFields.Add(DatItemField.SaveStateStatus);
+                        missingFields.Add(Models.Metadata.Driver.SaveStateKey);
                     break;
 
                 case DatItems.Formats.SoftwareList softwarelist:
                     if (string.IsNullOrEmpty(softwarelist.Tag))
-                        missingFields.Add(DatItemField.Tag);
+                        missingFields.Add(Models.Metadata.SoftwareList.TagKey);
                     if (string.IsNullOrEmpty(softwarelist.Name))
-                        missingFields.Add(DatItemField.Name);
+                        missingFields.Add(Models.Metadata.SoftwareList.NameKey);
                     if (!softwarelist.StatusSpecified)
-                        missingFields.Add(DatItemField.SoftwareListStatus);
+                        missingFields.Add(Models.Metadata.SoftwareList.StatusKey);
                     break;
             }
 

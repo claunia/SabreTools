@@ -568,7 +568,7 @@ namespace SabreTools.DatFiles
         /// Return list of required fields missing from a DatItem
         /// </summary>
         /// <returns>List of missing required fields, null or empty if none were found</returns>
-        protected virtual List<DatItemField>? GetMissingRequiredFields(DatItem datItem) => null;
+        protected virtual List<string>? GetMissingRequiredFields(DatItem datItem) => null;
 
         /// <summary>
         /// Get if a machine contains any writable items
@@ -643,12 +643,12 @@ namespace SabreTools.DatFiles
             }
 
             // If we have an item with missing required fields
-            List<DatItemField>? missingFields = GetMissingRequiredFields(datItem);
+            List<string>? missingFields = GetMissingRequiredFields(datItem);
             if (missingFields != null && missingFields.Count != 0)
             {
                 string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
 #if NET20 || NET35
-                logger?.Verbose($"Item '{itemString}' was skipped because it was missing required fields for {Header?.DatFormat}: {string.Join(", ", missingFields.Select(f => f.ToString()).ToArray())}");
+                logger?.Verbose($"Item '{itemString}' was skipped because it was missing required fields for {Header?.DatFormat}: {string.Join(", ", [.. missingFields])}");
 #else
                 logger?.Verbose($"Item '{itemString}' was skipped because it was missing required fields for {Header?.DatFormat}: {string.Join(", ", missingFields)}");
 #endif

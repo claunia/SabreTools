@@ -66,26 +66,6 @@ namespace SabreTools.Test.Core
         }
 
         [Theory]
-        [InlineData(null, DatItemField.NULL)]
-        [InlineData("name", DatItemField.NULL)]
-        [InlineData("item-name", DatItemField.Name)]
-        [InlineData("item.name", DatItemField.Name)]
-        [InlineData("item_name", DatItemField.Name)]
-        [InlineData("item name", DatItemField.Name)]
-        [InlineData("datitem-name", DatItemField.Name)]
-        [InlineData("datitem.name", DatItemField.Name)]
-        [InlineData("datitem_name", DatItemField.Name)]
-        [InlineData("datitem name", DatItemField.Name)]
-        [InlineData("ITEM.NAME", DatItemField.Name)]
-        [InlineData("iTeM.namE", DatItemField.Name)]
-        public void AsDatItemFieldProcessingTest(string? field, DatItemField expected)
-        {
-            // TODO: Write new test for all supported fields
-            DatItemField actual = field.AsDatItemField();
-            Assert.Equal(expected, actual);
-        }
-
-        [Theory]
         [InlineData(null, DeviceType.NULL)]
         [InlineData("unknown", DeviceType.Unknown)]
         [InlineData("cartridge", DeviceType.Cartridge)]
@@ -773,7 +753,6 @@ namespace SabreTools.Test.Core
         [InlineData(ChipType.NULL, 2)]
         [InlineData(ControlType.NULL, 15)]
         [InlineData(DatHeaderField.NULL, 94)]
-        [InlineData(DatItemField.NULL, 197)]
         [InlineData(DeviceType.NULL, 21)]
         [InlineData(DisplayType.NULL, 5)]
         [InlineData(Endianness.NULL, 2)]

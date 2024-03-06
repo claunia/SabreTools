@@ -42,136 +42,136 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <inheritdoc/>
-        protected override List<DatItemField>? GetMissingRequiredFields(DatItem datItem)
+        protected override List<string>? GetMissingRequiredFields(DatItem datItem)
         {
-            var missingFields = new List<DatItemField>();
+            var missingFields = new List<string>();
             switch (datItem)
             {
                 case BiosSet biosset:
                     if (string.IsNullOrEmpty(biosset.Name))
-                        missingFields.Add(DatItemField.Name);
+                        missingFields.Add(Models.Metadata.BiosSet.NameKey);
                     if (string.IsNullOrEmpty(biosset.Description))
-                        missingFields.Add(DatItemField.Description);
+                        missingFields.Add(Models.Metadata.BiosSet.DescriptionKey);
                     break;
 
                 case Rom rom:
                     if (string.IsNullOrEmpty(rom.Name))
-                        missingFields.Add(DatItemField.Name);
+                        missingFields.Add(Models.Metadata.Rom.NameKey);
                     if (rom.Size == null || rom.Size < 0)
-                        missingFields.Add(DatItemField.Size);
+                        missingFields.Add(Models.Metadata.Rom.SizeKey);
                     if (string.IsNullOrEmpty(rom.CRC)
                         && string.IsNullOrEmpty(rom.SHA1))
                     {
-                        missingFields.Add(DatItemField.SHA1);
+                        missingFields.Add(Models.Metadata.Rom.SHA1Key);
                     }
                     break;
 
                 case Disk disk:
                     if (string.IsNullOrEmpty(disk.Name))
-                        missingFields.Add(DatItemField.Name);
+                        missingFields.Add(Models.Metadata.Disk.NameKey);
                     if (string.IsNullOrEmpty(disk.MD5)
                         && string.IsNullOrEmpty(disk.SHA1))
                     {
-                        missingFields.Add(DatItemField.SHA1);
+                        missingFields.Add(Models.Metadata.Disk.SHA1Key);
                     }
                     break;
 
                 case DeviceReference deviceref:
                     if (string.IsNullOrEmpty(deviceref.Name))
-                        missingFields.Add(DatItemField.Name);
+                        missingFields.Add(Models.Metadata.DeviceRef.NameKey);
                     break;
 
                 case Sample sample:
                     if (string.IsNullOrEmpty(sample.Name))
-                        missingFields.Add(DatItemField.Name);
+                        missingFields.Add(Models.Metadata.Sample.NameKey);
                     break;
 
                 case Chip chip:
                     if (string.IsNullOrEmpty(chip.Name))
-                        missingFields.Add(DatItemField.Name);
+                        missingFields.Add(Models.Metadata.Chip.NameKey);
                     if (!chip.ChipTypeSpecified)
-                        missingFields.Add(DatItemField.ChipType);
+                        missingFields.Add(Models.Metadata.Chip.ChipTypeKey);
                     break;
 
                 case Display display:
                     if (!display.DisplayTypeSpecified)
-                        missingFields.Add(DatItemField.DisplayType);
+                        missingFields.Add(Models.Metadata.Display.DisplayTypeKey);
                     if (display.Refresh == null)
-                        missingFields.Add(DatItemField.Refresh);
+                        missingFields.Add(Models.Metadata.Display.RefreshKey);
                     break;
 
                 case Sound sound:
                     if (sound.Channels == null)
-                        missingFields.Add(DatItemField.Channels);
+                        missingFields.Add(Models.Metadata.Sound.ChannelsKey);
                     break;
 
                 case Input input:
                     if (input.Players == null)
-                        missingFields.Add(DatItemField.Players);
+                        missingFields.Add(Models.Metadata.Input.PlayersKey);
                     break;
 
                 case DipSwitch dipswitch:
                     if (string.IsNullOrEmpty(dipswitch.Name))
-                        missingFields.Add(DatItemField.Name);
+                        missingFields.Add(Models.Metadata.DipSwitch.NameKey);
                     if (string.IsNullOrEmpty(dipswitch.Tag))
-                        missingFields.Add(DatItemField.Tag);
+                        missingFields.Add(Models.Metadata.DipSwitch.TagKey);
                     break;
 
                 case Configuration configuration:
                     if (string.IsNullOrEmpty(configuration.Name))
-                        missingFields.Add(DatItemField.Name);
+                        missingFields.Add(Models.Metadata.Configuration.NameKey);
                     if (string.IsNullOrEmpty(configuration.Tag))
-                        missingFields.Add(DatItemField.Tag);
+                        missingFields.Add(Models.Metadata.Configuration.TagKey);
                     break;
 
                 case Port port:
                     if (string.IsNullOrEmpty(port.Tag))
-                        missingFields.Add(DatItemField.Tag);
+                        missingFields.Add(Models.Metadata.Port.TagKey);
                     break;
 
                 case Adjuster adjuster:
                     if (string.IsNullOrEmpty(adjuster.Name))
-                        missingFields.Add(DatItemField.Name);
+                        missingFields.Add(Models.Metadata.Adjuster.NameKey);
                     break;
 
                 case Driver driver:
                     if (!driver.StatusSpecified)
-                        missingFields.Add(DatItemField.SupportStatus);
+                        missingFields.Add(Models.Metadata.Driver.StatusKey);
                     if (!driver.EmulationSpecified)
-                        missingFields.Add(DatItemField.EmulationStatus);
+                        missingFields.Add(Models.Metadata.Driver.EmulationKey);
                     if (!driver.CocktailSpecified)
-                        missingFields.Add(DatItemField.CocktailStatus);
+                        missingFields.Add(Models.Metadata.Driver.CocktailKey);
                     if (!driver.SaveStateSpecified)
-                        missingFields.Add(DatItemField.SaveStateStatus);
+                        missingFields.Add(Models.Metadata.Driver.SaveStateKey);
                     break;
 
                 case Feature feature:
                     if (!feature.TypeSpecified)
-                        missingFields.Add(DatItemField.FeatureType);
+                        missingFields.Add(Models.Metadata.Feature.FeatureTypeKey);
                     break;
 
                 case Device device:
                     if (!device.DeviceTypeSpecified)
-                        missingFields.Add(DatItemField.DeviceType);
+                        missingFields.Add(Models.Metadata.Device.DeviceTypeKey);
                     break;
 
                 case Slot slot:
                     if (string.IsNullOrEmpty(slot.Name))
-                        missingFields.Add(DatItemField.Name);
+                        missingFields.Add(Models.Metadata.Slot.NameKey);
                     break;
 
                 case DatItems.Formats.SoftwareList softwarelist:
                     if (string.IsNullOrEmpty(softwarelist.Tag))
-                        missingFields.Add(DatItemField.Tag);
+                        missingFields.Add(Models.Metadata.SoftwareList.TagKey);
                     if (string.IsNullOrEmpty(softwarelist.Name))
-                        missingFields.Add(DatItemField.Name);
+                        missingFields.Add(Models.Metadata.SoftwareList.NameKey);
                     if (!softwarelist.StatusSpecified)
-                        missingFields.Add(DatItemField.SoftwareListStatus);
+                        missingFields.Add(Models.Metadata.SoftwareList.StatusKey);
                     break;
 
                 case RamOption ramoption:
                     if (string.IsNullOrEmpty(ramoption.Name))
-                        missingFields.Add(DatItemField.Name);
+                        missingFields.Add(Models.Metadata.RamOption.NameKey);
                     break;
             }
 

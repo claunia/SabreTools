@@ -22,18 +22,18 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <inheritdoc/>
-        protected override List<DatItemField>? GetMissingRequiredFields(DatItem datItem)
+        protected override List<string>? GetMissingRequiredFields(DatItem datItem)
         {
-            var missingFields = new List<DatItemField>();
+            var missingFields = new List<string>();
 
             if (string.IsNullOrEmpty(datItem.GetName()))
-                missingFields.Add(DatItemField.Name);
+                missingFields.Add(Models.Metadata.Rom.NameKey);
 
             switch (datItem)
             {
                 case Rom rom:
                     if (string.IsNullOrEmpty(rom.SHA1))
-                        missingFields.Add(DatItemField.SHA1);
+                        missingFields.Add(Models.Metadata.Rom.SHA1Key);
                     break;
             }
 

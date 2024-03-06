@@ -40,36 +40,6 @@ namespace SabreTools.Core.Tools
         }
 
         /// <summary>
-        /// Get DatItemField value from input string
-        /// </summary>
-        /// <param name="input">String to get value from</param>
-        /// <returns>DatItemField value corresponding to the string</returns>
-        public static DatItemField AsDatItemField(this string? input)
-        {
-            // If the input is empty, we return null
-            if (string.IsNullOrEmpty(input))
-                return DatItemField.NULL;
-
-            // Normalize the input
-            input = input!.ToLowerInvariant();
-
-            // Create regex
-            string datItemRegex = @"^(item|datitem)[.\-_\s]";
-
-            // If we don't have an item field, skip
-            if (!Regex.IsMatch(input, datItemRegex))
-                return DatItemField.NULL;
-
-            // Replace the match and re-normalize
-            string itemInput = Regex.Replace(input, datItemRegex, string.Empty)
-                .Replace(' ', '_')
-                .Replace('-', '_')
-                .Replace('.', '_');
-
-            return AsEnumValue<DatItemField>(itemInput);
-        }
-
-        /// <summary>
         /// Get bool? value from input string
         /// </summary>
         /// <param name="yesno">String to get value from</param>

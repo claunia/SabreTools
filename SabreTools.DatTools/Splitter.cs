@@ -113,54 +113,54 @@ namespace SabreTools.DatTools
         /// </summary>
         /// <param name="datFile">Current DatFile object to split</param>
         /// <returns>Dictionary of Field to DatFile mappings</returns>
-        public static Dictionary<DatItemField, DatFile> SplitByHash(DatFile datFile)
+        public static Dictionary<string, DatFile> SplitByHash(DatFile datFile)
         {
             // Create each of the respective output DATs
             InternalStopwatch watch = new($"Splitting DAT by best available hashes");
 
             // Create the set of field-to-dat mappings
-            Dictionary<DatItemField, DatFile> fieldDats = [];
+            Dictionary<string, DatFile> fieldDats = [];
 
             // TODO: Can this be made into a loop?
-            fieldDats[DatItemField.Status] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats[DatItemField.Status].Header.FileName += " (Nodump)";
-            fieldDats[DatItemField.Status].Header.Name += " (Nodump)";
-            fieldDats[DatItemField.Status].Header.Description += " (Nodump)";
+            fieldDats[Models.Metadata.Rom.StatusKey] = DatFile.Create(datFile.Header.CloneStandard());
+            fieldDats[Models.Metadata.Rom.StatusKey].Header.FileName += " (Nodump)";
+            fieldDats[Models.Metadata.Rom.StatusKey].Header.Name += " (Nodump)";
+            fieldDats[Models.Metadata.Rom.StatusKey].Header.Description += " (Nodump)";
 
-            fieldDats[DatItemField.SHA512] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats[DatItemField.SHA512].Header.FileName += " (SHA-512)";
-            fieldDats[DatItemField.SHA512].Header.Name += " (SHA-512)";
-            fieldDats[DatItemField.SHA512].Header.Description += " (SHA-512)";
+            fieldDats[Models.Metadata.Rom.SHA512Key] = DatFile.Create(datFile.Header.CloneStandard());
+            fieldDats[Models.Metadata.Rom.SHA512Key].Header.FileName += " (SHA-512)";
+            fieldDats[Models.Metadata.Rom.SHA512Key].Header.Name += " (SHA-512)";
+            fieldDats[Models.Metadata.Rom.SHA512Key].Header.Description += " (SHA-512)";
 
-            fieldDats[DatItemField.SHA384] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats[DatItemField.SHA384].Header.FileName += " (SHA-384)";
-            fieldDats[DatItemField.SHA384].Header.Name += " (SHA-384)";
-            fieldDats[DatItemField.SHA384].Header.Description += " (SHA-384)";
+            fieldDats[Models.Metadata.Rom.SHA384Key] = DatFile.Create(datFile.Header.CloneStandard());
+            fieldDats[Models.Metadata.Rom.SHA384Key].Header.FileName += " (SHA-384)";
+            fieldDats[Models.Metadata.Rom.SHA384Key].Header.Name += " (SHA-384)";
+            fieldDats[Models.Metadata.Rom.SHA384Key].Header.Description += " (SHA-384)";
 
-            fieldDats[DatItemField.SHA256] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats[DatItemField.SHA256].Header.FileName += " (SHA-256)";
-            fieldDats[DatItemField.SHA256].Header.Name += " (SHA-256)";
-            fieldDats[DatItemField.SHA256].Header.Description += " (SHA-256)";
+            fieldDats[Models.Metadata.Rom.SHA256Key] = DatFile.Create(datFile.Header.CloneStandard());
+            fieldDats[Models.Metadata.Rom.SHA256Key].Header.FileName += " (SHA-256)";
+            fieldDats[Models.Metadata.Rom.SHA256Key].Header.Name += " (SHA-256)";
+            fieldDats[Models.Metadata.Rom.SHA256Key].Header.Description += " (SHA-256)";
 
-            fieldDats[DatItemField.SHA1] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats[DatItemField.SHA1].Header.FileName += " (SHA-1)";
-            fieldDats[DatItemField.SHA1].Header.Name += " (SHA-1)";
-            fieldDats[DatItemField.SHA1].Header.Description += " (SHA-1)";
+            fieldDats[Models.Metadata.Rom.SHA1Key] = DatFile.Create(datFile.Header.CloneStandard());
+            fieldDats[Models.Metadata.Rom.SHA1Key].Header.FileName += " (SHA-1)";
+            fieldDats[Models.Metadata.Rom.SHA1Key].Header.Name += " (SHA-1)";
+            fieldDats[Models.Metadata.Rom.SHA1Key].Header.Description += " (SHA-1)";
 
-            fieldDats[DatItemField.MD5] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats[DatItemField.MD5].Header.FileName += " (MD5)";
-            fieldDats[DatItemField.MD5].Header.Name += " (MD5)";
-            fieldDats[DatItemField.MD5].Header.Description += " (MD5)";
+            fieldDats[Models.Metadata.Rom.MD5Key] = DatFile.Create(datFile.Header.CloneStandard());
+            fieldDats[Models.Metadata.Rom.MD5Key].Header.FileName += " (MD5)";
+            fieldDats[Models.Metadata.Rom.MD5Key].Header.Name += " (MD5)";
+            fieldDats[Models.Metadata.Rom.MD5Key].Header.Description += " (MD5)";
 
-            fieldDats[DatItemField.CRC] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats[DatItemField.CRC].Header.FileName += " (CRC)";
-            fieldDats[DatItemField.CRC].Header.Name += " (CRC)";
-            fieldDats[DatItemField.CRC].Header.Description += " (CRC)";
+            fieldDats[Models.Metadata.Rom.CRCKey] = DatFile.Create(datFile.Header.CloneStandard());
+            fieldDats[Models.Metadata.Rom.CRCKey].Header.FileName += " (CRC)";
+            fieldDats[Models.Metadata.Rom.CRCKey].Header.Name += " (CRC)";
+            fieldDats[Models.Metadata.Rom.CRCKey].Header.Description += " (CRC)";
 
-            fieldDats[DatItemField.NULL] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats[DatItemField.NULL].Header.FileName += " (Other)";
-            fieldDats[DatItemField.NULL].Header.Name += " (Other)";
-            fieldDats[DatItemField.NULL].Header.Description += " (Other)";
+            fieldDats["null"] = DatFile.Create(datFile.Header.CloneStandard());
+            fieldDats["null"].Header.FileName += " (Other)";
+            fieldDats["null"].Header.Name += " (Other)";
+            fieldDats["null"].Header.Description += " (Other)";
 
             // Now populate each of the DAT objects in turn
 #if NET452_OR_GREATER || NETCOREAPP
@@ -188,26 +188,26 @@ namespace SabreTools.DatTools
                     if ((item.ItemType == ItemType.Rom && (item as Rom)!.ItemStatus == ItemStatus.Nodump)
                         || (item.ItemType == ItemType.Disk && (item as Disk)!.ItemStatus == ItemStatus.Nodump))
                     {
-                        fieldDats[DatItemField.Status].Items.Add(key, item);
+                        fieldDats[Models.Metadata.Rom.StatusKey].Items.Add(key, item);
                     }
 
                     // If the file has a SHA-512
                     else if ((item.ItemType == ItemType.Rom && !string.IsNullOrEmpty((item as Rom)!.SHA512)))
                     {
-                        fieldDats[DatItemField.SHA512].Items.Add(key, item);
+                        fieldDats[Models.Metadata.Rom.SHA512Key].Items.Add(key, item);
                     }
 
                     // If the file has a SHA-384
                     else if ((item.ItemType == ItemType.Rom && !string.IsNullOrEmpty((item as Rom)!.SHA384)))
                     {
-                        fieldDats[DatItemField.SHA384].Items.Add(key, item);
+                        fieldDats[Models.Metadata.Rom.SHA384Key].Items.Add(key, item);
                     }
 
                     // If the file has a SHA-256
                     else if ((item.ItemType == ItemType.Media && !string.IsNullOrEmpty((item as Media)!.SHA256))
                         || (item.ItemType == ItemType.Rom && !string.IsNullOrEmpty((item as Rom)!.SHA256)))
                     {
-                        fieldDats[DatItemField.SHA256].Items.Add(key, item);
+                        fieldDats[Models.Metadata.Rom.SHA256Key].Items.Add(key, item);
                     }
 
                     // If the file has a SHA-1
@@ -215,7 +215,7 @@ namespace SabreTools.DatTools
                         || (item.ItemType == ItemType.Media && !string.IsNullOrEmpty((item as Media)!.SHA1))
                         || (item.ItemType == ItemType.Rom && !string.IsNullOrEmpty((item as Rom)!.SHA1)))
                     {
-                        fieldDats[DatItemField.SHA1].Items.Add(key, item);
+                        fieldDats[Models.Metadata.Rom.SHA1Key].Items.Add(key, item);
                     }
 
                     // If the file has an MD5
@@ -223,18 +223,18 @@ namespace SabreTools.DatTools
                         || (item.ItemType == ItemType.Media && !string.IsNullOrEmpty((item as Media)!.MD5))
                         || (item.ItemType == ItemType.Rom && !string.IsNullOrEmpty((item as Rom)!.MD5)))
                     {
-                        fieldDats[DatItemField.MD5].Items.Add(key, item);
+                        fieldDats[Models.Metadata.Rom.MD5Key].Items.Add(key, item);
                     }
 
                     // If the file has a CRC
                     else if ((item.ItemType == ItemType.Rom && !string.IsNullOrEmpty((item as Rom)!.CRC)))
                     {
-                        fieldDats[DatItemField.CRC].Items.Add(key, item);
+                        fieldDats[Models.Metadata.Rom.CRCKey].Items.Add(key, item);
                     }
 
                     else
                     {
-                        fieldDats[DatItemField.NULL].Items.Add(key, item);
+                        fieldDats["null"].Items.Add(key, item);
                     }
                 }
 #if NET40_OR_GREATER || NETCOREAPP

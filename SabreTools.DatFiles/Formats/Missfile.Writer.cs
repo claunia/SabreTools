@@ -13,7 +13,7 @@ namespace SabreTools.DatFiles.Formats
     internal partial class Missfile : DatFile
     {
         /// <inheritdoc/>
-        protected override List<DatItemField>? GetMissingRequiredFields(DatItem datItem)
+        protected override List<string>? GetMissingRequiredFields(DatItem datItem)
         {
             // TODO: Check required fields
             return null;

@@ -25,13 +25,13 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <inheritdoc/>
-        protected override List<DatItemField>? GetMissingRequiredFields(DatItem datItem)
+        protected override List<string>? GetMissingRequiredFields(DatItem datItem)
         {
-            List<DatItemField> missingFields = [];
+            var missingFields = new List<string>();
 
             // Check item name
             if (string.IsNullOrEmpty(datItem.GetName()))
-                missingFields.Add(DatItemField.Name);
+                missingFields.Add(Models.Metadata.Rom.NameKey);
 
             // Check hash linked to specific Hashfile type
             switch (_hash)
@@ -41,10 +41,10 @@ namespace SabreTools.DatFiles.Formats
                     {
                         case ItemType.Rom:
                             if (string.IsNullOrEmpty((datItem as Rom)?.CRC))
-                                missingFields.Add(DatItemField.CRC);
+                                missingFields.Add(Models.Metadata.Rom.CRCKey);
                             break;
                         default:
-                            missingFields.Add(DatItemField.CRC);
+                            missingFields.Add(Models.Metadata.Rom.CRCKey);
                             break;
                     }
                     break;
@@ -53,18 +53,18 @@ namespace SabreTools.DatFiles.Formats
                     {
                         case ItemType.Disk:
                             if (string.IsNullOrEmpty((datItem as Disk)?.MD5))
-                                missingFields.Add(DatItemField.MD5);
+                                missingFields.Add(Models.Metadata.Disk.MD5Key);
                             break;
                         case ItemType.Media:
                             if (string.IsNullOrEmpty((datItem as Media)?.MD5))
-                                missingFields.Add(DatItemField.MD5);
+                                missingFields.Add(Models.Metadata.Media.MD5Key);
                             break;
                         case ItemType.Rom:
                             if (string.IsNullOrEmpty((datItem as Rom)?.MD5))
-                                missingFields.Add(DatItemField.MD5);
+                                missingFields.Add(Models.Metadata.Rom.MD5Key);
                             break;
                         default:
-                            missingFields.Add(DatItemField.MD5);
+                            missingFields.Add(Models.Metadata.Rom.MD5Key);
                             break;
                     }
                     break;
@@ -73,18 +73,18 @@ namespace SabreTools.DatFiles.Formats
                     {
                         case ItemType.Disk:
                             if (string.IsNullOrEmpty((datItem as Disk)?.SHA1))
-                                missingFields.Add(DatItemField.SHA1);
+                                missingFields.Add(Models.Metadata.Disk.SHA1Key);
                             break;
                         case ItemType.Media:
                             if (string.IsNullOrEmpty((datItem as Media)?.SHA1))
-                                missingFields.Add(DatItemField.SHA1);
+                                missingFields.Add(Models.Metadata.Media.SHA1Key);
                             break;
                         case ItemType.Rom:
                             if (string.IsNullOrEmpty((datItem as Rom)?.SHA1))
-                                missingFields.Add(DatItemField.SHA1);
+                                missingFields.Add(Models.Metadata.Rom.SHA1Key);
                             break;
                         default:
-                            missingFields.Add(DatItemField.SHA1);
+                            missingFields.Add(Models.Metadata.Rom.SHA1Key);
                             break;
                     }
                     break;
@@ -93,14 +93,14 @@ namespace SabreTools.DatFiles.Formats
                     {
                         case ItemType.Media:
                             if (string.IsNullOrEmpty((datItem as Media)?.SHA256))
-                                missingFields.Add(DatItemField.SHA256);
+                                missingFields.Add(Models.Metadata.Media.SHA256Key);
                             break;
                         case ItemType.Rom:
                             if (string.IsNullOrEmpty((datItem as Rom)?.SHA256))
-                                missingFields.Add(DatItemField.SHA256);
+                                missingFields.Add(Models.Metadata.Rom.SHA256Key);
                             break;
                         default:
-                            missingFields.Add(DatItemField.SHA256);
+                            missingFields.Add(Models.Metadata.Rom.SHA256Key);
                             break;
                     }
                     break;
@@ -109,10 +109,10 @@ namespace SabreTools.DatFiles.Formats
                     {
                         case ItemType.Rom:
                             if (string.IsNullOrEmpty((datItem as Rom)?.SHA384))
-                                missingFields.Add(DatItemField.SHA384);
+                                missingFields.Add(Models.Metadata.Rom.SHA384Key);
                             break;
                         default:
-                            missingFields.Add(DatItemField.SHA384);
+                            missingFields.Add(Models.Metadata.Rom.SHA384Key);
                             break;
                     }
                     break;
@@ -121,10 +121,10 @@ namespace SabreTools.DatFiles.Formats
                     {
                         case ItemType.Rom:
                             if (string.IsNullOrEmpty((datItem as Rom)?.SHA512))
-                                missingFields.Add(DatItemField.SHA512);
+                                missingFields.Add(Models.Metadata.Rom.SHA512Key);
                             break;
                         default:
-                            missingFields.Add(DatItemField.SHA512);
+                            missingFields.Add(Models.Metadata.Rom.SHA512Key);
                             break;
                     }
                     break;
@@ -133,14 +133,14 @@ namespace SabreTools.DatFiles.Formats
                     {
                         case ItemType.Media:
                             if (string.IsNullOrEmpty((datItem as Media)?.SpamSum))
-                                missingFields.Add(DatItemField.SpamSum);
+                                missingFields.Add(Models.Metadata.Media.SpamSumKey);
                             break;
                         case ItemType.Rom:
                             if (string.IsNullOrEmpty((datItem as Rom)?.SpamSum))
-                                missingFields.Add(DatItemField.SpamSum);
+                                missingFields.Add(Models.Metadata.Rom.SpamSumKey);
                             break;
                         default:
-                            missingFields.Add(DatItemField.SpamSum);
+                            missingFields.Add(Models.Metadata.Rom.SpamSumKey);
                             break;
                     }
                     break;

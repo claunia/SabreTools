@@ -52,7 +52,7 @@ namespace SabreTools.Features
             AddFeature(OutputDirStringInput);
         }
 
-        public override bool ProcessFeatures(Dictionary<string, Help.Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature?> features)
         {
             // If the base fails, just fail out
             if (!base.ProcessFeatures(features))
