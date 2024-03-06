@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using SabreTools.Core;
+using SabreTools.Hashing;
 using SabreTools.Help;
 using Microsoft.Data.Sqlite;
 

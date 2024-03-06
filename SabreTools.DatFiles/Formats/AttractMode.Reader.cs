@@ -3,6 +3,7 @@ using System.Linq;
 using SabreTools.Core;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
+using SabreTools.Hashing;
 
 namespace SabreTools.DatFiles.Formats
 {

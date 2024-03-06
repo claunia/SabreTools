@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using SabreTools.Hashing;
 using SabreTools.Models.Metadata;
 
 namespace SabreTools.Core

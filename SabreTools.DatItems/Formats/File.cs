@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.FileTypes;
-using SabreTools.Filter;
+using SabreTools.Hashing;
 using SabreTools.Matching;
 
 // TODO: Add item mappings for all fields

@@ -1,6 +1,5 @@
 ﻿using System;
-
-using SabreTools.Core;
+using SabreTools.Hashing;
 
 namespace SabreTools.DatFiles
 {

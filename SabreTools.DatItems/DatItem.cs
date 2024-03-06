@@ -8,6 +8,7 @@ using SabreTools.Core.Tools;
 using SabreTools.DatItems.Formats;
 using SabreTools.FileTypes;
 using SabreTools.Filter;
+using SabreTools.Hashing;
 using SabreTools.Logging;
 using SabreTools.Matching;
 

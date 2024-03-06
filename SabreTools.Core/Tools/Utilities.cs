@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using SabreTools.Hashing;
 using SabreTools.Matching;
 
 namespace SabreTools.Core.Tools
@@ -63,8 +64,8 @@ namespace SabreTools.Core.Tools
             // Cap the depth between 0 and 20, for now
             if (depth < 0)
                 depth = 0;
-            else if (depth > (Constants.SHA1Length / 2))
-                depth = (Constants.SHA1Length / 2);
+            else if (depth > Constants.SHA1Zero.Length)
+                depth = Constants.SHA1Zero.Length;
 
             // Loop through and generate the subdirectory
             string path = string.Empty;
