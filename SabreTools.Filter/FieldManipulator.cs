@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
+using SabreTools.Core;
 using SabreTools.Models.Metadata;
 
 namespace SabreTools.Filter
@@ -51,6 +52,28 @@ namespace SabreTools.Filter
 
             // Remove the key
             dictionaryBase.Remove(fieldName!);
+            return true;
+        }
+
+        /// <summary>
+        /// Replace a field from one DictionaryBase to another
+        /// </summary>
+        public static bool ReplaceField(DictionaryBase? from, DictionaryBase? to, string? fieldName)
+        {
+            // If the items or field name are missing, we can't do anything
+            if (from == null || to == null || string.IsNullOrEmpty(fieldName))
+                return false;
+
+            // If the types of the items are not the same, we can't do anything
+            if (from.GetType() != to.GetType())
+                return false;
+
+            // If the key doesn't exist in the source, we can't do anything
+            if (!from.ContainsKey(fieldName!))
+                return false;
+
+            // Set the key
+            to[fieldName!] = from[fieldName!];
             return true;
         }
 
