@@ -176,6 +176,7 @@ namespace SabreTools.DatFiles
         /// <param name="datItem">DatItem to set fields on</param>
         public void SetFields(DatItem datItem)
         {
+            // If we have an invalid input, return
             if (datItem == null)
                 return;
 

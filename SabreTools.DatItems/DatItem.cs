@@ -394,7 +394,17 @@ namespace SabreTools.DatItems
         /// </summary>
         /// <param name="fieldName">Field to remove</param>
         /// <returns>True if the removal was successful, false otherwise</returns>
-        public bool RemoveField(string? fieldName) => FieldManipulator.RemoveField(_internal, fieldName);
+        public bool RemoveField(string? fieldName)
+            => FieldManipulator.RemoveField(_internal, fieldName);
+
+        /// <summary>
+        /// Replace a field from another DatItem
+        /// </summary>
+        /// <param name="other">DatItem to replace field from</param>
+        /// <param name="fieldName">Field to replace</param>
+        /// <returns>True if the replacement was successful, false otherwise</returns>
+        public bool ReplaceField(DatItem? other, string? fieldName)
+            => FieldManipulator.ReplaceField(other?._internal, _internal, fieldName);
 
         /// <summary>
         /// Set a field in the DatItem from a mapping string
@@ -403,7 +413,8 @@ namespace SabreTools.DatItems
         /// <param name="value">String representing the value to set</param>
         /// <returns>True if the removal was successful, false otherwise</returns>
         /// <remarks>This only performs minimal validation before setting</remarks>
-        public bool SetField(string? fieldName, string value) => FieldManipulator.SetField(_internal, fieldName, value);
+        public bool SetField(string? fieldName, string value)
+            => FieldManipulator.SetField(_internal, fieldName, value);
 
         #endregion
 

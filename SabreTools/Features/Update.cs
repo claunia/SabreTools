@@ -90,8 +90,8 @@ namespace SabreTools.Features
                 return false;
 
             // Get feature flags
-            var updateDatItemFields = GetUpdateDatItemFields(features);
-            var updateMachineFields = GetUpdateMachineFields(features);
+            var updateMachineFieldNames = GetUpdateMachineFields(features);
+            var updateItemFieldNames = GetUpdateDatItemFields(features);
             var updateMode = GetUpdateMode(features);
 
             // Normalize the extensions
@@ -138,8 +138,11 @@ namespace SabreTools.Features
             }
 
             // If no update fields are set, default to Names
-            if (updateDatItemFields == null || updateDatItemFields.Count == 0)
-                updateDatItemFields = new List<DatItemField>() { DatItemField.Name };
+            if (updateItemFieldNames == null || updateItemFieldNames.Count == 0)
+            {
+                updateItemFieldNames = [];
+                updateItemFieldNames["item"] = [Models.Metadata.Rom.NameKey];
+            }
 
             // Ensure we only have files in the inputs
             List<ParentablePath> inputPaths = PathTool.GetFilesOnly(Inputs, appendparent: true);
@@ -391,8 +394,8 @@ namespace SabreTools.Features
                     DatFileTool.BaseReplace(
                         userInputDat,
                         repDat,
-                        updateMachineFields,
-                        updateDatItemFields,
+                        updateMachineFieldNames,
+                        updateItemFieldNames,
                         GetBoolean(features, OnlySameValue));
 
                     // Finally output the replaced DatFile

@@ -95,20 +95,20 @@ namespace SabreTools.DatTools
         /// </summary>
         /// <param name="datFile">Current DatFile object to use for updating</param>
         /// <param name="intDat">DatFile to replace the values in</param>
-        /// <param name="machineFields">List of MachineFields representing what should be updated</param>
-        /// <param name="datItemFields">List of DatItemFields representing what should be updated</param>
+        /// <param name="machineFieldNames">List of machine field names representing what should be updated</param>
+        /// <param name="itemFieldNames">List of item field names representing what should be updated</param>
         /// <param name="onlySame">True if descriptions should only be replaced if the game name is the same, false otherwise</param>
         public static void BaseReplace(
             DatFile datFile,
             DatFile intDat,
-            List<MachineField> machineFields,
-            List<DatItemField> datItemFields,
+            List<string> machineFieldNames,
+            Dictionary<string, List<string>> itemFieldNames,
             bool onlySame)
         {
             InternalStopwatch watch = new($"Replacing items in '{intDat.Header.FileName}' from the base DAT");
 
             // If we are matching based on DatItem fields of any sort
-            if (datItemFields.Any())
+            if (itemFieldNames.Any())
             {
                 // For comparison's sake, we want to use CRC as the base bucketing
                 datFile.Items.BucketBy(ItemKey.CRC, DedupeType.Full);
@@ -140,7 +140,7 @@ namespace SabreTools.DatTools
 
                         // Replace fields from the first duplicate, if we have one
                         if (dupes.Count > 0)
-                            Replacer.ReplaceFields(newDatItem, dupes.First(), datItemFields);
+                            Replacer.ReplaceFields(newDatItem, dupes.First(), itemFieldNames);
 
                         newDatItems.Add(newDatItem);
                     }
@@ -156,7 +156,7 @@ namespace SabreTools.DatTools
             }
 
             // If we are matching based on Machine fields of any sort
-            if (machineFields.Any())
+            if (machineFieldNames.Any())
             {
                 // For comparison's sake, we want to use Machine Name as the base bucketing
                 datFile.Items.BucketBy(ItemKey.Machine, DedupeType.Full);
@@ -189,7 +189,7 @@ namespace SabreTools.DatTools
                             continue;
 
                         if (datFile.Items.ContainsKey(key) && list.Count > 0)
-                            Replacer.ReplaceFields(newDatItem.Machine, list[0].Machine, machineFields, onlySame);
+                            Replacer.ReplaceFields(newDatItem.Machine, list[0].Machine, machineFieldNames, onlySame);
 
                         newDatItems.Add(newDatItem);
                     }

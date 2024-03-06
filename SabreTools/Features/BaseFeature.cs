@@ -2046,28 +2046,37 @@ Some special strings that can be used:
         }
 
         /// <summary>
-        /// Get update DatItem fields from feature list
+        /// Get update Machine fields from feature list
         /// </summary>
-        protected static List<DatItemField> GetUpdateDatItemFields(Dictionary<string, Feature> features)
+        protected static List<string> GetUpdateMachineFields(Dictionary<string, Feature> features)
         {
-            List<DatItemField> updateFields = new();
+            List<string> updateFields = [];
             foreach (string fieldName in GetList(features, UpdateFieldListValue))
             {
-                updateFields.Add(fieldName.AsDatItemField());
+                (string? itemType, string? key) = SabreTools.Filter.FilterParser.ParseFilterId(fieldName);
+                if (itemType == Models.Metadata.MetadataFile.MachineKey)
+                    updateFields.Add(key);
             }
 
             return updateFields;
         }
 
         /// <summary>
-        /// Get update Machine fields from feature list
+        /// Get update DatItem fields from feature list
         /// </summary>
-        protected static List<MachineField> GetUpdateMachineFields(Dictionary<string, Feature> features)
+        protected static Dictionary<string, List<string>> GetUpdateDatItemFields(Dictionary<string, Feature> features)
         {
-            List<MachineField> updateFields = new();
+            Dictionary<string, List<string>> updateFields = [];
             foreach (string fieldName in GetList(features, UpdateFieldListValue))
             {
-                updateFields.Add(fieldName.AsMachineField());
+                (string? itemType, string? key) = SabreTools.Filter.FilterParser.ParseFilterId(fieldName);
+                if (itemType != Models.Metadata.MetadataFile.HeaderKey && itemType != Models.Metadata.MetadataFile.MachineKey)
+                {
+                    if (!updateFields.ContainsKey(itemType))
+                        updateFields[itemType] = [];
+
+                    updateFields[itemType].Add(key);
+                }
             }
 
             return updateFields;

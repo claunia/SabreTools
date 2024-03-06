@@ -558,6 +558,15 @@ namespace SabreTools.DatItems
             => FieldManipulator.RemoveField(_machine, fieldName);
 
         /// <summary>
+        /// Replace a field from another Machine
+        /// </summary>
+        /// <param name="other">Machine to replace field from</param>
+        /// <param name="fieldName">Field to replace</param>
+        /// <returns>True if the replacement was successful, false otherwise</returns>
+        public bool ReplaceField(Machine? other, string? fieldName)
+            => FieldManipulator.ReplaceField(other?._machine, _machine, fieldName);
+
+        /// <summary>
         /// Set a field in the Machine from a mapping string
         /// </summary>
         /// <param name="fieldName">Field to set</param>

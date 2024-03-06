@@ -16,7 +16,10 @@ namespace SabreTools.Test.Filtering
             var datItem = CreateDatItem();
             var repDatItem = CreateDatItem();
             repDatItem.SetName("bar");
-            var fields = new List<DatItemField> { DatItemField.Name };
+            var fields = new Dictionary<string, List<string>>
+            {
+                ["item"] = [Models.Metadata.Rom.NameKey]
+            };
             Replacer.ReplaceFields(datItem, repDatItem, fields);
             Assert.Equal("bar", datItem.GetName());
         }
@@ -27,7 +30,7 @@ namespace SabreTools.Test.Filtering
             var datItem = CreateDatItem();
             var repDatItem = CreateDatItem();
             repDatItem.Machine.Name = "foo";
-            var fields = new List<MachineField> { MachineField.Name };
+            List<string> fields = [Models.Metadata.Machine.NameKey];
             Replacer.ReplaceFields(datItem.Machine, repDatItem.Machine, fields, false);
             Assert.Equal("foo", datItem.Machine.Name);
         }
