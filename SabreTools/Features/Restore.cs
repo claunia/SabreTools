@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Collections.Generic;
 using Microsoft.Data.Sqlite;
-using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.FileTypes;
 using SabreTools.Hashing;
@@ -17,7 +16,7 @@ namespace SabreTools.Features
         public Restore()
         {
             Name = Value;
-            Flags = new List<string>() { "re", "restore" };
+            Flags = ["re", "restore"];
             Description = "Restore header to file based on SHA-1";
             _featureType = ParameterType.Flag;
             LongDescription = @"This will make use of stored copier headers and reapply them to files if they match the included hash. More than one header can be applied to a file, so they will be output to new files, suffixed with .newX, where X is a number. No input files are altered in the process. Only uncompressed files will be processed.
@@ -35,7 +34,7 @@ The following systems have headers that this program can work with:
 
             // Common Features
             AddCommonFeatures();
-            
+
             AddFeature(OutputDirStringInput);
         }
 
@@ -54,24 +53,24 @@ The following systems have headers that this program can work with:
 
             return true;
         }
-    
+
         /// <summary>
         /// Detect and replace header(s) to the given file
         /// </summary>
         /// <param name="file">Name of the file to be parsed</param>
         /// <param name="outDir">Output directory to write the file to, empty means the same directory as the input file</param>
         /// <returns>True if a header was found and appended, false otherwise</returns>
-        public bool RestoreHeader(string file, string outDir)
+        public bool RestoreHeader(string file, string? outDir)
         {
             // Create the output directory if it doesn't exist
             if (!string.IsNullOrWhiteSpace(outDir) && !Directory.Exists(outDir))
                 Directory.CreateDirectory(outDir);
 
             // First, get the SHA-1 hash of the file
-            BaseFile baseFile = BaseFile.GetInfo(file, hashes: [HashType.SHA1], asFiles: TreatAsFile.NonArchive);
+            BaseFile? baseFile = BaseFile.GetInfo(file, hashes: [HashType.SHA1], asFiles: TreatAsFile.NonArchive);
 
             // Retrieve a list of all related headers from the database
-            List<string> headers = RetrieveHeadersFromDatabase(TextHelper.ByteArrayToString(baseFile.SHA1));
+            List<string> headers = RetrieveHeadersFromDatabase(TextHelper.ByteArrayToString(baseFile!.SHA1)!);
 
             // If we have nothing retrieved, we return false
             if (headers.Count == 0)
@@ -100,14 +99,14 @@ The following systems have headers that this program can work with:
             EnsureDatabase();
 
             // Open the database connection
-            SqliteConnection dbc = new(HeadererConnectionString);
+            SqliteConnection dbc = new SqliteConnection(HeadererConnectionString);
             dbc.Open();
 
             // Create the output list of headers
-            List<string> headers = new();
+            List<string> headers = [];
 
             string query = $"SELECT header, type FROM data WHERE sha1='{SHA1}'";
-            SqliteCommand slc = new(query, dbc);
+            SqliteCommand slc = new SqliteCommand(query, dbc);
             SqliteDataReader sldr = slc.ExecuteReader();
 
             if (sldr.HasRows)
@@ -130,7 +129,7 @@ The following systems have headers that this program can work with:
 
             return headers;
         }
-    
+
         /// <summary>
         /// Add an aribtrary number of bytes to the inputted file
         /// </summary>
@@ -138,7 +137,7 @@ The following systems have headers that this program can work with:
         /// <param name="output">Outputted file</param>
         /// <param name="bytesToAddToHead">Bytes to be added to head of file</param>
         /// <param name="bytesToAddToTail">Bytes to be added to tail of file</param>
-        private static void AppendBytes(string input, string output, byte[] bytesToAddToHead, byte[] bytesToAddToTail)
+        private static void AppendBytes(string input, string output, byte[]? bytesToAddToHead, byte[]? bytesToAddToTail)
         {
             // If any of the inputs are invalid, skip
             if (!File.Exists(input))
@@ -157,7 +156,7 @@ The following systems have headers that this program can work with:
         /// <param name="output">Outputted stream</param>
         /// <param name="bytesToAddToHead">Bytes to be added to head of stream</param>
         /// <param name="bytesToAddToTail">Bytes to be added to tail of stream</param>
-        private static void AppendBytes(Stream input, Stream output, byte[] bytesToAddToHead, byte[] bytesToAddToTail)
+        private static void AppendBytes(Stream input, Stream output, byte[]? bytesToAddToHead, byte[]? bytesToAddToTail)
         {
             // Write out prepended bytes
             if (bytesToAddToHead != null && bytesToAddToHead.Length > 0)

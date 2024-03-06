@@ -16,7 +16,7 @@ namespace SabreTools.Features
         public Verify()
         {
             Name = Value;
-            Flags = new List<string>() { "ve", "verify" };
+            Flags = ["ve", "verify"];
             Description = "Verify a folder against DATs";
             _featureType = ParameterType.Flag;
             LongDescription = "When used, this will use an input DAT or set of DATs to blindly check against an input folder. The base of the folder is considered the base for the combined DATs and games are either the directories or archives within. This will only do a direct verification of the items within and will create a fixdat afterwards for missing files.";
@@ -103,7 +103,7 @@ namespace SabreTools.Features
             // Otherwise, process all DATs into the same output
             else
             {
-                InternalStopwatch watch = new("Populating internal DAT");
+                var watch = new InternalStopwatch("Populating internal DAT");
 
                 // Add all of the input DATs into one huge internal DAT
                 DatFile datdata = DatFile.Create();

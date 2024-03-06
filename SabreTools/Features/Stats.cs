@@ -13,7 +13,7 @@ namespace SabreTools.Features
         public Stats()
         {
             Name = Value;
-            Flags = new List<string>() { "st", "stats" };
+            Flags = ["st", "stats"];
             Description = "Get statistics on all input DATs";
             _featureType = ParameterType.Flag;
             LongDescription = @"This will output by default the combined statistics for all input DAT files.
@@ -49,13 +49,13 @@ The stats that are outputted are as follows:
             if (!base.ProcessFeatures(features))
                 return false;
 
-            string filename = Header.FileName;
+            string filename = Header!.FileName!;
             if (Path.GetFileName(filename) != filename)
             {
                 if (string.IsNullOrWhiteSpace(OutputDir))
                     OutputDir = Path.GetDirectoryName(filename);
                 else
-                    OutputDir = Path.Combine(OutputDir, Path.GetDirectoryName(filename));
+                    OutputDir = Path.Combine(OutputDir, Path.GetDirectoryName(filename)!);
 
                 filename = Path.GetFileName(filename);
             }

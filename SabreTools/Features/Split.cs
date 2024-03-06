@@ -16,11 +16,11 @@ namespace SabreTools.Features
         public Split()
         {
             Name = Value;
-            Flags = new List<string>() { "sp", "split" };
+            Flags = ["sp", "split"];
             Description = "Split input DATs by a given criteria";
             _featureType = ParameterType.Flag;
             LongDescription = "This feature allows the user to split input DATs by a number of different possible criteria. See the individual input information for details. More than one split type is allowed at a time.";
-            Features = new Dictionary<string, Help.Feature>();
+            Features = [];
 
             // Common Features
             AddCommonFeatures();
@@ -64,7 +64,7 @@ namespace SabreTools.Features
             foreach (ParentablePath file in files)
             {
                 // Create and fill the new DAT
-                DatFile internalDat = DatFile.Create(Header);
+                DatFile internalDat = DatFile.Create(Header!);
                 Parser.ParseInto(internalDat, file);
 
                 // Get the output directory
@@ -75,14 +75,16 @@ namespace SabreTools.Features
                 if (splittingMode.HasFlag(SplittingMode.Extension))
                 {
                     (DatFile? extADat, DatFile? extBDat) = DatTools.Splitter.SplitByExtension(internalDat, GetList(features, ExtAListValue), GetList(features, ExtBListValue));
+                    if (extADat != null && extBDat != null)
+                    {
+                        var watch = new InternalStopwatch("Outputting extension-split DATs");
 
-                    InternalStopwatch watch = new("Outputting extension-split DATs");
+                        // Output both possible DatFiles
+                        Writer.Write(extADat, OutputDir);
+                        Writer.Write(extBDat, OutputDir);
 
-                    // Output both possible DatFiles
-                    Writer.Write(extADat, OutputDir);
-                    Writer.Write(extBDat, OutputDir);
-
-                    watch.Stop();
+                        watch.Stop();
+                    }
                 }
 
                 // Hash splitting
@@ -90,7 +92,7 @@ namespace SabreTools.Features
                 {
                     Dictionary<string, DatFile> typeDats = DatTools.Splitter.SplitByHash(internalDat);
 
-                    InternalStopwatch watch = new("Outputting hash-split DATs");
+                    var watch = new InternalStopwatch("Outputting hash-split DATs");
 
                     // Loop through each type DatFile
 #if NET452_OR_GREATER || NETCOREAPP
@@ -117,7 +119,7 @@ namespace SabreTools.Features
                     logger.Warning("This feature is not implemented: level-split");
                     DatTools.Splitter.SplitByLevel(
                         internalDat,
-                        OutputDir,
+                        OutputDir!,
                         GetBoolean(features, ShortValue),
                         GetBoolean(features, BaseValue));
                 }
@@ -127,7 +129,7 @@ namespace SabreTools.Features
                 {
                     (DatFile lessThan, DatFile greaterThan) = DatTools.Splitter.SplitBySize(internalDat, GetInt64(features, RadixInt64Value));
 
-                    InternalStopwatch watch = new("Outputting size-split DATs");
+                    var watch = new InternalStopwatch("Outputting size-split DATs");
 
                     // Output both possible DatFiles
                     Writer.Write(lessThan, OutputDir);
@@ -142,7 +144,7 @@ namespace SabreTools.Features
                     logger.Warning("This feature is not implemented: level-split");
                     List<DatFile> sizedDats = DatTools.Splitter.SplitByTotalSize(internalDat, GetInt64(features, ChunkSizeInt64Value));
 
-                    InternalStopwatch watch = new("Outputting total-size-split DATs");
+                    var watch = new InternalStopwatch("Outputting total-size-split DATs");
 
                     // Loop through each type DatFile
 #if NET452_OR_GREATER || NETCOREAPP
@@ -168,7 +170,7 @@ namespace SabreTools.Features
                 {
                     Dictionary<ItemType, DatFile> typeDats = DatTools.Splitter.SplitByType(internalDat);
 
-                    InternalStopwatch watch = new("Outputting ItemType DATs");
+                    var watch = new InternalStopwatch("Outputting ItemType DATs");
 
                     // Loop through each type DatFile
 #if NET452_OR_GREATER || NETCOREAPP

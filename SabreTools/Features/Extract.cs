@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Collections.Generic;
 using Microsoft.Data.Sqlite;
-using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.FileTypes;
 using SabreTools.Hashing;
@@ -18,7 +17,7 @@ namespace SabreTools.Features
         public Extract()
         {
             Name = Value;
-            Flags = new List<string>() { "ex", "extract" };
+            Flags = ["ex", "extract"];
             Description = "Extract and remove copier headers";
             _featureType = ParameterType.Flag;
             LongDescription = @"This will detect, store, and remove copier headers from a file or folder of files. The headers are backed up and collated by the hash of the unheadered file. Files are then output without the detected copier header alongside the originals with the suffix .new. No input files are altered in the process. Only uncompressed files will be processed.
@@ -67,7 +66,7 @@ The following systems have headers that this program can work with:
         /// <param name="outDir">Output directory to write the file to, empty means the same directory as the input file</param>
         /// <param name="nostore">True if headers should not be stored in the database, false otherwise</param>
         /// <returns>True if the output file was created, false otherwise</returns>
-        private bool DetectTransformStore(string file, string outDir, bool nostore)
+        private bool DetectTransformStore(string file, string? outDir, bool nostore)
         {
             // Create the output directory if it doesn't exist
             if (!string.IsNullOrWhiteSpace(outDir) && !Directory.Exists(outDir))
@@ -91,9 +90,10 @@ The following systems have headers that this program can work with:
             {
                 // Extract the header as a string for the database
                 using var fs = File.OpenRead(file);
-                byte[] hbin = new byte[int.Parse(rule.StartOffset)];
-                fs.Read(hbin, 0, int.Parse(rule.StartOffset));
-                hstr = TextHelper.ByteArrayToString(hbin);
+                int startOffset = int.Parse(rule.StartOffset ?? "0");
+                byte[] hbin = new byte[startOffset];
+                fs.Read(hbin, 0, startOffset);
+                hstr = TextHelper.ByteArrayToString(hbin)!;
             }
             catch
             {
@@ -101,7 +101,7 @@ The following systems have headers that this program can work with:
             }
 
             // Apply the rule to the file
-            string newfile = (string.IsNullOrWhiteSpace(outDir) ? Path.GetFullPath(file) + ".new" : Path.Combine(outDir, Path.GetFileName(file)));
+            string newfile = string.IsNullOrWhiteSpace(outDir) ? Path.GetFullPath(file) + ".new" : Path.Combine(outDir, Path.GetFileName(file));
             rule.TransformFile(file, newfile);
 
             // If the output file doesn't exist, return false
@@ -111,8 +111,8 @@ The following systems have headers that this program can work with:
             // Now add the information to the database if it's not already there
             if (!nostore)
             {
-                BaseFile baseFile = BaseFile.GetInfo(newfile, hashes: [HashType.SHA1], asFiles: TreatAsFile.NonArchive);
-                AddHeaderToDatabase(hstr, TextHelper.ByteArrayToString(baseFile.SHA1), rule.SourceFile);
+                BaseFile? baseFile = BaseFile.GetInfo(newfile, hashes: [HashType.SHA1], asFiles: TreatAsFile.NonArchive);
+                AddHeaderToDatabase(hstr, TextHelper.ByteArrayToString(baseFile!.SHA1)!, rule.SourceFile!);
             }
 
             return true;

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-
 using SabreTools.Core;
 using SabreTools.Help;
 
@@ -12,7 +11,7 @@ namespace SabreTools.Features
         public Version()
         {
             Name = Value;
-            Flags = new List<string>() { "v", "version" };
+            Flags = ["v", "version"];
             Description = "Prints version";
             _featureType = ParameterType.Flag;
             LongDescription = "Prints current program version.";

@@ -39,7 +39,7 @@ namespace SabreTools.DatTools
         /// <returns>True if the DAT was written correctly, false otherwise</returns>
         public static bool Write(
             DatFile datFile,
-            string outDir,
+            string ?outDir,
             bool overwrite = true,
             bool ignoreblanks = false,
             bool quotes = true,
@@ -53,7 +53,7 @@ namespace SabreTools.DatTools
             }
 
             // Ensure the output directory is set and created
-            outDir = outDir.Ensure(create: true);
+            outDir = outDir?.Ensure(create: true);
 
             InternalStopwatch watch = new($"Writing out internal dat to '{outDir}'");
 
@@ -74,7 +74,7 @@ namespace SabreTools.DatTools
             logger.User($"A total of {datFile.Items.TotalCount - datFile.Items.RemovedCount} items will be written out to '{datFile.Header.FileName}'");
 
             // Get the outfile names
-            Dictionary<DatFormat, string> outfiles = datFile.Header.CreateOutFileNames(outDir, overwrite);
+            Dictionary<DatFormat, string> outfiles = datFile.Header.CreateOutFileNames(outDir!, overwrite);
 
             try
             {

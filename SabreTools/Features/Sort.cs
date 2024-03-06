@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-
 using SabreTools.DatFiles;
 using SabreTools.DatTools;
 using SabreTools.FileTypes;
@@ -17,7 +16,7 @@ namespace SabreTools.Features
         public Sort()
         {
             Name = Value;
-            Flags = new List<string>() { "ss", "sort" };
+            Flags = ["ss", "sort"];
             Description = "Sort inputs by a set of DATs";
             _featureType = ParameterType.Flag;
             LongDescription = "This feature allows the user to quickly rebuild based on a supplied DAT file(s). By default all files will be rebuilt to uncompressed folders in the output directory.";
@@ -43,7 +42,7 @@ namespace SabreTools.Features
             AddFeature(TarFlag);
             AddFeature(TorrentGzipFlag);
             this[TorrentGzipFlag]!.AddFeature(RombaFlag);
-            this[TorrentGzipFlag][RombaFlag]!.AddFeature(RombaDepthInt32Input);
+            this[TorrentGzipFlag]![RombaFlag]!.AddFeature(RombaDepthInt32Input);
             //AddFeature(SharedInputs.TorrentLrzipFlag);
             //AddFeature(SharedInputs.TorrentLz4Flag);
             //AddFeature(SharedInputs.TorrentRarFlag);
@@ -74,7 +73,7 @@ namespace SabreTools.Features
             var outputFormat = GetOutputFormat(features);
 
             // If we have the romba flag
-            if (Header.OutputDepot?.IsActive == true)
+            if (Header!.OutputDepot?.IsActive == true)
             {
                 // Update TorrentGzip output
                 if (outputFormat == OutputFormat.TorrentGzip)
@@ -108,9 +107,9 @@ namespace SabreTools.Features
                     // If we have the depot flag, respect it
                     bool success;
                     if (Header.InputDepot?.IsActive ?? false)
-                        success = Rebuilder.RebuildDepot(datdata, Inputs, Path.Combine(OutputDir, datdata.Header.FileName), date, delete, inverse, outputFormat);
+                        success = Rebuilder.RebuildDepot(datdata, Inputs, Path.Combine(OutputDir!, datdata.Header.FileName!), date, delete, inverse, outputFormat);
                     else
-                        success = Rebuilder.RebuildGeneric(datdata, Inputs, Path.Combine(OutputDir, datdata.Header.FileName), quickScan, date, delete, inverse, outputFormat, asFiles);
+                        success = Rebuilder.RebuildGeneric(datdata, Inputs, Path.Combine(OutputDir!, datdata.Header.FileName!), quickScan, date, delete, inverse, outputFormat, asFiles);
 
                     // If we have a success and we're updating the DAT, write it out
                     if (success && updateDat)
@@ -127,7 +126,7 @@ namespace SabreTools.Features
             // Otherwise, process all DATs into the same output
             else
             {
-                InternalStopwatch watch = new("Populating internal DAT");
+                var watch = new InternalStopwatch("Populating internal DAT");
 
                 // Add all of the input DATs into one huge internal DAT
                 DatFile datdata = DatFile.Create();
@@ -149,9 +148,9 @@ namespace SabreTools.Features
                 // If we have the depot flag, respect it
                 bool success;
                 if (Header.InputDepot?.IsActive ?? false)
-                    success = Rebuilder.RebuildDepot(datdata, Inputs, OutputDir, date, delete, inverse, outputFormat);
+                    success = Rebuilder.RebuildDepot(datdata, Inputs, OutputDir!, date, delete, inverse, outputFormat);
                 else
-                    success = Rebuilder.RebuildGeneric(datdata, Inputs, OutputDir, quickScan, date, delete, inverse, outputFormat, asFiles);
+                    success = Rebuilder.RebuildGeneric(datdata, Inputs, OutputDir!, quickScan, date, delete, inverse, outputFormat, asFiles);
 
                 // If we have a success and we're updating the DAT, write it out
                 if (success && updateDat)

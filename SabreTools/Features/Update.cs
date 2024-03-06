@@ -18,11 +18,11 @@ namespace SabreTools.Features
         public Update()
         {
             Name = Value;
-            Flags = new List<string>() { "ud", "update" };
+            Flags = ["ud", "update"];
             Description = "Update and manipulate DAT(s)";
             _featureType = ParameterType.Flag;
             LongDescription = "This is the multitool part of the program, allowing for almost every manipulation to a DAT, or set of DATs. This is also a combination of many different programs that performed DAT manipulation that work better together.";
-            Features = new Dictionary<string, Help.Feature>();
+            Features = [];
 
             // Common Features
             AddCommonFeatures();
@@ -38,7 +38,7 @@ namespace SabreTools.Features
             this[OutputTypeListInput]!.AddFeature(ReplaceExtensionStringInput);
             this[OutputTypeListInput]!.AddFeature(RemoveExtensionsFlag);
             this[OutputTypeListInput]!.AddFeature(RombaFlag);
-            this[OutputTypeListInput][RombaFlag]!.AddFeature(RombaDepthInt32Input);
+            this[OutputTypeListInput]![RombaFlag]!.AddFeature(RombaDepthInt32Input);
             this[OutputTypeListInput]!.AddFeature(DeprecatedFlag);
 
             AddHeaderFeatures();
@@ -68,11 +68,11 @@ namespace SabreTools.Features
             AddFeature(BaseReplaceFlag);
             this[BaseReplaceFlag]!.AddFeature(BaseDatListInput);
             this[BaseReplaceFlag]!.AddFeature(UpdateFieldListInput);
-            this[BaseReplaceFlag][UpdateFieldListInput]!.AddFeature(OnlySameFlag);
+            this[BaseReplaceFlag]![UpdateFieldListInput]!.AddFeature(OnlySameFlag);
             AddFeature(ReverseBaseReplaceFlag);
             this[ReverseBaseReplaceFlag]!.AddFeature(BaseDatListInput);
             this[ReverseBaseReplaceFlag]!.AddFeature(UpdateFieldListInput);
-            this[ReverseBaseReplaceFlag][UpdateFieldListInput]!.AddFeature(OnlySameFlag);
+            this[ReverseBaseReplaceFlag]![UpdateFieldListInput]!.AddFeature(OnlySameFlag);
             AddFeature(DiffCascadeFlag);
             this[DiffCascadeFlag]!.AddFeature(SkipFirstOutputFlag);
             AddFeature(DiffReverseCascadeFlag);
@@ -95,7 +95,7 @@ namespace SabreTools.Features
             var updateMode = GetUpdateMode(features);
 
             // Normalize the extensions
-            Header.AddExtension = (string.IsNullOrWhiteSpace(Header.AddExtension) || Header.AddExtension.StartsWith(".")
+            Header!.AddExtension = (string.IsNullOrWhiteSpace(Header.AddExtension) || Header.AddExtension.StartsWith(".")
                 ? Header.AddExtension
                 : $".{Header.AddExtension}");
             Header.ReplaceExtension = (string.IsNullOrWhiteSpace(Header.ReplaceExtension) || Header.ReplaceExtension.StartsWith(".")
@@ -114,14 +114,14 @@ namespace SabreTools.Features
                 {
                     Header.Name = (updateMode != 0 ? "DiffDAT" : "MergeDAT")
                         + (Header.Type == "SuperDAT" ? "-SuperDAT" : string.Empty)
-                        + (Cleaner.DedupeRoms != DedupeType.None ? "-deduped" : string.Empty);
+                        + (Cleaner!.DedupeRoms != DedupeType.None ? "-deduped" : string.Empty);
                 }
 
                 if (string.IsNullOrWhiteSpace(Header.Description))
                 {
                     Header.Description = (updateMode != 0 ? "DiffDAT" : "MergeDAT")
                         + (Header.Type == "SuperDAT" ? "-SuperDAT" : string.Empty)
-                        + (Cleaner.DedupeRoms != DedupeType.None ? " - deduped" : string.Empty);
+                        + (Cleaner!.DedupeRoms != DedupeType.None ? " - deduped" : string.Empty);
 
                     if (!GetBoolean(features, NoAutomaticDateValue))
                         Header.Description += $" ({Header.Date})";
@@ -149,7 +149,7 @@ namespace SabreTools.Features
             List<ParentablePath> basePaths = PathTool.GetFilesOnly(GetList(features, BaseDatListValue));
 
             // Ensure the output directory
-            OutputDir = OutputDir.Ensure();
+            OutputDir = OutputDir?.Ensure();
 
             // If we're in standard update mode, run through all of the inputs
             if (updateMode == UpdateMode.None)
@@ -172,14 +172,14 @@ namespace SabreTools.Features
                             || datFile.Header.DatFormat.HasFlag(DatFormat.SSV));
 
                     // Perform additional processing steps
-                    Extras.ApplyExtras(datFile);
-                    Splitter.ApplySplitting(datFile, useTags: false);
-                    datFile.ExecuteFilters(FilterRunner);
-                    Cleaner.ApplyCleaning(datFile);
-                    Remover.ApplyRemovals(datFile);
+                    Extras!.ApplyExtras(datFile);
+                    Splitter!.ApplySplitting(datFile, useTags: false);
+                    datFile.ExecuteFilters(FilterRunner!);
+                    Cleaner!.ApplyCleaning(datFile);
+                    Remover!.ApplyRemovals(datFile);
 
                     // Get the correct output path
-                    string realOutDir = inputPath.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
+                    string realOutDir = inputPath.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue))!;
 
                     // Try to output the file, overwriting only if it's not in the current directory
                     Writer.Write(datFile, realOutDir, overwrite: GetBoolean(features, InplaceValue));
@@ -215,11 +215,11 @@ namespace SabreTools.Features
                 datHeaders = DatFileTool.PopulateUserData(userInputDat, inputPaths);
 
             // Perform additional processing steps
-            Extras.ApplyExtras(userInputDat);
-            Splitter.ApplySplitting(userInputDat, useTags: false);
-            userInputDat.ExecuteFilters(FilterRunner);
-            Cleaner.ApplyCleaning(userInputDat);
-            Remover.ApplyRemovals(userInputDat);
+            Extras!.ApplyExtras(userInputDat);
+            Splitter!.ApplySplitting(userInputDat, useTags: false);
+            userInputDat.ExecuteFilters(FilterRunner!);
+            Cleaner!.ApplyCleaning(userInputDat);
+            Remover!.ApplyRemovals(userInputDat);
 
             // Output only DatItems that are duplicated across inputs
             if (updateMode.HasFlag(UpdateMode.DiffDupesOnly))
@@ -258,7 +258,7 @@ namespace SabreTools.Features
                 for (int j = 0; j < inputPaths.Count; j++)
 #endif
                 {
-                    string path = inputPaths[j].GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
+                    string path = inputPaths[j].GetOutputPath(OutputDir, GetBoolean(features, InplaceValue))!;
 
                     // Try to output the file
                     Writer.Write(datFiles[j], path, overwrite: GetBoolean(features, InplaceValue));
@@ -314,7 +314,7 @@ namespace SabreTools.Features
                 for (int j = startIndex; j < inputPaths.Count; j++)
 #endif
                 {
-                    string path = inputPaths[j].GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
+                    string path = inputPaths[j].GetOutputPath(OutputDir, GetBoolean(features, InplaceValue))!;
 
                     // Try to output the file
                     Writer.Write(datFiles[j], path, overwrite: GetBoolean(features, InplaceValue));
@@ -346,7 +346,7 @@ namespace SabreTools.Features
                     // Perform additional processing steps
                     Extras.ApplyExtras(repDat);
                     Splitter.ApplySplitting(repDat, useTags: false);
-                    repDat.ExecuteFilters(FilterRunner);
+                    repDat.ExecuteFilters(FilterRunner!);
                     Cleaner.ApplyCleaning(repDat);
                     Remover.ApplyRemovals(repDat);
 
@@ -354,7 +354,7 @@ namespace SabreTools.Features
                     DatFileTool.DiffAgainst(userInputDat, repDat, GetBoolean(Features, ByGameValue));
 
                     // Finally output the diffed DatFile
-                    string interOutDir = inputPath.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
+                    string interOutDir = inputPath.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue))!;
                     Writer.Write(repDat, interOutDir, overwrite: GetBoolean(features, InplaceValue));
 #if NET40_OR_GREATER || NETCOREAPP
                 });
@@ -382,7 +382,7 @@ namespace SabreTools.Features
                     // Perform additional processing steps
                     Extras.ApplyExtras(repDat);
                     Splitter.ApplySplitting(repDat, useTags: false);
-                    repDat.ExecuteFilters(FilterRunner);
+                    repDat.ExecuteFilters(FilterRunner!);
                     Cleaner.ApplyCleaning(repDat);
                     Remover.ApplyRemovals(repDat);
 
@@ -395,7 +395,7 @@ namespace SabreTools.Features
                         GetBoolean(features, OnlySameValue));
 
                     // Finally output the replaced DatFile
-                    string interOutDir = inputPath.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
+                    string interOutDir = inputPath.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue))!;
                     Writer.Write(repDat, interOutDir, overwrite: GetBoolean(features, InplaceValue));
 #if NET40_OR_GREATER || NETCOREAPP
                 });

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
@@ -25,7 +24,7 @@ namespace SabreTools.Features
         public Batch()
         {
             Name = Value;
-            Flags = new List<string>() { "bt", "batch" };
+            Flags = ["bt", "batch"];
             Description = "Enable batch mode";
             _featureType = ParameterType.Flag;
             LongDescription = @"Run a special mode that takes input files as lists of batch commands to run sequentially. Each command has to be its own line and must be followed by a semicolon (`;`). Commented lines may start with either `REM` or `#`. Multiple batch files are allowed but they will be run independently from each other.
@@ -62,7 +61,7 @@ Reset the internal state:           reset();";
             // Try to read each input as a batch run file
             foreach (string path in Inputs)
             {
-                InternalStopwatch watch = new($"Processing '{path}'...");
+                var watch = new InternalStopwatch($"Processing '{path}'...");
                 ProcessScript(path);
                 watch.Stop();
             }
@@ -90,7 +89,7 @@ Reset the internal state:           reset();";
                 string[] lines = File.ReadAllLines(path);
 
                 // Each batch file has its own state
-                BatchState batchState = new();
+                var batchState = new BatchState();
 
                 // Process each command line
                 foreach (string line in lines)
@@ -139,7 +138,7 @@ Reset the internal state:           reset();";
         /// </summary>
         private abstract class BatchCommand
         {
-            public string Name { get; set; }
+            public string? Name { get; set; }
             public List<string> Arguments { get; private set; } = [];
 
             /// <summary>
@@ -872,12 +871,12 @@ Reset the internal state:           reset();";
             public override void Process(BatchState batchState)
             {
                 // Get overwrite value, if possible
-                bool? overwrite = true;
+                bool overwrite = true;
                 if (Arguments.Count == 1)
-                    overwrite = Arguments[0].AsYesNo();
+                    overwrite = Arguments[0].AsYesNo() ?? true;
 
                 // Write out the dat with the current state
-                Writer.Write(batchState.DatFile, batchState.OutputDirectory, overwrite: overwrite.Value);
+                Writer.Write(batchState.DatFile, batchState.OutputDirectory, overwrite: overwrite);
             }
         }
 

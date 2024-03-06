@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-using SabreTools.Help;
+﻿using SabreTools.Help;
 
 namespace SabreTools.Features
 {
@@ -11,7 +9,7 @@ namespace SabreTools.Features
         public DisplayHelp()
         {
             Name = Value;
-            Flags = new List<string>() { "?", "h", "help" };
+            Flags = ["?", "h", "help"];
             Description = "Show this help";
             _featureType = ParameterType.Flag;
             LongDescription = "Built-in to most of the programs is a basic help text.";

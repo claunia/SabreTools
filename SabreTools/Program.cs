@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-
 using SabreTools.Core;
 using SabreTools.Features;
 using SabreTools.Help;
@@ -17,7 +16,7 @@ namespace SabreTools
         /// <summary>
         /// Help object that determines available functionality
         /// </summary>
-        private static FeatureSet _help;
+        private static FeatureSet? _help;
 
         /// <summary>
         /// Logging object
@@ -43,7 +42,7 @@ namespace SabreTools
             _help = RetrieveHelp();
 
             // Credits take precidence over all
-            if ((new List<string>(args)).Contains("--credits"))
+            if (new List<string>(args).Contains("--credits"))
             {
                 FeatureSet.OutputCredits();
                 LoggerImpl.Close();
@@ -81,7 +80,7 @@ namespace SabreTools
             featureName = _help.GetFeatureName(featureName);
 
             // Get the associated feature
-            BaseFeature feature = _help[featureName] as BaseFeature;
+            BaseFeature feature = (_help[featureName] as BaseFeature)!;
 
             // If we had the help feature first
             if (featureName == DisplayHelp.Value || featureName == DisplayHelpDetailed.Value)
@@ -161,16 +160,16 @@ namespace SabreTools
         {
             // Create and add the header to the Help object
             string barrier = "-----------------------------------------";
-            List<string> helpHeader = new()
-            {
+            List<string> helpHeader =
+            [
                 "SabreTools - Manipulate, convert, and use DAT files",
                 barrier,
                 "Usage: SabreTools [option] [flags] [filename|dirname] ...",
                 string.Empty
-            };
+            ];
 
             // Create the base help object with header
-            FeatureSet help = new(helpHeader);
+            var help = new FeatureSet(helpHeader);
 
             // Add all of the features
             help.Add(new DisplayHelp());
@@ -198,7 +197,7 @@ namespace SabreTools
             if (inputs.Count == 0)
             {
                 logger.Error("This feature requires at least one input");
-                _help.OutputIndividualFeature(feature.Name);
+                _help?.OutputIndividualFeature(feature.Name);
                 Environment.Exit(0);
             }
         }

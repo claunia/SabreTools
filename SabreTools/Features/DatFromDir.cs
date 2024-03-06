@@ -15,11 +15,11 @@ namespace SabreTools.Features
         public DatFromDir()
         {
             Name = Value;
-            Flags = new List<string>() { "d", "d2d", "dfd" };
+            Flags = ["d", "d2d", "dfd"];
             Description = "Create DAT(s) from an input directory";
             _featureType = ParameterType.Flag;
             LongDescription = "Create a DAT file from an input directory or set of files. By default, this will output a DAT named based on the input directory and the current date. It will also treat all archives as possible games and add all three hashes (CRC, MD5, SHA-1) for each file.";
-            Features = new Dictionary<string, Help.Feature>();
+            Features = [];
 
             // Common Features
             AddCommonFeatures();
@@ -68,10 +68,10 @@ namespace SabreTools.Features
 
             // Apply the specialized field removals to the cleaner
             if (!addFileDates)
-                Remover.PopulateExclusionsFromList(new List<string> { "DatItem.Date" });
+                Remover!.PopulateExclusionsFromList(["DatItem.Date"]);
 
             // Create a new DATFromDir object and process the inputs
-            DatFile basedat = DatFile.Create(Header);
+            DatFile basedat = DatFile.Create(Header!);
             basedat.Header.Date = DateTime.Now.ToString("yyyy-MM-dd");
 
             // For each input directory, create a DAT
@@ -98,11 +98,11 @@ namespace SabreTools.Features
                     if (success)
                     {
                         // Perform additional processing steps
-                        Extras.ApplyExtras(datdata);
-                        Splitter.ApplySplitting(datdata, useTags: false);
-                        datdata.ExecuteFilters(FilterRunner);
-                        Cleaner.ApplyCleaning(datdata);
-                        Remover.ApplyRemovals(datdata);
+                        Extras!.ApplyExtras(datdata);
+                        Splitter!.ApplySplitting(datdata, useTags: false);
+                        datdata.ExecuteFilters(FilterRunner!);
+                        Cleaner!.ApplyCleaning(datdata);
+                        Remover!.ApplyRemovals(datdata);
 
                         // Write out the file
                         Writer.Write(datdata, OutputDir);
