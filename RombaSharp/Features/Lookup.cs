@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-
 using SabreTools.Core;
 using SabreTools.Help;
 using Microsoft.Data.Sqlite;
@@ -13,7 +12,7 @@ namespace RombaSharp.Features
         public Lookup()
         {
             Name = Value;
-            Flags = new List<string>() { "lookup" };
+            Flags = ["lookup"];
             Description = "For each specified hash it looks up any available information.";
             _featureType = ParameterType.Flag;
             LongDescription = "For each specified hash it looks up any available information (dat or rom).";

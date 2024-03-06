@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
+using Microsoft.Data.Sqlite;
 using SabreTools.Help;
 using SabreTools.IO;
-using Microsoft.Data.Sqlite;
 
 namespace RombaSharp.Features
 {
@@ -16,7 +15,7 @@ namespace RombaSharp.Features
         public Import()
         {
             Name = Value;
-            Flags = new List<string>() { "import" };
+            Flags = ["import"];
             Description = "Import a database from a formatted CSV file";
             _featureType = ParameterType.Flag;
             LongDescription = "Import a database from a formatted CSV file";

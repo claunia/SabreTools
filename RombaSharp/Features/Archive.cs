@@ -20,7 +20,7 @@ namespace RombaSharp.Features
         public Archive()
         {
             Name = Value;
-            Flags = new List<string>() { "archive" };
+            Flags = ["archive"];
             Description = "Adds ROM files from the specified directories to the ROM archive.";
             _featureType = ParameterType.Flag;
             LongDescription = @"Adds ROM files from the specified directories to the ROM archive.

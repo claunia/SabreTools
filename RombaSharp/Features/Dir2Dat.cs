@@ -16,7 +16,7 @@ namespace RombaSharp.Features
         public Dir2Dat()
         {
             Name = Value;
-            Flags = new List<string>() { "dir2dat" };
+            Flags = ["dir2dat"];
             Description = "Creates a DAT file for the specified input directory and saves it to the -out filename.";
             _featureType = ParameterType.Flag;
             LongDescription = "Creates a DAT file for the specified input directory and saves it to the -out filename.";

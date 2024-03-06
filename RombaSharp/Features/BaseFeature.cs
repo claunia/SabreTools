@@ -552,9 +552,9 @@ CREATE TABLE IF NOT EXISTS dat (
         {
             // Get a dictionary of filenames that actually exist in the DATRoot, logging which ones are not
 #if NET20 || NET35
-            List<string> datRootDats = Directory.GetFiles(_dats, "*").ToList();
+            List<string> datRootDats = Directory.GetFiles(_dats!, "*").ToList();
 #else
-            List<string> datRootDats = Directory.EnumerateFiles(_dats, "*", SearchOption.AllDirectories).ToList();
+            List<string> datRootDats = Directory.EnumerateFiles(_dats!, "*", SearchOption.AllDirectories).ToList();
 #endif
             List<string> lowerCaseDats = datRootDats.ConvertAll(i => Path.GetFileName(i).ToLowerInvariant());
             Dictionary<string, string> foundDats = [];
@@ -785,7 +785,7 @@ CREATE TABLE IF NOT EXISTS dat (
         internal void AddDatToDatabase(Rom dat, SqliteConnection dbc)
         {
             // Get the dat full path
-            string fullpath = Path.Combine(_dats, (dat.Machine.Name == "dats" ? string.Empty : dat.Machine.Name), dat.Name);
+            string fullpath = Path.Combine(_dats!, (dat.Machine.Name == "dats" ? string.Empty : dat.Machine.Name)!, dat.Name!);
 
             // Parse the Dat if possible
             logger.User($"Adding from '{dat.Name}'");

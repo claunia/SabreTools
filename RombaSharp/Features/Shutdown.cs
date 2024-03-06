@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-
 using SabreTools.Help;
 
 namespace RombaSharp.Features
@@ -11,7 +10,7 @@ namespace RombaSharp.Features
         public Shutdown()
         {
             Name = Value;
-            Flags = new List<string>() { "shutdown" };
+            Flags = ["shutdown"];
             Description = "Gracefully shuts down server.";
             _featureType = ParameterType.Flag;
             LongDescription = "Gracefully shuts down server saving all the cached data.";

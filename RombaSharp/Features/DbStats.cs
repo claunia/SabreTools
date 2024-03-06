@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-
-using SabreTools.Help;
 using Microsoft.Data.Sqlite;
+using SabreTools.Help;
 
 namespace RombaSharp.Features
 {
@@ -12,7 +11,7 @@ namespace RombaSharp.Features
         public DbStats()
         {
             Name = Value;
-            Flags = new List<string>() { "dbstats" };
+            Flags = ["dbstats"];
             Description = "Prints db stats.";
             _featureType = ParameterType.Flag;
             LongDescription = "Print db stats.";

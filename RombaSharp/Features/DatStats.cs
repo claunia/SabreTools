@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-
 using SabreTools.DatTools;
 using SabreTools.Help;
 using SabreTools.Reports;
@@ -14,7 +13,7 @@ namespace RombaSharp.Features
         public DatStats()
         {
             Name = Value;
-            Flags = new List<string>() { "datstats" };
+            Flags = ["datstats"];
             Description = "Prints dat stats.";
             _featureType = ParameterType.Flag;
             LongDescription = "Print dat stats.";
@@ -32,7 +31,7 @@ namespace RombaSharp.Features
 
             // If we have no inputs listed, we want to use datroot
             if (Inputs == null || Inputs.Count == 0)
-                Inputs = new List<string> { Path.GetFullPath(_dats) };
+                Inputs = new List<string> { Path.GetFullPath(_dats!) };
 
             // Now output the stats for all inputs
             var statistics = Statistics.CalculateStatistics(Inputs, single: true);

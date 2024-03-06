@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
 using SabreTools.Help;
 using SabreTools.IO;
 
@@ -14,7 +13,7 @@ namespace RombaSharp.Features
         public Merge()
         {
             Name = Value;
-            Flags = new List<string>() { "merge" };
+            Flags = ["merge"];
             Description = "Merges depot";
             _featureType = ParameterType.Flag;
             LongDescription = "Merges specified depot into current depot.";

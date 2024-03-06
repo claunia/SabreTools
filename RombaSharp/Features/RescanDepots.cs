@@ -20,7 +20,7 @@ namespace RombaSharp.Features
         public RescanDepots()
         {
             Name = Value;
-            Flags = new List<string>() { "depot-rescan" };
+            Flags = ["depot-rescan"];
             Description = "Rescan a specific depot to get new information";
             _featureType = ParameterType.Flag;
             LongDescription = "Rescan a specific depot to get new information";
@@ -59,7 +59,7 @@ namespace RombaSharp.Features
                 dbc.Open();
 
                 // If we have it, then check for all hashes that are in that depot
-                List<string> hashes = new List<string>();
+                List<string> hashes = [];
                 string query = $"SELECT sha1 FROM sha1 WHERE depot=\"{depotname}\"";
                 SqliteCommand slc = new SqliteCommand(query, dbc);
                 SqliteDataReader sldr = slc.ExecuteReader();
@@ -84,7 +84,7 @@ namespace RombaSharp.Features
                 string md5sha1query = "INSERT OR IGNORE INTO md5sha1 (md5, sha1) VALUES";
 
                 // Once we have both, check for any new files
-                List<string> dupehashes = new List<string>();
+                List<string> dupehashes = [];
                 IEnumerable<string> keys = depot.Items.Keys;
                 foreach (string key in keys)
                 {
@@ -94,12 +94,12 @@ namespace RombaSharp.Features
 
                     foreach (Rom rom in roms)
                     {
-                        if (hashes.Contains(rom.SHA1))
+                        if (hashes.Contains(rom.SHA1!))
                         {
-                            dupehashes.Add(rom.SHA1);
-                            hashes.Remove(rom.SHA1);
+                            dupehashes.Add(rom.SHA1!);
+                            hashes.Remove(rom.SHA1!);
                         }
-                        else if (!dupehashes.Contains(rom.SHA1))
+                        else if (!dupehashes.Contains(rom.SHA1!))
                         {
                             if (!string.IsNullOrWhiteSpace(rom.CRC))
                                 crcquery += $" (\"{rom.CRC}\"),";

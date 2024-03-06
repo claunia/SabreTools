@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-
 using SabreTools.Help;
 
 namespace RombaSharp.Features
@@ -11,7 +10,7 @@ namespace RombaSharp.Features
         public Cancel()
         {
             Name = Value;
-            Flags = new List<string>() { "cancel" };
+            Flags = ["cancel"];
             Description = "Cancels current long-running job";
             _featureType = ParameterType.Flag;
             LongDescription = "Cancels current long-running job.";

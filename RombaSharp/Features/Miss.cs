@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-
 using SabreTools.DatFiles;
 using SabreTools.DatTools;
 using SabreTools.Help;
@@ -16,7 +15,7 @@ namespace RombaSharp.Features
         public Miss()
         {
             Name = Value;
-            Flags = new List<string>() { "miss" };
+            Flags = ["miss"];
             Description = "Create miss and have file";
             _featureType = ParameterType.Flag;
             LongDescription = "For each specified DAT file, create miss and have file";
@@ -42,7 +41,7 @@ namespace RombaSharp.Features
             foreach (string key in foundDats.Keys)
             {
                 // Get the DAT file associated with the key
-                DatFile datFile = Parser.CreateAndParse(Path.Combine(_dats, foundDats[key]));
+                DatFile datFile = Parser.CreateAndParse(Path.Combine(_dats!, foundDats[key]));
 
                 // Now loop through and see if all of the hash combinations exist in the database
                 /* ended here */

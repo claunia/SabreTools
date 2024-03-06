@@ -20,7 +20,7 @@ namespace RombaSharp.Features
         public RefreshDats()
         {
             Name = Value;
-            Flags = new List<string>() { "refresh-dats" };
+            Flags = ["refresh-dats"];
             Description = "Refreshes the DAT index from the files in the DAT master directory tree.";
             _featureType = ParameterType.Flag;
             LongDescription = @"Refreshes the DAT index from the files in the DAT master directory tree.
@@ -74,8 +74,8 @@ contents of any changed dats.";
             datroot.Items.BucketBy(ItemKey.SHA1, DedupeType.None);
 
             // Create a List of dat hashes in the database (SHA-1)
-            List<string> databaseDats = new List<string>();
-            List<string> unneeded = new List<string>();
+            List<string> databaseDats = [];
+            List<string> unneeded = [];
 
             SqliteConnection dbc = new SqliteConnection(_connectionString);
             dbc.Open();

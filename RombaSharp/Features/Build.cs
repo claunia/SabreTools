@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
 using SabreTools.DatFiles;
 using SabreTools.DatTools;
 using SabreTools.FileTypes;
@@ -17,7 +16,7 @@ namespace RombaSharp.Features
         public Build()
         {
             Name = Value;
-            Flags = new List<string>() { "build" };
+            Flags = ["build"];
             Description = "For each specified DAT file it creates the torrentzip files.";
             _featureType = ParameterType.Flag;
             LongDescription = @"For each specified DAT file it creates the torrentzip files in the specified
@@ -56,7 +55,7 @@ structure according to the original DAT master directory tree structure.";
             foreach (string key in foundDats.Keys)
             {
                 // Get the DAT file associated with the key
-                DatFile datFile = Parser.CreateAndParse(Path.Combine(_dats, foundDats[key]));
+                DatFile datFile = Parser.CreateAndParse(Path.Combine(_dats!, foundDats[key]));
 
                 // Set the depot values
                 datFile.Header.InputDepot = new DepotInformation(true, 4);

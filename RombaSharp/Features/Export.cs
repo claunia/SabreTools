@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-
-using SabreTools.Help;
 using Microsoft.Data.Sqlite;
+using SabreTools.Help;
 
 namespace RombaSharp.Features
 {
@@ -14,7 +13,7 @@ namespace RombaSharp.Features
         public Export()
         {
             Name = Value;
-            Flags = new List<string>() { "export" };
+            Flags = ["export"];
             Description = "Exports db to export.csv";
             _featureType = ParameterType.Flag;
             LongDescription = "Exports db to standardized export.csv";

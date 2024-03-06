@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-
 using SabreTools.Help;
 
 namespace RombaSharp.Features
@@ -12,7 +11,7 @@ namespace RombaSharp.Features
         public PurgeDelete()
         {
             Name = Value;
-            Flags = new List<string>() { "purge-delete" };
+            Flags = ["purge-delete"];
             Description = "Deletes DAT index entries for orphaned DATs";
             _featureType = ParameterType.Flag;
             LongDescription = @"Deletes DAT index entries for orphaned DATs and moves ROM files that are no
