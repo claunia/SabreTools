@@ -19,7 +19,7 @@ longer associated with any current DATs to the specified backup folder.
 The files will be placed in the backup location using
 a folder structure according to the original DAT master directory tree
 structure. It also deletes the specified DATs from the DAT index.";
-            Features = new Dictionary<string, Feature>();
+            Features = [];
 
             // Common Features
             AddCommonFeatures();
@@ -31,7 +31,7 @@ structure. It also deletes the specified DATs from the DAT index.";
             AddFeature(LogOnlyFlag);
         }
 
-        public override bool ProcessFeatures(Dictionary<string, Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature?> features)
         {
             // If the base fails, just fail out
             if (!base.ProcessFeatures(features))
@@ -40,7 +40,7 @@ structure. It also deletes the specified DATs from the DAT index.";
             // Get feature flags
             bool logOnly = GetBoolean(features, LogOnlyValue);
             int workers = GetInt32(features, WorkersInt32Value);
-            string backup = GetString(features, BackupStringValue);
+            string? backup = GetString(features, BackupStringValue);
             List<string> dats = GetList(features, DatsListStringValue);
             List<string> depot = GetList(features, DepotListStringValue);
 

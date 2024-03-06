@@ -18,7 +18,7 @@ namespace RombaSharp.Features
             Description = "Merges depot";
             _featureType = ParameterType.Flag;
             LongDescription = "Merges specified depot into current depot.";
-            Features = new Dictionary<string, Feature>();
+            Features = [];
 
             // Common Features
             AddCommonFeatures();
@@ -30,7 +30,7 @@ namespace RombaSharp.Features
         }
 
         // TODO: Add way of specifying "current depot" since that's what Romba relies on
-        public override bool ProcessFeatures(Dictionary<string, Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature?> features)
         {
             // If the base fails, just fail out
             if (!base.ProcessFeatures(features))
@@ -40,7 +40,7 @@ namespace RombaSharp.Features
             bool onlyNeeded = GetBoolean(features, OnlyNeededValue);
             bool skipInitialscan = GetBoolean(features, SkipInitialScanValue);
             int workers = GetInt32(features, WorkersInt32Value);
-            string resume = GetString(features, ResumeStringValue);
+            string? resume = GetString(features, ResumeStringValue);
 
             logger.Error("This feature is not yet implemented: merge");
 

@@ -30,7 +30,7 @@ The stats that are outputted are as follows:
 - Items that include a SHA-384
 - Items that include a SHA-512
 - Items with Nodump status";
-            Features = new Dictionary<string, Feature>();
+            Features = [];
 
             // Common Features
             AddCommonFeatures();
@@ -43,7 +43,7 @@ The stats that are outputted are as follows:
             AddFeature(IndividualFlag);
         }
 
-        public override bool ProcessFeatures(Dictionary<string, Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature?> features)
         {
             // If the base fails, just fail out
             if (!base.ProcessFeatures(features))

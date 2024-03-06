@@ -29,7 +29,7 @@ Unpacked files will be stored as individual entries. Prior to unpacking a zip
 file, the external SHA1 is checked against the DAT index. 
 If -only-needed is set, only those files are put in the ROM archive that
 have a current entry in the DAT index.";
-            Features = new Dictionary<string, SabreTools.Help.Feature>();
+            Features = [];
 
             // Common Features
             AddCommonFeatures();
@@ -45,7 +45,7 @@ have a current entry in the DAT index.";
             AddFeature(NoDbFlag);
         }
 
-        public override bool ProcessFeatures(Dictionary<string, SabreTools.Help.Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, SabreTools.Help.Feature?> features)
         {
             // If the base fails, just fail out
             if (!base.ProcessFeatures(features))
@@ -93,7 +93,10 @@ have a current entry in the DAT index.";
 
             foreach (string key in df.Items.Keys)
             {
-                ConcurrentList<DatItem> datItems = df.Items[key];
+                ConcurrentList<DatItem>? datItems = df.Items[key];
+                if (datItems == null)
+                    continue;
+
                 foreach (Rom rom in datItems)
                 {
                     // If we care about if the file exists, check the databse first
@@ -117,7 +120,7 @@ have a current entry in the DAT index.";
 
                             if (!string.IsNullOrWhiteSpace(rom.SHA1))
                             {
-                                sha1query += $" (\"{rom.SHA1}\", \"{_depots.Keys.ToList()[0]}\"),";
+                                sha1query += $" (\"{rom.SHA1}\", \"{_depots!.Keys.ToList()[0]}\"),";
 
                                 if (!string.IsNullOrWhiteSpace(rom.CRC))
                                     crcsha1query += $" (\"{rom.CRC}\", \"{rom.SHA1}\"),";
@@ -144,7 +147,7 @@ have a current entry in the DAT index.";
 
                             if (!string.IsNullOrWhiteSpace(rom.SHA1))
                             {
-                                sha1query += $" (\"{rom.SHA1}\", \"{_depots.Keys.ToList()[0]}\"),";
+                                sha1query += $" (\"{rom.SHA1}\", \"{_depots!.Keys.ToList()[0]}\"),";
 
                                 if (!string.IsNullOrWhiteSpace(rom.CRC))
                                     crcsha1query += $" (\"{rom.CRC}\", \"{rom.SHA1}\"),";
@@ -200,7 +203,7 @@ have a current entry in the DAT index.";
             Rebuilder.RebuildGeneric(
                 need,
                 onlyDirs,
-                outDir: _depots.Keys.ToList()[0],
+                outDir: _depots!.Keys.ToList()[0],
                 outputFormat: OutputFormat.TorrentGzipRomba,
                 asFiles: TreatAsFile.NonArchive);
             

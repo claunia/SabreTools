@@ -26,20 +26,20 @@ namespace SabreTools.Features
             AddCommonFeatures();
 
             AddFeature(OutputTypeListInput);
-            this[OutputTypeListInput].AddFeature(DeprecatedFlag);
+            this[OutputTypeListInput]!.AddFeature(DeprecatedFlag);
             AddFeature(OutputDirStringInput);
             AddFeature(InplaceFlag);
             AddFeature(ExtensionFlag);
-            this[ExtensionFlag].AddFeature(ExtaListInput);
-            this[ExtensionFlag].AddFeature(ExtbListInput);
+            this[ExtensionFlag]!.AddFeature(ExtaListInput);
+            this[ExtensionFlag]!.AddFeature(ExtbListInput);
             AddFeature(HashFlag);
             AddFeature(LevelFlag);
-            this[LevelFlag].AddFeature(ShortFlag);
-            this[LevelFlag].AddFeature(BaseFlag);
+            this[LevelFlag]!.AddFeature(ShortFlag);
+            this[LevelFlag]!.AddFeature(BaseFlag);
             AddFeature(SizeFlag);
-            this[SizeFlag].AddFeature(RadixInt64Input);
+            this[SizeFlag]!.AddFeature(RadixInt64Input);
             AddFeature(TotalSizeFlag);
-            this[TotalSizeFlag].AddFeature(ChunkSizeInt64Input);
+            this[TotalSizeFlag]!.AddFeature(ChunkSizeInt64Input);
             AddFeature(TypeFlag);
         }
 

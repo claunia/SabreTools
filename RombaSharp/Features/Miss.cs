@@ -20,13 +20,13 @@ namespace RombaSharp.Features
             Description = "Create miss and have file";
             _featureType = ParameterType.Flag;
             LongDescription = "For each specified DAT file, create miss and have file";
-            Features = new Dictionary<string, Feature>();
+            Features = [];
 
             // Common Features
             AddCommonFeatures();
         }
 
-        public override bool ProcessFeatures(Dictionary<string, Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature?> features)
         {
             // If the base fails, just fail out
             if (!base.ProcessFeatures(features))

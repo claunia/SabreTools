@@ -17,7 +17,7 @@ namespace RombaSharp.Features
             Description = "For each specified hash it looks up any available information.";
             _featureType = ParameterType.Flag;
             LongDescription = "For each specified hash it looks up any available information (dat or rom).";
-            Features = new Dictionary<string, Feature>();
+            Features = [];
 
             // Common Features
             AddCommonFeatures();
@@ -26,7 +26,7 @@ namespace RombaSharp.Features
             AddFeature(OutStringInput);
         }
 
-        public override bool ProcessFeatures(Dictionary<string, Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature?> features)
         {
             // If the base fails, just fail out
             if (!base.ProcessFeatures(features))
@@ -34,12 +34,12 @@ namespace RombaSharp.Features
 
             // Get feature flags
             long size = GetInt64(features, SizeInt64Value);
-            string outdat = GetString(features, OutStringValue);
+            string? outdat = GetString(features, OutStringValue);
 
             // First, try to figure out what type of hash each is by length and clean it
-            List<string> crc = new List<string>();
-            List<string> md5 = new List<string>();
-            List<string> sha1 = new List<string>();
+            List<string> crc = [];
+            List<string> md5 = [];
+            List<string> sha1 = [];
             foreach (string input in Inputs)
             {
                 if (input.Length == Constants.CRCLength)

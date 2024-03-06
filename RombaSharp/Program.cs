@@ -25,7 +25,7 @@ namespace RombaSharp
         /// <summary>
         /// Help object that determines available functionality
         /// </summary>
-        private static FeatureSet _help;
+        private static FeatureSet? _help;
 
         /// <summary>
         /// Logging object
@@ -81,18 +81,18 @@ namespace RombaSharp
             featureName = _help.GetFeatureName(featureName);
 
             // Get the associated feature
-            BaseFeature feature = _help[featureName] as BaseFeature;
+            BaseFeature? feature = _help[featureName] as BaseFeature;
 
             // If we had the help feature first
             if (featureName == DisplayHelp.Value || featureName == DisplayHelpDetailed.Value)
             {
-                feature.ProcessArgs(args, _help);
+                feature!.ProcessArgs(args, _help);
                 LoggerImpl.Close();
                 return;
             }
 
             // Now verify that all other flags are valid
-            if (!feature.ProcessArgs(args, _help))
+            if (!feature!.ProcessArgs(args, _help))
             {
                 LoggerImpl.Close();
                 return;
@@ -109,7 +109,7 @@ namespace RombaSharp
             }
 
             // Now process the current feature
-            Dictionary<string, Feature> features = _help.GetEnabledFeatures();
+            Dictionary<string, Feature?> features = _help.GetEnabledFeatures();
             bool success = false;
             switch (featureName)
             {
@@ -224,7 +224,7 @@ namespace RombaSharp
             if (inputs.Count == 0)
             {
                 logger.Error("This feature requires at least one input");
-                _help.OutputIndividualFeature(feature);
+                _help?.OutputIndividualFeature(feature);
                 Environment.Exit(0);
             }
         }

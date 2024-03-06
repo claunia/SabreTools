@@ -20,7 +20,7 @@ namespace RombaSharp.Features
             _featureType = ParameterType.Flag;
             LongDescription = @"Creates a DAT file with those entries that are in -new DAT file and not
 in -old DAT file. Ignores those entries in -old that are not in -new.";
-            this.Features = new Dictionary<string, Feature>();
+            this.Features = [];
 
             // Common Features
             AddCommonFeatures();
@@ -32,21 +32,21 @@ in -old DAT file. Ignores those entries in -old that are not in -new.";
             AddFeature(DescriptionStringInput);
         }
 
-        public override bool ProcessFeatures(Dictionary<string, Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature?> features)
         {
             // If the base fails, just fail out
             if (!base.ProcessFeatures(features))
                 return false;
 
             // Get feature flags
-            string name = GetString(features, NameStringValue);
-            string description = GetString(features, DescriptionStringValue);
-            string newdat = GetString(features, NewStringValue);
-            string olddat = GetString(features, OldStringValue);
-            string outdat = GetString(features, OutStringValue);
+            string? name = GetString(features, NameStringValue);
+            string? description = GetString(features, DescriptionStringValue);
+            string? newdat = GetString(features, NewStringValue);
+            string? olddat = GetString(features, OldStringValue);
+            string? outdat = GetString(features, OutStringValue);
 
             // Ensure the output directory
-            outdat.Ensure(create: true);
+            outdat = outdat?.Ensure(create: true);
 
             // Check that all required files exist
             if (!File.Exists(olddat))
@@ -70,7 +70,7 @@ in -old DAT file. Ignores those entries in -old that are not in -new.";
             // Diff against the new datfile
             DatFile intDat = Parser.CreateAndParse(newdat);
             DatFileTool.DiffAgainst(datfile, intDat, false);
-            Writer.Write(intDat, outdat);
+            Writer.Write(intDat, outdat!);
             return true;
         }
     }

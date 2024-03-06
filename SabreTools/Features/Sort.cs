@@ -21,7 +21,7 @@ namespace SabreTools.Features
             Description = "Sort inputs by a set of DATs";
             _featureType = ParameterType.Flag;
             LongDescription = "This feature allows the user to quickly rebuild based on a supplied DAT file(s). By default all files will be rebuilt to uncompressed folders in the output directory.";
-            Features = new Dictionary<string, Feature>();
+            Features = [];
 
             // Common Features
             AddCommonFeatures();
@@ -29,7 +29,7 @@ namespace SabreTools.Features
             AddFeature(DatListInput);
             AddFeature(OutputDirStringInput);
             AddFeature(DepotFlag);
-            this[DepotFlag].AddFeature(DepotDepthInt32Input);
+            this[DepotFlag]!.AddFeature(DepotDepthInt32Input);
             AddFeature(DeleteFlag);
             AddFeature(InverseFlag);
             AddFeature(QuickFlag);
@@ -42,13 +42,13 @@ namespace SabreTools.Features
             AddFeature(Torrent7zipFlag);
             AddFeature(TarFlag);
             AddFeature(TorrentGzipFlag);
-            this[TorrentGzipFlag].AddFeature(RombaFlag);
-            this[TorrentGzipFlag][RombaFlag].AddFeature(RombaDepthInt32Input);
+            this[TorrentGzipFlag]!.AddFeature(RombaFlag);
+            this[TorrentGzipFlag][RombaFlag]!.AddFeature(RombaDepthInt32Input);
             //AddFeature(SharedInputs.TorrentLrzipFlag);
             //AddFeature(SharedInputs.TorrentLz4Flag);
             //AddFeature(SharedInputs.TorrentRarFlag);
             //AddFeature(SharedInputs.TorrentXzFlag);
-            //this[SharedInputs.TorrentXzFlag].AddFeature(SharedInputs.RombaFlag);
+            //this[SharedInputs.TorrentXzFlag]!.AddFeature(SharedInputs.RombaFlag);
             AddFeature(TorrentZipFlag);
             //AddFeature(SharedInputs.TorrentZpaqFlag);
             //AddFeature(SharedInputs.TorrentZstdFlag);
@@ -58,7 +58,7 @@ namespace SabreTools.Features
             AddFeature(UpdateDatFlag);
         }
 
-        public override bool ProcessFeatures(Dictionary<string, Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature?> features)
         {
             // If the base fails, just fail out
             if (!base.ProcessFeatures(features))

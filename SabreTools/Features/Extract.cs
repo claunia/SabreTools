@@ -32,7 +32,7 @@ The following systems have headers that this program can work with:
   - Nintendo Famicom Disk System
   - Nintendo Super Famicom / Super Nintendo Entertainment System
   - Nintendo Super Famicom / Super Nintendo Entertainment System SPC";
-            Features = new Dictionary<string, Feature>();
+            Features = [];
 
             // Common Features
             AddCommonFeatures();
@@ -41,7 +41,7 @@ The following systems have headers that this program can work with:
             AddFeature(NoStoreHeaderFlag);
         }
 
-        public override bool ProcessFeatures(Dictionary<string, Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature?> features)
         {
             // If the base fails, just fail out
             if (!base.ProcessFeatures(features))

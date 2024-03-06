@@ -411,26 +411,26 @@ Possible values are: Verbose, User, Warning, Error");
         #region Settings
 
         // General settings
-        internal static string _logdir;		// Log folder location
-        internal static string _tmpdir;     // Temp folder location
-        internal static string _webdir;		// Web frontend location
-        internal static string _baddir;		// Fail-to-unpack file folder location
+        internal static string? _logdir;		// Log folder location
+        internal static string? _tmpdir;     // Temp folder location
+        internal static string? _webdir;		// Web frontend location
+        internal static string? _baddir;		// Fail-to-unpack file folder location
         internal static int _verbosity;		// Verbosity of the output
         internal static int _cores;			// Forced CPU cores
 
         // DatRoot settings
-        internal static string _dats;		// DatRoot folder location
-        internal static string _db;			// Database name
+        internal static string? _dats;		// DatRoot folder location
+        internal static string? _db;			// Database name
 
         // Depot settings
-        internal static Dictionary<string, Tuple<long, bool>> _depots; // Folder location, Max size
+        internal static Dictionary<string, Tuple<long, bool>>? _depots; // Folder location, Max size
 
         // Server settings
         internal static int _port;			// Web server port
 
         // Other internal variables
         internal const string _config = "config.xml";
-        internal static string _connectionString;
+        internal static string? _connectionString;
 
         #endregion
 
@@ -447,7 +447,7 @@ Possible values are: Verbose, User, Warning, Error");
 
         #endregion
 
-        public override bool ProcessFeatures(Dictionary<string, SabreTools.Help.Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, SabreTools.Help.Feature?> features)
         {
             LogLevel = GetString(features, LogLevelStringValue).AsEnumValue<LogLevel>();
             ScriptMode = GetBoolean(features, ScriptValue);
@@ -462,8 +462,12 @@ Possible values are: Verbose, User, Warning, Error");
         /// </summary>
         /// <param name="db">Name of the databse</param>
         /// <param name="connectionString">Connection string for SQLite</param>
-        public void EnsureDatabase(string db, string connectionString)
+        public void EnsureDatabase(string? db, string? connectionString)
         {
+            // Missing database or connection string can't work
+            if (db == null || connectionString == null)
+                return;
+
             // Make sure the file exists
             if (!System.IO.File.Exists(db))
                 System.IO.File.Create(db);
@@ -559,8 +563,9 @@ CREATE TABLE IF NOT EXISTS dat (
                 if (lowerCaseDats.Contains(input.ToLowerInvariant()))
                 {
                     string fullpath = Path.GetFullPath(datRootDats[lowerCaseDats.IndexOf(input.ToLowerInvariant())]);
-                    string sha1 = TextHelper.ByteArrayToString(BaseFile.GetInfo(fullpath, hashes: [HashType.SHA1]).SHA1);
-                    foundDats.Add(sha1, fullpath);
+                    string? sha1 = TextHelper.ByteArrayToString(BaseFile.GetInfo(fullpath, hashes: [HashType.SHA1])?.SHA1);
+                    if (sha1 != null)
+                        foundDats.Add(sha1, fullpath);
                 }
                 else
                 {
@@ -787,7 +792,7 @@ CREATE TABLE IF NOT EXISTS dat (
             DatFile tempdat = Parser.CreateAndParse(fullpath);
 
             // If the Dat wasn't empty, add the information
-            SqliteCommand slc = null;
+            SqliteCommand? slc = null;
             string crcquery = "INSERT OR IGNORE INTO crc (crc) VALUES";
             string md5query = "INSERT OR IGNORE INTO md5 (md5) VALUES";
             string sha1query = "INSERT OR IGNORE INTO sha1 (sha1) VALUES";
@@ -798,7 +803,7 @@ CREATE TABLE IF NOT EXISTS dat (
             bool hasItems = false;
             foreach (string romkey in tempdat.Items.Keys)
             {
-                foreach (DatItem datItem in tempdat.Items[romkey])
+                foreach (DatItem datItem in tempdat.Items[romkey]!)
                 {
                     logger.Verbose($"Checking and adding file '{datItem.GetName() ?? string.Empty}'");
 

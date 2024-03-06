@@ -15,13 +15,13 @@ namespace RombaSharp.Features
             Description = "Gracefully shuts down server.";
             _featureType = ParameterType.Flag;
             LongDescription = "Gracefully shuts down server saving all the cached data.";
-            Features = new Dictionary<string, Feature>();
+            Features = [];
 
             // Common Features
             AddCommonFeatures();
         }
 
-        public override bool ProcessFeatures(Dictionary<string, Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature?> features)
         {
             // If the base fails, just fail out
             if (!base.ProcessFeatures(features))

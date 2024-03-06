@@ -27,7 +27,7 @@ namespace RombaSharp.Features
 Detects any changes in the DAT master directory tree and updates the DAT index
 accordingly, marking deleted or overwritten dats as orphaned and updating
 contents of any changed dats.";
-            Features = new Dictionary<string, SabreTools.Help.Feature>();
+            Features = [];
 
             // Common Features
             AddCommonFeatures();
@@ -36,7 +36,7 @@ contents of any changed dats.";
             AddFeature(MissingSha1sStringInput);
         }
 
-        public override bool ProcessFeatures(Dictionary<string, SabreTools.Help.Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, SabreTools.Help.Feature?> features)
         {
             // If the base fails, just fail out
             if (!base.ProcessFeatures(features))
@@ -44,7 +44,7 @@ contents of any changed dats.";
 
             // Get feature flags
             int workers = GetInt32(features, WorkersInt32Value);
-            string missingSha1s = GetString(features, MissingSha1sStringValue);
+            string? missingSha1s = GetString(features, MissingSha1sStringValue);
 
             // Make sure the db is set
             if (string.IsNullOrWhiteSpace(_db))
@@ -112,7 +112,7 @@ contents of any changed dats.";
             watch.Start("Adding new DAT information");
             foreach (string key in datroot.Items.Keys)
             {
-                foreach (Rom value in datroot.Items[key])
+                foreach (Rom value in datroot.Items[key]!)
                 {
                     AddDatToDatabase(value, dbc);
                 }

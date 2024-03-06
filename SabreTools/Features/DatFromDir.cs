@@ -38,9 +38,9 @@ namespace SabreTools.Features
             AddFeature(ArchivesAsFilesFlag);
             AddFeature(ChdsAsFilesFlag);
             AddFeature(OutputTypeListInput);
-            this[OutputTypeListInput].AddFeature(DeprecatedFlag);
+            this[OutputTypeListInput]!.AddFeature(DeprecatedFlag);
             AddFeature(RombaFlag);
-            this[RombaFlag].AddFeature(RombaDepthInt32Input);
+            this[RombaFlag]!.AddFeature(RombaDepthInt32Input);
             AddFeature(SkipArchivesFlag);
             AddFeature(SkipFilesFlag);
             AddHeaderFeatures();
@@ -100,8 +100,7 @@ namespace SabreTools.Features
                         // Perform additional processing steps
                         Extras.ApplyExtras(datdata);
                         Splitter.ApplySplitting(datdata, useTags: false);
-                        Filter.ApplyFilters(datdata);
-                        // datdata.ExecuteFilters(FilterRunner); // TODO: Replace Filter.ApplyFilters with this
+                        datdata.ExecuteFilters(FilterRunner);
                         Cleaner.ApplyCleaning(datdata);
                         Remover.ApplyRemovals(datdata);
 

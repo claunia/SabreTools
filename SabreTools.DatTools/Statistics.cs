@@ -153,7 +153,7 @@ namespace SabreTools.DatTools
         public static bool Write(
             List<DatStatistics> stats,
             string reportName,
-            string outDir,
+            string? outDir,
             bool baddumpCol,
             bool nodumpCol,
             StatReportFormat statDatFormat,
@@ -171,12 +171,12 @@ namespace SabreTools.DatTools
                 reportName = "report";
 
             // Get the proper output directory name
-            outDir = outDir.Ensure();
+            outDir = outDir?.Ensure();
 
             InternalStopwatch watch = new($"Writing out report data to '{outDir}'");
 
             // Get the dictionary of desired output report names
-            Dictionary<StatReportFormat, string> outfiles = CreateOutStatsNames(outDir, statDatFormat, reportName);
+            Dictionary<StatReportFormat, string> outfiles = CreateOutStatsNames(outDir!, statDatFormat, reportName);
 
             try
             {

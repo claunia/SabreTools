@@ -15,13 +15,13 @@ namespace RombaSharp.Features
             Description = "Prints memory stats.";
             _featureType = ParameterType.Flag;
             LongDescription = "Print memory stats.";
-            Features = new Dictionary<string, Feature>();
+            Features = [];
 
             // Common Features
             AddCommonFeatures();
         }
 
-        public override bool ProcessFeatures(Dictionary<string, Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature?> features)
         {
             // If the base fails, just fail out
             if (!base.ProcessFeatures(features))

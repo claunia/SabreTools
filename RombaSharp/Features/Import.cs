@@ -20,13 +20,13 @@ namespace RombaSharp.Features
             Description = "Import a database from a formatted CSV file";
             _featureType = ParameterType.Flag;
             LongDescription = "Import a database from a formatted CSV file";
-            Features = new Dictionary<string, Feature>();
+            Features = [];
 
             // Common Features
             AddCommonFeatures();
         }
 
-        public override bool ProcessFeatures(Dictionary<string, Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature?> features)
         {
             // If the base fails, just fail out
             if (!base.ProcessFeatures(features))
@@ -46,7 +46,7 @@ namespace RombaSharp.Features
                 StreamReader sr = new StreamReader(File.OpenRead(input));
 
                 // The first line should be the hash header
-                string line = sr.ReadLine();
+                string? line = sr.ReadLine();
                 if (line != "CRC,MD5,SHA-1") // ,Depot
                 {
                     logger.Error($"{input} is not a valid export file");
@@ -63,7 +63,7 @@ namespace RombaSharp.Features
                 // For each line until we hit a blank line...
                 while (!sr.EndOfStream && line != string.Empty)
                 {
-                    line = sr.ReadLine();
+                    line = sr.ReadLine() ?? string.Empty;
                     string[] hashes = line.Split(',');
 
                     // Loop through the parsed entries

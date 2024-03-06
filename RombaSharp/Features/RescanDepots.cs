@@ -24,13 +24,13 @@ namespace RombaSharp.Features
             Description = "Rescan a specific depot to get new information";
             _featureType = ParameterType.Flag;
             LongDescription = "Rescan a specific depot to get new information";
-            Features = new Dictionary<string, SabreTools.Help.Feature>();
+            Features = [];
 
             // Common Features
             AddCommonFeatures();
         }
 
-        public override bool ProcessFeatures(Dictionary<string, SabreTools.Help.Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, SabreTools.Help.Feature?> features)
         {
             // If the base fails, just fail out
             if (!base.ProcessFeatures(features))
@@ -41,7 +41,7 @@ namespace RombaSharp.Features
             foreach (string depotname in Inputs)
             {
                 // Check that it's a valid depot first
-                if (!_depots.ContainsKey(depotname))
+                if (!_depots!.ContainsKey(depotname))
                 {
                     logger.User($"'{depotname}' is not a recognized depot. Please add it to your configuration file and try again");
                     return false;
@@ -88,7 +88,10 @@ namespace RombaSharp.Features
                 IEnumerable<string> keys = depot.Items.Keys;
                 foreach (string key in keys)
                 {
-                    ConcurrentList<DatItem> roms = depot.Items[key];
+                    ConcurrentList<DatItem>? roms = depot.Items[key];
+                    if (roms == null)
+                        continue;
+
                     foreach (Rom rom in roms)
                     {
                         if (hashes.Contains(rom.SHA1))

@@ -15,7 +15,7 @@ namespace SabreTools.Features
             Description = "Show this help";
             _featureType = ParameterType.Flag;
             LongDescription = "Built-in to most of the programs is a basic help text.";
-            Features = new Dictionary<string, Feature>();
+            Features = [];
         }
 
         public override bool ProcessArgs(string[] args, FeatureSet help)

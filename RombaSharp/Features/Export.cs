@@ -18,14 +18,14 @@ namespace RombaSharp.Features
             Description = "Exports db to export.csv";
             _featureType = ParameterType.Flag;
             LongDescription = "Exports db to standardized export.csv";
-            Features = new Dictionary<string, Feature>();
+            Features = [];
 
             // Common Features
             AddCommonFeatures();
         }
 
         // TODO: Add ability to say which depot the files are found in
-        public override bool ProcessFeatures(Dictionary<string, Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature?> features)
         {
             // If the base fails, just fail out
             if (!base.ProcessFeatures(features))

@@ -20,14 +20,14 @@ namespace SabreTools.Features
             Description = "Verify a folder against DATs";
             _featureType = ParameterType.Flag;
             LongDescription = "When used, this will use an input DAT or set of DATs to blindly check against an input folder. The base of the folder is considered the base for the combined DATs and games are either the directories or archives within. This will only do a direct verification of the items within and will create a fixdat afterwards for missing files.";
-            Features = new Dictionary<string, Feature>();
+            Features = [];
 
             // Common Features
             AddCommonFeatures();
 
             AddFeature(DatListInput);
             AddFeature(DepotFlag);
-            this[DepotFlag].AddFeature(DepotDepthInt32Input);
+            this[DepotFlag]!.AddFeature(DepotDepthInt32Input);
             AddFeature(OutputDirStringInput);
             AddFeature(HashOnlyFlag);
             AddFeature(QuickFlag);
@@ -40,7 +40,7 @@ namespace SabreTools.Features
             AddFilteringFeatures();
         }
 
-        public override bool ProcessFeatures(Dictionary<string, Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature?> features)
         {
             // If the base fails, just fail out
             if (!base.ProcessFeatures(features))
@@ -65,15 +65,14 @@ namespace SabreTools.Features
                     Parser.ParseInto(datdata, datfile, int.MaxValue, keep: true);
 
                     // Perform additional processing steps
-                    Extras.ApplyExtras(datdata);
-                    Splitter.ApplySplitting(datdata, useTags: true);
-                    Filter.ApplyFilters(datdata);
-                    // datdata.ExecuteFilters(FilterRunner); // TODO: Replace Filter.ApplyFilters with this
-                    Cleaner.ApplyCleaning(datdata);
-                    Remover.ApplyRemovals(datdata);
+                    Extras!.ApplyExtras(datdata);
+                    Splitter!.ApplySplitting(datdata, useTags: true);
+                    datdata.ExecuteFilters(FilterRunner!);
+                    Cleaner!.ApplyCleaning(datdata);
+                    Remover!.ApplyRemovals(datdata);
 
                     // Set depot information
-                    datdata.Header.InputDepot = Header.InputDepot?.Clone() as DepotInformation;
+                    datdata.Header.InputDepot = Header!.InputDepot?.Clone() as DepotInformation;
 
                     // If we have overridden the header skipper, set it now
                     if (!string.IsNullOrEmpty(Header.HeaderSkipper))
@@ -98,7 +97,7 @@ namespace SabreTools.Features
 
                     // Now write out if there are any items left
                     Writer.WriteStatsToConsole(datdata);
-                    Writer.Write(datdata, OutputDir);
+                    Writer.Write(datdata, OutputDir!);
                 }
             }
             // Otherwise, process all DATs into the same output
@@ -114,15 +113,14 @@ namespace SabreTools.Features
                 }
 
                 // Perform additional processing steps
-                Extras.ApplyExtras(datdata);
-                Splitter.ApplySplitting(datdata, useTags: true);
-                Filter.ApplyFilters(datdata);
-                // datdata.ExecuteFilters(FilterRunner); // TODO: Replace Filter.ApplyFilters with this
-                Cleaner.ApplyCleaning(datdata);
-                Remover.ApplyRemovals(datdata);
+                Extras!.ApplyExtras(datdata);
+                Splitter!.ApplySplitting(datdata, useTags: true);
+                datdata.ExecuteFilters(FilterRunner!);
+                Cleaner!.ApplyCleaning(datdata);
+                Remover!.ApplyRemovals(datdata);
 
                 // Set depot information
-                datdata.Header.InputDepot = Header.InputDepot?.Clone() as DepotInformation;
+                datdata.Header.InputDepot = Header!.InputDepot?.Clone() as DepotInformation;
 
                 // If we have overridden the header skipper, set it now
                 if (!string.IsNullOrEmpty(Header.HeaderSkipper))
@@ -149,7 +147,7 @@ namespace SabreTools.Features
 
                 // Now write out if there are any items left
                 Writer.WriteStatsToConsole(datdata);
-                Writer.Write(datdata, OutputDir);
+                Writer.Write(datdata, OutputDir!);
             }
 
             return true;

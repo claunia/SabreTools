@@ -29,17 +29,17 @@ namespace SabreTools.Features
 
             // Output Formats
             AddFeature(OutputTypeListInput);
-            this[OutputTypeListInput].AddFeature(PrefixStringInput);
-            this[OutputTypeListInput].AddFeature(PostfixStringInput);
-            this[OutputTypeListInput].AddFeature(QuotesFlag);
-            this[OutputTypeListInput].AddFeature(RomsFlag);
-            this[OutputTypeListInput].AddFeature(GamePrefixFlag);
-            this[OutputTypeListInput].AddFeature(AddExtensionStringInput);
-            this[OutputTypeListInput].AddFeature(ReplaceExtensionStringInput);
-            this[OutputTypeListInput].AddFeature(RemoveExtensionsFlag);
-            this[OutputTypeListInput].AddFeature(RombaFlag);
-            this[OutputTypeListInput][RombaFlag].AddFeature(RombaDepthInt32Input);
-            this[OutputTypeListInput].AddFeature(DeprecatedFlag);
+            this[OutputTypeListInput]!.AddFeature(PrefixStringInput);
+            this[OutputTypeListInput]!.AddFeature(PostfixStringInput);
+            this[OutputTypeListInput]!.AddFeature(QuotesFlag);
+            this[OutputTypeListInput]!.AddFeature(RomsFlag);
+            this[OutputTypeListInput]!.AddFeature(GamePrefixFlag);
+            this[OutputTypeListInput]!.AddFeature(AddExtensionStringInput);
+            this[OutputTypeListInput]!.AddFeature(ReplaceExtensionStringInput);
+            this[OutputTypeListInput]!.AddFeature(RemoveExtensionsFlag);
+            this[OutputTypeListInput]!.AddFeature(RombaFlag);
+            this[OutputTypeListInput][RombaFlag]!.AddFeature(RombaDepthInt32Input);
+            this[OutputTypeListInput]!.AddFeature(DeprecatedFlag);
 
             AddHeaderFeatures();
             AddFeature(KeepEmptyGamesFlag);
@@ -48,35 +48,35 @@ namespace SabreTools.Features
             AddFeature(DescriptionAsNameFlag);
             AddInternalSplitFeatures();
             AddFeature(TrimFlag);
-            this[TrimFlag].AddFeature(RootDirStringInput);
+            this[TrimFlag]!.AddFeature(RootDirStringInput);
             AddFeature(SingleSetFlag);
             AddFeature(DedupFlag);
             AddFeature(GameDedupFlag);
             AddFeature(MergeFlag);
-            this[MergeFlag].AddFeature(NoAutomaticDateFlag);
+            this[MergeFlag]!.AddFeature(NoAutomaticDateFlag);
             AddFeature(DiffAllFlag);
-            this[DiffAllFlag].AddFeature(NoAutomaticDateFlag);
+            this[DiffAllFlag]!.AddFeature(NoAutomaticDateFlag);
             AddFeature(DiffDuplicatesFlag);
-            this[DiffDuplicatesFlag].AddFeature(NoAutomaticDateFlag);
+            this[DiffDuplicatesFlag]!.AddFeature(NoAutomaticDateFlag);
             AddFeature(DiffIndividualsFlag);
-            this[DiffIndividualsFlag].AddFeature(NoAutomaticDateFlag);
+            this[DiffIndividualsFlag]!.AddFeature(NoAutomaticDateFlag);
             AddFeature(DiffNoDuplicatesFlag);
-            this[DiffNoDuplicatesFlag].AddFeature(NoAutomaticDateFlag);
+            this[DiffNoDuplicatesFlag]!.AddFeature(NoAutomaticDateFlag);
             AddFeature(DiffAgainstFlag);
-            this[DiffAgainstFlag].AddFeature(BaseDatListInput);
-            this[DiffAgainstFlag].AddFeature(ByGameFlag);
+            this[DiffAgainstFlag]!.AddFeature(BaseDatListInput);
+            this[DiffAgainstFlag]!.AddFeature(ByGameFlag);
             AddFeature(BaseReplaceFlag);
-            this[BaseReplaceFlag].AddFeature(BaseDatListInput);
-            this[BaseReplaceFlag].AddFeature(UpdateFieldListInput);
-            this[BaseReplaceFlag][UpdateFieldListInput].AddFeature(OnlySameFlag);
+            this[BaseReplaceFlag]!.AddFeature(BaseDatListInput);
+            this[BaseReplaceFlag]!.AddFeature(UpdateFieldListInput);
+            this[BaseReplaceFlag][UpdateFieldListInput]!.AddFeature(OnlySameFlag);
             AddFeature(ReverseBaseReplaceFlag);
-            this[ReverseBaseReplaceFlag].AddFeature(BaseDatListInput);
-            this[ReverseBaseReplaceFlag].AddFeature(UpdateFieldListInput);
-            this[ReverseBaseReplaceFlag][UpdateFieldListInput].AddFeature(OnlySameFlag);
+            this[ReverseBaseReplaceFlag]!.AddFeature(BaseDatListInput);
+            this[ReverseBaseReplaceFlag]!.AddFeature(UpdateFieldListInput);
+            this[ReverseBaseReplaceFlag][UpdateFieldListInput]!.AddFeature(OnlySameFlag);
             AddFeature(DiffCascadeFlag);
-            this[DiffCascadeFlag].AddFeature(SkipFirstOutputFlag);
+            this[DiffCascadeFlag]!.AddFeature(SkipFirstOutputFlag);
             AddFeature(DiffReverseCascadeFlag);
-            this[DiffReverseCascadeFlag].AddFeature(SkipFirstOutputFlag);
+            this[DiffReverseCascadeFlag]!.AddFeature(SkipFirstOutputFlag);
             AddFeature(ExtraIniListInput);
             AddFilteringFeatures();
             AddFeature(OutputDirStringInput);
@@ -174,8 +174,7 @@ namespace SabreTools.Features
                     // Perform additional processing steps
                     Extras.ApplyExtras(datFile);
                     Splitter.ApplySplitting(datFile, useTags: false);
-                    Filter.ApplyFilters(datFile);
-                    // datFile.ExecuteFilters(FilterRunner); // TODO: Replace Filter.ApplyFilters with this
+                    datFile.ExecuteFilters(FilterRunner);
                     Cleaner.ApplyCleaning(datFile);
                     Remover.ApplyRemovals(datFile);
 
@@ -218,8 +217,7 @@ namespace SabreTools.Features
             // Perform additional processing steps
             Extras.ApplyExtras(userInputDat);
             Splitter.ApplySplitting(userInputDat, useTags: false);
-            Filter.ApplyFilters(userInputDat);
-            // userInputDat.ExecuteFilters(FilterRunner); // TODO: Replace Filter.ApplyFilters with this
+            userInputDat.ExecuteFilters(FilterRunner);
             Cleaner.ApplyCleaning(userInputDat);
             Remover.ApplyRemovals(userInputDat);
 
@@ -348,8 +346,7 @@ namespace SabreTools.Features
                     // Perform additional processing steps
                     Extras.ApplyExtras(repDat);
                     Splitter.ApplySplitting(repDat, useTags: false);
-                    Filter.ApplyFilters(repDat);
-                    // repDat.ExecuteFilters(FilterRunner); // TODO: Replace Filter.ApplyFilters with this
+                    repDat.ExecuteFilters(FilterRunner);
                     Cleaner.ApplyCleaning(repDat);
                     Remover.ApplyRemovals(repDat);
 
@@ -385,8 +382,7 @@ namespace SabreTools.Features
                     // Perform additional processing steps
                     Extras.ApplyExtras(repDat);
                     Splitter.ApplySplitting(repDat, useTags: false);
-                    Filter.ApplyFilters(repDat);
-                    // repDat.ExecuteFilters(FilterRunner); // TODO: Replace Filter.ApplyFilters with this
+                    repDat.ExecuteFilters(FilterRunner);
                     Cleaner.ApplyCleaning(repDat);
                     Remover.ApplyRemovals(repDat);
 

@@ -15,7 +15,7 @@ namespace RombaSharp.Features
             Description = "Show this detailed help";
             _featureType = ParameterType.Flag;
             LongDescription = "Display a detailed help text to the screen.";
-            Features = new Dictionary<string, Feature>();
+            Features = [];
         }
 
         public override bool ProcessArgs(string[] args, FeatureSet help)

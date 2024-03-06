@@ -15,7 +15,7 @@ namespace RombaSharp.Features
             Description = "For each specified DAT file it creates a fix DAT.";
             _featureType = ParameterType.Flag;
             LongDescription = @"For each specified DAT file it creates a fix DAT with the missing entries for that DAT. If nothing is missing it doesn't create a fix DAT for that particular DAT.";
-            Features = new Dictionary<string, Feature>();
+            Features = [];
 
             // Common Features
             AddCommonFeatures();
@@ -26,7 +26,7 @@ namespace RombaSharp.Features
             AddFeature(SubworkersInt32Input);
         }
 
-        public override bool ProcessFeatures(Dictionary<string, Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature?> features)
         {
             // If the base fails, just fail out
             if (!base.ProcessFeatures(features))
@@ -37,7 +37,7 @@ namespace RombaSharp.Features
             bool fixdatOnly = GetBoolean(features, FixdatOnlyValue);
             int subworkers = GetInt32(features, SubworkersInt32Value);
             int workers = GetInt32(features, WorkersInt32Value);
-            string outdat = GetString(features, OutStringValue);
+            string? outdat = GetString(features, OutStringValue);
 
             logger.Error("This feature is not yet implemented: fixdat");
             return true;

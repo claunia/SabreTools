@@ -16,7 +16,7 @@ namespace SabreTools.Help
         /// <summary>
         /// List of files, directories, and potential wildcard paths
         /// </summary>
-        public List<string> Inputs = new();
+        public List<string> Inputs = [];
 
         #endregion
 
@@ -87,7 +87,7 @@ namespace SabreTools.Help
         /// Process and extract variables based on current feature
         /// </summary>
         /// <returns>True if execution was successful, false otherwise</returns>
-        public virtual bool ProcessFeatures(Dictionary<string, Feature> features) => true;
+        public virtual bool ProcessFeatures(Dictionary<string, Feature?> features) => true;
 
         #endregion
 
@@ -96,7 +96,7 @@ namespace SabreTools.Help
         /// <summary>
         /// Get boolean value from nullable feature
         /// </summary>
-        protected static bool GetBoolean(Dictionary<string, Feature> features, string key)
+        protected static bool GetBoolean(Dictionary<string, Feature?> features, string key)
         {
             if (!features.ContainsKey(key))
                 return false;
@@ -107,45 +107,45 @@ namespace SabreTools.Help
         /// <summary>
         /// Get int value from nullable feature
         /// </summary>
-        protected static int GetInt32(Dictionary<string, Feature> features, string key)
+        protected static int GetInt32(Dictionary<string, Feature?> features, string key)
         {
             if (!features.ContainsKey(key))
                 return Int32.MinValue;
 
-            return features[key].GetInt32Value();
+            return features[key]!.GetInt32Value();
         }
 
         /// <summary>
         /// Get long value from nullable feature
         /// </summary>
-        protected static long GetInt64(Dictionary<string, Feature> features, string key)
+        protected static long GetInt64(Dictionary<string, Feature?> features, string key)
         {
             if (!features.ContainsKey(key))
                 return Int64.MinValue;
 
-            return features[key].GetInt64Value();
+            return features[key]!.GetInt64Value();
         }
 
         /// <summary>
         /// Get list value from nullable feature
         /// </summary>
-        protected static List<string> GetList(Dictionary<string, Feature> features, string key)
+        protected static List<string> GetList(Dictionary<string, Feature?> features, string key)
         {
             if (!features.ContainsKey(key))
                 return [];
 
-            return features[key].GetListValue() ?? [];
+            return features[key]!.GetListValue() ?? [];
         }
 
         /// <summary>
         /// Get string value from nullable feature
         /// </summary>
-        protected static string? GetString(Dictionary<string, Feature> features, string key)
+        protected static string? GetString(Dictionary<string, Feature?> features, string key)
         {
             if (!features.ContainsKey(key))
                 return null;
 
-            return features[key].GetStringValue();
+            return features[key]!.GetStringValue();
         }
 
         #endregion
