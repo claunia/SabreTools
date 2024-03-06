@@ -70,36 +70,6 @@ namespace SabreTools.Core.Tools
         }
 
         /// <summary>
-        /// Get MachineField value from input string
-        /// </summary>
-        /// <param name="input">String to get value from</param>
-        /// <returns>MachineField value corresponding to the string</returns>
-        public static MachineField AsMachineField(this string? input)
-        {
-            // If the input is empty, we return null
-            if (string.IsNullOrEmpty(input))
-                return MachineField.NULL;
-
-            // Normalize the input
-            input = input!.ToLowerInvariant();
-
-            // Create regex
-            string machineRegex = @"^(game|machine)[.\-_\s]";
-
-            // If we don't have a machine field, skip
-            if (!Regex.IsMatch(input, machineRegex))
-                return MachineField.NULL;
-
-            // Replace the match and re-normalize
-            string machineInput = Regex.Replace(input, machineRegex, string.Empty)
-                .Replace(' ', '_')
-                .Replace('-', '_')
-                .Replace('.', '_');
-
-            return AsEnumValue<MachineField>(machineInput);
-        }
-
-        /// <summary>
         /// Get bool? value from input string
         /// </summary>
         /// <param name="yesno">String to get value from</param>

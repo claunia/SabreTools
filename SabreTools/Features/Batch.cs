@@ -8,6 +8,7 @@ using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatTools;
+using SabreTools.Filter;
 using SabreTools.Filtering;
 using SabreTools.Hashing;
 using SabreTools.Help;
@@ -46,13 +47,13 @@ Add new output format(s):           format(datformat, ...);
 Set the output directory:           output(outdir);
 Write the internal items:           write([overwrite = true]);
 Reset the internal state:           reset();";
-            Features = new Dictionary<string, Help.Feature>();
+            Features = [];
 
             // Common Features
             AddCommonFeatures();
         }
 
-        public override bool ProcessFeatures(Dictionary<string, Help.Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature?> features)
         {
             // If the base fails, just fail out
             if (!base.ProcessFeatures(features))
@@ -112,10 +113,10 @@ Reset the internal state:           reset();";
                     }
 
                     // Validate that the command has the proper number and type of arguments
-                    (bool valid, string error) = command.ValidateArguments();
+                    (bool valid, string? error) = command.ValidateArguments();
                     if (!valid)
                     {
-                        logger.User(error);
+                        logger.User(error ?? string.Empty);
                         logger.User($"Usage: {command.Usage()}");
                         break;
                     }
@@ -138,7 +139,7 @@ Reset the internal state:           reset();";
         /// </summary>
         private abstract class BatchCommand
         {
-            public string Name { get; private set; }
+            public string Name { get; set; }
             public List<string> Arguments { get; private set; } = [];
 
             /// <summary>
@@ -231,7 +232,7 @@ Reset the internal state:           reset();";
             }
 
             /// <inheritdoc/>
-            public override (bool, string) ValidateArguments()
+            public override (bool, string?) ValidateArguments()
             {
                 if (Arguments.Count != 0)
                 {
@@ -265,7 +266,7 @@ Reset the internal state:           reset();";
             }
 
             /// <inheritdoc/>
-            public override (bool, string) ValidateArguments()
+            public override (bool, string?) ValidateArguments()
             {
                 if (Arguments.Count == 0)
                 {
@@ -308,7 +309,7 @@ Reset the internal state:           reset();";
             }
 
             /// <inheritdoc/>
-            public override (bool, string) ValidateArguments()
+            public override (bool, string?) ValidateArguments()
             {
                 if (Arguments.Count != 2)
                 {
@@ -317,13 +318,11 @@ Reset the internal state:           reset();";
                 }
 
                 // Read in the individual arguments
-                MachineField extraMachineField = Arguments[0].AsMachineField();
-                DatItemField extraDatItemField = Arguments[0].AsDatItemField();
+                (string? type, string? key) = FilterParser.ParseFilterId(Arguments[0]);
                 string extraFile = Arguments[1];
 
                 // If we had an invalid input, log and continue
-                if (extraMachineField == MachineField.NULL
-                    && extraDatItemField == DatItemField.NULL)
+                if (type == null && key == null)
                 {
                     string message = $"{Arguments[0]} was an invalid field name";
                     return (false, message);
@@ -341,7 +340,7 @@ Reset the internal state:           reset();";
             public override void Process(BatchState batchState)
             {
                 // Read in the individual arguments
-                (string?, string?) fieldName = SabreTools.Filter.FilterParser.ParseFilterId(Arguments[0]);
+                (string?, string?) fieldName = FilterParser.ParseFilterId(Arguments[0]);
                 string extraFile = Arguments[1];
 
                 // Create the extra INI
@@ -379,9 +378,7 @@ Reset the internal state:           reset();";
                 }
 
                 // Read in the individual arguments
-                DatHeaderField filterDatHeaderField = Arguments[0].AsDatHeaderField();
-                MachineField filterMachineField = Arguments[0].AsMachineField();
-                DatItemField filterDatItemField = Arguments[0].AsDatItemField();
+                (string? type, string? key) = FilterParser.ParseFilterId(Arguments[0]);
                 bool? filterRemove = false;
                 if (Arguments.Count >= 3)
                     filterRemove = Arguments[2].AsYesNo();
@@ -390,9 +387,7 @@ Reset the internal state:           reset();";
                     filterPerMachine = Arguments[3].AsYesNo();
 
                 // If we had an invalid input, log and continue
-                if (filterDatHeaderField == DatHeaderField.NULL
-                    && filterMachineField == MachineField.NULL
-                    && filterDatItemField == DatItemField.NULL)
+                if (type == null && key == null)
                 {
                     string message = $"{Arguments[0]} was an invalid field name";
                     return (false, message);
@@ -456,7 +451,7 @@ Reset the internal state:           reset();";
             }
 
             /// <inheritdoc/>
-            public override (bool, string) ValidateArguments()
+            public override (bool, string?) ValidateArguments()
             {
                 if (Arguments.Count == 0)
                 {
@@ -509,7 +504,7 @@ Reset the internal state:           reset();";
             }
 
             /// <inheritdoc/>
-            public override (bool, string) ValidateArguments()
+            public override (bool, string?) ValidateArguments()
             {
                 if (Arguments.Count == 0)
                 {
@@ -549,7 +544,7 @@ Reset the internal state:           reset();";
             }
 
             /// <inheritdoc/>
-            public override (bool, string) ValidateArguments()
+            public override (bool, string?) ValidateArguments()
             {
                 if (Arguments.Count != 1)
                 {
@@ -597,7 +592,7 @@ Reset the internal state:           reset();";
             }
 
             /// <inheritdoc/>
-            public override (bool, string) ValidateArguments()
+            public override (bool, string?) ValidateArguments()
             {
                 if (Arguments.Count == 0)
                 {
@@ -631,7 +626,7 @@ Reset the internal state:           reset();";
             }
 
             /// <inheritdoc/>
-            public override (bool, string) ValidateArguments()
+            public override (bool, string?) ValidateArguments()
             {
                 if (Arguments.Count == 0)
                 {
@@ -665,7 +660,7 @@ Reset the internal state:           reset();";
             }
 
             /// <inheritdoc/>
-            public override (bool, string) ValidateArguments()
+            public override (bool, string?) ValidateArguments()
             {
                 if (Arguments.Count != 1)
                 {
@@ -698,7 +693,7 @@ Reset the internal state:           reset();";
             }
 
             /// <inheritdoc/>
-            public override (bool, string) ValidateArguments()
+            public override (bool, string?) ValidateArguments()
             {
                 if (Arguments.Count == 0)
                 {
@@ -733,7 +728,7 @@ Reset the internal state:           reset();";
             }
 
             /// <inheritdoc/>
-            public override (bool, string) ValidateArguments()
+            public override (bool, string?) ValidateArguments()
             {
                 if (Arguments.Count != 0)
                 {
@@ -766,7 +761,7 @@ Reset the internal state:           reset();";
             }
 
             /// <inheritdoc/>
-            public override (bool, string) ValidateArguments()
+            public override (bool, string?) ValidateArguments()
             {
                 if (Arguments.Count != 0)
                 {
@@ -800,7 +795,7 @@ Reset the internal state:           reset();";
             }
 
             /// <inheritdoc/>
-            public override (bool, string) ValidateArguments()
+            public override (bool, string?) ValidateArguments()
             {
                 if (Arguments.Count != 2)
                 {
@@ -847,7 +842,7 @@ Reset the internal state:           reset();";
             }
 
             /// <inheritdoc/>
-            public override (bool, string) ValidateArguments()
+            public override (bool, string?) ValidateArguments()
             {
                 if (Arguments.Count > 1)
                 {
@@ -894,7 +889,7 @@ Reset the internal state:           reset();";
         {
             public DatFile DatFile { get; set; } = DatFile.Create();
             public int Index { get; set; } = 0;
-            public string OutputDirectory { get; set; } = null;
+            public string? OutputDirectory { get; set; } = null;
 
             /// <summary>
             /// Reset the current state
