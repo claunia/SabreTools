@@ -139,7 +139,7 @@ Reset the internal state:           reset();";
         private abstract class BatchCommand
         {
             public string Name { get; private set; }
-            public List<string> Arguments { get; private set; } = new List<string>();
+            public List<string> Arguments { get; private set; } = [];
 
             /// <summary>
             /// Default constructor for setting arguments
@@ -153,7 +153,7 @@ Reset the internal state:           reset();";
             /// Create a command based on parsing a line
             /// </summary>
             /// <param name="line">Current line to parse into a command</param>
-            public static BatchCommand Create(string line)
+            public static BatchCommand? Create(string line)
             {
                 // Empty lines don't count
                 if (string.IsNullOrEmpty(line))
@@ -207,7 +207,7 @@ Reset the internal state:           reset();";
             /// <summary>
             /// Validate that a set of arguments are sufficient for a given command
             /// </summary>
-            public abstract (bool, string) ValidateArguments();
+            public abstract (bool, string?) ValidateArguments();
 
             /// <summary>
             /// Process a batch file state with the current command
@@ -370,7 +370,7 @@ Reset the internal state:           reset();";
             }
 
             /// <inheritdoc/>
-            public override (bool, string) ValidateArguments()
+            public override (bool, string?) ValidateArguments()
             {
                 if (Arguments.Count < 2 || Arguments.Count > 4)
                 {
@@ -415,29 +415,24 @@ Reset the internal state:           reset();";
             public override void Process(BatchState batchState)
             {
                 // Read in the individual arguments
-                MachineField filterMachineField = Arguments[0].AsMachineField();
-                DatItemField filterDatItemField = Arguments[0].AsDatItemField();
+                string filterField = Arguments[0];
                 string filterValue = Arguments[1];
                 bool? filterRemove = false;
                 if (Arguments.Count >= 3)
                     filterRemove = Arguments[2].AsYesNo();
+                // TODO: Add back this functionality
                 bool? filterPerMachine = false;
                 if (Arguments.Count >= 4)
                     filterPerMachine = Arguments[3].AsYesNo();
 
-                // Create filter to run filters from
-                Filtering.Filter filter = new()
-                {
-                    MachineFilter = new MachineFilter { HasFilters = true },
-                    DatItemFilter = new DatItemFilter { HasFilters = true },
-                };
+                // Build the filter statement
+                string filterString = $"{filterField}{(filterRemove == true ? "!" : string.Empty)}:{filterValue}";
 
-                // Set the possible filters
-                filter.MachineFilter.SetFilter(filterMachineField, filterValue, filterRemove.Value);
-                filter.DatItemFilter.SetFilter(filterDatItemField, filterValue, filterRemove.Value);
+                // Create filter to run filters from
+                var filter = new Filter.FilterRunner([filterString]);
 
                 // Apply the filters blindly
-                filter.ApplyFilters(batchState.DatFile, filterPerMachine.Value);
+                batchState.DatFile.ExecuteFilters(filter);
 
                 // Cleanup after the filter
                 // TODO: We might not want to remove immediately
