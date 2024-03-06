@@ -79,13 +79,14 @@ namespace SabreTools.Filtering
 
             #region Item-Specific
 
-            // Handle unnested sets first
+            // Handle normal sets first
             foreach (var fieldName in fieldNames)
             {
                 datItem.ReplaceField(repDatItem, fieldName);
             }
 
-            // Handle nested sets
+            // TODO: Filter out hashes before here so these checks actually work
+            // Handle special cases
             switch (datItem, repDatItem)
             {
                 case (Disk disk, Disk repDisk): ReplaceFields(disk, repDisk, fieldNames); break;

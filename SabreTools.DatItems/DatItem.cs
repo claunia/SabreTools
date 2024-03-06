@@ -372,8 +372,6 @@ namespace SabreTools.DatItems
 
         #endregion
 
-        // TODO: These should not take a field enum
-        // TODO: These should be item-specific for better filtering
         #region Manipulation
 
         /// <summary>

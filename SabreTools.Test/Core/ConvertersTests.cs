@@ -429,7 +429,6 @@ namespace SabreTools.Test.Core
         }
 
         // TODO: Write new test for all supported DatHeaderField values
-        // TODO: Write new test for all supported DatItemField values
 
         [Theory]
         [InlineData(DeviceType.NULL, null)]
@@ -606,8 +605,6 @@ namespace SabreTools.Test.Core
             string? actual = field.AsStringValue<LoadFlag>();
             Assert.Equal(expected, actual);
         }
-
-        // TODO: Write new test for all supported MachineField values
 
         [Theory]
         [InlineData(MachineType.None, true, "none")]

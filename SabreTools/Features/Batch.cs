@@ -819,11 +819,14 @@ Reset the internal state:           reset();";
             public override void Process(BatchState batchState)
             {
                 // Read in the individual arguments
-                DatHeaderField field = Arguments[0].AsDatHeaderField();
+                string field = Arguments[0];
                 string value = Arguments[1];
 
+                var setter = new Setter();
+                setter.PopulateSetters(field, value);
+
                 // Set the header field
-                batchState.DatFile.Header.SetFields(new Dictionary<DatHeaderField, string> { [field] = value });
+                setter.SetFields(batchState.DatFile.Header);
             }
         }
 

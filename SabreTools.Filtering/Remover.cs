@@ -187,8 +187,7 @@ namespace SabreTools.Filtering
 
             foreach (var fieldName in HeaderFieldNames)
             {
-                // TODO: Impelement in DatHeader
-                //datHeader.RemoveField(fieldName);
+                datHeader.RemoveField(fieldName);
             }
         }
 

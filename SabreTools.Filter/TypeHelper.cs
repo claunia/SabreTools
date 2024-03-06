@@ -1,10 +1,8 @@
 using System;
 using System.Linq;
 using System.Reflection;
-#if NET452_OR_GREATER || NETCOREAPP
 using System.Xml.Serialization;
 using SabreTools.Models;
-#endif
 using SabreTools.Models.Metadata;
 
 namespace SabreTools.Filter
@@ -24,9 +22,12 @@ namespace SabreTools.Filter
                 return null;
 
 #if NET20 || NET35 || NET40
-            // TODO: Figure out how to do this, try using the following:
-            // https://learn.microsoft.com/en-us/dotnet/api/system.reflection.customattributedata?view=net-8.0
-            return null;
+            return fields
+                .Where(f => f.IsLiteral && !f.IsInitOnly)
+                .Where(f => Attribute.GetCustomAttributes(f, typeof(NoFilterAttribute)).Length == 0)
+                .Select(f => f.GetRawConstantValue() as string)
+                .Where(v => v != null)
+                .ToArray()!;
 #else
             return fields
                 .Where(f => f.IsLiteral && !f.IsInitOnly)
@@ -72,9 +73,7 @@ namespace SabreTools.Filter
                 return null;
 
 #if NET20 || NET35 || NET40
-            // TODO: Figure out how to do this, try using the following:
-            // https://learn.microsoft.com/en-us/dotnet/api/system.reflection.customattributedata?view=net-8.0
-            return null;
+            return (Attribute.GetCustomAttribute(type, typeof(XmlRootAttribute)) as XmlRootAttribute)!.ElementName;
 #else
             return type.GetCustomAttribute<XmlRootAttribute>()?.ElementName;
 #endif

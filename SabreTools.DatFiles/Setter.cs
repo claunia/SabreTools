@@ -147,10 +147,9 @@ namespace SabreTools.DatFiles
             if (datHeader == null || !HeaderFieldMappings.Any())
                 return;
 
-            foreach (var fieldName in HeaderFieldMappings.Keys)
+            foreach (var kvp in HeaderFieldMappings)
             {
-                // TODO: Impelement in DatHeader
-                //datHeader.SetField(fieldName);
+                datHeader.SetField(kvp.Key, kvp.Value);
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
@@ -405,136 +406,6 @@ namespace SabreTools.DatFiles
 
         #region Instance Methods
 
-        #region Accessors
-
-        /// <summary>
-        /// Set fields with given values
-        /// </summary>
-        /// <param name="mappings">Mappings dictionary</param>
-        public void SetFields(Dictionary<DatHeaderField, string> mappings)
-        {
-            #region Common
-
-            if (mappings.ContainsKey(DatHeaderField.FileName))
-                FileName = mappings[DatHeaderField.FileName];
-
-            if (mappings.ContainsKey(DatHeaderField.Name))
-                Name = mappings[DatHeaderField.Name];
-
-            if (mappings.ContainsKey(DatHeaderField.Description))
-                Description = mappings[DatHeaderField.Description];
-
-            if (mappings.ContainsKey(DatHeaderField.RootDir))
-                RootDir = mappings[DatHeaderField.RootDir];
-
-            if (mappings.ContainsKey(DatHeaderField.Category))
-                Category = mappings[DatHeaderField.Category];
-
-            if (mappings.ContainsKey(DatHeaderField.Version))
-                Version = mappings[DatHeaderField.Version];
-
-            if (mappings.ContainsKey(DatHeaderField.Date))
-                Date = mappings[DatHeaderField.Date];
-
-            if (mappings.ContainsKey(DatHeaderField.Author))
-                Author = mappings[DatHeaderField.Author];
-
-            if (mappings.ContainsKey(DatHeaderField.Email))
-                Email = mappings[DatHeaderField.Email];
-
-            if (mappings.ContainsKey(DatHeaderField.Homepage))
-                Homepage = mappings[DatHeaderField.Homepage];
-
-            if (mappings.ContainsKey(DatHeaderField.Url))
-                Url = mappings[DatHeaderField.Url];
-
-            if (mappings.ContainsKey(DatHeaderField.Comment))
-                Comment = mappings[DatHeaderField.Comment];
-
-            if (mappings.ContainsKey(DatHeaderField.HeaderSkipper))
-                HeaderSkipper = mappings[DatHeaderField.HeaderSkipper];
-
-            if (mappings.ContainsKey(DatHeaderField.Type))
-                Type = mappings[DatHeaderField.Type];
-
-            if (mappings.ContainsKey(DatHeaderField.ForceMerging))
-                ForceMerging = mappings[DatHeaderField.ForceMerging].AsEnumValue<MergingFlag>();
-
-            if (mappings.ContainsKey(DatHeaderField.ForceNodump))
-                ForceNodump = mappings[DatHeaderField.ForceNodump].AsEnumValue<NodumpFlag>();
-
-            if (mappings.ContainsKey(DatHeaderField.ForcePacking))
-                ForcePacking = mappings[DatHeaderField.ForcePacking].AsEnumValue<PackingFlag>();
-
-            #endregion
-
-            #region ListXML
-
-            if (mappings.ContainsKey(DatHeaderField.Debug))
-                Debug = mappings[DatHeaderField.Debug].AsYesNo();
-
-            if (mappings.ContainsKey(DatHeaderField.MameConfig))
-                MameConfig = mappings[DatHeaderField.MameConfig];
-
-            #endregion
-
-            #region Logiqx
-
-            if (mappings.ContainsKey(DatHeaderField.ID))
-                NoIntroID = mappings[DatHeaderField.ID];
-
-            if (mappings.ContainsKey(DatHeaderField.Build))
-                Build = mappings[DatHeaderField.Build];
-
-            if (mappings.ContainsKey(DatHeaderField.RomMode))
-                RomMode = mappings[DatHeaderField.RomMode].AsEnumValue<MergingFlag>();
-
-            if (mappings.ContainsKey(DatHeaderField.BiosMode))
-                BiosMode = mappings[DatHeaderField.BiosMode].AsEnumValue<MergingFlag>();
-
-            if (mappings.ContainsKey(DatHeaderField.SampleMode))
-                SampleMode = mappings[DatHeaderField.SampleMode].AsEnumValue<MergingFlag>();
-
-            if (mappings.ContainsKey(DatHeaderField.LockRomMode))
-                LockRomMode = mappings[DatHeaderField.LockRomMode].AsYesNo();
-
-            if (mappings.ContainsKey(DatHeaderField.LockBiosMode))
-                LockBiosMode = mappings[DatHeaderField.LockBiosMode].AsYesNo();
-
-            if (mappings.ContainsKey(DatHeaderField.LockSampleMode))
-                LockSampleMode = mappings[DatHeaderField.LockSampleMode].AsYesNo();
-
-            #endregion
-
-            #region OfflineList
-
-            if (mappings.ContainsKey(DatHeaderField.System))
-                System = mappings[DatHeaderField.System];
-
-            if (mappings.ContainsKey(DatHeaderField.ScreenshotsWidth))
-                ScreenshotsWidth = mappings[DatHeaderField.ScreenshotsWidth];
-
-            if (mappings.ContainsKey(DatHeaderField.ScreenshotsHeight))
-                ScreenshotsHeight = mappings[DatHeaderField.ScreenshotsHeight];
-
-            // TODO: Add DatHeader_Info*
-            // TDOO: Add DatHeader_CanOpen*
-
-            if (mappings.ContainsKey(DatHeaderField.RomTitle))
-                RomTitle = mappings[DatHeaderField.RomTitle];
-
-            #endregion
-
-            #region RomCenter
-
-            if (mappings.ContainsKey(DatHeaderField.RomCenterVersion))
-                RomCenterVersion = mappings[DatHeaderField.RomCenterVersion];
-
-            #endregion
-        }
-
-        #endregion
-
         #region Cloning Methods
 
         /// <summary>
@@ -728,6 +599,118 @@ namespace SabreTools.DatFiles
             GameName = datHeader.GameName;
             Quotes = datHeader.Quotes;
             UseRomName = datHeader.UseRomName;
+        }
+
+        #endregion
+
+        #region Manipulation
+
+        //// <summary>
+        /// Remove a field from the header
+        /// </summary>
+        /// <param name="fieldName">Field to remove</param>
+        /// <returns>True if the removal was successful, false otherwise</returns>
+        public bool RemoveField(string fieldName)
+        {
+            DatHeaderField datHeaderField = fieldName.AsDatHeaderField();
+            switch (datHeaderField)
+            {
+                case DatHeaderField.Author: Author = null; break;
+                case DatHeaderField.BiosMode: BiosMode = MergingFlag.None; break;
+                case DatHeaderField.Build: Build = null; break;
+                case DatHeaderField.CanOpen: CanOpen = null; break;
+                case DatHeaderField.Category: Category = null; break;
+                case DatHeaderField.Comment: Comment = null; break;
+                case DatHeaderField.Date: Date = null; break;
+                case DatHeaderField.Debug: Debug = null; break;
+                case DatHeaderField.Description: Description = null; break;
+                case DatHeaderField.Email: Email = null; break;
+                case DatHeaderField.FileName: FileName = null; break;
+                case DatHeaderField.ForceMerging: ForceMerging = MergingFlag.None; break;
+                case DatHeaderField.ForceNodump: ForceNodump = NodumpFlag.None; break;
+                case DatHeaderField.ForcePacking: ForcePacking = PackingFlag.None; break;
+                case DatHeaderField.HeaderSkipper: HeaderSkipper = null; break;
+                case DatHeaderField.Homepage: Homepage = null; break;
+                case DatHeaderField.ID: NoIntroID = null; break;
+                // case DatHeaderField.Info_Default: Info_Default = null; break;
+                // case DatHeaderField.Info_IsNamingOption: Info_IsNamingOption = null; break;
+                // case DatHeaderField.Info_Name: Info_Name = null; break;
+                // case DatHeaderField.Info_Visible: Info_Visible = null; break;
+                case DatHeaderField.LockBiosMode: LockBiosMode = null; break;
+                case DatHeaderField.LockRomMode: LockRomMode = null; break;
+                case DatHeaderField.LockSampleMode: LockSampleMode = null; break;
+                case DatHeaderField.MameConfig: MameConfig = null; break;
+                case DatHeaderField.Name: Name = null; break;
+                case DatHeaderField.RomCenterVersion: RomCenterVersion = null; break;
+                case DatHeaderField.RomMode: RomMode = MergingFlag.None; break;
+                case DatHeaderField.RomTitle: RomTitle = null; break;
+                case DatHeaderField.RootDir: RootDir = null; break;
+                case DatHeaderField.SampleMode: SampleMode = MergingFlag.None; break;
+                case DatHeaderField.ScreenshotsHeight: ScreenshotsHeight = null; break;
+                case DatHeaderField.ScreenshotsWidth: ScreenshotsWidth = null; break;
+                case DatHeaderField.System: System = null; break;
+                case DatHeaderField.Type: Type = null; break;
+                case DatHeaderField.Url: Url = null; break;
+                case DatHeaderField.Version: Version = null; break;
+                default: return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Set a field in the header from a mapping string
+        /// </summary>
+        /// <param name="fieldName">Field to set</param>
+        /// <param name="value">String representing the value to set</param>
+        /// <returns>True if the setting was successful, false otherwise</returns>
+        /// <remarks>This only performs minimal validation before setting</remarks>
+        public bool SetField(string? fieldName, string value)
+        {
+            DatHeaderField datHeaderField = fieldName.AsDatHeaderField();
+            switch (datHeaderField)
+            {
+                case DatHeaderField.Author: Author = value; break;
+                case DatHeaderField.BiosMode: BiosMode = value.AsEnumValue<MergingFlag>(); break;
+                case DatHeaderField.Build: Build = value; break;
+                case DatHeaderField.CanOpen: CanOpen = [.. value.Split(',')]; break;
+                case DatHeaderField.Category: Category = value; break;
+                case DatHeaderField.Comment: Comment = value; break;
+                case DatHeaderField.Date: Date = value; break;
+                case DatHeaderField.Debug: Debug = value.AsYesNo(); break;
+                case DatHeaderField.Description: Description = value; break;
+                case DatHeaderField.Email: Email = value; break;
+                case DatHeaderField.FileName: FileName = value; break;
+                case DatHeaderField.ForceMerging: ForceMerging = value.AsEnumValue<MergingFlag>(); break;
+                case DatHeaderField.ForceNodump: ForceNodump = value.AsEnumValue<NodumpFlag>(); break;
+                case DatHeaderField.ForcePacking: ForcePacking = value.AsEnumValue<PackingFlag>(); break;
+                case DatHeaderField.HeaderSkipper: HeaderSkipper = value; break;
+                case DatHeaderField.Homepage: Homepage = value; break;
+                case DatHeaderField.ID: NoIntroID = value; break;
+                // case DatHeaderField.Info_Default: Info_Default = value; break;
+                // case DatHeaderField.Info_IsNamingOption: Info_IsNamingOption = value; break;
+                // case DatHeaderField.Info_Name: Info_Name = value; break;
+                // case DatHeaderField.Info_Visible: Info_Visible = value; break;
+                case DatHeaderField.LockBiosMode: LockBiosMode = value.AsYesNo(); break;
+                case DatHeaderField.LockRomMode: LockRomMode = value.AsYesNo(); break;
+                case DatHeaderField.LockSampleMode: LockSampleMode = value.AsYesNo(); break;
+                case DatHeaderField.MameConfig: MameConfig = value; break;
+                case DatHeaderField.Name: Name = value; break;
+                case DatHeaderField.RomCenterVersion: RomCenterVersion = value; break;
+                case DatHeaderField.RomMode: RomMode = value.AsEnumValue<MergingFlag>(); break;
+                case DatHeaderField.RomTitle: RomTitle = value; break;
+                case DatHeaderField.RootDir: RootDir = value; break;
+                case DatHeaderField.SampleMode: SampleMode = value.AsEnumValue<MergingFlag>(); break;
+                case DatHeaderField.ScreenshotsHeight: ScreenshotsHeight = value; break;
+                case DatHeaderField.ScreenshotsWidth: ScreenshotsWidth = value; break;
+                case DatHeaderField.System: System = value; break;
+                case DatHeaderField.Type: Type = value; break;
+                case DatHeaderField.Url: Url = value; break;
+                case DatHeaderField.Version: Version = value; break;
+                default: return false;
+            }
+
+            return true;
         }
 
         #endregion

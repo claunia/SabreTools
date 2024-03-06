@@ -738,6 +738,7 @@ namespace SabreTools.Core
 
     #region Fields
 
+    // TODO: This should move to Models like the rest
     /// <summary>
     /// List of valid field types within a DatHeader
     /// </summary>
