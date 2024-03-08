@@ -1,7 +1,6 @@
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
-using SabreTools.Filter;
 
 namespace SabreTools.DatItems.Formats
 {

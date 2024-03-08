@@ -4,7 +4,6 @@ using Newtonsoft.Json.Converters;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.FileTypes;
-using SabreTools.Filter;
 
 namespace SabreTools.DatItems.Formats
 {
