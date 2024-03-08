@@ -26,6 +26,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var missingFields = new List<string>();
 
+            // Check item name
             if (string.IsNullOrEmpty(datItem.GetName()))
                 missingFields.Add(Models.Metadata.Rom.NameKey);
 
@@ -360,7 +361,7 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         private static Models.OfflineList.Game CreateGame(Machine machine)
         {
-            
+
             var game = new Models.OfflineList.Game
             {
                 //ImageNumber = machine.ImageNumber, // TODO: Add to internal model

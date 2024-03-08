@@ -26,6 +26,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var missingFields = new List<string>();
 
+            // Check item name
             if (string.IsNullOrEmpty(datItem.GetName()))
                 missingFields.Add(Models.Metadata.Rom.NameKey);
 
