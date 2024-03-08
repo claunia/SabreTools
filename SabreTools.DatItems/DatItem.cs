@@ -161,6 +161,40 @@ namespace SabreTools.DatItems
         #region Accessors
 
         /// <summary>
+        /// Get the value from a field based on the type provided
+        /// </summary>
+        /// <typeparam name="T">Type of the value to get from the internal model</typeparam>
+        /// <param name="fieldName">Field to retrieve</param>
+        /// <returns>Value from the field, if possible</returns>
+        public T? GetFieldValue<T>(string? fieldName)
+        {
+            // Invalid field cannot be processed
+            if (string.IsNullOrEmpty(fieldName))
+                return default;
+
+            // Get the value based on the type
+            return _internal.Read<T>(fieldName!);
+        }
+
+        /// <summary>
+        /// Set the value from a field based on the type provided
+        /// </summary>
+        /// <typeparam name="T">Type of the value to set in the internal model</typeparam>
+        /// <param name="fieldName">Field to set</param>
+        /// <param name="value">Value to set</param>
+        /// <returns>True if the value was set, false otherwise</returns>
+        public bool SetFieldValue<T>(string? fieldName, T? value)
+        {
+            // Invalid field cannot be processed
+            if (string.IsNullOrEmpty(fieldName))
+                return false;
+
+            // Set the value based on the type
+            _internal[fieldName!] = value;
+            return true;
+        }
+
+        /// <summary>
         /// Gets the name to use for a DatItem
         /// </summary>
         /// <returns>Name if available, null otherwise</returns>

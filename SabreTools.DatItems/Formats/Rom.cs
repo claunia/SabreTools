@@ -443,10 +443,10 @@ namespace SabreTools.DatItems.Formats
         #region Accessors
 
         /// <inheritdoc/>
-        public override string? GetName() => Name;
+        public override string? GetName() => GetFieldValue<string>(Models.Metadata.Rom.NameKey);
 
         /// <inheritdoc/>
-        public override void SetName(string? name) => Name = name;
+        public override void SetName(string? name) => SetFieldValue(Models.Metadata.Rom.NameKey, name);
 
         #endregion
 

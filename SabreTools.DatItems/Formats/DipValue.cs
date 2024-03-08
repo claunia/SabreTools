@@ -65,10 +65,10 @@ namespace SabreTools.DatItems.Formats
         #region Accessors
 
         /// <inheritdoc/>
-        public override string? GetName() => Name;
+        public override string? GetName() => GetFieldValue<string>(Models.Metadata.DipValue.NameKey);
 
         /// <inheritdoc/>
-        public override void SetName(string? name) => Name = name;
+        public override void SetName(string? name) => SetFieldValue(Models.Metadata.DipValue.NameKey, name);
 
         #endregion
 

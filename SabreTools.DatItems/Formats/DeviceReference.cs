@@ -27,10 +27,10 @@ namespace SabreTools.DatItems.Formats
         #region Accessors
 
         /// <inheritdoc/>
-        public override string? GetName() => Name;
+        public override string? GetName() => GetFieldValue<string>(Models.Metadata.DeviceRef.NameKey);
 
         /// <inheritdoc/>
-        public override void SetName(string? name) => Name = name;
+        public override void SetName(string? name) => SetFieldValue(Models.Metadata.DeviceRef.NameKey, name);
 
         #endregion
 
