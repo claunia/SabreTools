@@ -149,11 +149,7 @@ namespace SabreTools.DatFiles.Formats
                             Size = null,
                             CRC = sfv.Hash,
 
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
+                            Source = new Source { Index = indexId, Name = filename },
                         };
                         rom.SetName(itemName);
 
@@ -200,11 +196,7 @@ namespace SabreTools.DatFiles.Formats
                         {
                             MD5 = md5.Hash,
 
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
+                            Source = new Source { Index = indexId, Name = filename },
                         };
                         disk.SetName(itemName);
 
@@ -217,11 +209,7 @@ namespace SabreTools.DatFiles.Formats
                         {
                             MD5 = md5.Hash,
 
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
+                            Source = new Source { Index = indexId, Name = filename },
                         };
                         media.SetName(itemName);
 
@@ -235,11 +223,7 @@ namespace SabreTools.DatFiles.Formats
                             Size = null,
                             MD5 = md5.Hash,
 
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
+                            Source = new Source { Index = indexId, Name = filename },
                         };
                         rom.SetName(itemName);
 
@@ -286,11 +270,7 @@ namespace SabreTools.DatFiles.Formats
                         {
                             SHA1 = sha1.Hash,
 
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
+                            Source = new Source { Index = indexId, Name = filename },
                         };
                         disk.SetName(itemName);
 
@@ -303,11 +283,7 @@ namespace SabreTools.DatFiles.Formats
                         {
                             SHA1 = sha1.Hash,
 
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
+                            Source = new Source { Index = indexId, Name = filename },
                         };
                         media.SetName(itemName);
 
@@ -321,11 +297,7 @@ namespace SabreTools.DatFiles.Formats
                             Size = null,
                             SHA1 = sha1.Hash,
 
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
+                            Source = new Source { Index = indexId, Name = filename },
                         };
                         rom.SetName(itemName);
 
@@ -372,11 +344,7 @@ namespace SabreTools.DatFiles.Formats
                         {
                             SHA256 = sha256.Hash,
 
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
+                            Source = new Source { Index = indexId, Name = filename },
                         };
                         media.SetName(itemName);
 
@@ -391,11 +359,7 @@ namespace SabreTools.DatFiles.Formats
                             Size = null,
                             SHA256 = sha256.Hash,
 
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
+                            Source = new Source { Index = indexId, Name = filename },
                         };
                         rom.SetName(itemName);
 
@@ -445,11 +409,7 @@ namespace SabreTools.DatFiles.Formats
                             Size = null,
                             SHA384 = sha384.Hash,
 
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
+                            Source = new Source { Index = indexId, Name = filename },
                         };
                         rom.SetName(itemName);
 
@@ -499,11 +459,7 @@ namespace SabreTools.DatFiles.Formats
                             Size = null,
                             SHA512 = sha512.Hash,
 
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
+                            Source = new Source { Index = indexId, Name = filename },
                         };
                         rom.SetName(itemName);
 
@@ -550,11 +506,7 @@ namespace SabreTools.DatFiles.Formats
                         {
                             SpamSum = spamsum.Hash,
 
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
+                            Source = new Source { Index = indexId, Name = filename },
                         };
                         media.SetName(itemName);
 
@@ -569,11 +521,7 @@ namespace SabreTools.DatFiles.Formats
                             Size = null,
                             SpamSum = spamsum.Hash,
 
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
+                            Source = new Source { Index = indexId, Name = filename },
                         };
                         rom.SetName(itemName);
 

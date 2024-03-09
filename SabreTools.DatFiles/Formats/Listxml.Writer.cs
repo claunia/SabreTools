@@ -5,6 +5,7 @@ using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
+using SabreTools.Serialization.CrossModel;
 
 namespace SabreTools.DatFiles.Formats
 {
@@ -802,12 +803,12 @@ namespace SabreTools.DatFiles.Formats
             var adjuster = new Models.Listxml.Adjuster
             {
                 Name = item.GetName(),
-                Default = item.Default.FromYesNo(),
+                Default = item.GetFieldValue<bool?>(Models.Metadata.Adjuster.DefaultKey).FromYesNo(),
             };
 
             if (item.ConditionsSpecified)
             {
-                var conditionItem = item.Conditions?.FirstOrDefault();
+                var conditionItem = item.GetFieldValue<Condition[]?>(Models.Metadata.Adjuster.ConditionKey)?.FirstOrDefault();
                 var condition = new Models.Listxml.Condition
                 {
                     Tag = conditionItem?.Tag,

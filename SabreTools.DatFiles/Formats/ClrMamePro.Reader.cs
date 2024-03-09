@@ -140,11 +140,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 var blank = new Blank
                 {
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
 
                 blank.CopyMachineInformation(machine);
@@ -177,11 +173,7 @@ namespace SabreTools.DatFiles.Formats
                     Date = release.Date,
                     Default = release.Default?.AsYesNo(),
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(release.Name);
 
@@ -213,11 +205,7 @@ namespace SabreTools.DatFiles.Formats
                     Description = biosset.Description,
                     Default = biosset.Default?.AsYesNo(),
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(biosset.Name);
 
@@ -267,11 +255,7 @@ namespace SabreTools.DatFiles.Formats
                     Inverted = rom.Inverted?.AsYesNo(),
                     MIA = rom.MIA?.AsYesNo(),
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(rom.Name);
 
@@ -306,11 +290,7 @@ namespace SabreTools.DatFiles.Formats
                     ItemStatus = disk.Status?.AsEnumValue<ItemStatus>() ?? ItemStatus.NULL,
                     //Flags = disk.Flags, // TODO: Add to internal model
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(disk.Name);
 
@@ -344,11 +324,7 @@ namespace SabreTools.DatFiles.Formats
                     SHA256 = medium.SHA256,
                     SpamSum = medium.SpamSum,
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(medium.Name);
 
@@ -377,11 +353,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Archive
                 {
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(archive.Name);
 
@@ -414,11 +386,7 @@ namespace SabreTools.DatFiles.Formats
                     //Flags = chip.Flags, // TODO: Add to internal model
                     Clock = NumberHelper.ConvertToInt64(chip.Clock),
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(chip.Name);
 
@@ -454,11 +422,7 @@ namespace SabreTools.DatFiles.Formats
                     //AspectY = video.AspectY, // TODO: Add to internal model or find mapping
                     Refresh = NumberHelper.ConvertToDouble(video.Freq),
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
 
                 switch (video.Orientation)
@@ -496,11 +460,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 Channels = NumberHelper.ConvertToInt64(sound.Channels),
 
-                Source = new Source
-                {
-                    Index = indexId,
-                    Name = filename,
-                },
+                Source = new Source { Index = indexId, Name = filename },
             };
 
             item.CopyMachineInformation(machine);
@@ -538,11 +498,7 @@ namespace SabreTools.DatFiles.Formats
                 Tilt = input.Tilt?.AsYesNo(),
                 Service = input.Service?.AsYesNo(),
 
-                Source = new Source
-                {
-                    Index = indexId,
-                    Name = filename,
-                },
+                Source = new Source { Index = indexId, Name = filename },
             };
 
             item.CopyMachineInformation(machine);
@@ -571,11 +527,7 @@ namespace SabreTools.DatFiles.Formats
                 {
                     Values = [],
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(dipswitch.Name);
 
@@ -620,11 +572,7 @@ namespace SabreTools.DatFiles.Formats
                 //PaletteSize = driver.PaletteSize, // TODO: Add to internal model or find mapping
                 //Blit = driver.Blit, // TODO: Add to internal model or find mapping
 
-                Source = new Source
-                {
-                    Index = indexId,
-                    Name = filename,
-                },
+                Source = new Source { Index = indexId, Name = filename },
             };
 
             item.CopyMachineInformation(machine);

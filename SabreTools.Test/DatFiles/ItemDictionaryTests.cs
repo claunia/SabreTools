@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-
-using SabreTools.Core;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -24,7 +21,6 @@ namespace SabreTools.Test.DatFiles
                 [
                     new Rom
                     {
-                        Name = "rom-1",
                         Size = 1024,
                         CRC = "DEADBEEF",
                         SHA1 = "0000000fbbb37f8488100b1b4697012de631a5e6",
@@ -32,18 +28,16 @@ namespace SabreTools.Test.DatFiles
                     },
                     new Rom
                     {
-                        Name = "rom-2",
                         Size = 1024,
                         CRC = "DEADBEEF",
                         SHA1 = "000000e948edcb4f7704b8af85a77a3339ecce44",
                         Machine = new Machine { Name = "game-1" },
                     },
                 ],
-                ["game-2"] = new ConcurrentList<DatItem>
-                {
+                ["game-2"] =
+                [
                     new Rom
                     {
-                        Name = "rom-3",
                         Size = 1024,
                         CRC = "DEADBEEF",
                         SHA1 = "00000ea4014ce66679e7e17d56ac510f67e39e26",
@@ -51,14 +45,17 @@ namespace SabreTools.Test.DatFiles
                     },
                     new Rom
                     {
-                        Name = "rom-4",
                         Size = 1024,
                         CRC = "DEADBEEF",
                         SHA1 = "00000151d437442e74e5134023fab8bf694a2487",
                         Machine = new Machine { Name = "game-2" },
                     },
-                },
+                ],
             };
+            dict["game-1"]![0].SetName("rom-1");
+            dict["game-1"]![1].SetName("rom-2");
+            dict["game-2"]![0].SetName("rom-3");
+            dict["game-2"]![1].SetName("rom-4");
 
             dict.BucketBy(itemKey, DedupeType.None);
             Assert.Equal(expected, dict.Keys.Count);
@@ -70,8 +67,8 @@ namespace SabreTools.Test.DatFiles
             // Setup the dictionary
             var dict = new ItemDictionary
             {
-                ["game-1"] = new ConcurrentList<DatItem> { new Rom(), },
-                ["game-2"] = new ConcurrentList<DatItem>(),
+                ["game-1"] = [new Rom(),],
+                ["game-2"] = [],
                 ["game-3"] = null,
             };
 
@@ -85,11 +82,10 @@ namespace SabreTools.Test.DatFiles
             // Setup the dictionary
             var dict = new ItemDictionary
             {
-                ["game-1"] = new ConcurrentList<DatItem>
-                {
+                ["game-1"] =
+                [
                     new Rom
                     {
-                        Name = "rom-1",
                         Size = 1024,
                         CRC = "DEADBEEF",
                         SHA1 = "0000000fbbb37f8488100b1b4697012de631a5e6",
@@ -97,15 +93,16 @@ namespace SabreTools.Test.DatFiles
                     },
                     new Rom
                     {
-                        Name = "rom-2",
                         Size = 1024,
                         CRC = "DEADBEEF",
                         SHA1 = "000000e948edcb4f7704b8af85a77a3339ecce44",
                         Machine = new Machine { Name = "game-1" },
                         Remove = true,
                     },
-                },
+                ],
             };
+            dict["game-1"]![0].SetName("rom-1");
+            dict["game-1"]![1].SetName("rom-2");
 
             dict.ClearMarked();
             string key = Assert.Single(dict.Keys);
@@ -122,32 +119,32 @@ namespace SabreTools.Test.DatFiles
             // Setup the dictionary
             var dict = new ItemDictionary
             {
-                ["game-1"] = new ConcurrentList<DatItem>
-                {
+                ["game-1"] =
+                [
                     new Rom
                     {
-                        Name = "rom-1",
                         Size = 1024,
                         SHA1 = "0000000fbbb37f8488100b1b4697012de631a5e6",
                         Machine = new Machine { Name = "game-1" },
                     },
                     new Rom
                     {
-                        Name = "rom-2",
                         Size = 1024,
                         SHA1 = "000000e948edcb4f7704b8af85a77a3339ecce44",
                         Machine = new Machine { Name = "game-1" },
                     },
-                },
+                ],
             };
+            dict["game-1"]![0].SetName("rom-1");
+            dict["game-1"]![1].SetName("rom-2");
 
             var rom = new Rom
             {
-                Name = "rom-1",
                 Size = hasDuplicate ? 1024 : 2048,
                 SHA1 = "0000000fbbb37f8488100b1b4697012de631a5e6",
                 Machine = new Machine { Name = "game-1" },
             };
+            rom.SetName("rom-1");
 
             var actual = dict.GetDuplicates(rom);
             Assert.Equal(expected, actual.Count);
@@ -161,32 +158,32 @@ namespace SabreTools.Test.DatFiles
             // Setup the dictionary
             var dict = new ItemDictionary
             {
-                ["game-1"] = new ConcurrentList<DatItem>
-                {
+                ["game-1"] =
+                [
                     new Rom
                     {
-                        Name = "rom-1",
                         Size = 1024,
                         SHA1 = "0000000fbbb37f8488100b1b4697012de631a5e6",
                         Machine = new Machine { Name = "game-1" },
                     },
                     new Rom
                     {
-                        Name = "rom-2",
                         Size = 1024,
                         SHA1 = "000000e948edcb4f7704b8af85a77a3339ecce44",
                         Machine = new Machine { Name = "game-1" },
                     },
-                },
+                ],
             };
+            dict["game-1"]![0].SetName("rom-1");
+            dict["game-1"]![1].SetName("rom-2");
 
             var rom = new Rom
             {
-                Name = "rom-1",
                 Size = expected ? 1024 : 2048,
                 SHA1 = "0000000fbbb37f8488100b1b4697012de631a5e6",
                 Machine = new Machine { Name = "game-1" },
             };
+            rom.SetName("rom-1");
 
             bool actual = dict.HasDuplicates(rom);
             Assert.Equal(expected, actual);

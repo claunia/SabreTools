@@ -107,11 +107,7 @@ namespace SabreTools.DatFiles.Formats
                 SHA256 = row.SHA256,
                 ItemStatus = ItemStatus.None,
 
-                Source = new Source
-                {
-                    Index = indexId,
-                    Name = filename,
-                },
+                Source = new Source { Index = indexId, Name = filename },
             };
             rom.SetName(name);
 

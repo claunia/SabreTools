@@ -169,11 +169,7 @@ namespace SabreTools.DatFiles.Formats
 
                 ItemStatus = ItemStatus.None,
 
-                Source = new Source
-                {
-                    Index = indexId,
-                    Name = filename,
-                },
+                Source = new Source { Index = indexId, Name = filename },
             };
             rom.SetName(name);
 

@@ -108,11 +108,7 @@ namespace SabreTools.DatFiles.Formats
                 {
                     Value = info.Value,
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 infoItem.SetName(info.Name);
 
@@ -127,11 +123,7 @@ namespace SabreTools.DatFiles.Formats
                 {
                     Value = sharedfeat.Value,
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 sharedfeatItem.SetName(sharedfeat.Name);
 
@@ -150,11 +142,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 var blank = new Blank
                 {
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
 
                 blank.CopyMachineInformation(machine);
@@ -184,11 +172,7 @@ namespace SabreTools.DatFiles.Formats
                     Interface = part.Interface,
                     Features = CreateFeatures(part.Feature, machine, filename, indexId, statsOnly),
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(part.Name);
 
@@ -221,11 +205,7 @@ namespace SabreTools.DatFiles.Formats
                 {
                     Value = feature.Value,
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(feature.Name);
 
@@ -260,11 +240,7 @@ namespace SabreTools.DatFiles.Formats
                     Width = NumberHelper.ConvertToInt64(dataarea.Width),
                     Endianness = dataarea.Endianness.AsEnumValue<Endianness>(),
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(dataarea.Name);
 
@@ -306,11 +282,7 @@ namespace SabreTools.DatFiles.Formats
                     Part = part,
                     DataArea = dataarea,
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(rom.Name);
 
@@ -339,11 +311,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new DiskArea
                 {
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(diskarea.Name);
 
@@ -382,11 +350,7 @@ namespace SabreTools.DatFiles.Formats
                     Part = part,
                     DiskArea = diskarea,
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(disk.Name);
 
@@ -421,11 +385,7 @@ namespace SabreTools.DatFiles.Formats
 
                     Part = part,
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(dipswitch.Name);
 
@@ -455,11 +415,7 @@ namespace SabreTools.DatFiles.Formats
                     Value = dipvalue.Value,
                     Default = dipvalue.Default.AsYesNo(),
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(dipvalue.Name);
 

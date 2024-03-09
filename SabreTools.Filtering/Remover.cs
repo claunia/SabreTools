@@ -282,7 +282,7 @@ namespace SabreTools.Filtering
             if (!adjuster.ConditionsSpecified)
                 return;
 
-            foreach (Condition subCondition in adjuster.Conditions!)
+            foreach (Condition subCondition in adjuster.GetFieldValue<Condition[]?>(Models.Metadata.Adjuster.ConditionKey)!)
             {
                 RemoveFields(subCondition);
             }

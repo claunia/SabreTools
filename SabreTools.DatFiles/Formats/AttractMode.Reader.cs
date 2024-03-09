@@ -95,11 +95,7 @@ namespace SabreTools.DatFiles.Formats
                 AltTitle = row.AltTitle,
                 // TODO: Add extended fields
 
-                Source = new Source
-                {
-                    Index = indexId,
-                    Name = filename,
-                },
+                Source = new Source { Index = indexId, Name = filename },
             };
             rom.SetName("-");
 

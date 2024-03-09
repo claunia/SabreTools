@@ -288,11 +288,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 var blank = new Blank
                 {
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
 
                 blank.CopyMachineInformation(machine);
@@ -325,11 +321,7 @@ namespace SabreTools.DatFiles.Formats
                     Date = release.Date,
                     Default = release.Default?.AsYesNo(),
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(release.Name);
 
@@ -361,11 +353,7 @@ namespace SabreTools.DatFiles.Formats
                     Description = biosset.Description,
                     Default = biosset.Default?.AsYesNo(),
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(biosset.Name);
 
@@ -412,11 +400,7 @@ namespace SabreTools.DatFiles.Formats
                     Inverted = rom.Inverted?.AsYesNo(),
                     MIA = rom.MIA?.AsYesNo(),
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(rom.Name);
 
@@ -450,11 +434,7 @@ namespace SabreTools.DatFiles.Formats
                     MergeTag = disk.Merge,
                     ItemStatus = disk.Status?.AsEnumValue<ItemStatus>() ?? ItemStatus.NULL,
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(disk.Name);
 
@@ -488,11 +468,7 @@ namespace SabreTools.DatFiles.Formats
                     SHA256 = medium.SHA256,
                     SpamSum = medium.SpamSum,
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(medium.Name);
 
@@ -521,11 +497,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new DeviceReference
                 {
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(deviceref.Name);
 
@@ -554,11 +526,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Sample
                 {
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(sample.Name);
 
@@ -587,11 +555,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Archive
                 {
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(archive.Name);
 
@@ -627,11 +591,7 @@ namespace SabreTools.DatFiles.Formats
                 NoSoundHardware = driver.NoSoundHardware?.AsYesNo(),
                 Incomplete = driver.Incomplete?.AsYesNo(),
 
-                Source = new Source
-                {
-                    Index = indexId,
-                    Name = filename,
-                },
+                Source = new Source { Index = indexId, Name = filename },
             };
 
             item.CopyMachineInformation(machine);
@@ -662,11 +622,7 @@ namespace SabreTools.DatFiles.Formats
                     Status = softwarelist.Status?.AsEnumValue<SoftwareListStatus>() ?? SoftwareListStatus.None,
                     Filter = softwarelist.Filter,
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(softwarelist.Name);
 

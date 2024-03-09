@@ -118,11 +118,7 @@ namespace SabreTools.DatFiles.Formats
                 {
                     ItemStatus = ItemStatus.None,
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 disk.SetName(row.Name);
 
@@ -148,11 +144,7 @@ namespace SabreTools.DatFiles.Formats
                     SHA1 = row.SHA1,
                     ItemStatus = ItemStatus.None,
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 rom.SetName(row.Name);
 
@@ -172,11 +164,7 @@ namespace SabreTools.DatFiles.Formats
                 {
                     ItemStatus = ItemStatus.BadDump,
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 disk.SetName(row.Name);
 
@@ -200,11 +188,7 @@ namespace SabreTools.DatFiles.Formats
                     SHA1 = null,
                     ItemStatus = ItemStatus.Nodump,
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 disk.SetName(row.Name);
 
@@ -225,11 +209,7 @@ namespace SabreTools.DatFiles.Formats
                     SHA1 = row.SHA1,
                     ItemStatus = ItemStatus.BadDump,
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 rom.SetName(row.Name);
 
@@ -249,11 +229,7 @@ namespace SabreTools.DatFiles.Formats
                     SHA1 = null,
                     ItemStatus = ItemStatus.Nodump,
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 rom.SetName(row.Name);
 

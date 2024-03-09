@@ -103,11 +103,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 var blank = new Blank
                 {
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
 
                 blank.CopyMachineInformation(machine);
@@ -148,11 +144,7 @@ namespace SabreTools.DatFiles.Formats
                     SHA1 = rom.Hash,
                     Remark = rom.Remark,
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(name);
 

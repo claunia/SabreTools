@@ -248,7 +248,7 @@ namespace SabreTools.DatFiles
             // Field.DatItem_Conditions does not apply here
             if (adjuster.ConditionsSpecified)
             {
-                foreach (Condition subCondition in adjuster.Conditions!)
+                foreach (Condition subCondition in adjuster.GetFieldValue<Condition[]?>(Models.Metadata.Adjuster.ConditionKey)!)
                 {
                     SetFields(subCondition);
                 }

@@ -88,11 +88,7 @@ namespace SabreTools.DatFiles.Formats
                         SHA1 = row.SHA1,
                         ItemStatus = row.Status.AsEnumValue<ItemStatus>(),
 
-                        Source = new Source
-                        {
-                            Index = indexId,
-                            Name = filename,
-                        },
+                        Source = new Source { Index = indexId, Name = filename },
                     };
                     item.SetName(row.DiskName);
                     break;
@@ -105,11 +101,7 @@ namespace SabreTools.DatFiles.Formats
                         SHA256 = row.SHA256,
                         SpamSum = row.SpamSum,
 
-                        Source = new Source
-                        {
-                            Index = indexId,
-                            Name = filename,
-                        },
+                        Source = new Source { Index = indexId, Name = filename },
                     };
                     item.SetName(row.DiskName);
                     break;
@@ -126,11 +118,7 @@ namespace SabreTools.DatFiles.Formats
                         SpamSum = row.SpamSum,
                         ItemStatus = row.Status.AsEnumValue<ItemStatus>(),
 
-                        Source = new Source
-                        {
-                            Index = indexId,
-                            Name = filename,
-                        },
+                        Source = new Source { Index = indexId, Name = filename },
                     };
                     item.SetName(row.RomName);
                     break;

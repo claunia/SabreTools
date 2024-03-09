@@ -144,11 +144,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 var blank = new Blank
                 {
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
 
                 blank.CopyMachineInformation(machine);
@@ -179,11 +175,7 @@ namespace SabreTools.DatFiles.Formats
                     Description = biosset.Description,
                     Default = biosset.Default?.AsYesNo(),
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(biosset.Name);
 
@@ -224,11 +216,7 @@ namespace SabreTools.DatFiles.Formats
                     //Dispose = rom.Dispose.AsYesNo(), // TODO: Add to internal model
                     //SoundOnly = rom.SoundOnly.AsYesNo(), // TODO: Add to internal model
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(rom.Name);
 
@@ -266,11 +254,7 @@ namespace SabreTools.DatFiles.Formats
                     ItemStatus = disk.Status.AsEnumValue<ItemStatus>(),
                     Optional = disk.Optional.AsYesNo(),
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(disk.Name);
 
@@ -299,11 +283,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new DeviceReference
                 {
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(deviceref.Name);
 
@@ -332,11 +312,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Sample
                 {
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(sample.Name);
 
@@ -370,11 +346,7 @@ namespace SabreTools.DatFiles.Formats
                     //SoundOnly = chip.SoundOnly, // TODO: Add to internal model
                     Clock = NumberHelper.ConvertToInt64(chip.Clock),
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(chip.Name);
 
@@ -418,11 +390,7 @@ namespace SabreTools.DatFiles.Formats
                     VBEnd = NumberHelper.ConvertToInt64(display.VBEnd),
                     VBStart = NumberHelper.ConvertToInt64(display.VBStart),
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
 
                 item.CopyMachineInformation(machine);
@@ -457,11 +425,7 @@ namespace SabreTools.DatFiles.Formats
                     //AspectY = video.AspectY, // TODO: Add to internal model or find mapping
                     Refresh = NumberHelper.ConvertToDouble(video.Refresh),
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
 
                 switch (video.Orientation)
@@ -499,11 +463,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 Channels = NumberHelper.ConvertToInt64(sound.Channels),
 
-                Source = new Source
-                {
-                    Index = indexId,
-                    Name = filename,
-                },
+                Source = new Source { Index = indexId, Name = filename },
             };
 
             item.CopyMachineInformation(machine);
@@ -535,11 +495,7 @@ namespace SabreTools.DatFiles.Formats
                 //Buttons = input.Buttons, // TODO: Add to internal model
                 Coins = NumberHelper.ConvertToInt64(input.Coins),
 
-                Source = new Source
-                {
-                    Index = indexId,
-                    Name = filename,
-                },
+                Source = new Source { Index = indexId, Name = filename },
             };
 
             var controls = new List<Control>();
@@ -593,11 +549,7 @@ namespace SabreTools.DatFiles.Formats
                     Tag = dipswitch.Tag,
                     Mask = dipswitch.Mask,
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(dipswitch.Name);
 
@@ -685,11 +637,7 @@ namespace SabreTools.DatFiles.Formats
                     Tag = configuration.Tag,
                     Mask = configuration.Mask,
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(configuration.Name);
 
@@ -775,11 +723,7 @@ namespace SabreTools.DatFiles.Formats
                 {
                     Tag = port.Tag,
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
 
                 var analogs = new List<Analog>();
@@ -818,17 +762,9 @@ namespace SabreTools.DatFiles.Formats
             containsItems = true;
             foreach (var adjuster in adjusters)
             {
-                var item = new Adjuster
-                {
-                    Default = adjuster.Default.AsYesNo(),
-
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
-                };
+                var item = new Adjuster { Source = new Source { Index = indexId, Name = filename } };
                 item.SetName(adjuster.Name);
+                item.SetFieldValue<bool?>(Models.Metadata.Adjuster.DefaultKey, adjuster.Default.AsYesNo());
 
                 if (adjuster.Condition != null)
                 {
@@ -839,7 +775,7 @@ namespace SabreTools.DatFiles.Formats
                         Relation = adjuster.Condition.Relation.AsEnumValue<Relation>(),
                         Value = adjuster.Condition.Value,
                     };
-                    item.Conditions = [condition];
+                    item.SetFieldValue<Condition[]?>(Models.Metadata.Adjuster.ConditionKey, [condition]);
                 }
 
                 item.CopyMachineInformation(machine);
@@ -877,11 +813,7 @@ namespace SabreTools.DatFiles.Formats
                 NoSoundHardware = driver.NoSoundHardware.AsYesNo(),
                 Incomplete = driver.Incomplete.AsYesNo(),
 
-                Source = new Source
-                {
-                    Index = indexId,
-                    Name = filename,
-                },
+                Source = new Source { Index = indexId, Name = filename },
             };
 
             item.CopyMachineInformation(machine);
@@ -912,11 +844,7 @@ namespace SabreTools.DatFiles.Formats
                     Status = feature.Status.AsEnumValue<FeatureStatus>(),
                     Overall = feature.Overall.AsEnumValue<FeatureStatus>(),
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
 
                 item.CopyMachineInformation(machine);
@@ -950,11 +878,7 @@ namespace SabreTools.DatFiles.Formats
                     Mandatory = NumberHelper.ConvertToInt64(device.Mandatory),
                     Interface = device.Interface,
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
 
                 if (device.Instance != null)
@@ -1003,11 +927,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Slot
                 {
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(slot.Name);
 
@@ -1055,11 +975,7 @@ namespace SabreTools.DatFiles.Formats
                     Status = softwarelist.Status.AsEnumValue<SoftwareListStatus>(),
                     Filter = softwarelist.Filter,
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(softwarelist.Name);
 
@@ -1091,11 +1007,7 @@ namespace SabreTools.DatFiles.Formats
                     Default = ramoption.Default.AsYesNo(),
                     Content = ramoption.Content,
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(ramoption.Name);
 

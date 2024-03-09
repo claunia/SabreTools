@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
 
@@ -14,31 +12,15 @@ namespace SabreTools.DatItems.Formats
     {
         #region Fields
 
-        /// <summary>
-        /// Determine whether the value is default
-        /// </summary>
-        [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("default")]
-        public bool? Default
-        {
-            get => _internal.ReadBool(Models.Metadata.Adjuster.DefaultKey);
-            set => _internal[Models.Metadata.Adjuster.DefaultKey] = value;
-        }
-
         [JsonIgnore]
-        public bool DefaultSpecified { get { return Default != null; } }
-
-        /// <summary>
-        /// Conditions associated with the adjustment
-        /// </summary>
-        [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("conditions")]
-        public List<Condition>? Conditions
+        public bool ConditionsSpecified
         {
-            get => _internal.Read<Condition[]>(Models.Metadata.Adjuster.ConditionKey)?.ToList();
-            set => _internal[Models.Metadata.Adjuster.ConditionKey] = value?.ToArray();
+            get
+            {
+                var conditions = GetFieldValue<Condition[]?>(Models.Metadata.Adjuster.ConditionKey);
+                return conditions != null && conditions.Length > 0;
+            }
         }
-
-        [JsonIgnore]
-        public bool ConditionsSpecified { get { return Conditions != null && Conditions.Count > 0; } }
 
         #endregion
 

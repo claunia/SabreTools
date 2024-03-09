@@ -123,11 +123,7 @@ namespace SabreTools.DatFiles.Formats
                         RomOf = rom.RomOf,
                     },
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
+                    Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(rom.RomName);
 

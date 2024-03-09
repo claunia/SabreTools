@@ -115,15 +115,16 @@ namespace SabreTools.Test.Filtering
         /// </summary>
         private static DatItem CreateDatItem(string name, string machine, string desc)
         {
-            return new Rom
+            var rom = new Rom
             {
-                Name = name,
                 Machine = new Machine
                 {
                     Name = machine,
                     Description = desc,
                 }
             };
+            rom.SetName(name);
+            return rom;
         }
     }
 }
