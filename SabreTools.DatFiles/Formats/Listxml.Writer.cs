@@ -48,14 +48,14 @@ namespace SabreTools.DatFiles.Formats
             switch (datItem)
             {
                 case BiosSet biosset:
-                    if (string.IsNullOrEmpty(biosset.Name))
+                    if (string.IsNullOrEmpty(biosset.GetName()))
                         missingFields.Add(Models.Metadata.BiosSet.NameKey);
                     if (string.IsNullOrEmpty(biosset.Description))
                         missingFields.Add(Models.Metadata.BiosSet.DescriptionKey);
                     break;
 
                 case Rom rom:
-                    if (string.IsNullOrEmpty(rom.Name))
+                    if (string.IsNullOrEmpty(rom.GetName()))
                         missingFields.Add(Models.Metadata.Rom.NameKey);
                     if (rom.Size == null || rom.Size < 0)
                         missingFields.Add(Models.Metadata.Rom.SizeKey);
@@ -67,7 +67,7 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case Disk disk:
-                    if (string.IsNullOrEmpty(disk.Name))
+                    if (string.IsNullOrEmpty(disk.GetName()))
                         missingFields.Add(Models.Metadata.Disk.NameKey);
                     if (string.IsNullOrEmpty(disk.MD5)
                         && string.IsNullOrEmpty(disk.SHA1))
@@ -77,17 +77,17 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case DeviceReference deviceref:
-                    if (string.IsNullOrEmpty(deviceref.Name))
+                    if (string.IsNullOrEmpty(deviceref.GetName()))
                         missingFields.Add(Models.Metadata.DeviceRef.NameKey);
                     break;
 
                 case Sample sample:
-                    if (string.IsNullOrEmpty(sample.Name))
+                    if (string.IsNullOrEmpty(sample.GetName()))
                         missingFields.Add(Models.Metadata.Sample.NameKey);
                     break;
 
                 case Chip chip:
-                    if (string.IsNullOrEmpty(chip.Name))
+                    if (string.IsNullOrEmpty(chip.GetName()))
                         missingFields.Add(Models.Metadata.Chip.NameKey);
                     if (!chip.ChipTypeSpecified)
                         missingFields.Add(Models.Metadata.Chip.ChipTypeKey);
@@ -111,14 +111,14 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case DipSwitch dipswitch:
-                    if (string.IsNullOrEmpty(dipswitch.Name))
+                    if (string.IsNullOrEmpty(dipswitch.GetName()))
                         missingFields.Add(Models.Metadata.DipSwitch.NameKey);
                     if (string.IsNullOrEmpty(dipswitch.Tag))
                         missingFields.Add(Models.Metadata.DipSwitch.TagKey);
                     break;
 
                 case Configuration configuration:
-                    if (string.IsNullOrEmpty(configuration.Name))
+                    if (string.IsNullOrEmpty(configuration.GetName()))
                         missingFields.Add(Models.Metadata.Configuration.NameKey);
                     if (string.IsNullOrEmpty(configuration.Tag))
                         missingFields.Add(Models.Metadata.Configuration.TagKey);
@@ -130,7 +130,7 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case Adjuster adjuster:
-                    if (string.IsNullOrEmpty(adjuster.Name))
+                    if (string.IsNullOrEmpty(adjuster.GetName()))
                         missingFields.Add(Models.Metadata.Adjuster.NameKey);
                     break;
 
@@ -156,21 +156,21 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case Slot slot:
-                    if (string.IsNullOrEmpty(slot.Name))
+                    if (string.IsNullOrEmpty(slot.GetName()))
                         missingFields.Add(Models.Metadata.Slot.NameKey);
                     break;
 
                 case DatItems.Formats.SoftwareList softwarelist:
                     if (string.IsNullOrEmpty(softwarelist.Tag))
                         missingFields.Add(Models.Metadata.SoftwareList.TagKey);
-                    if (string.IsNullOrEmpty(softwarelist.Name))
+                    if (string.IsNullOrEmpty(softwarelist.GetName()))
                         missingFields.Add(Models.Metadata.SoftwareList.NameKey);
                     if (!softwarelist.StatusSpecified)
                         missingFields.Add(Models.Metadata.SoftwareList.StatusKey);
                     break;
 
                 case RamOption ramoption:
-                    if (string.IsNullOrEmpty(ramoption.Name))
+                    if (string.IsNullOrEmpty(ramoption.GetName()))
                         missingFields.Add(Models.Metadata.RamOption.NameKey);
                     break;
             }
@@ -410,7 +410,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var biosset = new Models.Listxml.BiosSet
             {
-                Name = item.Name,
+                Name = item.GetName(),
                 Description = item.Description,
             };
 
@@ -427,7 +427,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var rom = new Models.Listxml.Rom
             {
-                Name = item.Name,
+                Name = item.GetName(),
                 Bios = item.Bios,
                 Size = item.Size?.ToString(),
                 CRC = item.CRC,
@@ -451,7 +451,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var disk = new Models.Listxml.Disk
             {
-                Name = item.Name,
+                Name = item.GetName(),
                 MD5 = item.MD5,
                 SHA1 = item.SHA1,
                 Merge = item.MergeTag,
@@ -472,7 +472,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var deviceref = new Models.Listxml.DeviceRef
             {
-                Name = item.Name,
+                Name = item.GetName(),
             };
 
             return deviceref;
@@ -485,7 +485,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var sample = new Models.Listxml.Sample
             {
-                Name = item.Name,
+                Name = item.GetName(),
             };
 
             return sample;
@@ -498,7 +498,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var chip = new Models.Listxml.Chip
             {
-                Name = item.Name,
+                Name = item.GetName(),
                 Tag = item.Tag,
                 Type = item.ChipType.AsStringValue<ChipType>(),
                 //SoundOnly = item.SoundOnly, // TODO: Add to internal model
@@ -606,7 +606,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var dipswitch = new Models.Listxml.DipSwitch
             {
-                Name = item.Name,
+                Name = item.GetName(),
                 Tag = item.Tag,
                 Mask = item.Mask,
             };
@@ -654,7 +654,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var diplocation = new Models.Listxml.DipLocation
             {
-                Name = item.Name,
+                Name = item.GetName(),
                 Number = item.Number?.ToString(),
                 Inverted = item.Inverted.FromYesNo(),
             };
@@ -669,7 +669,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var dipvalue = new Models.Listxml.DipValue
             {
-                Name = item.Name,
+                Name = item.GetName(),
                 Value = item.Value,
                 Default = item.Default.FromYesNo(),
             };
@@ -697,7 +697,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var configuration = new Models.Listxml.Configuration
             {
-                Name = item.Name,
+                Name = item.GetName(),
                 Tag = item.Tag,
                 Mask = item.Mask,
             };
@@ -745,7 +745,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var conflocation = new Models.Listxml.ConfLocation
             {
-                Name = item.Name,
+                Name = item.GetName(),
                 Number = item.Number?.ToString(),
                 Inverted = item.Inverted.FromYesNo(),
             };
@@ -760,7 +760,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var confsetting = new Models.Listxml.ConfSetting
             {
-                Name = item.Name,
+                Name = item.GetName(),
                 Value = item.Value,
                 Default = item.Default.FromYesNo(),
             };
@@ -801,7 +801,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var adjuster = new Models.Listxml.Adjuster
             {
-                Name = item.Name,
+                Name = item.GetName(),
                 Default = item.Default.FromYesNo(),
             };
 
@@ -878,7 +878,7 @@ namespace SabreTools.DatFiles.Formats
                 var instanceItem = item.Instances?.FirstOrDefault();
                 var instance = new Models.Listxml.Instance
                 {
-                    Name = instanceItem?.Name,
+                    Name = instanceItem?.GetName(),
                     BriefName = instanceItem?.BriefName,
                 };
                 device.Instance = instance;
@@ -889,7 +889,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 var extension = new Models.Listxml.Extension
                 {
-                    Name = extensionItem.Name,
+                    Name = extensionItem.GetName(),
                 };
                 extensions.Add(extension);
             }
@@ -907,7 +907,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var slot = new Models.Listxml.Slot
             {
-                Name = item.Name,
+                Name = item.GetName(),
             };
 
             var slotoptions = new List<Models.Listxml.SlotOption>();
@@ -915,7 +915,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 var slotoption = new Models.Listxml.SlotOption
                 {
-                    Name = slotoptionItem.Name,
+                    Name = slotoptionItem.GetName(),
                     DevName = slotoptionItem.DeviceName,
                     Default = slotoptionItem.Default.FromYesNo(),
                 };
@@ -936,7 +936,7 @@ namespace SabreTools.DatFiles.Formats
             var softwarelist = new Models.Listxml.SoftwareList
             {
                 Tag = item.Tag,
-                Name = item.Name,
+                Name = item.GetName(),
                 Status = item.Status.AsStringValue<SoftwareListStatus>(),
                 Filter = item.Filter,
             };
@@ -951,7 +951,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var softwarelist = new Models.Listxml.RamOption
             {
-                Name = item.Name,
+                Name = item.GetName(),
                 Default = item.Default.FromYesNo(),
                 Content = item.Content,
             };

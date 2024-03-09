@@ -13,16 +13,6 @@ namespace SabreTools.DatItems.Formats
         #region Fields
 
         /// <summary>
-        /// Name of the item
-        /// </summary>
-        [JsonProperty("name"), XmlElement("name")]
-        public string? Name
-        {
-            get => _internal.ReadString(Models.Metadata.Release.NameKey);
-            set => _internal[Models.Metadata.Release.NameKey] = value;
-        }
-
-        /// <summary>
         /// Release region(s)
         /// </summary>
         [JsonProperty("region", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("region")]
@@ -87,7 +77,7 @@ namespace SabreTools.DatItems.Formats
             _internal = new Models.Metadata.Release();
             Machine = new Machine();
 
-            Name = string.Empty;
+            SetName(string.Empty);
             ItemType = ItemType.Release;
             Region = string.Empty;
             Language = string.Empty;

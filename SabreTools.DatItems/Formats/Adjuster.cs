@@ -15,16 +15,6 @@ namespace SabreTools.DatItems.Formats
         #region Fields
 
         /// <summary>
-        /// Name of the item
-        /// </summary>
-        [JsonProperty("name"), XmlElement("name")]
-        public string? Name
-        {
-            get => _internal.ReadString(Models.Metadata.Adjuster.NameKey);
-            set => _internal[Models.Metadata.Adjuster.NameKey] = value;
-        }
-
-        /// <summary>
         /// Determine whether the value is default
         /// </summary>
         [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("default")]
@@ -72,7 +62,7 @@ namespace SabreTools.DatItems.Formats
             _internal = new Models.Metadata.Adjuster();
             Machine = new Machine();
 
-            Name = string.Empty;
+            SetName(string.Empty);
             ItemType = ItemType.Adjuster;
         }
 

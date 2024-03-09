@@ -67,7 +67,6 @@ namespace SabreTools.DatFiles.Formats
 
             var rom = new Rom()
             {
-                Name = "-",
                 Size = Constants.SizeZero,
                 CRC = Constants.CRCZero,
                 MD5 = Constants.MD5Zero,
@@ -102,6 +101,7 @@ namespace SabreTools.DatFiles.Formats
                     Name = filename,
                 },
             };
+            rom.SetName("-");
 
             // Now process and add the rom
             ParseAddHelper(rom, statsOnly);

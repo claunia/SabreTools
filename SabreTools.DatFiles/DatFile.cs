@@ -225,7 +225,7 @@ namespace SabreTools.DatFiles
                     && string.IsNullOrEmpty(disk.MD5)
                     && string.IsNullOrEmpty(disk.SHA1))
                 {
-                    logger.Verbose($"Incomplete entry for '{disk.Name}' will be output as nodump");
+                    logger.Verbose($"Incomplete entry for '{disk.GetName()}' will be output as nodump");
                     disk.ItemStatus = ItemStatus.Nodump;
                 }
 
@@ -239,7 +239,7 @@ namespace SabreTools.DatFiles
                     && string.IsNullOrEmpty(media.SHA256)
                     && string.IsNullOrEmpty(media.SpamSum))
                 {
-                    logger.Verbose($"Incomplete entry for '{media.Name}' will be output as nodump");
+                    logger.Verbose($"Incomplete entry for '{media.GetName()}' will be output as nodump");
                 }
 
                 item = media;
@@ -250,7 +250,7 @@ namespace SabreTools.DatFiles
                 if (rom.Size == null && !rom.HasHashes())
                 {
                     // No-op, just catch it so it doesn't go further
-                    logger.Verbose($"{Header.FileName}: Entry with only SHA-1 found - '{rom.Name}'");
+                    logger.Verbose($"{Header.FileName}: Entry with only SHA-1 found - '{rom.GetName()}'");
                 }
 
                 // If we have a rom and it's missing size AND the hashes match a 0-byte file, fill in the rest of the info
@@ -271,7 +271,7 @@ namespace SabreTools.DatFiles
                 // If the file has no size and it's not the above case, skip and log
                 else if (rom.ItemStatus != ItemStatus.Nodump && (rom.Size == 0 || rom.Size == null))
                 {
-                    logger.Verbose($"{Header.FileName}: Incomplete entry for '{rom.Name}' will be output as nodump");
+                    logger.Verbose($"{Header.FileName}: Incomplete entry for '{rom.GetName()}' will be output as nodump");
                     rom.ItemStatus = ItemStatus.Nodump;
                 }
 
@@ -280,7 +280,7 @@ namespace SabreTools.DatFiles
                     && rom.Size != null && rom.Size > 0
                     && !rom.HasHashes())
                 {
-                    logger.Verbose($"{Header.FileName}: Incomplete entry for '{rom.Name}' will be output as nodump");
+                    logger.Verbose($"{Header.FileName}: Incomplete entry for '{rom.GetName()}' will be output as nodump");
                     rom.ItemStatus = ItemStatus.Nodump;
                 }
 
@@ -541,7 +541,7 @@ namespace SabreTools.DatFiles
             {
                 logger.Verbose($"Empty folder found: {datItem.Machine.Name}");
 
-                rom.Name = (rom.Name == "null" ? "-" : rom.Name);
+                rom.SetName(rom.GetName() == "null" ? "-" : rom.GetName());
                 rom.Size = Constants.SizeZero;
                 rom.CRC = rom.CRC == "null" ? Constants.CRCZero : null;
                 rom.MD5 = rom.MD5 == "null" ? Constants.MD5Zero : null;

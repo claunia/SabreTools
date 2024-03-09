@@ -15,13 +15,6 @@ namespace SabreTools.DatItems.Formats
     {
         #region Fields
 
-        [JsonProperty("name"), XmlElement("name")]
-        public string? Name
-        {
-            get => _internal.ReadString(Models.Metadata.Part.NameKey);
-            set => _internal[Models.Metadata.Part.NameKey] = value;
-        }
-
         [JsonProperty("interface"), XmlElement("interface")]
         public string? Interface
         {
@@ -61,7 +54,7 @@ namespace SabreTools.DatItems.Formats
             _internal = new Models.Metadata.Part();
             Machine = new Machine();
 
-            Name = string.Empty;
+            SetName(string.Empty);
             ItemType = ItemType.Part;
         }
 

@@ -10,20 +10,6 @@ namespace SabreTools.DatItems.Formats
     [JsonObject("sample"), XmlRoot("sample")]
     public class Sample : DatItem
     {
-        #region Fields
-
-        /// <summary>
-        /// Name of the item
-        /// </summary>
-        [JsonProperty("name"), XmlElement("name")]
-        public string? Name
-        {
-            get => _internal.ReadString(Models.Metadata.Sample.NameKey);
-            set => _internal[Models.Metadata.Sample.NameKey] = value;
-        }
-
-        #endregion
-
         #region Accessors
 
         /// <inheritdoc/>
@@ -44,7 +30,7 @@ namespace SabreTools.DatItems.Formats
             _internal = new Models.Metadata.Sample();
             Machine = new Machine();
 
-            Name = string.Empty;
+            SetName(string.Empty);
             ItemType = ItemType.Sample;
         }
 

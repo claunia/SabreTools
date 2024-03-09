@@ -35,21 +35,21 @@ namespace SabreTools.DatFiles.Formats
             switch (datItem)
             {
                 case Release release:
-                    if (string.IsNullOrEmpty(release.Name))
+                    if (string.IsNullOrEmpty(release.GetName()))
                         missingFields.Add(Models.Metadata.Release.NameKey);
                     if (string.IsNullOrEmpty(release.Region))
                         missingFields.Add(Models.Metadata.Release.RegionKey);
                     break;
 
                 case BiosSet biosset:
-                    if (string.IsNullOrEmpty(biosset.Name))
+                    if (string.IsNullOrEmpty(biosset.GetName()))
                         missingFields.Add(Models.Metadata.BiosSet.NameKey);
                     if (string.IsNullOrEmpty(biosset.Description))
                         missingFields.Add(Models.Metadata.BiosSet.DescriptionKey);
                     break;
 
                 case Rom rom:
-                    if (string.IsNullOrEmpty(rom.Name))
+                    if (string.IsNullOrEmpty(rom.GetName()))
                         missingFields.Add(Models.Metadata.Rom.NameKey);
                     if (rom.Size == null || rom.Size < 0)
                         missingFields.Add(Models.Metadata.Rom.SizeKey);
@@ -66,7 +66,7 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case Disk disk:
-                    if (string.IsNullOrEmpty(disk.Name))
+                    if (string.IsNullOrEmpty(disk.GetName()))
                         missingFields.Add(Models.Metadata.Disk.NameKey);
                     if (string.IsNullOrEmpty(disk.MD5)
                         && string.IsNullOrEmpty(disk.SHA1))
@@ -76,7 +76,7 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case Media media:
-                    if (string.IsNullOrEmpty(media.Name))
+                    if (string.IsNullOrEmpty(media.GetName()))
                         missingFields.Add(Models.Metadata.Media.NameKey);
                     if (string.IsNullOrEmpty(media.MD5)
                         && string.IsNullOrEmpty(media.SHA1)
@@ -88,17 +88,17 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case DeviceReference deviceref:
-                    if (string.IsNullOrEmpty(deviceref.Name))
+                    if (string.IsNullOrEmpty(deviceref.GetName()))
                         missingFields.Add(Models.Metadata.DeviceRef.NameKey);
                     break;
 
                 case Sample sample:
-                    if (string.IsNullOrEmpty(sample.Name))
+                    if (string.IsNullOrEmpty(sample.GetName()))
                         missingFields.Add(Models.Metadata.Sample.NameKey);
                     break;
 
                 case Archive archive:
-                    if (string.IsNullOrEmpty(archive.Name))
+                    if (string.IsNullOrEmpty(archive.GetName()))
                         missingFields.Add(Models.Metadata.Archive.NameKey);
                     break;
 
@@ -116,7 +116,7 @@ namespace SabreTools.DatFiles.Formats
                 case DatItems.Formats.SoftwareList softwarelist:
                     if (string.IsNullOrEmpty(softwarelist.Tag))
                         missingFields.Add(Models.Metadata.SoftwareList.TagKey);
-                    if (string.IsNullOrEmpty(softwarelist.Name))
+                    if (string.IsNullOrEmpty(softwarelist.GetName()))
                         missingFields.Add(Models.Metadata.SoftwareList.NameKey);
                     if (!softwarelist.StatusSpecified)
                         missingFields.Add(Models.Metadata.SoftwareList.StatusKey);
@@ -484,7 +484,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var release = new Models.Logiqx.Release
             {
-                Name = item.Name,
+                Name = item.GetName(),
                 Region = item.Region,
                 Language = item.Language,
                 Date = item.Date,
@@ -503,7 +503,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var biosset = new Models.Logiqx.BiosSet
             {
-                Name = item.Name,
+                Name = item.GetName(),
                 Description = item.Description,
             };
 
@@ -520,7 +520,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var rom = new Models.Logiqx.Rom
             {
-                Name = item.Name,
+                Name = item.GetName(),
                 Size = item.Size?.ToString(),
                 CRC = item.CRC,
                 MD5 = item.MD5,
@@ -554,7 +554,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var disk = new Models.Logiqx.Disk
             {
-                Name = item.Name,
+                Name = item.GetName(),
                 MD5 = item.MD5,
                 SHA1 = item.SHA1,
                 Merge = item.MergeTag,
@@ -574,7 +574,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var media = new Models.Logiqx.Media
             {
-                Name = item.Name,
+                Name = item.GetName(),
                 MD5 = item.MD5,
                 SHA1 = item.SHA1,
                 SHA256 = item.SHA256,
@@ -590,7 +590,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var sample = new Models.Logiqx.Sample
             {
-                Name = item.Name,
+                Name = item.GetName(),
             };
             return sample;
         }
@@ -602,7 +602,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var archive = new Models.Logiqx.Archive
             {
-                Name = item.Name,
+                Name = item.GetName(),
             };
             return archive;
         }
@@ -614,7 +614,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var deviceref = new Models.Logiqx.DeviceRef
             {
-                Name = item.Name,
+                Name = item.GetName(),
             };
             return deviceref;
         }
@@ -652,7 +652,7 @@ namespace SabreTools.DatFiles.Formats
             var softwarelist = new Models.Logiqx.SoftwareList
             {
                 Tag = item.Tag,
-                Name = item.Name,
+                Name = item.GetName(),
                 Filter = item.Filter,
             };
 

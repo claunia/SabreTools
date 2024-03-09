@@ -143,7 +143,6 @@ namespace SabreTools.DatFiles.Formats
                 string name = $"{machine.Name}_{index++}{(!string.IsNullOrEmpty(rom.Remark) ? $" {rom.Remark}" : string.Empty)}";
                 var item = new Rom
                 {
-                    Name = name,
                     Offset = dump.Rom?.Start,
                     OpenMSXType = rom.Type,
                     SHA1 = rom.Hash,
@@ -155,6 +154,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(name);
 
                 if (dump.Original != null)
                 {

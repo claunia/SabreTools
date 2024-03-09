@@ -100,7 +100,6 @@ namespace SabreTools.DatFiles.Formats
 
             var rom = new Rom()
             {
-                Name = name,
                 Size = NumberHelper.ConvertToInt64(row.Size),
                 CRC = row.CRC32,
                 MD5 = row.MD5,
@@ -114,6 +113,7 @@ namespace SabreTools.DatFiles.Formats
                     Name = filename,
                 },
             };
+            rom.SetName(name);
 
             // Now process and add the rom
             rom.CopyMachineInformation(machine);

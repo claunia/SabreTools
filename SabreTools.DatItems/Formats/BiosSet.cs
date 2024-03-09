@@ -13,16 +13,6 @@ namespace SabreTools.DatItems.Formats
         #region Fields
 
         /// <summary>
-        /// Name of the item
-        /// </summary>
-        [JsonProperty("name"), XmlElement("name")]
-        public string? Name
-        {
-            get => _internal.ReadString(Models.Metadata.BiosSet.NameKey);
-            set => _internal[Models.Metadata.BiosSet.NameKey] = value;
-        }
-
-        /// <summary>
         /// Description of the BIOS
         /// </summary>
         [JsonProperty("description", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("description")]
@@ -67,7 +57,7 @@ namespace SabreTools.DatItems.Formats
             _internal = new Models.Metadata.BiosSet();
             Machine = new Machine();
 
-            Name = string.Empty;
+            SetName(string.Empty);
             ItemType = ItemType.BiosSet;
         }
 

@@ -15,16 +15,6 @@ namespace SabreTools.DatItems.Formats
         #region Fields
 
         /// <summary>
-        /// Name of the item
-        /// </summary>
-        [JsonProperty("name", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("name")]
-        public string? Name
-        {
-            get => _internal.ReadString(Models.Metadata.DataArea.NameKey);
-            set => _internal[Models.Metadata.DataArea.NameKey] = value;
-        }
-
-        /// <summary>
         /// Total size of the area
         /// </summary>
         [JsonProperty("size", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("size")]
@@ -85,7 +75,7 @@ namespace SabreTools.DatItems.Formats
             _internal = new Models.Metadata.DataArea();
             Machine = new Machine();
 
-            Name = string.Empty;
+            SetName(string.Empty);
             ItemType = ItemType.DataArea;
         }
 

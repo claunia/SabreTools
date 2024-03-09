@@ -171,7 +171,6 @@ namespace SabreTools.DatItems.Formats
         {
             var rom = new Rom()
             {
-                Name = $"{this.Id}.{this.Extension}",
                 ItemType = ItemType.Rom,
                 DupeType = this.DupeType,
 
@@ -184,6 +183,7 @@ namespace SabreTools.DatItems.Formats
                 SHA1 = this.SHA1,
                 SHA256 = this.SHA256,
             };
+            rom.SetName($"{this.Id}.{this.Extension}");
 
             return rom;
         }

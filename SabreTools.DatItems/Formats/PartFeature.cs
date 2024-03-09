@@ -13,16 +13,6 @@ namespace SabreTools.DatItems.Formats
         #region Fields
 
         /// <summary>
-        /// Name of the item
-        /// </summary>
-        [JsonProperty("name"), XmlElement("name")]
-        public string? Name
-        {
-            get => _internal.ReadString(Models.Metadata.Feature.NameKey);
-            set => _internal[Models.Metadata.Feature.NameKey] = value;
-        }
-
-        /// <summary>
         /// PartFeature value
         /// </summary>
         [JsonProperty("value"), XmlElement("value")]
@@ -54,7 +44,7 @@ namespace SabreTools.DatItems.Formats
             _internal = new Models.Metadata.Feature();
             Machine = new Machine();
 
-            Name = string.Empty;
+            SetName(string.Empty);
             ItemType = ItemType.PartFeature;
         }
 

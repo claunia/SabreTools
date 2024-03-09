@@ -17,16 +17,6 @@ namespace SabreTools.DatItems.Formats
         #region Common
 
         /// <summary>
-        /// Name of the item
-        /// </summary>
-        [JsonProperty("name"), XmlElement("name")]
-        public string? Name
-        {
-            get => _internal.ReadString(Models.Metadata.DipSwitch.NameKey);
-            set => _internal[Models.Metadata.DipSwitch.NameKey] = value;
-        }
-
-        /// <summary>
         /// Tag associated with the dipswitch
         /// </summary>
         [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tag")]
@@ -102,7 +92,7 @@ namespace SabreTools.DatItems.Formats
             get
             {
                 return Part != null
-                    && (!string.IsNullOrEmpty(Part.Name)
+                    && (!string.IsNullOrEmpty(Part.GetName())
                         || !string.IsNullOrEmpty(Part.Interface));
             }
         }
@@ -131,7 +121,7 @@ namespace SabreTools.DatItems.Formats
             _internal = new Models.Metadata.DipSwitch();
             Machine = new Machine();
 
-            Name = string.Empty;
+            SetName(string.Empty);
             ItemType = ItemType.DipSwitch;
         }
 

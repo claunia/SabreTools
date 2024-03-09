@@ -13,16 +13,6 @@ namespace SabreTools.DatItems.Formats
         #region Fields
 
         /// <summary>
-        /// Location name
-        /// </summary>
-        [JsonProperty("name"), XmlElement("name")]
-        public string? Name
-        {
-            get => _internal.ReadString(Models.Metadata.ConfLocation.NameKey);
-            set => _internal[Models.Metadata.ConfLocation.NameKey] = value;
-        }
-
-        /// <summary>
         /// Location ID
         /// </summary>
         [JsonProperty("number", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("number")]
@@ -70,7 +60,7 @@ namespace SabreTools.DatItems.Formats
             _internal = new Models.Metadata.ConfLocation();
             Machine = new Machine();
 
-            Name = string.Empty;
+            SetName(string.Empty);
             ItemType = ItemType.ConfLocation;
         }
 

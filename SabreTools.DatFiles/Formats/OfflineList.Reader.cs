@@ -370,7 +370,6 @@ namespace SabreTools.DatFiles.Formats
 
                 var item = new Rom
                 {
-                    Name = name,
                     Size = size,
                     CRC = crc.Content,
                     ItemStatus = ItemStatus.None,
@@ -381,6 +380,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(name);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);

@@ -176,7 +176,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new BiosSet
                 {
-                    Name = biosset.Name,
                     Description = biosset.Description,
                     Default = biosset.Default?.AsYesNo(),
 
@@ -186,6 +185,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(biosset.Name);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -212,7 +212,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Rom
                 {
-                    Name = rom.Name,
                     Bios = rom.Bios,
                     Size = NumberHelper.ConvertToInt64(rom.Size),
                     CRC = rom.CRC,
@@ -231,6 +230,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(rom.Name);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -257,7 +257,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Disk
                 {
-                    Name = disk.Name,
                     MD5 = disk.MD5,
                     SHA1 = disk.SHA1,
                     MergeTag = disk.Merge,
@@ -273,6 +272,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(disk.Name);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -299,14 +299,13 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new DeviceReference
                 {
-                    Name = deviceref.Name,
-
                     Source = new Source
                     {
                         Index = indexId,
                         Name = filename,
                     },
                 };
+                item.SetName(deviceref.Name);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -333,14 +332,13 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Sample
                 {
-                    Name = sample.Name,
-
                     Source = new Source
                     {
                         Index = indexId,
                         Name = filename,
                     },
                 };
+                item.SetName(sample.Name);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -367,7 +365,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Chip
                 {
-                    Name = chip.Name,
                     Tag = chip.Tag,
                     ChipType = chip.Type.AsEnumValue<ChipType>(),
                     //SoundOnly = chip.SoundOnly, // TODO: Add to internal model
@@ -379,6 +376,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(chip.Name);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -592,7 +590,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new DipSwitch
                 {
-                    Name = dipswitch.Name,
                     Tag = dipswitch.Tag,
                     Mask = dipswitch.Mask,
 
@@ -602,6 +599,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(dipswitch.Name);
 
                 if (dipswitch.Condition != null)
                 {
@@ -620,10 +618,11 @@ namespace SabreTools.DatFiles.Formats
                 {
                     var locationItem = new DipLocation
                     {
-                        Name = diplocation.Name,
                         Number = NumberHelper.ConvertToInt64(diplocation.Number),
                         Inverted = diplocation.Inverted.AsYesNo(),
                     };
+                    locationItem.SetName(diplocation.Name);
+
                     locations.Add(locationItem);
                 }
 
@@ -635,10 +634,10 @@ namespace SabreTools.DatFiles.Formats
                 {
                     var dipValueItem = new DipValue
                     {
-                        Name = dipvalue.Name,
                         Value = dipvalue.Value,
                         Default = dipvalue.Default.AsYesNo(),
                     };
+                    dipValueItem.SetName(dipvalue.Name);
 
                     if (dipvalue.Condition != null)
                     {
@@ -683,7 +682,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Configuration
                 {
-                    Name = configuration.Name,
                     Tag = configuration.Tag,
                     Mask = configuration.Mask,
 
@@ -693,6 +691,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(configuration.Name);
 
                 if (configuration.Condition != null)
                 {
@@ -711,10 +710,10 @@ namespace SabreTools.DatFiles.Formats
                 {
                     var locationItem = new ConfLocation
                     {
-                        Name = confLocation.Name,
                         Number = NumberHelper.ConvertToInt64(confLocation.Number),
                         Inverted = confLocation.Inverted.AsYesNo(),
                     };
+                    locationItem.SetName(confLocation.Name);
                     locations.Add(locationItem);
                 }
 
@@ -726,10 +725,10 @@ namespace SabreTools.DatFiles.Formats
                 {
                     var settingItem = new ConfSetting
                     {
-                        Name = dipvalue.Name,
                         Value = dipvalue.Value,
                         Default = dipvalue.Default.AsYesNo(),
                     };
+                    settingItem.SetName(dipvalue.Name);
 
                     if (dipvalue.Condition != null)
                     {
@@ -821,7 +820,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Adjuster
                 {
-                    Name = adjuster.Name,
                     Default = adjuster.Default.AsYesNo(),
 
                     Source = new Source
@@ -830,6 +828,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(adjuster.Name);
 
                 if (adjuster.Condition != null)
                 {
@@ -962,19 +961,17 @@ namespace SabreTools.DatFiles.Formats
                 {
                     var instance = new Instance
                     {
-                        Name = device.Instance.Name,
                         BriefName = device.Instance.BriefName,
                     };
+                    instance.SetName(device.Instance.Name);
                     item.Instances = [instance];
                 }
 
                 var extensions = new List<Extension>();
                 foreach (var extension in device.Extension ?? [])
                 {
-                    var extensionItem = new Extension
-                    {
-                        Name = extension.Name,
-                    };
+                    var extensionItem = new Extension();
+                    extensionItem.SetName(extension.Name);
                     extensions.Add(extensionItem);
                 }
 
@@ -1006,24 +1003,23 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Slot
                 {
-                    Name = slot.Name,
-
                     Source = new Source
                     {
                         Index = indexId,
                         Name = filename,
                     },
                 };
+                item.SetName(slot.Name);
 
                 var slotoptions = new List<SlotOption>();
                 foreach (var slotoption in slot.SlotOption ?? [])
                 {
                     var slotoptionItem = new SlotOption
                     {
-                        Name = slotoption.Name,
                         DeviceName = slotoption.DevName,
                         Default = slotoption.Default.AsYesNo(),
                     };
+                    slotoptionItem.SetName(slotoption.Name);
                     slotoptions.Add(slotoptionItem);
                 }
 
@@ -1056,7 +1052,6 @@ namespace SabreTools.DatFiles.Formats
                 var item = new DatItems.Formats.SoftwareList
                 {
                     Tag = softwarelist.Tag,
-                    Name = softwarelist.Name,
                     Status = softwarelist.Status.AsEnumValue<SoftwareListStatus>(),
                     Filter = softwarelist.Filter,
 
@@ -1066,6 +1061,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(softwarelist.Name);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -1092,7 +1088,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new RamOption
                 {
-                    Name = ramoption.Name,
                     Default = ramoption.Default.AsYesNo(),
                     Content = ramoption.Content,
 
@@ -1102,6 +1097,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(ramoption.Name);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);

@@ -13,16 +13,6 @@ namespace SabreTools.DatItems.Formats
         #region Fields
 
         /// <summary>
-        /// Name of the item
-        /// </summary>
-        [JsonProperty("name"), XmlElement("name")]
-        public string? Name
-        {
-            get => _internal.ReadString(Models.Metadata.Instance.NameKey);
-            set => _internal[Models.Metadata.Instance.NameKey] = value;
-        }
-
-        /// <summary>
         /// Short name for the instance
         /// </summary>
         [JsonProperty("briefname", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("briefname")]
@@ -54,7 +44,7 @@ namespace SabreTools.DatItems.Formats
             _internal = new Models.Metadata.Instance();
             Machine = new Machine();
 
-            Name = string.Empty;
+            SetName(string.Empty);
             ItemType = ItemType.Instance;
         }
 

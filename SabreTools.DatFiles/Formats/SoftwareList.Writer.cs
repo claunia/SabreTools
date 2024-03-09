@@ -41,12 +41,12 @@ namespace SabreTools.DatFiles.Formats
                     }
                     else
                     {
-                        if (string.IsNullOrEmpty(dipSwitch.Part!.Name))
+                        if (string.IsNullOrEmpty(dipSwitch.Part!.GetName()))
                             missingFields.Add(Models.Metadata.Part.NameKey);
                         if (string.IsNullOrEmpty(dipSwitch.Part.Interface))
                             missingFields.Add(Models.Metadata.Part.InterfaceKey);
                     }
-                    if (string.IsNullOrEmpty(dipSwitch.Name))
+                    if (string.IsNullOrEmpty(dipSwitch.GetName()))
                         missingFields.Add(Models.Metadata.DipSwitch.NameKey);
                     if (string.IsNullOrEmpty(dipSwitch.Tag))
                         missingFields.Add(Models.Metadata.DipSwitch.TagKey);
@@ -54,7 +54,7 @@ namespace SabreTools.DatFiles.Formats
                         missingFields.Add(Models.Metadata.DipSwitch.MaskKey);
                     if (dipSwitch.ValuesSpecified)
                     {
-                        if (dipSwitch.Values!.Any(dv => string.IsNullOrEmpty(dv.Name)))
+                        if (dipSwitch.Values!.Any(dv => string.IsNullOrEmpty(dv.GetName())))
                             missingFields.Add(Models.Metadata.DipValue.NameKey);
                         if (dipSwitch.Values!.Any(dv => string.IsNullOrEmpty(dv.Value)))
                             missingFields.Add(Models.Metadata.DipValue.ValueKey);
@@ -70,7 +70,7 @@ namespace SabreTools.DatFiles.Formats
                     }
                     else
                     {
-                        if (string.IsNullOrEmpty(disk.Part!.Name))
+                        if (string.IsNullOrEmpty(disk.Part!.GetName()))
                             missingFields.Add(Models.Metadata.Part.NameKey);
                         if (string.IsNullOrEmpty(disk.Part.Interface))
                             missingFields.Add(Models.Metadata.Part.InterfaceKey);
@@ -81,15 +81,15 @@ namespace SabreTools.DatFiles.Formats
                     }
                     else
                     {
-                        if (string.IsNullOrEmpty(disk.DiskArea!.Name))
+                        if (string.IsNullOrEmpty(disk.DiskArea!.GetName()))
                             missingFields.Add(Models.Metadata.DiskArea.NameKey);
                     }
-                    if (string.IsNullOrEmpty(disk.Name))
+                    if (string.IsNullOrEmpty(disk.GetName()))
                         missingFields.Add(Models.Metadata.Disk.NameKey);
                     break;
 
                 case Info info:
-                    if (string.IsNullOrEmpty(info.Name))
+                    if (string.IsNullOrEmpty(info.GetName()))
                         missingFields.Add(Models.Metadata.Info.NameKey);
                     break;
 
@@ -101,7 +101,7 @@ namespace SabreTools.DatFiles.Formats
                     }
                     else
                     {
-                        if (string.IsNullOrEmpty(rom.Part!.Name))
+                        if (string.IsNullOrEmpty(rom.Part!.GetName()))
                             missingFields.Add(Models.Metadata.Part.NameKey);
                         if (string.IsNullOrEmpty(rom.Part.Interface))
                             missingFields.Add(Models.Metadata.Part.InterfaceKey);
@@ -113,7 +113,7 @@ namespace SabreTools.DatFiles.Formats
                     }
                     else
                     {
-                        if (string.IsNullOrEmpty(rom.DataArea!.Name))
+                        if (string.IsNullOrEmpty(rom.DataArea!.GetName()))
                             missingFields.Add(Models.Metadata.DataArea.NameKey);
                         if (!rom.DataArea.SizeSpecified)
                             missingFields.Add(Models.Metadata.DataArea.SizeKey);
@@ -121,7 +121,7 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case SharedFeature sharedFeat:
-                    if (string.IsNullOrEmpty(sharedFeat.Name))
+                    if (string.IsNullOrEmpty(sharedFeat.GetName()))
                         missingFields.Add(Models.Metadata.SharedFeat.NameKey);
                     break;
                 default:
@@ -278,7 +278,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var info = new Models.SoftwareList.Info
             {
-                Name = item.Name,
+                Name = item.GetName(),
                 Value = item.Value,
             };
             return info;
@@ -291,7 +291,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var sharedfeat = new Models.SoftwareList.SharedFeat
             {
-                Name = item.Name,
+                Name = item.GetName(),
                 Value = item.Value,
             };
             return sharedfeat;
@@ -304,7 +304,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var part = new Models.SoftwareList.Part
             {
-                Name = item.Part?.Name,
+                Name = item.Part?.GetName(),
                 Interface = item.Part?.Interface,
                 Feature = CreateFeatures(item.Part?.Features),
                 DataArea = CreateDataAreas(item),
@@ -321,7 +321,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var part = new Models.SoftwareList.Part
             {
-                Name = item.Part?.Name,
+                Name = item.Part?.GetName(),
                 Interface = item.Part?.Interface,
                 Feature = CreateFeatures(item.Part?.Features),
                 DataArea = null,
@@ -338,7 +338,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var part = new Models.SoftwareList.Part
             {
-                Name = item.Part?.Name,
+                Name = item.Part?.GetName(),
                 Interface = item.Part?.Interface,
                 Feature = CreateFeatures(item.Part?.Features),
                 DataArea = null,
@@ -362,7 +362,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 var feature = new Models.SoftwareList.Feature
                 {
-                    Name = item.Name,
+                    Name = item.GetName(),
                     Value = item.Value,
                 };
                 features.Add(feature);
@@ -378,7 +378,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var dataArea = new Models.SoftwareList.DataArea
             {
-                Name = item.DataArea?.Name,
+                Name = item.DataArea?.GetName(),
                 Size = item.DataArea?.Size?.ToString(),
                 Width = item.DataArea?.Width?.ToString(),
                 Endianness = item.DataArea?.Endianness.AsStringValue<Endianness>(),
@@ -394,7 +394,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var rom = new Models.SoftwareList.Rom
             {
-                Name = item.Name,
+                Name = item.GetName(),
                 Size = item.Size?.ToString(),
                 Length = null,
                 CRC = item.CRC,
@@ -426,7 +426,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var disk = new Models.SoftwareList.Disk
             {
-                Name = item.Name,
+                Name = item.GetName(),
                 MD5 = item.MD5,
                 SHA1 = item.SHA1,
                 Status = item.ItemStatus.AsStringValue<ItemStatus>(useSecond: false),
@@ -445,10 +445,11 @@ namespace SabreTools.DatFiles.Formats
             {
                 var dipValue = new Models.SoftwareList.DipValue
                 {
-                    Name = setting.Name,
+                    Name = setting.GetName(),
                     Value = setting.Value,
                     Default = setting.Default?.ToString(),
                 };
+
                 dipValues.Add(dipValue);
             }
 

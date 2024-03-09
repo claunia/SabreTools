@@ -29,17 +29,6 @@ namespace SabreTools.DatItems.Formats
         }
 
         /// <summary>
-        /// Name of the item
-        /// </summary>
-        [JsonProperty("name")]
-        [XmlElement("name")]
-        public string? Name
-        {
-            get => _internal.ReadString(Models.Metadata.SoftwareList.NameKey);
-            set => _internal[Models.Metadata.SoftwareList.NameKey] = value;
-        }
-
-        /// <summary>
         /// Status of the softare list according to the machine
         /// </summary>
         [JsonProperty("status", DefaultValueHandling = DefaultValueHandling.Ignore)]
@@ -87,7 +76,7 @@ namespace SabreTools.DatItems.Formats
             _internal = new Models.Metadata.SoftwareList();
             Machine = new Machine();
 
-            Name = string.Empty;
+            SetName(string.Empty);
             ItemType = ItemType.SoftwareList;
         }
 

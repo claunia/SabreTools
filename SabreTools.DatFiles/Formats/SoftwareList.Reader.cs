@@ -106,7 +106,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var infoItem = new Info
                 {
-                    Name = info.Name,
                     Value = info.Value,
 
                     Source = new Source
@@ -115,6 +114,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                infoItem.SetName(info.Name);
 
                 infoItem.CopyMachineInformation(machine);
                 ParseAddHelper(infoItem, statsOnly);
@@ -125,7 +125,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var sharedfeatItem = new SharedFeature
                 {
-                    Name = sharedfeat.Name,
                     Value = sharedfeat.Value,
 
                     Source = new Source
@@ -134,6 +133,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                sharedfeatItem.SetName(sharedfeat.Name);
 
                 sharedfeatItem.CopyMachineInformation(machine);
                 ParseAddHelper(sharedfeatItem, statsOnly);
@@ -181,7 +181,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Part
                 {
-                    Name = part.Name,
                     Interface = part.Interface,
                     Features = CreateFeatures(part.Feature, machine, filename, indexId, statsOnly),
 
@@ -191,6 +190,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(part.Name);
 
                 item.CopyMachineInformation(machine);
 
@@ -219,7 +219,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new PartFeature
                 {
-                    Name = feature.Name,
                     Value = feature.Value,
 
                     Source = new Source
@@ -228,6 +227,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(feature.Name);
 
                 item.CopyMachineInformation(machine);
                 partFeatures.Add(item);
@@ -256,7 +256,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new DataArea
                 {
-                    Name = dataarea.Name,
                     Size = NumberHelper.ConvertToInt64(dataarea.Size),
                     Width = NumberHelper.ConvertToInt64(dataarea.Width),
                     Endianness = dataarea.Endianness.AsEnumValue<Endianness>(),
@@ -267,6 +266,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(dataarea.Name);
 
                 item.CopyMachineInformation(machine);
                 ConvertRoms(dataarea.Rom, part, item, machine, filename, indexId, statsOnly, ref containsItems);
@@ -295,7 +295,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Rom
                 {
-                    Name = rom.Name,
                     Size = NumberHelper.ConvertToInt64(rom.Size ?? rom.Length),
                     CRC = rom.CRC,
                     SHA1 = rom.SHA1,
@@ -313,6 +312,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(rom.Name);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -339,14 +339,13 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new DiskArea
                 {
-                    Name = diskarea.Name,
-
                     Source = new Source
                     {
                         Index = indexId,
                         Name = filename,
                     },
                 };
+                item.SetName(diskarea.Name);
 
                 item.CopyMachineInformation(machine);
                 ConvertDisks(diskarea.Disk, part, item, machine, filename, indexId, statsOnly, ref containsItems);
@@ -371,15 +370,14 @@ namespace SabreTools.DatFiles.Formats
                 return;
 
             containsItems = true;
-            foreach (var rom in disks)
+            foreach (var disk in disks)
             {
                 var item = new Disk
                 {
-                    Name = rom.Name,
-                    MD5 = rom.MD5,
-                    SHA1 = rom.SHA1,
-                    ItemStatus = rom.Status.AsEnumValue<ItemStatus>(),
-                    Writable = rom.Writeable.AsYesNo(),
+                    MD5 = disk.MD5,
+                    SHA1 = disk.SHA1,
+                    ItemStatus = disk.Status.AsEnumValue<ItemStatus>(),
+                    Writable = disk.Writeable.AsYesNo(),
 
                     Part = part,
                     DiskArea = diskarea,
@@ -390,6 +388,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(disk.Name);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -416,11 +415,10 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new DipSwitch
                 {
-                    Name = dipswitch.Name,
                     Tag = dipswitch.Tag,
                     Mask = dipswitch.Mask,
                     Values = CreateDipValues(dipswitch.DipValue, machine, filename, indexId),
-                    
+
                     Part = part,
 
                     Source = new Source
@@ -429,6 +427,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(dipswitch.Name);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -453,7 +452,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new DipValue
                 {
-                    Name = dipvalue.Name,
                     Value = dipvalue.Value,
                     Default = dipvalue.Default.AsYesNo(),
 
@@ -463,6 +461,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(dipvalue.Name);
 
                 item.CopyMachineInformation(machine);
                 settings.Add(item);

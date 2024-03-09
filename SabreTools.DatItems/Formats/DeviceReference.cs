@@ -10,20 +10,6 @@ namespace SabreTools.DatItems.Formats
     [JsonObject("device_ref"), XmlRoot("device_ref")]
     public class DeviceReference : DatItem
     {
-        #region Fields
-
-        /// <summary>
-        /// Name of the item
-        /// </summary>
-        [JsonProperty("name"), XmlElement("name")]
-        public string? Name
-        {
-            get => _internal.ReadString(Models.Metadata.DeviceRef.NameKey);
-            set => _internal[Models.Metadata.DeviceRef.NameKey] = value;
-        }
-
-        #endregion
-
         #region Accessors
 
         /// <inheritdoc/>
@@ -44,7 +30,7 @@ namespace SabreTools.DatItems.Formats
             _internal = new Models.Metadata.DeviceRef();
             Machine = new Machine();
 
-            Name = string.Empty;
+            SetName(string.Empty);
             ItemType = ItemType.DeviceReference;
         }
 

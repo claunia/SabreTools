@@ -146,7 +146,6 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Rom:
                         var rom = new Rom
                         {
-                            Name = itemName,
                             Size = null,
                             CRC = sfv.Hash,
 
@@ -156,6 +155,7 @@ namespace SabreTools.DatFiles.Formats
                                 Name = filename,
                             },
                         };
+                        rom.SetName(itemName);
 
                         rom.CopyMachineInformation(machine);
                         ParseAddHelper(rom, statsOnly);
@@ -198,7 +198,6 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Disk:
                         var disk = new Disk
                         {
-                            Name = itemName,
                             MD5 = md5.Hash,
 
                             Source = new Source
@@ -207,6 +206,7 @@ namespace SabreTools.DatFiles.Formats
                                 Name = filename,
                             },
                         };
+                        disk.SetName(itemName);
 
                         disk.CopyMachineInformation(machine);
                         ParseAddHelper(disk, statsOnly);
@@ -215,7 +215,6 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Media:
                         var media = new Media
                         {
-                            Name = itemName,
                             MD5 = md5.Hash,
 
                             Source = new Source
@@ -224,6 +223,7 @@ namespace SabreTools.DatFiles.Formats
                                 Name = filename,
                             },
                         };
+                        media.SetName(itemName);
 
                         media.CopyMachineInformation(machine);
                         ParseAddHelper(media, statsOnly);
@@ -232,7 +232,6 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Rom:
                         var rom = new Rom
                         {
-                            Name = itemName,
                             Size = null,
                             MD5 = md5.Hash,
 
@@ -242,6 +241,7 @@ namespace SabreTools.DatFiles.Formats
                                 Name = filename,
                             },
                         };
+                        rom.SetName(itemName);
 
                         rom.CopyMachineInformation(machine);
                         ParseAddHelper(rom, statsOnly);
@@ -284,7 +284,6 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Disk:
                         var disk = new Disk
                         {
-                            Name = itemName,
                             SHA1 = sha1.Hash,
 
                             Source = new Source
@@ -293,6 +292,7 @@ namespace SabreTools.DatFiles.Formats
                                 Name = filename,
                             },
                         };
+                        disk.SetName(itemName);
 
                         disk.CopyMachineInformation(machine);
                         ParseAddHelper(disk, statsOnly);
@@ -301,7 +301,6 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Media:
                         var media = new Media
                         {
-                            Name = itemName,
                             SHA1 = sha1.Hash,
 
                             Source = new Source
@@ -310,6 +309,7 @@ namespace SabreTools.DatFiles.Formats
                                 Name = filename,
                             },
                         };
+                        media.SetName(itemName);
 
                         media.CopyMachineInformation(machine);
                         ParseAddHelper(media, statsOnly);
@@ -318,7 +318,6 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Rom:
                         var rom = new Rom
                         {
-                            Name = itemName,
                             Size = null,
                             SHA1 = sha1.Hash,
 
@@ -328,6 +327,7 @@ namespace SabreTools.DatFiles.Formats
                                 Name = filename,
                             },
                         };
+                        rom.SetName(itemName);
 
                         rom.CopyMachineInformation(machine);
                         ParseAddHelper(rom, statsOnly);
@@ -370,7 +370,6 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Media:
                         var media = new Media
                         {
-                            Name = itemName,
                             SHA256 = sha256.Hash,
 
                             Source = new Source
@@ -379,6 +378,7 @@ namespace SabreTools.DatFiles.Formats
                                 Name = filename,
                             },
                         };
+                        media.SetName(itemName);
 
                         media.CopyMachineInformation(machine);
                         ParseAddHelper(media, statsOnly);
@@ -388,7 +388,6 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Rom:
                         var rom = new Rom
                         {
-                            Name = itemName,
                             Size = null,
                             SHA256 = sha256.Hash,
 
@@ -398,6 +397,7 @@ namespace SabreTools.DatFiles.Formats
                                 Name = filename,
                             },
                         };
+                        rom.SetName(itemName);
 
                         rom.CopyMachineInformation(machine);
                         ParseAddHelper(rom, statsOnly);
@@ -442,7 +442,6 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Rom:
                         var rom = new Rom
                         {
-                            Name = itemName,
                             Size = null,
                             SHA384 = sha384.Hash,
 
@@ -452,6 +451,7 @@ namespace SabreTools.DatFiles.Formats
                                 Name = filename,
                             },
                         };
+                        rom.SetName(itemName);
 
                         rom.CopyMachineInformation(machine);
                         ParseAddHelper(rom, statsOnly);
@@ -496,7 +496,6 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Rom:
                         var rom = new Rom
                         {
-                            Name = itemName,
                             Size = null,
                             SHA512 = sha512.Hash,
 
@@ -506,6 +505,7 @@ namespace SabreTools.DatFiles.Formats
                                 Name = filename,
                             },
                         };
+                        rom.SetName(itemName);
 
                         rom.CopyMachineInformation(machine);
                         ParseAddHelper(rom, statsOnly);
@@ -548,7 +548,6 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Media:
                         var media = new Media
                         {
-                            Name = itemName,
                             SpamSum = spamsum.Hash,
 
                             Source = new Source
@@ -557,6 +556,7 @@ namespace SabreTools.DatFiles.Formats
                                 Name = filename,
                             },
                         };
+                        media.SetName(itemName);
 
                         media.CopyMachineInformation(machine);
                         ParseAddHelper(media, statsOnly);
@@ -566,7 +566,6 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Rom:
                         var rom = new Rom
                         {
-                            Name = itemName,
                             Size = null,
                             SpamSum = spamsum.Hash,
 
@@ -576,6 +575,7 @@ namespace SabreTools.DatFiles.Formats
                                 Name = filename,
                             },
                         };
+                        rom.SetName(itemName);
 
                         rom.CopyMachineInformation(machine);
                         ParseAddHelper(rom, statsOnly);

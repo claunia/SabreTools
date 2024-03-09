@@ -109,7 +109,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Rom
                 {
-                    Name = rom.RomName,
                     Size = NumberHelper.ConvertToInt64(rom.RomSize),
                     CRC = rom.RomCRC,
                     MergeTag = rom.MergeName,
@@ -130,6 +129,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(rom.RomName);
 
                 // Now process and add the item
                 ParseAddHelper(item, statsOnly);

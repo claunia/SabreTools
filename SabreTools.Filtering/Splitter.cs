@@ -301,7 +301,7 @@ namespace SabreTools.Filtering
                 List<string?> deviceReferences = datFile.Items[machine]!
                     .Where(i => i.ItemType == ItemType.DeviceReference)
                     .Select(i => i as DeviceReference)
-                    .Select(dr => dr!.Name)
+                    .Select(dr => dr!.GetName())
                     .Distinct()
                     .ToList();
 
@@ -333,7 +333,7 @@ namespace SabreTools.Filtering
 
                         newDeviceReferences.AddRange(devItems
                             .Where(i => i.ItemType == ItemType.DeviceReference)
-                            .Select(i => (i as DeviceReference)!.Name!));
+                            .Select(i => (i as DeviceReference)!.GetName()!));
 
                         // Set new machine information and add to the current machine
                         DatItem copyFrom = datFile.Items[machine]![0];
@@ -357,7 +357,11 @@ namespace SabreTools.Filtering
                     foreach (string deviceReference in newDeviceReferences.Distinct())
                     {
                         if (!deviceReferences.Contains(deviceReference))
-                            datFile.Items[machine]!.Add(new DeviceReference() { Name = deviceReference });
+                        {
+                            var deviceRef = new DeviceReference();
+                            deviceRef.SetName(deviceReference);
+                            datFile.Items[machine]!.Add(deviceRef);
+                        }
                     }
                 }
 
@@ -511,13 +515,13 @@ namespace SabreTools.Filtering
                         Disk disk = (item as Disk)!;
 
                         // If the merge tag exists and the parent already contains it, skip
-                        if (disk.MergeTag != null && datFile.Items[parent!]!.Where(i => i.ItemType == ItemType.Disk).Select(i => (i as Disk)!.Name).Contains(disk.MergeTag))
+                        if (disk.MergeTag != null && datFile.Items[parent!]!.Where(i => i.ItemType == ItemType.Disk).Select(i => (i as Disk)!.GetName()).Contains(disk.MergeTag))
                         {
                             continue;
                         }
 
                         // If the merge tag exists but the parent doesn't contain it, add to parent
-                        else if (disk.MergeTag != null && !datFile.Items[parent!]!.Where(i => i.ItemType == ItemType.Disk).Select(i => (i as Disk)!.Name).Contains(disk.MergeTag))
+                        else if (disk.MergeTag != null && !datFile.Items[parent!]!.Where(i => i.ItemType == ItemType.Disk).Select(i => (i as Disk)!.GetName()).Contains(disk.MergeTag))
                         {
                             disk.CopyMachineInformation(copyFrom);
                             datFile.Items.Add(parent!, disk);
@@ -537,16 +541,16 @@ namespace SabreTools.Filtering
                         Rom rom = (item as Rom)!;
 
                         // If the merge tag exists and the parent already contains it, skip
-                        if (rom.MergeTag != null && datFile.Items[parent!]!.Where(i => i.ItemType == ItemType.Rom).Select(i => (i as Rom)!.Name).Contains(rom.MergeTag))
+                        if (rom.MergeTag != null && datFile.Items[parent!]!.Where(i => i.ItemType == ItemType.Rom).Select(i => (i as Rom)!.GetName()).Contains(rom.MergeTag))
                         {
                             continue;
                         }
 
                         // If the merge tag exists but the parent doesn't contain it, add to subfolder of parent
-                        else if (rom.MergeTag != null && !datFile.Items[parent!]!.Where(i => i.ItemType == ItemType.Rom).Select(i => (i as Rom)!.Name).Contains(rom.MergeTag))
+                        else if (rom.MergeTag != null && !datFile.Items[parent!]!.Where(i => i.ItemType == ItemType.Rom).Select(i => (i as Rom)!.GetName()).Contains(rom.MergeTag))
                         {
                             if (subfolder)
-                                rom.Name = $"{rom.Machine.Name}\\{rom.Name}";
+                                rom.SetName($"{rom.Machine.Name}\\{rom.GetName()}");
 
                             rom.CopyMachineInformation(copyFrom);
                             datFile.Items.Add(parent!, rom);
@@ -556,7 +560,7 @@ namespace SabreTools.Filtering
                         else if (!datFile.Items[parent!]!.Contains(item) || skipDedup)
                         {
                             if (subfolder)
-                                rom.Name = $"{item.Machine.Name}\\{rom.Name}";
+                                rom.SetName($"{item.Machine.Name}\\{rom.GetName()}");
 
                             rom.CopyMachineInformation(copyFrom);
                             datFile.Items.Add(parent!, rom);

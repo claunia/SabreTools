@@ -125,7 +125,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var file = new Models.ArchiveDotOrg.File
             {
-                Name = item.Name,
+                Name = item.GetName(),
                 Source = item.ArchiveDotOrgSource,
                 //BitTorrentMagnetHash = item.BitTorrentMagnetHash, // TODO: Add to internal model
                 Size = item.Size?.ToString(),

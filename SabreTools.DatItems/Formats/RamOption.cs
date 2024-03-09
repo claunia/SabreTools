@@ -13,16 +13,6 @@ namespace SabreTools.DatItems.Formats
         #region Fields
 
         /// <summary>
-        /// Name of the item
-        /// </summary>
-        [JsonProperty("name"), XmlElement("name")]
-        public string? Name
-        {
-            get => _internal.ReadString(Models.Metadata.RamOption.NameKey);
-            set => _internal[Models.Metadata.RamOption.NameKey] = value;
-        }
-
-        /// <summary>
         /// Determine whether the RamOption is default
         /// </summary>
         [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("default")]
@@ -67,7 +57,7 @@ namespace SabreTools.DatItems.Formats
             _internal = new Models.Metadata.RamOption();
             Machine = new Machine();
 
-            Name = string.Empty;
+            SetName(string.Empty);
             ItemType = ItemType.RamOption;
         }
 

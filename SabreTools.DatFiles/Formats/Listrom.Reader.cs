@@ -116,7 +116,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var disk = new Disk
                 {
-                    Name = row.Name,
                     ItemStatus = ItemStatus.None,
 
                     Source = new Source
@@ -125,6 +124,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                disk.SetName(row.Name);
 
                 if (!string.IsNullOrEmpty(row.MD5))
                     disk.MD5 = row.MD5;
@@ -143,7 +143,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var rom = new Rom
                 {
-                    Name = row.Name,
                     Size = NumberHelper.ConvertToInt64(row.Size),
                     CRC = row.CRC,
                     SHA1 = row.SHA1,
@@ -155,6 +154,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                rom.SetName(row.Name);
 
                 // Now process and add the item
                 rom.CopyMachineInformation(machine);
@@ -170,7 +170,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var disk = new Disk
                 {
-                    Name = row.Name,
                     ItemStatus = ItemStatus.BadDump,
 
                     Source = new Source
@@ -179,6 +178,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                disk.SetName(row.Name);
 
                 if (!string.IsNullOrEmpty(row.MD5))
                     disk.MD5 = row.MD5;
@@ -196,7 +196,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var disk = new Disk
                 {
-                    Name = row.Name,
                     MD5 = null,
                     SHA1 = null,
                     ItemStatus = ItemStatus.Nodump,
@@ -207,6 +206,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                disk.SetName(row.Name);
 
                 // Now process and add the item
                 disk.CopyMachineInformation(machine);
@@ -220,7 +220,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var rom = new Rom
                 {
-                    Name = row.Name,
                     Size = NumberHelper.ConvertToInt64(row.Size),
                     CRC = row.CRC,
                     SHA1 = row.SHA1,
@@ -232,6 +231,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                rom.SetName(row.Name);
 
                 // Now process and add the item
                 rom.CopyMachineInformation(machine);
@@ -244,7 +244,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var rom = new Rom
                 {
-                    Name = row.Name,
                     Size = NumberHelper.ConvertToInt64(row.Size),
                     CRC = null,
                     SHA1 = null,
@@ -256,6 +255,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                rom.SetName(row.Name);
 
                 // Now process and add the item
                 rom.CopyMachineInformation(machine);

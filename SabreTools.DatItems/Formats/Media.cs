@@ -15,16 +15,6 @@ namespace SabreTools.DatItems.Formats
         #region Fields
 
         /// <summary>
-        /// Name of the item
-        /// </summary>
-        [JsonProperty("name"), XmlElement("name")]
-        public string? Name
-        {
-            get => _internal.ReadString(Models.Metadata.Media.NameKey);
-            set => _internal[Models.Metadata.Media.NameKey] = value;
-        }
-
-        /// <summary>
         /// Data MD5 hash
         /// </summary>
         [JsonProperty("md5", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("md5")]
@@ -86,7 +76,7 @@ namespace SabreTools.DatItems.Formats
             _internal = new Models.Metadata.Media();
             Machine = new Machine();
 
-            Name = string.Empty;
+            SetName(string.Empty);
             ItemType = ItemType.Media;
             DupeType = 0x00;
         }
@@ -100,7 +90,7 @@ namespace SabreTools.DatItems.Formats
             _internal = new Models.Metadata.Media();
             Machine = new Machine();
 
-            Name = baseFile.Filename;
+            SetName(baseFile.Filename);
             MD5 = TextHelper.ByteArrayToString(baseFile.MD5);
             SHA1 = TextHelper.ByteArrayToString(baseFile.SHA1);
             SHA256 = TextHelper.ByteArrayToString(baseFile.SHA256);
@@ -137,7 +127,7 @@ namespace SabreTools.DatItems.Formats
         {
             return new BaseFile()
             {
-                Filename = this.Name,
+                Filename = this.GetName(),
                 Parent = this.Machine.Name,
                 MD5 = TextHelper.StringToByteArray(this.MD5),
                 SHA1 = TextHelper.StringToByteArray(this.SHA1),

@@ -84,7 +84,6 @@ namespace SabreTools.DatFiles.Formats
                 case ItemType.Disk:
                     item = new Disk
                     {
-                        Name = row.DiskName,
                         MD5 = row.MD5,
                         SHA1 = row.SHA1,
                         ItemStatus = row.Status.AsEnumValue<ItemStatus>(),
@@ -95,12 +94,12 @@ namespace SabreTools.DatFiles.Formats
                             Name = filename,
                         },
                     };
+                    item.SetName(row.DiskName);
                     break;
 
                 case ItemType.Media:
                     item = new Media
                     {
-                        Name = row.DiskName,
                         MD5 = row.MD5,
                         SHA1 = row.SHA1,
                         SHA256 = row.SHA256,
@@ -112,12 +111,12 @@ namespace SabreTools.DatFiles.Formats
                             Name = filename,
                         },
                     };
+                    item.SetName(row.DiskName);
                     break;
 
                 case ItemType.Rom:
                     item = new Rom
                     {
-                        Name = row.RomName,
                         CRC = row.CRC,
                         MD5 = row.MD5,
                         SHA1 = row.SHA1,
@@ -133,6 +132,7 @@ namespace SabreTools.DatFiles.Formats
                             Name = filename,
                         },
                     };
+                    item.SetName(row.RomName);
                     break;
             }
 

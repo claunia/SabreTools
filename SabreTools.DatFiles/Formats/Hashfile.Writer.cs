@@ -251,7 +251,7 @@ namespace SabreTools.DatFiles.Formats
                         case Rom rom:
                             sfvs.Add(new Models.Hashfile.SFV
                             {
-                                File = name + rom.Name,
+                                File = name + rom.GetName(),
                                 Hash = rom.CRC,
                             });
                             break;
@@ -303,7 +303,7 @@ namespace SabreTools.DatFiles.Formats
                             md5s.Add(new Models.Hashfile.MD5
                             {
                                 Hash = disk.MD5,
-                                File = name + disk.Name,
+                                File = name + disk.GetName(),
                             });
                             break;
 
@@ -311,7 +311,7 @@ namespace SabreTools.DatFiles.Formats
                             md5s.Add(new Models.Hashfile.MD5
                             {
                                 Hash = media.MD5,
-                                File = name + media.Name,
+                                File = name + media.GetName(),
                             });
                             break;
 
@@ -319,7 +319,7 @@ namespace SabreTools.DatFiles.Formats
                             md5s.Add(new Models.Hashfile.MD5
                             {
                                 Hash = rom.MD5,
-                                File = name + rom.Name,
+                                File = name + rom.GetName(),
                             });
                             break;
                     }
@@ -370,7 +370,7 @@ namespace SabreTools.DatFiles.Formats
                             sha1s.Add(new Models.Hashfile.SHA1
                             {
                                 Hash = disk.SHA1,
-                                File = name + disk.Name,
+                                File = name + disk.GetName(),
                             });
                             break;
 
@@ -378,7 +378,7 @@ namespace SabreTools.DatFiles.Formats
                             sha1s.Add(new Models.Hashfile.SHA1
                             {
                                 Hash = media.SHA1,
-                                File = name + media.Name,
+                                File = name + media.GetName(),
                             });
                             break;
 
@@ -386,7 +386,7 @@ namespace SabreTools.DatFiles.Formats
                             sha1s.Add(new Models.Hashfile.SHA1
                             {
                                 Hash = rom.SHA1,
-                                File = name + rom.Name,
+                                File = name + rom.GetName(),
                             });
                             break;
                     }
@@ -437,7 +437,7 @@ namespace SabreTools.DatFiles.Formats
                             sha256s.Add(new Models.Hashfile.SHA256
                             {
                                 Hash = media.SHA256,
-                                File = name + media.Name,
+                                File = name + media.GetName(),
                             });
                             break;
 
@@ -445,7 +445,7 @@ namespace SabreTools.DatFiles.Formats
                             sha256s.Add(new Models.Hashfile.SHA256
                             {
                                 Hash = rom.SHA256,
-                                File = name + rom.Name,
+                                File = name + rom.GetName(),
                             });
                             break;
                     }
@@ -496,7 +496,7 @@ namespace SabreTools.DatFiles.Formats
                             sha384s.Add(new Models.Hashfile.SHA384
                             {
                                 Hash = rom.SHA384,
-                                File = name + rom.Name,
+                                File = name + rom.GetName(),
                             });
                             break;
                     }
@@ -547,7 +547,7 @@ namespace SabreTools.DatFiles.Formats
                             sha512s.Add(new Models.Hashfile.SHA512
                             {
                                 Hash = rom.SHA512,
-                                File = name + rom.Name,
+                                File = name + rom.GetName(),
                             });
                             break;
                     }
@@ -598,7 +598,7 @@ namespace SabreTools.DatFiles.Formats
                             spamsums.Add(new Models.Hashfile.SpamSum
                             {
                                 Hash = media.SpamSum,
-                                File = name + media.Name,
+                                File = name + media.GetName(),
                             });
                             break;
 
@@ -606,7 +606,7 @@ namespace SabreTools.DatFiles.Formats
                             spamsums.Add(new Models.Hashfile.SpamSum
                             {
                                 Hash = rom.SpamSum,
-                                File = name + rom.Name,
+                                File = name + rom.GetName(),
                             });
                             break;
                     }

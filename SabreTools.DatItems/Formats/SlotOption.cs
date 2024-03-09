@@ -13,16 +13,6 @@ namespace SabreTools.DatItems.Formats
         #region Fields
 
         /// <summary>
-        /// Slot option name
-        /// </summary>
-        [JsonProperty("name"), XmlElement("name")]
-        public string? Name
-        {
-            get => _internal.ReadString(Models.Metadata.SlotOption.NameKey);
-            set => _internal[Models.Metadata.SlotOption.NameKey] = value;
-        }
-
-        /// <summary>
         /// Referenced device name
         /// </summary>
         [JsonProperty("devname"), XmlElement("devname")]
@@ -67,7 +57,7 @@ namespace SabreTools.DatItems.Formats
             _internal = new Models.Metadata.SlotOption();
             Machine = new Machine();
 
-            Name = string.Empty;
+            SetName(string.Empty);
             ItemType = ItemType.SlotOption;
         }
 

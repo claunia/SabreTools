@@ -10,20 +10,6 @@ namespace SabreTools.DatItems.Formats
     [JsonObject("extension"), XmlRoot("extension")]
     public class Extension : DatItem
     {
-        #region Fields
-
-        /// <summary>
-        /// Name of the item
-        /// </summary>
-        [JsonProperty("name"), XmlElement("name")]
-        public string? Name
-        {
-            get => _internal.ReadString(Models.Metadata.Extension.NameKey);
-            set => _internal[Models.Metadata.Extension.NameKey] = value;
-        }
-
-        #endregion
-
         #region Accessors
 
         /// <inheritdoc/>
@@ -44,7 +30,7 @@ namespace SabreTools.DatItems.Formats
             _internal = new Models.Metadata.Extension();
             Machine = new Machine();
 
-            Name = string.Empty;
+            SetName(string.Empty);
             ItemType = ItemType.Extension;
         }
 

@@ -170,7 +170,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 return new Models.Listrom.Row
                 {
-                    Name = disk.Name,
+                    Name = disk.GetName(),
                     NoGoodDumpKnown = true,
                 };
             }
@@ -178,7 +178,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 var row = new Models.Listrom.Row
                 {
-                    Name = disk.Name,
+                    Name = disk.GetName(),
                     Bad = true,
                 };
 
@@ -193,7 +193,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 var row = new Models.Listrom.Row
                 {
-                    Name = disk.Name,
+                    Name = disk.GetName(),
                 };
 
                 if (!string.IsNullOrEmpty(disk.MD5))
@@ -214,7 +214,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 return new Models.Listrom.Row
                 {
-                    Name = rom.Name,
+                    Name = rom.GetName(),
                     Size = rom.Size?.ToString(),
                     NoGoodDumpKnown = true,
                 };
@@ -223,7 +223,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 return new Models.Listrom.Row
                 {
-                    Name = rom.Name,
+                    Name = rom.GetName(),
                     Size = rom.Size?.ToString(),
                     Bad = true,
                     CRC = rom.CRC,
@@ -234,7 +234,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 return new Models.Listrom.Row
                 {
-                    Name = rom.Name,
+                    Name = rom.GetName(),
                     Size = rom.Size?.ToString(),
                     CRC = rom.CRC,
                     SHA1 = rom.SHA1,

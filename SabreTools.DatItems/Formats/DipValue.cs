@@ -15,16 +15,6 @@ namespace SabreTools.DatItems.Formats
         #region Fields
 
         /// <summary>
-        /// Setting name
-        /// </summary>
-        [JsonProperty("name"), XmlElement("name")]
-        public string? Name
-        {
-            get => _internal.ReadString(Models.Metadata.DipValue.NameKey);
-            set => _internal[Models.Metadata.DipValue.NameKey] = value;
-        }
-
-        /// <summary>
         /// Setting value
         /// </summary>
         [JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("value")]
@@ -82,7 +72,7 @@ namespace SabreTools.DatItems.Formats
             _internal = new Models.Metadata.DipValue();
             Machine = new Machine();
 
-            Name = string.Empty;
+            SetName(string.Empty);
             ItemType = ItemType.DipValue;
         }
 

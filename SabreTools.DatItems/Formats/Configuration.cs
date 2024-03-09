@@ -15,16 +15,6 @@ namespace SabreTools.DatItems.Formats
         #region Fields
 
         /// <summary>
-        /// Name of the item
-        /// </summary>
-        [JsonProperty("name"), XmlElement("name")]
-        public string? Name
-        {
-            get => _internal.ReadString(Models.Metadata.Configuration.NameKey);
-            set => _internal[Models.Metadata.Configuration.NameKey] = value;
-        }
-
-        /// <summary>
         /// Tag associated with the configuration
         /// </summary>
         [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tag")]
@@ -105,7 +95,7 @@ namespace SabreTools.DatItems.Formats
             _internal = new Models.Metadata.Configuration();
             Machine = new Machine();
 
-            Name = string.Empty;
+            SetName(string.Empty);
             ItemType = ItemType.Configuration;
         }
 

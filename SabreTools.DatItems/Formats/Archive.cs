@@ -13,16 +13,6 @@ namespace SabreTools.DatItems.Formats
         #region Fields
 
         /// <summary>
-        /// Name of the item
-        /// </summary>
-        [JsonProperty("name"), XmlElement("name")]
-        public string? Name
-        {
-            get => _internal.ReadString(Models.Metadata.Archive.NameKey);
-            set => _internal[Models.Metadata.Archive.NameKey] = value;
-        }
-
-        /// <summary>
         /// Archive ID number
         /// </summary>
         /// <remarks>TODO: No-Intro database export only</remarks>
@@ -109,7 +99,7 @@ namespace SabreTools.DatItems.Formats
             _internal = new Models.Metadata.Archive();
             Machine = new Machine();
 
-            Name = string.Empty;
+            SetName(string.Empty);
             ItemType = ItemType.Archive;
         }
 

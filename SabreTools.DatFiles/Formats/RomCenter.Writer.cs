@@ -187,7 +187,7 @@ namespace SabreTools.DatFiles.Formats
                 //ParentDescription = item.Machine.CloneOfDescription, // TODO: Add to internal model or find mapping
                 GameName = item.Machine.Name,
                 GameDescription = item.Machine.Description,
-                RomName = item.Name,
+                RomName = item.GetName(),
                 RomCRC = item.CRC,
                 RomSize = item.Size?.ToString(),
                 RomOf = item.Machine.RomOf,

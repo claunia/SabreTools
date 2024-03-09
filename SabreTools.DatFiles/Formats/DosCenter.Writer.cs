@@ -178,7 +178,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var rom = new Models.DosCenter.File
             {
-                Name = item.Name,
+                Name = item.GetName(),
                 Size = item.Size?.ToString(),
                 CRC = item.CRC,
                 Date = item.Date,

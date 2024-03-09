@@ -18,16 +18,6 @@ namespace SabreTools.DatItems.Formats
         #region Common
 
         /// <summary>
-        /// Name of the item
-        /// </summary>
-        [JsonProperty("name"), XmlElement("name")]
-        public string? Name
-        {
-            get => _internal.ReadString(Models.Metadata.Disk.NameKey);
-            set => _internal[Models.Metadata.Disk.NameKey] = value;
-        }
-
-        /// <summary>
         /// Data MD5 hash
         /// </summary>
         [JsonProperty("md5", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("md5")]
@@ -138,7 +128,7 @@ namespace SabreTools.DatItems.Formats
             get
             {
                 return DiskArea != null
-                    && !string.IsNullOrEmpty(DiskArea.Name);
+                    && !string.IsNullOrEmpty(DiskArea.GetName());
             }
         }
 
@@ -159,7 +149,7 @@ namespace SabreTools.DatItems.Formats
             get
             {
                 return Part != null
-                    && (!string.IsNullOrEmpty(Part.Name)
+                    && (!string.IsNullOrEmpty(Part.GetName())
                         || !string.IsNullOrEmpty(Part.Interface));
             }
         }
@@ -188,7 +178,7 @@ namespace SabreTools.DatItems.Formats
             _internal = new Models.Metadata.Disk();
             Machine = new Machine();
 
-            Name = string.Empty;
+            SetName(string.Empty);
             ItemType = ItemType.Disk;
             DupeType = 0x00;
             ItemStatus = ItemStatus.None;
@@ -202,7 +192,7 @@ namespace SabreTools.DatItems.Formats
             _internal = new Models.Metadata.Disk();
             Machine = new Machine();
 
-            Name = baseFile.Filename;
+            SetName(baseFile.Filename);
             MD5 = TextHelper.ByteArrayToString(baseFile.MD5);
             SHA1 = TextHelper.ByteArrayToString(baseFile.SHA1);
 
@@ -238,7 +228,7 @@ namespace SabreTools.DatItems.Formats
         {
             return new BaseFile()
             {
-                Filename = this.Name,
+                Filename = this.GetName(),
                 Parent = this.Machine.Name,
                 MD5 = TextHelper.StringToByteArray(this.MD5),
                 SHA1 = TextHelper.StringToByteArray(this.SHA1),
@@ -260,9 +250,11 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
 
-                DataArea = new DataArea { Name = this.DiskArea?.Name },
+                DataArea = new DataArea(),
                 Part = this.Part,
             };
+
+            rom.DataArea.SetName(this.DiskArea?.GetName());
 
             return rom;
         }

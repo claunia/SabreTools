@@ -15,16 +15,6 @@ namespace SabreTools.DatItems.Formats
         #region Fields
 
         /// <summary>
-        /// Name of the item
-        /// </summary>
-        [JsonProperty("name"), XmlElement("name")]
-        public string? Name
-        {
-            get => _internal.ReadString(Models.Metadata.Chip.NameKey);
-            set => _internal[Models.Metadata.Chip.NameKey] = value;
-        }
-
-        /// <summary>
         /// Internal tag
         /// </summary>
         [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tag")]
@@ -83,7 +73,7 @@ namespace SabreTools.DatItems.Formats
             _internal = new Models.Metadata.Chip();
             Machine = new Machine();
 
-            Name = string.Empty;
+            SetName(string.Empty);
             ItemType = ItemType.Chip;
         }
 

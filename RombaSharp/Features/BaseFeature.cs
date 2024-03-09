@@ -785,10 +785,10 @@ CREATE TABLE IF NOT EXISTS dat (
         internal void AddDatToDatabase(Rom dat, SqliteConnection dbc)
         {
             // Get the dat full path
-            string fullpath = Path.Combine(_dats!, (dat.Machine.Name == "dats" ? string.Empty : dat.Machine.Name)!, dat.Name!);
+            string fullpath = Path.Combine(_dats!, (dat.Machine.Name == "dats" ? string.Empty : dat.Machine.Name)!, dat.GetName()!);
 
             // Parse the Dat if possible
-            logger.User($"Adding from '{dat.Name}'");
+            logger.User($"Adding from '{dat.GetName()}'");
             DatFile tempdat = Parser.CreateAndParse(fullpath);
 
             // If the Dat wasn't empty, add the information

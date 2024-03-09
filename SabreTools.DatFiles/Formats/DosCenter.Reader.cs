@@ -141,7 +141,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Rom
                 {
-                    Name = rom.Name,
                     Size = NumberHelper.ConvertToInt64(rom.Size),
                     CRC = rom.CRC,
                     Date = rom.Date,
@@ -152,6 +151,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(rom.Name);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);

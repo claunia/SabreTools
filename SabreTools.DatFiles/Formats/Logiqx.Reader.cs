@@ -320,7 +320,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Release
                 {
-                    Name = release.Name,
                     Region = release.Region,
                     Language = release.Language,
                     Date = release.Date,
@@ -332,6 +331,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(release.Name);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -358,7 +358,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new BiosSet
                 {
-                    Name = biosset.Name,
                     Description = biosset.Description,
                     Default = biosset.Default?.AsYesNo(),
 
@@ -368,6 +367,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(biosset.Name);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -394,7 +394,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Rom
                 {
-                    Name = rom.Name,
                     Size = NumberHelper.ConvertToInt64(rom.Size),
                     CRC = rom.CRC,
                     MD5 = rom.MD5,
@@ -419,6 +418,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(rom.Name);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -445,7 +445,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Disk
                 {
-                    Name = disk.Name,
                     MD5 = disk.MD5,
                     SHA1 = disk.SHA1,
                     MergeTag = disk.Merge,
@@ -457,6 +456,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(disk.Name);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -483,7 +483,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Media
                 {
-                    Name = medium.Name,
                     MD5 = medium.MD5,
                     SHA1 = medium.SHA1,
                     SHA256 = medium.SHA256,
@@ -495,6 +494,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(medium.Name);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -521,14 +521,13 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new DeviceReference
                 {
-                    Name = deviceref.Name,
-
                     Source = new Source
                     {
                         Index = indexId,
                         Name = filename,
                     },
                 };
+                item.SetName(deviceref.Name);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -555,14 +554,13 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Sample
                 {
-                    Name = sample.Name,
-
                     Source = new Source
                     {
                         Index = indexId,
                         Name = filename,
                     },
                 };
+                item.SetName(sample.Name);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -589,14 +587,13 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Archive
                 {
-                    Name = archive.Name,
-
                     Source = new Source
                     {
                         Index = indexId,
                         Name = filename,
                     },
                 };
+                item.SetName(archive.Name);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -662,7 +659,6 @@ namespace SabreTools.DatFiles.Formats
                 var item = new DatItems.Formats.SoftwareList
                 {
                     Tag = softwarelist.Tag,
-                    Name = softwarelist.Name,
                     Status = softwarelist.Status?.AsEnumValue<SoftwareListStatus>() ?? SoftwareListStatus.None,
                     Filter = softwarelist.Filter,
 
@@ -672,6 +668,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(softwarelist.Name);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);

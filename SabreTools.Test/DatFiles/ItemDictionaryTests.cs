@@ -20,8 +20,8 @@ namespace SabreTools.Test.DatFiles
             // Setup the dictionary
             var dict = new ItemDictionary
             {
-                ["game-1"] = new ConcurrentList<DatItem>
-                {
+                ["game-1"] =
+                [
                     new Rom
                     {
                         Name = "rom-1",
@@ -38,7 +38,7 @@ namespace SabreTools.Test.DatFiles
                         SHA1 = "000000e948edcb4f7704b8af85a77a3339ecce44",
                         Machine = new Machine { Name = "game-1" },
                     },
-                },
+                ],
                 ["game-2"] = new ConcurrentList<DatItem>
                 {
                     new Rom

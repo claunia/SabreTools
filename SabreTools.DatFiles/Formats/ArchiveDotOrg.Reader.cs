@@ -103,7 +103,6 @@ namespace SabreTools.DatFiles.Formats
 
             var rom = new Rom()
             {
-                Name = name,
                 ArchiveDotOrgSource = file.Source,
                 //BitTorrentMagnetHash = file.BitTorrentMagnetHash, // TODO: Add to internal model
                 Date = file.LastModifiedTime?.ToString(),
@@ -176,6 +175,7 @@ namespace SabreTools.DatFiles.Formats
                     Name = filename,
                 },
             };
+            rom.SetName(name);
 
             // Now process and add the rom
             rom.CopyMachineInformation(machine);

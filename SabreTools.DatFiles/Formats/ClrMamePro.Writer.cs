@@ -41,21 +41,21 @@ namespace SabreTools.DatFiles.Formats
             switch (datItem)
             {
                 case Release release:
-                    if (string.IsNullOrEmpty(release.Name))
+                    if (string.IsNullOrEmpty(release.GetName()))
                         missingFields.Add(Models.Metadata.Release.NameKey);
                     if (string.IsNullOrEmpty(release.Region))
                         missingFields.Add(Models.Metadata.Release.RegionKey);
                     break;
 
                 case BiosSet biosset:
-                    if (string.IsNullOrEmpty(biosset.Name))
+                    if (string.IsNullOrEmpty(biosset.GetName()))
                         missingFields.Add(Models.Metadata.BiosSet.NameKey);
                     if (string.IsNullOrEmpty(biosset.Description))
                         missingFields.Add(Models.Metadata.BiosSet.DescriptionKey);
                     break;
 
                 case Rom rom:
-                    if (string.IsNullOrEmpty(rom.Name))
+                    if (string.IsNullOrEmpty(rom.GetName()))
                         missingFields.Add(Models.Metadata.Rom.NameKey);
                     if (rom.Size == null || rom.Size < 0)
                         missingFields.Add(Models.Metadata.Rom.SizeKey);
@@ -72,7 +72,7 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case Disk disk:
-                    if (string.IsNullOrEmpty(disk.Name))
+                    if (string.IsNullOrEmpty(disk.GetName()))
                         missingFields.Add(Models.Metadata.Disk.NameKey);
                     if (string.IsNullOrEmpty(disk.MD5)
                         && string.IsNullOrEmpty(disk.SHA1))
@@ -82,19 +82,19 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case Sample sample:
-                    if (string.IsNullOrEmpty(sample.Name))
+                    if (string.IsNullOrEmpty(sample.GetName()))
                         missingFields.Add(Models.Metadata.Sample.NameKey);
                     break;
 
                 case Archive archive:
-                    if (string.IsNullOrEmpty(archive.Name))
+                    if (string.IsNullOrEmpty(archive.GetName()))
                         missingFields.Add(Models.Metadata.Archive.NameKey);
                     break;
 
                 case Chip chip:
                     if (!chip.ChipTypeSpecified)
                         missingFields.Add(Models.Metadata.Chip.ChipTypeKey);
-                    if (string.IsNullOrEmpty(chip.Name))
+                    if (string.IsNullOrEmpty(chip.GetName()))
                         missingFields.Add(Models.Metadata.Chip.NameKey);
                     break;
 
@@ -118,7 +118,7 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case DipSwitch dipswitch:
-                    if (string.IsNullOrEmpty(dipswitch.Name))
+                    if (string.IsNullOrEmpty(dipswitch.GetName()))
                         missingFields.Add(Models.Metadata.DipSwitch.NameKey);
                     break;
 
@@ -337,7 +337,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var release = new Models.ClrMamePro.Release
             {
-                Name = item.Name,
+                Name = item.GetName(),
                 Region = item.Region,
                 Language = item.Language,
                 Date = item.Date,
@@ -356,7 +356,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var biosset = new Models.ClrMamePro.BiosSet
             {
-                Name = item.Name,
+                Name = item.GetName(),
                 Description = item.Description,
             };
 
@@ -373,7 +373,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var rom = new Models.ClrMamePro.Rom
             {
-                Name = item.Name,
+                Name = item.GetName(),
                 Size = item.Size?.ToString(),
                 CRC = item.CRC,
                 MD5 = item.MD5,
@@ -410,7 +410,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var disk = new Models.ClrMamePro.Disk
             {
-                Name = item.Name,
+                Name = item.GetName(),
                 MD5 = item.MD5,
                 SHA1 = item.SHA1,
                 Merge = item.MergeTag,
@@ -430,7 +430,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var media = new Models.ClrMamePro.Media
             {
-                Name = item.Name,
+                Name = item.GetName(),
                 MD5 = item.MD5,
                 SHA1 = item.SHA1,
                 SHA256 = item.SHA256,
@@ -446,7 +446,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var sample = new Models.ClrMamePro.Sample
             {
-                Name = item.Name,
+                Name = item.GetName(),
             };
             return sample;
         }
@@ -458,7 +458,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var archive = new Models.ClrMamePro.Archive
             {
-                Name = item.Name,
+                Name = item.GetName(),
             };
             return archive;
         }
@@ -471,7 +471,7 @@ namespace SabreTools.DatFiles.Formats
             var chip = new Models.ClrMamePro.Chip
             {
                 Type = item.ChipType.AsStringValue<ChipType>(),
-                Name = item.Name,
+                Name = item.GetName(),
                 //Flags = item.Flags, // TODO: Add to internal model
                 Clock = item.Clock?.ToString(),
             };
@@ -547,7 +547,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var dipswitch = new Models.ClrMamePro.DipSwitch
             {
-                Name = item.Name,
+                Name = item.GetName(),
             };
 
             if (item.ValuesSpecified)

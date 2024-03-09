@@ -547,8 +547,8 @@ namespace SabreTools.DatTools
 
                 // Get the item from the current file
                 Rom item = new(BaseFile.GetInfo(stream, keepReadOpen: true));
-                item.Machine.Name = Path.GetFileNameWithoutExtension(item.Name);
-                item.Machine.Description = Path.GetFileNameWithoutExtension(item.Name);
+                item.Machine.Name = Path.GetFileNameWithoutExtension(item.GetName());
+                item.Machine.Description = Path.GetFileNameWithoutExtension(item.GetName());
 
                 // If we are coming from an archive, set the correct machine name
                 if (machinename != null)

@@ -172,7 +172,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Release
                 {
-                    Name = release.Name,
                     Region = release.Region,
                     Language = release.Language,
                     Date = release.Date,
@@ -184,6 +183,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(release.Name);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -210,7 +210,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new BiosSet
                 {
-                    Name = biosset.Name,
                     Description = biosset.Description,
                     Default = biosset.Default?.AsYesNo(),
 
@@ -220,6 +219,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(biosset.Name);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -246,7 +246,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Rom
                 {
-                    Name = rom.Name,
                     Size = NumberHelper.ConvertToInt64(rom.Size),
                     CRC = rom.CRC,
                     MD5 = rom.MD5,
@@ -274,6 +273,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(rom.Name);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -300,7 +300,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Disk
                 {
-                    Name = disk.Name,
                     MD5 = disk.MD5,
                     SHA1 = disk.SHA1,
                     MergeTag = disk.Merge,
@@ -313,6 +312,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(disk.Name);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -339,7 +339,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Media
                 {
-                    Name = medium.Name,
                     MD5 = medium.MD5,
                     SHA1 = medium.SHA1,
                     SHA256 = medium.SHA256,
@@ -351,6 +350,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(medium.Name);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -377,14 +377,13 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Archive
                 {
-                    Name = archive.Name,
-
                     Source = new Source
                     {
                         Index = indexId,
                         Name = filename,
                     },
                 };
+                item.SetName(archive.Name);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -412,7 +411,6 @@ namespace SabreTools.DatFiles.Formats
                 var item = new Chip
                 {
                     ChipType = chip.Type?.AsEnumValue<ChipType>() ?? ChipType.NULL,
-                    Name = chip.Name,
                     //Flags = chip.Flags, // TODO: Add to internal model
                     Clock = NumberHelper.ConvertToInt64(chip.Clock),
 
@@ -422,6 +420,7 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(chip.Name);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -570,7 +569,6 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new DipSwitch
                 {
-                    Name = dipswitch.Name,
                     Values = [],
 
                     Source = new Source
@@ -579,15 +577,17 @@ namespace SabreTools.DatFiles.Formats
                         Name = filename,
                     },
                 };
+                item.SetName(dipswitch.Name);
 
                 foreach (string entry in dipswitch.Entry ?? [])
                 {
                     var dipValue = new DipValue
                     {
-                        Name = dipswitch.Name,
                         Value = entry,
                         Default = entry == dipswitch.Default,
                     };
+                    dipValue.SetName(dipswitch.Name);
+
                     item.Values.Add(dipValue);
                 }
 

@@ -18,16 +18,6 @@ namespace SabreTools.DatItems.Formats
         #region Common
 
         /// <summary>
-        /// Name of the item
-        /// </summary>
-        [JsonProperty("name"), XmlElement("name")]
-        public string? Name
-        {
-            get => _internal.ReadString(Models.Metadata.Rom.NameKey);
-            set => _internal[Models.Metadata.Rom.NameKey] = value;
-        }
-
-        /// <summary>
         /// What BIOS is required for this rom
         /// </summary>
         [JsonProperty("bios", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("bios")]
@@ -383,7 +373,7 @@ namespace SabreTools.DatItems.Formats
             get
             {
                 return DataArea != null
-                    && (!string.IsNullOrEmpty(DataArea.Name)
+                    && (!string.IsNullOrEmpty(DataArea.GetName())
                         || DataArea.SizeSpecified
                         || DataArea.WidthSpecified
                         || DataArea.EndiannessSpecified);
@@ -421,7 +411,7 @@ namespace SabreTools.DatItems.Formats
             get
             {
                 return Part != null
-                    && (!string.IsNullOrEmpty(Part.Name)
+                    && (!string.IsNullOrEmpty(Part.GetName())
                         || !string.IsNullOrEmpty(Part.Interface));
             }
         }
@@ -460,7 +450,7 @@ namespace SabreTools.DatItems.Formats
             _internal = new Models.Metadata.Rom();
             Machine = new Machine();
 
-            Name = null;
+            SetName(null);
             ItemType = ItemType.Rom;
             DupeType = 0x00;
             ItemStatus = ItemStatus.None;
@@ -475,7 +465,7 @@ namespace SabreTools.DatItems.Formats
         public Rom(string name, string machineName)
         {
             _internal = new Models.Metadata.Rom();
-            Name = name;
+            SetName(name);
             ItemType = ItemType.Rom;
             Size = null;
             ItemStatus = ItemStatus.None;
@@ -496,7 +486,7 @@ namespace SabreTools.DatItems.Formats
             _internal = new Models.Metadata.Rom();
             Machine = new Machine();
 
-            Name = baseFile.Filename;
+            SetName(baseFile.Filename);
             Size = baseFile.Size;
             CRC = TextHelper.ByteArrayToString(baseFile.CRC);
             MD5 = TextHelper.ByteArrayToString(baseFile.MD5);
@@ -533,7 +523,6 @@ namespace SabreTools.DatItems.Formats
         {
             return new Rom()
             {
-                Name = this.Name,
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
@@ -552,7 +541,7 @@ namespace SabreTools.DatItems.Formats
         {
             return new BaseFile()
             {
-                Filename = this.Name,
+                Filename = this.GetName(),
                 Parent = this.Machine.Name,
                 Date = this.Date,
                 Size = this.Size,
