@@ -37,9 +37,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a SharedFeature object from the internal model
         /// </summary>
-        public SharedFeature(Models.Metadata.SharedFeat? item)
+        public SharedFeature(Models.Metadata.SharedFeat item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.SharedFeature);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

@@ -106,9 +106,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create an Archive object from the internal model
         /// </summary>
-        public Archive(Models.Metadata.Archive? item)
+        public Archive(Models.Metadata.Archive item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Archive);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

@@ -37,9 +37,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create an Instance object from the internal model
         /// </summary>
-        public Instance(Models.Metadata.Instance? item)
+        public Instance(Models.Metadata.Instance item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Instance);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

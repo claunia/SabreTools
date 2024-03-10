@@ -40,9 +40,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a Port object from the internal model
         /// </summary>
-        public Port(Models.Metadata.Port? item)
+        public Port(Models.Metadata.Port item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Port);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

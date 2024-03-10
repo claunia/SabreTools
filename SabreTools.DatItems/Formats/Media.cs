@@ -40,9 +40,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a Media object from the internal model
         /// </summary>
-        public Media(Models.Metadata.Media? item)
+        public Media(Models.Metadata.Media item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Media);
             SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
@@ -103,7 +103,7 @@ namespace SabreTools.DatItems.Formats
         /// <returns></returns>
         public Rom ConvertToRom()
         {
-            var rom = new Rom(_internal.ConvertToRom());
+            var rom = new Rom(_internal.ConvertToRom()!);
             rom.SetFieldValue<DupeType>(DatItem.DupeTypeKey, GetFieldValue<DupeType>(DatItem.DupeTypeKey));
             rom.SetFieldValue<Machine>(DatItem.MachineKey, GetFieldValue<Machine>(DatItem.MachineKey));
             rom.SetFieldValue<bool>(DatItem.RemoveKey, GetFieldValue<bool>(DatItem.RemoveKey));

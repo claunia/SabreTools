@@ -149,9 +149,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a Rom object from the internal model
         /// </summary>
-        public Rom(Models.Metadata.Rom? item)
+        public Rom(Models.Metadata.Rom item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Rom);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

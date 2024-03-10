@@ -50,9 +50,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a Device object from the internal model
         /// </summary>
-        public Device(Models.Metadata.Device? item)
+        public Device(Models.Metadata.Device item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Device);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

@@ -51,9 +51,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a ConfSetting object from the internal model
         /// </summary>
-        public ConfSetting(Models.Metadata.ConfSetting? item)
+        public ConfSetting(Models.Metadata.ConfSetting item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.ConfSetting);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

@@ -98,9 +98,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a Disk object from the internal model
         /// </summary>
-        public Disk(Models.Metadata.Disk? item)
+        public Disk(Models.Metadata.Disk item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Disk);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
@@ -139,7 +139,7 @@ namespace SabreTools.DatItems.Formats
         /// <returns></returns>
         public Rom ConvertToRom()
         {
-            var rom = new Rom(_internal.ConvertToRom());
+            var rom = new Rom(_internal.ConvertToRom()!);
             rom.GetFieldValue<DataArea?>(Rom.DataAreaKey)?.SetName(this.GetFieldValue<DiskArea?>(Disk.DiskAreaKey)?.GetName());
             rom.SetFieldValue<DupeType>(DatItem.DupeTypeKey, GetFieldValue<DupeType>(DatItem.DupeTypeKey));
             rom.SetFieldValue<Machine>(DatItem.MachineKey, GetFieldValue<Machine>(DatItem.MachineKey)!.Clone() as Machine ?? new Machine());

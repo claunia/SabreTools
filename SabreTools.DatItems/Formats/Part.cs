@@ -52,9 +52,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a Part object from the internal model
         /// </summary>
-        public Part(Models.Metadata.Part? item)
+        public Part(Models.Metadata.Part item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Part);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

@@ -51,9 +51,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a DipValue object from the internal model
         /// </summary>
-        public DipValue(Models.Metadata.DipValue? item)
+        public DipValue(Models.Metadata.DipValue item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.DipValue);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

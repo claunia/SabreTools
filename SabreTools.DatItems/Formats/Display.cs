@@ -26,9 +26,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a Display object from the internal model
         /// </summary>
-        public Display(Models.Metadata.Display? item)
+        public Display(Models.Metadata.Display item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Display);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
@@ -37,10 +37,10 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a Display object from the internal model
         /// </summary>
-        public Display(Models.Metadata.Video? item)
+        public Display(Models.Metadata.Video item)
         {
             // TODO: Determine what transformation is needed here
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Display);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

@@ -37,9 +37,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a SlotOption object from the internal model
         /// </summary>
-        public SlotOption(Models.Metadata.SlotOption? item)
+        public SlotOption(Models.Metadata.SlotOption item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.SlotOption);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

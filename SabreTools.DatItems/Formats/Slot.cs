@@ -51,9 +51,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a Slot object from the internal model
         /// </summary>
-        public Slot(Models.Metadata.Slot? item)
+        public Slot(Models.Metadata.Slot item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Slot);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

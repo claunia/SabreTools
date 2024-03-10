@@ -37,9 +37,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a ConfLocation object from the internal model
         /// </summary>
-        public ConfLocation(Models.Metadata.ConfLocation? item)
+        public ConfLocation(Models.Metadata.ConfLocation item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.ConfLocation);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

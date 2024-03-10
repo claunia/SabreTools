@@ -37,9 +37,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create an Extension object from the internal model
         /// </summary>
-        public Extension(Models.Metadata.Extension? item)
+        public Extension(Models.Metadata.Extension item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Extension);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

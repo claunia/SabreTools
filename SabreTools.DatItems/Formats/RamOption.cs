@@ -37,9 +37,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a RamOption object from the internal model
         /// </summary>
-        public RamOption(Models.Metadata.RamOption? item)
+        public RamOption(Models.Metadata.RamOption item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.RamOption);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

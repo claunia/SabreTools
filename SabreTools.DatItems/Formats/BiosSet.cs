@@ -37,9 +37,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a BiosSet object from the internal model
         /// </summary>
-        public BiosSet(Models.Metadata.BiosSet? item)
+        public BiosSet(Models.Metadata.BiosSet item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.BiosSet);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

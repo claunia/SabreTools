@@ -51,9 +51,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create an Adjuster object from the internal model
         /// </summary>
-        public Adjuster(Models.Metadata.Adjuster? item)
+        public Adjuster(Models.Metadata.Adjuster item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Adjuster);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

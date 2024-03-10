@@ -40,9 +40,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a SoftwareList object from the internal model
         /// </summary>
-        public SoftwareList(Models.Metadata.SoftwareList? item)
+        public SoftwareList(Models.Metadata.SoftwareList item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.SoftwareList);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

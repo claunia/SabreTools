@@ -29,9 +29,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a Driver object from the internal model
         /// </summary>
-        public Driver(Models.Metadata.Driver? item)
+        public Driver(Models.Metadata.Driver item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Driver);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

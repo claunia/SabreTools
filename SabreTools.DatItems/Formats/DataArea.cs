@@ -38,9 +38,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a DataArea object from the internal model
         /// </summary>
-        public DataArea(Models.Metadata.DataArea? item)
+        public DataArea(Models.Metadata.DataArea item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.DataArea);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

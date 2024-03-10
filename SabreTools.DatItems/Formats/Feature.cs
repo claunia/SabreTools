@@ -26,9 +26,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a Feature object from the internal model
         /// </summary>
-        public Feature(Models.Metadata.Feature? item)
+        public Feature(Models.Metadata.Feature item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Feature);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

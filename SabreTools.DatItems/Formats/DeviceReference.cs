@@ -37,9 +37,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a DeviceReference object from the internal model
         /// </summary>
-        public DeviceReference(Models.Metadata.DeviceRef? item)
+        public DeviceReference(Models.Metadata.DeviceRef item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.DeviceReference);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

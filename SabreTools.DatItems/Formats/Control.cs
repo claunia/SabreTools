@@ -26,9 +26,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a Control object from the internal model
         /// </summary>
-        public Control(Models.Metadata.Control? item)
+        public Control(Models.Metadata.Control item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Control);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

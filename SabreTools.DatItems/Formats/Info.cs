@@ -37,9 +37,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create an Info object from the internal model
         /// </summary>
-        public Info(Models.Metadata.Info? item)
+        public Info(Models.Metadata.Info item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Info);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

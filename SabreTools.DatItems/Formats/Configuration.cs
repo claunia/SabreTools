@@ -71,9 +71,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a Configuration object from the internal model
         /// </summary>
-        public Configuration(Models.Metadata.Configuration? item)
+        public Configuration(Models.Metadata.Configuration item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Configuration);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

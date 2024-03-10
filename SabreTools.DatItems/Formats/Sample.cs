@@ -37,9 +37,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a Sample object from the internal model
         /// </summary>
-        public Sample(Models.Metadata.Sample? item)
+        public Sample(Models.Metadata.Sample item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Sample);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

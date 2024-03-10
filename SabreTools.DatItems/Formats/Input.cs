@@ -40,9 +40,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create an Input object from the internal model
         /// </summary>
-        public Input(Models.Metadata.Input? item)
+        public Input(Models.Metadata.Input item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Input);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

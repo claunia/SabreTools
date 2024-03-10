@@ -37,9 +37,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a DipLocation object from the internal model
         /// </summary>
-        public DipLocation(Models.Metadata.DipLocation? item)
+        public DipLocation(Models.Metadata.DipLocation item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.DipLocation);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

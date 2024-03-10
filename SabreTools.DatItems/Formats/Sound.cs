@@ -26,9 +26,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a Sound object from the internal model
         /// </summary>
-        public Sound(Models.Metadata.Sound? item)
+        public Sound(Models.Metadata.Sound item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Sound);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

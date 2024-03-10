@@ -26,9 +26,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a Condition object from the internal model
         /// </summary>
-        public Condition(Models.Metadata.Condition? item)
+        public Condition(Models.Metadata.Condition item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Condition);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

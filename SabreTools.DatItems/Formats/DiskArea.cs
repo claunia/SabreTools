@@ -38,9 +38,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a DiskArea object from the internal model
         /// </summary>
-        public DiskArea(Models.Metadata.DiskArea? item)
+        public DiskArea(Models.Metadata.DiskArea item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.DiskArea);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

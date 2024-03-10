@@ -92,9 +92,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a DipSwitch object from the internal model
         /// </summary>
-        public DipSwitch(Models.Metadata.DipSwitch? item)
+        public DipSwitch(Models.Metadata.DipSwitch item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.DipSwitch);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

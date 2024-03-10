@@ -37,9 +37,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a Release object from the internal model
         /// </summary>
-        public Release(Models.Metadata.Release? item)
+        public Release(Models.Metadata.Release item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Release);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

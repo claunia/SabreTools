@@ -26,9 +26,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create an Analog object from the internal model
         /// </summary>
-        public Analog(Models.Metadata.Analog? item)
+        public Analog(Models.Metadata.Analog item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Analog);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

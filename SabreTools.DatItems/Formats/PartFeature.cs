@@ -37,9 +37,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a PartFeature object from the internal model
         /// </summary>
-        public PartFeature(Models.Metadata.Feature? item)
+        public PartFeature(Models.Metadata.Feature item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.PartFeature);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());

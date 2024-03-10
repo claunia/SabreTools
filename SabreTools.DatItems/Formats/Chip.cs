@@ -37,9 +37,9 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a Chip object from the internal model
         /// </summary>
-        public Chip(Models.Metadata.Chip? item)
+        public Chip(Models.Metadata.Chip item)
         {
-            _internal = item ?? [];
+            _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Chip);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
