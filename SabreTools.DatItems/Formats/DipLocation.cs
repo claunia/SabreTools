@@ -34,6 +34,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.DipLocation;
         }
 
+        /// <summary>
+        /// Create a DipLocation object from the internal model
+        /// </summary>
+        public DipLocation(Models.Metadata.DipLocation? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.DipLocation;
+        }
+
         #endregion
 
         #region Cloning Methods

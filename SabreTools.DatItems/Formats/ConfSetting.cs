@@ -48,6 +48,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.ConfSetting;
         }
 
+        /// <summary>
+        /// Create a ConfSetting object from the internal model
+        /// </summary>
+        public ConfSetting(Models.Metadata.ConfSetting? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.ConfSetting;
+        }
+
         #endregion
 
         #region Cloning Methods

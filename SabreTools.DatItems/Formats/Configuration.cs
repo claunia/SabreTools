@@ -68,6 +68,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.Configuration;
         }
 
+        /// <summary>
+        /// Create a Configuration object from the internal model
+        /// </summary>
+        public Configuration(Models.Metadata.Configuration? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.Configuration;
+        }
+
         #endregion
 
         #region Cloning Methods

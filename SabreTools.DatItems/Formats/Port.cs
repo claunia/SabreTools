@@ -37,6 +37,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.Port;
         }
 
+        /// <summary>
+        /// Create a Port object from the internal model
+        /// </summary>
+        public Port(Models.Metadata.Port? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.Port;
+        }
+
         #endregion
 
         #region Cloning Methods

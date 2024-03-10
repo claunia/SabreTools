@@ -81,6 +81,17 @@ namespace SabreTools.DatItems.Formats
             SetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey, ItemStatus.None);
         }
 
+        /// <summary>
+        /// Create a Disk object from the internal model
+        /// </summary>
+        public Disk(Models.Metadata.Disk? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.Disk;
+        }
+
         #endregion
 
         #region Cloning Methods

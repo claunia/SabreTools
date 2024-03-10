@@ -26,6 +26,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.Driver;
         }
 
+        /// <summary>
+        /// Create a Driver object from the internal model
+        /// </summary>
+        public Driver(Models.Metadata.Driver? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.Driver;
+        }
+
         #endregion
 
         #region Cloning Methods

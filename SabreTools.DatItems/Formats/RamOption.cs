@@ -34,6 +34,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.RamOption;
         }
 
+        /// <summary>
+        /// Create a RamOption object from the internal model
+        /// </summary>
+        public RamOption(Models.Metadata.RamOption? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.RamOption;
+        }
+
         #endregion
 
         #region Cloning Methods

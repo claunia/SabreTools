@@ -38,6 +38,18 @@ namespace SabreTools.DatItems.Formats
         }
 
         /// <summary>
+        /// Create a Media object from the internal model
+        /// </summary>
+        public Media(Models.Metadata.Media? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.Media;
+            DupeType = 0x00;
+        }
+
+        /// <summary>
         /// Create a Media object from a BaseFile
         /// </summary>
         /// <param name="baseFile"></param>

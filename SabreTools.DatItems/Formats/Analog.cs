@@ -23,6 +23,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.Analog;
         }
 
+        /// <summary>
+        /// Create an Analog object from the internal model
+        /// </summary>
+        public Analog(Models.Metadata.Analog? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.Analog;
+        }
+
         #endregion
 
         #region Cloning Methods

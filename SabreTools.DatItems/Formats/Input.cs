@@ -37,6 +37,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.Input;
         }
 
+        /// <summary>
+        /// Create an Input object from the internal model
+        /// </summary>
+        public Input(Models.Metadata.Input? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.Input;
+        }
+
         #endregion
 
         #region Cloning Methods

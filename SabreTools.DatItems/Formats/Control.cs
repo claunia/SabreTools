@@ -23,6 +23,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.Control;
         }
 
+        /// <summary>
+        /// Create a Control object from the internal model
+        /// </summary>
+        public Control(Models.Metadata.Control? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.Control;
+        }
+
         #endregion
 
         #region Cloning Methods

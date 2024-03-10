@@ -34,6 +34,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.SharedFeature;
         }
 
+        /// <summary>
+        /// Create a SharedFeature object from the internal model
+        /// </summary>
+        public SharedFeature(Models.Metadata.SharedFeat? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.SharedFeature;
+        }
+
         #endregion
 
         #region Cloning Methods

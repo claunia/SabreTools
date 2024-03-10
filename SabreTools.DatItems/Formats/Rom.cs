@@ -137,13 +137,13 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Create a Rom object from the internal model
         /// </summary>
-        public Rom(Models.Metadata.Rom? rom)
+        public Rom(Models.Metadata.Rom? item)
         {
-            _internal = rom ?? [];
+            _internal = item ?? [];
+            Machine = new Machine();
 
             ItemType = ItemType.Rom;
             DupeType = 0x00;
-            SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.None);
         }
 
         #endregion

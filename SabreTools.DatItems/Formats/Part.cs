@@ -49,6 +49,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.Part;
         }
 
+        /// <summary>
+        /// Create a Part object from the internal model
+        /// </summary>
+        public Part(Models.Metadata.Part? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.Part;
+        }
+
         #endregion
 
         #region Cloning Methods

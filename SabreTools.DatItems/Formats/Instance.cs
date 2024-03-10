@@ -34,6 +34,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.Instance;
         }
 
+        /// <summary>
+        /// Create an Instance object from the internal model
+        /// </summary>
+        public Instance(Models.Metadata.Instance? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.Instance;
+        }
+
         #endregion
 
         #region Cloning Methods

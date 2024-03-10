@@ -34,6 +34,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.DeviceReference;
         }
 
+        /// <summary>
+        /// Create a DeviceReference object from the internal model
+        /// </summary>
+        public DeviceReference(Models.Metadata.DeviceRef? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.DeviceReference;
+        }
+
         #endregion
 
         #region Cloning Methods

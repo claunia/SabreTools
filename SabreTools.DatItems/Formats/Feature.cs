@@ -23,6 +23,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.Feature;
         }
 
+        /// <summary>
+        /// Create a Feature object from the internal model
+        /// </summary>
+        public Feature(Models.Metadata.Feature? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.Feature;
+        }
+
         #endregion
 
         #region Cloning Methods

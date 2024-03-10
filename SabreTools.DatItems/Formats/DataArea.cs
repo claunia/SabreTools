@@ -35,6 +35,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.DataArea;
         }
 
+        /// <summary>
+        /// Create a DataArea object from the internal model
+        /// </summary>
+        public DataArea(Models.Metadata.DataArea? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.DataArea;
+        }
+
         #endregion
 
         #region Cloning Methods

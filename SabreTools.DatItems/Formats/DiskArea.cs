@@ -35,6 +35,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.DiskArea;
         }
 
+        /// <summary>
+        /// Create a DiskArea object from the internal model
+        /// </summary>
+        public DiskArea(Models.Metadata.DiskArea? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.DiskArea;
+        }
+
         #endregion
 
         #region Cloning Methods

@@ -48,6 +48,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.DipValue;
         }
 
+        /// <summary>
+        /// Create a DipValue object from the internal model
+        /// </summary>
+        public DipValue(Models.Metadata.DipValue? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.DipValue;
+        }
+
         #endregion
 
         #region Cloning Methods

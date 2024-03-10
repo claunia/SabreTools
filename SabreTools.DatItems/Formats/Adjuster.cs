@@ -48,6 +48,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.Adjuster;
         }
 
+        /// <summary>
+        /// Create an Adjuster object from the internal model
+        /// </summary>
+        public Adjuster(Models.Metadata.Adjuster? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.Adjuster;
+        }
+
         #endregion
 
         #region Cloning Methods

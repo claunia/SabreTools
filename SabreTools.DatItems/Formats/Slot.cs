@@ -48,6 +48,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.Slot;
         }
 
+        /// <summary>
+        /// Create a Slot object from the internal model
+        /// </summary>
+        public Slot(Models.Metadata.Slot? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.Slot;
+        }
+
         #endregion
 
         #region Cloning Methods

@@ -34,6 +34,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.BiosSet;
         }
 
+        /// <summary>
+        /// Create a BiosSet object from the internal model
+        /// </summary>
+        public BiosSet(Models.Metadata.BiosSet? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.BiosSet;
+        }
+
         #endregion
 
         #region Cloning Methods

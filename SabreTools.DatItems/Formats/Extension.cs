@@ -34,6 +34,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.Extension;
         }
 
+        /// <summary>
+        /// Create an Extension object from the internal model
+        /// </summary>
+        public Extension(Models.Metadata.Extension? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.Extension;
+        }
+
         #endregion
 
         #region Cloning Methods

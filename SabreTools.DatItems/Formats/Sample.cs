@@ -34,6 +34,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.Sample;
         }
 
+        /// <summary>
+        /// Create a Sample object from the internal model
+        /// </summary>
+        public Sample(Models.Metadata.Sample? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.Sample;
+        }
+
         #endregion
 
         #region Cloning Methods

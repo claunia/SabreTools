@@ -23,6 +23,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.Display;
         }
 
+        /// <summary>
+        /// Create a Display object from the internal model
+        /// </summary>
+        public Display(Models.Metadata.Display? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.Display;
+        }
+
         #endregion
 
         #region Cloning Methods

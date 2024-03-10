@@ -23,6 +23,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.Condition;
         }
 
+        /// <summary>
+        /// Create a Condition object from the internal model
+        /// </summary>
+        public Condition(Models.Metadata.Condition? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.Condition;
+        }
+
         #endregion
 
         #region Cloning Methods

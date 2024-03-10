@@ -23,6 +23,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.Sound;
         }
 
+        /// <summary>
+        /// Create a Sound object from the internal model
+        /// </summary>
+        public Sound(Models.Metadata.Sound? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.Sound;
+        }
+
         #endregion
 
         #region Cloning Methods

@@ -80,6 +80,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.DipSwitch;
         }
 
+        /// <summary>
+        /// Create a DipSwitch object from the internal model
+        /// </summary>
+        public DipSwitch(Models.Metadata.DipSwitch? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.DipSwitch;
+        }
+
         #endregion
 
         #region Cloning Methods

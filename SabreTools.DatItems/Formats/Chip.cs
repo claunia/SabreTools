@@ -34,6 +34,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.Chip;
         }
 
+        /// <summary>
+        /// Create a Chip object from the internal model
+        /// </summary>
+        public Chip(Models.Metadata.Chip? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.Chip;
+        }
+
         #endregion
 
         #region Cloning Methods

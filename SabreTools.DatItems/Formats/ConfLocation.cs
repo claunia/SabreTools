@@ -34,6 +34,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.ConfLocation;
         }
 
+        /// <summary>
+        /// Create a ConfLocation object from the internal model
+        /// </summary>
+        public ConfLocation(Models.Metadata.ConfLocation? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.ConfLocation;
+        }
+
         #endregion
 
         #region Cloning Methods

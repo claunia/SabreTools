@@ -37,6 +37,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.SoftwareList;
         }
 
+        /// <summary>
+        /// Create a SoftwareList object from the internal model
+        /// </summary>
+        public SoftwareList(Models.Metadata.SoftwareList? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.SoftwareList;
+        }
+
         #endregion
 
         #region Cloning Methods

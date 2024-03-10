@@ -34,6 +34,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.Info;
         }
 
+        /// <summary>
+        /// Create an Info object from the internal model
+        /// </summary>
+        public Info(Models.Metadata.Info? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.Info;
+        }
+
         #endregion
 
         #region Cloning Methods
