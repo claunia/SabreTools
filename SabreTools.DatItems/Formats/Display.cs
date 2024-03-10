@@ -34,6 +34,18 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.Display;
         }
 
+        /// <summary>
+        /// Create a Display object from the internal model
+        /// </summary>
+        public Display(Models.Metadata.Video? item)
+        {
+            // TODO: Determine what transformation is needed here
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.Display;
+        }
+
         #endregion
 
         #region Cloning Methods
