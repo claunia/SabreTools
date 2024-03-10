@@ -703,6 +703,43 @@ namespace SabreTools.DatItems
     /// </summary>
     public abstract class DatItem<T> : DatItem, IEquatable<DatItem<T>>, IComparable<DatItem<T>>, ICloneable where T : Models.Metadata.DatItem
     {
+        #region Fields
+
+        /// <summary>
+        /// Item type for the object
+        /// </summary>
+        protected abstract ItemType ItemType { get; }
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Create a default, empty object
+        /// </summary>
+        public DatItem()
+        {
+            _internal = Activator.CreateInstance<T>();
+
+            SetName(string.Empty);
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
+        }
+
+        /// <summary>
+        /// Create an object from the internal model
+        /// </summary>
+        public DatItem(T item)
+        {
+            _internal = item;
+
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
+        }
+
+        #endregion
+
+        // TODO: Figure out how to replace individual versions with this
         #region Cloning Methods
 
         /// <summary>
