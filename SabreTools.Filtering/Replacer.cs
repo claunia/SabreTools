@@ -31,8 +31,8 @@ namespace SabreTools.Filtering
                 // Special case for description
                 if (machineFieldNames.Contains(Models.Metadata.Machine.DescriptionKey))
                 {
-                    if (!onlySame || (onlySame && machine.Name == machine.Description))
-                        machine.Description = repMachine.Description;
+                    if (!onlySame || (onlySame && machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) == machine.GetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey)))
+                        machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, repMachine.GetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey));
 
                     continue;
                 }

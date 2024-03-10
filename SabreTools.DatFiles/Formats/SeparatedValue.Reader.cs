@@ -71,11 +71,9 @@ namespace SabreTools.DatFiles.Formats
             Header.Description ??= row.Description;
 
             // Read Machine values
-            var machine = new Machine
-            {
-                Name = row.GameName,
-                Description = row.GameDescription,
-            };
+            var machine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, row.GameDescription);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, row.GameName);
 
             // Read item values
             DatItem? item = null;

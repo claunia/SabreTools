@@ -301,24 +301,22 @@ namespace SabreTools.DatFiles.Formats
             if (game == null)
                 return;
 
-            var machine = new Machine
-            {
-                //ImageNumber = game.ImageNumber, // TODO: Add to internal model
-                //ReleaseNumber = game.ReleaseNumber, // TODO: Add to internal model
-                Name = game.Title,
-                //SaveType = game.SaveType, // TODO: Add to internal model
-                Publisher = game.Publisher,
-                //Location = game.Location, // TODO: Add to internal model
-                //SourceRom = game.SourceRom, // TODO: Add to internal model
-                //Language = game.Language, // TODO: Add to internal model
-                //Im1CRC = game.Im1CRC, // TODO: Add to internal model
-                //Im2CRC = game.Im2CRC, // TODO: Add to internal model
-                Comment = game.Comment,
-            };
+            var machine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.CommentKey, game.Comment);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.Im1CRCKey, game.Im1CRC);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.Im2CRCKey, game.Im2CRC);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.ImageNumberKey, game.ImageNumber);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.LanguageKey, game.Language);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.LocationKey, game.Location);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, game.Title);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.PublisherKey, game.Publisher);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.ReleaseNumberKey, game.ReleaseNumber);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.SaveTypeKey, game.SaveType);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.SourceRomKey, game.SourceRom);
 
             long? size = NumberHelper.ConvertToInt64(game.RomSize);
             if (game.DuplicateID != "0")
-                machine.CloneOf = game.DuplicateID;
+                machine.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, game.DuplicateID);
 
             // Check if there are any items
             bool containsItems = false;
@@ -362,7 +360,7 @@ namespace SabreTools.DatFiles.Formats
                 string name = string.Empty;
                 if (!string.IsNullOrEmpty(releaseNumber) && releaseNumber != "0")
                     name += $"{releaseNumber} - ";
-                name += $"{machine.Name}{crc.Extension}";
+                name += $"{machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)}{crc.Extension}";
 
                 var item = new Rom
                 {

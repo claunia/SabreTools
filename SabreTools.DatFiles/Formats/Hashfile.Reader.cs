@@ -80,7 +80,9 @@ namespace SabreTools.DatFiles.Formats
                 filename = filename.Substring(machineName.Length + 1);
             }
 
-            var machine = new Machine { Name = machineName };
+            var machine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineName);
+
             return (machine, filename);
         }
 

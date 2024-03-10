@@ -105,18 +105,17 @@ namespace SabreTools.DatFiles.Formats
                 return;
 
             // Create the machine for copying information
-            var machine = new Machine
-            {
-                Name = game.Name,
-                Description = game.Description,
-                Year = game.Year,
-                Manufacturer = game.Manufacturer,
-                Category = game.Category,
-                CloneOf = game.CloneOf,
-                RomOf = game.RomOf,
-                SampleOf = game.SampleOf,
-                MachineType = (game is Models.ClrMamePro.Resource ? MachineType.Bios : MachineType.None),
-            };
+            var machine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.CategoryKey, game.Category);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, game.CloneOf);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, game.Description);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.ManufacturerKey, game.Manufacturer);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, game.Name);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, game.RomOf);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.SampleOfKey, game.SampleOf);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.YearKey, game.Year);
+            if (game is Models.ClrMamePro.Resource)
+                machine.SetFieldValue<bool?>(Models.Metadata.Machine.IsBiosKey, true);
 
             // Check if there are any items
             bool containsItems = false;

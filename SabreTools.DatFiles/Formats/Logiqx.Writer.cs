@@ -389,48 +389,39 @@ namespace SabreTools.DatFiles.Formats
         {
             Models.Logiqx.GameBase game = _deprecated ? new Models.Logiqx.Game() : new Models.Logiqx.Machine();
 
-            game.Name = machine.Name;
-            game.SourceFile = machine.SourceFile;
-#if NETFRAMEWORK
-            if ((machine.MachineType & MachineType.Bios) != 0)
+            game.Name = machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey);
+            game.SourceFile = machine.GetFieldValue<string?>(Models.Metadata.Machine.SourceFileKey);
+            if (machine.GetFieldValue<bool?>(Models.Metadata.Machine.IsBiosKey) == true)
                 game.IsBios = "yes";
-            if ((machine.MachineType & MachineType.Device) != 0)
+            if (machine.GetFieldValue<bool?>(Models.Metadata.Machine.IsDeviceKey) == true)
                 game.IsDevice = "yes";
-            if ((machine.MachineType & MachineType.Mechanical) != 0)
+            if (machine.GetFieldValue<bool?>(Models.Metadata.Machine.IsMechanicalKey) == true)
                 game.IsMechanical = "yes";
-#else
-            if (machine.MachineType.HasFlag(MachineType.Bios))
-                game.IsBios = "yes";
-            if (machine.MachineType.HasFlag(MachineType.Device))
-                game.IsDevice = "yes";
-            if (machine.MachineType.HasFlag(MachineType.Mechanical))
-                game.IsMechanical = "yes";
-#endif
-            game.CloneOf = machine.CloneOf;
-            game.RomOf = machine.RomOf;
-            game.SampleOf = machine.SampleOf;
-            game.Board = machine.Board;
-            game.RebuildTo = machine.RebuildTo;
-            game.Id = machine.NoIntroId;
-            game.CloneOfId = machine.NoIntroCloneOfId;
-            game.Runnable = machine.Runnable.AsStringValue<Runnable>();
-            if (machine.Comment != null)
+            game.CloneOf = machine.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey);
+            game.RomOf = machine.GetFieldValue<string?>(Models.Metadata.Machine.RomOfKey);
+            game.SampleOf = machine.GetFieldValue<string?>(Models.Metadata.Machine.SampleOfKey);
+            game.Board = machine.GetFieldValue<string?>(Models.Metadata.Machine.BoardKey);
+            game.RebuildTo = machine.GetFieldValue<string?>(Models.Metadata.Machine.RebuildToKey);
+            game.Id = machine.GetFieldValue<string?>(Models.Metadata.Machine.IdKey);
+            game.CloneOfId = machine.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfIdKey);
+            game.Runnable = machine.GetFieldValue<Runnable>(Models.Metadata.Machine.RunnableKey).AsStringValue<Runnable>();
+            if (machine.GetFieldValue<string?>(Models.Metadata.Machine.CommentKey) != null)
             {
-                if (machine.Comment.Contains(';'))
-                    game.Comment = machine.Comment.Split(';');
+                if (machine.GetFieldValue<string?>(Models.Metadata.Machine.CommentKey)!.Contains(';'))
+                    game.Comment = machine.GetFieldValue<string?>(Models.Metadata.Machine.CommentKey)!.Split(';');
                 else
-                    game.Comment = [machine.Comment];
+                    game.Comment = [machine.GetFieldValue<string?>(Models.Metadata.Machine.CommentKey)!];
             }
-            game.Description = machine.Description;
-            game.Year = machine.Year;
-            game.Manufacturer = machine.Manufacturer;
-            game.Publisher = machine.Publisher;
-            if (machine.Category != null)
+            game.Description = machine.GetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey);
+            game.Year = machine.GetFieldValue<string?>(Models.Metadata.Machine.YearKey);
+            game.Manufacturer = machine.GetFieldValue<string?>(Models.Metadata.Machine.ManufacturerKey);
+            game.Publisher = machine.GetFieldValue<string?>(Models.Metadata.Machine.PublisherKey);
+            if (machine.GetFieldValue<string?>(Models.Metadata.Machine.CategoryKey) != null)
             {
-                if (machine.Category.Contains(';'))
-                    game.Category = machine.Category.Split(';');
+                if (machine.GetFieldValue<string?>(Models.Metadata.Machine.CategoryKey)!.Contains(';'))
+                    game.Category = machine.GetFieldValue<string?>(Models.Metadata.Machine.CategoryKey)!.Split(';');
                 else
-                    game.Category = [machine.Category];
+                    game.Category = [machine.GetFieldValue<string?>(Models.Metadata.Machine.CategoryKey)!];
             }
             game.Trurip = CreateTrurip(machine);
 
@@ -459,18 +450,18 @@ namespace SabreTools.DatFiles.Formats
             var trurip = new Models.Logiqx.Trurip
             {
                 TitleID = machine.TitleID,
-                Publisher = machine.Publisher,
+                Publisher = machine.GetFieldValue<string?>(Models.Metadata.Machine.PublisherKey),
                 Developer = machine.Developer,
-                Year = machine.Year,
+                Year = machine.GetFieldValue<string?>(Models.Metadata.Machine.YearKey),
                 Genre = machine.Genre,
                 Subgenre = machine.Subgenre,
                 Ratings = machine.Ratings,
                 Score = machine.Score,
-                Players = machine.Players,
+                Players = machine.GetFieldValue<string?>(Models.Metadata.Machine.PlayersKey),
                 Enabled = machine.Enabled,
                 CRC = machine.Crc.FromYesNo(),
-                Source = machine.SourceFile,
-                CloneOf = machine.CloneOf,
+                Source = machine.GetFieldValue<string?>(Models.Metadata.Machine.SourceFileKey),
+                CloneOf = machine.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey),
                 RelatedTo = machine.RelatedTo,
             };
 

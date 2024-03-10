@@ -232,14 +232,14 @@ namespace SabreTools.DatFiles.Formats
                 // We normalize to all "game"
                 var game = new Models.ClrMamePro.Game
                 {
-                    Name = machine?.Name,
-                    Description = machine?.Description,
-                    Year = machine?.Year,
-                    Manufacturer = machine?.Manufacturer,
-                    Category = machine?.Category,
-                    CloneOf = machine?.CloneOf,
-                    RomOf = machine?.RomOf,
-                    SampleOf = machine?.SampleOf,
+                    Name = machine?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
+                    Description = machine?.GetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey),
+                    Year = machine?.GetFieldValue<string?>(Models.Metadata.Machine.YearKey),
+                    Manufacturer = machine?.GetFieldValue<string?>(Models.Metadata.Machine.ManufacturerKey),
+                    Category = machine?.GetFieldValue<string?>(Models.Metadata.Machine.CategoryKey),
+                    CloneOf = machine?.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey),
+                    RomOf = machine?.GetFieldValue<string?>(Models.Metadata.Machine.RomOfKey),
+                    SampleOf = machine?.GetFieldValue<string?>(Models.Metadata.Machine.SampleOfKey),
                 };
 
                 // Create holders for all item types

@@ -24,7 +24,7 @@ namespace SabreTools.Test.DatFiles
             var setter = new Setter();
             setter.PopulateSetters("machine.name", "foo");
             setter.SetFields(datItem.Machine);
-            Assert.Equal("foo", datItem.Machine.Name);
+            Assert.Equal("foo", datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey));
         }
 
         /// <summary>
@@ -32,15 +32,13 @@ namespace SabreTools.Test.DatFiles
         /// </summary>
         private static DatItem CreateDatItem()
         {
-            var rom = new Rom
-            {
-                Machine = new Machine
-                {
-                    Name = "bar",
-                    Description = "bar",
-                }
-            };
+            var machine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "bar");
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, "bar");
+
+            var rom = new Rom { Machine = machine };
             rom.SetName("foo");
+
             return rom;
         }
     }

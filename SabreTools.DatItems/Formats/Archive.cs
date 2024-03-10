@@ -103,6 +103,17 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.Archive;
         }
 
+        /// <summary>
+        /// Create an Archive object from the internal model
+        /// </summary>
+        public Archive(Models.Metadata.Archive? item)
+        {
+            _internal = item ?? [];
+            Machine = new Machine();
+
+            ItemType = ItemType.Archive;
+        }
+
         #endregion
 
         #region Cloning Methods

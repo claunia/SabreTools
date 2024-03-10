@@ -207,45 +207,38 @@ namespace SabreTools.DatFiles.Formats
                 return;
 
             // Create the machine for copying information
-            var machine = new Machine
-            {
-                Name = game.Name,
-                SourceFile = game.SourceFile,
-                CloneOf = game.CloneOf,
-                RomOf = game.RomOf,
-                SampleOf = game.SampleOf,
-                Board = game.Board,
-                RebuildTo = game.RebuildTo,
-                NoIntroId = game.Id,
-                NoIntroCloneOfId = game.CloneOfId,
-                Runnable = game.Runnable.AsEnumValue<Runnable>(),
-
-                Description = game.Description,
-                Year = game.Year,
-                Manufacturer = game.Manufacturer,
-                Publisher = game.Publisher,
-            };
+            var machine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.BoardKey, game.Board);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, game.CloneOf);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfIdKey, game.CloneOfId);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, game.Description);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.IdKey, game.Id);
+            machine.SetFieldValue<bool?>(Models.Metadata.Machine.IsBiosKey, game.IsBios.AsYesNo());
+            machine.SetFieldValue<bool?>(Models.Metadata.Machine.IsDeviceKey, game.IsDevice.AsYesNo());
+            machine.SetFieldValue<bool?>(Models.Metadata.Machine.IsMechanicalKey, game.IsMechanical.AsYesNo());
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.ManufacturerKey, game.Manufacturer);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, game.Name);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.PublisherKey, game.Publisher);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.RebuildToKey, game.RebuildTo);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.RomKey, game.RomOf);
+            machine.SetFieldValue<Runnable>(Models.Metadata.Machine.RunnableKey, game.Runnable.AsEnumValue<Runnable>());
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.SampleOfKey, game.SampleOf);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.SourceFileKey, game.SourceFile);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.YearKey, game.Year);
 
             if (!string.IsNullOrEmpty(dirname))
-                machine.Name = $"{dirname}/{machine.Name}";
-
-            if (game.IsBios.AsYesNo() == true)
-                machine.MachineType |= MachineType.Bios;
-            if (game.IsDevice.AsYesNo() == true)
-                machine.MachineType |= MachineType.Device;
-            if (game.IsMechanical.AsYesNo() == true)
-                machine.MachineType |= MachineType.Mechanical;
+                machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, $"{dirname}/{machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)}");
 
 #if NETFRAMEWORK
             if (game.Comment != null && game.Comment.Any())
-                machine.Comment = string.Join(";", game.Comment);
+                machine.SetFieldValue<string?>(Models.Metadata.Machine.CommentKey, string.Join(";", game.Comment));
             if (game.Category != null && game.Category.Any())
-                machine.Category = string.Join(";", game.Category);
+                machine.SetFieldValue<string?>(Models.Metadata.Machine.CategoryKey, string.Join(";", game.Category));
 #else
             if (game.Comment != null && game.Comment.Any())
-                machine.Comment = string.Join(';', game.Comment);
+                machine.SetFieldValue<string?>(Models.Metadata.Machine.CommentKey, string.Join(';', game.Comment));
             if (game.Category != null && game.Category.Any())
-                machine.Category = string.Join(';', game.Category);
+                machine.SetFieldValue<string?>(Models.Metadata.Machine.CategoryKey, string.Join(';', game.Category));
 #endif
 
             if (game.Trurip != null)
@@ -253,18 +246,18 @@ namespace SabreTools.DatFiles.Formats
                 var trurip = game.Trurip;
 
                 machine.TitleID = trurip.TitleID;
-                machine.Publisher = trurip.Publisher;
+                machine.SetFieldValue<string?>(Models.Metadata.Machine.PublisherKey, trurip.Publisher);
                 machine.Developer = trurip.Developer;
-                machine.Year = trurip.Year;
+                machine.SetFieldValue<string?>(Models.Metadata.Machine.YearKey, value: trurip.Year);
                 machine.Genre = trurip.Genre;
                 machine.Subgenre = trurip.Subgenre;
                 machine.Ratings = trurip.Ratings;
                 machine.Score = trurip.Score;
-                machine.Players = trurip.Players;
+                machine.SetFieldValue<string?>(Models.Metadata.Machine.PlayersKey, trurip.Players);
                 machine.Enabled = trurip.Enabled;
                 machine.Crc = trurip.CRC.AsYesNo();
-                machine.SourceFile = trurip.Source;
-                machine.CloneOf = trurip.CloneOf;
+                machine.SetFieldValue<string?>(Models.Metadata.Machine.SourceFileKey, trurip.Source);
+                machine.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, trurip.CloneOf);
                 machine.RelatedTo = trurip.RelatedTo;
             }
 

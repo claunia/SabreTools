@@ -259,13 +259,13 @@ namespace SabreTools.DatFiles.Formats
         {
             var software = new Models.SoftwareList.Software
             {
-                Name = machine.Name,
-                CloneOf = machine.CloneOf,
-                Supported = machine.Supported.AsStringValue<Supported>(useSecond: true),
-                Description = machine.Description,
-                Year = machine.Year,
-                Publisher = machine.Publisher,
-                Notes = machine.Comment,
+                Name = machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
+                CloneOf = machine.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey),
+                Supported = machine.GetFieldValue<Supported>(Models.Metadata.Machine.SupportedKey).AsStringValue<Supported>(useSecond: true),
+                Description = machine.GetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey),
+                Year = machine.GetFieldValue<string?>(Models.Metadata.Machine.YearKey),
+                Publisher = machine.GetFieldValue<string?>(Models.Metadata.Machine.PublisherKey),
+                Notes = machine.GetFieldValue<string?>(Models.Metadata.Machine.CommentKey),
             };
 
             return software;

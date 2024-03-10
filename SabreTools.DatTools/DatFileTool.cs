@@ -74,9 +74,9 @@ namespace SabreTools.DatTools
                     }
 
                     filename = filename.Remove(0, rootpath?.Length ?? 0);
-                    newItem.Machine.Name = Path.GetDirectoryName(filename) + Path.DirectorySeparatorChar
+                    newItem.Machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Path.GetDirectoryName(filename) + Path.DirectorySeparatorChar
                         + Path.GetFileNameWithoutExtension(filename) + Path.DirectorySeparatorChar
-                        + newItem.Machine.Name;
+                        + newItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey));
 
                     newItems.Add(newItem);
                 }
@@ -430,7 +430,7 @@ namespace SabreTools.DatTools
                             continue;
 
                         if (item.Source != null)
-                            newrom.Machine.Name += $" ({Path.GetFileNameWithoutExtension(inputs[item.Source.Index].CurrentPath)})";
+                            newrom.Machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, newrom.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) + $" ({Path.GetFileNameWithoutExtension(inputs[item.Source.Index].CurrentPath)})");
 
                         dupeData.Items.Add(key, newrom);
                     }
@@ -622,7 +622,7 @@ namespace SabreTools.DatTools
                         if (item.Clone() is not DatItem newrom || newrom.Source == null)
                             continue;
 
-                        newrom.Machine.Name += $" ({Path.GetFileNameWithoutExtension(inputs[newrom.Source.Index].CurrentPath)})";
+                        newrom.Machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, newrom.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) + $" ({Path.GetFileNameWithoutExtension(inputs[newrom.Source.Index].CurrentPath)})");
                         outerDiffData.Items.Add(key, newrom);
                     }
                 }

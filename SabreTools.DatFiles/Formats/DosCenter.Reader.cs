@@ -96,7 +96,8 @@ namespace SabreTools.DatFiles.Formats
             if (machineName?.EndsWith(".zip") == true)
                 machineName = System.IO.Path.GetFileNameWithoutExtension(machineName);
 
-            var machine = new Machine { Name = machineName };
+            var machine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineName);
 
             // Check if there are any items
             bool containsItems = false;

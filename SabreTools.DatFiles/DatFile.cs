@@ -366,7 +366,7 @@ namespace SabreTools.DatFiles
         {
             // Initialize strings
             string fix,
-                game = item.Machine.Name ?? string.Empty,
+                game = item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) ?? string.Empty,
                 name = item.GetName() ?? item.ItemType.ToString(),
                 crc = string.Empty,
                 md5 = string.Empty,
@@ -415,9 +415,9 @@ namespace SabreTools.DatFiles
                 .Replace("%game%", game)
                 .Replace("%machine%", game)
                 .Replace("%name%", name)
-                .Replace("%manufacturer%", item.Machine.Manufacturer ?? string.Empty)
-                .Replace("%publisher%", item.Machine.Publisher ?? string.Empty)
-                .Replace("%category%", item.Machine.Category ?? string.Empty)
+                .Replace("%manufacturer%", item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.ManufacturerKey) ?? string.Empty)
+                .Replace("%publisher%", item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.PublisherKey) ?? string.Empty)
+                .Replace("%category%", item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.CategoryKey) ?? string.Empty)
                 .Replace("%crc%", crc)
                 .Replace("%md5%", md5)
                 .Replace("%sha1%", sha1)
@@ -447,7 +447,7 @@ namespace SabreTools.DatFiles
                 Header.UseRomName = true;
 
             // Get the name to update
-            string? name = (Header.UseRomName ? item.GetName() : item.Machine.Name) ?? string.Empty;
+            string? name = (Header.UseRomName ? item.GetName() : item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)) ?? string.Empty;
 
             // Create the proper Prefix and Postfix
             string pre = CreatePrefixPostfix(item, true);
@@ -504,14 +504,14 @@ namespace SabreTools.DatFiles
                 name += Header.AddExtension;
 
             if (Header.UseRomName && Header.GameName)
-                name = Path.Combine(item.Machine.Name ?? string.Empty, name);
+                name = Path.Combine(item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) ?? string.Empty, name);
 
             // Now assign back the formatted name
             name = $"{pre}{name}{post}";
             if (Header.UseRomName)
                 item.SetName(name);
             else if (item.Machine != null)
-                item.Machine.Name = name;
+                item.Machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, name);
 
             // Restore all relevant values
             if (forceRemoveQuotes)
@@ -539,7 +539,7 @@ namespace SabreTools.DatFiles
             // If the Rom has "null" characteristics, ensure all fields
             if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null && rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey) == "null")
             {
-                logger.Verbose($"Empty folder found: {datItem.Machine.Name}");
+                logger.Verbose($"Empty folder found: {datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)}");
 
                 rom.SetName(rom.GetName() == "null" ? "-" : rom.GetName());
                 rom.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, Constants.SizeZero);

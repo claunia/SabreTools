@@ -183,14 +183,14 @@ namespace SabreTools.DatFiles.Formats
         {
             var rom = new Models.RomCenter.Rom
             {
-                ParentName = item.Machine.CloneOf,
-                //ParentDescription = item.Machine.CloneOfDescription, // TODO: Add to internal model or find mapping
-                GameName = item.Machine.Name,
-                GameDescription = item.Machine.Description,
+                ParentName = item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey),
+                //ParentDescription = item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfDescription), // TODO: Add to internal model or find mapping
+                GameName = item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
+                GameDescription = item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey),
                 RomName = item.GetName(),
                 RomCRC = item.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey),
                 RomSize = item.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey)?.ToString(),
-                RomOf = item.Machine.RomOf,
+                RomOf = item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.RomOfKey),
                 MergeName = item.GetFieldValue<string?>(Models.Metadata.Rom.MergeKey),
             };
             return rom;

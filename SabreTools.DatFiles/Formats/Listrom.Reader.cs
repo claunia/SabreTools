@@ -69,19 +69,14 @@ namespace SabreTools.DatFiles.Formats
             Machine machine;
             if (!string.IsNullOrEmpty(set.Device))
             {
-                machine = new Machine
-                {
-                    Name = set.Device,
-                    MachineType = MachineType.Device,
-                };
+                machine = new Machine();
+                machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, set.Device);
+                machine.SetFieldValue<bool?>(Models.Metadata.Machine.IsDeviceKey, true);
             }
             else if (!string.IsNullOrEmpty(set.Driver))
             {
-                machine = new Machine
-                {
-                    Name = set.Driver,
-                    MachineType = MachineType.None,
-                };
+                machine = new Machine();
+                machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, set.Driver);
             }
             else
             {

@@ -90,16 +90,14 @@ namespace SabreTools.DatFiles.Formats
                 return;
 
             // Create the machine for copying information
-            var machine = new Machine
-            {
-                Name = software.Name,
-                CloneOf = software.CloneOf,
-                Supported = software.Supported.AsEnumValue<Supported>(),
-                Description = software.Description,
-                Year = software.Year,
-                Publisher = software.Publisher,
-                Comment = software.Notes,
-            };
+            var machine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, software.CloneOf);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.CommentKey, software.Notes);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, software.Description);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, software.Name);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.PublisherKey, software.Publisher);
+            machine.SetFieldValue<Supported>(Models.Metadata.Machine.SupportedKey, software.Supported.AsEnumValue<Supported>());
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.YearKey, software.Year);
 
             // Add all Info objects
             foreach (var info in software.Info ?? [])

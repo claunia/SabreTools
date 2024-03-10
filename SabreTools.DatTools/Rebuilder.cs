@@ -437,11 +437,11 @@ namespace SabreTools.DatTools
                 foreach (DatItem item in dupes)
                 {
                     // If we don't have a proper machine
-                    if (item.Machine?.Name == null || !datFile.Items.ContainsKey(item.Machine.Name))
+                    if (item.Machine?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) == null || !datFile.Items.ContainsKey(item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)!))
                         continue;
 
                     // If we should check for the items in the machine
-                    var items = datFile.Items[item.Machine.Name];
+                    var items = datFile.Items[item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)!];
                     if (shouldCheck && items!.Count > 1)
                         outputFormat = OutputFormat.Folder;
                     else if (shouldCheck && items!.Count == 1)
@@ -547,14 +547,14 @@ namespace SabreTools.DatTools
 
                 // Get the item from the current file
                 Rom item = new(BaseFile.GetInfo(stream, keepReadOpen: true));
-                item.Machine.Name = Path.GetFileNameWithoutExtension(item.GetName());
-                item.Machine.Description = Path.GetFileNameWithoutExtension(item.GetName());
+                item.Machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, Path.GetFileNameWithoutExtension(item.GetName()));
+                item.Machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Path.GetFileNameWithoutExtension(item.GetName()));
 
                 // If we are coming from an archive, set the correct machine name
                 if (machinename != null)
                 {
-                    item.Machine.Name = machinename;
-                    item.Machine.Description = machinename;
+                    item.Machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, machinename);
+                    item.Machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machinename);
                 }
 
                 dupes.Add(item);

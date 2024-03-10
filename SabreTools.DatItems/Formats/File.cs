@@ -91,7 +91,7 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("format", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("format")]
         public string? Format { get; set; }
 
-        #endregion // Fields
+        #endregion
 
         #region Constructors
 
@@ -152,7 +152,7 @@ namespace SabreTools.DatItems.Formats
         {
             return new BaseFile()
             {
-                Parent = this.Machine.Name,
+                Parent = this.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
                 CRC = this._crc,
                 MD5 = this._md5,
                 SHA1 = this._sha1,

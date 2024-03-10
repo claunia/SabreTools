@@ -24,8 +24,8 @@ namespace SabreTools.Test.Filtering
 
             // Check the fields
             Assert.Equal("nam", datItem.GetName());
-            Assert.Equal("nam-2", datItem.Machine.Name);
-            Assert.Equal("nam-3", datItem.Machine.Description);
+            Assert.Equal("nam-2", datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey));
+            Assert.Equal("nam-3", datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey));
         }
     
         [Fact]
@@ -45,8 +45,8 @@ namespace SabreTools.Test.Filtering
 
             // Check the fields
             Assert.Equal("name", datItem.GetName());
-            Assert.Equal("'AB'", datItem.Machine.Name);
-            Assert.Equal("ae-Zh", datItem.Machine.Description);
+            Assert.Equal("'AB'", datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey));
+            Assert.Equal("ae-Zh", datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey));
         }
     
         [Fact]
@@ -66,8 +66,8 @@ namespace SabreTools.Test.Filtering
 
             // Check the fields
             Assert.Equal("name", datItem.GetName());
-            Assert.Equal("!", datItem.Machine.Name);
-            Assert.Equal("name-3", datItem.Machine.Description);
+            Assert.Equal("!", datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey));
+            Assert.Equal("name-3", datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey));
         }
 
         [Theory]
@@ -92,8 +92,8 @@ namespace SabreTools.Test.Filtering
 
             // Check the fields
             Assert.Equal(expected, datItem.GetName());
-            Assert.Equal("name-2", datItem.Machine.Name);
-            Assert.Equal("name-3", datItem.Machine.Description);
+            Assert.Equal("name-2", datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey));
+            Assert.Equal("name-3", datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey));
         }
     
         [Fact]
@@ -107,23 +107,21 @@ namespace SabreTools.Test.Filtering
 
             // Check the fields
             Assert.Equal("name", datItem.GetName());
-            Assert.Equal("name-2/name", datItem.Machine.Name);
+            Assert.Equal("name-2/name", datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey));
         }
 
         /// <summary>
         /// Generate a consistent DatItem for testing
         /// </summary>
-        private static DatItem CreateDatItem(string name, string machine, string desc)
+        private static DatItem CreateDatItem(string name, string machName, string desc)
         {
-            var rom = new Rom
-            {
-                Machine = new Machine
-                {
-                    Name = machine,
-                    Description = desc,
-                }
-            };
+            var machine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machName);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, desc);
+
+            var rom = new Rom { Machine = machine };
             rom.SetName(name);
+
             return rom;
         }
     }

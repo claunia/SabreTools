@@ -372,33 +372,24 @@ namespace SabreTools.DatFiles.Formats
         {
             var game = new Models.Listxml.Machine
             {
-                Name = machine.Name,
-                SourceFile = machine.SourceFile,
-                Runnable = machine.Runnable.AsStringValue<Runnable>(),
-                CloneOf = machine.CloneOf,
-                RomOf = machine.RomOf,
-                SampleOf = machine.SampleOf,
-                Description = machine.Description,
-                Year = machine.Year,
-                Manufacturer = machine.Manufacturer,
-                History = machine.History,
+                Name = machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
+                SourceFile = machine.GetFieldValue<string?>(Models.Metadata.Machine.SourceFileKey),
+                Runnable = machine.GetFieldValue<Runnable>(Models.Metadata.Machine.RunnableKey).AsStringValue<Runnable>(),
+                CloneOf = machine.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey),
+                RomOf = machine.GetFieldValue<string?>(Models.Metadata.Machine.RomOfKey),
+                SampleOf = machine.GetFieldValue<string?>(Models.Metadata.Machine.SampleOfKey),
+                Description = machine.GetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey),
+                Year = machine.GetFieldValue<string?>(Models.Metadata.Machine.YearKey),
+                Manufacturer = machine.GetFieldValue<string?>(Models.Metadata.Machine.ManufacturerKey),
+                History = machine.GetFieldValue<string?>(Models.Metadata.Machine.HistoryKey),
             };
 
-#if NETFRAMEWORK
-            if ((machine.MachineType & MachineType.Bios) != 0)
+            if (machine.GetFieldValue<bool?>(Models.Metadata.Machine.IsBiosKey) == true)
                 game.IsBios = "yes";
-            if ((machine.MachineType & MachineType.Device) != 0)
+            if (machine.GetFieldValue<bool?>(Models.Metadata.Machine.IsDeviceKey) == true)
                 game.IsDevice = "yes";
-            if ((machine.MachineType & MachineType.Mechanical) != 0)
+            if (machine.GetFieldValue<bool?>(Models.Metadata.Machine.IsMechanicalKey) == true)
                 game.IsMechanical = "yes";
-#else
-            if (machine.MachineType.HasFlag(MachineType.Bios))
-                game.IsBios = "yes";
-            if (machine.MachineType.HasFlag(MachineType.Device))
-                game.IsDevice = "yes";
-            if (machine.MachineType.HasFlag(MachineType.Mechanical))
-                game.IsMechanical = "yes";
-#endif
 
             return game;
         }

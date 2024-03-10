@@ -68,15 +68,13 @@ namespace SabreTools.Test.Filter
         /// </summary>
         private static DatItem CreateDatItem()
         {
-            var rom = new Rom
-            {
-                Machine = new Machine
-                {
-                    Name = "bar",
-                    Description = "bar",
-                }
-            };
+            var machine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "bar");
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, "bar");
+
+            var rom = new Rom { Machine = machine };
             rom.SetName("foo");
+
             return rom;
         }
     }

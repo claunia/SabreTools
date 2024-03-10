@@ -387,7 +387,7 @@ namespace SabreTools.DatItems
             if (lastItem.DupeType.HasFlag(DupeType.External) || lastItem?.Source?.Index != Source?.Index)
 #endif
             {
-                if (lastItem?.Machine.Name == Machine?.Name && lastItem?.GetName() == GetName())
+                if (lastItem?.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) == Machine?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) && lastItem?.GetName() == GetName())
                     output = DupeType.External | DupeType.All;
                 else
                     output = DupeType.External | DupeType.Hash;
@@ -396,7 +396,7 @@ namespace SabreTools.DatItems
             // Otherwise, it's considered an internal dupe
             else
             {
-                if (lastItem?.Machine.Name == Machine?.Name && lastItem?.GetName() == GetName())
+                if (lastItem?.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) == Machine?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) && lastItem?.GetName() == GetName())
                     output = DupeType.Internal | DupeType.All;
                 else
                     output = DupeType.Internal | DupeType.Hash;
@@ -476,9 +476,9 @@ namespace SabreTools.DatItems
                     key = (norename ? string.Empty
                         : Source?.Index.ToString().PadLeft(10, '0')
                             + "-")
-                    + (string.IsNullOrEmpty(Machine?.Name)
+                    + (string.IsNullOrEmpty(Machine?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey))
                             ? "Default"
-                            : Machine!.Name!);
+                            : Machine!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)!);
                     if (lower)
                         key = key.ToLowerInvariant();
 
@@ -614,7 +614,8 @@ namespace SabreTools.DatItems
                         }
 
                         // If the current machine is a child of the new machine, use the new machine instead
-                        if (saveditem.Machine.CloneOf == file.Machine.Name || saveditem.Machine.RomOf == file.Machine.Name)
+                        if (saveditem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey) == file.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)
+                            || saveditem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.RomOfKey) == file.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey))
                         {
                             saveditem.CopyMachineInformation(file);
                             saveditem.SetName(file.GetName());
@@ -765,7 +766,7 @@ namespace SabreTools.DatItems
                     NaturalComparer nc = new();
 
                     // If machine names match, more refinement is needed
-                    if (x.Machine.Name == y.Machine.Name)
+                    if (x.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) == y.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey))
                     {
                         // If item types match, more refinement is needed
                         if (x.ItemType == y.ItemType)
@@ -781,7 +782,7 @@ namespace SabreTools.DatItems
 
                                 // If item names match, then compare on machine or source, depending on the flag
                                 if (xName == yName)
-                                    return (norename ? nc.Compare(x.Machine.Name, y.Machine.Name) : (x.Source?.Index - y.Source?.Index) ?? 0);
+                                    return (norename ? nc.Compare(x.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey), y.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)) : (x.Source?.Index - y.Source?.Index) ?? 0);
 
                                 // Otherwise, just sort based on item names
                                 return nc.Compare(xName, yName);
@@ -796,7 +797,7 @@ namespace SabreTools.DatItems
                     }
 
                     // Otherwise, just sort based on machine name
-                    return nc.Compare(x.Machine.Name, y.Machine.Name);
+                    return nc.Compare(x.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey), y.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey));
                 }
                 catch
                 {

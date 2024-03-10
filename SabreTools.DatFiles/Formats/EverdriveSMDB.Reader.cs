@@ -58,7 +58,9 @@ namespace SabreTools.DatFiles.Formats
                 filename = filename.Substring(machineName.Length + 1);
             }
 
-            var machine = new Machine { Name = machineName };
+            var machine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineName);
+
             return (machine, filename);
         }
 
@@ -96,7 +98,11 @@ namespace SabreTools.DatFiles.Formats
                 return;
 
             (var machine, string? name) = DeriveMachine(row.Name);
-            machine ??= new Machine { Name = Path.GetFileNameWithoutExtension(row.Name) };
+            if (machine == null)
+            {
+                machine = new Machine();
+                machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Path.GetFileNameWithoutExtension(row.Name));
+            }
 
             var rom = new Rom()
             {

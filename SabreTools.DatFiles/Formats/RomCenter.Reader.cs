@@ -107,14 +107,12 @@ namespace SabreTools.DatFiles.Formats
 
             foreach (var rom in games.Rom)
             {
-                var machine = new Machine
-                {
-                    Name = rom.GameName,
-                    Description = rom.GameDescription,
-                    CloneOf = rom.ParentName,
-                    //CloneOfDescription = rom.ParentDescription, // TODO: Add to internal model or find mapping
-                    RomOf = rom.RomOf,
-                };
+                var machine = new Machine();
+                machine.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, rom.ParentName);
+                //machine.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfDescriptionKey, rom.ParentDescription); // TODO: Add to internal model or find mapping
+                machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, rom.GameDescription);
+                machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, rom.GameName);
+                machine.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, rom.RomOf);
 
                 var item = new Rom
                 {

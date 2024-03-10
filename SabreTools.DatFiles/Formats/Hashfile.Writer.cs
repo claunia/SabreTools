@@ -244,7 +244,7 @@ namespace SabreTools.DatFiles.Formats
 
                     string name = string.Empty;
                     if (Header.GameName && item.Machine != null)
-                        name = $"{item.Machine.Name}{Path.DirectorySeparatorChar}";
+                        name = $"{item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)}{Path.DirectorySeparatorChar}";
 
                     switch (item)
                     {
@@ -295,7 +295,7 @@ namespace SabreTools.DatFiles.Formats
 
                     string name = string.Empty;
                     if (Header.GameName && item.Machine != null)
-                        name = $"{item.Machine.Name}{Path.DirectorySeparatorChar}";
+                        name = $"{item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)}{Path.DirectorySeparatorChar}";
 
                     switch (item)
                     {
@@ -362,7 +362,7 @@ namespace SabreTools.DatFiles.Formats
 
                     string name = string.Empty;
                     if (Header.GameName && item.Machine != null)
-                        name = $"{item.Machine.Name}{Path.DirectorySeparatorChar}";
+                        name = $"{item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)}{Path.DirectorySeparatorChar}";
 
                     switch (item)
                     {
@@ -429,7 +429,7 @@ namespace SabreTools.DatFiles.Formats
 
                     string name = string.Empty;
                     if (Header.GameName && item.Machine != null)
-                        name = $"{item.Machine.Name}{Path.DirectorySeparatorChar}";
+                        name = $"{item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)}{Path.DirectorySeparatorChar}";
 
                     switch (item)
                     {
@@ -488,7 +488,7 @@ namespace SabreTools.DatFiles.Formats
 
                     string name = string.Empty;
                     if (Header.GameName && item.Machine != null)
-                        name = $"{item.Machine.Name}{Path.DirectorySeparatorChar}";
+                        name = $"{item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)}{Path.DirectorySeparatorChar}";
 
                     switch (item)
                     {
@@ -539,7 +539,7 @@ namespace SabreTools.DatFiles.Formats
 
                     string name = string.Empty;
                     if (Header.GameName && item.Machine != null)
-                        name = $"{item.Machine.Name}{Path.DirectorySeparatorChar}";
+                        name = $"{item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)}{Path.DirectorySeparatorChar}";
 
                     switch (item)
                     {
@@ -590,7 +590,7 @@ namespace SabreTools.DatFiles.Formats
 
                     string name = string.Empty;
                     if (Header.GameName && item.Machine != null)
-                        name = $"{item.Machine.Name}{Path.DirectorySeparatorChar}";
+                        name = $"{item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)}{Path.DirectorySeparatorChar}";
 
                     switch (item)
                     {

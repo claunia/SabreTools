@@ -96,7 +96,7 @@ namespace SabreTools.DatItems.Formats
             return new BaseFile()
             {
                 Filename = this.GetName(),
-                Parent = this.Machine.Name,
+                Parent = this.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
                 MD5 = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Media.MD5Key)),
                 SHA1 = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Media.SHA1Key)),
                 SHA256 = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Media.SHA256Key)),

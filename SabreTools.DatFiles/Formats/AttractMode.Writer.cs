@@ -124,23 +124,23 @@ namespace SabreTools.DatFiles.Formats
         {
             var row = new Models.AttractMode.Row
             {
-                Name = rom.Machine.Name,
-                Title = rom.Machine.Description,
+                Name = rom.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
+                Title = rom.Machine.GetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey),
                 Emulator = Header.FileName,
-                CloneOf = rom.Machine.CloneOf,
-                Year = rom.Machine.Year,
-                Manufacturer = rom.Machine.Manufacturer,
-                Category = rom.Machine.Category,
-                Players = rom.Machine.Players,
-                Rotation = rom.Machine.Rotation,
-                Control = rom.Machine.Control,
-                Status = rom.Machine.Status,
-                DisplayCount = rom.Machine.DisplayCount,
-                DisplayType = rom.Machine.DisplayType,
+                CloneOf = rom.Machine.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey),
+                Year = rom.Machine.GetFieldValue<string?>(Models.Metadata.Machine.YearKey),
+                Manufacturer = rom.Machine.GetFieldValue<string?>(Models.Metadata.Machine.ManufacturerKey),
+                Category = rom.Machine.GetFieldValue<string?>(Models.Metadata.Machine.CategoryKey),
+                Players = rom.Machine.GetFieldValue<string?>(Models.Metadata.Machine.PlayersKey),
+                Rotation = rom.Machine.GetFieldValue<string?>(Models.Metadata.Machine.RotationKey),
+                Control = rom.Machine.GetFieldValue<string?>(Models.Metadata.Machine.ControlKey),
+                Status = rom.Machine.GetFieldValue<string?>(Models.Metadata.Machine.StatusKey),
+                DisplayCount = rom.Machine.GetFieldValue<string?>(Models.Metadata.Machine.DisplayCountKey),
+                DisplayType = rom.Machine.GetFieldValue<string?>(Models.Metadata.Machine.DisplayTypeKey),
                 AltRomname = rom.GetFieldValue<string?>(Models.Metadata.Rom.AltRomnameKey),
                 AltTitle = rom.GetFieldValue<string?>(Models.Metadata.Rom.AltTitleKey),
-                Extra = rom.Machine.Comment,
-                Buttons = rom.Machine.Buttons,
+                Extra = rom.Machine.GetFieldValue<string?>(Models.Metadata.Machine.CommentKey),
+                Buttons = rom.Machine.GetFieldValue<string?>(Models.Metadata.Machine.ButtonsKey),
                 // TODO: Add extended fields
             };
             return row;

@@ -60,7 +60,7 @@ namespace SabreTools.DatItems.Formats
             }
         }
 
-        #endregion // Fields
+        #endregion
 
         #region Accessors
 
@@ -102,11 +102,9 @@ namespace SabreTools.DatItems.Formats
             SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, null);
             SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.None);
 
-            Machine = new Machine
-            {
-                Name = machineName,
-                Description = machineName,
-            };
+            Machine = new Machine();
+            Machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, machineName);
+            Machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineName);
         }
 
         /// <summary>
@@ -174,7 +172,7 @@ namespace SabreTools.DatItems.Formats
             return new BaseFile()
             {
                 Filename = GetName(),
-                Parent = this.Machine.Name,
+                Parent = this.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
                 Date = GetFieldValue<string?>(Models.Metadata.Rom.DateKey),
                 Size = GetFieldValue<long?>(Models.Metadata.Rom.SizeKey),
                 CRC = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Rom.CRCKey)),

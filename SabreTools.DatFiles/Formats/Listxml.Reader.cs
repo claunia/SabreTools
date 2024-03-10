@@ -93,26 +93,20 @@ namespace SabreTools.DatFiles.Formats
                 return;
 
             // Create the machine for copying information
-            var machine = new Machine
-            {
-                Name = game.Name,
-                SourceFile = game.SourceFile,
-                Runnable = game.Runnable.AsEnumValue<Runnable>(),
-                CloneOf = game.CloneOf,
-                RomOf = game.RomOf,
-                SampleOf = game.SampleOf,
-                Description = game.Description,
-                Year = game.Year,
-                Manufacturer = game.Manufacturer,
-                History = game.History,
-            };
-
-            if (game.IsBios.AsYesNo() == true)
-                machine.MachineType |= MachineType.Bios;
-            if (game.IsDevice.AsYesNo() == true)
-                machine.MachineType |= MachineType.Device;
-            if (game.IsMechanical.AsYesNo() == true)
-                machine.MachineType |= MachineType.Mechanical;
+            var machine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, game.CloneOf);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, game.Description);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.HistoryKey, game.History);
+            machine.SetFieldValue<bool?>(Models.Metadata.Machine.IsBiosKey, game.IsBios.AsYesNo());
+            machine.SetFieldValue<bool?>(Models.Metadata.Machine.IsDeviceKey, game.IsDevice.AsYesNo());
+            machine.SetFieldValue<bool?>(Models.Metadata.Machine.IsMechanicalKey, game.IsMechanical.AsYesNo());
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.ManufacturerKey, game.Manufacturer);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, game.Name);
+            machine.SetFieldValue<Runnable>(Models.Metadata.Machine.RunnableKey, game.Runnable.AsEnumValue<Runnable>());
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, game.RomOf);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.SampleOfKey, game.SampleOf);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.SourceFileKey, game.SourceFile);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.YearKey, game.Year);
 
             // Check if there are any items
             bool containsItems = false;

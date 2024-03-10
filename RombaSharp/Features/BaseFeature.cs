@@ -785,7 +785,7 @@ CREATE TABLE IF NOT EXISTS dat (
         internal void AddDatToDatabase(Rom dat, SqliteConnection dbc)
         {
             // Get the dat full path
-            string fullpath = Path.Combine(_dats!, (dat.Machine.Name == "dats" ? string.Empty : dat.Machine.Name)!, dat.GetName()!);
+            string fullpath = Path.Combine(_dats!, (dat.Machine.GetFieldValue<string?>(SabreTools.Models.Metadata.Machine.NameKey) == "dats" ? string.Empty : dat.Machine.GetFieldValue<string?>(SabreTools.Models.Metadata.Machine.NameKey))!, dat.GetName()!);
 
             // Parse the Dat if possible
             logger.User($"Adding from '{dat.GetName()}'");

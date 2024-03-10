@@ -361,21 +361,20 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         private static Models.OfflineList.Game CreateGame(Machine machine)
         {
-
             var game = new Models.OfflineList.Game
             {
-                //ImageNumber = machine.ImageNumber, // TODO: Add to internal model
-                //ReleaseNumber = machine.ReleaseNumber, // TODO: Add to internal model
-                Title = machine.Name,
-                //SaveType = machine.SaveType, // TODO: Add to internal model
-                Publisher = machine.Publisher,
-                //Location = machine.Location, // TODO: Add to internal model
-                //SourceRom = machine.SourceRom, // TODO: Add to internal model
-                //Language = machine.Language, // TODO: Add to internal model
-                //Im1CRC = machine.Im1CRC, // TODO: Add to internal model
-                //Im2CRC = machine.Im2CRC, // TODO: Add to internal model
-                Comment = machine.Comment,
-                DuplicateID = machine.CloneOf,
+                ImageNumber = machine.GetFieldValue<string?>(Models.Metadata.Machine.ImageNumberKey),
+                ReleaseNumber = machine.GetFieldValue<string?>(Models.Metadata.Machine.ReleaseNumberKey),
+                Title = machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
+                SaveType = machine.GetFieldValue<string?>(Models.Metadata.Machine.SaveTypeKey),
+                Publisher = machine.GetFieldValue<string?>(Models.Metadata.Machine.PublisherKey),
+                Location = machine.GetFieldValue<string?>(Models.Metadata.Machine.LocationKey),
+                SourceRom = machine.GetFieldValue<string?>(Models.Metadata.Machine.SourceRomKey),
+                Language = machine.GetFieldValue<string?>(Models.Metadata.Machine.LanguageKey),
+                Im1CRC = machine.GetFieldValue<string?>(Models.Metadata.Machine.Im1CRCKey),
+                Im2CRC = machine.GetFieldValue<string?>(Models.Metadata.Machine.Im2CRCKey),
+                Comment = machine.GetFieldValue<string?>(Models.Metadata.Machine.CommentKey),
+                DuplicateID = machine.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey),
             };
 
             return game;

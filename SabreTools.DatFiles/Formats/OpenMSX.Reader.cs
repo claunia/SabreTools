@@ -84,15 +84,13 @@ namespace SabreTools.DatFiles.Formats
                 return;
 
             // Create the machine for copying information
-            var machine = new Machine
-            {
-                Name = software.Title,
-                GenMSXID = software.GenMSXID,
-                System = software.System,
-                Manufacturer = software.Company,
-                Year = software.Year,
-                Country = software.Country,
-            };
+            var machine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.CountryKey, software.Country);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.GenMSXIDKey, software.GenMSXID);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.ManufacturerKey, software.Company);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.SystemKey, software.System);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, software.Title);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.YearKey, software.Year);
 
             // Check if there are any items
             bool containsItems = false;
@@ -136,7 +134,7 @@ namespace SabreTools.DatFiles.Formats
 
                 var rom = dump.Rom;
 
-                string name = $"{machine.Name}_{index++}{(!string.IsNullOrEmpty(rom.Remark) ? $" {rom.Remark}" : string.Empty)}";
+                string name = $"{machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)}_{index++}{(!string.IsNullOrEmpty(rom.Remark) ? $" {rom.Remark}" : string.Empty)}";
                 var item = new Rom
                 {
                     Source = new Source { Index = indexId, Name = filename },

@@ -65,23 +65,21 @@ namespace SabreTools.DatFiles.Formats
             if (row == null)
                 return;
 
-            var machine = new Machine
-            {
-                Name = row.Name,
-                Description = row.Title,
-                CloneOf = row.CloneOf,
-                Year = row.Year,
-                Manufacturer = row.Manufacturer,
-                Category = row.Category,
-                Players = row.Players,
-                Rotation = row.Rotation,
-                Control = row.Control,
-                Status = row.Status,
-                DisplayCount = row.DisplayCount,
-                DisplayType = row.DisplayType,
-                Comment = row.Extra,
-                Buttons = row.Buttons
-            };
+            var machine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.ButtonsKey, row.Buttons);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.CategoryKey, row.Category);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, row.CloneOf);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.CommentKey, row.Extra);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.ControlKey, row.Control);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, row.Title);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.DisplayCountKey, row.DisplayCount);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.DisplayTypeKey, row.DisplayType);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.ManufacturerKey, row.Manufacturer);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, row.Name);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.PlayersKey, row.Players);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.RotationKey, row.Rotation);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.StatusKey, row.Status);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.YearKey, row.Year);
 
             var rom = new Rom()
             {

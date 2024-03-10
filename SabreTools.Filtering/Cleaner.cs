@@ -195,27 +195,27 @@ namespace SabreTools.Filtering
             // If we're stripping unicode characters, strip machine name and description
             if (RemoveUnicode)
             {
-                datItem.Machine.Name = TextHelper.RemoveUnicodeCharacters(datItem.Machine.Name);
-                datItem.Machine.Description = TextHelper.RemoveUnicodeCharacters(datItem.Machine.Description);
+                datItem.Machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, TextHelper.RemoveUnicodeCharacters(datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)));
+                datItem.Machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, TextHelper.RemoveUnicodeCharacters(datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey)));
                 datItem.SetName(TextHelper.RemoveUnicodeCharacters(datItem.GetName()));
             }
 
             // If we're in cleaning mode, sanitize machine name and description
             if (Clean)
             {
-                datItem.Machine.Name = TextHelper.NormalizeCharacters(datItem.Machine.Name);
-                datItem.Machine.Description = TextHelper.NormalizeCharacters(datItem.Machine.Description);
+                datItem.Machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, TextHelper.NormalizeCharacters(datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)));
+                datItem.Machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, TextHelper.NormalizeCharacters(datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey)));
             }
 
             // If we are in single game mode, rename the machine
             if (Single)
-                datItem.Machine.Name = "!";
+                datItem.Machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "!");
 
             // If we are in NTFS trim mode, trim the item name
             if (Trim && datItem.GetName() != null)
             {
                 // Windows max name length is 260
-                int usableLength = 260 - datItem.Machine.Name!.Length - (Root?.Length ?? 0);
+                int usableLength = 260 - datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)!.Length - (Root?.Length ?? 0);
                 if (datItem.GetName()!.Length > usableLength)
                 {
                     string ext = Path.GetExtension(datItem.GetName()!);
@@ -261,9 +261,9 @@ namespace SabreTools.Filtering
                     {
                         // If the key mapping doesn't exist, add it
 #if NET40_OR_GREATER || NETCOREAPP
-                        mapping.TryAdd(item.Machine.Name!, item.Machine.Description!.Replace('/', '_').Replace("\"", "''").Replace(":", " -"));
+                        mapping.TryAdd(item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)!, item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey)!.Replace('/', '_').Replace("\"", "''").Replace(":", " -"));
 #else
-                        mapping[item.Machine.Name!] = item.Machine.Description!.Replace('/', '_').Replace("\"", "''").Replace(":", " -");
+                        mapping[item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)!] = item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey)!.Replace('/', '_').Replace("\"", "''").Replace(":", " -");
 #endif
                     }
 #if NET40_OR_GREATER || NETCOREAPP
@@ -293,20 +293,20 @@ namespace SabreTools.Filtering
                     foreach (DatItem item in items)
                     {
                         // Update machine name
-                        if (!string.IsNullOrEmpty(item.Machine.Name) && mapping.ContainsKey(item.Machine.Name!))
-                            item.Machine.Name = mapping[item.Machine.Name!];
+                        if (!string.IsNullOrEmpty(item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)) && mapping.ContainsKey(item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)!))
+                            item.Machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, mapping[item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)!]);
 
                         // Update cloneof
-                        if (!string.IsNullOrEmpty(item.Machine.CloneOf) && mapping.ContainsKey(item.Machine.CloneOf!))
-                            item.Machine.CloneOf = mapping[item.Machine.CloneOf!];
+                        if (!string.IsNullOrEmpty(item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey)) && mapping.ContainsKey(item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey)!))
+                            item.Machine.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, mapping[item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey)!]);
 
                         // Update romof
-                        if (!string.IsNullOrEmpty(item.Machine.RomOf) && mapping.ContainsKey(item.Machine.RomOf!))
-                            item.Machine.RomOf = mapping[item.Machine.RomOf!];
+                        if (!string.IsNullOrEmpty(item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.RomOfKey)) && mapping.ContainsKey(item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.RomOfKey)!))
+                            item.Machine.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, mapping[item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.RomOfKey)!]);
 
                         // Update sampleof
-                        if (!string.IsNullOrEmpty(item.Machine.SampleOf) && mapping.ContainsKey(item.Machine.SampleOf!))
-                            item.Machine.SampleOf = mapping[item.Machine.SampleOf!];
+                        if (!string.IsNullOrEmpty(item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.SampleOfKey)) && mapping.ContainsKey(item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.SampleOfKey)!))
+                            item.Machine.SetFieldValue<string?>(Models.Metadata.Machine.SampleOfKey, mapping[item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.SampleOfKey)!]);
 
                         // Add the new item to the output list
                         newItems.Add(item);
@@ -356,30 +356,30 @@ namespace SabreTools.Filtering
                 DatItem item = datFile.Items[key]![0];
 
                 // Match on CloneOf first
-                if (!string.IsNullOrEmpty(item.Machine.CloneOf))
+                if (!string.IsNullOrEmpty(item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey)))
                 {
-                    if (!parents.ContainsKey(item.Machine.CloneOf!.ToLowerInvariant()))
-                        parents.Add(item.Machine.CloneOf.ToLowerInvariant(), new List<string>());
+                    if (!parents.ContainsKey(item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey)!.ToLowerInvariant()))
+                        parents.Add(item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey)!.ToLowerInvariant(), []);
 
-                    parents[item.Machine.CloneOf.ToLowerInvariant()].Add(item.Machine.Name!.ToLowerInvariant());
+                    parents[item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey)!.ToLowerInvariant()].Add(item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)!.ToLowerInvariant());
                 }
 
                 // Then by RomOf
-                else if (!string.IsNullOrEmpty(item.Machine.RomOf))
+                else if (!string.IsNullOrEmpty(item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.RomOfKey)))
                 {
-                    if (!parents.ContainsKey(item.Machine.RomOf!.ToLowerInvariant()))
-                        parents.Add(item.Machine.RomOf.ToLowerInvariant(), new List<string>());
+                    if (!parents.ContainsKey(item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.RomOfKey)!.ToLowerInvariant()))
+                        parents.Add(item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.RomOfKey)!.ToLowerInvariant(), []);
 
-                    parents[item.Machine.RomOf.ToLowerInvariant()].Add(item.Machine.Name!.ToLowerInvariant());
+                    parents[item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.RomOfKey)!.ToLowerInvariant()].Add(item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)!.ToLowerInvariant());
                 }
 
                 // Otherwise, treat it as a parent
                 else
                 {
-                    if (!parents.ContainsKey(item.Machine.Name!.ToLowerInvariant()))
-                        parents.Add(item.Machine.Name!.ToLowerInvariant(), new List<string>());
+                    if (!parents.ContainsKey(item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)!.ToLowerInvariant()))
+                        parents.Add(item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)!.ToLowerInvariant(), []);
 
-                    parents[item.Machine.Name.ToLowerInvariant()].Add(item.Machine.Name.ToLowerInvariant());
+                    parents[item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)!.ToLowerInvariant()].Add(item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)!.ToLowerInvariant());
                 }
             }
 
@@ -458,9 +458,9 @@ namespace SabreTools.Filtering
 
             string[] splitname = datItem.GetName()!.Split('.');
 #if NET20 || NET35
-            datItem.Machine.Name += $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1).ToArray())}";
+            datItem.Machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) + $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1).ToArray())}");
 #else
-            datItem.Machine.Name += $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1))}";
+            datItem.Machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) + $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1))}");
 #endif
             datItem.SetName(Path.GetFileName(datItem.GetName()));
         }
@@ -497,11 +497,11 @@ namespace SabreTools.Filtering
                 for (int j = 0; j < items.Count; j++)
                 {
                     DatItem item = items[j];
-                    if (Regex.IsMatch(item.Machine.Name!, pattern))
-                        item.Machine.Name = Regex.Replace(item.Machine.Name!, pattern, "$2");
+                    if (Regex.IsMatch(item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)!, pattern))
+                        item.Machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Regex.Replace(item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)!, pattern, "$2"));
 
-                    if (Regex.IsMatch(item.Machine.Description!, pattern))
-                        item.Machine.Description = Regex.Replace(item.Machine.Description!, pattern, "$2");
+                    if (Regex.IsMatch(item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey)!, pattern))
+                        item.Machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, Regex.Replace(item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey)!, pattern, "$2"));
 
                     items[j] = item;
                 }
