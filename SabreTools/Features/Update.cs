@@ -95,12 +95,12 @@ namespace SabreTools.Features
             var updateMode = GetUpdateMode(features);
 
             // Normalize the extensions
-            Header!.AddExtension = (string.IsNullOrWhiteSpace(Header.AddExtension) || Header.AddExtension.StartsWith(".")
-                ? Header.AddExtension
-                : $".{Header.AddExtension}");
-            Header.ReplaceExtension = (string.IsNullOrWhiteSpace(Header.ReplaceExtension) || Header.ReplaceExtension.StartsWith(".")
-                ? Header.ReplaceExtension
-                : $".{Header.ReplaceExtension}");
+            Header!.SetFieldValue<string?>(DatHeader.AddExtensionKey, (string.IsNullOrWhiteSpace(Header.GetFieldValue<string?>(DatHeader.AddExtensionKey)) || Header.GetFieldValue<string?>(DatHeader.AddExtensionKey)!.StartsWith(".")
+                ? Header.GetFieldValue<string?>(DatHeader.AddExtensionKey)
+                : $".{Header.GetFieldValue<string?>(DatHeader.AddExtensionKey)}"));
+            Header.SetFieldValue<string?>(DatHeader.ReplaceExtensionKey, (string.IsNullOrWhiteSpace(Header.GetFieldValue<string?>(DatHeader.ReplaceExtensionKey)) || Header.GetFieldValue<string?>(DatHeader.ReplaceExtensionKey)!.StartsWith(".")
+                ? Header.GetFieldValue<string?>(DatHeader.ReplaceExtensionKey)
+                : $".{Header.GetFieldValue<string?>(DatHeader.ReplaceExtensionKey)}"));
 
             // If we're in a non-replacement special update mode and the names aren't set, set defaults
             if (updateMode != 0

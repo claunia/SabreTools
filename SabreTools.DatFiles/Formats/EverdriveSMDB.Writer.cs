@@ -139,7 +139,7 @@ namespace SabreTools.DatFiles.Formats
             var row = new Models.EverdriveSMDB.Row
             {
                 SHA256 = rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA256Key),
-                Name = $"{rom.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) ?? string.Empty}/{rom.GetName()}",
+                Name = $"{rom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) ?? string.Empty}/{rom.GetName()}",
                 SHA1 = rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key),
                 MD5 = rom.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key),
                 CRC32 = rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey),

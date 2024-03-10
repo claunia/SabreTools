@@ -32,9 +32,9 @@ namespace SabreTools.DatItems.Formats
         public Port()
         {
             _internal = new Models.Metadata.Port();
-            Machine = new Machine();
 
-            ItemType = ItemType.Port;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Port);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 
         /// <summary>
@@ -43,9 +43,9 @@ namespace SabreTools.DatItems.Formats
         public Port(Models.Metadata.Port? item)
         {
             _internal = item ?? [];
-            Machine = new Machine();
 
-            ItemType = ItemType.Port;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Port);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 
         #endregion
@@ -57,13 +57,6 @@ namespace SabreTools.DatItems.Formats
         {
             return new Port()
             {
-                ItemType = this.ItemType,
-                DupeType = this.DupeType,
-
-                Machine = this.Machine.Clone() as Machine ?? new Machine(),
-                Source = this.Source?.Clone() as Source,
-                Remove = this.Remove,
-
                 _internal = this._internal?.Clone() as Models.Metadata.Port ?? [],
             };
         }

@@ -219,15 +219,15 @@ namespace SabreTools.Filtering
             #region Common
 
             // Handle Machine fields
-            if (MachineFieldNames.Any() && datItem.Machine != null)
-                RemoveFields(datItem.Machine);
+            if (MachineFieldNames.Any() && datItem.GetFieldValue<Machine>(DatItem.MachineKey) != null)
+                RemoveFields(datItem.GetFieldValue<Machine>(DatItem.MachineKey));
 
             // If there are no field names, return
             if (ItemFieldNames == null || !ItemFieldNames.Any())
                 return;
 
             // If there are no field names for this type or generic, return
-            string? itemType = datItem.ItemType.AsStringValue<ItemType>();
+            string? itemType = datItem.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey).AsStringValue<ItemType>();
             if (itemType == null || (!ItemFieldNames.ContainsKey(itemType) && !ItemFieldNames.ContainsKey("item")))
                 return;
 
@@ -388,7 +388,7 @@ namespace SabreTools.Filtering
             }
 
             if (dipSwitch.PartSpecified)
-                RemoveFields(dipSwitch.GetFieldValue<Part?>("PART")! as DatItem);
+                RemoveFields(dipSwitch.GetFieldValue<Part?>(DipSwitch.PartKey)! as DatItem);
         }
 
         /// <summary>
@@ -413,10 +413,10 @@ namespace SabreTools.Filtering
         private void RemoveFields(Disk disk)
         {
             if (disk.DiskAreaSpecified)
-                RemoveFields(disk.GetFieldValue<DiskArea?>("DISKAREA")! as DatItem);
+                RemoveFields(disk.GetFieldValue<DiskArea?>(Disk.DiskAreaKey)! as DatItem);
 
             if (disk.PartSpecified)
-                RemoveFields(disk.GetFieldValue<Part?>("PART")! as DatItem);
+                RemoveFields(disk.GetFieldValue<Part?>(Disk.PartKey)! as DatItem);
         }
 
         /// <summary>
@@ -471,10 +471,10 @@ namespace SabreTools.Filtering
         private void RemoveFields(Rom rom)
         {
             if (rom.DataAreaSpecified)
-                RemoveFields(rom.GetFieldValue<DataArea?>("DATAAREA")!);
+                RemoveFields(rom.GetFieldValue<DataArea?>(Rom.DataAreaKey)!);
 
             if (rom.PartSpecified)
-                RemoveFields(rom.GetFieldValue<Part?>("PART")! as DatItem);
+                RemoveFields(rom.GetFieldValue<Part?>(Rom.PartKey)! as DatItem);
         }
 
         /// <summary>

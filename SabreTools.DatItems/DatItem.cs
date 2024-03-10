@@ -2,7 +2,6 @@
 using System.IO;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems.Formats;
@@ -62,81 +61,37 @@ namespace SabreTools.DatItems
     [XmlInclude(typeof(Sound))]
     public abstract class DatItem : IEquatable<DatItem>, IComparable<DatItem>, ICloneable
     {
-        #region Fields
-
-        #region Common Fields
-
-        /// <summary>
-        /// Item type for outputting
-        /// </summary>
-        [JsonProperty("itemtype")]
-        [JsonConverter(typeof(StringEnumConverter))]
-        [XmlElement("itemtype")]
-        public ItemType ItemType
-        {
-            get => _internal.ReadString(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>();
-            set => _internal[Models.Metadata.DatItem.TypeKey] = value.AsStringValue<ItemType>();
-        }
+        #region Constants
 
         /// <summary>
         /// Duplicate type when compared to another item
         /// </summary>
-        /// <remarks>Hack on top of internal model</remarks>
-        [JsonIgnore, XmlIgnore]
-        public DupeType DupeType
-        {
-            get => _internal.Read<DupeType?>("DUPETYPE") ?? 0;
-            set => _internal["DUPETYPE"] = value;
-        }
+        public const string DupeTypeKey = "DUPETYPE";
+
+        /// <summary>
+        /// Machine associated with the item
+        /// </summary>
+        public const string MachineKey = "MACHINE";
+
+        /// <summary>
+        /// Flag if item should be removed
+        /// </summary>
+        public const string RemoveKey = "REMOVE";
+
+        /// <summary>
+        /// Source information
+        /// </summary>
+        public const string SourceKey = "SOURCE";
+
+        #endregion
+
+        #region Fields
 
         /// <summary>
         /// Internal model wrapped by this DatItem
         /// </summary>
         [JsonIgnore, XmlIgnore]
         protected Models.Metadata.DatItem _internal;
-
-        #endregion
-
-        #region Machine Fields
-
-        /// <summary>
-        /// Machine values
-        /// </summary>
-        /// <remarks>Hack on top of internal model</remarks>
-        [JsonIgnore, XmlIgnore]
-        public Machine Machine
-        {
-            get => _internal.Read<Machine>("MACHINE") ?? new Machine();
-            set => _internal["MACHINE"] = value;
-        }
-
-        #endregion
-
-        #region Metadata information
-
-        /// <summary>
-        /// Source information
-        /// </summary>
-        /// <remarks>Hack on top of internal model</remarks>
-        [JsonIgnore, XmlIgnore]
-        public Source? Source
-        {
-            get => _internal.Read<Source>("SOURCE") ?? new Source();
-            set => _internal["SOURCE"] = value;
-        }
-
-        /// <summary>
-        /// Flag if item should be removed
-        /// </summary>
-        /// <remarks>Hack on top of internal model</remarks>
-        [JsonIgnore, XmlIgnore]
-        public bool Remove
-        {
-            get => _internal.ReadBool("REMOVE") ?? false;
-            set => _internal["REMOVE"] = value;
-        }
-
-        #endregion // Metadata information
 
         #endregion
 
@@ -216,7 +171,7 @@ namespace SabreTools.DatItems
         public DatItem()
         {
             _internal = new Models.Metadata.Blank();
-            Machine = new Machine();
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
 
             logger = new Logger(this);
         }
@@ -312,11 +267,11 @@ namespace SabreTools.DatItems
         /// <param name="item">Existing item to copy information from</param>
         public void CopyMachineInformation(DatItem item)
         {
-            if (item?.Machine == null)
+            if (item?.GetFieldValue<Machine>(DatItem.MachineKey) == null)
                 return;
 
-            if (item.Machine.Clone() is Machine cloned)
-                Machine = cloned;
+            if (item.GetFieldValue<Machine>(DatItem.MachineKey)!.Clone() is Machine cloned)
+                SetFieldValue<Machine>(DatItem.MachineKey, cloned);
         }
 
         /// <summary>
@@ -329,7 +284,7 @@ namespace SabreTools.DatItems
                 return;
 
             if (machine.Clone() is Machine cloned)
-                Machine = cloned;
+                SetFieldValue<Machine>(DatItem.MachineKey, cloned);
         }
 
         #endregion
@@ -360,7 +315,7 @@ namespace SabreTools.DatItems
         public virtual bool Equals(DatItem? other)
         {
             // If we don't have a matched type, return false
-            if (ItemType != other?.ItemType)
+            if (GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) != other?.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey))
                 return false;
 
             // Compare the internal models
@@ -382,12 +337,12 @@ namespace SabreTools.DatItems
 
             // If the duplicate is external already or should be, set it
 #if NETFRAMEWORK
-            if ((lastItem.DupeType & DupeType.External) != 0 || lastItem?.Source?.Index != Source?.Index)
+            if ((lastItem.GetFieldValue<DupeType>(DatItem.DupeTypeKey) & DupeType.External) != 0 || lastItem?.GetFieldValue<Source?>(DatItem.SourceKey)?.Index != GetFieldValue<Source?>(DatItem.SourceKey)?.Index)
 #else
-            if (lastItem.DupeType.HasFlag(DupeType.External) || lastItem?.Source?.Index != Source?.Index)
+            if (lastItem.GetFieldValue<DupeType>(DatItem.DupeTypeKey).HasFlag(DupeType.External) || lastItem?.GetFieldValue<Source?>(DatItem.SourceKey)?.Index != GetFieldValue<Source?>(DatItem.SourceKey)?.Index)
 #endif
             {
-                if (lastItem?.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) == Machine?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) && lastItem?.GetName() == GetName())
+                if (lastItem?.GetFieldValue<Machine>(DatItem.MachineKey)?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) == GetFieldValue<Machine>(DatItem.MachineKey)?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) && lastItem?.GetName() == GetName())
                     output = DupeType.External | DupeType.All;
                 else
                     output = DupeType.External | DupeType.Hash;
@@ -396,7 +351,7 @@ namespace SabreTools.DatItems
             // Otherwise, it's considered an internal dupe
             else
             {
-                if (lastItem?.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) == Machine?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) && lastItem?.GetName() == GetName())
+                if (lastItem?.GetFieldValue<Machine>(DatItem.MachineKey)?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) == GetFieldValue<Machine>(DatItem.MachineKey)?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) && lastItem?.GetName() == GetName())
                     output = DupeType.Internal | DupeType.All;
                 else
                     output = DupeType.Internal | DupeType.Hash;
@@ -416,7 +371,7 @@ namespace SabreTools.DatItems
         /// <returns>True if the item passes the filter, false otherwise</returns>
         public bool PassesFilter(FilterRunner filterRunner)
         {
-            if (!Machine.PassesFilter(filterRunner))
+            if (!GetFieldValue<Machine>(DatItem.MachineKey)!.PassesFilter(filterRunner))
                 return false;
 
             return filterRunner.Run(_internal);
@@ -474,11 +429,11 @@ namespace SabreTools.DatItems
 
                 case ItemKey.Machine:
                     key = (norename ? string.Empty
-                        : Source?.Index.ToString().PadLeft(10, '0')
+                        : GetFieldValue<Source?>(DatItem.SourceKey)?.Index.ToString().PadLeft(10, '0')
                             + "-")
-                    + (string.IsNullOrEmpty(Machine?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey))
+                    + (string.IsNullOrEmpty(GetFieldValue<Machine>(DatItem.MachineKey)?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey))
                             ? "Default"
-                            : Machine!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)!);
+                            : GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)!);
                     if (lower)
                         key = key.ToLowerInvariant();
 
@@ -543,36 +498,35 @@ namespace SabreTools.DatItems
             int nodumpCount = 0;
             for (int f = 0; f < infiles.Count; f++)
             {
-                DatItem file = infiles[f];
+                DatItem item = infiles[f];
 
                 // If we somehow have a null item, skip
-                if (file == null)
+                if (item == null)
                     continue;
 
                 // If we don't have a Disk, File, Media, or Rom, we skip checking for duplicates
-                if (file.ItemType != ItemType.Disk && file.ItemType != ItemType.File
-                    && file.ItemType != ItemType.Media && file.ItemType != ItemType.Rom)
+                if (item is not Disk && item is not Formats.File && item is not Media && item is not Rom)
                 {
                     continue;
                 }
 
                 // If it's a nodump, add and skip
-                if (file is Rom rom && rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) == ItemStatus.Nodump)
+                if (item is Rom rom && rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) == ItemStatus.Nodump)
                 {
-                    outfiles.Add(file);
+                    outfiles.Add(item);
                     nodumpCount++;
                     continue;
                 }
-                else if (file is Disk disk && disk.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey) == ItemStatus.Nodump)
+                else if (item is Disk disk && disk.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey) == ItemStatus.Nodump)
                 {
-                    outfiles.Add(file);
+                    outfiles.Add(item);
                     nodumpCount++;
                     continue;
                 }
                 // If it's the first non-nodump rom in the list, don't touch it
                 else if (outfiles.Count == 0 || outfiles.Count == nodumpCount)
                 {
-                    outfiles.Add(file);
+                    outfiles.Add(item);
                     continue;
                 }
 
@@ -585,7 +539,7 @@ namespace SabreTools.DatItems
                     DatItem lastrom = outfiles[i];
 
                     // Get the duplicate status
-                    dupetype = file.GetDuplicateStatus(lastrom);
+                    dupetype = item.GetDuplicateStatus(lastrom);
 
                     // If it's a duplicate, skip adding it to the output but add any missing information
                     if (dupetype != 0x00)
@@ -594,31 +548,31 @@ namespace SabreTools.DatItems
                         pos = i;
 
                         // Disks, Media, and Roms have more information to fill
-                        if (file is Disk disk && saveditem is Disk savedDisk)
+                        if (item is Disk disk && saveditem is Disk savedDisk)
                             savedDisk.FillMissingInformation(disk);
-                        else if (file is Formats.File fileItem && saveditem is Formats.File savedFile)
+                        else if (item is Formats.File fileItem && saveditem is Formats.File savedFile)
                             savedFile.FillMissingInformation(fileItem);
-                        else if (file is Media media && saveditem is Media savedMedia)
+                        else if (item is Media media && saveditem is Media savedMedia)
                             savedMedia.FillMissingInformation(media);
-                        else if (file is Rom romItem && saveditem is Rom savedRom)
+                        else if (item is Rom romItem && saveditem is Rom savedRom)
                             savedRom.FillMissingInformation(romItem);
 
-                        saveditem.DupeType = dupetype;
+                        saveditem.SetFieldValue<DupeType>(DatItem.DupeTypeKey, dupetype);
 
                         // If the current system has a lower ID than the previous, set the system accordingly
-                        if (file.Source?.Index < saveditem.Source?.Index)
+                        if (item.GetFieldValue<Source?>(DatItem.SourceKey)?.Index < saveditem.GetFieldValue<Source?>(DatItem.SourceKey)?.Index)
                         {
-                            saveditem.Source = file.Source.Clone() as Source;
-                            saveditem.CopyMachineInformation(file);
-                            saveditem.SetName(file.GetName());
+                            item.SetFieldValue<Source?>(DatItem.SourceKey, item.GetFieldValue<Source?>(DatItem.SourceKey)!.Clone() as Source);
+                            saveditem.CopyMachineInformation(item);
+                            saveditem.SetName(item.GetName());
                         }
 
                         // If the current machine is a child of the new machine, use the new machine instead
-                        if (saveditem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey) == file.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)
-                            || saveditem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.RomOfKey) == file.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey))
+                        if (saveditem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey) == item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)
+                            || saveditem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.RomOfKey) == item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey))
                         {
-                            saveditem.CopyMachineInformation(file);
-                            saveditem.SetName(file.GetName());
+                            saveditem.CopyMachineInformation(item);
+                            saveditem.SetName(item.GetName());
                         }
 
                         break;
@@ -628,7 +582,7 @@ namespace SabreTools.DatItems
                 // If no duplicate is found, add it to the list
                 if (dupetype == 0x00)
                 {
-                    outfiles.Add(file);
+                    outfiles.Add(item);
                 }
                 // Otherwise, if a new rom information is found, add that
                 else
@@ -672,10 +626,10 @@ namespace SabreTools.DatItems
                 }
 
                 // Get the last item name, if applicable
-                string lastItemName = lastItem.GetName() ?? lastItem.ItemType.ToString();
+                string lastItemName = lastItem.GetName() ?? lastItem.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey).ToString();
 
                 // Get the current item name, if applicable
-                string datItemName = datItem.GetName() ?? datItem.ItemType.ToString();
+                string datItemName = datItem.GetName() ?? datItem.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey).ToString();
 
                 // If the current item exactly matches the last item, then we don't add it
 #if NETFRAMEWORK
@@ -693,8 +647,7 @@ namespace SabreTools.DatItems
                 {
                     staticLogger.Verbose($"Name duplicate found for '{datItemName}'");
 
-                    if (datItem.ItemType == ItemType.Disk || datItem.ItemType == ItemType.File
-                        || datItem.ItemType == ItemType.Media || datItem.ItemType == ItemType.Rom)
+                    if (datItem is Disk || datItem is Formats.File || datItem is Media || datItem is Rom)
                     {
                         datItemName += GetDuplicateSuffix(datItem);
                         lastrenamed ??= datItemName;
@@ -766,10 +719,10 @@ namespace SabreTools.DatItems
                     NaturalComparer nc = new();
 
                     // If machine names match, more refinement is needed
-                    if (x.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) == y.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey))
+                    if (x.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) == y.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey))
                     {
                         // If item types match, more refinement is needed
-                        if (x.ItemType == y.ItemType)
+                        if (x.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) == y.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey))
                         {
                             string? xDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty));
                             string? yDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty));
@@ -782,7 +735,7 @@ namespace SabreTools.DatItems
 
                                 // If item names match, then compare on machine or source, depending on the flag
                                 if (xName == yName)
-                                    return (norename ? nc.Compare(x.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey), y.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)) : (x.Source?.Index - y.Source?.Index) ?? 0);
+                                    return (norename ? nc.Compare(x.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey), y.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)) : (x.GetFieldValue<Source?>(DatItem.SourceKey)?.Index - y.GetFieldValue<Source?>(DatItem.SourceKey)?.Index) ?? 0);
 
                                 // Otherwise, just sort based on item names
                                 return nc.Compare(xName, yName);
@@ -793,11 +746,11 @@ namespace SabreTools.DatItems
                         }
 
                         // Otherwise, just sort based on item type
-                        return x.ItemType - y.ItemType;
+                        return x.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) - y.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey);
                     }
 
                     // Otherwise, just sort based on machine name
-                    return nc.Compare(x.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey), y.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey));
+                    return nc.Compare(x.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey), y.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey));
                 }
                 catch
                 {

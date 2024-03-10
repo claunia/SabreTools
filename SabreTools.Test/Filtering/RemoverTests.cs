@@ -24,7 +24,7 @@ namespace SabreTools.Test.Filtering
             var remover = new Remover();
             remover.PopulateExclusions("Machine.Name");
             remover.RemoveFields(datItem);
-            Assert.Null(datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey));
+            Assert.Null(datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey));
         }
 
         /// <summary>
@@ -36,8 +36,9 @@ namespace SabreTools.Test.Filtering
             machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "bar");
             machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, "bar");
 
-            var rom = new Rom { Machine = machine };
+            var rom = new Rom();
             rom.SetName("foo");
+            rom.SetFieldValue<Machine>(DatItem.MachineKey, machine);
 
             return rom;
         }

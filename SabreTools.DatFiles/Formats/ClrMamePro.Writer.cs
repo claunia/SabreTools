@@ -227,7 +227,7 @@ namespace SabreTools.DatFiles.Formats
                     continue;
 
                 // Get the first item for game information
-                var machine = items[0].Machine;
+                var machine = items[0].GetFieldValue<Machine>(DatItem.MachineKey);
 
                 // We normalize to all "game"
                 var game = new Models.ClrMamePro.Game

@@ -157,11 +157,11 @@ namespace SabreTools.DatTools
 
                 // Otherwise, we rebuild that file to all locations that we need to
                 bool usedInternally;
-                if (items[0].ItemType == ItemType.Disk)
+                if (items[0].GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) == ItemType.Disk)
                     usedInternally = RebuildIndividualFile(datFile, new Disk(fileinfo), foundpath, outDir, date, inverse, outputFormat, isZip: false);
-                else if (items[0].ItemType == ItemType.File)
+                else if (items[0].GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) == ItemType.File)
                     usedInternally = RebuildIndividualFile(datFile, new DatItems.Formats.File(fileinfo), foundpath, outDir, date, inverse, outputFormat, isZip: false);
-                else if (items[0].ItemType == ItemType.Media)
+                else if (items[0].GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) == ItemType.Media)
                     usedInternally = RebuildIndividualFile(datFile, new Media(fileinfo), foundpath, outDir, date, inverse, outputFormat, isZip: false);
                 else
                     usedInternally = RebuildIndividualFile(datFile, new Rom(fileinfo), foundpath, outDir, date, inverse, outputFormat, isZip: false);
@@ -389,7 +389,7 @@ namespace SabreTools.DatTools
             bool rebuilt = false;
 
             // If the DatItem is a Disk or Media, force rebuilding to a folder except if TGZ or TXZ
-            if ((datItem.ItemType == ItemType.Disk || datItem.ItemType == ItemType.Media)
+            if ((datItem is Disk || datItem is Media)
                 && !(outputFormat == OutputFormat.TorrentGzip || outputFormat == OutputFormat.TorrentGzipRomba)
                 && !(outputFormat == OutputFormat.TorrentXZ || outputFormat == OutputFormat.TorrentXZRomba))
             {
@@ -422,7 +422,7 @@ namespace SabreTools.DatTools
                 if (RebuildTorrentXz(datFile, datItem, file, outDir, outputFormat, isZip))
                     return true;
 
-                logger.User($"{(inverse ? "No matches" : "Matches")} found for '{Path.GetFileName(datItem.GetName() ?? datItem.ItemType.ToString())}', rebuilding accordingly...");
+                logger.User($"{(inverse ? "No matches" : "Matches")} found for '{Path.GetFileName(datItem.GetName() ?? datItem.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey).ToString())}', rebuilding accordingly...");
                 rebuilt = true;
 
                 // Special case for partial packing mode
@@ -437,11 +437,11 @@ namespace SabreTools.DatTools
                 foreach (DatItem item in dupes)
                 {
                     // If we don't have a proper machine
-                    if (item.Machine?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) == null || !datFile.Items.ContainsKey(item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)!))
+                    if (item.GetFieldValue<Machine>(DatItem.MachineKey)!?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) == null || !datFile.Items.ContainsKey(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)!))
                         continue;
 
                     // If we should check for the items in the machine
-                    var items = datFile.Items[item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)!];
+                    var items = datFile.Items[item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)!];
                     if (shouldCheck && items!.Count > 1)
                         outputFormat = OutputFormat.Folder;
                     else if (shouldCheck && items!.Count == 1)
@@ -478,7 +478,7 @@ namespace SabreTools.DatTools
                         // If we have duplicates and we're not filtering
                         if (ShouldRebuild(datFile, headerless, transformStream, false, out dupes))
                         {
-                            logger.User($"Headerless matches found for '{Path.GetFileName(datItem.GetName() ?? datItem.ItemType.ToString())}', rebuilding accordingly...");
+                            logger.User($"Headerless matches found for '{Path.GetFileName(datItem.GetName() ?? datItem.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey).ToString())}', rebuilding accordingly...");
                             rebuilt = true;
 
                             // Now loop through the list and rebuild accordingly
@@ -547,14 +547,14 @@ namespace SabreTools.DatTools
 
                 // Get the item from the current file
                 Rom item = new(BaseFile.GetInfo(stream, keepReadOpen: true));
-                item.Machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, Path.GetFileNameWithoutExtension(item.GetName()));
-                item.Machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Path.GetFileNameWithoutExtension(item.GetName()));
+                item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, Path.GetFileNameWithoutExtension(item.GetName()));
+                item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Path.GetFileNameWithoutExtension(item.GetName()));
 
                 // If we are coming from an archive, set the correct machine name
                 if (machinename != null)
                 {
-                    item.Machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, machinename);
-                    item.Machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machinename);
+                    item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, machinename);
+                    item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machinename);
                 }
 
                 dupes.Add(item);
@@ -678,7 +678,7 @@ namespace SabreTools.DatTools
             {
                 BaseArchive? archive = BaseArchive.Create(file);
                 if (archive != null)
-                    (stream, _) = archive.CopyToStream(datItem.GetName() ?? datItem.ItemType.ToString());
+                    (stream, _) = archive.CopyToStream(datItem.GetName() ?? datItem.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey).ToString());
             }
             // Otherwise, just open the filestream
             else

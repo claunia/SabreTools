@@ -100,7 +100,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public File()
         {
-            ItemType = ItemType.File;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.File);
         }
 
         /// <summary>
@@ -114,8 +114,8 @@ namespace SabreTools.DatItems.Formats
             _sha1 = baseFile.SHA1;
             _sha256 = baseFile.SHA256;
 
-            ItemType = ItemType.File;
-            DupeType = 0x00;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.File);
+            SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
         }
 
         #endregion
@@ -125,15 +125,8 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc/>
         public override object Clone()
         {
-            return new File()
+            var file = new File()
             {
-                ItemType = this.ItemType,
-                DupeType = this.DupeType,
-
-                Machine = this.Machine.Clone() as Machine ?? new Machine(),
-                Source = this.Source?.Clone() as Source,
-                Remove = this.Remove,
-
                 Id = this.Id,
                 Extension = this.Extension,
                 Size = this.Size,
@@ -143,6 +136,12 @@ namespace SabreTools.DatItems.Formats
                 _sha256 = this._sha256,
                 Format = this.Format,
             };
+            file.SetFieldValue<DupeType>(DatItem.DupeTypeKey, GetFieldValue<DupeType>(DatItem.DupeTypeKey));
+            file.SetFieldValue<Machine>(DatItem.MachineKey, GetFieldValue<Machine>(DatItem.MachineKey)!.Clone() as Machine ?? new Machine());
+            file.SetFieldValue<bool>(DatItem.RemoveKey, GetFieldValue<bool>(DatItem.RemoveKey));
+            file.SetFieldValue<Source?>(DatItem.SourceKey, GetFieldValue<Source?>(DatItem.SourceKey));
+
+            return file;
         }
 
         /// <summary>
@@ -152,7 +151,7 @@ namespace SabreTools.DatItems.Formats
         {
             return new BaseFile()
             {
-                Parent = this.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
+                Parent = GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
                 CRC = this._crc,
                 MD5 = this._md5,
                 SHA1 = this._sha1,
@@ -166,20 +165,16 @@ namespace SabreTools.DatItems.Formats
         /// <returns></returns>
         public Rom ConvertToRom()
         {
-            var rom = new Rom()
-            {
-                ItemType = ItemType.Rom,
-                DupeType = this.DupeType,
-
-                Machine = this.Machine.Clone() as Machine ?? new Machine(),
-                Source = this.Source?.Clone() as Source,
-                Remove = this.Remove,
-            };
+            var rom = new Rom();
             rom.SetName($"{this.Id}.{this.Extension}");
             rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, CRC);
+            rom.SetFieldValue<DupeType>(DatItem.DupeTypeKey, GetFieldValue<DupeType>(DatItem.DupeTypeKey));
+            rom.SetFieldValue<Machine>(DatItem.MachineKey, GetFieldValue<Machine>(DatItem.MachineKey)!.Clone() as Machine ?? new Machine());
             rom.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, MD5);
+            rom.SetFieldValue<bool>(DatItem.RemoveKey, GetFieldValue<bool>(DatItem.RemoveKey));
             rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, SHA1);
             rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA256Key, SHA256);
+            rom.SetFieldValue<Source?>(DatItem.SourceKey, GetFieldValue<Source?>(DatItem.SourceKey));
 
             return rom;
         }
@@ -194,7 +189,7 @@ namespace SabreTools.DatItems.Formats
             bool dupefound = false;
 
             // If we don't have a file, return false
-            if (ItemType != other?.ItemType)
+            if (GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) != other?.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey))
                 return dupefound;
 
             // Otherwise, treat it as a File

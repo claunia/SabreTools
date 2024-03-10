@@ -18,9 +18,9 @@ namespace SabreTools.DatItems.Formats
         public Display()
         {
             _internal = new Models.Metadata.Display();
-            Machine = new Machine();
 
-            ItemType = ItemType.Display;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Display);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 
         /// <summary>
@@ -29,9 +29,9 @@ namespace SabreTools.DatItems.Formats
         public Display(Models.Metadata.Display? item)
         {
             _internal = item ?? [];
-            Machine = new Machine();
 
-            ItemType = ItemType.Display;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Display);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 
         /// <summary>
@@ -41,9 +41,9 @@ namespace SabreTools.DatItems.Formats
         {
             // TODO: Determine what transformation is needed here
             _internal = item ?? [];
-            Machine = new Machine();
 
-            ItemType = ItemType.Display;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Display);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 
         #endregion
@@ -55,13 +55,6 @@ namespace SabreTools.DatItems.Formats
         {
             return new Display()
             {
-                ItemType = this.ItemType,
-                DupeType = this.DupeType,
-
-                Machine = this.Machine.Clone() as Machine ?? new Machine(),
-                Source = this.Source?.Clone() as Source,
-                Remove = this.Remove,
-
                 _internal = this._internal?.Clone() as Models.Metadata.Display ?? [],
             };
         }

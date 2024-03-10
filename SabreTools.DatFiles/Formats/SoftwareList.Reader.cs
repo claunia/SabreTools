@@ -108,11 +108,9 @@ namespace SabreTools.DatFiles.Formats
             // Add all Info objects
             foreach (var info in software.Info ?? [])
             {
-                var infoItem = new Info
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var infoItem = new Info();
                 infoItem.SetName(info.Name);
+                infoItem.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
                 infoItem.SetFieldValue<string?>(Models.Metadata.Info.ValueKey, info.Value);
 
                 infoItem.CopyMachineInformation(machine);
@@ -122,11 +120,9 @@ namespace SabreTools.DatFiles.Formats
             // Add all SharedFeat objects
             foreach (var sharedfeat in software.SharedFeat ?? [])
             {
-                var sharedfeatItem = new SharedFeature
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var sharedfeatItem = new SharedFeature();
                 sharedfeatItem.SetName(sharedfeat.Name);
+                sharedfeatItem.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
                 sharedfeatItem.SetFieldValue<string?>(Models.Metadata.SharedFeat.ValueKey, sharedfeat.Value);
 
                 sharedfeatItem.CopyMachineInformation(machine);
@@ -142,10 +138,8 @@ namespace SabreTools.DatFiles.Formats
             // If we had no items, create a Blank placeholder
             if (!containsItems)
             {
-                var blank = new Blank
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var blank = new Blank();
+                blank.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
 
                 blank.CopyMachineInformation(machine);
                 ParseAddHelper(blank, statsOnly);
@@ -169,13 +163,11 @@ namespace SabreTools.DatFiles.Formats
 
             foreach (var part in parts)
             {
-                var item = new Part
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var item = new Part();
                 item.SetName(part.Name);
                 item.SetFieldValue<string?>(Models.Metadata.Part.InterfaceKey, part.Interface);
                 item.SetFieldValue<PartFeature[]?>(Models.Metadata.Part.FeatureKey, CreateFeatures(part.Feature, machine, filename, indexId, statsOnly));
+                item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
 
                 item.CopyMachineInformation(machine);
 
@@ -202,11 +194,9 @@ namespace SabreTools.DatFiles.Formats
             var partFeatures = new List<PartFeature>();
             foreach (var feature in features)
             {
-                var item = new PartFeature
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var item = new PartFeature();
                 item.SetName(feature.Name);
+                item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
                 item.SetFieldValue<string?>(Models.Metadata.Feature.ValueKey, feature.Value);
 
                 item.CopyMachineInformation(machine);
@@ -234,13 +224,11 @@ namespace SabreTools.DatFiles.Formats
 
             foreach (var dataarea in dataareas)
             {
-                var item = new DataArea
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var item = new DataArea();
                 item.SetName(dataarea.Name);
                 item.SetFieldValue<Endianness?>(Models.Metadata.DataArea.EndiannessKey, dataarea.Endianness.AsEnumValue<Endianness>());
                 item.SetFieldValue<long?>(Models.Metadata.DataArea.SizeKey, NumberHelper.ConvertToInt64(dataarea.Size));
+                item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
                 item.SetFieldValue<long?>(Models.Metadata.DataArea.WidthKey, NumberHelper.ConvertToInt64(dataarea.Width));
 
                 item.CopyMachineInformation(machine);
@@ -268,20 +256,18 @@ namespace SabreTools.DatFiles.Formats
             containsItems = true;
             foreach (var rom in roms)
             {
-                var item = new Rom
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var item = new Rom();
                 item.SetName(rom.Name);
-                item.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, NumberHelper.ConvertToInt64(rom.Size ?? rom.Length));
                 item.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, rom.CRC);
-                item.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, rom.SHA1);
-                item.SetFieldValue<string?>(Models.Metadata.Rom.OffsetKey, rom.Offset);
-                item.SetFieldValue<string?>(Models.Metadata.Rom.ValueKey, rom.Value);
-                item.SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, rom.Status.AsEnumValue<ItemStatus>());
+                item.SetFieldValue<DataArea?>(Rom.DataAreaKey, dataarea);
                 item.SetFieldValue<LoadFlag>(Models.Metadata.Rom.LoadFlagKey, rom.LoadFlag.AsEnumValue<LoadFlag>());
-                item.SetFieldValue<Part?>("PART", part);
-                item.SetFieldValue<DataArea?>("DATAAREA", dataarea);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.OffsetKey, rom.Offset);
+                item.SetFieldValue<Part?>(Rom.PartKey, part);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, rom.SHA1);
+                item.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, NumberHelper.ConvertToInt64(rom.Size ?? rom.Length));
+                item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
+                item.SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, rom.Status.AsEnumValue<ItemStatus>());
+                item.SetFieldValue<string?>(Models.Metadata.Rom.ValueKey, rom.Value);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -306,11 +292,9 @@ namespace SabreTools.DatFiles.Formats
 
             foreach (var diskarea in diskareas)
             {
-                var item = new DiskArea
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var item = new DiskArea();
                 item.SetName(diskarea.Name);
+                item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
 
                 item.CopyMachineInformation(machine);
                 ConvertDisks(diskarea.Disk, part, item, machine, filename, indexId, statsOnly, ref containsItems);
@@ -337,16 +321,14 @@ namespace SabreTools.DatFiles.Formats
             containsItems = true;
             foreach (var disk in disks)
             {
-                var item = new Disk
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var item = new Disk();
                 item.SetName(disk.Name);
-                item.SetFieldValue<DiskArea?>("DISKAREA", diskarea);
+                item.SetFieldValue<DiskArea?>(Disk.DiskAreaKey, diskarea);
                 item.SetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey, disk.Status?.AsEnumValue<ItemStatus>() ?? ItemStatus.NULL);
                 item.SetFieldValue<string?>(Models.Metadata.Disk.MD5Key, disk.MD5);
-                item.SetFieldValue<Part?>("PART", part);
+                item.SetFieldValue<Part?>(Disk.PartKey, part);
                 item.SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, disk.SHA1);
+                item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
                 item.SetFieldValue<bool?>(Models.Metadata.Disk.WritableKey, disk.Writeable.AsYesNo());
 
                 item.CopyMachineInformation(machine);
@@ -372,14 +354,12 @@ namespace SabreTools.DatFiles.Formats
 
             foreach (var dipswitch in dipswitches)
             {
-                var item = new DipSwitch
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var item = new DipSwitch();
                 item.SetName(dipswitch.Name);
                 item.SetFieldValue<DipValue[]?>(Models.Metadata.DipSwitch.DipValueKey, CreateDipValues(dipswitch.DipValue, machine, filename, indexId)?.ToArray());
-                item.SetFieldValue<Part?>("PART", part);
+                item.SetFieldValue<Part?>(DipSwitch.PartKey, part);
                 item.SetFieldValue<string?>(Models.Metadata.DipSwitch.MaskKey, dipswitch.Mask);
+                item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
                 item.SetFieldValue<string?>(Models.Metadata.DipSwitch.TagKey, dipswitch.Tag);
 
                 item.CopyMachineInformation(machine);
@@ -403,12 +383,10 @@ namespace SabreTools.DatFiles.Formats
             var settings = new List<DipValue>();
             foreach (var dipvalue in dipvalues)
             {
-                var item = new DipValue
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var item = new DipValue();
                 item.SetName(dipvalue.Name);
                 item.SetFieldValue<bool?>(Models.Metadata.DipValue.DefaultKey, dipvalue.Default.AsYesNo());
+                item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
                 item.SetFieldValue<string?>(Models.Metadata.DipValue.ValueKey, dipvalue.Value);
 
                 item.CopyMachineInformation(machine);

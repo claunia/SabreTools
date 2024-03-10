@@ -143,7 +143,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public SourceDetails()
         {
-            ItemType = ItemType.SourceDetails;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.SourceDetails);
         }
 
         #endregion
@@ -153,15 +153,8 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc/>
         public override object Clone()
         {
-            return new SourceDetails()
+            var sourceDetails = new SourceDetails()
             {
-                ItemType = this.ItemType,
-                DupeType = this.DupeType,
-
-                Machine = this.Machine.Clone() as Machine ?? new Machine(),
-                Source = this.Source?.Clone() as Source,
-                Remove = this.Remove,
-
                 Id = this.Id,
                 Section = this.Section,
                 RomInfo = this.RomInfo,
@@ -183,6 +176,13 @@ namespace SabreTools.DatItems.Formats
                 Link2 = this.Link2,
                 Link3 = this.Link3,
             };
+            sourceDetails.SetFieldValue<DupeType>(DatItem.DupeTypeKey, GetFieldValue<DupeType>(DatItem.DupeTypeKey));
+            sourceDetails.SetFieldValue<Machine>(DatItem.MachineKey, GetFieldValue<Machine>(DatItem.MachineKey));
+            sourceDetails.SetFieldValue<bool>(DatItem.RemoveKey, GetFieldValue<bool>(DatItem.RemoveKey));
+            sourceDetails.SetFieldValue<Source?>(DatItem.SourceKey, GetFieldValue<Source?>(DatItem.SourceKey));
+            sourceDetails.SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey));
+
+            return sourceDetails;
         }
 
         #endregion
@@ -193,7 +193,7 @@ namespace SabreTools.DatItems.Formats
         public override bool Equals(DatItem? other)
         {
             // If we don't have a SourceDetails, return false
-            if (ItemType != other?.ItemType)
+            if (GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) != other?.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey))
                 return false;
 
             // Otherwise, treat it as a SourceDetails

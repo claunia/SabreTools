@@ -144,10 +144,8 @@ namespace SabreTools.DatFiles.Formats
             // If we had no items, create a Blank placeholder
             if (!containsItems)
             {
-                var blank = new Blank
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var blank = new Blank();
+                blank.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
 
                 blank.CopyMachineInformation(machine);
                 ParseAddHelper(blank, statsOnly);
@@ -172,13 +170,11 @@ namespace SabreTools.DatFiles.Formats
             containsItems = true;
             foreach (var biosset in biossets)
             {
-                var item = new BiosSet
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var item = new BiosSet();
                 item.SetName(biosset.Name);
                 item.SetFieldValue<bool?>(Models.Metadata.BiosSet.DefaultKey, biosset.Default?.AsYesNo());
                 item.SetFieldValue<string?>(Models.Metadata.BiosSet.DescriptionKey, biosset.Description);
+                item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -203,10 +199,7 @@ namespace SabreTools.DatFiles.Formats
             containsItems = true;
             foreach (var rom in roms)
             {
-                var item = new Rom
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var item = new Rom();
                 item.SetName(rom.Name);
                 item.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, NumberHelper.ConvertToInt64(rom.Size));
                 item.SetFieldValue<string?>(Models.Metadata.Rom.BiosKey, rom.Bios);
@@ -218,6 +211,7 @@ namespace SabreTools.DatFiles.Formats
                 item.SetFieldValue<string?>(Models.Metadata.Rom.RegionKey, rom.Region);
                 item.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, rom.SHA1);
                 item.SetFieldValue<bool?>(Models.Metadata.Rom.SoundOnlyKey, rom.SoundOnly.AsYesNo());
+                item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
                 item.SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, rom.Status.AsEnumValue<ItemStatus>());
 
                 item.CopyMachineInformation(machine);
@@ -243,10 +237,7 @@ namespace SabreTools.DatFiles.Formats
             containsItems = true;
             foreach (var disk in disks)
             {
-                var item = new Disk
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var item = new Disk();
                 item.SetName(disk.Name);
                 item.SetFieldValue<string?>(Models.Metadata.Disk.IndexKey, disk.Index);
                 item.SetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey, disk.Status?.AsEnumValue<ItemStatus>() ?? ItemStatus.NULL);
@@ -255,6 +246,7 @@ namespace SabreTools.DatFiles.Formats
                 item.SetFieldValue<bool?>(Models.Metadata.Disk.OptionalKey, disk.Optional.AsYesNo());
                 item.SetFieldValue<string?>(Models.Metadata.Disk.RegionKey, disk.Region);
                 item.SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, disk.SHA1);
+                item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
                 item.SetFieldValue<bool?>(Models.Metadata.Disk.WritableKey, disk.Writable.AsYesNo());
 
                 item.CopyMachineInformation(machine);
@@ -280,11 +272,9 @@ namespace SabreTools.DatFiles.Formats
             containsItems = true;
             foreach (var deviceref in devicerefs)
             {
-                var item = new DeviceReference
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var item = new DeviceReference();
                 item.SetName(deviceref.Name);
+                item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -309,11 +299,9 @@ namespace SabreTools.DatFiles.Formats
             containsItems = true;
             foreach (var sample in samples)
             {
-                var item = new Sample
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var item = new Sample();
                 item.SetName(sample.Name);
+                item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -338,14 +326,12 @@ namespace SabreTools.DatFiles.Formats
             containsItems = true;
             foreach (var chip in chips)
             {
-                var item = new Chip
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var item = new Chip();
                 item.SetName(chip.Name);
                 item.SetFieldValue<ChipType?>(Models.Metadata.Chip.ChipTypeKey, chip.Type.AsEnumValue<ChipType>());
                 item.SetFieldValue<long?>(Models.Metadata.Chip.ClockKey, NumberHelper.ConvertToInt64(chip.Clock));
-                item.SetFieldValue<bool?>(Models.Metadata.Chip.SoundOnlyKey, chip.Type.AsYesNo());
+                item.SetFieldValue<bool?>(Models.Metadata.Chip.SoundOnlyKey, chip.SoundOnly.AsYesNo());
+                item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
                 item.SetFieldValue<string?>(Models.Metadata.Chip.TagKey, chip.Tag);
 
                 item.CopyMachineInformation(machine);
@@ -371,10 +357,7 @@ namespace SabreTools.DatFiles.Formats
             containsItems = true;
             foreach (var display in displays)
             {
-                var item = new Display
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var item = new Display();
                 item.SetFieldValue<DisplayType>(Models.Metadata.Display.DisplayTypeKey, display.Type.AsEnumValue<DisplayType>());
                 item.SetFieldValue<bool?>(Models.Metadata.Display.FlipXKey, display.FlipX.AsYesNo());
                 item.SetFieldValue<long?>(Models.Metadata.Display.HBEndKey, NumberHelper.ConvertToInt64(display.HBEnd));
@@ -384,6 +367,7 @@ namespace SabreTools.DatFiles.Formats
                 item.SetFieldValue<long?>(Models.Metadata.Display.PixClockKey, NumberHelper.ConvertToInt64(display.PixClock));
                 item.SetFieldValue<double?>(Models.Metadata.Display.RefreshKey, NumberHelper.ConvertToDouble(display.Refresh));
                 item.SetFieldValue<long?>(Models.Metadata.Display.RotateKey, NumberHelper.ConvertToInt64(display.Rotate));
+                item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
                 item.SetFieldValue<string?>(Models.Metadata.Display.TagKey, display.Tag);
                 item.SetFieldValue<long?>(Models.Metadata.Display.VBEndKey, NumberHelper.ConvertToInt64(display.VBEnd));
                 item.SetFieldValue<long?>(Models.Metadata.Display.VBStartKey, NumberHelper.ConvertToInt64(display.VBStart));
@@ -413,15 +397,13 @@ namespace SabreTools.DatFiles.Formats
             containsItems = true;
             foreach (var video in videos)
             {
-                var item = new Display
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var item = new Display();
                 item.SetFieldValue<long?>("ASPECTX", NumberHelper.ConvertToInt64(video.AspectX));
                 item.SetFieldValue<long?>("ASPECTY", NumberHelper.ConvertToInt64(video.AspectY));
                 item.SetFieldValue<DisplayType>(Models.Metadata.Display.DisplayTypeKey, video.Screen?.AsEnumValue<DisplayType>() ?? DisplayType.NULL);
                 item.SetFieldValue<long?>(Models.Metadata.Display.HeightKey, NumberHelper.ConvertToInt64(video.Height));
                 item.SetFieldValue<double?>(Models.Metadata.Display.RefreshKey, NumberHelper.ConvertToDouble(video.Refresh));
+                item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
                 item.SetFieldValue<long?>(Models.Metadata.Display.WidthKey, NumberHelper.ConvertToInt64(video.Width));
 
                 switch (video.Orientation)
@@ -455,11 +437,9 @@ namespace SabreTools.DatFiles.Formats
                 return;
 
             containsItems = true;
-            var item = new Sound
-            {
-                Source = new Source { Index = indexId, Name = filename },
-            };
+            var item = new Sound();
             item.SetFieldValue<long?>(Models.Metadata.Sound.ChannelsKey, NumberHelper.ConvertToInt64(sound.Channels));
+            item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
 
             item.CopyMachineInformation(machine);
             ParseAddHelper(item, statsOnly);
@@ -481,15 +461,13 @@ namespace SabreTools.DatFiles.Formats
                 return;
 
             containsItems = true;
-            var item = new Input
-            {
-                Source = new Source { Index = indexId, Name = filename },
-            };
+            var item = new Input();
             item.SetFieldValue<long?>(Models.Metadata.Input.ButtonsKey, NumberHelper.ConvertToInt64(input.Buttons));
             item.SetFieldValue<long?>(Models.Metadata.Input.CoinsKey, NumberHelper.ConvertToInt64(input.Coins));
             //item.SetFieldValue<string?>(Models.Metadata.Input.ControlKey, input.ControlAttr);
             item.SetFieldValue<long?>(Models.Metadata.Input.PlayersKey, NumberHelper.ConvertToInt64(input.Players));
             item.SetFieldValue<bool?>(Models.Metadata.Input.ServiceKey, input.Service?.AsYesNo());
+            item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
             item.SetFieldValue<bool?>(Models.Metadata.Input.TiltKey, input.Tilt?.AsYesNo());
 
             var controls = new List<Control>();
@@ -537,12 +515,10 @@ namespace SabreTools.DatFiles.Formats
             containsItems = true;
             foreach (var dipswitch in dipswitches)
             {
-                var item = new DipSwitch
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var item = new DipSwitch();
                 item.SetName(dipswitch.Name);
                 item.SetFieldValue<string?>(Models.Metadata.DipSwitch.MaskKey, dipswitch.Mask);
+                item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
                 item.SetFieldValue<string?>(Models.Metadata.DipSwitch.TagKey, dipswitch.Tag);
 
                 if (dipswitch.Condition != null)
@@ -618,12 +594,10 @@ namespace SabreTools.DatFiles.Formats
             containsItems = true;
             foreach (var configuration in configurations)
             {
-                var item = new Configuration
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var item = new Configuration();
                 item.SetName(configuration.Name);
                 item.SetFieldValue<string?>(Models.Metadata.Configuration.MaskKey, configuration.Mask);
+                item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
                 item.SetFieldValue<string?>(Models.Metadata.Configuration.TagKey, configuration.Tag);
 
                 if (configuration.Condition != null)
@@ -699,10 +673,8 @@ namespace SabreTools.DatFiles.Formats
             containsItems = true;
             foreach (var port in ports)
             {
-                var item = new Port
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var item = new Port();
+                item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
                 item.SetFieldValue<string>(Models.Metadata.Port.TagKey, port.Tag);
 
                 var analogs = new List<Analog>();
@@ -740,12 +712,10 @@ namespace SabreTools.DatFiles.Formats
             containsItems = true;
             foreach (var adjuster in adjusters)
             {
-                var item = new Adjuster
-                {
-                    Source = new Source { Index = indexId, Name = filename }
-                };
+                var item = new Adjuster();
                 item.SetName(adjuster.Name);
                 item.SetFieldValue<bool?>(Models.Metadata.Adjuster.DefaultKey, adjuster.Default.AsYesNo());
+                item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
 
                 if (adjuster.Condition != null)
                 {
@@ -779,10 +749,7 @@ namespace SabreTools.DatFiles.Formats
                 return;
 
             containsItems = true;
-            var item = new Driver
-            {
-                Source = new Source { Index = indexId, Name = filename },
-            };
+            var item = new Driver();
             item.SetFieldValue<SupportStatus>(Models.Metadata.Driver.CocktailKey, driver.Cocktail?.AsEnumValue<SupportStatus>() ?? SupportStatus.NULL);
             item.SetFieldValue<SupportStatus>(Models.Metadata.Driver.ColorKey, driver.Color?.AsEnumValue<SupportStatus>() ?? SupportStatus.NULL);
             item.SetFieldValue<SupportStatus>(Models.Metadata.Driver.EmulationKey, driver.Emulation?.AsEnumValue<SupportStatus>() ?? SupportStatus.NULL);
@@ -792,6 +759,7 @@ namespace SabreTools.DatFiles.Formats
             item.SetFieldValue<bool?>(Models.Metadata.Driver.RequiresArtworkKey, driver.RequiresArtwork.AsYesNo());
             item.SetFieldValue<Supported>(Models.Metadata.Driver.SaveStateKey, driver.SaveState?.AsEnumValue<Supported>() ?? Supported.NULL);
             item.SetFieldValue<SupportStatus>(Models.Metadata.Driver.SoundKey, driver.Sound?.AsEnumValue<SupportStatus>() ?? SupportStatus.NULL);
+            item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
             item.SetFieldValue<SupportStatus>(Models.Metadata.Driver.StatusKey, driver.Status?.AsEnumValue<SupportStatus>() ?? SupportStatus.NULL);
             item.SetFieldValue<bool?>(Models.Metadata.Driver.UnofficialKey, driver.Unofficial.AsYesNo());
 
@@ -817,12 +785,10 @@ namespace SabreTools.DatFiles.Formats
             containsItems = true;
             foreach (var feature in features)
             {
-                var item = new Feature
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var item = new Feature();
                 item.SetFieldValue<FeatureType>(Models.Metadata.Feature.FeatureTypeKey, feature.Type.AsEnumValue<FeatureType>());
                 item.SetFieldValue<FeatureStatus>(Models.Metadata.Feature.OverallKey, feature.Overall.AsEnumValue<FeatureStatus>());
+                item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
                 item.SetFieldValue<FeatureStatus>(Models.Metadata.Feature.StatusKey, feature.Status.AsEnumValue<FeatureStatus>());
 
                 item.CopyMachineInformation(machine);
@@ -848,14 +814,12 @@ namespace SabreTools.DatFiles.Formats
             containsItems = true;
             foreach (var device in devices)
             {
-                var item = new Device
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var item = new Device();
                 item.SetFieldValue<DeviceType>(Models.Metadata.Device.DeviceTypeKey, device.Type.AsEnumValue<DeviceType>());
                 item.SetFieldValue<string?>(Models.Metadata.Device.FixedImageKey, device.FixedImage);
                 item.SetFieldValue<string?>(Models.Metadata.Device.InterfaceKey, device.Interface);
                 item.SetFieldValue<long?>(Models.Metadata.Device.MandatoryKey, NumberHelper.ConvertToInt64(device.Mandatory));
+                item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
                 item.SetFieldValue<string?>(Models.Metadata.Device.TagKey, device.Tag);
 
                 if (device.Instance != null)
@@ -902,11 +866,9 @@ namespace SabreTools.DatFiles.Formats
             containsItems = true;
             foreach (var slot in slots)
             {
-                var item = new Slot
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var item = new Slot();
                 item.SetName(slot.Name);
+                item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
 
                 var slotoptions = new List<SlotOption>();
                 foreach (var slotoption in slot.SlotOption ?? [])
@@ -945,12 +907,10 @@ namespace SabreTools.DatFiles.Formats
             containsItems = true;
             foreach (var softwarelist in softwarelists)
             {
-                var item = new DatItems.Formats.SoftwareList
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var item = new DatItems.Formats.SoftwareList();
                 item.SetName(softwarelist.Name);
                 item.SetFieldValue<string?>(Models.Metadata.SoftwareList.FilterKey, softwarelist.Filter);
+                item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
                 item.SetFieldValue<SoftwareListStatus>(Models.Metadata.SoftwareList.StatusKey, softwarelist.Status.AsEnumValue<SoftwareListStatus>());
                 item.SetFieldValue<string?>(Models.Metadata.SoftwareList.TagKey, softwarelist.Tag);
 
@@ -977,13 +937,11 @@ namespace SabreTools.DatFiles.Formats
             containsItems = true;
             foreach (var ramoption in ramoptions)
             {
-                var item = new RamOption
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var item = new RamOption();
                 item.SetName(ramoption.Name);
                 item.SetFieldValue<string?>(Models.Metadata.RamOption.ContentKey, ramoption.Content);
                 item.SetFieldValue<bool?>(Models.Metadata.RamOption.DefaultKey, ramoption.Default.AsYesNo());
+                item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);

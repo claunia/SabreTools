@@ -59,11 +59,11 @@ namespace SabreTools.DatFiles.Formats
                         datItem = ProcessNullifiedItem(datItem);
 
                         // Write out the item if we're using machine names or we're not ignoring
-                        if (!Header.UseRomName || !ShouldIgnore(datItem, ignoreblanks))
+                        if (!Header.GetFieldValue<bool>(DatHeader.UseRomNameKey) || !ShouldIgnore(datItem, ignoreblanks))
                             WriteDatItem(sw, datItem, lastgame);
 
                         // Set the new data to compare against
-                        lastgame = datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey);
+                        lastgame = datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey);
                     }
                 }
 
@@ -92,10 +92,10 @@ namespace SabreTools.DatFiles.Formats
             ProcessItemName(datItem, false, forceRomName: false);
 
             // Romba mode automatically uses item name
-            if (Header.OutputDepot?.IsActive == true || Header.UseRomName)
+            if (Header.OutputDepot?.IsActive == true || Header.GetFieldValue<bool>(DatHeader.UseRomNameKey))
                 sw.Write($"{datItem.GetName() ?? string.Empty}\n");
-            else if (!Header.UseRomName && datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) != lastgame)
-                sw.Write($"{datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) ?? string.Empty}\n");
+            else if (!Header.GetFieldValue<bool>(DatHeader.UseRomNameKey) && datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) != lastgame)
+                sw.Write($"{datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) ?? string.Empty}\n");
 
             sw.Flush();
         }

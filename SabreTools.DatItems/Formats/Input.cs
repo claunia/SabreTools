@@ -32,9 +32,9 @@ namespace SabreTools.DatItems.Formats
         public Input()
         {
             _internal = new Models.Metadata.Input();
-            Machine = new Machine();
 
-            ItemType = ItemType.Input;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Input);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 
         /// <summary>
@@ -43,9 +43,9 @@ namespace SabreTools.DatItems.Formats
         public Input(Models.Metadata.Input? item)
         {
             _internal = item ?? [];
-            Machine = new Machine();
 
-            ItemType = ItemType.Input;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Input);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 
         #endregion
@@ -57,13 +57,6 @@ namespace SabreTools.DatItems.Formats
         {
             return new Input()
             {
-                ItemType = this.ItemType,
-                DupeType = this.DupeType,
-
-                Machine = this.Machine.Clone() as Machine ?? new Machine(),
-                Source = this.Source?.Clone() as Source,
-                Remove = this.Remove,
-
                 _internal = this._internal?.Clone() as Models.Metadata.Input ?? [],
             };
         }

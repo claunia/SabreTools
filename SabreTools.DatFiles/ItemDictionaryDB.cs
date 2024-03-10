@@ -336,11 +336,11 @@ namespace SabreTools.DatFiles
                 TotalCount++;
 
                 // Increment removal count
-                if (item.Remove)
+                if (item.GetFieldValue<bool>(DatItem.RemoveKey))
                     RemovedCount++;
 
                 // Increment the item count for the type
-                AddItemCount(item.ItemType);
+                AddItemCount(item.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey));
 
                 // Some item types require special processing
                 switch (item)
@@ -530,8 +530,8 @@ namespace SabreTools.DatFiles
 
                 // Filter the list
                 return fi.Where(i => i != null)
-                    .Where(i => !i.Remove)
-                    .Where(i => i.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) != null)
+                    .Where(i => !i.GetFieldValue<bool>(DatItem.RemoveKey))
+                    .Where(i => i.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) != null)
                     .ToConcurrentList();
             }
         }
@@ -644,11 +644,11 @@ namespace SabreTools.DatFiles
                 TotalCount--;
 
                 // Decrement removal count
-                if (item.Remove)
+                if (item.GetFieldValue<bool>(DatItem.RemoveKey))
                     RemovedCount--;
 
                 // Decrement the item count for the type
-                RemoveItemCount(item.ItemType);
+                RemoveItemCount(item.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey));
 
                 // Some item types require special processing
                 switch (item)
@@ -1062,7 +1062,7 @@ CREATE TABLE IF NOT EXISTS groups (
                     this[key] = null;
 
                 // If there are no non-blank items, remove
-                else if (!this[key]!.Any(i => i != null && i.ItemType != ItemType.Blank))
+                else if (!this[key]!.Any(i => i != null && i is not Blank))
                     this[key] = null;
             }
         }
@@ -1079,7 +1079,7 @@ CREATE TABLE IF NOT EXISTS groups (
             foreach (string key in keys)
             {
                 ConcurrentList<DatItem>? oldItemList = this[key];
-                ConcurrentList<DatItem>? newItemList = oldItemList?.Where(i => !i.Remove)?.ToConcurrentList();
+                ConcurrentList<DatItem>? newItemList = oldItemList?.Where(i => !i.GetFieldValue<bool>(DatItem.RemoveKey))?.ToConcurrentList();
 
                 Remove(key);
                 AddRange(key, newItemList);
@@ -1113,12 +1113,12 @@ CREATE TABLE IF NOT EXISTS groups (
             for (int i = 0; i < roms.Count; i++)
             {
                 DatItem other = roms[i];
-                if (other.Remove)
+                if (other.GetFieldValue<bool>(DatItem.RemoveKey))
                     continue;
 
                 if (datItem.Equals(other))
                 {
-                    other.Remove = true;
+                    other.SetFieldValue<bool>(DatItem.RemoveKey, true);
                     output.Add(other);
                 }
                 else

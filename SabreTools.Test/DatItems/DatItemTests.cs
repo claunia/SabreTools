@@ -19,7 +19,7 @@ namespace SabreTools.Test.DatItems
         public void CreateItemTypeTest(ItemType? itemType, ItemType expected)
         {
             var actual = DatItem.Create(itemType);
-            Assert.Equal(expected, actual.ItemType);
+            Assert.Equal(expected, actual.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey));
         }
 
         [Theory]
@@ -32,7 +32,7 @@ namespace SabreTools.Test.DatItems
         {
             var baseFile = CreateBaseFile(fileType);
             var actual = DatItem.Create(baseFile);
-            Assert.Equal(expected, actual?.ItemType);
+            Assert.Equal(expected, actual?.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey));
         }
     
         [Fact]
@@ -53,20 +53,16 @@ namespace SabreTools.Test.DatItems
             var machineB = new Machine();
             machineB.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
 
-            var romA = new Rom
-            {
-                Source = new Source { Index = 0 },
-            };
+            var romA = new Rom();
             romA.SetName("same-name");
             romA.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            romA.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = 0 });
             romA.CopyMachineInformation(machineA);
 
-            var romB = new Rom
-            {
-                Source = new Source { Index = 1 },
-            };
+            var romB = new Rom();
             romB.SetName("same-name");
             romB.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            romB.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = 1 });
             romB.CopyMachineInformation(machineB);
 
             var actual = romA.GetDuplicateStatus(romB);
@@ -82,20 +78,16 @@ namespace SabreTools.Test.DatItems
             var machineB = new Machine();
             machineB.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "not-name-same");
 
-            var romA = new Rom
-            {
-                Source = new Source { Index = 0 },
-            };
+            var romA = new Rom();
             romA.SetName("same-name");
             romA.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            romA.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = 0 });
             romA.CopyMachineInformation(machineA);
 
-            var romB = new Rom
-            {
-                Source = new Source { Index = 1 },
-            };
+            var romB = new Rom();
             romB.SetName("same-name");
             romB.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            romB.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = 1 });
             romB.CopyMachineInformation(machineB);
 
             var actual = romA.GetDuplicateStatus(romB);
@@ -111,20 +103,16 @@ namespace SabreTools.Test.DatItems
             var machineB = new Machine();
             machineB.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
 
-            var romA = new Rom
-            {
-                Source = new Source { Index = 0 },
-            };
+            var romA = new Rom();
             romA.SetName("same-name");
             romA.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            romA.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = 0 });
             romA.CopyMachineInformation(machineA);
 
-            var romB = new Rom
-            {
-                Source = new Source { Index = 0 },
-            };
+            var romB = new Rom();
             romB.SetName("same-name");
             romB.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            romB.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = 0 });
             romB.CopyMachineInformation(machineB);
 
             var actual = romA.GetDuplicateStatus(romB);
@@ -140,20 +128,16 @@ namespace SabreTools.Test.DatItems
             var machineB = new Machine();
             machineB.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "not-name-same");
 
-            var romA = new Rom
-            {
-                Source = new Source { Index = 0 },
-            };
+            var romA = new Rom();
             romA.SetName("same-name");
             romA.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            romA.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = 0 });
             romA.CopyMachineInformation(machineA);
 
-            var romB = new Rom
-            {
-                Source = new Source { Index = 0 },
-            };
+            var romB = new Rom();
             romB.SetName("same-name");
             romB.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            romB.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = 0 });
             romB.CopyMachineInformation(machineB);
 
             var actual = romA.GetDuplicateStatus(romB);

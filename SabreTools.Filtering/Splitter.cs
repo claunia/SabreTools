@@ -246,8 +246,8 @@ namespace SabreTools.Filtering
 
                 // Determine if the game has a parent or not
                 string? parent = null;
-                if (!string.IsNullOrEmpty(items[0].Machine.GetFieldValue<string?>(Models.Metadata.Machine.RomOfKey)))
-                    parent = items[0].Machine.GetFieldValue<string?>(Models.Metadata.Machine.RomOfKey);
+                if (!string.IsNullOrEmpty(items[0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.RomOfKey)))
+                    parent = items[0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.RomOfKey);
 
                 // If the parent doesnt exist, we want to continue
                 if (string.IsNullOrEmpty(parent))
@@ -290,12 +290,12 @@ namespace SabreTools.Filtering
                     continue;
 
                 // If the machine (is/is not) a device, we want to continue
-                if (dev ^ (datFile.Items[machine]![0].Machine.GetFieldValue<bool?>(Models.Metadata.Machine.IsDeviceKey) == true))
+                if (dev ^ (datFile.Items[machine]![0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<bool?>(Models.Metadata.Machine.IsDeviceKey) == true))
                     continue;
 
                 // Get all device reference names from the current machine
                 List<string?> deviceReferences = datFile.Items[machine]!
-                    .Where(i => i.ItemType == ItemType.DeviceReference)
+                    .Where(i => i is DeviceReference)
                     .Select(i => i as DeviceReference)
                     .Select(dr => dr!.GetName())
                     .Distinct()
@@ -303,7 +303,7 @@ namespace SabreTools.Filtering
 
                 // Get all slot option names from the current machine
                 List<string?> slotOptions = datFile.Items[machine]!
-                    .Where(i => i.ItemType == ItemType.Slot)
+                    .Where(i => i is Slot)
                     .Select(i => i as Slot)
                     .Where(s => s!.SlotOptionsSpecified)
                     .SelectMany(s => s!.GetFieldValue<SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey)!)
@@ -328,7 +328,7 @@ namespace SabreTools.Filtering
                             continue;
 
                         newDeviceReferences.AddRange(devItems
-                            .Where(i => i.ItemType == ItemType.DeviceReference)
+                            .Where(i => i is DeviceReference)
                             .Select(i => (i as DeviceReference)!.GetName()!));
 
                         // Set new machine information and add to the current machine
@@ -336,7 +336,7 @@ namespace SabreTools.Filtering
                         foreach (DatItem item in devItems)
                         {
                             // If the parent machine doesn't already contain this item, add it
-                            if (!datFile.Items[machine]!.Any(i => i.ItemType == item.ItemType && i.GetName() == item.GetName()))
+                            if (!datFile.Items[machine]!.Any(i => i.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) == item.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) && i.GetName() == item.GetName()))
                             {
                                 // Set that we found new items
                                 foundnew = true;
@@ -378,7 +378,7 @@ namespace SabreTools.Filtering
                             continue;
 
                         newSlotOptions.AddRange(slotItems
-                            .Where(i => i.ItemType == ItemType.Slot)
+                            .Where(i => i is Slot)
                             .Where(s => (s as Slot)!.SlotOptionsSpecified)
                             .SelectMany(s => (s as Slot)!.GetFieldValue<SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey)!)
                             .Select(o => o.GetFieldValue<string?>(Models.Metadata.SlotOption.DevNameKey)!));
@@ -388,7 +388,7 @@ namespace SabreTools.Filtering
                         foreach (DatItem item in slotItems)
                         {
                             // If the parent machine doesn't already contain this item, add it
-                            if (!datFile.Items[machine]!.Any(i => i.ItemType == item.ItemType && i.GetName() == item.GetName()))
+                            if (!datFile.Items[machine]!.Any(i => i.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) == item.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) && i.GetName() == item.GetName()))
                             {
                                 // Set that we found new items
                                 foundnew = true;
@@ -437,8 +437,8 @@ namespace SabreTools.Filtering
 
                 // Determine if the game has a parent or not
                 string? parent = null;
-                if (!string.IsNullOrEmpty(items[0].Machine.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey)))
-                    parent = items[0].Machine.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey);
+                if (!string.IsNullOrEmpty(items[0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey)))
+                    parent = items[0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey);
 
                 // If the parent doesnt exist, we want to continue
                 if (string.IsNullOrEmpty(parent))
@@ -464,10 +464,10 @@ namespace SabreTools.Filtering
 
                 // Now we want to get the parent romof tag and put it in each of the items
                 items = datFile.Items[game];
-                string? romof = datFile.Items[parent!]![0].Machine.GetFieldValue<string?>(Models.Metadata.Machine.RomOfKey);
+                string? romof = datFile.Items[parent!]![0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.RomOfKey);
                 foreach (DatItem item in items!)
                 {
-                    item.Machine.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, romof);
+                    item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, romof);
                 }
             }
         }
@@ -490,8 +490,8 @@ namespace SabreTools.Filtering
 
                 // Determine if the game has a parent or not
                 string? parent = null;
-                if (!string.IsNullOrEmpty(items[0].Machine.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey)))
-                    parent = items[0].Machine.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey);
+                if (!string.IsNullOrEmpty(items[0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey)))
+                    parent = items[0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey);
 
                 // If there is no parent, then we continue
                 if (string.IsNullOrEmpty(parent))
@@ -502,8 +502,8 @@ namespace SabreTools.Filtering
                 if (datFile.Items[parent!]!.Count == 0)
                 {
                     copyFrom = new Rom();
-                    copyFrom.Machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, parent);
-                    copyFrom.Machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, parent);
+                    copyFrom.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, parent);
+                    copyFrom.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, parent);
                 }
                 else
                 {
@@ -514,19 +514,22 @@ namespace SabreTools.Filtering
                 foreach (DatItem item in items!)
                 {
                     // Special disk handling
-                    if (item.ItemType == ItemType.Disk)
+                    if (item is Disk disk)
                     {
-                        Disk disk = (item as Disk)!;
                         string? mergeTag = disk.GetFieldValue<string?>(Models.Metadata.Disk.MergeKey);
 
                         // If the merge tag exists and the parent already contains it, skip
-                        if (mergeTag != null && datFile.Items[parent!]!.Where(i => i.ItemType == ItemType.Disk).Select(i => (i as Disk)!.GetName()).Contains(mergeTag))
+                        if (mergeTag != null && datFile.Items[parent!]!
+                            .Where(i => i is Disk)
+                            .Select(i => (i as Disk)!.GetName()).Contains(mergeTag))
                         {
                             continue;
                         }
 
                         // If the merge tag exists but the parent doesn't contain it, add to parent
-                        else if (mergeTag != null && !datFile.Items[parent!]!.Where(i => i.ItemType == ItemType.Disk).Select(i => (i as Disk)!.GetName()).Contains(mergeTag))
+                        else if (mergeTag != null && !datFile.Items[parent!]!
+                            .Where(i => i is Disk)
+                            .Select(i => (i as Disk)!.GetName()).Contains(mergeTag))
                         {
                             disk.CopyMachineInformation(copyFrom);
                             datFile.Items.Add(parent!, disk);
@@ -541,21 +544,23 @@ namespace SabreTools.Filtering
                     }
 
                     // Special rom handling
-                    else if (item.ItemType == ItemType.Rom)
+                    else if (item is Rom rom)
                     {
-                        Rom rom = (item as Rom)!;
-
                         // If the merge tag exists and the parent already contains it, skip
-                        if (rom.GetFieldValue<string?>(Models.Metadata.Rom.MergeKey) != null && datFile.Items[parent!]!.Where(i => i.ItemType == ItemType.Rom).Select(i => (i as Rom)!.GetName()).Contains(rom.GetFieldValue<string?>(Models.Metadata.Rom.MergeKey)))
+                        if (rom.GetFieldValue<string?>(Models.Metadata.Rom.MergeKey) != null && datFile.Items[parent!]!
+                            .Where(i => i is Rom).Select(i => (i as Rom)!.GetName())
+                            .Contains(rom.GetFieldValue<string?>(Models.Metadata.Rom.MergeKey)))
                         {
                             continue;
                         }
 
                         // If the merge tag exists but the parent doesn't contain it, add to subfolder of parent
-                        else if (rom.GetFieldValue<string?>(Models.Metadata.Rom.MergeKey) != null && !datFile.Items[parent!]!.Where(i => i.ItemType == ItemType.Rom).Select(i => (i as Rom)!.GetName()).Contains(rom.GetFieldValue<string?>(Models.Metadata.Rom.MergeKey)))
+                        else if (rom.GetFieldValue<string?>(Models.Metadata.Rom.MergeKey) != null && !datFile.Items[parent!]!
+                            .Where(i => i is Rom).Select(i => (i as Rom)!.GetName())
+                            .Contains(rom.GetFieldValue<string?>(Models.Metadata.Rom.MergeKey)))
                         {
                             if (subfolder)
-                                rom.SetName($"{rom.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)}\\{rom.GetName()}");
+                                rom.SetName($"{rom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)}\\{rom.GetName()}");
 
                             rom.CopyMachineInformation(copyFrom);
                             datFile.Items.Add(parent!, rom);
@@ -565,7 +570,7 @@ namespace SabreTools.Filtering
                         else if (!datFile.Items[parent!]!.Contains(item) || skipDedup)
                         {
                             if (subfolder)
-                                rom.SetName($"{item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)}\\{rom.GetName()}");
+                                rom.SetName($"{item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)}\\{rom.GetName()}");
 
                             rom.CopyMachineInformation(copyFrom);
                             datFile.Items.Add(parent!, rom);
@@ -576,7 +581,7 @@ namespace SabreTools.Filtering
                     else if (!datFile.Items[parent!]!.Contains(item))
                     {
                         if (subfolder)
-                            item.SetName($"{item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)}\\{item.GetName()}");
+                            item.SetName($"{item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)}\\{item.GetName()}");
 
                         item.CopyMachineInformation(copyFrom);
                         datFile.Items.Add(parent!, item);
@@ -602,8 +607,8 @@ namespace SabreTools.Filtering
                     continue;
 
                 if (items.Count > 0
-                    && ((items[0].Machine.GetFieldValue<bool?>(Models.Metadata.Machine.IsBiosKey) == true)
-                        || (items[0].Machine.GetFieldValue<bool?>(Models.Metadata.Machine.IsDeviceKey) == true)))
+                    && ((items[0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<bool?>(Models.Metadata.Machine.IsBiosKey) == true)
+                        || (items[0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<bool?>(Models.Metadata.Machine.IsDeviceKey) == true)))
                 {
                     datFile.Items.Remove(game);
                 }
@@ -627,13 +632,13 @@ namespace SabreTools.Filtering
                     continue;
 
                 // If the game (is/is not) a bios, we want to continue
-                if (bios ^ (items[0].Machine.GetFieldValue<bool?>(Models.Metadata.Machine.IsBiosKey) == true))
+                if (bios ^ (items[0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<bool?>(Models.Metadata.Machine.IsBiosKey) == true))
                     continue;
 
                 // Determine if the game has a parent or not
                 string? parent = null;
-                if (!string.IsNullOrEmpty(items[0].Machine.GetFieldValue<string?>(Models.Metadata.Machine.RomOfKey)))
-                    parent = items[0].Machine.GetFieldValue<string?>(Models.Metadata.Machine.RomOfKey);
+                if (!string.IsNullOrEmpty(items[0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.RomOfKey)))
+                    parent = items[0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.RomOfKey);
 
                 // If the parent doesnt exist, we want to continue
                 if (string.IsNullOrEmpty(parent))
@@ -678,8 +683,8 @@ namespace SabreTools.Filtering
 
                 // Determine if the game has a parent or not
                 string? parent = null;
-                if (!string.IsNullOrEmpty(items[0].Machine.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey)))
-                    parent = items[0].Machine.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey);
+                if (!string.IsNullOrEmpty(items[0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey)))
+                    parent = items[0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey);
 
                 // If the parent doesnt exist, we want to continue
                 if (string.IsNullOrEmpty(parent))
@@ -702,10 +707,10 @@ namespace SabreTools.Filtering
 
                 // Now we want to get the parent romof tag and put it in each of the remaining items
                 items = datFile.Items[game];
-                string? romof = datFile.Items[parent!]![0].Machine.GetFieldValue<string?>(Models.Metadata.Machine.RomOfKey);
+                string? romof = datFile.Items[parent!]![0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.RomOfKey);
                 foreach (DatItem item in items!)
                 {
-                    item.Machine.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, romof);
+                    item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, romof);
                 }
             }
         }
@@ -725,9 +730,9 @@ namespace SabreTools.Filtering
 
                 foreach (DatItem item in items)
                 {
-                    item.Machine.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, null);
-                    item.Machine.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, null);
-                    item.Machine.SetFieldValue<string?>(Models.Metadata.Machine.SampleOfKey, null);
+                    item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, null);
+                    item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, null);
+                    item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.SampleOfKey, null);
                 }
             }
         }

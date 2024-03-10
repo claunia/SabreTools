@@ -29,10 +29,10 @@ namespace SabreTools.Test.Filtering
         {
             var datItem = CreateDatItem();
             var repDatItem = CreateDatItem();
-            repDatItem.Machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "foo");
+            repDatItem.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "foo");
             List<string> fields = [Models.Metadata.Machine.NameKey];
-            Replacer.ReplaceFields(datItem.Machine, repDatItem.Machine, fields, false);
-            Assert.Equal("foo", datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey));
+            Replacer.ReplaceFields(datItem.GetFieldValue<Machine>(DatItem.MachineKey)!, repDatItem.GetFieldValue<Machine>(DatItem.MachineKey)!, fields, false);
+            Assert.Equal("foo", datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey));
         }
 
         /// <summary>
@@ -44,8 +44,9 @@ namespace SabreTools.Test.Filtering
             machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "bar");
             machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, "bar");
 
-            var rom = new Rom { Machine = machine };
+            var rom = new Rom();
             rom.SetName("foo");
+            rom.SetFieldValue<Machine>(DatItem.MachineKey, machine);
 
             return rom;
         }

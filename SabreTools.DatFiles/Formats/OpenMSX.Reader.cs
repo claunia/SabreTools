@@ -102,10 +102,8 @@ namespace SabreTools.DatFiles.Formats
             // If we had no items, create a Blank placeholder
             if (!containsItems)
             {
-                var blank = new Blank
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var blank = new Blank();
+                blank.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
 
                 blank.CopyMachineInformation(machine);
                 ParseAddHelper(blank, statsOnly);
@@ -138,15 +136,13 @@ namespace SabreTools.DatFiles.Formats
                 var rom = dump.Rom;
 
                 string name = $"{machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)}_{index++}{(!string.IsNullOrEmpty(rom.Remark) ? $" {rom.Remark}" : string.Empty)}";
-                var item = new Rom
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var item = new Rom();
                 item.SetName(name);
                 item.SetFieldValue<string?>(Models.Metadata.Rom.OffsetKey, dump.Rom?.Start);
                 item.SetFieldValue<string?>(Models.Metadata.Rom.OpenMSXType, rom.Type);
                 item.SetFieldValue<string?>(Models.Metadata.Rom.RemarkKey, rom.Remark);
                 item.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, rom.Hash);
+                item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
 
                 if (dump.Original != null)
                 {

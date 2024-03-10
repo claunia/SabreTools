@@ -785,7 +785,11 @@ CREATE TABLE IF NOT EXISTS dat (
         internal void AddDatToDatabase(Rom dat, SqliteConnection dbc)
         {
             // Get the dat full path
-            string fullpath = Path.Combine(_dats!, (dat.Machine.GetFieldValue<string?>(SabreTools.Models.Metadata.Machine.NameKey) == "dats" ? string.Empty : dat.Machine.GetFieldValue<string?>(SabreTools.Models.Metadata.Machine.NameKey))!, dat.GetName()!);
+            string fullpath = Path.Combine(_dats!,
+                (dat.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(SabreTools.Models.Metadata.Machine.NameKey) == "dats"
+                    ? string.Empty
+                    : dat.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(SabreTools.Models.Metadata.Machine.NameKey))!
+                , dat.GetName()!);
 
             // Parse the Dat if possible
             logger.User($"Adding from '{dat.GetName()}'");
@@ -807,9 +811,8 @@ CREATE TABLE IF NOT EXISTS dat (
                 {
                     logger.Verbose($"Checking and adding file '{datItem.GetName() ?? string.Empty}'");
 
-                    if (datItem.ItemType == ItemType.Disk)
+                    if (datItem is Disk disk)
                     {
-                        Disk disk = (Disk)datItem;
                         hasItems = true;
 
                         if (!string.IsNullOrWhiteSpace(disk.GetFieldValue<string?>(SabreTools.Models.Metadata.Disk.MD5Key)))
@@ -823,9 +826,8 @@ CREATE TABLE IF NOT EXISTS dat (
                                 md5sha1query += $" (\"{disk.GetFieldValue<string?>(SabreTools.Models.Metadata.Disk.MD5Key)}\", \"{disk.GetFieldValue<string?>(SabreTools.Models.Metadata.Disk.SHA1Key)}\"),";
                         }
                     }
-                    else if (datItem.ItemType == ItemType.Media)
+                    else if (datItem is Media media)
                     {
-                        Media media = (Media)datItem;
                         hasItems = true;
 
                         if (!string.IsNullOrWhiteSpace(media.GetFieldValue<string?>(SabreTools.Models.Metadata.Media.MD5Key)))
@@ -839,9 +841,8 @@ CREATE TABLE IF NOT EXISTS dat (
                                 md5sha1query += $" (\"{media.GetFieldValue<string?>(SabreTools.Models.Metadata.Media.MD5Key)}\", \"{media.GetFieldValue<string?>(SabreTools.Models.Metadata.Media.SHA1Key)}\"),";
                         }
                     }
-                    else if (datItem.ItemType == ItemType.Rom)
+                    else if (datItem is Rom rom)
                     {
-                        Rom rom = (Rom)datItem;
                         hasItems = true;
 
                         if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.CRCKey)))

@@ -113,7 +113,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public ReleaseDetails()
         {
-            ItemType = ItemType.ReleaseDetails;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.ReleaseDetails);
         }
 
         #endregion
@@ -123,15 +123,8 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc/>
         public override object Clone()
         {
-            return new ReleaseDetails()
+            var releaseDetails = new ReleaseDetails()
             {
-                ItemType = this.ItemType,
-                DupeType = this.DupeType,
-
-                Machine = this.Machine.Clone() as Machine ?? new Machine(),
-                Source = this.Source?.Clone() as Source,
-                Remove = this.Remove,
-
                 Id = this.Id,
                 DirName = this.DirName,
                 RomInfo = this.RomInfo,
@@ -148,6 +141,13 @@ namespace SabreTools.DatItems.Formats
                 Region = this.Region,
                 Origin = this.Origin,
             };
+            releaseDetails.SetFieldValue<DupeType>(DatItem.DupeTypeKey, GetFieldValue<DupeType>(DatItem.DupeTypeKey));
+            releaseDetails.SetFieldValue<Machine>(DatItem.MachineKey, GetFieldValue<Machine>(DatItem.MachineKey));
+            releaseDetails.SetFieldValue<bool>(DatItem.RemoveKey, GetFieldValue<bool>(DatItem.RemoveKey));
+            releaseDetails.SetFieldValue<Source?>(DatItem.SourceKey, GetFieldValue<Source?>(DatItem.SourceKey));
+            releaseDetails.SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey));
+
+            return releaseDetails;
         }
 
         #endregion
@@ -158,7 +158,7 @@ namespace SabreTools.DatItems.Formats
         public override bool Equals(DatItem? other)
         {
             // If we don't have a Details, return false
-            if (ItemType != other?.ItemType)
+            if (GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) != other?.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey))
                 return false;
 
             // Otherwise, treat it as a Details

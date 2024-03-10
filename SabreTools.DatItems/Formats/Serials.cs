@@ -106,7 +106,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Serials()
         {
-            ItemType = ItemType.Serials;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Serials);
         }
 
         #endregion
@@ -116,15 +116,8 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc/>
         public override object Clone()
         {
-            return new Serials()
+            var serials = new Serials()
             {
-                ItemType = this.ItemType,
-                DupeType = this.DupeType,
-
-                Machine = this.Machine.Clone() as Machine ?? new Machine(),
-                Source = this.Source?.Clone() as Source,
-                Remove = this.Remove,
-
                 DigitalSerial1 = this.DigitalSerial1,
                 DigitalSerial2 = this.DigitalSerial2,
                 MediaSerial1 = this.MediaSerial1,
@@ -140,6 +133,13 @@ namespace SabreTools.DatItems.Formats
                 MediaStamp = this.MediaStamp,
                 BoxBarcode = this.BoxBarcode,
             };
+            serials.SetFieldValue<DupeType>(DatItem.DupeTypeKey, GetFieldValue<DupeType>(DatItem.DupeTypeKey));
+            serials.SetFieldValue<Machine>(DatItem.MachineKey, GetFieldValue<Machine>(DatItem.MachineKey));
+            serials.SetFieldValue<bool>(DatItem.RemoveKey, GetFieldValue<bool>(DatItem.RemoveKey));
+            serials.SetFieldValue<Source?>(DatItem.SourceKey, GetFieldValue<Source?>(DatItem.SourceKey));
+            serials.SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey));
+
+            return serials;
         }
 
         #endregion
@@ -150,7 +150,7 @@ namespace SabreTools.DatItems.Formats
         public override bool Equals(DatItem? other)
         {
             // If we don't have a Serials, return false
-            if (ItemType != other?.ItemType)
+            if (GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) != other?.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey))
                 return false;
 
             // Otherwise, treat it as a Serials

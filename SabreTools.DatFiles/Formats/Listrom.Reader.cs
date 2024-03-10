@@ -109,12 +109,10 @@ namespace SabreTools.DatFiles.Formats
                 && (!string.IsNullOrEmpty(row.MD5)
                     || !string.IsNullOrEmpty(row.SHA1)))
             {
-                var disk = new Disk
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var disk = new Disk();
                 disk.SetName(row.Name);
                 disk.SetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey, ItemStatus.None);
+                disk.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
 
                 if (!string.IsNullOrEmpty(row.MD5))
                     disk.SetFieldValue<string?>(Models.Metadata.Disk.MD5Key, row.MD5);
@@ -131,14 +129,12 @@ namespace SabreTools.DatFiles.Formats
                 && !row.NoGoodDumpKnown
                 && !row.Bad)
             {
-                var rom = new Rom
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var rom = new Rom();
                 rom.SetName(row.Name);
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, row.CRC);
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, row.SHA1);
                 rom.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, NumberHelper.ConvertToInt64(row.Size));
+                rom.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
                 rom.SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.None);
 
                 // Now process and add the item
@@ -153,12 +149,10 @@ namespace SabreTools.DatFiles.Formats
                 && (!string.IsNullOrEmpty(row.MD5)
                     || !string.IsNullOrEmpty(row.SHA1)))
             {
-                var disk = new Disk
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var disk = new Disk();
                 disk.SetName(row.Name);
                 disk.SetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey, value: ItemStatus.BadDump);
+                disk.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
 
                 if (!string.IsNullOrEmpty(row.MD5))
                     disk.SetFieldValue<string?>(Models.Metadata.Disk.MD5Key, row.MD5);
@@ -174,13 +168,11 @@ namespace SabreTools.DatFiles.Formats
             else if (row.Size == null
                 && row.NoGoodDumpKnown)
             {
-                var disk = new Disk
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var disk = new Disk();
                 disk.SetName(row.Name);
                 disk.SetFieldValue<string?>(Models.Metadata.Disk.MD5Key, null);
                 disk.SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, null);
+                disk.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
                 disk.SetFieldValue<ItemStatus?>(Models.Metadata.Disk.StatusKey, ItemStatus.Nodump);
 
                 // Now process and add the item
@@ -193,14 +185,12 @@ namespace SabreTools.DatFiles.Formats
                 && !row.NoGoodDumpKnown
                 && row.Bad)
             {
-                var rom = new Rom
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var rom = new Rom();
                 rom.SetName(row.Name);
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, row.CRC);
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, row.SHA1);
                 rom.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, NumberHelper.ConvertToInt64(row.Size));
+                rom.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
                 rom.SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.BadDump);
 
                 // Now process and add the item
@@ -212,14 +202,12 @@ namespace SabreTools.DatFiles.Formats
             else if (row.Size != null
                 && row.NoGoodDumpKnown)
             {
-                var rom = new Rom
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
+                var rom = new Rom();
                 rom.SetName(row.Name);
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, null);
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, null);
                 rom.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, NumberHelper.ConvertToInt64(row.Size));
+                rom.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
                 rom.SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.Nodump);
 
                 // Now process and add the item

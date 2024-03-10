@@ -17,7 +17,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Blank()
         {
-            ItemType = ItemType.Blank;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Blank);
         }
 
         #endregion
@@ -27,15 +27,13 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc/>
         public override object Clone()
         {
-            return new Blank()
-            {
-                ItemType = this.ItemType,
-                DupeType = this.DupeType,
+            var blank = new Blank();
+            blank.SetFieldValue<Machine>(DatItem.MachineKey, GetFieldValue<Machine>(DatItem.MachineKey));
+            blank.SetFieldValue<bool>(DatItem.RemoveKey, GetFieldValue<bool>(DatItem.RemoveKey));
+            blank.SetFieldValue<Source?>(DatItem.SourceKey, GetFieldValue<Source?>(DatItem.SourceKey));
+            blank.SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey));
 
-                Machine = this.Machine.Clone() as Machine ?? new Machine(),
-                Source = this.Source?.Clone() as Source,
-                Remove = this.Remove,
-            };
+            return blank;
         }
 
         #endregion
@@ -46,14 +44,14 @@ namespace SabreTools.DatItems.Formats
         public override bool Equals(DatItem? other)
         {
             // If we don't have a blank, return false
-            if (ItemType != other?.ItemType)
+            if (GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) != other?.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey))
                 return false;
 
             // Otherwise, treat it as a Blank
             Blank? newOther = other as Blank;
 
             // If the archive information matches
-            return (Machine == newOther!.Machine);
+            return GetFieldValue<Machine>(DatItem.MachineKey) == newOther!.GetFieldValue<Machine>(DatItem.MachineKey);
         }
 
         #endregion

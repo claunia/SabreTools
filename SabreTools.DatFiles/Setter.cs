@@ -182,15 +182,15 @@ namespace SabreTools.DatFiles
             #region Common
 
             // Handle Machine fields
-            if (MachineFieldMappings.Any() && datItem.Machine != null)
-                SetFields(datItem.Machine);
+            if (MachineFieldMappings.Any() && datItem.GetFieldValue<Machine>(DatItem.MachineKey) != null)
+                SetFields(datItem.GetFieldValue<Machine>(DatItem.MachineKey)!);
 
             // If there are no field names, return
             if (ItemFieldMappings == null || !ItemFieldMappings.Any())
                 return;
 
             // If there are no field names for this type or generic, return
-            string? itemType = datItem.ItemType.AsStringValue<ItemType>();
+            string? itemType = datItem.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey).AsStringValue<ItemType>();
             if (itemType == null || (!ItemFieldMappings.Keys.Any(kvp => kvp.Item1 == itemType) && !ItemFieldMappings.Keys.Any(kvp => kvp.Item1 == "item")))
                 return;
 
@@ -355,9 +355,9 @@ namespace SabreTools.DatFiles
             }
 
             if (!dipSwitch.PartSpecified)
-                dipSwitch.SetFieldValue<Part?>("PART", new Part());
+                dipSwitch.SetFieldValue<Part?>(DipSwitch.PartKey, new Part());
 
-            SetFields((dipSwitch.GetFieldValue<Part?>("PART") as DatItem)!);
+            SetFields((dipSwitch.GetFieldValue<Part?>(DipSwitch.PartKey) as DatItem)!);
         }
 
         /// <summary>
@@ -382,14 +382,14 @@ namespace SabreTools.DatFiles
         private void SetFields(Disk disk)
         {
             if (!disk.DiskAreaSpecified)
-                disk.SetFieldValue<DiskArea?>("DISKAREA", new DiskArea());
+                disk.SetFieldValue<DiskArea?>(Disk.DiskAreaKey, new DiskArea());
 
-            SetFields(disk.GetFieldValue<DiskArea?>("DISKAREA")! as DatItem);
+            SetFields(disk.GetFieldValue<DiskArea?>(Disk.DiskAreaKey)! as DatItem);
 
             if (!disk.PartSpecified)
-                disk.SetFieldValue<Part?>("PART", new Part());
+                disk.SetFieldValue<Part?>(Disk.PartKey, new Part());
 
-            SetFields(disk.GetFieldValue<Part?>("PART")! as DatItem);
+            SetFields(disk.GetFieldValue<Part?>(Disk.PartKey)! as DatItem);
         }
 
         /// <summary>
@@ -444,14 +444,14 @@ namespace SabreTools.DatFiles
         private void SetFields(Rom rom)
         {
             if (!rom.DataAreaSpecified)
-                rom.SetFieldValue<DataArea?>("DATAAREA", new DataArea());
+                rom.SetFieldValue<DataArea?>(Rom.DataAreaKey, new DataArea());
 
-            SetFields(rom.GetFieldValue<DataArea?>("DATAAREA")! as DatItem);
+            SetFields(rom.GetFieldValue<DataArea?>(Rom.DataAreaKey)! as DatItem);
 
             if (!rom.PartSpecified)
-                rom.SetFieldValue<Part?>("PART", new Part());
+                rom.SetFieldValue<Part?>(Rom.PartKey, new Part());
 
-            SetFields(rom.GetFieldValue<Part?>("PART")! as DatItem);
+            SetFields(rom.GetFieldValue<Part?>(Rom.PartKey)! as DatItem);
         }
 
         /// <summary>

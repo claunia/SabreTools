@@ -1,10 +1,8 @@
-﻿using System.Reflection;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.FileTypes;
-using SabreTools.Filter;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -14,6 +12,20 @@ namespace SabreTools.DatItems.Formats
     [JsonObject("rom"), XmlRoot("rom")]
     public class Rom : DatItem
     {
+        #region Constants
+
+        /// <summary>
+        /// Non-standard key for inverted logic
+        /// </summary>
+        public const string DataAreaKey = "DATAAREA";
+
+        /// <summary>
+        /// Non-standard key for inverted logic
+        /// </summary>
+        public const string PartKey = "PART";
+
+        #endregion
+
         #region Fields
 
         [JsonIgnore]
@@ -41,7 +53,7 @@ namespace SabreTools.DatItems.Formats
         {
             get
             {
-                var dataArea = GetFieldValue<DataArea?>("DATAAREA");
+                var dataArea = GetFieldValue<DataArea?>(Rom.DataAreaKey);
                 return dataArea != null
                     && (!string.IsNullOrEmpty(dataArea.GetName())
                         || dataArea.GetFieldValue<long?>(Models.Metadata.DataArea.SizeKey) != null
@@ -55,7 +67,7 @@ namespace SabreTools.DatItems.Formats
         {
             get
             {
-                var part = GetFieldValue<Part?>("PART");
+                var part = GetFieldValue<Part?>(Rom.PartKey);
                 return part != null
                     && (!string.IsNullOrEmpty(part.GetName())
                         || !string.IsNullOrEmpty(part.GetFieldValue<string?>(Models.Metadata.Part.InterfaceKey)));
@@ -82,11 +94,11 @@ namespace SabreTools.DatItems.Formats
         public Rom()
         {
             _internal = new Models.Metadata.Rom();
-            Machine = new Machine();
 
             SetName(null);
-            ItemType = ItemType.Rom;
-            DupeType = 0x00;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Rom);
+            SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
             SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.None);
         }
 
@@ -100,13 +112,13 @@ namespace SabreTools.DatItems.Formats
         {
             _internal = new Models.Metadata.Rom();
             SetName(name);
-            ItemType = ItemType.Rom;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Rom);
             SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, null);
             SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.None);
 
-            Machine = new Machine();
-            Machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, machineName);
-            Machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineName);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
+            GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, machineName);
+            GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineName);
         }
 
         /// <summary>
@@ -116,7 +128,6 @@ namespace SabreTools.DatItems.Formats
         public Rom(BaseFile baseFile)
         {
             _internal = new Models.Metadata.Rom();
-            Machine = new Machine();
 
             SetName(baseFile.Filename);
             SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, baseFile.Size);
@@ -128,8 +139,9 @@ namespace SabreTools.DatItems.Formats
             SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key, TextHelper.ByteArrayToString(baseFile.SHA512));
             SetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey, System.Text.Encoding.UTF8.GetString(baseFile.SpamSum ?? []));
 
-            ItemType = ItemType.Rom;
-            DupeType = 0x00;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Rom);
+            SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
             SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.None);
             SetFieldValue<string?>(Models.Metadata.Rom.DateKey, baseFile.Date);
         }
@@ -140,10 +152,9 @@ namespace SabreTools.DatItems.Formats
         public Rom(Models.Metadata.Rom? item)
         {
             _internal = item ?? [];
-            Machine = new Machine();
 
-            ItemType = ItemType.Rom;
-            DupeType = 0x00;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Rom);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 
         #endregion
@@ -155,13 +166,6 @@ namespace SabreTools.DatItems.Formats
         {
             return new Rom()
             {
-                ItemType = this.ItemType,
-                DupeType = this.DupeType,
-
-                Machine = this.Machine.Clone() as Machine ?? new Machine(),
-                Source = this.Source?.Clone() as Source,
-                Remove = this.Remove,
-
                 _internal = this._internal?.Clone() as Models.Metadata.Rom ?? [],
             };
         }
@@ -174,7 +178,7 @@ namespace SabreTools.DatItems.Formats
             return new BaseFile()
             {
                 Filename = GetName(),
-                Parent = this.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
+                Parent = GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
                 Date = GetFieldValue<string?>(Models.Metadata.Rom.DateKey),
                 Size = GetFieldValue<long?>(Models.Metadata.Rom.SizeKey),
                 CRC = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Rom.CRCKey)),

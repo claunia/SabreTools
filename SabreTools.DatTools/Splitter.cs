@@ -181,60 +181,53 @@ namespace SabreTools.DatTools
                 foreach (DatItem item in items)
                 {
                     // If the file is not a Disk, Media, or Rom, continue
-                    if (item.ItemType != ItemType.Disk && item.ItemType != ItemType.Media && item.ItemType != ItemType.Rom)
-                        continue;
-
-                    // If the file is a nodump
-                    if ((item.ItemType == ItemType.Rom && (item as Rom)!.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) == ItemStatus.Nodump)
-                        || (item.ItemType == ItemType.Disk && (item as Disk)!.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey) == ItemStatus.Nodump))
+                    switch (item)
                     {
-                        fieldDats[Models.Metadata.Rom.StatusKey].Items.Add(key, item);
-                    }
+                        case Disk disk:
+                            if (disk.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey) == ItemStatus.Nodump)
+                                fieldDats[Models.Metadata.Disk.StatusKey].Items.Add(key, item);
+                            else if (!string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key)))
+                                fieldDats[Models.Metadata.Disk.SHA1Key].Items.Add(key, item);
+                            else if (!string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key)))
+                                fieldDats[Models.Metadata.Disk.MD5Key].Items.Add(key, item);
+                            else if (!string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key)))
+                                fieldDats[Models.Metadata.Disk.MD5Key].Items.Add(key, item);
+                            else
+                                fieldDats["null"].Items.Add(key, item);
+                            break;
 
-                    // If the file has a SHA-512
-                    else if ((item.ItemType == ItemType.Rom && !string.IsNullOrEmpty((item as Rom)!.GetFieldValue<string?>(Models.Metadata.Rom.SHA512Key))))
-                    {
-                        fieldDats[Models.Metadata.Rom.SHA512Key].Items.Add(key, item);
-                    }
+                        case Media media:
+                            if (!string.IsNullOrEmpty(media.GetFieldValue<string?>(Models.Metadata.Media.SHA256Key)))
+                                fieldDats[Models.Metadata.Media.SHA256Key].Items.Add(key, item);
+                            else if (!string.IsNullOrEmpty(media.GetFieldValue<string?>(Models.Metadata.Media.SHA1Key)))
+                                fieldDats[Models.Metadata.Media.SHA1Key].Items.Add(key, item);
+                            else if (!string.IsNullOrEmpty(media.GetFieldValue<string?>(Models.Metadata.Media.MD5Key)))
+                                fieldDats[Models.Metadata.Media.MD5Key].Items.Add(key, item);
+                            else
+                                fieldDats["null"].Items.Add(key, item);
+                            break;
 
-                    // If the file has a SHA-384
-                    else if ((item.ItemType == ItemType.Rom && !string.IsNullOrEmpty((item as Rom)!.GetFieldValue<string?>(Models.Metadata.Rom.SHA384Key))))
-                    {
-                        fieldDats[Models.Metadata.Rom.SHA384Key].Items.Add(key, item);
-                    }
+                        case Rom rom:
+                            if (rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) == ItemStatus.Nodump)
+                                fieldDats[Models.Metadata.Rom.StatusKey].Items.Add(key, item);
+                            else if (!string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA512Key)))
+                                fieldDats[Models.Metadata.Rom.SHA512Key].Items.Add(key, item);
+                            else if (!string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA384Key)))
+                                fieldDats[Models.Metadata.Rom.SHA384Key].Items.Add(key, item);
+                            else if (!string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA256Key)))
+                                fieldDats[Models.Metadata.Rom.SHA256Key].Items.Add(key, item);
+                            else if (!string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key)))
+                                fieldDats[Models.Metadata.Rom.SHA1Key].Items.Add(key, item);
+                            else if (!string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key)))
+                                fieldDats[Models.Metadata.Rom.MD5Key].Items.Add(key, item);
+                            else if (!string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey)))
+                                fieldDats[Models.Metadata.Rom.CRCKey].Items.Add(key, item);
+                            else
+                                fieldDats["null"].Items.Add(key, item);
+                            break;
 
-                    // If the file has a SHA-256
-                    else if ((item.ItemType == ItemType.Media && !string.IsNullOrEmpty((item as Media)!.GetFieldValue<string?>(Models.Metadata.Media.SHA256Key)))
-                        || (item.ItemType == ItemType.Rom && !string.IsNullOrEmpty((item as Rom)!.GetFieldValue<string?>(Models.Metadata.Rom.SHA256Key))))
-                    {
-                        fieldDats[Models.Metadata.Rom.SHA256Key].Items.Add(key, item);
-                    }
-
-                    // If the file has a SHA-1
-                    else if ((item.ItemType == ItemType.Disk && !string.IsNullOrEmpty((item as Disk)!.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key)))
-                        || (item.ItemType == ItemType.Media && !string.IsNullOrEmpty((item as Media)!.GetFieldValue<string?>(Models.Metadata.Media.SHA1Key)))
-                        || (item.ItemType == ItemType.Rom && !string.IsNullOrEmpty((item as Rom)!.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key))))
-                    {
-                        fieldDats[Models.Metadata.Rom.SHA1Key].Items.Add(key, item);
-                    }
-
-                    // If the file has an MD5
-                    else if ((item.ItemType == ItemType.Disk && !string.IsNullOrEmpty((item as Disk)!.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key)))
-                        || (item.ItemType == ItemType.Media && !string.IsNullOrEmpty((item as Media)!.GetFieldValue<string?>(Models.Metadata.Media.MD5Key)))
-                        || (item.ItemType == ItemType.Rom && !string.IsNullOrEmpty((item as Rom)!.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key))))
-                    {
-                        fieldDats[Models.Metadata.Rom.MD5Key].Items.Add(key, item);
-                    }
-
-                    // If the file has a CRC
-                    else if ((item.ItemType == ItemType.Rom && !string.IsNullOrEmpty((item as Rom)!.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey))))
-                    {
-                        fieldDats[Models.Metadata.Rom.CRCKey].Items.Add(key, item);
-                    }
-
-                    else
-                    {
-                        fieldDats["null"].Items.Add(key, item);
+                        default:
+                            continue;
                     }
                 }
 #if NET40_OR_GREATER || NETCOREAPP
@@ -295,8 +288,8 @@ namespace SabreTools.DatTools
 #else
                     continue;
 #endif
-                items.ForEach(item => item.Machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Path.GetFileName(item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey))));
-                items.ForEach(item => item.Machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, Path.GetFileName(item.Machine.GetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey))));
+                items.ForEach(item => item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Path.GetFileName(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey))));
+                items.ForEach(item => item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, Path.GetFileName(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey))));
 
                 // Now add the game to the output DAT
                 tempDat.Items.AddRange(key, items);
@@ -411,19 +404,19 @@ namespace SabreTools.DatTools
                 foreach (DatItem item in items)
                 {
                     // If the file is not a Rom, it automatically goes in the "lesser" dat
-                    if (item.ItemType != ItemType.Rom)
+                    if (item is not Rom rom)
                         lessThan.Items.Add(key, item);
 
                     // If the file is a Rom and has no size, put it in the "lesser" dat
-                    else if (item.ItemType == ItemType.Rom && (item as Rom)!.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null)
+                    else if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null)
                         lessThan.Items.Add(key, item);
 
                     // If the file is a Rom and less than the radix, put it in the "lesser" dat
-                    else if (item.ItemType == ItemType.Rom && (item as Rom)!.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) < radix)
+                    else if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) < radix)
                         lessThan.Items.Add(key, item);
 
                     // If the file is a Rom and greater than or equal to the radix, put it in the "greater" dat
-                    else if (item.ItemType == ItemType.Rom && (item as Rom)!.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) >= radix)
+                    else if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) >= radix)
                         greaterThan.Items.Add(key, item);
                 }
 #if NET40_OR_GREATER || NETCOREAPP
@@ -607,7 +600,7 @@ namespace SabreTools.DatTools
 
                 foreach (DatItem item in items)
                 {
-                    if (item.ItemType == itemType)
+                    if (item.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) == itemType)
                         indexDat.Items.Add(key, item);
                 }
 #if NET40_OR_GREATER || NETCOREAPP

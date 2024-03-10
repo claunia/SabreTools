@@ -42,10 +42,10 @@ namespace SabreTools.DatItems.Formats
         public DipValue()
         {
             _internal = new Models.Metadata.DipValue();
-            Machine = new Machine();
 
             SetName(string.Empty);
-            ItemType = ItemType.DipValue;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.DipValue);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 
         /// <summary>
@@ -54,9 +54,9 @@ namespace SabreTools.DatItems.Formats
         public DipValue(Models.Metadata.DipValue? item)
         {
             _internal = item ?? [];
-            Machine = new Machine();
 
-            ItemType = ItemType.DipValue;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.DipValue);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 
         #endregion
@@ -68,13 +68,6 @@ namespace SabreTools.DatItems.Formats
         {
             return new DipValue()
             {
-                ItemType = this.ItemType,
-                DupeType = this.DupeType,
-
-                Machine = this.Machine.Clone() as Machine ?? new Machine(),
-                Source = this.Source?.Clone() as Source,
-                Remove = this.Remove,
-
                 _internal = this._internal?.Clone() as Models.Metadata.DipValue ?? [],
             };
         }

@@ -55,11 +55,11 @@ namespace SabreTools.Filtering
 
             #region Common
 
-            if (datItem.ItemType != repDatItem.ItemType)
+            if (datItem.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) != repDatItem.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey))
                 return;
 
             // If there are no field names for this type or generic, return
-            string? itemType = datItem.ItemType.AsStringValue<ItemType>();
+            string? itemType = datItem.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey).AsStringValue<ItemType>();
             if (itemType == null || (!itemFieldNames.ContainsKey(itemType) && !itemFieldNames.ContainsKey("item")))
                 return;
 

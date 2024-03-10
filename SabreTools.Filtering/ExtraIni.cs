@@ -125,7 +125,7 @@ namespace SabreTools.Filtering
                     // Loop through and set the fields accordingly
                     foreach (var datItem in datItems)
                     {
-                        setter.SetFields(datItem.Machine);
+                        setter.SetFields(datItem.GetFieldValue<Machine>(DatItem.MachineKey));
                         setter.SetFields(datItem);
                     }
                 }

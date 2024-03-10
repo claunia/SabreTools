@@ -103,7 +103,7 @@ namespace SabreTools.DatFiles.Formats
                     continue;
 
                 // Get the first item for game information
-                var machine = items[0].Machine;
+                var machine = items[0].GetFieldValue<Machine>(DatItem.MachineKey);
                 var software = new Models.OpenMSX.Software
                 {
                     Title = machine?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),

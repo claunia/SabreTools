@@ -55,11 +55,11 @@ namespace SabreTools.DatTools
                 foreach (DatItem item in items)
                 {
                     DatItem newItem = item;
-                    if (newItem.Source == null)
+                    if (newItem.GetFieldValue<Source?>(DatItem.SourceKey) == null)
                         continue;
 
-                    string filename = inputs[newItem.Source.Index].CurrentPath;
-                    string? rootpath = inputs[newItem.Source.Index].ParentPath;
+                    string filename = inputs[newItem.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].CurrentPath;
+                    string? rootpath = inputs[newItem.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].ParentPath;
 
                     if (!string.IsNullOrEmpty(rootpath)
 #if NETFRAMEWORK
@@ -74,9 +74,9 @@ namespace SabreTools.DatTools
                     }
 
                     filename = filename.Remove(0, rootpath?.Length ?? 0);
-                    newItem.Machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Path.GetDirectoryName(filename) + Path.DirectorySeparatorChar
+                    newItem.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Path.GetDirectoryName(filename) + Path.DirectorySeparatorChar
                         + Path.GetFileNameWithoutExtension(filename) + Path.DirectorySeparatorChar
-                        + newItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey));
+                        + newItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey));
 
                     newItems.Add(newItem);
                 }
@@ -189,7 +189,7 @@ namespace SabreTools.DatTools
                             continue;
 
                         if (datFile.Items.ContainsKey(key) && list.Count > 0)
-                            Replacer.ReplaceFields(newDatItem.Machine, list[0].Machine, machineFieldNames, onlySame);
+                            Replacer.ReplaceFields(newDatItem.GetFieldValue<Machine>(DatItem.MachineKey)!, list[index: 0].GetFieldValue<Machine>(DatItem.MachineKey)!, machineFieldNames, onlySame);
 
                         newDatItems.Add(newDatItem);
                     }
@@ -421,16 +421,16 @@ namespace SabreTools.DatTools
                 foreach (DatItem item in items)
                 {
 #if NETFRAMEWORK
-                    if ((item.DupeType & DupeType.External) != 0)
+                    if ((item.GetFieldValue<DupeType>(DatItem.DupeTypeKey) & DupeType.External) != 0)
 #else
-                    if (item.DupeType.HasFlag(DupeType.External))
+                    if (item.GetFieldValue<DupeType>(DatItem.DupeTypeKey).HasFlag(DupeType.External))
 #endif
                     {
                         if (item.Clone() is not DatItem newrom)
                             continue;
 
-                        if (item.Source != null)
-                            newrom.Machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, newrom.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) + $" ({Path.GetFileNameWithoutExtension(inputs[item.Source.Index].CurrentPath)})");
+                        if (item.GetFieldValue<Source?>(DatItem.SourceKey) != null)
+                            newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) + $" ({Path.GetFileNameWithoutExtension(inputs[item.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].CurrentPath)})");
 
                         dupeData.Items.Add(key, newrom);
                     }
@@ -529,15 +529,15 @@ namespace SabreTools.DatTools
                 // Loop through and add the items correctly
                 foreach (DatItem item in items)
                 {
-                    if (item.Source == null)
+                    if (item.GetFieldValue<Source?>(DatItem.SourceKey) == null)
                         continue;
 
 #if NETFRAMEWORK
-                    if ((item.DupeType & DupeType.Internal) != 0 || item.DupeType == 0x00)
+                    if ((item.GetFieldValue<DupeType>(DatItem.DupeTypeKey) & DupeType.Internal) != 0 || item.GetFieldValue<DupeType>(DatItem.DupeTypeKey) == 0x00)
 #else
-                    if (item.DupeType.HasFlag(DupeType.Internal) || item.DupeType == 0x00)
+                    if (item.GetFieldValue<DupeType>(DatItem.DupeTypeKey).HasFlag(DupeType.Internal) || item.GetFieldValue<DupeType>(DatItem.DupeTypeKey) == 0x00)
 #endif
-                        outDats[item.Source.Index].Items.Add(key, item);
+                        outDats[item.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].Items.Add(key, item);
                 }
 #if NET40_OR_GREATER || NETCOREAPP
             });
@@ -614,15 +614,15 @@ namespace SabreTools.DatTools
                 foreach (DatItem item in items)
                 {
 #if NETFRAMEWORK
-                    if ((item.DupeType & DupeType.Internal) != 0 || item.DupeType == 0x00)
+                    if ((item.GetFieldValue<DupeType>(DatItem.DupeTypeKey) & DupeType.Internal) != 0 || item.GetFieldValue<DupeType>(DatItem.DupeTypeKey) == 0x00)
 #else
-                    if (item.DupeType.HasFlag(DupeType.Internal) || item.DupeType == 0x00)
+                    if (item.GetFieldValue<DupeType>(DatItem.DupeTypeKey).HasFlag(DupeType.Internal) || item.GetFieldValue<DupeType>(DatItem.DupeTypeKey) == 0x00)
 #endif
                     {
-                        if (item.Clone() is not DatItem newrom || newrom.Source == null)
+                        if (item.Clone() is not DatItem newrom || newrom.GetFieldValue<Source?>(DatItem.SourceKey) == null)
                             continue;
 
-                        newrom.Machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, newrom.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) + $" ({Path.GetFileNameWithoutExtension(inputs[newrom.Source.Index].CurrentPath)})");
+                        newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) + $" ({Path.GetFileNameWithoutExtension(inputs[newrom.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].CurrentPath)})");
                         outerDiffData.Items.Add(key, newrom);
                     }
                 }
@@ -747,7 +747,7 @@ namespace SabreTools.DatTools
 
                 foreach (DatItem item in items)
                 {
-                    if (item.Source != null && item.Source.Index == index)
+                    if (item.GetFieldValue<Source?>(DatItem.SourceKey) != null && item.GetFieldValue<Source?>(DatItem.SourceKey)!.Index == index)
                         indexDat.Items.Add(key, item);
                 }
 #if NET40_OR_GREATER || NETCOREAPP

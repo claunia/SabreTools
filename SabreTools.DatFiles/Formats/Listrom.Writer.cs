@@ -116,8 +116,12 @@ namespace SabreTools.DatFiles.Formats
 
                 var set = new Models.Listrom.Set
                 {
-                    Driver = items[0]!.Machine!.GetFieldValue<bool?>(Models.Metadata.Machine.IsDeviceKey) == true ? items[0]!.Machine!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) : null,
-                    Device = items[0]!.Machine!.GetFieldValue<bool?>(Models.Metadata.Machine.IsDeviceKey) == true ? items[0]!.Machine!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) : null,
+                    Driver = items[0]!.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<bool?>(Models.Metadata.Machine.IsDeviceKey) == true
+                        ? items[0]!.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)
+                        : null,
+                    Device = items[0]!.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<bool?>(Models.Metadata.Machine.IsDeviceKey) == true
+                        ? items[0]!.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)
+                        : null,
                 };
 
                 // Loop through and convert the items to respective lists

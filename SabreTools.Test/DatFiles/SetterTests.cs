@@ -23,8 +23,8 @@ namespace SabreTools.Test.DatFiles
             var datItem = CreateDatItem();
             var setter = new Setter();
             setter.PopulateSetters("machine.name", "foo");
-            setter.SetFields(datItem.Machine);
-            Assert.Equal("foo", datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey));
+            setter.SetFields(datItem.GetFieldValue<Machine>(DatItem.MachineKey));
+            Assert.Equal("foo", datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey));
         }
 
         /// <summary>
@@ -36,7 +36,8 @@ namespace SabreTools.Test.DatFiles
             machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "bar");
             machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, "bar");
 
-            var rom = new Rom { Machine = machine };
+            var rom = new Rom();
+            rom.SetFieldValue<Machine>(DatItem.MachineKey, machine);
             rom.SetName("foo");
 
             return rom;

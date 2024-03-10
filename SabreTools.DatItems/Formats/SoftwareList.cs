@@ -31,10 +31,10 @@ namespace SabreTools.DatItems.Formats
         public SoftwareList()
         {
             _internal = new Models.Metadata.SoftwareList();
-            Machine = new Machine();
 
             SetName(string.Empty);
-            ItemType = ItemType.SoftwareList;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.SoftwareList);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 
         /// <summary>
@@ -43,9 +43,9 @@ namespace SabreTools.DatItems.Formats
         public SoftwareList(Models.Metadata.SoftwareList? item)
         {
             _internal = item ?? [];
-            Machine = new Machine();
 
-            ItemType = ItemType.SoftwareList;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.SoftwareList);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 
         #endregion
@@ -56,13 +56,6 @@ namespace SabreTools.DatItems.Formats
         {
             return new SoftwareList()
             {
-                ItemType = this.ItemType,
-                DupeType = this.DupeType,
-
-                Machine = this.Machine.Clone() as Machine ?? new Machine(),
-                Source = this.Source?.Clone() as Source,
-                Remove = this.Remove,
-
                 _internal = this._internal?.Clone() as Models.Metadata.SoftwareList ?? [],
             };
         }

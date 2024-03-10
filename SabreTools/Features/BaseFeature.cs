@@ -2152,15 +2152,7 @@ Some special strings that can be used:
             // TODO: Sort this by region, like the actual header
             var datHeader = new DatHeader()
             {
-                AddExtension = GetString(features, AddExtensionStringValue),
                 FileName = GetString(features, FilenameStringValue),
-                GameName = GetBoolean(features, GamePrefixValue),
-                Postfix = GetString(features, PostfixStringValue),
-                Prefix = GetString(features, PrefixStringValue),
-                Quotes = GetBoolean(features, QuotesValue),
-                RemoveExtension = GetBoolean(features, RemoveExtensionsValue),
-                ReplaceExtension = GetString(features, ReplaceExtensionStringValue),
-                UseRomName = GetBoolean(features, RomsValue),
 
                 // Get the depot information
                 InputDepot = new DepotInformation(
@@ -2186,6 +2178,15 @@ Some special strings that can be used:
             datHeader.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, GetBoolean(features, SuperdatValue) ? "SuperDAT" : null);
             datHeader.SetFieldValue<string?>(Models.Metadata.Header.UrlKey, GetString(features, UrlStringValue));
             datHeader.SetFieldValue<string?>(Models.Metadata.Header.VersionKey, GetString(features, VersionStringValue));
+
+            datHeader.SetFieldValue<string?>(DatHeader.AddExtensionKey, GetString(features, AddExtensionStringValue));
+            datHeader.SetFieldValue<bool>(DatHeader.GameNameKey, GetBoolean(features, GamePrefixValue));
+            datHeader.SetFieldValue<string?>(DatHeader.PostfixKey, GetString(features, PostfixStringValue));
+            datHeader.SetFieldValue<string?>(DatHeader.PrefixKey, GetString(features, PrefixStringValue));
+            datHeader.SetFieldValue<bool>(DatHeader.QuotesKey, GetBoolean(features, QuotesValue));
+            datHeader.SetFieldValue<bool>(DatHeader.RemoveExtensionKey, GetBoolean(features, RemoveExtensionsValue));
+            datHeader.SetFieldValue<string?>(DatHeader.ReplaceExtensionKey, GetString(features, ReplaceExtensionStringValue));
+            datHeader.SetFieldValue<bool>(DatHeader.UseRomNameKey, GetBoolean(features, RomsValue));
 
             bool deprecated = GetBoolean(features, DeprecatedValue);
             foreach (string ot in GetList(features, OutputTypeListValue))

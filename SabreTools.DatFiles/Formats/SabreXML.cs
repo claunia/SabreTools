@@ -170,7 +170,7 @@ namespace SabreTools.DatFiles.Formats
                         if (xs.Deserialize(xtr.ReadSubtree()) is DatItem item)
                         {
                             item.CopyMachineInformation(machine);
-                            item.Source = new Source { Name = filename, Index = indexId };
+                            item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
                             ParseAddHelper(item, statsOnly);
                         }
                         xtr.Skip();
@@ -227,11 +227,11 @@ namespace SabreTools.DatFiles.Formats
                         DatItem datItem = datItems[index];
 
                         // If we have a different game and we're not at the start of the list, output the end of last item
-                        if (lastgame != null && lastgame.ToLowerInvariant() != datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)?.ToLowerInvariant())
+                        if (lastgame != null && lastgame.ToLowerInvariant() != datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)?.ToLowerInvariant())
                             WriteEndGame(xtw);
 
                         // If we have a new game, output the beginning of the new item
-                        if (lastgame == null || lastgame.ToLowerInvariant() != datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)?.ToLowerInvariant())
+                        if (lastgame == null || lastgame.ToLowerInvariant() != datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)?.ToLowerInvariant())
                             WriteStartGame(xtw, datItem);
 
                         // Check for a "null" item
@@ -242,7 +242,7 @@ namespace SabreTools.DatFiles.Formats
                             WriteDatItem(xtw, datItem);
 
                         // Set the new data to compare against
-                        lastgame = datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey);
+                        lastgame = datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey);
                     }
                 }
 
@@ -292,14 +292,14 @@ namespace SabreTools.DatFiles.Formats
         private static void WriteStartGame(XmlTextWriter xtw, DatItem datItem)
         {
             // No game should start with a path separator
-            datItem.Machine!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)?.TrimStart(Path.DirectorySeparatorChar) ?? string.Empty);
+            datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)?.TrimStart(Path.DirectorySeparatorChar) ?? string.Empty);
 
             // Write the machine
             xtw.WriteStartElement("directory");
             XmlSerializer xs = new(typeof(Machine));
             XmlSerializerNamespaces ns = new();
             ns.Add("", "");
-            xs.Serialize(xtw, datItem.Machine, ns);
+            xs.Serialize(xtw, datItem.GetFieldValue<Machine>(DatItem.MachineKey), ns);
 
             xtw.WriteStartElement("files");
 

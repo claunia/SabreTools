@@ -30,11 +30,11 @@ namespace SabreTools.DatItems.Formats
         public Media()
         {
             _internal = new Models.Metadata.Media();
-            Machine = new Machine();
 
             SetName(string.Empty);
-            ItemType = ItemType.Media;
-            DupeType = 0x00;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Media);
+            SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 
         /// <summary>
@@ -43,10 +43,10 @@ namespace SabreTools.DatItems.Formats
         public Media(Models.Metadata.Media? item)
         {
             _internal = item ?? [];
-            Machine = new Machine();
 
-            ItemType = ItemType.Media;
-            DupeType = 0x00;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Media);
+            SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 
         /// <summary>
@@ -56,7 +56,6 @@ namespace SabreTools.DatItems.Formats
         public Media(BaseFile baseFile)
         {
             _internal = new Models.Metadata.Media();
-            Machine = new Machine();
 
             SetName(baseFile.Filename);
             SetFieldValue<string?>(Models.Metadata.Media.MD5Key, TextHelper.ByteArrayToString(baseFile.MD5));
@@ -64,8 +63,9 @@ namespace SabreTools.DatItems.Formats
             SetFieldValue<string?>(Models.Metadata.Media.SHA256Key, TextHelper.ByteArrayToString(baseFile.SHA256));
             SetFieldValue<string?>(Models.Metadata.Media.SpamSumKey, System.Text.Encoding.UTF8.GetString(baseFile.SpamSum ?? []));
 
-            ItemType = ItemType.Media;
-            DupeType = 0x00;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Media);
+            SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 
         #endregion
@@ -77,13 +77,6 @@ namespace SabreTools.DatItems.Formats
         {
             return new Media()
             {
-                ItemType = this.ItemType,
-                DupeType = this.DupeType,
-
-                Machine = this.Machine.Clone() as Machine ?? new Machine(),
-                Source = this.Source?.Clone() as Source,
-                Remove = this.Remove,
-
                 _internal = this._internal?.Clone() as Models.Metadata.Media ?? [],
             };
         }
@@ -96,7 +89,7 @@ namespace SabreTools.DatItems.Formats
             return new BaseFile()
             {
                 Filename = this.GetName(),
-                Parent = this.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
+                Parent = GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
                 MD5 = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Media.MD5Key)),
                 SHA1 = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Media.SHA1Key)),
                 SHA256 = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Media.SHA256Key)),
@@ -110,15 +103,11 @@ namespace SabreTools.DatItems.Formats
         /// <returns></returns>
         public Rom ConvertToRom()
         {
-            var rom = new Rom(_internal.ConvertToRom())
-            {
-                ItemType = ItemType.Rom,
-                DupeType = this.DupeType,
-
-                Machine = this.Machine.Clone() as Machine ?? new Machine(),
-                Source = this.Source?.Clone() as Source,
-                Remove = this.Remove,
-            };
+            var rom = new Rom(_internal.ConvertToRom());
+            rom.SetFieldValue<DupeType>(DatItem.DupeTypeKey, GetFieldValue<DupeType>(DatItem.DupeTypeKey));
+            rom.SetFieldValue<Machine>(DatItem.MachineKey, GetFieldValue<Machine>(DatItem.MachineKey));
+            rom.SetFieldValue<bool>(DatItem.RemoveKey, GetFieldValue<bool>(DatItem.RemoveKey));
+            rom.SetFieldValue<Source?>(DatItem.SourceKey, GetFieldValue<Source?>(DatItem.SourceKey));
 
             return rom;
         }

@@ -142,8 +142,8 @@ namespace SabreTools.DatTools
                 for (int i = 0; i < items.Count; i++)
                 {
                     // Unmatched items will have a source ID of int.MaxValue, remove all others
-                    if (items[i].Source?.Index != int.MaxValue)
-                        items[i].Remove = true;
+                    if (items[i].GetFieldValue<Source?>(DatItem.SourceKey)?.Index != int.MaxValue)
+                        items[i].SetFieldValue<bool>(DatItem.RemoveKey, true);
                 }
 
                 // Set the list back, just in case

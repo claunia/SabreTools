@@ -10,6 +10,15 @@ namespace SabreTools.DatItems.Formats
     [JsonObject("dipswitch"), XmlRoot("dipswitch")]
     public class DipSwitch : DatItem
     {
+        #region Constants
+
+        /// <summary>
+        /// Non-standard key for inverted logic
+        /// </summary>
+        public const string PartKey = "PART";
+
+        #endregion
+
         #region Fields
 
         [JsonIgnore]
@@ -47,7 +56,7 @@ namespace SabreTools.DatItems.Formats
         {
             get
             {
-                var part = GetFieldValue<Part?>("PART");
+                var part = GetFieldValue<Part?>(DipSwitch.PartKey);
                 return part != null
                     && (!string.IsNullOrEmpty(part.GetName())
                         || !string.IsNullOrEmpty(part.GetFieldValue<string?>(Models.Metadata.Part.InterfaceKey)));
@@ -74,10 +83,10 @@ namespace SabreTools.DatItems.Formats
         public DipSwitch()
         {
             _internal = new Models.Metadata.DipSwitch();
-            Machine = new Machine();
 
             SetName(string.Empty);
-            ItemType = ItemType.DipSwitch;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.DipSwitch);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 
         /// <summary>
@@ -86,9 +95,9 @@ namespace SabreTools.DatItems.Formats
         public DipSwitch(Models.Metadata.DipSwitch? item)
         {
             _internal = item ?? [];
-            Machine = new Machine();
 
-            ItemType = ItemType.DipSwitch;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.DipSwitch);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 
         #endregion
@@ -100,13 +109,6 @@ namespace SabreTools.DatItems.Formats
         {
             return new DipSwitch()
             {
-                ItemType = this.ItemType,
-                DupeType = this.DupeType,
-
-                Machine = this.Machine.Clone() as Machine ?? new Machine(),
-                Source = this.Source?.Clone() as Source,
-                Remove = this.Remove,
-
                 _internal = this._internal?.Clone() as Models.Metadata.DipSwitch ?? [],
             };
         }

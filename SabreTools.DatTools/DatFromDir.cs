@@ -402,7 +402,7 @@ namespace SabreTools.DatTools
         {
             // If we didn't get an accepted parsed type somehow, cancel out
             List<ItemType> parsed = [ItemType.Disk, ItemType.File, ItemType.Media, ItemType.Rom];
-            if (!parsed.Contains(datItem.ItemType))
+            if (!parsed.Contains(datItem.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey)))
                 return;
 
             try
@@ -493,17 +493,17 @@ namespace SabreTools.DatTools
             }
 
             // Update machine information
-            datItem.Machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, machineName);
-            datItem.Machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineName);
+            datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, machineName);
+            datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineName);
 
             // If we have a Disk, then the ".chd" extension needs to be removed
-            if (datItem.ItemType == ItemType.Disk && itemName!.EndsWith(".chd"))
+            if (datItem is Disk && itemName!.EndsWith(".chd"))
             {
                 itemName = itemName.Substring(0, itemName.Length - 4);
             }
 
             // If we have a Media, then the extension needs to be removed
-            else if (datItem.ItemType == ItemType.Media)
+            else if (datItem is Media)
             {
                 if (itemName!.EndsWith(".dicf"))
                     itemName = itemName.Substring(0, itemName.Length - 5);

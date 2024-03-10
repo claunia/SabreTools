@@ -42,9 +42,9 @@ namespace SabreTools.DatItems.Formats
         public Device()
         {
             _internal = new Models.Metadata.Device();
-            Machine = new Machine();
 
-            ItemType = ItemType.Device;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Device);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 
         /// <summary>
@@ -53,9 +53,9 @@ namespace SabreTools.DatItems.Formats
         public Device(Models.Metadata.Device? item)
         {
             _internal = item ?? [];
-            Machine = new Machine();
 
-            ItemType = ItemType.Device;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Device);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 
         #endregion
@@ -67,13 +67,6 @@ namespace SabreTools.DatItems.Formats
         {
             return new Device()
             {
-                ItemType = this.ItemType,
-                DupeType = this.DupeType,
-
-                Machine = this.Machine.Clone() as Machine ?? new Machine(),
-                Source = this.Source?.Clone() as Source,
-                Remove = this.Remove,
-
                 _internal = this._internal?.Clone() as Models.Metadata.Device ?? [],
             };
         }

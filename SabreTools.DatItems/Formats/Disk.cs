@@ -12,6 +12,20 @@ namespace SabreTools.DatItems.Formats
     [JsonObject("disk"), XmlRoot("disk")]
     public class Disk : DatItem
     {
+        #region Constants
+
+        /// <summary>
+        /// Non-standard key for inverted logic
+        /// </summary>
+        public const string DiskAreaKey = "DISKAREA";
+
+        /// <summary>
+        /// Non-standard key for inverted logic
+        /// </summary>
+        public const string PartKey = "PART";
+
+        #endregion
+
         #region Fields
 
         [JsonIgnore]
@@ -19,7 +33,7 @@ namespace SabreTools.DatItems.Formats
         {
             get
             {
-                var diskArea = GetFieldValue<DiskArea?>("DISKAREA");
+                var diskArea = GetFieldValue<DiskArea?>(Disk.DiskAreaKey);
                 return diskArea != null && !string.IsNullOrEmpty(diskArea.GetName());
             }
         }
@@ -29,7 +43,7 @@ namespace SabreTools.DatItems.Formats
         {
             get
             {
-                var part = GetFieldValue<Part?>("PART");
+                var part = GetFieldValue<Part?>(Disk.PartKey);
                 return part != null
                     && (!string.IsNullOrEmpty(part.GetName())
                         || !string.IsNullOrEmpty(part.GetFieldValue<string?>(Models.Metadata.Part.InterfaceKey)));
@@ -56,11 +70,11 @@ namespace SabreTools.DatItems.Formats
         public Disk()
         {
             _internal = new Models.Metadata.Disk();
-            Machine = new Machine();
 
             SetName(string.Empty);
-            ItemType = ItemType.Disk;
-            DupeType = 0x00;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Disk);
+            SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
             SetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey, ItemStatus.None);
         }
 
@@ -70,14 +84,14 @@ namespace SabreTools.DatItems.Formats
         public Disk(BaseFile baseFile)
         {
             _internal = new Models.Metadata.Disk();
-            Machine = new Machine();
 
             SetName(baseFile.Filename);
             SetFieldValue<string?>(Models.Metadata.Disk.MD5Key, TextHelper.ByteArrayToString(baseFile.MD5));
             SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, TextHelper.ByteArrayToString(baseFile.SHA1));
 
-            ItemType = ItemType.Disk;
-            DupeType = 0x00;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Disk);
+            SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
             SetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey, ItemStatus.None);
         }
 
@@ -87,9 +101,9 @@ namespace SabreTools.DatItems.Formats
         public Disk(Models.Metadata.Disk? item)
         {
             _internal = item ?? [];
-            Machine = new Machine();
 
-            ItemType = ItemType.Disk;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Disk);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 
         #endregion
@@ -101,13 +115,6 @@ namespace SabreTools.DatItems.Formats
         {
             return new Disk()
             {
-                ItemType = this.ItemType,
-                DupeType = this.DupeType,
-
-                Machine = this.Machine.Clone() as Machine ?? new Machine(),
-                Source = this.Source?.Clone() as Source,
-                Remove = this.Remove,
-
                 _internal = this._internal?.Clone() as Models.Metadata.Disk ?? [],
             };
         }
@@ -120,7 +127,7 @@ namespace SabreTools.DatItems.Formats
             return new BaseFile()
             {
                 Filename = this.GetName(),
-                Parent = this.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
+                Parent = GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
                 MD5 = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Disk.MD5Key)),
                 SHA1 = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key)),
             };
@@ -132,17 +139,12 @@ namespace SabreTools.DatItems.Formats
         /// <returns></returns>
         public Rom ConvertToRom()
         {
-            var rom = new Rom(_internal.ConvertToRom())
-            {
-                ItemType = ItemType.Rom,
-                DupeType = this.DupeType,
-
-                Machine = this.Machine.Clone() as Machine ?? new Machine(),
-                Source = this.Source?.Clone() as Source,
-                Remove = this.Remove,
-            };
-
-            rom.GetFieldValue<DataArea?>("DATAAREA")?.SetName(this.GetFieldValue<DiskArea?>("DISKAREA")?.GetName());
+            var rom = new Rom(_internal.ConvertToRom());
+            rom.GetFieldValue<DataArea?>(Rom.DataAreaKey)?.SetName(this.GetFieldValue<DiskArea?>(Disk.DiskAreaKey)?.GetName());
+            rom.SetFieldValue<DupeType>(DatItem.DupeTypeKey, GetFieldValue<DupeType>(DatItem.DupeTypeKey));
+            rom.SetFieldValue<Machine>(DatItem.MachineKey, GetFieldValue<Machine>(DatItem.MachineKey)!.Clone() as Machine ?? new Machine());
+            rom.SetFieldValue<bool>(DatItem.RemoveKey, GetFieldValue<bool>(DatItem.RemoveKey));
+            rom.SetFieldValue<Source?>(DatItem.SourceKey, GetFieldValue<Source?>(DatItem.SourceKey));
 
             return rom;
         }

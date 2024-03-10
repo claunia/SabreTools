@@ -72,8 +72,9 @@ namespace SabreTools.Test.Filter
             machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "bar");
             machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, "bar");
 
-            var rom = new Rom { Machine = machine };
+            var rom = new Rom();
             rom.SetName("foo");
+            rom.SetFieldValue<Machine>(DatItem.MachineKey, machine);
 
             return rom;
         }

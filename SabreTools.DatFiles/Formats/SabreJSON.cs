@@ -344,7 +344,7 @@ namespace SabreTools.DatFiles.Formats
             if (datItem != null)
             {
                 datItem.CopyMachineInformation(machine);
-                datItem.Source = new Source { Index = indexId, Name = filename };
+                datItem.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
                 ParseAddHelper(datItem, statsOnly);
             }
         }
@@ -395,11 +395,11 @@ namespace SabreTools.DatFiles.Formats
                         DatItem datItem = datItems[index];
 
                         // If we have a different game and we're not at the start of the list, output the end of last item
-                        if (lastgame != null && lastgame.ToLowerInvariant() != datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)?.ToLowerInvariant())
+                        if (lastgame != null && lastgame.ToLowerInvariant() != datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)?.ToLowerInvariant())
                             SabreJSON.WriteEndGame(jtw);
 
                         // If we have a new game, output the beginning of the new item
-                        if (lastgame == null || lastgame.ToLowerInvariant() != datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)?.ToLowerInvariant())
+                        if (lastgame == null || lastgame.ToLowerInvariant() != datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)?.ToLowerInvariant())
                             SabreJSON.WriteStartGame(jtw, datItem);
 
                         // Check for a "null" item
@@ -410,7 +410,7 @@ namespace SabreTools.DatFiles.Formats
                             WriteDatItem(jtw, datItem);
 
                         // Set the new data to compare against
-                        lastgame = datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey);
+                        lastgame = datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey);
                     }
                 }
 
@@ -457,8 +457,8 @@ namespace SabreTools.DatFiles.Formats
         private static void WriteStartGame(JsonTextWriter jtw, DatItem datItem)
         {
             // No game should start with a path separator
-            if (!string.IsNullOrEmpty(datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)))
-                datItem.Machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, datItem.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)!.TrimStart(Path.DirectorySeparatorChar));
+            if (!string.IsNullOrEmpty(datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)))
+                datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)!.TrimStart(Path.DirectorySeparatorChar));
 
             // Build the state
             jtw.WriteStartObject();
@@ -466,7 +466,7 @@ namespace SabreTools.DatFiles.Formats
             // Write the Machine
             jtw.WritePropertyName("machine");
             JsonSerializer js = new() { Formatting = Formatting.Indented };
-            js.Serialize(jtw, datItem.Machine);
+            js.Serialize(jtw, datItem.GetFieldValue<Machine>(DatItem.MachineKey)!);
 
             jtw.WritePropertyName("items");
             jtw.WriteStartArray();

@@ -12,6 +12,25 @@ namespace SabreTools.DatItems
     [JsonObject("machine"), XmlRoot("machine")]
     public class Machine : ICloneable
     {
+        #region Constants
+
+        /// <summary>
+        /// Trurip/EmuArc Machine developer
+        /// </summary>
+        public const string DeveloperKey = "DEVELOPER";
+
+        /// <summary>
+        /// Trurip/EmuArc Game genre
+        /// </summary>
+        public const string GenreKey = "GENRE";
+
+        /// <summary>
+        /// Trurip/EmuArc Title ID
+        /// </summary>
+        public const string TitleIDKey = "TITLEID";
+
+        #endregion
+
         #region Fields
 
         // TODO: Should this be a separate object for TruRip?

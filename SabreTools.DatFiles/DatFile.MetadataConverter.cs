@@ -230,10 +230,8 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.Adjuster(item)
-                {
-                    Source = new DatItems.Source { Index = indexId, Name = filename }
-                };
+                var datItem = new DatItems.Formats.Adjuster(item);
+                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
             }
@@ -256,10 +254,8 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.Archive(item)
-                {
-                    Source = new DatItems.Source { Index = indexId, Name = filename }
-                };
+                var datItem = new DatItems.Formats.Archive(item);
+                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
             }
@@ -282,10 +278,8 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.BiosSet(item)
-                {
-                    Source = new DatItems.Source { Index = indexId, Name = filename }
-                };
+                var datItem = new DatItems.Formats.BiosSet(item);
+                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
             }
@@ -308,10 +302,8 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.Chip(item)
-                {
-                    Source = new DatItems.Source { Index = indexId, Name = filename }
-                };
+                var datItem = new DatItems.Formats.Chip(item);
+                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
             }
@@ -334,10 +326,8 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.Configuration(item)
-                {
-                    Source = new DatItems.Source { Index = indexId, Name = filename }
-                };
+                var datItem = new DatItems.Formats.Configuration(item);
+                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
             }
@@ -362,10 +352,8 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.DataArea(item)
-                {
-                    Source = new DatItems.Source { Index = indexId, Name = filename }
-                };
+                var datItem = new DatItems.Formats.DataArea(item);
+                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
             }
@@ -388,10 +376,8 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.Device(item)
-                {
-                    Source = new DatItems.Source { Index = indexId, Name = filename }
-                };
+                var datItem = new DatItems.Formats.Device(item);
+                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
             }
@@ -414,10 +400,8 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.DeviceReference(item)
-                {
-                    Source = new DatItems.Source { Index = indexId, Name = filename }
-                };
+                var datItem = new DatItems.Formats.DeviceReference(item);
+                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
             }
@@ -440,10 +424,8 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.DipLocation(item)
-                {
-                    Source = new DatItems.Source { Index = indexId, Name = filename }
-                };
+                var datItem = new DatItems.Formats.DipLocation(item);
+                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
             }
@@ -466,10 +448,8 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.DipSwitch(item)
-                {
-                    Source = new DatItems.Source { Index = indexId, Name = filename }
-                };
+                var datItem = new DatItems.Formats.DipSwitch(item);
+                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
             }
@@ -492,10 +472,8 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.DipValue(item)
-                {
-                    Source = new DatItems.Source { Index = indexId, Name = filename }
-                };
+                var datItem = new DatItems.Formats.DipValue(item);
+                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
             }
@@ -518,10 +496,8 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.Disk(item)
-                {
-                    Source = new DatItems.Source { Index = indexId, Name = filename }
-                };
+                var datItem = new DatItems.Formats.Disk(item);
+                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
             }
@@ -546,10 +522,8 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.DiskArea(item)
-                {
-                    Source = new DatItems.Source { Index = indexId, Name = filename }
-                };
+                var datItem = new DatItems.Formats.DiskArea(item);
+                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
             }
@@ -572,10 +546,8 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.Display(item)
-                {
-                    Source = new DatItems.Source { Index = indexId, Name = filename }
-                };
+                var datItem = new DatItems.Formats.Display(item);
+                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
             }
@@ -598,10 +570,8 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.Driver(item)
-                {
-                    Source = new DatItems.Source { Index = indexId, Name = filename }
-                };
+                var datItem = new DatItems.Formats.Driver(item);
+                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
             }
@@ -645,10 +615,8 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.Feature(item)
-                {
-                    Source = new DatItems.Source { Index = indexId, Name = filename }
-                };
+                var datItem = new DatItems.Formats.Feature(item);
+                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
             }
@@ -671,10 +639,8 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.Info(item)
-                {
-                    Source = new DatItems.Source { Index = indexId, Name = filename }
-                };
+                var datItem = new DatItems.Formats.Info(item);
+                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
             }
@@ -697,10 +663,8 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.Input(item)
-                {
-                    Source = new DatItems.Source { Index = indexId, Name = filename }
-                };
+                var datItem = new DatItems.Formats.Input(item);
+                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
             }
@@ -723,10 +687,8 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.Media(item)
-                {
-                    Source = new DatItems.Source { Index = indexId, Name = filename }
-                };
+                var datItem = new DatItems.Formats.Media(item);
+                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
             }
@@ -753,10 +715,8 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.Part(item)
-                {
-                    Source = new DatItems.Source { Index = indexId, Name = filename }
-                };
+                var datItem = new DatItems.Formats.Part(item);
+                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
             }
@@ -779,10 +739,8 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.Port(item)
-                {
-                    Source = new DatItems.Source { Index = indexId, Name = filename }
-                };
+                var datItem = new DatItems.Formats.Port(item);
+                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
             }
@@ -805,10 +763,8 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.RamOption(item)
-                {
-                    Source = new DatItems.Source { Index = indexId, Name = filename }
-                };
+                var datItem = new DatItems.Formats.RamOption(item);
+                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
             }
@@ -831,10 +787,8 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.Release(item)
-                {
-                    Source = new DatItems.Source { Index = indexId, Name = filename }
-                };
+                var datItem = new DatItems.Formats.Release(item);
+                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
             }
@@ -857,10 +811,8 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.Rom(item)
-                {
-                    Source = new DatItems.Source { Index = indexId, Name = filename }
-                };
+                var datItem = new DatItems.Formats.Rom(item);
+                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
             }
@@ -883,10 +835,8 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.Sample(item)
-                {
-                    Source = new DatItems.Source { Index = indexId, Name = filename }
-                };
+                var datItem = new DatItems.Formats.Sample(item);
+                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
             }
@@ -909,10 +859,8 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.SharedFeature(item)
-                {
-                    Source = new DatItems.Source { Index = indexId, Name = filename }
-                };
+                var datItem = new DatItems.Formats.SharedFeature(item);
+                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
             }
@@ -935,10 +883,8 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.SoftwareList(item)
-                {
-                    Source = new DatItems.Source { Index = indexId, Name = filename }
-                };
+                var datItem = new DatItems.Formats.SoftwareList(item);
+                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
             }
@@ -961,10 +907,8 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.Sound(item)
-                {
-                    Source = new DatItems.Source { Index = indexId, Name = filename }
-                };
+                var datItem = new DatItems.Formats.Sound(item);
+                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
             }
@@ -987,10 +931,8 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.Display(item)
-                {
-                    Source = new DatItems.Source { Index = indexId, Name = filename }
-                };
+                var datItem = new DatItems.Formats.Display(item);
+                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
             }

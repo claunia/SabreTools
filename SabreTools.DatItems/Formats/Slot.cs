@@ -42,10 +42,10 @@ namespace SabreTools.DatItems.Formats
         public Slot()
         {
             _internal = new Models.Metadata.Slot();
-            Machine = new Machine();
 
             SetName(string.Empty);
-            ItemType = ItemType.Slot;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Slot);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 
         /// <summary>
@@ -54,9 +54,9 @@ namespace SabreTools.DatItems.Formats
         public Slot(Models.Metadata.Slot? item)
         {
             _internal = item ?? [];
-            Machine = new Machine();
 
-            ItemType = ItemType.Slot;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Slot);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 
         #endregion
@@ -68,13 +68,6 @@ namespace SabreTools.DatItems.Formats
         {
             return new Slot()
             {
-                ItemType = this.ItemType,
-                DupeType = this.DupeType,
-
-                Machine = this.Machine.Clone() as Machine ?? new Machine(),
-                Source = this.Source?.Clone() as Source,
-                Remove = this.Remove,
-
                 _internal = this._internal?.Clone() as Models.Metadata.Slot ?? [],
             };
         }

@@ -42,10 +42,10 @@ namespace SabreTools.DatItems.Formats
         public Adjuster()
         {
             _internal = new Models.Metadata.Adjuster();
-            Machine = new Machine();
 
             SetName(string.Empty);
-            ItemType = ItemType.Adjuster;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Adjuster);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 
         /// <summary>
@@ -54,9 +54,9 @@ namespace SabreTools.DatItems.Formats
         public Adjuster(Models.Metadata.Adjuster? item)
         {
             _internal = item ?? [];
-            Machine = new Machine();
 
-            ItemType = ItemType.Adjuster;
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Adjuster);
+            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 
         #endregion
@@ -68,13 +68,6 @@ namespace SabreTools.DatItems.Formats
         {
             return new Adjuster()
             {
-                ItemType = this.ItemType,
-                DupeType = this.DupeType,
-
-                Machine = this.Machine.Clone() as Machine ?? new Machine(),
-                Source = this.Source?.Clone() as Source,
-                Remove = this.Remove,
-
                 _internal = this._internal?.Clone() as Models.Metadata.Adjuster ?? [],
             };
         }

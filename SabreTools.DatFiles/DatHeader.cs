@@ -15,6 +15,50 @@ namespace SabreTools.DatFiles
     [JsonObject("header"), XmlRoot("header")]
     public class DatHeader : ICloneable
     {
+        #region Constants
+
+        /// <summary>
+        /// Add a new extension to all items
+        /// </summary>
+        public const string AddExtensionKey = "ADDEXTENSION";
+
+        /// <summary>
+        /// Output the machine name
+        /// </summary>
+        public const string GameNameKey = "GAMENAME";
+
+        /// <summary>
+        /// Text to append to all outputted lines
+        /// </summary>
+        public const string PostfixKey = "POSTFIX";
+
+        /// <summary>
+        /// Text to prepend to all outputted lines
+        /// </summary>
+        public const string PrefixKey = "PREFIX";
+
+        /// <summary>
+        /// Wrap quotes around the entire line, sans prefix and postfix
+        /// </summary>
+        public const string QuotesKey = "QUOTES";
+
+        /// <summary>
+        /// Remove all item extensions
+        /// </summary>
+        public const string RemoveExtensionKey = "REMOVEEXTENSION";
+
+        /// <summary>
+        /// Replace all item extensions
+        /// </summary>
+        public const string ReplaceExtensionKey = "REPLACEEXTENSION";
+
+        /// <summary>
+        /// Output the item name
+        /// </summary>
+        public const string UseRomNameKey = "USEROMNAME";
+
+        #endregion
+
         #region Fields
 
         /// <summary>
@@ -49,58 +93,6 @@ namespace SabreTools.DatFiles
                 return canOpen != null && canOpen.Length > 0;
             }
         }
-
-        /// <summary>
-        /// Output the item name
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public bool UseRomName { get; set; }
-
-        #region Write pre-processing
-
-        /// <summary>
-        /// Text to prepend to all outputted lines
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public string? Prefix { get; set; }
-
-        /// <summary>
-        /// Text to append to all outputted lines
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public string? Postfix { get; set; }
-
-        /// <summary>
-        /// Add a new extension to all items
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public string? AddExtension { get; set; }
-
-        /// <summary>
-        /// Replace all item extensions
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public string? ReplaceExtension { get; set; }
-
-        /// <summary>
-        /// Remove all item extensions
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public bool RemoveExtension { get; set; }
-
-        /// <summary>
-        /// Output the machine name
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public bool GameName { get; set; }
-
-        /// <summary>
-        /// Wrap quotes around the entire line, sans prefix and postfix
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public bool Quotes { get; set; }
-
-        #endregion
 
         #region Depot Information
 
@@ -178,14 +170,6 @@ namespace SabreTools.DatFiles
                 FileName = this.FileName,
                 DatFormat = this.DatFormat,
 
-                UseRomName = this.UseRomName,
-                Prefix = this.Prefix,
-                Postfix = this.Postfix,
-                Quotes = this.Quotes,
-                ReplaceExtension = this.ReplaceExtension,
-                AddExtension = this.AddExtension,
-                RemoveExtension = this.RemoveExtension,
-                GameName = this.GameName,
                 InputDepot = this.InputDepot?.Clone() as DepotInformation,
                 OutputDepot = this.OutputDepot?.Clone() as DepotInformation,
             };
@@ -222,6 +206,15 @@ namespace SabreTools.DatFiles
             header.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, GetFieldValue<string?>(Models.Metadata.Header.TypeKey));
             header.SetFieldValue<string?>(Models.Metadata.Header.UrlKey, GetFieldValue<string?>(Models.Metadata.Header.UrlKey));
             header.SetFieldValue<string?>(Models.Metadata.Header.VersionKey, GetFieldValue<string?>(Models.Metadata.Header.VersionKey));
+
+            header.SetFieldValue<string?>(DatHeader.AddExtensionKey, GetFieldValue<string?>(DatHeader.AddExtensionKey));
+            header.SetFieldValue<bool>(DatHeader.GameNameKey, GetFieldValue<bool>(DatHeader.GameNameKey));
+            header.SetFieldValue<string?>(DatHeader.PostfixKey, GetFieldValue<string?>(DatHeader.PostfixKey));
+            header.SetFieldValue<string?>(DatHeader.PrefixKey, GetFieldValue<string?>(DatHeader.PrefixKey));
+            header.SetFieldValue<bool>(DatHeader.RemoveExtensionKey, GetFieldValue<bool>(DatHeader.RemoveExtensionKey));
+            header.SetFieldValue<string?>(DatHeader.ReplaceExtensionKey, GetFieldValue<string?>(DatHeader.ReplaceExtensionKey));
+            header.SetFieldValue<bool>(DatHeader.QuotesKey, GetFieldValue<bool>(DatHeader.QuotesKey));
+            header.SetFieldValue<bool>(DatHeader.UseRomNameKey, GetFieldValue<bool>(DatHeader.UseRomNameKey));
 
             return header;
         }
@@ -261,21 +254,23 @@ namespace SabreTools.DatFiles
         /// </summary>
         public DatHeader CloneFiltering()
         {
-            return new DatHeader()
+            var header = new DatHeader()
             {
                 DatFormat = this.DatFormat,
 
-                UseRomName = this.UseRomName,
-                Prefix = this.Prefix,
-                Postfix = this.Postfix,
-                Quotes = this.Quotes,
-                ReplaceExtension = this.ReplaceExtension,
-                AddExtension = this.AddExtension,
-                RemoveExtension = this.RemoveExtension,
-                GameName = this.GameName,
                 InputDepot = this.InputDepot?.Clone() as DepotInformation,
                 OutputDepot = this.OutputDepot?.Clone() as DepotInformation,
             };
+            header.SetFieldValue<string?>(DatHeader.AddExtensionKey, GetFieldValue<string?>(DatHeader.AddExtensionKey));
+            header.SetFieldValue<bool>(DatHeader.GameNameKey, GetFieldValue<bool>(DatHeader.GameNameKey));
+            header.SetFieldValue<string?>(DatHeader.PostfixKey, GetFieldValue<string?>(DatHeader.PostfixKey));
+            header.SetFieldValue<string?>(DatHeader.PrefixKey, GetFieldValue<string?>(DatHeader.PrefixKey));
+            header.SetFieldValue<bool>(DatHeader.RemoveExtensionKey, GetFieldValue<bool>(DatHeader.RemoveExtensionKey));
+            header.SetFieldValue<string?>(DatHeader.ReplaceExtensionKey, GetFieldValue<string?>(DatHeader.ReplaceExtensionKey));
+            header.SetFieldValue<bool>(DatHeader.QuotesKey, GetFieldValue<bool>(DatHeader.QuotesKey));
+            header.SetFieldValue<bool>(DatHeader.UseRomNameKey, GetFieldValue<bool>(DatHeader.UseRomNameKey));
+
+            return header;
         }
 
         /// <summary>
@@ -341,24 +336,24 @@ namespace SabreTools.DatFiles
             if (datHeader.DatFormat != 0x00)
                 DatFormat = datHeader.DatFormat;
 
-            if (!string.IsNullOrEmpty(datHeader.Prefix))
-                Prefix = datHeader.Prefix;
+            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(DatHeader.PrefixKey)))
+                SetFieldValue<string?>(DatHeader.PrefixKey, datHeader.GetFieldValue<string?>(DatHeader.PrefixKey));
 
-            if (!string.IsNullOrEmpty(datHeader.Postfix))
-                Postfix = datHeader.Postfix;
+            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(DatHeader.PostfixKey)))
+                SetFieldValue<string?>(DatHeader.PostfixKey, datHeader.GetFieldValue<string?>(DatHeader.PostfixKey));
 
-            if (!string.IsNullOrEmpty(datHeader.AddExtension))
-                AddExtension = datHeader.AddExtension;
+            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(DatHeader.AddExtensionKey)))
+                SetFieldValue<string?>(DatHeader.AddExtensionKey, datHeader.GetFieldValue<string?>(DatHeader.AddExtensionKey));
 
-            if (!string.IsNullOrEmpty(datHeader.ReplaceExtension))
-                ReplaceExtension = datHeader.ReplaceExtension;
+            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(DatHeader.ReplaceExtensionKey)))
+                SetFieldValue<string?>(DatHeader.ReplaceExtensionKey, datHeader.GetFieldValue<string?>(DatHeader.ReplaceExtensionKey));
 
-            RemoveExtension = datHeader.RemoveExtension;
             InputDepot = datHeader.InputDepot?.Clone() as DepotInformation;
             OutputDepot = datHeader.OutputDepot?.Clone() as DepotInformation;
-            GameName = datHeader.GameName;
-            Quotes = datHeader.Quotes;
-            UseRomName = datHeader.UseRomName;
+            SetFieldValue<bool>(DatHeader.GameNameKey, datHeader.GetFieldValue<bool>(DatHeader.GameNameKey));
+            SetFieldValue<bool>(DatHeader.QuotesKey, datHeader.GetFieldValue<bool>(DatHeader.QuotesKey));
+            SetFieldValue<bool>(DatHeader.RemoveExtensionKey, datHeader.GetFieldValue<bool>(DatHeader.RemoveExtensionKey));
+            SetFieldValue<bool>(DatHeader.UseRomNameKey, datHeader.GetFieldValue<bool>(DatHeader.UseRomNameKey));
         }
 
         #endregion
