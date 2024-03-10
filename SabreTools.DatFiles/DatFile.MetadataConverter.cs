@@ -6,7 +6,7 @@ namespace SabreTools.DatFiles
     // TODO: Figure out if there's a way to condense the various processing methods
     // TODO: Convert nested items (e.g. Configuration, DipLocation)
     // TODO: Determine which items need to have their values flipped (e.g. Part, DiskArea, DataArea)
-    public static class MetadataConverter
+    public partial class DatFile
     {
          #region Converters
 
@@ -17,7 +17,7 @@ namespace SabreTools.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        public static void ConvertMetadata(Models.Metadata.MetadataFile? item, string filename, int indexId, bool statsOnly)
+        public void ConvertMetadata(Models.Metadata.MetadataFile? item, string filename, int indexId, bool statsOnly)
         {
             // If the metadata file is invalid, we can't do anything
             if (item == null || !item.Any())
@@ -42,7 +42,7 @@ namespace SabreTools.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private static void ConvertMachine(Models.Metadata.Machine? item, string filename, int indexId, bool statsOnly)
+        private void ConvertMachine(Models.Metadata.Machine? item, string filename, int indexId, bool statsOnly)
         {
             // If the machine is invalid, we can't do anything
             if (item == null || !item.Any())
@@ -54,57 +54,57 @@ namespace SabreTools.DatFiles
             // Convert items in the machine
             if (item.ContainsKey(Models.Metadata.Machine.AdjusterKey))
             {
-                var items = item.Read<Models.Metadata.Adjuster[]>(Models.Metadata.Machine.AdjusterKey);
+                var items = ReadItemArray<Models.Metadata.Adjuster>(item, Models.Metadata.Machine.AdjusterKey);
                 ProcessItems(items, machine, filename, indexId, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.ArchiveKey))
             {
-                var items = item.Read<Models.Metadata.Archive[]>(Models.Metadata.Machine.ArchiveKey);
+                var items = ReadItemArray<Models.Metadata.Archive>(item, Models.Metadata.Machine.ArchiveKey);
                 ProcessItems(items, machine, filename, indexId, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.BiosSetKey))
             {
-                var items = item.Read<Models.Metadata.BiosSet[]>(Models.Metadata.Machine.BiosSetKey);
+                var items = ReadItemArray<Models.Metadata.BiosSet>(item, Models.Metadata.Machine.BiosSetKey);
                 ProcessItems(items, machine, filename, indexId, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.ChipKey))
             {
-                var items = item.Read<Models.Metadata.Chip[]>(Models.Metadata.Machine.ChipKey);
+                var items = ReadItemArray<Models.Metadata.Chip>(item, Models.Metadata.Machine.ChipKey);
                 ProcessItems(items, machine, filename, indexId, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.ConfigurationKey))
             {
-                var items = item.Read<Models.Metadata.Configuration[]>(Models.Metadata.Machine.ConfigurationKey);
+                var items = ReadItemArray<Models.Metadata.Configuration>(item, Models.Metadata.Machine.ConfigurationKey);
                 ProcessItems(items, machine, filename, indexId, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.DeviceKey))
             {
-                var items = item.Read<Models.Metadata.Device[]>(Models.Metadata.Machine.DeviceKey);
+                var items = ReadItemArray<Models.Metadata.Device>(item, Models.Metadata.Machine.DeviceKey);
                 ProcessItems(items, machine, filename, indexId, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.DeviceRefKey))
             {
-                var items = item.Read<Models.Metadata.DeviceRef[]>(Models.Metadata.Machine.DeviceRefKey);
+                var items = ReadItemArray<Models.Metadata.DeviceRef>(item, Models.Metadata.Machine.DeviceRefKey);
                 ProcessItems(items, machine, filename, indexId, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.DipSwitchKey))
             {
-                var items = item.Read<Models.Metadata.DipSwitch[]>(Models.Metadata.Machine.DipSwitchKey);
+                var items = ReadItemArray<Models.Metadata.DipSwitch>(item, Models.Metadata.Machine.DipSwitchKey);
                 ProcessItems(items, machine, filename, indexId, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.DiskKey))
             {
-                var items = item.Read<Models.Metadata.Disk[]>(Models.Metadata.Machine.DiskKey);
+                var items = ReadItemArray<Models.Metadata.Disk>(item, Models.Metadata.Machine.DiskKey);
                 ProcessItems(items, machine, filename, indexId, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.DisplayKey))
             {
-                var items = item.Read<Models.Metadata.Display[]>(Models.Metadata.Machine.DisplayKey);
+                var items = ReadItemArray<Models.Metadata.Display>(item, Models.Metadata.Machine.DisplayKey);
                 ProcessItems(items, machine, filename, indexId, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.DriverKey))
             {
-                var items = item.Read<Models.Metadata.Driver[]>(Models.Metadata.Machine.DriverKey);
+                var items = ReadItemArray<Models.Metadata.Driver>(item, Models.Metadata.Machine.DriverKey);
                 ProcessItems(items, machine, filename, indexId, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.DumpKey))
@@ -115,67 +115,67 @@ namespace SabreTools.DatFiles
             }
             if (item.ContainsKey(Models.Metadata.Machine.FeatureKey))
             {
-                var items = item.Read<Models.Metadata.Feature[]>(Models.Metadata.Machine.FeatureKey);
+                var items = ReadItemArray<Models.Metadata.Feature>(item, Models.Metadata.Machine.FeatureKey);
                 ProcessItems(items, machine, filename, indexId, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.InfoKey))
             {
-                var items = item.Read<Models.Metadata.Info[]>(Models.Metadata.Machine.InfoKey);
+                var items = ReadItemArray<Models.Metadata.Info>(item, Models.Metadata.Machine.InfoKey);
                 ProcessItems(items, machine, filename, indexId, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.InputKey))
             {
-                var items = item.Read<Models.Metadata.Input[]>(Models.Metadata.Machine.InputKey);
+                var items = ReadItemArray<Models.Metadata.Input>(item, Models.Metadata.Machine.InputKey);
                 ProcessItems(items, machine, filename, indexId, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.MediaKey))
             {
-                var items = item.Read<Models.Metadata.Media[]>(Models.Metadata.Machine.MediaKey);
+                var items = ReadItemArray<Models.Metadata.Media>(item, Models.Metadata.Machine.MediaKey);
                 ProcessItems(items, machine, filename, indexId, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.PartKey))
             {
-                var items = item.Read<Models.Metadata.Part[]>(Models.Metadata.Machine.PartKey);
+                var items = ReadItemArray<Models.Metadata.Part>(item, Models.Metadata.Machine.PartKey);
                 ProcessItems(items, machine, filename, indexId, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.PortKey))
             {
-                var items = item.Read<Models.Metadata.Port[]>(Models.Metadata.Machine.PortKey);
+                var items = ReadItemArray<Models.Metadata.Port>(item, Models.Metadata.Machine.PortKey);
                 ProcessItems(items, machine, filename, indexId, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.RamOptionKey))
             {
-                var items = item.Read<Models.Metadata.RamOption[]>(Models.Metadata.Machine.RamOptionKey);
+                var items = ReadItemArray<Models.Metadata.RamOption>(item, Models.Metadata.Machine.RamOptionKey);
                 ProcessItems(items, machine, filename, indexId, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.ReleaseKey))
             {
-                var items = item.Read<Models.Metadata.Release[]>(Models.Metadata.Machine.ReleaseKey);
+                var items = ReadItemArray<Models.Metadata.Release>(item, Models.Metadata.Machine.ReleaseKey);
                 ProcessItems(items, machine, filename, indexId, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.RomKey))
             {
-                var items = item.Read<Models.Metadata.Rom[]>(Models.Metadata.Machine.RomKey);
+                var items = ReadItemArray<Models.Metadata.Rom>(item, Models.Metadata.Machine.RomKey);
                 ProcessItems(items, machine, filename, indexId, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.SampleKey))
             {
-                var items = item.Read<Models.Metadata.Sample[]>(Models.Metadata.Machine.SampleKey);
+                var items = ReadItemArray<Models.Metadata.Sample>(item, Models.Metadata.Machine.SampleKey);
                 ProcessItems(items, machine, filename, indexId, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.SharedFeatKey))
             {
-                var items = item.Read<Models.Metadata.SharedFeat[]>(Models.Metadata.Machine.SharedFeatKey);
+                var items = ReadItemArray<Models.Metadata.SharedFeat>(item, Models.Metadata.Machine.SharedFeatKey);
                 ProcessItems(items, machine, filename, indexId, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.SoftwareListKey))
             {
-                var items = item.Read<Models.Metadata.SoftwareList[]>(Models.Metadata.Machine.SoftwareListKey);
+                var items = ReadItemArray<Models.Metadata.SoftwareList>(item, Models.Metadata.Machine.SoftwareListKey);
                 ProcessItems(items, machine, filename, indexId, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.SoundKey))
             {
-                var items = item.Read<Models.Metadata.Sound[]>(Models.Metadata.Machine.SoundKey);
+                var items = ReadItemArray<Models.Metadata.Sound>(item, Models.Metadata.Machine.SoundKey);
                 ProcessItems(items, machine, filename, indexId, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.TruripKey))
@@ -184,9 +184,25 @@ namespace SabreTools.DatFiles
             }
             if (item.ContainsKey(Models.Metadata.Machine.VideoKey))
             {
-                var items = item.Read<Models.Metadata.Video[]>(Models.Metadata.Machine.VideoKey);
+                var items = ReadItemArray<Models.Metadata.Video>(item, Models.Metadata.Machine.VideoKey);
                 ProcessItems(items, machine, filename, indexId, statsOnly);
             }
+        }
+
+        /// <summary>
+        /// Read an item array from a given key, if possible
+        /// </summary>
+        private static T[]? ReadItemArray<T>(Models.Metadata.DictionaryBase item, string key) where T : Models.Metadata.DictionaryBase
+        {
+            var items = item.Read<T[]>(key);
+            if (items == default)
+            {
+                var single = item.Read<T>(key);
+                if (single != default)
+                    items = [single];
+            }
+
+            return items;
         }
 
         /// <summary>
@@ -197,7 +213,7 @@ namespace SabreTools.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private static void ProcessItems(Models.Metadata.Adjuster[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Adjuster[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -211,7 +227,7 @@ namespace SabreTools.DatFiles
                     Source = new DatItems.Source { Index = indexId, Name = filename }
                 };
                 datItem.CopyMachineInformation(machine);
-                //ParseAddHelper(datItem, statsOnly);
+                ParseAddHelper(datItem, statsOnly);
             }
         }
 
@@ -223,7 +239,7 @@ namespace SabreTools.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private static void ProcessItems(Models.Metadata.Archive[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Archive[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -237,7 +253,7 @@ namespace SabreTools.DatFiles
                     Source = new DatItems.Source { Index = indexId, Name = filename }
                 };
                 datItem.CopyMachineInformation(machine);
-                //ParseAddHelper(datItem, statsOnly);
+                ParseAddHelper(datItem, statsOnly);
             }
         }
 
@@ -249,7 +265,7 @@ namespace SabreTools.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private static void ProcessItems(Models.Metadata.BiosSet[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.BiosSet[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -263,7 +279,7 @@ namespace SabreTools.DatFiles
                     Source = new DatItems.Source { Index = indexId, Name = filename }
                 };
                 datItem.CopyMachineInformation(machine);
-                //ParseAddHelper(datItem, statsOnly);
+                ParseAddHelper(datItem, statsOnly);
             }
         }
 
@@ -275,7 +291,7 @@ namespace SabreTools.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private static void ProcessItems(Models.Metadata.Chip[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Chip[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -289,7 +305,7 @@ namespace SabreTools.DatFiles
                     Source = new DatItems.Source { Index = indexId, Name = filename }
                 };
                 datItem.CopyMachineInformation(machine);
-                //ParseAddHelper(datItem, statsOnly);
+                ParseAddHelper(datItem, statsOnly);
             }
         }
 
@@ -301,7 +317,7 @@ namespace SabreTools.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private static void ProcessItems(Models.Metadata.Configuration[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Configuration[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -315,7 +331,35 @@ namespace SabreTools.DatFiles
                     Source = new DatItems.Source { Index = indexId, Name = filename }
                 };
                 datItem.CopyMachineInformation(machine);
-                //ParseAddHelper(datItem, statsOnly);
+                ParseAddHelper(datItem, statsOnly);
+            }
+        }
+
+        /// <summary>
+        /// Convert DataArea information 
+        /// </summary>
+        /// <param name="items">Array of internal items to convert</param>
+        /// <param name="machine">Machine to use with the converted items</param>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        private void ProcessItems(Models.Metadata.DataArea[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        {
+            // If the array is null or empty, return without processing
+            if (items == null || items.Length == 0)
+                return;
+
+            // TODO: Extract Roms
+
+            // Loop through the items and add
+            foreach (var item in items)
+            {
+                var datItem = new DatItems.Formats.DataArea(item)
+                {
+                    Source = new DatItems.Source { Index = indexId, Name = filename }
+                };
+                datItem.CopyMachineInformation(machine);
+                ParseAddHelper(datItem, statsOnly);
             }
         }
 
@@ -327,7 +371,7 @@ namespace SabreTools.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private static void ProcessItems(Models.Metadata.Device[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Device[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -341,7 +385,7 @@ namespace SabreTools.DatFiles
                     Source = new DatItems.Source { Index = indexId, Name = filename }
                 };
                 datItem.CopyMachineInformation(machine);
-                //ParseAddHelper(datItem, statsOnly);
+                ParseAddHelper(datItem, statsOnly);
             }
         }
 
@@ -353,7 +397,7 @@ namespace SabreTools.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private static void ProcessItems(Models.Metadata.DeviceRef[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.DeviceRef[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -367,7 +411,33 @@ namespace SabreTools.DatFiles
                     Source = new DatItems.Source { Index = indexId, Name = filename }
                 };
                 datItem.CopyMachineInformation(machine);
-                //ParseAddHelper(datItem, statsOnly);
+                ParseAddHelper(datItem, statsOnly);
+            }
+        }
+
+        /// <summary>
+        /// Convert DipLocation information 
+        /// </summary>
+        /// <param name="items">Array of internal items to convert</param>
+        /// <param name="machine">Machine to use with the converted items</param>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        private void ProcessItems(Models.Metadata.DipLocation[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        {
+            // If the array is null or empty, return without processing
+            if (items == null || items.Length == 0)
+                return;
+
+            // Loop through the items and add
+            foreach (var item in items)
+            {
+                var datItem = new DatItems.Formats.DipLocation(item)
+                {
+                    Source = new DatItems.Source { Index = indexId, Name = filename }
+                };
+                datItem.CopyMachineInformation(machine);
+                ParseAddHelper(datItem, statsOnly);
             }
         }
 
@@ -379,7 +449,7 @@ namespace SabreTools.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private static void ProcessItems(Models.Metadata.DipSwitch[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.DipSwitch[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -393,7 +463,33 @@ namespace SabreTools.DatFiles
                     Source = new DatItems.Source { Index = indexId, Name = filename }
                 };
                 datItem.CopyMachineInformation(machine);
-                //ParseAddHelper(datItem, statsOnly);
+                ParseAddHelper(datItem, statsOnly);
+            }
+        }
+
+        /// <summary>
+        /// Convert DipValue information 
+        /// </summary>
+        /// <param name="items">Array of internal items to convert</param>
+        /// <param name="machine">Machine to use with the converted items</param>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        private void ProcessItems(Models.Metadata.DipValue[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        {
+            // If the array is null or empty, return without processing
+            if (items == null || items.Length == 0)
+                return;
+
+            // Loop through the items and add
+            foreach (var item in items)
+            {
+                var datItem = new DatItems.Formats.DipValue(item)
+                {
+                    Source = new DatItems.Source { Index = indexId, Name = filename }
+                };
+                datItem.CopyMachineInformation(machine);
+                ParseAddHelper(datItem, statsOnly);
             }
         }
 
@@ -405,7 +501,7 @@ namespace SabreTools.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private static void ProcessItems(Models.Metadata.Disk[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Disk[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -419,7 +515,35 @@ namespace SabreTools.DatFiles
                     Source = new DatItems.Source { Index = indexId, Name = filename }
                 };
                 datItem.CopyMachineInformation(machine);
-                //ParseAddHelper(datItem, statsOnly);
+                ParseAddHelper(datItem, statsOnly);
+            }
+        }
+
+        /// <summary>
+        /// Convert DiskArea information 
+        /// </summary>
+        /// <param name="items">Array of internal items to convert</param>
+        /// <param name="machine">Machine to use with the converted items</param>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        private void ProcessItems(Models.Metadata.DiskArea[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        {
+            // If the array is null or empty, return without processing
+            if (items == null || items.Length == 0)
+                return;
+
+            // TODO: Extract Disks
+
+            // Loop through the items and add
+            foreach (var item in items)
+            {
+                var datItem = new DatItems.Formats.DiskArea(item)
+                {
+                    Source = new DatItems.Source { Index = indexId, Name = filename }
+                };
+                datItem.CopyMachineInformation(machine);
+                ParseAddHelper(datItem, statsOnly);
             }
         }
 
@@ -431,7 +555,7 @@ namespace SabreTools.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private static void ProcessItems(Models.Metadata.Display[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Display[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -445,7 +569,7 @@ namespace SabreTools.DatFiles
                     Source = new DatItems.Source { Index = indexId, Name = filename }
                 };
                 datItem.CopyMachineInformation(machine);
-                //ParseAddHelper(datItem, statsOnly);
+                ParseAddHelper(datItem, statsOnly);
             }
         }
 
@@ -457,7 +581,7 @@ namespace SabreTools.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private static void ProcessItems(Models.Metadata.Driver[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Driver[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -471,7 +595,7 @@ namespace SabreTools.DatFiles
                     Source = new DatItems.Source { Index = indexId, Name = filename }
                 };
                 datItem.CopyMachineInformation(machine);
-                //ParseAddHelper(datItem, statsOnly);
+                ParseAddHelper(datItem, statsOnly);
             }
         }
 
@@ -483,7 +607,7 @@ namespace SabreTools.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private static void ProcessItems(Models.Metadata.Feature[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Feature[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -497,7 +621,7 @@ namespace SabreTools.DatFiles
                     Source = new DatItems.Source { Index = indexId, Name = filename }
                 };
                 datItem.CopyMachineInformation(machine);
-                //ParseAddHelper(datItem, statsOnly);
+                ParseAddHelper(datItem, statsOnly);
             }
         }
 
@@ -509,7 +633,7 @@ namespace SabreTools.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private static void ProcessItems(Models.Metadata.Info[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Info[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -523,7 +647,7 @@ namespace SabreTools.DatFiles
                     Source = new DatItems.Source { Index = indexId, Name = filename }
                 };
                 datItem.CopyMachineInformation(machine);
-                //ParseAddHelper(datItem, statsOnly);
+                ParseAddHelper(datItem, statsOnly);
             }
         }
 
@@ -535,7 +659,7 @@ namespace SabreTools.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private static void ProcessItems(Models.Metadata.Input[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Input[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -549,7 +673,7 @@ namespace SabreTools.DatFiles
                     Source = new DatItems.Source { Index = indexId, Name = filename }
                 };
                 datItem.CopyMachineInformation(machine);
-                //ParseAddHelper(datItem, statsOnly);
+                ParseAddHelper(datItem, statsOnly);
             }
         }
 
@@ -561,7 +685,7 @@ namespace SabreTools.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private static void ProcessItems(Models.Metadata.Media[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Media[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -575,7 +699,7 @@ namespace SabreTools.DatFiles
                     Source = new DatItems.Source { Index = indexId, Name = filename }
                 };
                 datItem.CopyMachineInformation(machine);
-                //ParseAddHelper(datItem, statsOnly);
+                ParseAddHelper(datItem, statsOnly);
             }
         }
 
@@ -587,11 +711,15 @@ namespace SabreTools.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private static void ProcessItems(Models.Metadata.Part[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Part[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
                 return;
+
+            // TODO: Extract DataAreas
+            // TODO: Extract DiskAreas
+            // TODO: Extract DipSwitches
 
             // Loop through the items and add
             foreach (var item in items)
@@ -601,7 +729,7 @@ namespace SabreTools.DatFiles
                     Source = new DatItems.Source { Index = indexId, Name = filename }
                 };
                 datItem.CopyMachineInformation(machine);
-                //ParseAddHelper(datItem, statsOnly);
+                ParseAddHelper(datItem, statsOnly);
             }
         }
 
@@ -613,7 +741,7 @@ namespace SabreTools.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private static void ProcessItems(Models.Metadata.Port[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Port[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -627,7 +755,7 @@ namespace SabreTools.DatFiles
                     Source = new DatItems.Source { Index = indexId, Name = filename }
                 };
                 datItem.CopyMachineInformation(machine);
-                //ParseAddHelper(datItem, statsOnly);
+                ParseAddHelper(datItem, statsOnly);
             }
         }
 
@@ -639,7 +767,7 @@ namespace SabreTools.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private static void ProcessItems(Models.Metadata.RamOption[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.RamOption[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -653,7 +781,7 @@ namespace SabreTools.DatFiles
                     Source = new DatItems.Source { Index = indexId, Name = filename }
                 };
                 datItem.CopyMachineInformation(machine);
-                //ParseAddHelper(datItem, statsOnly);
+                ParseAddHelper(datItem, statsOnly);
             }
         }
 
@@ -665,7 +793,7 @@ namespace SabreTools.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private static void ProcessItems(Models.Metadata.Release[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Release[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -679,7 +807,7 @@ namespace SabreTools.DatFiles
                     Source = new DatItems.Source { Index = indexId, Name = filename }
                 };
                 datItem.CopyMachineInformation(machine);
-                //ParseAddHelper(datItem, statsOnly);
+                ParseAddHelper(datItem, statsOnly);
             }
         }
 
@@ -691,7 +819,7 @@ namespace SabreTools.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private static void ProcessItems(Models.Metadata.Rom[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Rom[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -705,7 +833,7 @@ namespace SabreTools.DatFiles
                     Source = new DatItems.Source { Index = indexId, Name = filename }
                 };
                 datItem.CopyMachineInformation(machine);
-                //ParseAddHelper(datItem, statsOnly);
+                ParseAddHelper(datItem, statsOnly);
             }
         }
 
@@ -717,7 +845,7 @@ namespace SabreTools.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private static void ProcessItems(Models.Metadata.Sample[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Sample[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -731,7 +859,7 @@ namespace SabreTools.DatFiles
                     Source = new DatItems.Source { Index = indexId, Name = filename }
                 };
                 datItem.CopyMachineInformation(machine);
-                //ParseAddHelper(datItem, statsOnly);
+                ParseAddHelper(datItem, statsOnly);
             }
         }
 
@@ -743,7 +871,7 @@ namespace SabreTools.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private static void ProcessItems(Models.Metadata.SharedFeat[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.SharedFeat[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -757,7 +885,7 @@ namespace SabreTools.DatFiles
                     Source = new DatItems.Source { Index = indexId, Name = filename }
                 };
                 datItem.CopyMachineInformation(machine);
-                //ParseAddHelper(datItem, statsOnly);
+                ParseAddHelper(datItem, statsOnly);
             }
         }
 
@@ -769,7 +897,7 @@ namespace SabreTools.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private static void ProcessItems(Models.Metadata.SoftwareList[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.SoftwareList[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -783,7 +911,7 @@ namespace SabreTools.DatFiles
                     Source = new DatItems.Source { Index = indexId, Name = filename }
                 };
                 datItem.CopyMachineInformation(machine);
-                //ParseAddHelper(datItem, statsOnly);
+                ParseAddHelper(datItem, statsOnly);
             }
         }
 
@@ -795,7 +923,7 @@ namespace SabreTools.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private static void ProcessItems(Models.Metadata.Sound[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Sound[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -809,7 +937,7 @@ namespace SabreTools.DatFiles
                     Source = new DatItems.Source { Index = indexId, Name = filename }
                 };
                 datItem.CopyMachineInformation(machine);
-                //ParseAddHelper(datItem, statsOnly);
+                ParseAddHelper(datItem, statsOnly);
             }
         }
 
@@ -821,7 +949,7 @@ namespace SabreTools.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private static void ProcessItems(Models.Metadata.Video[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Video[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -835,7 +963,7 @@ namespace SabreTools.DatFiles
                     Source = new DatItems.Source { Index = indexId, Name = filename }
                 };
                 datItem.CopyMachineInformation(machine);
-                //ParseAddHelper(datItem, statsOnly);
+                ParseAddHelper(datItem, statsOnly);
             }
         }
 
