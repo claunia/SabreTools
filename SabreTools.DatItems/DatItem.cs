@@ -91,7 +91,7 @@ namespace SabreTools.DatItems
         /// Internal model wrapped by this DatItem
         /// </summary>
         [JsonIgnore, XmlIgnore]
-        protected Models.Metadata.DatItem _internal;
+        protected Models.Metadata.DatItem _internal = [];
 
         #endregion
 
@@ -158,15 +158,6 @@ namespace SabreTools.DatItems
         #endregion
 
         #region Constructors
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public DatItem()
-        {
-            _internal = new Models.Metadata.Blank();
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
 
         /// <summary>
         /// Create a specific type of DatItem to be used based on a BaseFile
