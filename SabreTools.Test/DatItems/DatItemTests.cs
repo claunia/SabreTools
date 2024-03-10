@@ -12,17 +12,6 @@ namespace SabreTools.Test.DatItems
     public class DatItemTests
     {
         [Theory]
-        [InlineData(null, ItemType.Rom)]
-        [InlineData(ItemType.Disk, ItemType.Disk)]
-        [InlineData(ItemType.Media, ItemType.Media)]
-        [InlineData(ItemType.Rom, ItemType.Rom)]
-        public void CreateItemTypeTest(ItemType? itemType, ItemType expected)
-        {
-            var actual = DatItem.Create(itemType);
-            Assert.Equal(expected, actual.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey));
-        }
-
-        [Theory]
         [InlineData(FileType.None, ItemType.Rom)]
         [InlineData(FileType.Folder, null)]
         [InlineData(FileType.AaruFormat, ItemType.Media)]

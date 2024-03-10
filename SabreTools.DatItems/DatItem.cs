@@ -177,55 +177,6 @@ namespace SabreTools.DatItems
         }
 
         /// <summary>
-        /// Create a specific type of DatItem to be used based on an ItemType
-        /// </summary>
-        /// <param name="itemType">Type of the DatItem to be created</param>
-        /// <returns>DatItem of the specific internal type that corresponds to the inputs</returns>
-        public static DatItem Create(ItemType? itemType)
-        {
-            return itemType switch
-            {
-                ItemType.Adjuster => new Adjuster(),
-                ItemType.Analog => new Analog(),
-                ItemType.Archive => new Archive(),
-                ItemType.BiosSet => new BiosSet(),
-                ItemType.Blank => new Blank(),
-                ItemType.Chip => new Chip(),
-                ItemType.Condition => new Condition(),
-                ItemType.Configuration => new Configuration(),
-                ItemType.ConfLocation => new ConfLocation(),
-                ItemType.Device => new Device(),
-                ItemType.DeviceReference => new DeviceReference(),
-                ItemType.DipLocation => new DipLocation(),
-                ItemType.DipSwitch => new DipSwitch(),
-                ItemType.Disk => new Disk(),
-                ItemType.Display => new Display(),
-                ItemType.Driver => new Driver(),
-                ItemType.Extension => new Extension(),
-                ItemType.Feature => new Feature(),
-                ItemType.File => new Formats.File(),
-                ItemType.Info => new Info(),
-                ItemType.Instance => new Instance(),
-                ItemType.Media => new Media(),
-                ItemType.PartFeature => new PartFeature(),
-                ItemType.Port => new Port(),
-                ItemType.RamOption => new RamOption(),
-                ItemType.Release => new Release(),
-                ItemType.ReleaseDetails => new ReleaseDetails(),
-                ItemType.Rom => new Rom(),
-                ItemType.Sample => new Sample(),
-                ItemType.Serials => new Serials(),
-                ItemType.SharedFeature => new SharedFeature(),
-                ItemType.Slot => new Slot(),
-                ItemType.SlotOption => new SlotOption(),
-                ItemType.SoftwareList => new SoftwareList(),
-                ItemType.Sound => new Sound(),
-                ItemType.SourceDetails => new SourceDetails(),
-                _ => new Rom(),
-            };
-        }
-
-        /// <summary>
         /// Create a specific type of DatItem to be used based on a BaseFile
         /// </summary>
         /// <param name="baseFile">BaseFile containing information to be created</param>
