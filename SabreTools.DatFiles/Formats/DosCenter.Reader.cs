@@ -1,8 +1,4 @@
 using System;
-using System.Linq;
-using SabreTools.Core.Tools;
-using SabreTools.DatItems;
-using SabreTools.DatItems.Formats;
 
 namespace SabreTools.DatFiles.Formats
 {
@@ -18,12 +14,13 @@ namespace SabreTools.DatFiles.Formats
             {
                 // Deserialize the input file
                 var metadataFile = new Serialization.Files.DosCenter().Deserialize(filename);
+                var metadata = new Serialization.CrossModel.DosCenter().Serialize(metadataFile);
 
                 // Convert the header to the internal format
                 ConvertHeader(metadataFile?.DosCenter, keep);
 
-                // Convert the game data to the internal format
-                ConvertGames(metadataFile?.Game, filename, indexId, statsOnly);
+                // Convert to the internal format
+                ConvertMetadata(metadata, filename, indexId, statsOnly);
             }
             catch (Exception ex) when (!throwOnError)
             {
@@ -56,98 +53,6 @@ namespace SabreTools.DatFiles.Formats
             // Handle implied SuperDAT
             if (doscenter.Name?.Contains(" - SuperDAT") == true && keep)
                 Header.Type ??= "SuperDAT";
-        }
-
-        /// <summary>
-        /// Convert games information
-        /// </summary>
-        /// <param name="games">Array of deserialized models to convert</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
-        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ConvertGames(Models.DosCenter.Game[]? games, string filename, int indexId, bool statsOnly)
-        {
-            // If the game array is missing, we can't do anything
-            if (games == null || !games.Any())
-                return;
-
-            // Loop through the games and add
-            foreach (var game in games)
-            {
-                ConvertGame(game, filename, indexId, statsOnly);
-            }
-        }
-
-        /// <summary>
-        /// Convert game information
-        /// </summary>
-        /// <param name="game">Deserialized model to convert</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
-        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ConvertGame(Models.DosCenter.Game game, string filename, int indexId, bool statsOnly)
-        {
-            // If the game is missing, we can't do anything
-            if (game == null)
-                return;
-
-            // Create the machine for copying information
-            string? machineName = game.Name?.Trim('"');
-            if (machineName?.EndsWith(".zip") == true)
-                machineName = System.IO.Path.GetFileNameWithoutExtension(machineName);
-
-            var machine = new Machine();
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineName);
-
-            // Check if there are any items
-            bool containsItems = false;
-
-            // Loop through each type of item
-            ConvertFiles(game.File, machine, filename, indexId, statsOnly, ref containsItems);
-
-            // If we had no items, create a Blank placeholder
-            if (!containsItems)
-            {
-                var blank = new Blank
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
-
-                blank.CopyMachineInformation(machine);
-                ParseAddHelper(blank, statsOnly);
-            }
-        }
-
-        /// <summary>
-        /// Convert Rom information
-        /// </summary>
-        /// <param name="files">Array of deserialized models to convert</param>
-        /// <param name="machine">Prefilled machine to use</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
-        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        /// <param name="containsItems">True if there were any items in the array, false otherwise</param>
-        private void ConvertFiles(Models.DosCenter.File[]? files, Machine machine, string filename, int indexId, bool statsOnly, ref bool containsItems)
-        {
-            // If the files array is missing, we can't do anything
-            if (files == null || !files.Any())
-                return;
-
-            containsItems = true;
-            foreach (var file in files)
-            {
-                var item = new Rom
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
-                item.SetName(file.Name);
-                item.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, file.CRC);
-                item.SetFieldValue<string?>(Models.Metadata.Rom.DateKey, file.Date);
-                item.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, NumberHelper.ConvertToInt64(file.Size));
-
-                item.CopyMachineInformation(machine);
-                ParseAddHelper(item, statsOnly);
-            }
         }
     
         #endregion
