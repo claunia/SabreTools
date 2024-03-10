@@ -98,16 +98,10 @@ namespace SabreTools.DatItems
         #region Logging
 
         /// <summary>
-        /// Logging object
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        protected Logger logger;
-
-        /// <summary>
         /// Static logger for static methods
         /// </summary>
         [JsonIgnore, XmlIgnore]
-        protected static Logger staticLogger = new();
+        protected static readonly Logger staticLogger = new();
 
         #endregion
 
@@ -172,8 +166,6 @@ namespace SabreTools.DatItems
         {
             _internal = new Models.Metadata.Blank();
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-
-            logger = new Logger(this);
         }
 
         /// <summary>
