@@ -2,7 +2,6 @@ using System.Linq;
 
 namespace SabreTools.DatFiles
 {
-    // TODO: Figure out if there's a way to condense the various processing methods
     // TODO: Convert nested items (e.g. Configuration, DipLocation)
     // TODO: Determine which items need to have their values flipped (e.g. Part, DiskArea, DataArea)
     public partial class DatFile
