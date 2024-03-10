@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SabreTools.Core;
 using SabreTools.Core.Tools;
-using SabreTools.DatItems;
-using SabreTools.DatItems.Formats;
 
 namespace SabreTools.DatFiles.Formats
 {
@@ -20,6 +17,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 // Deserialize the input file
                 var dat = new Serialization.Files.OfflineList().Deserialize(filename);
+                var metadata = new Serialization.CrossModel.OfflineList().Serialize(dat);
 
                 // Convert the header to the internal format
                 OfflineList.ConvertHeader(dat);
@@ -27,8 +25,8 @@ namespace SabreTools.DatFiles.Formats
                 // Convert the configuration to the internal format
                 ConvertConfiguration(dat?.Configuration, keep);
 
-                // Convert the games to the internal format
-                ConvertGames(dat?.Games, filename, indexId, statsOnly);
+                // Convert to the internal format
+                ConvertMetadata(metadata, filename, indexId, statsOnly);
 
                 // Convert the GUI to the internal format
                 ConvertGUI(dat?.GUI);
@@ -267,113 +265,6 @@ namespace SabreTools.DatFiles.Formats
                 return;
 
             // TODO: Add to internal model
-        }
-
-        /// <summary>
-        /// Convert games information
-        /// </summary>
-        /// <param name="search">Deserialized model to convert</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
-        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ConvertGames(Models.OfflineList.Games? games, string filename, int indexId, bool statsOnly)
-        {
-            // If the games array is missing, we can't do anything
-            if (games?.Game == null || !games.Game.Any())
-                return;
-
-            foreach (var game in games.Game)
-            {
-                ConvertGame(game, filename, indexId, statsOnly);
-            }
-        }
-
-        /// <summary>
-        /// Convert game information
-        /// </summary>
-        /// <param name="search">Deserialized model to convert</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
-        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ConvertGame(Models.OfflineList.Game? game, string filename, int indexId, bool statsOnly)
-        {
-            // If the game is missing, we can't do anything
-            if (game == null)
-                return;
-
-            var machine = new Machine();
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.CommentKey, game.Comment);
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.Im1CRCKey, game.Im1CRC);
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.Im2CRCKey, game.Im2CRC);
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.ImageNumberKey, game.ImageNumber);
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.LanguageKey, game.Language);
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.LocationKey, game.Location);
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, game.Title);
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.PublisherKey, game.Publisher);
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.ReleaseNumberKey, game.ReleaseNumber);
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.SaveTypeKey, game.SaveType);
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.SourceRomKey, game.SourceRom);
-
-            long? size = NumberHelper.ConvertToInt64(game.RomSize);
-            if (game.DuplicateID != "0")
-                machine.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, game.DuplicateID);
-
-            // Check if there are any items
-            bool containsItems = false;
-
-            // Loop through each file
-            ConvertFiles(game.Files, machine, size, game.ReleaseNumber, filename, indexId, statsOnly, ref containsItems);
-
-            // If we had no items, create a Blank placeholder
-            if (!containsItems)
-            {
-                var blank = new Blank
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
-
-                blank.CopyMachineInformation(machine);
-                ParseAddHelper(blank, statsOnly);
-            }
-        }
-
-        /// <summary>
-        /// Convert Files information
-        /// </summary>
-        /// <param name="files">Array of deserialized models to convert</param>
-        /// <param name="machine">Prefilled machine to use</param>
-        /// <param name="size">Item size to use</param>
-        /// <param name="releaseNumber">Release number to use</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
-        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        /// <param name="containsItems">True if there were any items in the array, false otherwise</param>
-        private void ConvertFiles(Models.OfflineList.Files? files, Machine machine, long? size, string? releaseNumber, string filename, int indexId, bool statsOnly, ref bool containsItems)
-        {
-            // If the files array is missing, we can't do anything
-            if (files?.RomCRC == null || !files.RomCRC.Any())
-                return;
-
-            containsItems = true;
-            foreach (var crc in files.RomCRC)
-            {
-                string name = string.Empty;
-                if (!string.IsNullOrEmpty(releaseNumber) && releaseNumber != "0")
-                    name += $"{releaseNumber} - ";
-                name += $"{machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)}{crc.Extension}";
-
-                var item = new Rom
-                {
-                    Source = new Source { Index = indexId, Name = filename },
-                };
-                item.SetName(name);
-                item.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, crc.Content);
-                item.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, size);
-                item.SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.None);
-
-                item.CopyMachineInformation(machine);
-                ParseAddHelper(item, statsOnly);
-            }
         }
 
         /// <summary>
