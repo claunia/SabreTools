@@ -2,7 +2,6 @@ using System.Linq;
 
 namespace SabreTools.DatFiles
 {
-    // TODO: Have the converters return a value OR port functionality to DatFile
     // TODO: Figure out if there's a way to condense the various processing methods
     // TODO: Convert nested items (e.g. Configuration, DipLocation)
     // TODO: Determine which items need to have their values flipped (e.g. Part, DiskArea, DataArea)
@@ -22,6 +21,8 @@ namespace SabreTools.DatFiles
             // If the metadata file is invalid, we can't do anything
             if (item == null || !item.Any())
                 return;
+
+            // TODO: Add header parsing
 
             // Get the machines from the metadata
             var machines = item.Read<Models.Metadata.Machine[]>(Models.Metadata.MetadataFile.MachineKey);
