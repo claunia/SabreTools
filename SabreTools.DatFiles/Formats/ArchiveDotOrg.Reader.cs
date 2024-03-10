@@ -16,7 +16,7 @@ namespace SabreTools.DatFiles.Formats
                 var files = new Serialization.Files.ArchiveDotOrg().Deserialize(filename);
                 var metadata = new Serialization.CrossModel.ArchiveDotOrg().Serialize(files);
 
-                // Convert the files data to the internal format
+                // Convert to the internal format
                 ConvertMetadata(metadata, filename, indexId, statsOnly);
             }
             catch (Exception ex) when (!throwOnError)
