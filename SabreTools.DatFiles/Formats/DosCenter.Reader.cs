@@ -133,17 +133,16 @@ namespace SabreTools.DatFiles.Formats
                 return;
 
             containsItems = true;
-            foreach (var rom in files)
+            foreach (var file in files)
             {
                 var item = new Rom
                 {
-                    Size = NumberHelper.ConvertToInt64(rom.Size),
-                    CRC = rom.CRC,
-                    Date = rom.Date,
-
                     Source = new Source { Index = indexId, Name = filename },
                 };
-                item.SetName(rom.Name);
+                item.SetName(file.Name);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, file.CRC);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.DateKey, file.Date);
+                item.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, NumberHelper.ConvertToInt64(file.Size));
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);

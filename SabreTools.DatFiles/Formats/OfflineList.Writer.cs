@@ -33,9 +33,9 @@ namespace SabreTools.DatFiles.Formats
             switch (datItem)
             {
                 case Rom rom:
-                    if (rom.Size == null || rom.Size < 0)
+                    if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null || rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) < 0)
                         missingFields.Add(Models.Metadata.Rom.SizeKey);
-                    if (string.IsNullOrEmpty(rom.CRC))
+                    if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey)))
                         missingFields.Add(Models.Metadata.Rom.CRCKey);
                     break;
             }
@@ -388,7 +388,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var romCRC = new Models.OfflineList.FileRomCRC
             {
-                Content = item.CRC,
+                Content = item.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey),
             };
 
             return romCRC;

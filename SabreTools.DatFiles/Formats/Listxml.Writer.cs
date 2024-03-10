@@ -5,7 +5,6 @@ using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
-using SabreTools.Serialization.CrossModel;
 
 namespace SabreTools.DatFiles.Formats
 {
@@ -51,17 +50,17 @@ namespace SabreTools.DatFiles.Formats
                 case BiosSet biosset:
                     if (string.IsNullOrEmpty(biosset.GetName()))
                         missingFields.Add(Models.Metadata.BiosSet.NameKey);
-                    if (string.IsNullOrEmpty(biosset.Description))
+                    if (string.IsNullOrEmpty(biosset.GetFieldValue<string?>(Models.Metadata.BiosSet.DescriptionKey)))
                         missingFields.Add(Models.Metadata.BiosSet.DescriptionKey);
                     break;
 
                 case Rom rom:
                     if (string.IsNullOrEmpty(rom.GetName()))
                         missingFields.Add(Models.Metadata.Rom.NameKey);
-                    if (rom.Size == null || rom.Size < 0)
+                    if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null || rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) < 0)
                         missingFields.Add(Models.Metadata.Rom.SizeKey);
-                    if (string.IsNullOrEmpty(rom.CRC)
-                        && string.IsNullOrEmpty(rom.SHA1))
+                    if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey))
+                        && string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key)))
                     {
                         missingFields.Add(Models.Metadata.Rom.SHA1Key);
                     }
@@ -70,8 +69,8 @@ namespace SabreTools.DatFiles.Formats
                 case Disk disk:
                     if (string.IsNullOrEmpty(disk.GetName()))
                         missingFields.Add(Models.Metadata.Disk.NameKey);
-                    if (string.IsNullOrEmpty(disk.MD5)
-                        && string.IsNullOrEmpty(disk.SHA1))
+                    if (string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key))
+                        && string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key)))
                     {
                         missingFields.Add(Models.Metadata.Disk.SHA1Key);
                     }
@@ -90,43 +89,43 @@ namespace SabreTools.DatFiles.Formats
                 case Chip chip:
                     if (string.IsNullOrEmpty(chip.GetName()))
                         missingFields.Add(Models.Metadata.Chip.NameKey);
-                    if (!chip.ChipTypeSpecified)
+                    if (chip.GetFieldValue<ChipType>(Models.Metadata.Chip.ChipTypeKey) == ChipType.NULL)
                         missingFields.Add(Models.Metadata.Chip.ChipTypeKey);
                     break;
 
                 case Display display:
-                    if (!display.DisplayTypeSpecified)
+                    if (display.GetFieldValue<DisplayType>(Models.Metadata.Display.DisplayTypeKey) == DisplayType.NULL)
                         missingFields.Add(Models.Metadata.Display.DisplayTypeKey);
-                    if (display.Refresh == null)
+                    if (display.GetFieldValue<double?>(Models.Metadata.Display.RefreshKey) == null)
                         missingFields.Add(Models.Metadata.Display.RefreshKey);
                     break;
 
                 case Sound sound:
-                    if (sound.Channels == null)
+                    if (sound.GetFieldValue<long?>(Models.Metadata.Sound.ChannelsKey) == null)
                         missingFields.Add(Models.Metadata.Sound.ChannelsKey);
                     break;
 
                 case Input input:
-                    if (input.Players == null)
+                    if (input.GetFieldValue<long?>(Models.Metadata.Input.PlayersKey) == null)
                         missingFields.Add(Models.Metadata.Input.PlayersKey);
                     break;
 
                 case DipSwitch dipswitch:
                     if (string.IsNullOrEmpty(dipswitch.GetName()))
                         missingFields.Add(Models.Metadata.DipSwitch.NameKey);
-                    if (string.IsNullOrEmpty(dipswitch.Tag))
+                    if (string.IsNullOrEmpty(dipswitch.GetFieldValue<string?>(Models.Metadata.DipSwitch.TagKey)))
                         missingFields.Add(Models.Metadata.DipSwitch.TagKey);
                     break;
 
                 case Configuration configuration:
                     if (string.IsNullOrEmpty(configuration.GetName()))
                         missingFields.Add(Models.Metadata.Configuration.NameKey);
-                    if (string.IsNullOrEmpty(configuration.Tag))
+                    if (string.IsNullOrEmpty(configuration.GetFieldValue<string>(Models.Metadata.Configuration.TagKey)))
                         missingFields.Add(Models.Metadata.Configuration.TagKey);
                     break;
 
                 case Port port:
-                    if (string.IsNullOrEmpty(port.Tag))
+                    if (string.IsNullOrEmpty(port.GetFieldValue<string>(Models.Metadata.Port.TagKey)))
                         missingFields.Add(Models.Metadata.Port.TagKey);
                     break;
 
@@ -136,23 +135,23 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case Driver driver:
-                    if (!driver.StatusSpecified)
+                    if (driver.GetFieldValue<SupportStatus>(Models.Metadata.Driver.StatusKey) == SupportStatus.NULL)
                         missingFields.Add(Models.Metadata.Driver.StatusKey);
-                    if (!driver.EmulationSpecified)
+                    if (driver.GetFieldValue<SupportStatus>(Models.Metadata.Driver.EmulationKey) == SupportStatus.NULL)
                         missingFields.Add(Models.Metadata.Driver.EmulationKey);
-                    if (!driver.CocktailSpecified)
+                    if (driver.GetFieldValue<SupportStatus>(Models.Metadata.Driver.CocktailKey) == SupportStatus.NULL)
                         missingFields.Add(Models.Metadata.Driver.CocktailKey);
-                    if (!driver.SaveStateSpecified)
+                    if (driver.GetFieldValue<SupportStatus>(Models.Metadata.Driver.SaveStateKey) == SupportStatus.NULL)
                         missingFields.Add(Models.Metadata.Driver.SaveStateKey);
                     break;
 
                 case Feature feature:
-                    if (!feature.TypeSpecified)
+                    if (feature.GetFieldValue<FeatureType>(Models.Metadata.Feature.FeatureTypeKey) == FeatureType.NULL)
                         missingFields.Add(Models.Metadata.Feature.FeatureTypeKey);
                     break;
 
                 case Device device:
-                    if (!device.DeviceTypeSpecified)
+                    if (device.GetFieldValue<DeviceType>(Models.Metadata.Device.DeviceTypeKey) != DeviceType.NULL)
                         missingFields.Add(Models.Metadata.Device.DeviceTypeKey);
                     break;
 
@@ -162,11 +161,11 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case DatItems.Formats.SoftwareList softwarelist:
-                    if (string.IsNullOrEmpty(softwarelist.Tag))
+                    if (string.IsNullOrEmpty(softwarelist.GetFieldValue<string?>(Models.Metadata.SoftwareList.TagKey)))
                         missingFields.Add(Models.Metadata.SoftwareList.TagKey);
                     if (string.IsNullOrEmpty(softwarelist.GetName()))
                         missingFields.Add(Models.Metadata.SoftwareList.NameKey);
-                    if (!softwarelist.StatusSpecified)
+                    if (softwarelist.GetFieldValue<SoftwareListStatus?>(Models.Metadata.SoftwareList.StatusKey) == SoftwareListStatus.None)
                         missingFields.Add(Models.Metadata.SoftwareList.StatusKey);
                     break;
 
@@ -412,11 +411,9 @@ namespace SabreTools.DatFiles.Formats
             var biosset = new Models.Listxml.BiosSet
             {
                 Name = item.GetName(),
-                Description = item.Description,
+                Default = item.GetFieldValue<bool?>(Models.Metadata.BiosSet.DefaultKey).FromYesNo(),
+                Description = item.GetFieldValue<string?>(Models.Metadata.BiosSet.DescriptionKey),
             };
-
-            if (item.DefaultSpecified)
-                biosset.Default = item.Default.FromYesNo();
 
             return biosset;
         }
@@ -429,17 +426,17 @@ namespace SabreTools.DatFiles.Formats
             var rom = new Models.Listxml.Rom
             {
                 Name = item.GetName(),
-                Bios = item.Bios,
-                Size = item.Size?.ToString(),
-                CRC = item.CRC,
-                SHA1 = item.SHA1,
-                Merge = item.MergeTag,
-                Region = item.Region,
-                Offset = item.Offset,
-                Status = item.ItemStatus.AsStringValue<ItemStatus>(useSecond: false),
-                Optional = item.Optional.FromYesNo(),
-                //Dispose = item.Dispose.FromYesNo(), // TODO: Add to internal model
-                //SoundOnly = item.SoundOnly.FromYesNo(), // TODO: Add to internal model
+                Bios = item.GetFieldValue<string?>(Models.Metadata.Rom.BiosKey),
+                Size = item.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey)?.ToString(),
+                CRC = item.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey),
+                SHA1 = item.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key),
+                Merge = item.GetFieldValue<string?>(Models.Metadata.Rom.MergeKey),
+                Region = item.GetFieldValue<string?>(Models.Metadata.Rom.RegionKey),
+                Offset = item.GetFieldValue<string?>(Models.Metadata.Rom.OffsetKey),
+                Status = item.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey).AsStringValue<ItemStatus>(useSecond: false),
+                Optional = item.GetFieldValue<bool?>(Models.Metadata.Rom.OptionalKey).FromYesNo(),
+                Dispose = item.GetFieldValue<bool?>(Models.Metadata.Rom.DisposeKey).FromYesNo(),
+                SoundOnly = item.GetFieldValue<bool?>(Models.Metadata.Rom.SoundOnlyKey).FromYesNo(),
             };
 
             return rom;
@@ -453,14 +450,14 @@ namespace SabreTools.DatFiles.Formats
             var disk = new Models.Listxml.Disk
             {
                 Name = item.GetName(),
-                MD5 = item.MD5,
-                SHA1 = item.SHA1,
-                Merge = item.MergeTag,
-                Region = item.Region,
-                Index = item.Index,
-                Writable = item.Writable.FromYesNo(),
-                Status = item.ItemStatus.AsStringValue<ItemStatus>(useSecond: false),
-                Optional = item.Optional.FromYesNo(),
+                MD5 = item.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key),
+                SHA1 = item.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key),
+                Merge = item.GetFieldValue<string?>(Models.Metadata.Disk.MergeKey),
+                Region = item.GetFieldValue<string?>(Models.Metadata.Disk.RegionKey),
+                Index = item.GetFieldValue<string?>(Models.Metadata.Disk.IndexKey),
+                Writable = item.GetFieldValue<bool?>(Models.Metadata.Disk.WritableKey).FromYesNo(),
+                Status = item.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey).AsStringValue<ItemStatus>(useSecond: false),
+                Optional = item.GetFieldValue<bool?>(Models.Metadata.Disk.OptionalKey).FromYesNo(),
             };
 
             return disk;
@@ -500,10 +497,10 @@ namespace SabreTools.DatFiles.Formats
             var chip = new Models.Listxml.Chip
             {
                 Name = item.GetName(),
-                Tag = item.Tag,
-                Type = item.ChipType.AsStringValue<ChipType>(),
-                //SoundOnly = item.SoundOnly, // TODO: Add to internal model
-                Clock = item.Clock?.ToString(),
+                Tag = item.GetFieldValue<string?>(Models.Metadata.Chip.TagKey),
+                Type = item.GetFieldValue<ChipType>(Models.Metadata.Chip.ChipTypeKey).AsStringValue<ChipType>(),
+                SoundOnly = item.GetFieldValue<bool?>(Models.Metadata.Chip.SoundOnlyKey).FromYesNo(),
+                Clock = item.GetFieldValue<long?>(Models.Metadata.Chip.TagKey)?.ToString(),
             };
 
             return chip;
@@ -516,20 +513,20 @@ namespace SabreTools.DatFiles.Formats
         {
             var display = new Models.Listxml.Display
             {
-                Tag = item.Tag,
-                Type = item.DisplayType.AsStringValue<DisplayType>(),
-                Rotate = item.Rotate?.ToString(),
-                FlipX = item.FlipX.FromYesNo(),
-                Width = item.Width?.ToString(),
-                Height = item.Height?.ToString(),
-                Refresh = item.Refresh?.ToString(),
-                PixClock = item.PixClock?.ToString(),
-                HTotal = item.HTotal?.ToString(),
-                HBEnd = item.HBEnd?.ToString(),
-                HBStart = item.HBStart?.ToString(),
-                VTotal = item.VTotal?.ToString(),
-                VBEnd = item.VBEnd?.ToString(),
-                VBStart = item.VBStart?.ToString(),
+                Tag = item.GetFieldValue<string?>(Models.Metadata.Display.TagKey),
+                Type = item.GetFieldValue<DisplayType>(Models.Metadata.Display.DisplayTypeKey).AsStringValue<DisplayType>(),
+                Rotate = item.GetFieldValue<long?>(Models.Metadata.Display.RotateKey)?.ToString(),
+                FlipX = item.GetFieldValue<bool?>(Models.Metadata.Display.FlipXKey).FromYesNo(),
+                Width = item.GetFieldValue<string?>(Models.Metadata.Display.WidthKey)?.ToString(),
+                Height = item.GetFieldValue<string?>(Models.Metadata.Display.HeightKey)?.ToString(),
+                Refresh = item.GetFieldValue<double?>(Models.Metadata.Display.RefreshKey)?.ToString(),
+                PixClock = item.GetFieldValue<string?>(Models.Metadata.Display.PixClockKey)?.ToString(),
+                HTotal = item.GetFieldValue<string?>(Models.Metadata.Display.HTotalKey)?.ToString(),
+                HBEnd = item.GetFieldValue<string?>(Models.Metadata.Display.HBEndKey)?.ToString(),
+                HBStart = item.GetFieldValue<string?>(Models.Metadata.Display.HBStartKey)?.ToString(),
+                VTotal = item.GetFieldValue<string?>(Models.Metadata.Display.VTotalKey)?.ToString(),
+                VBEnd = item.GetFieldValue<string?>(Models.Metadata.Display.VBEndKey)?.ToString(),
+                VBStart = item.GetFieldValue<string?>(Models.Metadata.Display.VBStartKey)?.ToString(),
             };
 
             return display;
@@ -542,7 +539,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var sound = new Models.Listxml.Sound
             {
-                Channels = item.Channels?.ToString(),
+                Channels = item.GetFieldValue<long?>(Models.Metadata.Sound.ChannelsKey)?.ToString(),
             };
 
             return sound;
@@ -555,16 +552,16 @@ namespace SabreTools.DatFiles.Formats
         {
             var input = new Models.Listxml.Input
             {
-                Service = item.Service.FromYesNo(),
-                Tilt = item.Tilt.FromYesNo(),
-                Players = item.Players?.ToString(),
-                //ControlAttr = item.ControlAttr, // TODO: Add to internal model
-                //Buttons = item.Buttons, // TODO: Add to internal model
-                Coins = item.Coins?.ToString(),
+                Service = item.GetFieldValue<bool?>(Models.Metadata.Input.ServiceKey).FromYesNo(),
+                Tilt = item.GetFieldValue<bool?>(Models.Metadata.Input.TiltKey).FromYesNo(),
+                Players = item.GetFieldValue<long?>(Models.Metadata.Input.PlayersKey)?.ToString(),
+                //ControlAttr = item.GetFieldValue<string?>(Models.Metadata.Input.ControlKey),
+                Buttons = item.GetFieldValue<long?>(Models.Metadata.Input.ButtonsKey)?.ToString(),
+                Coins = item.GetFieldValue<long?>(Models.Metadata.Input.CoinsKey)?.ToString(),
             };
 
             var controls = new List<Models.Listxml.Control>();
-            foreach (var controlItem in item.Controls ?? [])
+            foreach (var controlItem in item.GetFieldValue<Control[]?>(Models.Metadata.Input.ControlKey) ?? [])
             {
                 var control = CreateControl(controlItem);
                 controls.Add(control);
@@ -583,18 +580,18 @@ namespace SabreTools.DatFiles.Formats
         {
             var control = new Models.Listxml.Control
             {
-                Type = item.ControlType.AsStringValue<ControlType>(),
-                Player = item.Player?.ToString(),
-                Buttons = item.Buttons?.ToString(),
-                ReqButtons = item.RequiredButtons?.ToString(),
-                Minimum = item.Minimum?.ToString(),
-                Maximum = item.Maximum?.ToString(),
-                Sensitivity = item.Sensitivity?.ToString(),
-                KeyDelta = item.KeyDelta?.ToString(),
-                Reverse = item.Reverse.FromYesNo(),
-                Ways = item.Ways,
-                Ways2 = item.Ways2,
-                Ways3 = item.Ways3,
+                Type = item.GetFieldValue<ControlType>(Models.Metadata.Control.ControlTypeKey).AsStringValue<ControlType>(),
+                Player = item.GetFieldValue<long?>(Models.Metadata.Control.PlayerKey)?.ToString(),
+                Buttons = item.GetFieldValue<long?>(Models.Metadata.Control.ButtonsKey)?.ToString(),
+                ReqButtons = item.GetFieldValue<long?>(Models.Metadata.Control.ReqButtonsKey)?.ToString(),
+                Minimum = item.GetFieldValue<long?>(Models.Metadata.Control.MinimumKey)?.ToString(),
+                Maximum = item.GetFieldValue<long?>(Models.Metadata.Control.MaximumKey)?.ToString(),
+                Sensitivity = item.GetFieldValue<long?>(Models.Metadata.Control.SensitivityKey)?.ToString(),
+                KeyDelta = item.GetFieldValue<long?>(Models.Metadata.Control.KeyDeltaKey)?.ToString(),
+                Reverse = item.GetFieldValue<bool?>(Models.Metadata.Control.ReverseKey).FromYesNo(),
+                Ways = item.GetFieldValue<string?>(Models.Metadata.Control.WaysKey),
+                Ways2 = item.GetFieldValue<string?>(Models.Metadata.Control.Ways2Key),
+                Ways3 = item.GetFieldValue<string?>(Models.Metadata.Control.Ways3Key),
             };
 
             return control;
@@ -608,25 +605,25 @@ namespace SabreTools.DatFiles.Formats
             var dipswitch = new Models.Listxml.DipSwitch
             {
                 Name = item.GetName(),
-                Tag = item.Tag,
-                Mask = item.Mask,
+                Tag = item.GetFieldValue<string?>(Models.Metadata.DipSwitch.TagKey),
+                Mask = item.GetFieldValue<string?>(Models.Metadata.DipSwitch.MaskKey),
             };
 
             if (item.ConditionsSpecified)
             {
-                var conditionItem = item.Conditions?.FirstOrDefault();
+                var conditionItem = item.GetFieldValue<Condition[]?>(Models.Metadata.DipSwitch.ConditionKey)?.FirstOrDefault();
                 var condition = new Models.Listxml.Condition
                 {
-                    Tag = conditionItem?.Tag,
-                    Mask = conditionItem?.Mask,
-                    Relation = conditionItem?.Relation.AsStringValue<Relation>(),
-                    Value = conditionItem?.Value,
+                    Tag = conditionItem?.GetFieldValue<string?>(Models.Metadata.Condition.TagKey),
+                    Mask = conditionItem?.GetFieldValue<string?>(Models.Metadata.Condition.MaskKey),
+                    Relation = conditionItem?.GetFieldValue<Relation>(Models.Metadata.Condition.RelationKey).AsStringValue<Relation>(),
+                    Value = conditionItem?.GetFieldValue<string?>(Models.Metadata.Condition.ValueKey),
                 };
                 dipswitch.Condition = condition;
             }
 
             var diplocations = new List<Models.Listxml.DipLocation>();
-            foreach (var locationItem in item.Locations ?? [])
+            foreach (var locationItem in item.GetFieldValue<DipLocation[]?>(Models.Metadata.DipSwitch.DipLocationKey) ?? [])
             {
                 var control = CreateDipLocation(locationItem);
                 diplocations.Add(control);
@@ -636,7 +633,7 @@ namespace SabreTools.DatFiles.Formats
                 dipswitch.DipLocation = [.. diplocations];
 
             var dipvalues = new List<Models.Listxml.DipValue>();
-            foreach (var dipValueItem in item.Values ?? [])
+            foreach (var dipValueItem in item.GetFieldValue<DipValue[]?>(Models.Metadata.DipSwitch.DipValueKey) ?? [])
             {
                 var dipvalue = CreateDipValue(dipValueItem);
                 dipvalues.Add(dipvalue);
@@ -656,8 +653,8 @@ namespace SabreTools.DatFiles.Formats
             var diplocation = new Models.Listxml.DipLocation
             {
                 Name = item.GetName(),
-                Number = item.Number?.ToString(),
-                Inverted = item.Inverted.FromYesNo(),
+                Number = item.GetFieldValue<long?>(Models.Metadata.DipLocation.NumberKey)?.ToString(),
+                Inverted = item.GetFieldValue<bool?>(Models.Metadata.DipLocation.InvertedKey).FromYesNo(),
             };
 
             return diplocation;
@@ -671,19 +668,19 @@ namespace SabreTools.DatFiles.Formats
             var dipvalue = new Models.Listxml.DipValue
             {
                 Name = item.GetName(),
-                Value = item.Value,
-                Default = item.Default.FromYesNo(),
+                Value = item.GetFieldValue<string?>(Models.Metadata.DipValue.ValueKey),
+                Default = item.GetFieldValue<bool?>(Models.Metadata.DipValue.DefaultKey).FromYesNo(),
             };
 
             if (item.ConditionsSpecified)
             {
-                var conditionItem = item.Conditions?.FirstOrDefault();
+                var conditionItem = item.GetFieldValue<Condition[]?>(Models.Metadata.DipValue.ConditionKey)?.FirstOrDefault();
                 var condition = new Models.Listxml.Condition
                 {
-                    Tag = conditionItem?.Tag,
-                    Mask = conditionItem?.Mask,
-                    Relation = conditionItem?.Relation.AsStringValue<Relation>(),
-                    Value = conditionItem?.Value,
+                    Tag = conditionItem?.GetFieldValue<string?>(Models.Metadata.Condition.TagKey),
+                    Mask = conditionItem?.GetFieldValue<string?>(Models.Metadata.Condition.MaskKey),
+                    Relation = conditionItem?.GetFieldValue<Relation>(Models.Metadata.Condition.RelationKey).AsStringValue<Relation>(),
+                    Value = conditionItem?.GetFieldValue<string?>(Models.Metadata.Condition.ValueKey),
                 };
                 dipvalue.Condition = condition;
             }
@@ -699,25 +696,25 @@ namespace SabreTools.DatFiles.Formats
             var configuration = new Models.Listxml.Configuration
             {
                 Name = item.GetName(),
-                Tag = item.Tag,
-                Mask = item.Mask,
+                Tag = item.GetFieldValue<string>(Models.Metadata.Configuration.TagKey),
+                Mask = item.GetFieldValue<string>(Models.Metadata.Configuration.MaskKey),
             };
 
             if (item.ConditionsSpecified)
             {
-                var conditionItem = item.Conditions?.FirstOrDefault();
+                var conditionItem = item.GetFieldValue<Condition[]?>(Models.Metadata.Configuration.ConditionKey)?.FirstOrDefault();
                 var condition = new Models.Listxml.Condition
                 {
-                    Tag = conditionItem?.Tag,
-                    Mask = conditionItem?.Mask,
-                    Relation = conditionItem?.Relation.AsStringValue<Relation>(),
-                    Value = conditionItem?.Value,
+                    Tag = conditionItem?.GetFieldValue<string?>(Models.Metadata.Condition.TagKey),
+                    Mask = conditionItem?.GetFieldValue<string?>(Models.Metadata.Condition.MaskKey),
+                    Relation = conditionItem?.GetFieldValue<Relation>(Models.Metadata.Condition.RelationKey).AsStringValue<Relation>(),
+                    Value = conditionItem?.GetFieldValue<string?>(Models.Metadata.Condition.ValueKey),
                 };
                 configuration.Condition = condition;
             }
 
             var confLocations = new List<Models.Listxml.ConfLocation>();
-            foreach (var location in item.Locations ?? [])
+            foreach (var location in item.GetFieldValue<ConfLocation[]?>(Models.Metadata.Configuration.ConfLocationKey) ?? [])
             {
                 var control = CreateConfLocation(location);
                 confLocations.Add(control);
@@ -727,7 +724,7 @@ namespace SabreTools.DatFiles.Formats
                 configuration.ConfLocation = [.. confLocations];
 
             var confsettings = new List<Models.Listxml.ConfSetting>();
-            foreach (var confSettingItem in item.Settings ?? [])
+            foreach (var confSettingItem in item.GetFieldValue<ConfSetting[]?>(Models.Metadata.Configuration.ConfSettingKey) ?? [])
             {
                 var dipvalue = CreateConfSetting(confSettingItem);
                 confsettings.Add(dipvalue);
@@ -747,8 +744,8 @@ namespace SabreTools.DatFiles.Formats
             var conflocation = new Models.Listxml.ConfLocation
             {
                 Name = item.GetName(),
-                Number = item.Number?.ToString(),
-                Inverted = item.Inverted.FromYesNo(),
+                Number = item.GetFieldValue<long?>(Models.Metadata.ConfLocation.NumberKey)?.ToString(),
+                Inverted = item.GetFieldValue<bool?>(Models.Metadata.ConfLocation.InvertedKey).FromYesNo(),
             };
 
             return conflocation;
@@ -762,19 +759,19 @@ namespace SabreTools.DatFiles.Formats
             var confsetting = new Models.Listxml.ConfSetting
             {
                 Name = item.GetName(),
-                Value = item.Value,
-                Default = item.Default.FromYesNo(),
+                Value = item.GetFieldValue<string?>(Models.Metadata.ConfSetting.ValueKey),
+                Default = item.GetFieldValue<bool?>(Models.Metadata.ConfSetting.DefaultKey).FromYesNo(),
             };
 
             if (item.ConditionsSpecified)
             {
-                var conditionItem = item.Conditions?.FirstOrDefault();
+                var conditionItem = item.GetFieldValue<Condition[]?>(Models.Metadata.ConfSetting.ConditionKey)?.FirstOrDefault();
                 var condition = new Models.Listxml.Condition
                 {
-                    Tag = conditionItem?.Tag,
-                    Mask = conditionItem?.Mask,
-                    Relation = conditionItem?.Relation.AsStringValue<Relation>(),
-                    Value = conditionItem?.Value,
+                    Tag = conditionItem?.GetFieldValue<string?>(Models.Metadata.Condition.TagKey),
+                    Mask = conditionItem?.GetFieldValue<string?>(Models.Metadata.Condition.MaskKey),
+                    Relation = conditionItem?.GetFieldValue<Relation>(Models.Metadata.Condition.RelationKey).AsStringValue<Relation>(),
+                    Value = conditionItem?.GetFieldValue<string?>(Models.Metadata.Condition.ValueKey),
                 };
                 confsetting.Condition = condition;
             }
@@ -789,7 +786,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var port = new Models.Listxml.Port
             {
-                Tag = item.Tag,
+                Tag = item.GetFieldValue<string>(Models.Metadata.Port.TagKey),
             };
 
             return port;
@@ -811,10 +808,10 @@ namespace SabreTools.DatFiles.Formats
                 var conditionItem = item.GetFieldValue<Condition[]?>(Models.Metadata.Adjuster.ConditionKey)?.FirstOrDefault();
                 var condition = new Models.Listxml.Condition
                 {
-                    Tag = conditionItem?.Tag,
-                    Mask = conditionItem?.Mask,
-                    Relation = conditionItem?.Relation.AsStringValue<Relation>(),
-                    Value = conditionItem?.Value,
+                    Tag = conditionItem?.GetFieldValue<string?>(Models.Metadata.Condition.TagKey),
+                    Mask = conditionItem?.GetFieldValue<string?>(Models.Metadata.Condition.MaskKey),
+                    Relation = conditionItem?.GetFieldValue<Relation>(Models.Metadata.Condition.RelationKey).AsStringValue<Relation>(),
+                    Value = conditionItem?.GetFieldValue<string?>(Models.Metadata.Condition.ValueKey),
                 };
                 adjuster.Condition = condition;
             }
@@ -829,17 +826,17 @@ namespace SabreTools.DatFiles.Formats
         {
             var driver = new Models.Listxml.Driver
             {
-                Status = item.Status.AsStringValue<SupportStatus>(),
-                //Color = item.Color.AsStringValue<SupportStatus>(), // TODO: Add to internal model
-                //Sound = item.Sound.AsStringValue<SupportStatus>(), // TODO: Add to internal model
-                //PaletteSize = driver.PaletteSize?.ToString(), // TODO: Add to internal model
-                Emulation = item.Emulation.AsStringValue<SupportStatus>(),
-                Cocktail = item.Cocktail.AsStringValue<SupportStatus>(),
-                SaveState = item.SaveState.AsStringValue<Supported>(useSecond: true),
-                RequiresArtwork = item.RequiresArtwork.FromYesNo(),
-                Unofficial = item.Unofficial.FromYesNo(),
-                NoSoundHardware = item.NoSoundHardware.FromYesNo(),
-                Incomplete = item.Incomplete.FromYesNo(),
+                Status = item.GetFieldValue<SupportStatus>(Models.Metadata.Driver.StatusKey).AsStringValue<SupportStatus>(),
+                Color = item.GetFieldValue<SupportStatus>(Models.Metadata.Driver.ColorKey).AsStringValue<SupportStatus>(),
+                Sound = item.GetFieldValue<SupportStatus>(Models.Metadata.Driver.SoundKey).AsStringValue<SupportStatus>(),
+                PaletteSize = item.GetFieldValue<long?>(Models.Metadata.Driver.PaletteSizeKey)?.ToString(),
+                Emulation = item.GetFieldValue<SupportStatus>(Models.Metadata.Driver.EmulationKey).AsStringValue<SupportStatus>(),
+                Cocktail = item.GetFieldValue<SupportStatus>(Models.Metadata.Driver.CocktailKey).AsStringValue<SupportStatus>(),
+                SaveState = item.GetFieldValue<Supported>(Models.Metadata.Driver.SaveStateKey).AsStringValue<Supported>(useSecond: true),
+                RequiresArtwork = item.GetFieldValue<bool?>(Models.Metadata.Driver.RequiresArtworkKey).FromYesNo(),
+                Unofficial = item.GetFieldValue<bool?>(Models.Metadata.Driver.UnofficialKey).FromYesNo(),
+                NoSoundHardware = item.GetFieldValue<bool?>(Models.Metadata.Driver.NoSoundHardwareKey).FromYesNo(),
+                Incomplete = item.GetFieldValue<bool?>(Models.Metadata.Driver.IncompleteKey).FromYesNo(),
             };
 
             return driver;
@@ -852,9 +849,9 @@ namespace SabreTools.DatFiles.Formats
         {
             var feature = new Models.Listxml.Feature
             {
-                Type = item.Type.AsStringValue<FeatureType>(),
-                Status = item.Status.AsStringValue<FeatureStatus>(),
-                Overall = item.Overall.AsStringValue<FeatureStatus>(),
+                Type = item.GetFieldValue<FeatureType>(Models.Metadata.Feature.FeatureTypeKey).AsStringValue<FeatureType>(),
+                Status = item.GetFieldValue<FeatureStatus>(Models.Metadata.Feature.StatusKey).AsStringValue<FeatureStatus>(),
+                Overall = item.GetFieldValue<FeatureStatus>(Models.Metadata.Feature.OverallKey).AsStringValue<FeatureStatus>(),
             };
 
             return feature;
@@ -867,26 +864,26 @@ namespace SabreTools.DatFiles.Formats
         {
             var device = new Models.Listxml.Device
             {
-                Type = item.DeviceType.AsStringValue<DeviceType>(),
-                Tag = item.Tag,
-                FixedImage = item.FixedImage,
-                Mandatory = item.Mandatory?.ToString(),
-                Interface = item.Interface,
+                Type = item.GetFieldValue<DeviceType>(Models.Metadata.Device.DeviceTypeKey).AsStringValue<DeviceType>(),
+                Tag = item.GetFieldValue<string?>(Models.Metadata.Device.TagKey),
+                FixedImage = item.GetFieldValue<string?>(Models.Metadata.Device.FixedImageKey),
+                Mandatory = item.GetFieldValue<long?>(Models.Metadata.Device.MandatoryKey)?.ToString(),
+                Interface = item.GetFieldValue<string?>(Models.Metadata.Device.InterfaceKey),
             };
 
             if (item.InstancesSpecified)
             {
-                var instanceItem = item.Instances?.FirstOrDefault();
+                var instanceItem = item.GetFieldValue<Instance[]?>(Models.Metadata.Device.InstanceKey)?.FirstOrDefault();
                 var instance = new Models.Listxml.Instance
                 {
                     Name = instanceItem?.GetName(),
-                    BriefName = instanceItem?.BriefName,
+                    BriefName = instanceItem?.GetFieldValue<string?>(Models.Metadata.Instance.BriefNameKey),
                 };
                 device.Instance = instance;
             }
 
             var extensions = new List<Models.Listxml.Extension>();
-            foreach (var extensionItem in item.Extensions ?? [])
+            foreach (var extensionItem in item.GetFieldValue<Extension[]?>(Models.Metadata.Device.ExtensionKey) ?? [])
             {
                 var extension = new Models.Listxml.Extension
                 {
@@ -912,13 +909,13 @@ namespace SabreTools.DatFiles.Formats
             };
 
             var slotoptions = new List<Models.Listxml.SlotOption>();
-            foreach (var slotoptionItem in item.SlotOptions ?? [])
+            foreach (var slotoptionItem in item.GetFieldValue<SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey) ?? [])
             {
                 var slotoption = new Models.Listxml.SlotOption
                 {
                     Name = slotoptionItem.GetName(),
-                    DevName = slotoptionItem.DeviceName,
-                    Default = slotoptionItem.Default.FromYesNo(),
+                    DevName = slotoptionItem.GetFieldValue<string?>(Models.Metadata.SlotOption.DevNameKey),
+                    Default = slotoptionItem.GetFieldValue<bool?>(Models.Metadata.SlotOption.DefaultKey).FromYesNo(),
                 };
                 slotoptions.Add(slotoption);
             }
@@ -936,10 +933,10 @@ namespace SabreTools.DatFiles.Formats
         {
             var softwarelist = new Models.Listxml.SoftwareList
             {
-                Tag = item.Tag,
+                Tag = item.GetFieldValue<string?>(Models.Metadata.SoftwareList.TagKey),
                 Name = item.GetName(),
-                Status = item.Status.AsStringValue<SoftwareListStatus>(),
-                Filter = item.Filter,
+                Status = item.GetFieldValue<SoftwareListStatus>(Models.Metadata.SoftwareList.StatusKey).AsStringValue<SoftwareListStatus>(),
+                Filter = item.GetFieldValue<string?>(Models.Metadata.SoftwareList.FilterKey),
             };
 
             return softwarelist;
@@ -953,8 +950,8 @@ namespace SabreTools.DatFiles.Formats
             var softwarelist = new Models.Listxml.RamOption
             {
                 Name = item.GetName(),
-                Default = item.Default.FromYesNo(),
-                Content = item.Content,
+                Default = item.GetFieldValue<bool?>(Models.Metadata.RamOption.DefaultKey).FromYesNo(),
+                Content = item.GetFieldValue<string?>(Models.Metadata.RamOption.ContentKey),
             };
 
             return softwarelist;

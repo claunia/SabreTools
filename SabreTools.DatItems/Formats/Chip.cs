@@ -1,8 +1,6 @@
 ﻿using System.Xml.Serialization;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using SabreTools.Core;
-using SabreTools.Core.Tools;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -12,47 +10,6 @@ namespace SabreTools.DatItems.Formats
     [JsonObject("chip"), XmlRoot("chip")]
     public class Chip : DatItem
     {
-        #region Fields
-
-        /// <summary>
-        /// Internal tag
-        /// </summary>
-        [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tag")]
-        public string? Tag
-        {
-            get => _internal.ReadString(Models.Metadata.Chip.TagKey);
-            set => _internal[Models.Metadata.Chip.TagKey] = value;
-        }
-
-        /// <summary>
-        /// Type of the chip
-        /// </summary>
-        [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("type")]
-        [JsonConverter(typeof(StringEnumConverter))]
-        public ChipType ChipType
-        {
-            get => _internal.ReadString(Models.Metadata.Chip.ChipTypeKey).AsEnumValue<ChipType>();
-            set => _internal[Models.Metadata.Chip.ChipTypeKey] = value.AsStringValue<ChipType>();
-        }
-
-        [JsonIgnore]
-        public bool ChipTypeSpecified { get { return ChipType != ChipType.NULL; } }
-
-        /// <summary>
-        /// Clock speed
-        /// </summary>
-        [JsonProperty("clock", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("clock")]
-        public long? Clock
-        {
-            get => _internal.ReadLong(Models.Metadata.Chip.ClockKey);
-            set => _internal[Models.Metadata.Chip.ClockKey] = value;
-        }
-
-        [JsonIgnore]
-        public bool ClockSpecified { get { return Clock != null; } }
-
-        #endregion
-
         #region Accessors
 
         /// <inheritdoc/>

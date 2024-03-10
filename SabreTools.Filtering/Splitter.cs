@@ -310,8 +310,8 @@ namespace SabreTools.Filtering
                     .Where(i => i.ItemType == ItemType.Slot)
                     .Select(i => i as Slot)
                     .Where(s => s!.SlotOptionsSpecified)
-                    .SelectMany(s => s!.SlotOptions!)
-                    .Select(so => so.DeviceName)
+                    .SelectMany(s => s!.GetFieldValue<SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey)!)
+                    .Select(so => so.GetFieldValue<string?>(Models.Metadata.SlotOption.DevNameKey))
                     .Distinct()
                     .ToList();
 
@@ -384,8 +384,8 @@ namespace SabreTools.Filtering
                         newSlotOptions.AddRange(slotItems
                             .Where(i => i.ItemType == ItemType.Slot)
                             .Where(s => (s as Slot)!.SlotOptionsSpecified)
-                            .SelectMany(s => (s as Slot)!.SlotOptions!)
-                            .Select(o => o.DeviceName!));
+                            .SelectMany(s => (s as Slot)!.GetFieldValue<SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey)!)
+                            .Select(o => o.GetFieldValue<string?>(Models.Metadata.SlotOption.DevNameKey)!));
 
                         // Set new machine information and add to the current machine
                         DatItem copyFrom = datFile.Items[machine]![0];
@@ -409,7 +409,15 @@ namespace SabreTools.Filtering
                     foreach (string slotOption in newSlotOptions.Distinct())
                     {
                         if (!slotOptions.Contains(slotOption))
-                            datFile.Items[machine]!.Add(new Slot() { SlotOptions = new List<SlotOption> { new SlotOption { DeviceName = slotOption } } });
+                        {
+                            var slotOptionItem = new SlotOption();
+                            slotOptionItem.SetFieldValue<string?>(Models.Metadata.SlotOption.DevNameKey, slotOption);
+
+                            var slotItem = new Slot();
+                            slotItem.SetFieldValue<SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey, [slotOptionItem]);
+
+                            datFile.Items[machine]!.Add(slotItem);
+                        }
                     }
                 }
             }
@@ -513,22 +521,23 @@ namespace SabreTools.Filtering
                     if (item.ItemType == ItemType.Disk)
                     {
                         Disk disk = (item as Disk)!;
+                        string? mergeTag = disk.GetFieldValue<string?>(Models.Metadata.Disk.MergeKey);
 
                         // If the merge tag exists and the parent already contains it, skip
-                        if (disk.MergeTag != null && datFile.Items[parent!]!.Where(i => i.ItemType == ItemType.Disk).Select(i => (i as Disk)!.GetName()).Contains(disk.MergeTag))
+                        if (mergeTag != null && datFile.Items[parent!]!.Where(i => i.ItemType == ItemType.Disk).Select(i => (i as Disk)!.GetName()).Contains(mergeTag))
                         {
                             continue;
                         }
 
                         // If the merge tag exists but the parent doesn't contain it, add to parent
-                        else if (disk.MergeTag != null && !datFile.Items[parent!]!.Where(i => i.ItemType == ItemType.Disk).Select(i => (i as Disk)!.GetName()).Contains(disk.MergeTag))
+                        else if (mergeTag != null && !datFile.Items[parent!]!.Where(i => i.ItemType == ItemType.Disk).Select(i => (i as Disk)!.GetName()).Contains(mergeTag))
                         {
                             disk.CopyMachineInformation(copyFrom);
                             datFile.Items.Add(parent!, disk);
                         }
 
                         // If there is no merge tag, add to parent
-                        else if (disk.MergeTag == null)
+                        else if (mergeTag == null)
                         {
                             disk.CopyMachineInformation(copyFrom);
                             datFile.Items.Add(parent!, disk);
@@ -541,13 +550,13 @@ namespace SabreTools.Filtering
                         Rom rom = (item as Rom)!;
 
                         // If the merge tag exists and the parent already contains it, skip
-                        if (rom.MergeTag != null && datFile.Items[parent!]!.Where(i => i.ItemType == ItemType.Rom).Select(i => (i as Rom)!.GetName()).Contains(rom.MergeTag))
+                        if (rom.GetFieldValue<string?>(Models.Metadata.Rom.MergeKey) != null && datFile.Items[parent!]!.Where(i => i.ItemType == ItemType.Rom).Select(i => (i as Rom)!.GetName()).Contains(rom.GetFieldValue<string?>(Models.Metadata.Rom.MergeKey)))
                         {
                             continue;
                         }
 
                         // If the merge tag exists but the parent doesn't contain it, add to subfolder of parent
-                        else if (rom.MergeTag != null && !datFile.Items[parent!]!.Where(i => i.ItemType == ItemType.Rom).Select(i => (i as Rom)!.GetName()).Contains(rom.MergeTag))
+                        else if (rom.GetFieldValue<string?>(Models.Metadata.Rom.MergeKey) != null && !datFile.Items[parent!]!.Where(i => i.ItemType == ItemType.Rom).Select(i => (i as Rom)!.GetName()).Contains(rom.GetFieldValue<string?>(Models.Metadata.Rom.MergeKey)))
                         {
                             if (subfolder)
                                 rom.SetName($"{rom.Machine.Name}\\{rom.GetName()}");

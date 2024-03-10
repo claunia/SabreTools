@@ -65,41 +65,39 @@ namespace SabreTools.DatFiles.Formats
             if (row == null)
                 return;
 
+            var machine = new Machine
+            {
+                Name = row.Name,
+                Description = row.Title,
+                CloneOf = row.CloneOf,
+                Year = row.Year,
+                Manufacturer = row.Manufacturer,
+                Category = row.Category,
+                Players = row.Players,
+                Rotation = row.Rotation,
+                Control = row.Control,
+                Status = row.Status,
+                DisplayCount = row.DisplayCount,
+                DisplayType = row.DisplayType,
+                Comment = row.Extra,
+                Buttons = row.Buttons
+            };
+
             var rom = new Rom()
             {
-                Size = Constants.SizeZero,
-                CRC = Constants.CRCZero,
-                MD5 = Constants.MD5Zero,
-                SHA1 = Constants.SHA1Zero,
-                ItemStatus = ItemStatus.None,
-
-                Machine = new Machine
-                {
-                    Name = row.Name,
-                    Description = row.Title,
-                    CloneOf = row.CloneOf,
-                    Year = row.Year,
-                    Manufacturer = row.Manufacturer,
-                    Category = row.Category,
-                    Players = row.Players,
-                    Rotation = row.Rotation,
-                    Control = row.Control,
-                    Status = row.Status,
-                    DisplayCount = row.DisplayCount,
-                    DisplayType = row.DisplayType,
-                    Comment = row.Extra,
-                    Buttons = row.Buttons
-                },
-
-                AltName = row.AltRomname,
-                AltTitle = row.AltTitle,
-                // TODO: Add extended fields
-
                 Source = new Source { Index = indexId, Name = filename },
             };
             rom.SetName("-");
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.AltRomnameKey, row.AltRomname);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.AltTitleKey, row.AltTitle);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, Constants.CRCZero);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, Constants.MD5Zero);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, Constants.SHA1Zero);
+            rom.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, Constants.SizeZero);
+            rom.SetFieldValue<ItemStatus?>(Models.Metadata.Rom.StatusKey, ItemStatus.None);
 
             // Now process and add the rom
+            rom.CopyMachineInformation(machine);
             ParseAddHelper(rom, statsOnly);
         }
 

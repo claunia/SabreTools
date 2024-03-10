@@ -50,9 +50,6 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("nfosize", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("nfosize")]
         public long? NfoSize { get; set; }
 
-        [JsonIgnore]
-        public bool NfoSizeSpecified { get { return NfoSize != null; } }
-
         /// <summary>
         /// NFO CRC value
         /// </summary>

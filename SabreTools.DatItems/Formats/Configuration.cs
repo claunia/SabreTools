@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
 
@@ -14,64 +12,35 @@ namespace SabreTools.DatItems.Formats
     {
         #region Fields
 
-        /// <summary>
-        /// Tag associated with the configuration
-        /// </summary>
-        [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tag")]
-        public string? Tag
+        [JsonIgnore]
+        public bool ConditionsSpecified
         {
-            get => _internal.ReadString(Models.Metadata.Configuration.TagKey);
-            set => _internal[Models.Metadata.Configuration.TagKey] = value;
-        }
-
-        /// <summary>
-        /// Mask associated with the configuration
-        /// </summary>
-        [JsonProperty("mask", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("mask")]
-        public string? Mask
-        {
-            get => _internal.ReadString(Models.Metadata.Configuration.MaskKey);
-            set => _internal[Models.Metadata.Configuration.MaskKey] = value;
-        }
-
-        /// <summary>
-        /// Conditions associated with the configuration
-        /// </summary>
-        [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("conditions")]
-        public List<Condition>? Conditions
-        {
-            get => _internal.Read<Condition[]>(Models.Metadata.Configuration.ConditionKey)?.ToList();
-            set => _internal[Models.Metadata.Configuration.ConditionKey] = value?.ToArray();
+            get
+            {
+                var conditions = GetFieldValue<Condition[]?>(Models.Metadata.Configuration.ConditionKey);
+                return conditions != null && conditions.Length > 0;
+            }
         }
 
         [JsonIgnore]
-        public bool ConditionsSpecified { get { return Conditions != null && Conditions.Count > 0; } }
-
-        /// <summary>
-        /// Locations associated with the configuration
-        /// </summary>
-        [JsonProperty("locations", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("locations")]
-        public List<ConfLocation>? Locations
+        public bool LocationsSpecified
         {
-            get => _internal.Read<ConfLocation[]>(Models.Metadata.Configuration.ConfLocationKey)?.ToList();
-            set => _internal[Models.Metadata.Configuration.ConfLocationKey] = value?.ToArray();
+            get
+            {
+                var locations = GetFieldValue<ConfLocation[]?>(Models.Metadata.Configuration.ConfLocationKey);
+                return locations != null && locations.Length > 0;
+            }
         }
 
         [JsonIgnore]
-        public bool LocationsSpecified { get { return Locations != null && Locations.Count > 0; } }
-
-        /// <summary>
-        /// Settings associated with the configuration
-        /// </summary>
-        [JsonProperty("settings", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("settings")]
-        public List<ConfSetting>? Settings
+        public bool SettingsSpecified
         {
-            get => _internal.Read<List<ConfSetting>>(Models.Metadata.Configuration.ConfSettingKey);
-            set => _internal[Models.Metadata.Configuration.ConfSettingKey] = value;
+            get
+            {
+                var settings = GetFieldValue<ConfSetting[]?>(Models.Metadata.Configuration.ConfSettingKey);
+                return settings != null && settings.Length > 0;
+            }
         }
-
-        [JsonIgnore]
-        public bool SettingsSpecified { get { return Settings != null && Settings.Count > 0; } }
 
         #endregion
 

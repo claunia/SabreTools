@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
 
@@ -15,22 +13,15 @@ namespace SabreTools.DatItems.Formats
     {
         #region Fields
 
-        [JsonProperty("interface"), XmlElement("interface")]
-        public string? Interface
-        {
-            get => _internal.ReadString(Models.Metadata.Part.InterfaceKey);
-            set => _internal[Models.Metadata.Part.InterfaceKey] = value;
-        }
-    
-        [JsonProperty("features", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("features")]
-        public List<PartFeature>? Features
-        {
-            get => _internal.Read<PartFeature[]>(Models.Metadata.Part.FeatureKey)?.ToList();
-            set => _internal[Models.Metadata.Part.FeatureKey] = value?.ToArray();
-        }
-
         [JsonIgnore]
-        public bool FeaturesSpecified { get { return Features != null && Features.Count > 0; } }
+        public bool FeaturesSpecified
+        {
+            get
+            {
+                var features = GetFieldValue<PartFeature[]?>(Models.Metadata.Part.FeatureKey);
+                return features != null && features.Length > 0;
+            }
+        }
 
         #endregion
 

@@ -812,15 +812,15 @@ CREATE TABLE IF NOT EXISTS dat (
                         Disk disk = (Disk)datItem;
                         hasItems = true;
 
-                        if (!string.IsNullOrWhiteSpace(disk.MD5))
-                            md5query += $" (\"{disk.MD5}\"),";
+                        if (!string.IsNullOrWhiteSpace(disk.GetFieldValue<string?>(SabreTools.Models.Metadata.Disk.MD5Key)))
+                            md5query += $" (\"{disk.GetFieldValue<string?>(SabreTools.Models.Metadata.Disk.MD5Key)}\"),";
 
-                        if (!string.IsNullOrWhiteSpace(disk.SHA1))
+                        if (!string.IsNullOrWhiteSpace(disk.GetFieldValue<string?>(SabreTools.Models.Metadata.Disk.SHA1Key)))
                         {
-                            sha1query += $" (\"{disk.SHA1}\"),";
+                            sha1query += $" (\"{disk.GetFieldValue<string?>(SabreTools.Models.Metadata.Disk.SHA1Key)}\"),";
 
-                            if (!string.IsNullOrWhiteSpace(disk.MD5))
-                                md5sha1query += $" (\"{disk.MD5}\", \"{disk.SHA1}\"),";
+                            if (!string.IsNullOrWhiteSpace(disk.GetFieldValue<string?>(SabreTools.Models.Metadata.Disk.MD5Key)))
+                                md5sha1query += $" (\"{disk.GetFieldValue<string?>(SabreTools.Models.Metadata.Disk.MD5Key)}\", \"{disk.GetFieldValue<string?>(SabreTools.Models.Metadata.Disk.SHA1Key)}\"),";
                         }
                     }
                     else if (datItem.ItemType == ItemType.Media)
@@ -828,15 +828,15 @@ CREATE TABLE IF NOT EXISTS dat (
                         Media media = (Media)datItem;
                         hasItems = true;
 
-                        if (!string.IsNullOrWhiteSpace(media.MD5))
-                            md5query += $" (\"{media.MD5}\"),";
+                        if (!string.IsNullOrWhiteSpace(media.GetFieldValue<string?>(SabreTools.Models.Metadata.Media.MD5Key)))
+                            md5query += $" (\"{media.GetFieldValue<string?>(SabreTools.Models.Metadata.Media.MD5Key)}\"),";
 
-                        if (!string.IsNullOrWhiteSpace(media.SHA1))
+                        if (!string.IsNullOrWhiteSpace(media.GetFieldValue<string?>(SabreTools.Models.Metadata.Media.SHA1Key)))
                         {
-                            sha1query += $" (\"{media.SHA1}\"),";
+                            sha1query += $" (\"{media.GetFieldValue<string?>(SabreTools.Models.Metadata.Media.SHA1Key)}\"),";
 
-                            if (!string.IsNullOrWhiteSpace(media.MD5))
-                                md5sha1query += $" (\"{media.MD5}\", \"{media.SHA1}\"),";
+                            if (!string.IsNullOrWhiteSpace(media.GetFieldValue<string?>(SabreTools.Models.Metadata.Media.MD5Key)))
+                                md5sha1query += $" (\"{media.GetFieldValue<string?>(SabreTools.Models.Metadata.Media.MD5Key)}\", \"{media.GetFieldValue<string?>(SabreTools.Models.Metadata.Media.SHA1Key)}\"),";
                         }
                     }
                     else if (datItem.ItemType == ItemType.Rom)
@@ -844,21 +844,21 @@ CREATE TABLE IF NOT EXISTS dat (
                         Rom rom = (Rom)datItem;
                         hasItems = true;
 
-                        if (!string.IsNullOrWhiteSpace(rom.CRC))
-                            crcquery += $" (\"{rom.CRC}\"),";
+                        if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.CRCKey)))
+                            crcquery += $" (\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.CRCKey)}\"),";
 
-                        if (!string.IsNullOrWhiteSpace(rom.MD5))
-                            md5query += $" (\"{rom.MD5}\"),";
+                        if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.MD5Key)))
+                            md5query += $" (\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.MD5Key)}\"),";
 
-                        if (!string.IsNullOrWhiteSpace(rom.SHA1))
+                        if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)))
                         {
-                            sha1query += $" (\"{rom.SHA1}\"),";
+                            sha1query += $" (\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)}\"),";
 
-                            if (!string.IsNullOrWhiteSpace(rom.CRC))
-                                crcsha1query += $" (\"{rom.CRC}\", \"{rom.SHA1}\"),";
+                            if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.CRCKey)))
+                                crcsha1query += $" (\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.CRCKey)}\", \"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)}\"),";
 
-                            if (!string.IsNullOrWhiteSpace(rom.MD5))
-                                md5sha1query += $" (\"{rom.MD5}\", \"{rom.SHA1}\"),";
+                            if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.MD5Key)))
+                                md5sha1query += $" (\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.MD5Key)}\", \"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)}\"),";
                         }
                     }
                 }
@@ -898,7 +898,7 @@ CREATE TABLE IF NOT EXISTS dat (
             // Only add the DAT if it's non-empty
             if (hasItems)
             {
-                string datquery = $"INSERT OR IGNORE INTO dat (hash) VALUES (\"{dat.SHA1}\")";
+                string datquery = $"INSERT OR IGNORE INTO dat (hash) VALUES (\"{dat.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)}\")";
                 slc = new SqliteCommand(datquery, dbc);
                 slc.ExecuteNonQuery();
             }

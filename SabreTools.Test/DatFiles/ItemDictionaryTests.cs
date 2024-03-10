@@ -14,48 +14,37 @@ namespace SabreTools.Test.DatFiles
         [InlineData(ItemKey.SHA1, 4)]
         public void BucketByTest(ItemKey itemKey, int expected)
         {
+            // Setup the items
+            var rom1 = new Rom { Machine = new Machine { Name = "game-1" } };
+            rom1.SetName("rom-1");
+            rom1.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            rom1.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "0000000fbbb37f8488100b1b4697012de631a5e6");
+            rom1.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, 1024);
+
+            var rom2 = new Rom { Machine = new Machine { Name = "game-1" } };
+            rom2.SetName("rom-2");
+            rom2.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            rom2.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "000000e948edcb4f7704b8af85a77a3339ecce44");
+            rom2.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, 1024);
+
+            var rom3 = new Rom { Machine = new Machine { Name = "game-2" } };
+            rom3.SetName("rom-3");
+            rom3.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            rom3.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "00000ea4014ce66679e7e17d56ac510f67e39e26");
+            rom3.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, 1024);
+
+            var rom4 = new Rom { Machine = new Machine { Name = "game-2" } };
+            rom4.SetName("rom-4");
+            rom4.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            rom4.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "00000151d437442e74e5134023fab8bf694a2487");
+            rom4.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, 1024);
+
             // Setup the dictionary
             var dict = new ItemDictionary
             {
-                ["game-1"] =
-                [
-                    new Rom
-                    {
-                        Size = 1024,
-                        CRC = "DEADBEEF",
-                        SHA1 = "0000000fbbb37f8488100b1b4697012de631a5e6",
-                        Machine = new Machine { Name = "game-1" },
-                    },
-                    new Rom
-                    {
-                        Size = 1024,
-                        CRC = "DEADBEEF",
-                        SHA1 = "000000e948edcb4f7704b8af85a77a3339ecce44",
-                        Machine = new Machine { Name = "game-1" },
-                    },
-                ],
-                ["game-2"] =
-                [
-                    new Rom
-                    {
-                        Size = 1024,
-                        CRC = "DEADBEEF",
-                        SHA1 = "00000ea4014ce66679e7e17d56ac510f67e39e26",
-                        Machine = new Machine { Name = "game-2" },
-                    },
-                    new Rom
-                    {
-                        Size = 1024,
-                        CRC = "DEADBEEF",
-                        SHA1 = "00000151d437442e74e5134023fab8bf694a2487",
-                        Machine = new Machine { Name = "game-2" },
-                    },
-                ],
+                ["game-1"] = [rom1, rom2],
+                ["game-2"] = [rom3, rom4],
             };
-            dict["game-1"]![0].SetName("rom-1");
-            dict["game-1"]![1].SetName("rom-2");
-            dict["game-2"]![0].SetName("rom-3");
-            dict["game-2"]![1].SetName("rom-4");
 
             dict.BucketBy(itemKey, DedupeType.None);
             Assert.Equal(expected, dict.Keys.Count);
@@ -79,30 +68,24 @@ namespace SabreTools.Test.DatFiles
         [Fact]
         public void ClearMarkedTest()
         {
+            // Setup the items
+            var rom1 = new Rom { Machine = new Machine { Name = "game-1" } };
+            rom1.SetName("rom-1");
+            rom1.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            rom1.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "0000000fbbb37f8488100b1b4697012de631a5e6");
+            rom1.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, 1024);
+
+            var rom2 = new Rom { Machine = new Machine { Name = "game-1" }, Remove = true };
+            rom2.SetName("rom-2");
+            rom2.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            rom2.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "000000e948edcb4f7704b8af85a77a3339ecce44");
+            rom2.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, 1024);
+
             // Setup the dictionary
             var dict = new ItemDictionary
             {
-                ["game-1"] =
-                [
-                    new Rom
-                    {
-                        Size = 1024,
-                        CRC = "DEADBEEF",
-                        SHA1 = "0000000fbbb37f8488100b1b4697012de631a5e6",
-                        Machine = new Machine { Name = "game-1" },
-                    },
-                    new Rom
-                    {
-                        Size = 1024,
-                        CRC = "DEADBEEF",
-                        SHA1 = "000000e948edcb4f7704b8af85a77a3339ecce44",
-                        Machine = new Machine { Name = "game-1" },
-                        Remove = true,
-                    },
-                ],
+                ["game-1"] = [rom1, rom2],
             };
-            dict["game-1"]![0].SetName("rom-1");
-            dict["game-1"]![1].SetName("rom-2");
 
             dict.ClearMarked();
             string key = Assert.Single(dict.Keys);
@@ -116,35 +99,28 @@ namespace SabreTools.Test.DatFiles
         [InlineData(false, 0)]
         public void GetDuplicatesTest(bool hasDuplicate, int expected)
         {
+            // Setup the items
+            var rom1 = new Rom { Machine = new Machine { Name = "game-1" } };
+            rom1.SetName("rom-1");
+            rom1.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "0000000fbbb37f8488100b1b4697012de631a5e6");
+            rom1.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, 1024);
+
+            var rom2 = new Rom { Machine = new Machine { Name = "game-1" } };
+            rom2.SetName("rom-2");
+            rom2.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "000000e948edcb4f7704b8af85a77a3339ecce44");
+            rom2.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, 1024);
+
             // Setup the dictionary
             var dict = new ItemDictionary
             {
-                ["game-1"] =
-                [
-                    new Rom
-                    {
-                        Size = 1024,
-                        SHA1 = "0000000fbbb37f8488100b1b4697012de631a5e6",
-                        Machine = new Machine { Name = "game-1" },
-                    },
-                    new Rom
-                    {
-                        Size = 1024,
-                        SHA1 = "000000e948edcb4f7704b8af85a77a3339ecce44",
-                        Machine = new Machine { Name = "game-1" },
-                    },
-                ],
+                ["game-1"] = [rom1, rom2],
             };
-            dict["game-1"]![0].SetName("rom-1");
-            dict["game-1"]![1].SetName("rom-2");
 
-            var rom = new Rom
-            {
-                Size = hasDuplicate ? 1024 : 2048,
-                SHA1 = "0000000fbbb37f8488100b1b4697012de631a5e6",
-                Machine = new Machine { Name = "game-1" },
-            };
+            // Setup the test item
+            var rom = new Rom { Machine = new Machine { Name = "game-1" } };
             rom.SetName("rom-1");
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "0000000fbbb37f8488100b1b4697012de631a5e6");
+            rom.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, hasDuplicate ? 1024 : 2048);
 
             var actual = dict.GetDuplicates(rom);
             Assert.Equal(expected, actual.Count);
@@ -155,35 +131,28 @@ namespace SabreTools.Test.DatFiles
         [InlineData(false)]
         public void HasDuplicatesTest(bool expected)
         {
+            // Setup the items
+            var rom1 = new Rom { Machine = new Machine { Name = "game-1" } };
+            rom1.SetName("rom-1");
+            rom1.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "0000000fbbb37f8488100b1b4697012de631a5e6");
+            rom1.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, 1024);
+
+            var rom2 = new Rom { Machine = new Machine { Name = "game-1" } };
+            rom2.SetName("rom-2");
+            rom2.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "000000e948edcb4f7704b8af85a77a3339ecce44");
+            rom2.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, 1024);
+
             // Setup the dictionary
             var dict = new ItemDictionary
             {
-                ["game-1"] =
-                [
-                    new Rom
-                    {
-                        Size = 1024,
-                        SHA1 = "0000000fbbb37f8488100b1b4697012de631a5e6",
-                        Machine = new Machine { Name = "game-1" },
-                    },
-                    new Rom
-                    {
-                        Size = 1024,
-                        SHA1 = "000000e948edcb4f7704b8af85a77a3339ecce44",
-                        Machine = new Machine { Name = "game-1" },
-                    },
-                ],
+                ["game-1"] = [rom1, rom2],
             };
-            dict["game-1"]![0].SetName("rom-1");
-            dict["game-1"]![1].SetName("rom-2");
 
-            var rom = new Rom
-            {
-                Size = expected ? 1024 : 2048,
-                SHA1 = "0000000fbbb37f8488100b1b4697012de631a5e6",
-                Machine = new Machine { Name = "game-1" },
-            };
+            // Setup the test item
+            var rom = new Rom { Machine = new Machine { Name = "game-1" } };
             rom.SetName("rom-1");
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "0000000fbbb37f8488100b1b4697012de631a5e6");
+            rom.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, expected ? 1024 : 2048);
 
             bool actual = dict.HasDuplicates(rom);
             Assert.Equal(expected, actual);

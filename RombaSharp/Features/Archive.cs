@@ -103,30 +103,30 @@ have a current entry in the DAT index.";
                     if (onlyNeeded && !noDb)
                     {
                         string query = "SELECT * FROM crcsha1 JOIN md5sha1 ON crcsha1.sha1=md5sha1.sha1"
-                                    + $" WHERE crcsha1.crc=\"{rom.CRC}\""
-                                    + $" OR md5sha1.md5=\"{rom.MD5}\""
-                                    + $" OR md5sha1.sha1=\"{rom.SHA1}\"";
+                                    + $" WHERE crcsha1.crc=\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.CRCKey)}\""
+                                    + $" OR md5sha1.md5=\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.MD5Key)}\""
+                                    + $" OR md5sha1.sha1=\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)}\"";
                         SqliteCommand slc = new SqliteCommand(query, dbc);
                         SqliteDataReader sldr = slc.ExecuteReader();
 
                         if (sldr.HasRows)
                         {
                             // Add to the queries
-                            if (!string.IsNullOrWhiteSpace(rom.CRC))
-                                crcquery += $" (\"{rom.CRC}\"),";
+                            if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.CRCKey)))
+                                crcquery += $" (\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.CRCKey)}\"),";
 
-                            if (!string.IsNullOrWhiteSpace(rom.MD5))
-                                md5query += $" (\"{rom.MD5}\"),";
+                            if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.MD5Key)))
+                                md5query += $" (\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.MD5Key)}\"),";
 
-                            if (!string.IsNullOrWhiteSpace(rom.SHA1))
+                            if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)))
                             {
-                                sha1query += $" (\"{rom.SHA1}\", \"{_depots!.Keys.ToList()[0]}\"),";
+                                sha1query += $" (\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)}\", \"{_depots!.Keys.ToList()[0]}\"),";
 
-                                if (!string.IsNullOrWhiteSpace(rom.CRC))
-                                    crcsha1query += $" (\"{rom.CRC}\", \"{rom.SHA1}\"),";
+                                if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.CRCKey)))
+                                    crcsha1query += $" (\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.CRCKey)}\", \"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)}\"),";
 
-                                if (!string.IsNullOrWhiteSpace(rom.MD5))
-                                    md5sha1query += $" (\"{rom.MD5}\", \"{rom.SHA1}\"),";
+                                if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.MD5Key)))
+                                    md5sha1query += $" (\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.MD5Key)}\", \"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)}\"),";
                             }
 
                             // Add to the Dat
@@ -139,21 +139,21 @@ have a current entry in the DAT index.";
                         // Add to the queries
                         if (!noDb)
                         {
-                            if (!string.IsNullOrWhiteSpace(rom.CRC))
-                                crcquery += $" (\"{rom.CRC}\"),";
+                            if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.CRCKey)))
+                                crcquery += $" (\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.CRCKey)}\"),";
 
-                            if (!string.IsNullOrWhiteSpace(rom.MD5))
-                                md5query += $" (\"{rom.MD5}\"),";
+                            if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.MD5Key)))
+                                md5query += $" (\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.MD5Key)}\"),";
 
-                            if (!string.IsNullOrWhiteSpace(rom.SHA1))
+                            if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)))
                             {
-                                sha1query += $" (\"{rom.SHA1}\", \"{_depots!.Keys.ToList()[0]}\"),";
+                                sha1query += $" (\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)}\", \"{_depots!.Keys.ToList()[0]}\"),";
 
-                                if (!string.IsNullOrWhiteSpace(rom.CRC))
-                                    crcsha1query += $" (\"{rom.CRC}\", \"{rom.SHA1}\"),";
+                                if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.CRCKey)))
+                                    crcsha1query += $" (\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.CRCKey)}\", \"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)}\"),";
 
-                                if (!string.IsNullOrWhiteSpace(rom.MD5))
-                                    md5sha1query += $" (\"{rom.MD5}\", \"{rom.SHA1}\"),";
+                                if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.MD5Key)))
+                                    md5sha1query += $" (\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.MD5Key)}\", \"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)}\"),";
                             }
                         }
 

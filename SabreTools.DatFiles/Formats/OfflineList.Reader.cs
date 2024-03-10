@@ -366,13 +366,12 @@ namespace SabreTools.DatFiles.Formats
 
                 var item = new Rom
                 {
-                    Size = size,
-                    CRC = crc.Content,
-                    ItemStatus = ItemStatus.None,
-
                     Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(name);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, crc.Content);
+                item.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, size);
+                item.SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.None);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);

@@ -1,8 +1,6 @@
 ﻿using System.Xml.Serialization;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using SabreTools.Core;
-using SabreTools.Core.Tools;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -15,47 +13,6 @@ namespace SabreTools.DatItems.Formats
     [JsonObject("softwarelist"), XmlRoot("softwarelist")]
     public class SoftwareList : DatItem
     {
-        #region Fields
-
-        /// <summary>
-        /// Tag for the software list
-        /// </summary>
-        [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("tag")]
-        public string? Tag
-        {
-            get => _internal.ReadString(Models.Metadata.SoftwareList.TagKey);
-            set => _internal[Models.Metadata.SoftwareList.TagKey] = value;
-        }
-
-        /// <summary>
-        /// Status of the softare list according to the machine
-        /// </summary>
-        [JsonProperty("status", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [JsonConverter(typeof(StringEnumConverter))]
-        [XmlElement("status")]
-        public SoftwareListStatus Status
-        {
-            get => _internal.ReadString(Models.Metadata.SoftwareList.StatusKey).AsEnumValue<SoftwareListStatus>();
-            set => _internal[Models.Metadata.SoftwareList.StatusKey] = value.AsStringValue<SoftwareListStatus>();
-        }
-
-        [JsonIgnore]
-        public bool StatusSpecified { get { return Status != SoftwareListStatus.None; } }
-
-        /// <summary>
-        /// Filter to apply to the software list
-        /// </summary>
-        [JsonProperty("filter", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("filter")]
-        public string? Filter
-        {
-            get => _internal.ReadString(Models.Metadata.SoftwareList.FilterKey);
-            set => _internal[Models.Metadata.SoftwareList.FilterKey] = value;
-        }
-
-        #endregion
-
         #region Accessors
 
         /// <inheritdoc/>

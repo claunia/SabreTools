@@ -10,20 +10,6 @@ namespace SabreTools.DatItems.Formats
     [JsonObject("info"), XmlRoot("info")]
     public class Info : DatItem
     {
-        #region Fields
-
-        /// <summary>
-        /// Information value
-        /// </summary>
-        [JsonProperty("value"), XmlElement("value")]
-        public string? Value
-        {
-            get => _internal.ReadString(Models.Metadata.Info.ValueKey);
-            set => _internal[Models.Metadata.Info.ValueKey] = value;
-        }
-
-        #endregion
-
         #region Accessors
 
         /// <inheritdoc/>

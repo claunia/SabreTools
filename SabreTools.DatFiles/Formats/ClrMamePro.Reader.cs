@@ -168,14 +168,13 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Release
                 {
-                    Region = release.Region,
-                    Language = release.Language,
-                    Date = release.Date,
-                    Default = release.Default?.AsYesNo(),
-
                     Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(release.Name);
+                item.SetFieldValue<string?>(Models.Metadata.Release.DateKey, release.Date);
+                item.SetFieldValue<bool?>(Models.Metadata.Release.DefaultKey, release.Default?.AsYesNo());
+                item.SetFieldValue<string?>(Models.Metadata.Release.LanguageKey, release.Language);
+                item.SetFieldValue<string?>(Models.Metadata.Release.RegionKey, release.Region);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -202,12 +201,11 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new BiosSet
                 {
-                    Description = biosset.Description,
-                    Default = biosset.Default?.AsYesNo(),
-
                     Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(biosset.Name);
+                item.SetFieldValue<bool?>(Models.Metadata.BiosSet.DefaultKey, biosset.Default?.AsYesNo());
+                item.SetFieldValue<string?>(Models.Metadata.BiosSet.DescriptionKey, biosset.Description);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -234,30 +232,29 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Rom
                 {
-                    Size = NumberHelper.ConvertToInt64(rom.Size),
-                    CRC = rom.CRC,
-                    MD5 = rom.MD5,
-                    SHA1 = rom.SHA1,
-                    SHA256 = rom.SHA256,
-                    SHA384 = rom.SHA384,
-                    SHA512 = rom.SHA512,
-                    SpamSum = rom.SpamSum,
-                    //xxHash364 = rom.xxHash364, // TODO: Add to internal model
-                    //xxHash3128 = rom.xxHash3128, // TODO: Add to internal model
-                    MergeTag = rom.Merge,
-                    ItemStatus = rom.Status?.AsEnumValue<ItemStatus>() ?? ItemStatus.NULL,
-                    Region = rom.Region,
-                    //Flags = rom.Flags, // TODO: Add to internal model
-                    Offset = rom.Offs,
-                    //Serial = rom.Serial, // TODO: Add to internal model
-                    //Header = rom.Header, // TODO: Add to internal model
-                    Date = rom.Date,
-                    Inverted = rom.Inverted?.AsYesNo(),
-                    MIA = rom.MIA?.AsYesNo(),
-
                     Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(rom.Name);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, rom.CRC);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.DateKey, rom.Date);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.FlagsKey, rom.Flags);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.HeaderKey, rom.Header);
+                item.SetFieldValue<bool?>(Models.Metadata.Rom.InvertedKey, rom.Inverted?.AsYesNo());
+                item.SetFieldValue<bool?>(Models.Metadata.Rom.MIAKey, rom.MIA?.AsYesNo());
+                item.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, rom.MD5);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.MergeKey, rom.Merge);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.OffsetKey, rom.Offs);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.RegionKey, rom.Region);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.SerialKey, rom.Serial);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, rom.SHA1);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.SHA256Key, rom.SHA256);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.SHA384Key, rom.SHA384);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key, rom.SHA512);
+                item.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, NumberHelper.ConvertToInt64(rom.Size));
+                item.SetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey, rom.SpamSum);
+                item.SetFieldValue<ItemStatus?>(Models.Metadata.Rom.StatusKey, rom.Status?.AsEnumValue<ItemStatus>() ?? ItemStatus.NULL);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.xxHash364Key, rom.xxHash364);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.xxHash3128Key, rom.xxHash3128);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -284,15 +281,14 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Disk
                 {
-                    MD5 = disk.MD5,
-                    SHA1 = disk.SHA1,
-                    MergeTag = disk.Merge,
-                    ItemStatus = disk.Status?.AsEnumValue<ItemStatus>() ?? ItemStatus.NULL,
-                    //Flags = disk.Flags, // TODO: Add to internal model
-
                     Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(disk.Name);
+                item.SetFieldValue<string?>(Models.Metadata.Disk.FlagsKey, disk.Flags);
+                item.SetFieldValue<string?>(Models.Metadata.Disk.MD5Key, disk.MD5);
+                item.SetFieldValue<string?>(Models.Metadata.Disk.MergeKey, disk.Merge);
+                item.SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, disk.SHA1);
+                item.SetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey, disk.Status?.AsEnumValue<ItemStatus>() ?? ItemStatus.NULL);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -319,14 +315,13 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Media
                 {
-                    MD5 = medium.MD5,
-                    SHA1 = medium.SHA1,
-                    SHA256 = medium.SHA256,
-                    SpamSum = medium.SpamSum,
-
                     Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(medium.Name);
+                item.SetFieldValue<string?>(Models.Metadata.Media.MD5Key, medium.MD5);
+                item.SetFieldValue<string?>(Models.Metadata.Media.SHA1Key, medium.SHA1);
+                item.SetFieldValue<string?>(Models.Metadata.Media.SHA256Key, medium.SHA256);
+                item.SetFieldValue<string?>(Models.Metadata.Media.SpamSumKey, medium.SpamSum);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -382,13 +377,12 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Chip
                 {
-                    ChipType = chip.Type?.AsEnumValue<ChipType>() ?? ChipType.NULL,
-                    //Flags = chip.Flags, // TODO: Add to internal model
-                    Clock = NumberHelper.ConvertToInt64(chip.Clock),
-
                     Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(chip.Name);
+                item.SetFieldValue<ChipType>(Models.Metadata.Chip.ChipTypeKey, chip.Type?.AsEnumValue<ChipType>() ?? ChipType.NULL);
+                item.SetFieldValue<long?>(Models.Metadata.Chip.ClockKey, NumberHelper.ConvertToInt64(chip.Clock));
+                item.SetFieldValue<string?>(Models.Metadata.Chip.FlagsKey, chip.Flags);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -415,23 +409,22 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Display
                 {
-                    DisplayType = video.Screen?.AsEnumValue<DisplayType>() ?? DisplayType.NULL,
-                    Width = NumberHelper.ConvertToInt64(video.X),
-                    Height = NumberHelper.ConvertToInt64(video.Y),
-                    //AspectX = video.AspectX, // TODO: Add to internal model or find mapping
-                    //AspectY = video.AspectY, // TODO: Add to internal model or find mapping
-                    Refresh = NumberHelper.ConvertToDouble(video.Freq),
-
                     Source = new Source { Index = indexId, Name = filename },
                 };
+                item.SetFieldValue<long?>("ASPECTX", NumberHelper.ConvertToInt64(video.AspectX));
+                item.SetFieldValue<long?>("ASPECTY", NumberHelper.ConvertToInt64(video.AspectY));
+                item.SetFieldValue<DisplayType>(Models.Metadata.Display.DisplayTypeKey, video.Screen?.AsEnumValue<DisplayType>() ?? DisplayType.NULL);
+                item.SetFieldValue<long?>(Models.Metadata.Display.HeightKey, NumberHelper.ConvertToInt64(video.Y));
+                item.SetFieldValue<double?>(Models.Metadata.Display.RefreshKey, NumberHelper.ConvertToDouble(video.Freq));
+                item.SetFieldValue<long?>(Models.Metadata.Display.WidthKey, NumberHelper.ConvertToInt64(video.X));
 
                 switch (video.Orientation)
                 {
                     case "horizontal":
-                        item.Rotate = 0;
+                        item.SetFieldValue<long?>(Models.Metadata.Display.RotateKey, 0);
                         break;
                     case "vertical":
-                        item.Rotate = 90;
+                        item.SetFieldValue<long?>(Models.Metadata.Display.RotateKey, 90);
                         break;
                 }
 
@@ -458,10 +451,9 @@ namespace SabreTools.DatFiles.Formats
             containsItems = true;
             var item = new Sound
             {
-                Channels = NumberHelper.ConvertToInt64(sound.Channels),
-
                 Source = new Source { Index = indexId, Name = filename },
             };
+            item.SetFieldValue<long?>(Models.Metadata.Sound.ChannelsKey, NumberHelper.ConvertToInt64(sound.Channels));
 
             item.CopyMachineInformation(machine);
             ParseAddHelper(item, statsOnly);
@@ -485,21 +477,18 @@ namespace SabreTools.DatFiles.Formats
             containsItems = true;
             var item = new Input
             {
-                Players = NumberHelper.ConvertToInt64(input.Players),
-                //Control = input.Control, // TODO: Add to internal model or find mapping
-                Controls =
-                [
-                    new Control
-                    {
-                        Buttons = NumberHelper.ConvertToInt64(input.Buttons),
-                    },
-                ],
-                Coins = NumberHelper.ConvertToInt64(input.Coins),
-                Tilt = input.Tilt?.AsYesNo(),
-                Service = input.Service?.AsYesNo(),
-
                 Source = new Source { Index = indexId, Name = filename },
             };
+            item.SetFieldValue<long?>(Models.Metadata.Input.CoinsKey, NumberHelper.ConvertToInt64(input.Coins));
+            //item.SetFieldValue<string?>(Models.Metadata.Input.ControlKey, input.Control);
+            item.SetFieldValue<long?>(Models.Metadata.Input.PlayersKey, NumberHelper.ConvertToInt64(input.Players));
+            item.SetFieldValue<bool?>(Models.Metadata.Input.ServiceKey, input.Service?.AsYesNo());
+            item.SetFieldValue<bool?>(Models.Metadata.Input.TiltKey, input.Tilt?.AsYesNo());
+
+            var control = new Control();
+            control.SetFieldValue<long?>(Models.Metadata.Control.ButtonsKey, NumberHelper.ConvertToInt64(input.Buttons));
+
+            item.SetFieldValue<Control[]?>(Models.Metadata.Input.ControlKey, [control]);
 
             item.CopyMachineInformation(machine);
             ParseAddHelper(item, statsOnly);
@@ -525,23 +514,22 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new DipSwitch
                 {
-                    Values = [],
-
                     Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(dipswitch.Name);
 
+                var values = new List<DipValue>();
                 foreach (string entry in dipswitch.Entry ?? [])
                 {
-                    var dipValue = new DipValue
-                    {
-                        Value = entry,
-                        Default = entry == dipswitch.Default,
-                    };
+                    var dipValue = new DipValue();
                     dipValue.SetName(dipswitch.Name);
+                    dipValue.SetFieldValue<bool?>(Models.Metadata.DipValue.DefaultKey, entry == dipswitch.Default);
+                    dipValue.SetFieldValue<string?>(Models.Metadata.DipValue.ValueKey, entry);
 
-                    item.Values.Add(dipValue);
+                    values.Add(dipValue);
                 }
+
+                item.SetFieldValue<DipValue[]?>(Models.Metadata.DipSwitch.DipValueKey, [.. values]);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -566,14 +554,13 @@ namespace SabreTools.DatFiles.Formats
             containsItems = true;
             var item = new Driver
             {
-                Status = driver.Status?.AsEnumValue<SupportStatus>() ?? SupportStatus.NULL,
-                //Color = driver.Color, // TODO: Add to internal model or find mapping
-                //Sound = driver.Sound, // TODO: Add to internal model or find mapping
-                //PaletteSize = driver.PaletteSize, // TODO: Add to internal model or find mapping
-                //Blit = driver.Blit, // TODO: Add to internal model or find mapping
-
                 Source = new Source { Index = indexId, Name = filename },
             };
+            item.SetFieldValue<string?>(Models.Metadata.Driver.BlitKey, driver.Blit);
+            item.SetFieldValue<SupportStatus>(Models.Metadata.Driver.ColorKey, driver.Color?.AsEnumValue<SupportStatus>() ?? SupportStatus.NULL);
+            item.SetFieldValue<long?>(Models.Metadata.Driver.PaletteSizeKey, NumberHelper.ConvertToInt64(driver.PaletteSize));
+            item.SetFieldValue<SupportStatus>(Models.Metadata.Driver.SoundKey, driver.Sound?.AsEnumValue<SupportStatus>() ?? SupportStatus.NULL);
+            item.SetFieldValue<SupportStatus>(Models.Metadata.Driver.StatusKey, driver.Status?.AsEnumValue<SupportStatus>() ?? SupportStatus.NULL);
 
             item.CopyMachineInformation(machine);
             ParseAddHelper(item, statsOnly);

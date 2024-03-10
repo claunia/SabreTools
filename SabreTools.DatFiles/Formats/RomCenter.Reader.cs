@@ -107,27 +107,27 @@ namespace SabreTools.DatFiles.Formats
 
             foreach (var rom in games.Rom)
             {
+                var machine = new Machine
+                {
+                    Name = rom.GameName,
+                    Description = rom.GameDescription,
+                    CloneOf = rom.ParentName,
+                    //CloneOfDescription = rom.ParentDescription, // TODO: Add to internal model or find mapping
+                    RomOf = rom.RomOf,
+                };
+
                 var item = new Rom
                 {
-                    Size = NumberHelper.ConvertToInt64(rom.RomSize),
-                    CRC = rom.RomCRC,
-                    MergeTag = rom.MergeName,
-                    ItemStatus = ItemStatus.None,
-
-                    Machine = new Machine
-                    {
-                        Name = rom.GameName,
-                        Description = rom.GameDescription,
-                        CloneOf = rom.ParentName,
-                        //CloneOfDescription = rom.ParentDescription, // TODO: Add to internal model or find mapping
-                        RomOf = rom.RomOf,
-                    },
-
                     Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(rom.RomName);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, rom.RomCRC);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.MergeKey, rom.MergeName);
+                item.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, NumberHelper.ConvertToInt64(rom.RomSize));
+                item.SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.None);
 
                 // Now process and add the item
+                item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
             }
         }

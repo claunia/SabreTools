@@ -10,20 +10,6 @@ namespace SabreTools.DatItems.Formats
     [JsonObject("part_feature"), XmlRoot("part_feature")]
     public class PartFeature : DatItem
     {
-        #region Fields
-
-        /// <summary>
-        /// PartFeature value
-        /// </summary>
-        [JsonProperty("value"), XmlElement("value")]
-        public string? Value
-        {
-            get => _internal.ReadString(Models.Metadata.Feature.ValueKey);
-            set => _internal[Models.Metadata.Feature.ValueKey] = value;
-        }
-
-        #endregion
-
         #region Accessors
 
         /// <inheritdoc/>

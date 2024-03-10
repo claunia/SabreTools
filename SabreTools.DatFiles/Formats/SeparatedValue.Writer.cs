@@ -36,23 +36,23 @@ namespace SabreTools.DatFiles.Formats
             switch (datItem)
             {
                 case Disk disk:
-                    if (string.IsNullOrEmpty(disk.MD5)
-                        && string.IsNullOrEmpty(disk.SHA1))
+                    if (string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key))
+                        && string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key)))
                     {
                         missingFields.Add(Models.Metadata.Disk.SHA1Key);
                     }
                     break;
 
                 case Rom rom:
-                    if (rom.Size == null || rom.Size < 0)
+                    if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null || rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) < 0)
                         missingFields.Add(Models.Metadata.Rom.SizeKey);
-                    if (string.IsNullOrEmpty(rom.CRC)
-                        && string.IsNullOrEmpty(rom.MD5)
-                        && string.IsNullOrEmpty(rom.SHA1)
-                        && string.IsNullOrEmpty(rom.SHA256)
-                        && string.IsNullOrEmpty(rom.SHA384)
-                        && string.IsNullOrEmpty(rom.SHA512)
-                        && string.IsNullOrEmpty(rom.SpamSum))
+                    if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey))
+                        && string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key))
+                        && string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key))
+                        && string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA256Key))
+                        && string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA384Key))
+                        && string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA512Key))
+                        && string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey)))
                     {
                         missingFields.Add(Models.Metadata.Rom.SHA1Key);
                     }
@@ -164,18 +164,18 @@ namespace SabreTools.DatFiles.Formats
                 Description = Header.Description,
                 GameName = disk.Machine.Name,
                 GameDescription = disk.Machine.Description,
-                Type = disk.ItemType.AsStringValue<ItemType>(),
+                Type = disk.GetFieldValue<ItemType>(Models.Metadata.Disk.TypeKey).AsStringValue<ItemType>(),
                 RomName = string.Empty,
                 DiskName = disk.GetName(),
                 Size = string.Empty,
                 CRC = string.Empty,
-                MD5 = disk.MD5,
-                SHA1 = disk.SHA1,
+                MD5 = disk.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key),
+                SHA1 = disk.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key),
                 SHA256 = string.Empty,
                 SHA384 = string.Empty,
                 SHA512 = string.Empty,
                 SpamSum = string.Empty,
-                Status = disk.ItemStatus.AsStringValue<ItemStatus>(useSecond: false),
+                Status = disk.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey).AsStringValue<ItemStatus>(useSecond: false),
             };
             return row;
         }
@@ -197,12 +197,12 @@ namespace SabreTools.DatFiles.Formats
                 DiskName = media.GetName(),
                 Size = string.Empty,
                 CRC = string.Empty,
-                MD5 = media.MD5,
-                SHA1 = media.SHA1,
-                SHA256 = media.SHA256,
+                MD5 = media.GetFieldValue<string?>(Models.Metadata.Media.MD5Key),
+                SHA1 = media.GetFieldValue<string?>(Models.Metadata.Media.SHA1Key),
+                SHA256 = media.GetFieldValue<string?>(Models.Metadata.Media.SHA256Key),
                 SHA384 = string.Empty,
                 SHA512 = string.Empty,
-                SpamSum = media.SpamSum,
+                SpamSum = media.GetFieldValue<string?>(Models.Metadata.Media.SpamSumKey),
                 Status = string.Empty,
             };
             return row;
@@ -223,15 +223,15 @@ namespace SabreTools.DatFiles.Formats
                 Type = rom.ItemType.AsStringValue<ItemType>(),
                 RomName = rom.GetName(),
                 DiskName = string.Empty,
-                Size = rom.Size?.ToString(),
-                CRC = rom.CRC,
-                MD5 = rom.MD5,
-                SHA1 = rom.SHA1,
-                SHA256 = rom.SHA256,
-                SHA384 = rom.SHA384,
-                SHA512 = rom.SHA512,
-                SpamSum = rom.SpamSum,
-                Status = rom.ItemStatus.AsStringValue<ItemStatus>(useSecond: false),
+                Size = rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey)?.ToString(),
+                CRC = rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey),
+                MD5 = rom.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key),
+                SHA1 = rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key),
+                SHA256 = rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA256Key),
+                SHA384 = rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA384Key),
+                SHA512 = rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA512Key),
+                SpamSum = rom.GetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey),
+                Status = rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey).AsStringValue<ItemStatus>(useSecond: false),
             };
             return row;
         }

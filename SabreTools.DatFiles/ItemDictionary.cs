@@ -229,40 +229,40 @@ namespace SabreTools.DatFiles
                 switch (item)
                 {
                     case Disk disk:
-                        if (disk.ItemStatus != ItemStatus.Nodump)
+                        if (disk.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey) != ItemStatus.Nodump)
                         {
-                            AddHashCount(HashType.MD5, string.IsNullOrEmpty(disk.MD5) ? 0 : 1);
-                            AddHashCount(HashType.SHA1, string.IsNullOrEmpty(disk.SHA1) ? 0 : 1);
+                            AddHashCount(HashType.MD5, string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key)) ? 0 : 1);
+                            AddHashCount(HashType.SHA1, string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key)) ? 0 : 1);
                         }
 
-                        AddStatusCount(ItemStatus.BadDump, disk.ItemStatus == ItemStatus.BadDump ? 1 : 0);
-                        AddStatusCount(ItemStatus.Good, disk.ItemStatus == ItemStatus.Good ? 1 : 0);
-                        AddStatusCount(ItemStatus.Nodump, disk.ItemStatus == ItemStatus.Nodump ? 1 : 0);
-                        AddStatusCount(ItemStatus.Verified, disk.ItemStatus == ItemStatus.Verified ? 1 : 0);
+                        AddStatusCount(ItemStatus.BadDump, disk.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey) == ItemStatus.BadDump ? 1 : 0);
+                        AddStatusCount(ItemStatus.Good, disk.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey) == ItemStatus.Good ? 1 : 0);
+                        AddStatusCount(ItemStatus.Nodump, disk.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey) == ItemStatus.Nodump ? 1 : 0);
+                        AddStatusCount(ItemStatus.Verified, disk.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey) == ItemStatus.Verified ? 1 : 0);
                         break;
                     case Media media:
-                        AddHashCount(HashType.MD5, string.IsNullOrEmpty(media.MD5) ? 0 : 1);
-                        AddHashCount(HashType.SHA1, string.IsNullOrEmpty(media.SHA1) ? 0 : 1);
-                        AddHashCount(HashType.SHA256, string.IsNullOrEmpty(media.SHA256) ? 0 : 1);
-                        AddHashCount(HashType.SpamSum, string.IsNullOrEmpty(media.SpamSum) ? 0 : 1);
+                        AddHashCount(HashType.MD5, string.IsNullOrEmpty(media.GetFieldValue<string?>(Models.Metadata.Media.MD5Key)) ? 0 : 1);
+                        AddHashCount(HashType.SHA1, string.IsNullOrEmpty(media.GetFieldValue<string?>(Models.Metadata.Media.SHA1Key)) ? 0 : 1);
+                        AddHashCount(HashType.SHA256, string.IsNullOrEmpty(media.GetFieldValue<string?>(Models.Metadata.Media.SHA256Key)) ? 0 : 1);
+                        AddHashCount(HashType.SpamSum, string.IsNullOrEmpty(media.GetFieldValue<string?>(Models.Metadata.Media.SpamSumKey)) ? 0 : 1);
                         break;
                     case Rom rom:
-                        if (rom.ItemStatus != ItemStatus.Nodump)
+                        if (rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) != ItemStatus.Nodump)
                         {
-                            TotalSize += rom.Size ?? 0;
-                            AddHashCount(HashType.CRC32, string.IsNullOrEmpty(rom.CRC) ? 0 : 1);
-                            AddHashCount(HashType.MD5, string.IsNullOrEmpty(rom.MD5) ? 0 : 1);
-                            AddHashCount(HashType.SHA1, string.IsNullOrEmpty(rom.SHA1) ? 0 : 1);
-                            AddHashCount(HashType.SHA256, string.IsNullOrEmpty(rom.SHA256) ? 0 : 1);
-                            AddHashCount(HashType.SHA384, string.IsNullOrEmpty(rom.SHA384) ? 0 : 1);
-                            AddHashCount(HashType.SHA512, string.IsNullOrEmpty(rom.SHA512) ? 0 : 1);
-                            AddHashCount(HashType.SpamSum, string.IsNullOrEmpty(rom.SpamSum) ? 0 : 1);
+                            TotalSize += rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) ?? 0;
+                            AddHashCount(HashType.CRC32, string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey)) ? 0 : 1);
+                            AddHashCount(HashType.MD5, string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key)) ? 0 : 1);
+                            AddHashCount(HashType.SHA1, string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key)) ? 0 : 1);
+                            AddHashCount(HashType.SHA256, string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA256Key)) ? 0 : 1);
+                            AddHashCount(HashType.SHA384, string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA384Key)) ? 0 : 1);
+                            AddHashCount(HashType.SHA512, string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA512Key)) ? 0 : 1);
+                            AddHashCount(HashType.SpamSum, string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey)) ? 0 : 1);
                         }
 
-                        AddStatusCount(ItemStatus.BadDump, rom.ItemStatus == ItemStatus.BadDump ? 1 : 0);
-                        AddStatusCount(ItemStatus.Good, rom.ItemStatus == ItemStatus.Good ? 1 : 0);
-                        AddStatusCount(ItemStatus.Nodump, rom.ItemStatus == ItemStatus.Nodump ? 1 : 0);
-                        AddStatusCount(ItemStatus.Verified, rom.ItemStatus == ItemStatus.Verified ? 1 : 0);
+                        AddStatusCount(ItemStatus.BadDump, rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) == ItemStatus.BadDump ? 1 : 0);
+                        AddStatusCount(ItemStatus.Good, rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) == ItemStatus.Good ? 1 : 0);
+                        AddStatusCount(ItemStatus.Nodump, rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) == ItemStatus.Nodump ? 1 : 0);
+                        AddStatusCount(ItemStatus.Verified, rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) == ItemStatus.Verified ? 1 : 0);
                         break;
                 }
             }
@@ -510,40 +510,40 @@ namespace SabreTools.DatFiles
                 switch (item)
                 {
                     case Disk disk:
-                        if (disk.ItemStatus != ItemStatus.Nodump)
+                        if (disk.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey) != ItemStatus.Nodump)
                         {
-                            RemoveHashCount(HashType.MD5, string.IsNullOrEmpty(disk.MD5) ? 0 : 1);
-                            RemoveHashCount(HashType.SHA1, string.IsNullOrEmpty(disk.SHA1) ? 0 : 1);
+                            RemoveHashCount(HashType.MD5, string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key)) ? 0 : 1);
+                            RemoveHashCount(HashType.SHA1, string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key)) ? 0 : 1);
                         }
 
-                        RemoveStatusCount(ItemStatus.BadDump, disk.ItemStatus == ItemStatus.BadDump ? 1 : 0);
-                        RemoveStatusCount(ItemStatus.Good, disk.ItemStatus == ItemStatus.Good ? 1 : 0);
-                        RemoveStatusCount(ItemStatus.Nodump, disk.ItemStatus == ItemStatus.Nodump ? 1 : 0);
-                        RemoveStatusCount(ItemStatus.Verified, disk.ItemStatus == ItemStatus.Verified ? 1 : 0);
+                        RemoveStatusCount(ItemStatus.BadDump, disk.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey) == ItemStatus.BadDump ? 1 : 0);
+                        RemoveStatusCount(ItemStatus.Good, disk.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey) == ItemStatus.Good ? 1 : 0);
+                        RemoveStatusCount(ItemStatus.Nodump, disk.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey) == ItemStatus.Nodump ? 1 : 0);
+                        RemoveStatusCount(ItemStatus.Verified, disk.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey) == ItemStatus.Verified ? 1 : 0);
                         break;
                     case Media media:
-                        RemoveHashCount(HashType.MD5, string.IsNullOrEmpty(media.MD5) ? 0 : 1);
-                        RemoveHashCount(HashType.SHA1, string.IsNullOrEmpty(media.SHA1) ? 0 : 1);
-                        RemoveHashCount(HashType.SHA256, string.IsNullOrEmpty(media.SHA256) ? 0 : 1);
-                        RemoveHashCount(HashType.SpamSum, string.IsNullOrEmpty(media.SpamSum) ? 0 : 1);
+                        RemoveHashCount(HashType.MD5, string.IsNullOrEmpty(media.GetFieldValue<string?>(Models.Metadata.Media.MD5Key)) ? 0 : 1);
+                        RemoveHashCount(HashType.SHA1, string.IsNullOrEmpty(media.GetFieldValue<string?>(Models.Metadata.Media.SHA1Key)) ? 0 : 1);
+                        RemoveHashCount(HashType.SHA256, string.IsNullOrEmpty(media.GetFieldValue<string?>(Models.Metadata.Media.SHA256Key)) ? 0 : 1);
+                        RemoveHashCount(HashType.SpamSum, string.IsNullOrEmpty(media.GetFieldValue<string?>(Models.Metadata.Media.SpamSumKey)) ? 0 : 1);
                         break;
                     case Rom rom:
-                        if (rom.ItemStatus != ItemStatus.Nodump)
+                        if (rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) != ItemStatus.Nodump)
                         {
-                            TotalSize -= rom.Size ?? 0;
-                            RemoveHashCount(HashType.CRC32, string.IsNullOrEmpty(rom.CRC) ? 0 : 1);
-                            RemoveHashCount(HashType.MD5, string.IsNullOrEmpty(rom.MD5) ? 0 : 1);
-                            RemoveHashCount(HashType.SHA1, string.IsNullOrEmpty(rom.SHA1) ? 0 : 1);
-                            RemoveHashCount(HashType.SHA256, string.IsNullOrEmpty(rom.SHA256) ? 0 : 1);
-                            RemoveHashCount(HashType.SHA384, string.IsNullOrEmpty(rom.SHA384) ? 0 : 1);
-                            RemoveHashCount(HashType.SHA512, string.IsNullOrEmpty(rom.SHA512) ? 0 : 1);
-                            RemoveHashCount(HashType.SpamSum, string.IsNullOrEmpty(rom.SpamSum) ? 0 : 1);
+                            TotalSize -= rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) ?? 0;
+                            RemoveHashCount(HashType.CRC32, string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey)) ? 0 : 1);
+                            RemoveHashCount(HashType.MD5, string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key)) ? 0 : 1);
+                            RemoveHashCount(HashType.SHA1, string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key)) ? 0 : 1);
+                            RemoveHashCount(HashType.SHA256, string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA256Key)) ? 0 : 1);
+                            RemoveHashCount(HashType.SHA384, string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA384Key)) ? 0 : 1);
+                            RemoveHashCount(HashType.SHA512, string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA512Key)) ? 0 : 1);
+                            RemoveHashCount(HashType.SpamSum, string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey)) ? 0 : 1);
                         }
 
-                        RemoveStatusCount(ItemStatus.BadDump, rom.ItemStatus == ItemStatus.BadDump ? 1 : 0);
-                        RemoveStatusCount(ItemStatus.Good, rom.ItemStatus == ItemStatus.Good ? 1 : 0);
-                        RemoveStatusCount(ItemStatus.Nodump, rom.ItemStatus == ItemStatus.Nodump ? 1 : 0);
-                        RemoveStatusCount(ItemStatus.Verified, rom.ItemStatus == ItemStatus.Verified ? 1 : 0);
+                        RemoveStatusCount(ItemStatus.BadDump, rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) == ItemStatus.BadDump ? 1 : 0);
+                        RemoveStatusCount(ItemStatus.Good, rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) == ItemStatus.Good ? 1 : 0);
+                        RemoveStatusCount(ItemStatus.Nodump, rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) == ItemStatus.Nodump ? 1 : 0);
+                        RemoveStatusCount(ItemStatus.Verified, rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) == ItemStatus.Verified ? 1 : 0);
                         break;
                 }
             }

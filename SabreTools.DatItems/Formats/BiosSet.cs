@@ -10,33 +10,6 @@ namespace SabreTools.DatItems.Formats
     [JsonObject("biosset"), XmlRoot("biosset")]
     public class BiosSet : DatItem
     {
-        #region Fields
-
-        /// <summary>
-        /// Description of the BIOS
-        /// </summary>
-        [JsonProperty("description", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("description")]
-        public string? Description
-        {
-            get => _internal.ReadString(Models.Metadata.BiosSet.DescriptionKey);
-            set => _internal[Models.Metadata.BiosSet.DescriptionKey] = value;
-        }
-
-        /// <summary>
-        /// Determine whether the BIOS is default
-        /// </summary>
-        [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("default")]
-        public bool? Default
-        {
-            get => _internal.ReadBool(Models.Metadata.BiosSet.DefaultKey);
-            set => _internal[Models.Metadata.BiosSet.DefaultKey] = value;
-        }
-
-        [JsonIgnore]
-        public bool DefaultSpecified { get { return Default != null; } }
-
-        #endregion
-
         #region Accessors
 
         /// <inheritdoc/>

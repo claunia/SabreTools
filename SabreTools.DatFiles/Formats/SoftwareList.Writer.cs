@@ -41,22 +41,22 @@ namespace SabreTools.DatFiles.Formats
                     }
                     else
                     {
-                        if (string.IsNullOrEmpty(dipSwitch.Part!.GetName()))
+                        if (string.IsNullOrEmpty(dipSwitch.GetFieldValue<Part?>("PART")!.GetName()))
                             missingFields.Add(Models.Metadata.Part.NameKey);
-                        if (string.IsNullOrEmpty(dipSwitch.Part.Interface))
+                        if (string.IsNullOrEmpty(dipSwitch.GetFieldValue<Part?>("PART")!.GetFieldValue<string?>(Models.Metadata.Part.InterfaceKey)))
                             missingFields.Add(Models.Metadata.Part.InterfaceKey);
                     }
                     if (string.IsNullOrEmpty(dipSwitch.GetName()))
                         missingFields.Add(Models.Metadata.DipSwitch.NameKey);
-                    if (string.IsNullOrEmpty(dipSwitch.Tag))
+                    if (string.IsNullOrEmpty(dipSwitch.GetFieldValue<string?>(Models.Metadata.DipSwitch.TagKey)))
                         missingFields.Add(Models.Metadata.DipSwitch.TagKey);
-                    if (string.IsNullOrEmpty(dipSwitch.Mask))
+                    if (string.IsNullOrEmpty(dipSwitch.GetFieldValue<string?>(Models.Metadata.DipSwitch.MaskKey)))
                         missingFields.Add(Models.Metadata.DipSwitch.MaskKey);
                     if (dipSwitch.ValuesSpecified)
                     {
-                        if (dipSwitch.Values!.Any(dv => string.IsNullOrEmpty(dv.GetName())))
+                        if (dipSwitch.GetFieldValue<DipValue[]?>(Models.Metadata.DipSwitch.DipValueKey)!.Any(dv => string.IsNullOrEmpty(dv.GetName())))
                             missingFields.Add(Models.Metadata.DipValue.NameKey);
-                        if (dipSwitch.Values!.Any(dv => string.IsNullOrEmpty(dv.Value)))
+                        if (dipSwitch.GetFieldValue<DipValue[]?>(Models.Metadata.DipSwitch.DipValueKey)!.Any(dv => string.IsNullOrEmpty(dv.GetFieldValue<string?>(Models.Metadata.DipValue.ValueKey))))
                             missingFields.Add(Models.Metadata.DipValue.ValueKey);
                     }
 
@@ -70,9 +70,9 @@ namespace SabreTools.DatFiles.Formats
                     }
                     else
                     {
-                        if (string.IsNullOrEmpty(disk.Part!.GetName()))
+                        if (string.IsNullOrEmpty(disk.GetFieldValue<Part?>("PART")!.GetName()))
                             missingFields.Add(Models.Metadata.Part.NameKey);
-                        if (string.IsNullOrEmpty(disk.Part.Interface))
+                        if (string.IsNullOrEmpty(disk.GetFieldValue<Part?>("PART")!.GetFieldValue<string?>(Models.Metadata.Part.InterfaceKey)))
                             missingFields.Add(Models.Metadata.Part.InterfaceKey);
                     }
                     if (!disk.DiskAreaSpecified)
@@ -81,7 +81,7 @@ namespace SabreTools.DatFiles.Formats
                     }
                     else
                     {
-                        if (string.IsNullOrEmpty(disk.DiskArea!.GetName()))
+                        if (string.IsNullOrEmpty(disk.GetFieldValue<DiskArea?>("DISKAREA")!.GetName()))
                             missingFields.Add(Models.Metadata.DiskArea.NameKey);
                     }
                     if (string.IsNullOrEmpty(disk.GetName()))
@@ -101,9 +101,9 @@ namespace SabreTools.DatFiles.Formats
                     }
                     else
                     {
-                        if (string.IsNullOrEmpty(rom.Part!.GetName()))
+                        if (string.IsNullOrEmpty(rom.GetFieldValue<Part?>("PART")!.GetName()))
                             missingFields.Add(Models.Metadata.Part.NameKey);
-                        if (string.IsNullOrEmpty(rom.Part.Interface))
+                        if (string.IsNullOrEmpty(rom.GetFieldValue<Part?>("PART")!.GetFieldValue<string?>(Models.Metadata.Part.InterfaceKey)))
                             missingFields.Add(Models.Metadata.Part.InterfaceKey);
                     }
                     if (!rom.DataAreaSpecified)
@@ -113,9 +113,9 @@ namespace SabreTools.DatFiles.Formats
                     }
                     else
                     {
-                        if (string.IsNullOrEmpty(rom.DataArea!.GetName()))
+                        if (string.IsNullOrEmpty(rom.GetFieldValue<DataArea?>("DATAAREA")!.GetName()))
                             missingFields.Add(Models.Metadata.DataArea.NameKey);
-                        if (!rom.DataArea.SizeSpecified)
+                        if (rom.GetFieldValue<DataArea?>("DATAAREA")!.GetFieldValue<long?>(Models.Metadata.DataArea.SizeKey) == null)
                             missingFields.Add(Models.Metadata.DataArea.SizeKey);
                     }
                     break;
@@ -279,7 +279,7 @@ namespace SabreTools.DatFiles.Formats
             var info = new Models.SoftwareList.Info
             {
                 Name = item.GetName(),
-                Value = item.Value,
+                Value = item.GetFieldValue<string?>(Models.Metadata.Info.ValueKey),
             };
             return info;
         }
@@ -292,7 +292,7 @@ namespace SabreTools.DatFiles.Formats
             var sharedfeat = new Models.SoftwareList.SharedFeat
             {
                 Name = item.GetName(),
-                Value = item.Value,
+                Value = item.GetFieldValue<string?>(Models.Metadata.SharedFeat.ValueKey),
             };
             return sharedfeat;
         }
@@ -304,9 +304,9 @@ namespace SabreTools.DatFiles.Formats
         {
             var part = new Models.SoftwareList.Part
             {
-                Name = item.Part?.GetName(),
-                Interface = item.Part?.Interface,
-                Feature = CreateFeatures(item.Part?.Features),
+                Name = item.GetFieldValue<Part?>("PART")?.GetName(),
+                Interface = item.GetFieldValue<Part?>("PART")?.GetFieldValue<string?>(Models.Metadata.Part.InterfaceKey),
+                Feature = CreateFeatures(item.GetFieldValue<Part?>("PART")?.GetFieldValue<PartFeature[]?>(Models.Metadata.Part.FeatureKey)),
                 DataArea = CreateDataAreas(item),
                 DiskArea = null,
                 DipSwitch = null,
@@ -321,9 +321,9 @@ namespace SabreTools.DatFiles.Formats
         {
             var part = new Models.SoftwareList.Part
             {
-                Name = item.Part?.GetName(),
-                Interface = item.Part?.Interface,
-                Feature = CreateFeatures(item.Part?.Features),
+                Name = item.GetFieldValue<Part?>("PART")?.GetName(),
+                Interface = item.GetFieldValue<Part?>("PART")?.GetFieldValue<string?>(Models.Metadata.Part.InterfaceKey),
+                Feature = CreateFeatures(item.GetFieldValue<Part?>("PART")?.GetFieldValue<PartFeature[]?>(Models.Metadata.Part.FeatureKey)),
                 DataArea = null,
                 DiskArea = CreateDiskAreas(item),
                 DipSwitch = null,
@@ -338,9 +338,9 @@ namespace SabreTools.DatFiles.Formats
         {
             var part = new Models.SoftwareList.Part
             {
-                Name = item.Part?.GetName(),
-                Interface = item.Part?.Interface,
-                Feature = CreateFeatures(item.Part?.Features),
+                Name = item.GetFieldValue<Part?>("PART")?.GetName(),
+                Interface = item.GetFieldValue<Part?>("PART")?.GetFieldValue<string?>(Models.Metadata.Part.InterfaceKey),
+                Feature = CreateFeatures(item.GetFieldValue<Part?>("PART")?.GetFieldValue<PartFeature[]?>(Models.Metadata.Part.FeatureKey)),
                 DataArea = null,
                 DiskArea = null,
                 DipSwitch = CreateDipSwitches(item),
@@ -351,7 +351,7 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         /// Create a Feature array from the current list of PartFeature DatItems
         /// <summary>
-        private static Models.SoftwareList.Feature[]? CreateFeatures(List<PartFeature>? items)
+        private static Models.SoftwareList.Feature[]? CreateFeatures(PartFeature[]? items)
         {
             // If we don't have features, we can't do anything
             if (items == null || !items.Any())
@@ -363,7 +363,7 @@ namespace SabreTools.DatFiles.Formats
                 var feature = new Models.SoftwareList.Feature
                 {
                     Name = item.GetName(),
-                    Value = item.Value,
+                    Value = item.GetFieldValue<string?>(Models.Metadata.Feature.ValueKey),
                 };
                 features.Add(feature);
             }
@@ -378,10 +378,10 @@ namespace SabreTools.DatFiles.Formats
         {
             var dataArea = new Models.SoftwareList.DataArea
             {
-                Name = item.DataArea?.GetName(),
-                Size = item.DataArea?.Size?.ToString(),
-                Width = item.DataArea?.Width?.ToString(),
-                Endianness = item.DataArea?.Endianness.AsStringValue<Endianness>(),
+                Name = item.GetFieldValue<DataArea?>("DATAAREA")?.GetName(),
+                Size = item.GetFieldValue<DataArea?>("DATAAREA")?.GetFieldValue<long?>(Models.Metadata.DataArea.SizeKey)?.ToString(),
+                Width = item.GetFieldValue<DataArea?>("DATAAREA")?.GetFieldValue<long?>(Models.Metadata.DataArea.WidthKey)?.ToString(),
+                Endianness = item.GetFieldValue<DataArea?>("DATAAREA")?.GetFieldValue<Endianness>(Models.Metadata.DataArea.EndiannessKey).AsStringValue<Endianness>(),
                 Rom = CreateRom(item),
             };
             return [dataArea];
@@ -395,14 +395,14 @@ namespace SabreTools.DatFiles.Formats
             var rom = new Models.SoftwareList.Rom
             {
                 Name = item.GetName(),
-                Size = item.Size?.ToString(),
+                Size = item.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey)?.ToString(),
                 Length = null,
-                CRC = item.CRC,
-                SHA1 = item.SHA1,
-                Offset = item.Offset,
-                Value = item.Value,
-                Status = item.ItemStatus.AsStringValue<ItemStatus>(useSecond: false),
-                LoadFlag = item.LoadFlag.AsStringValue<LoadFlag>(),
+                CRC = item.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey),
+                SHA1 = item.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key),
+                Offset = item.GetFieldValue<string?>(Models.Metadata.Rom.OffsetKey),
+                Value = item.GetFieldValue<string?>(Models.Metadata.Rom.ValueKey),
+                Status = item.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey).AsStringValue<ItemStatus>(useSecond: false),
+                LoadFlag = item.GetFieldValue<LoadFlag>(Models.Metadata.Rom.LoadFlagKey).AsStringValue<LoadFlag>(),
             };
             return [rom];
         }
@@ -427,10 +427,10 @@ namespace SabreTools.DatFiles.Formats
             var disk = new Models.SoftwareList.Disk
             {
                 Name = item.GetName(),
-                MD5 = item.MD5,
-                SHA1 = item.SHA1,
-                Status = item.ItemStatus.AsStringValue<ItemStatus>(useSecond: false),
-                Writeable = item.Writable?.ToString(),
+                MD5 = item.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key),
+                SHA1 = item.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key),
+                Status = item.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey).AsStringValue<ItemStatus>(useSecond: false),
+                Writeable = item.GetFieldValue<bool?>(Models.Metadata.Disk.WritableKey)?.ToString(),
             };
             return [disk];
         }
@@ -441,13 +441,13 @@ namespace SabreTools.DatFiles.Formats
         private static Models.SoftwareList.DipSwitch[]? CreateDipSwitches(DipSwitch item)
         {
             var dipValues = new List<Models.SoftwareList.DipValue>();
-            foreach (var setting in item.Values ?? [])
+            foreach (var setting in item.GetFieldValue<DipValue[]?>(Models.Metadata.DipSwitch.DipValueKey) ?? [])
             {
                 var dipValue = new Models.SoftwareList.DipValue
                 {
                     Name = setting.GetName(),
-                    Value = setting.Value,
-                    Default = setting.Default?.ToString(),
+                    Value = setting.GetFieldValue<string?>(Models.Metadata.DipValue.ValueKey),
+                    Default = setting.GetFieldValue<bool?>(Models.Metadata.DipValue.DefaultKey).FromYesNo(),
                 };
 
                 dipValues.Add(dipValue);

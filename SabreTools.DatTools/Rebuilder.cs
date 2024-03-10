@@ -405,7 +405,7 @@ namespace SabreTools.DatTools
                 datItem = media.ConvertToRom();
 
             // Prepopluate a key string
-            string crc = (datItem as Rom)!.CRC ?? string.Empty;
+            string crc = (datItem as Rom)!.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey) ?? string.Empty;
 
             // Try to get the stream for the file
             if (!GetFileStream(datItem, file, isZip, out Stream? fileStream))
@@ -588,7 +588,7 @@ namespace SabreTools.DatTools
                 logger.User($"Matches found for '{Path.GetFileName(datItem.GetName() ?? string.Empty)}', rebuilding accordingly...");
 
                 // Get the proper output path
-                string sha1 = (datItem as Rom)!.SHA1 ?? string.Empty;
+                string sha1 = (datItem as Rom)!.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key) ?? string.Empty;
                 if (outputFormat == OutputFormat.TorrentGzipRomba)
                     outDir = Path.Combine(outDir, Utilities.GetDepotPath(sha1, datFile.Header.OutputDepot?.Depth ?? 0) ?? string.Empty);
                 else
@@ -634,7 +634,7 @@ namespace SabreTools.DatTools
                 logger.User($"Matches found for '{Path.GetFileName(datItem.GetName() ?? string.Empty)}', rebuilding accordingly...");
 
                 // Get the proper output path
-                string sha1 = (datItem as Rom)!.SHA1 ?? string.Empty;
+                string sha1 = (datItem as Rom)!.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key) ?? string.Empty;
                 if (outputFormat == OutputFormat.TorrentXZRomba)
                     outDir = Path.Combine(outDir, Utilities.GetDepotPath(sha1, datFile.Header.OutputDepot?.Depth ?? 0) ?? string.Empty).Replace(".gz", ".xz");
                 else

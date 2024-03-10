@@ -139,34 +139,33 @@ namespace SabreTools.DatFiles.Formats
                 string name = $"{machine.Name}_{index++}{(!string.IsNullOrEmpty(rom.Remark) ? $" {rom.Remark}" : string.Empty)}";
                 var item = new Rom
                 {
-                    Offset = dump.Rom?.Start,
-                    OpenMSXType = rom.Type,
-                    SHA1 = rom.Hash,
-                    Remark = rom.Remark,
-
                     Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(name);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.OffsetKey, dump.Rom?.Start);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.OpenMSXType, rom.Type);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.RemarkKey, rom.Remark);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, rom.Hash);
 
                 if (dump.Original != null)
                 {
-                    item.Original = new Original
+                    item.SetFieldValue<Original?>("ORIGINAL", new Original
                     {
                         Value = dump.Original.Value.AsYesNo(),
                         Content = dump.Original.Content,
-                    };
+                    });
                 }
 
                 switch (dump.Rom)
                 {
                     case Models.OpenMSX.Rom:
-                        item.OpenMSXSubType = OpenMSXSubType.Rom;
+                        item.SetFieldValue<OpenMSXSubType>(Models.Metadata.Rom.OpenMSXMediaType, OpenMSXSubType.Rom);
                         break;
                     case Models.OpenMSX.MegaRom:
-                        item.OpenMSXSubType = OpenMSXSubType.MegaRom;
+                        item.SetFieldValue<OpenMSXSubType>(Models.Metadata.Rom.OpenMSXMediaType, OpenMSXSubType.MegaRom);
                         break;
                     case Models.OpenMSX.SCCPlusCart:
-                        item.OpenMSXSubType = OpenMSXSubType.SCCPlusCart;
+                        item.SetFieldValue<OpenMSXSubType>(Models.Metadata.Rom.OpenMSXMediaType, OpenMSXSubType.SCCPlusCart);
                         break;
                 }
 

@@ -100,16 +100,15 @@ namespace SabreTools.DatFiles.Formats
 
             var rom = new Rom()
             {
-                Size = NumberHelper.ConvertToInt64(row.Size),
-                CRC = row.CRC32,
-                MD5 = row.MD5,
-                SHA1 = row.SHA1,
-                SHA256 = row.SHA256,
-                ItemStatus = ItemStatus.None,
-
                 Source = new Source { Index = indexId, Name = filename },
             };
             rom.SetName(name);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, row.CRC32);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, row.MD5);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, row.SHA1);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA256Key, row.SHA256);
+            rom.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, NumberHelper.ConvertToInt64(row.Size));
+            rom.SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.None);
 
             // Now process and add the rom
             rom.CopyMachineInformation(machine);

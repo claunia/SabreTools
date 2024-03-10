@@ -146,12 +146,11 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Rom:
                         var rom = new Rom
                         {
-                            Size = null,
-                            CRC = sfv.Hash,
-
                             Source = new Source { Index = indexId, Name = filename },
                         };
                         rom.SetName(itemName);
+                        rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, sfv.Hash);
+                        rom.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, null);
 
                         rom.CopyMachineInformation(machine);
                         ParseAddHelper(rom, statsOnly);
@@ -194,11 +193,10 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Disk:
                         var disk = new Disk
                         {
-                            MD5 = md5.Hash,
-
                             Source = new Source { Index = indexId, Name = filename },
                         };
                         disk.SetName(itemName);
+                        disk.SetFieldValue<string?>(Models.Metadata.Disk.MD5Key, md5.Hash);
 
                         disk.CopyMachineInformation(machine);
                         ParseAddHelper(disk, statsOnly);
@@ -207,11 +205,10 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Media:
                         var media = new Media
                         {
-                            MD5 = md5.Hash,
-
                             Source = new Source { Index = indexId, Name = filename },
                         };
                         media.SetName(itemName);
+                        media.SetFieldValue<string?>(Models.Metadata.Media.MD5Key, md5.Hash);
 
                         media.CopyMachineInformation(machine);
                         ParseAddHelper(media, statsOnly);
@@ -220,12 +217,11 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Rom:
                         var rom = new Rom
                         {
-                            Size = null,
-                            MD5 = md5.Hash,
-
                             Source = new Source { Index = indexId, Name = filename },
                         };
                         rom.SetName(itemName);
+                        rom.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, md5.Hash);
+                        rom.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, null);
 
                         rom.CopyMachineInformation(machine);
                         ParseAddHelper(rom, statsOnly);
@@ -268,11 +264,10 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Disk:
                         var disk = new Disk
                         {
-                            SHA1 = sha1.Hash,
-
                             Source = new Source { Index = indexId, Name = filename },
                         };
                         disk.SetName(itemName);
+                        disk.SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, sha1.Hash);
 
                         disk.CopyMachineInformation(machine);
                         ParseAddHelper(disk, statsOnly);
@@ -281,11 +276,10 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Media:
                         var media = new Media
                         {
-                            SHA1 = sha1.Hash,
-
                             Source = new Source { Index = indexId, Name = filename },
                         };
                         media.SetName(itemName);
+                        media.SetFieldValue<string?>(Models.Metadata.Media.SHA1Key, sha1.Hash);
 
                         media.CopyMachineInformation(machine);
                         ParseAddHelper(media, statsOnly);
@@ -294,12 +288,11 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Rom:
                         var rom = new Rom
                         {
-                            Size = null,
-                            SHA1 = sha1.Hash,
-
                             Source = new Source { Index = indexId, Name = filename },
                         };
                         rom.SetName(itemName);
+                        rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, sha1.Hash);
+                        rom.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, null);
 
                         rom.CopyMachineInformation(machine);
                         ParseAddHelper(rom, statsOnly);
@@ -342,11 +335,10 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Media:
                         var media = new Media
                         {
-                            SHA256 = sha256.Hash,
-
                             Source = new Source { Index = indexId, Name = filename },
                         };
                         media.SetName(itemName);
+                        media.SetFieldValue<string?>(Models.Metadata.Media.SHA256Key, sha256.Hash);
 
                         media.CopyMachineInformation(machine);
                         ParseAddHelper(media, statsOnly);
@@ -356,12 +348,11 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Rom:
                         var rom = new Rom
                         {
-                            Size = null,
-                            SHA256 = sha256.Hash,
-
                             Source = new Source { Index = indexId, Name = filename },
                         };
                         rom.SetName(itemName);
+                        rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA256Key, sha256.Hash);
+                        rom.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, null);
 
                         rom.CopyMachineInformation(machine);
                         ParseAddHelper(rom, statsOnly);
@@ -406,12 +397,11 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Rom:
                         var rom = new Rom
                         {
-                            Size = null,
-                            SHA384 = sha384.Hash,
-
                             Source = new Source { Index = indexId, Name = filename },
                         };
                         rom.SetName(itemName);
+                        rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA384Key, sha384.Hash);
+                        rom.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, null);
 
                         rom.CopyMachineInformation(machine);
                         ParseAddHelper(rom, statsOnly);
@@ -456,12 +446,11 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Rom:
                         var rom = new Rom
                         {
-                            Size = null,
-                            SHA512 = sha512.Hash,
-
                             Source = new Source { Index = indexId, Name = filename },
                         };
                         rom.SetName(itemName);
+                        rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key, sha512.Hash);
+                        rom.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, null);
 
                         rom.CopyMachineInformation(machine);
                         ParseAddHelper(rom, statsOnly);
@@ -504,11 +493,10 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Media:
                         var media = new Media
                         {
-                            SpamSum = spamsum.Hash,
-
                             Source = new Source { Index = indexId, Name = filename },
                         };
                         media.SetName(itemName);
+                        media.SetFieldValue<string?>(Models.Metadata.Media.SpamSumKey, spamsum.Hash);
 
                         media.CopyMachineInformation(machine);
                         ParseAddHelper(media, statsOnly);
@@ -518,12 +506,11 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Rom:
                         var rom = new Rom
                         {
-                            Size = null,
-                            SpamSum = spamsum.Hash,
-
                             Source = new Source { Index = indexId, Name = filename },
                         };
                         rom.SetName(itemName);
+                        rom.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, null);
+                        rom.SetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey, spamsum.Hash);
 
                         rom.CopyMachineInformation(machine);
                         ParseAddHelper(rom, statsOnly);

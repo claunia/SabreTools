@@ -1,6 +1,5 @@
 ﻿using System.Xml.Serialization;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.FileTypes;
@@ -15,356 +14,24 @@ namespace SabreTools.DatItems.Formats
     {
         #region Fields
 
-        #region Common
-
-        /// <summary>
-        /// What BIOS is required for this rom
-        /// </summary>
-        [JsonProperty("bios", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("bios")]
-        public string? Bios
+        [JsonIgnore]
+        public bool ItemStatusSpecified
         {
-            get => _internal.ReadString(Models.Metadata.Rom.BiosKey);
-            set => _internal[Models.Metadata.Rom.BiosKey] = value;
-        }
-
-        /// <summary>
-        /// Byte size of the rom
-        /// </summary>
-        [JsonProperty("size", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("size")]
-        public long? Size
-        {
-            get => _internal.ReadLong(Models.Metadata.Rom.SizeKey);
-            set => _internal[Models.Metadata.Rom.SizeKey] = value;
+            get
+            {
+                var status = GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey);
+                return status != ItemStatus.NULL && status != ItemStatus.None;
+            }
         }
 
         [JsonIgnore]
-        public bool SizeSpecified { get { return Size != null; } }
-
-        /// <summary>
-        /// File CRC32 hash
-        /// </summary>
-        [JsonProperty("crc", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("crc")]
-        public string? CRC
+        public bool OriginalSpecified
         {
-            get => _internal.ReadString(Models.Metadata.Rom.CRCKey);
-            set => _internal[Models.Metadata.Rom.CRCKey] = TextHelper.NormalizeCRC32(value);
-        }
-
-        /// <summary>
-        /// File MD5 hash
-        /// </summary>
-        [JsonProperty("md5", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("md5")]
-        public string? MD5
-        {
-            get => _internal.ReadString(Models.Metadata.Rom.MD5Key);
-            set => _internal[Models.Metadata.Rom.MD5Key] = TextHelper.NormalizeMD5(value);
-        }
-
-        /// <summary>
-        /// File SHA-1 hash
-        /// </summary>
-        [JsonProperty("sha1", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha1")]
-        public string? SHA1
-        {
-            get => _internal.ReadString(Models.Metadata.Rom.SHA1Key);
-            set => _internal[Models.Metadata.Rom.SHA1Key] = TextHelper.NormalizeSHA1(value);
-        }
-
-        /// <summary>
-        /// File SHA-256 hash
-        /// </summary>
-        [JsonProperty("sha256", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha256")]
-        public string? SHA256
-        {
-            get => _internal.ReadString(Models.Metadata.Rom.SHA256Key);
-            set => _internal[Models.Metadata.Rom.SHA256Key] = TextHelper.NormalizeSHA256(value);
-        }
-
-        /// <summary>
-        /// File SHA-384 hash
-        /// </summary>
-        [JsonProperty("sha384", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha384")]
-        public string? SHA384
-        {
-            get => _internal.ReadString(Models.Metadata.Rom.SHA384Key);
-            set => _internal[Models.Metadata.Rom.SHA384Key] = TextHelper.NormalizeSHA384(value);
-        }
-
-        /// <summary>
-        /// File SHA-512 hash
-        /// </summary>
-        [JsonProperty("sha512", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha512")]
-        public string? SHA512
-        {
-            get => _internal.ReadString(Models.Metadata.Rom.SHA512Key);
-            set => _internal[Models.Metadata.Rom.SHA512Key] = TextHelper.NormalizeSHA512(value);
-        }
-
-        /// <summary>
-        /// File SpamSum fuzzy hash
-        /// </summary>
-        [JsonProperty("spamsum", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("spamsum")]
-        public string? SpamSum
-        {
-            get => _internal.ReadString(Models.Metadata.Rom.SpamSumKey);
-            set => _internal[Models.Metadata.Rom.SpamSumKey] = value;
-        }
-
-        /// <summary>
-        /// Rom name to merge from parent
-        /// </summary>
-        [JsonProperty("merge", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("merge")]
-        public string? MergeTag
-        {
-            get => _internal.ReadString(Models.Metadata.Rom.MergeKey);
-            set => _internal[Models.Metadata.Rom.MergeKey] = value;
-        }
-
-        /// <summary>
-        /// Rom region
-        /// </summary>
-        [JsonProperty("region", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("biregionos")]
-        public string? Region
-        {
-            get => _internal.ReadString(Models.Metadata.Rom.RegionKey);
-            set => _internal[Models.Metadata.Rom.RegionKey] = value;
-        }
-
-        /// <summary>
-        /// Data offset within rom
-        /// </summary>
-        [JsonProperty("offset", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("offset")]
-        public string? Offset
-        {
-            get => _internal.ReadString(Models.Metadata.Rom.OffsetKey);
-            set => _internal[Models.Metadata.Rom.OffsetKey] = value;
-        }
-
-        /// <summary>
-        /// File created date
-        /// </summary>
-        [JsonProperty("date", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("date")]
-        public string? Date
-        {
-            get => _internal.ReadString(Models.Metadata.Rom.DateKey);
-            set => _internal[Models.Metadata.Rom.DateKey] = value;
-        }
-
-        /// <summary>
-        /// Rom dump status
-        /// </summary>
-        [JsonProperty("status", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("status")]
-        [JsonConverter(typeof(StringEnumConverter))]
-        public ItemStatus ItemStatus
-        {
-            get => _internal.ReadString(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>();
-            set => _internal[Models.Metadata.Rom.StatusKey] = value.AsStringValue<ItemStatus>(useSecond: false);
-        }
-
-        [JsonIgnore]
-        public bool ItemStatusSpecified { get { return ItemStatus != ItemStatus.NULL && ItemStatus != ItemStatus.None; } }
-
-        /// <summary>
-        /// Determine if the rom is optional in the set
-        /// </summary>
-        [JsonProperty("optional", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("optional")]
-        public bool? Optional
-        {
-            get => _internal.ReadBool(Models.Metadata.Rom.OptionalKey);
-            set => _internal[Models.Metadata.Rom.OptionalKey] = value;
-        }
-
-        [JsonIgnore]
-        public bool OptionalSpecified { get { return Optional != null; } }
-
-        /// <summary>
-        /// Determine if the CRC32 hash is inverted
-        /// </summary>
-        [JsonProperty("inverted", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("inverted")]
-        public bool? Inverted
-        {
-            get => _internal.ReadBool(Models.Metadata.Rom.InvertedKey);
-            set => _internal[Models.Metadata.Rom.InvertedKey] = value;
-        }
-
-        [JsonIgnore]
-        public bool InvertedSpecified { get { return Inverted != null; } }
-
-        #endregion
-
-        #region Archive.org
-
-        /// <summary>
-        /// Source of file
-        /// </summary>
-        [JsonProperty("ado_source", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("ado_source")]
-        public string? ArchiveDotOrgSource
-        {
-            get => _internal.ReadString(Models.Metadata.Rom.SourceKey);
-            set => _internal[Models.Metadata.Rom.SourceKey] = value;
-        }
-
-        /// <summary>
-        /// Archive.org recognized file format
-        /// </summary>
-        [JsonProperty("ado_format", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("ado_format")]
-        public string? ArchiveDotOrgFormat
-        {
-            get => _internal.ReadString(Models.Metadata.Rom.FormatKey);
-            set => _internal[Models.Metadata.Rom.FormatKey] = value;
-        }
-
-        /// <summary>
-        /// Original filename
-        /// </summary>
-        [JsonProperty("original_filename", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("original_filename")]
-        public string? OriginalFilename
-        {
-            get => _internal.ReadString(Models.Metadata.Rom.OriginalKey);
-            set => _internal[Models.Metadata.Rom.OriginalKey] = value;
-        }
-
-        /// <summary>
-        /// Image rotation
-        /// </summary>
-        /// <remarks>
-        /// TODO: This might be Int32?
-        /// </remarks>
-        [JsonProperty("rotation", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("rotation")]
-        public string? Rotation
-        {
-            get => _internal.ReadString(Models.Metadata.Rom.RotationKey);
-            set => _internal[Models.Metadata.Rom.RotationKey] = value;
-        }
-
-        /// <summary>
-        /// Summation value?
-        /// </summary>
-        [JsonProperty("summation", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("summation")]
-        public string? Summation
-        {
-            get => _internal.ReadString(Models.Metadata.Rom.SummationKey);
-            set => _internal[Models.Metadata.Rom.SummationKey] = value;
-        }
-
-        #endregion
-
-        #region AttractMode
-
-        /// <summary>
-        /// Alternate name for the item
-        /// </summary>
-        [JsonProperty("alt_internalname", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("alt_internalname")]
-        public string? AltName
-        {
-            get => _internal.ReadString(Models.Metadata.Rom.AltRomnameKey);
-            set => _internal[Models.Metadata.Rom.AltRomnameKey] = value;
-        }
-
-        /// <summary>
-        /// Alternate title for the item
-        /// </summary>
-        [JsonProperty("alt_title", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("alt_title")]
-        public string? AltTitle
-        {
-            get => _internal.ReadString(Models.Metadata.Rom.AltTitleKey);
-            set => _internal[Models.Metadata.Rom.AltTitleKey] = value;
-        }
-
-        #endregion
-
-        #region Logiqx
-
-        /// <summary>
-        /// Alternate title for the item
-        /// </summary>
-        [JsonProperty("mia", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("mia")]
-        public bool? MIA
-        {
-            get => _internal.ReadBool(Models.Metadata.Rom.MIAKey);
-            set => _internal[Models.Metadata.Rom.MIAKey] = value;
-        }
-
-        [JsonIgnore]
-        public bool MIASpecified { get { return MIA != null; } }
-
-        #endregion
-
-        #region OpenMSX
-
-        /// <summary>
-        /// OpenMSX sub item type
-        /// </summary>
-        /// <remarks>Hack on top of internal model</remarks>
-        [JsonProperty("original", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("original")]
-        public Original? Original
-        {
-            get => _internal.Read<Original>("ORIGINAL");
-            set => _internal["ORIGINAL"] = value;
-        }
-
-        [JsonIgnore]
-        public bool OriginalSpecified { get { return Original != null && Original != default; } }
-
-        /// <summary>
-        /// OpenMSX sub item type
-        /// </summary>
-        [JsonProperty("openmsx_subtype", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("openmsx_subtype")]
-        [JsonConverter(typeof(StringEnumConverter))]
-        public OpenMSXSubType OpenMSXSubType
-        {
-            get => _internal.ReadString(Models.Metadata.Rom.OpenMSXMediaType).AsEnumValue<OpenMSXSubType>();
-            set => _internal[Models.Metadata.Rom.OpenMSXMediaType] = value.AsStringValue<OpenMSXSubType>();
-        }
-
-        [JsonIgnore]
-        public bool OpenMSXSubTypeSpecified { get { return OpenMSXSubType != OpenMSXSubType.NULL; } }
-
-        /// <summary>
-        /// OpenMSX sub item type
-        /// </summary>
-        /// <remarks>Not related to the subtype above</remarks>
-        [JsonProperty("openmsx_type", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("openmsx_type")]
-        public string? OpenMSXType
-        {
-            get => _internal.ReadString(Models.Metadata.Rom.OpenMSXType);
-            set => _internal[Models.Metadata.Rom.OpenMSXType] = value;
-        }
-
-        /// <summary>
-        /// Item remark (like a comment)
-        /// </summary>
-        [JsonProperty("remark", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("remark")]
-        public string? Remark
-        {
-            get => _internal.ReadString(Models.Metadata.Rom.RemarkKey);
-            set => _internal[Models.Metadata.Rom.RemarkKey] = value;
-        }
-
-        /// <summary>
-        /// Boot state
-        /// </summary>
-        /// TODO: Investigate where this value came from?
-        [JsonProperty("boot", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("boot")]
-        public string? Boot
-        {
-            get => _internal.ReadString("BOOT");
-            set => _internal["BOOT"] = value;
-        }
-
-        #endregion
-
-        #region SoftwareList
-
-        /// <summary>
-        /// Data area information
-        /// </summary>
-        /// <remarks>Hack on top of internal model</remarks>
-        [JsonProperty("dataarea", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("dataarea")]
-        public DataArea? DataArea
-        {
-            get => _internal.Read<DataArea>("DATAAREA");
-            set => _internal["DATAAREA"] = value;
+            get
+            {
+                var original = GetFieldValue<Original?>("ORIGINAL");
+                return original != null && original != default;
+            }
         }
 
         [JsonIgnore]
@@ -372,37 +39,13 @@ namespace SabreTools.DatItems.Formats
         {
             get
             {
-                return DataArea != null
-                    && (!string.IsNullOrEmpty(DataArea.GetName())
-                        || DataArea.SizeSpecified
-                        || DataArea.WidthSpecified
-                        || DataArea.EndiannessSpecified);
+                var dataArea = GetFieldValue<DataArea?>("DATAAREA");
+                return dataArea != null
+                    && (!string.IsNullOrEmpty(dataArea.GetName())
+                        || dataArea.GetFieldValue<long?>(Models.Metadata.DataArea.SizeKey) != null
+                        || dataArea.GetFieldValue<long?>(Models.Metadata.DataArea.WidthKey) != null
+                        || dataArea.GetFieldValue<Endianness>(Models.Metadata.DataArea.EndiannessKey) != Endianness.NULL);
             }
-        }
-
-        /// <summary>
-        /// Loading flag
-        /// </summary>
-        [JsonProperty("loadflag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("loadflag")]
-        [JsonConverter(typeof(StringEnumConverter))]
-        public LoadFlag LoadFlag
-        {
-            get => _internal.ReadString(Models.Metadata.Rom.LoadFlagKey).AsEnumValue<LoadFlag>();
-            set => _internal[Models.Metadata.Rom.LoadFlagKey] = value.AsStringValue<LoadFlag>();
-        }
-
-        [JsonIgnore]
-        public bool LoadFlagSpecified { get { return LoadFlag != LoadFlag.NULL; } }
-
-        /// <summary>
-        /// Original hardware part associated with the item
-        /// </summary>
-        /// <remarks>Hack on top of internal model</remarks>
-        [JsonProperty("part", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("part")]
-        public Part? Part
-        {
-            get => _internal.Read<Part>("PART");
-            set => _internal["PART"] = value;
         }
 
         [JsonIgnore]
@@ -410,23 +53,12 @@ namespace SabreTools.DatItems.Formats
         {
             get
             {
-                return Part != null
-                    && (!string.IsNullOrEmpty(Part.GetName())
-                        || !string.IsNullOrEmpty(Part.Interface));
+                var part = GetFieldValue<Part?>("PART");
+                return part != null
+                    && (!string.IsNullOrEmpty(part.GetName())
+                        || !string.IsNullOrEmpty(part.GetFieldValue<string?>(Models.Metadata.Part.InterfaceKey)));
             }
         }
-
-        /// <summary>
-        /// SoftwareList value associated with the item
-        /// </summary>
-        [JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("value")]
-        public string? Value
-        {
-            get => _internal.ReadString(Models.Metadata.Rom.ValueKey);
-            set => _internal[Models.Metadata.Rom.ValueKey] = value;
-        }
-
-        #endregion
 
         #endregion // Fields
 
@@ -453,7 +85,7 @@ namespace SabreTools.DatItems.Formats
             SetName(null);
             ItemType = ItemType.Rom;
             DupeType = 0x00;
-            ItemStatus = ItemStatus.None;
+            SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.None);
         }
 
         /// <summary>
@@ -467,8 +99,8 @@ namespace SabreTools.DatItems.Formats
             _internal = new Models.Metadata.Rom();
             SetName(name);
             ItemType = ItemType.Rom;
-            Size = null;
-            ItemStatus = ItemStatus.None;
+            SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, null);
+            SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.None);
 
             Machine = new Machine
             {
@@ -487,19 +119,19 @@ namespace SabreTools.DatItems.Formats
             Machine = new Machine();
 
             SetName(baseFile.Filename);
-            Size = baseFile.Size;
-            CRC = TextHelper.ByteArrayToString(baseFile.CRC);
-            MD5 = TextHelper.ByteArrayToString(baseFile.MD5);
-            SHA1 = TextHelper.ByteArrayToString(baseFile.SHA1);
-            SHA256 = TextHelper.ByteArrayToString(baseFile.SHA256);
-            SHA384 = TextHelper.ByteArrayToString(baseFile.SHA384);
-            SHA512 = TextHelper.ByteArrayToString(baseFile.SHA512);
-            SpamSum = System.Text.Encoding.UTF8.GetString(baseFile.SpamSum ?? []);
+            SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, baseFile.Size);
+            SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, TextHelper.ByteArrayToString(baseFile.CRC));
+            SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, TextHelper.ByteArrayToString(baseFile.MD5));
+            SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, TextHelper.ByteArrayToString(baseFile.SHA1));
+            SetFieldValue<string?>(Models.Metadata.Rom.SHA256Key, TextHelper.ByteArrayToString(baseFile.SHA256));
+            SetFieldValue<string?>(Models.Metadata.Rom.SHA384Key, TextHelper.ByteArrayToString(baseFile.SHA384));
+            SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key, TextHelper.ByteArrayToString(baseFile.SHA512));
+            SetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey, System.Text.Encoding.UTF8.GetString(baseFile.SpamSum ?? []));
 
             ItemType = ItemType.Rom;
             DupeType = 0x00;
-            ItemStatus = ItemStatus.None;
-            Date = baseFile.Date;
+            SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.None);
+            SetFieldValue<string?>(Models.Metadata.Rom.DateKey, baseFile.Date);
         }
 
         /// <summary>
@@ -511,7 +143,7 @@ namespace SabreTools.DatItems.Formats
 
             ItemType = ItemType.Rom;
             DupeType = 0x00;
-            ItemStatus = ItemStatus.None;
+            SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.None);
         }
 
         #endregion
@@ -541,17 +173,17 @@ namespace SabreTools.DatItems.Formats
         {
             return new BaseFile()
             {
-                Filename = this.GetName(),
+                Filename = GetName(),
                 Parent = this.Machine.Name,
-                Date = this.Date,
-                Size = this.Size,
-                CRC = TextHelper.StringToByteArray(this.CRC),
-                MD5 = TextHelper.StringToByteArray(this.MD5),
-                SHA1 = TextHelper.StringToByteArray(this.SHA1),
-                SHA256 = TextHelper.StringToByteArray(this.SHA256),
-                SHA384 = TextHelper.StringToByteArray(this.SHA384),
-                SHA512 = TextHelper.StringToByteArray(this.SHA512),
-                SpamSum = System.Text.Encoding.UTF8.GetBytes(this.SpamSum ?? string.Empty),
+                Date = GetFieldValue<string?>(Models.Metadata.Rom.DateKey),
+                Size = GetFieldValue<long?>(Models.Metadata.Rom.SizeKey),
+                CRC = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Rom.CRCKey)),
+                MD5 = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Rom.MD5Key)),
+                SHA1 = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key)),
+                SHA256 = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Rom.SHA256Key)),
+                SHA384 = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Rom.SHA384Key)),
+                SHA512 = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Rom.SHA512Key)),
+                SpamSum = System.Text.Encoding.UTF8.GetBytes(GetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey) ?? string.Empty),
             };
         }
 
@@ -597,31 +229,31 @@ namespace SabreTools.DatItems.Formats
             switch (bucketedBy)
             {
                 case ItemKey.CRC:
-                    key = CRC;
+                    key = GetFieldValue<string?>(Models.Metadata.Rom.CRCKey);
                     break;
 
                 case ItemKey.MD5:
-                    key = MD5;
+                    key = GetFieldValue<string?>(Models.Metadata.Rom.MD5Key);
                     break;
 
                 case ItemKey.SHA1:
-                    key = SHA1;
+                    key = GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key);
                     break;
 
                 case ItemKey.SHA256:
-                    key = SHA256;
+                    key = GetFieldValue<string?>(Models.Metadata.Rom.SHA256Key);
                     break;
 
                 case ItemKey.SHA384:
-                    key = SHA384;
+                    key = GetFieldValue<string?>(Models.Metadata.Rom.SHA384Key);
                     break;
 
                 case ItemKey.SHA512:
-                    key = SHA512;
+                    key = GetFieldValue<string?>(Models.Metadata.Rom.SHA512Key);
                     break;
 
                 case ItemKey.SpamSum:
-                    key = SpamSum;
+                    key = GetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey);
                     break;
 
                 // Let the base handle generic stuff

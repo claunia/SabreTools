@@ -1,6 +1,5 @@
 ﻿using System.Xml.Serialization;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.FileTypes;
@@ -15,132 +14,14 @@ namespace SabreTools.DatItems.Formats
     {
         #region Fields
 
-        #region Common
-
-        /// <summary>
-        /// Data MD5 hash
-        /// </summary>
-        [JsonProperty("md5", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("md5")]
-        public string? MD5
-        {
-            get => _internal.ReadString(Models.Metadata.Disk.MD5Key);
-            set => _internal[Models.Metadata.Disk.MD5Key] = TextHelper.NormalizeMD5(value);
-        }
-
-        /// <summary>
-        /// Data SHA-1 hash
-        /// </summary>
-        [JsonProperty("sha1", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha1")]
-        public string? SHA1
-        {
-            get => _internal.ReadString(Models.Metadata.Disk.SHA1Key);
-            set => _internal[Models.Metadata.Disk.SHA1Key] = TextHelper.NormalizeSHA1(value);
-        }
-
-        /// <summary>
-        /// Disk name to merge from parent
-        /// </summary>
-        [JsonProperty("merge", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("merge")]
-        public string? MergeTag
-        {
-            get => _internal.ReadString(Models.Metadata.Disk.MergeKey);
-            set => _internal[Models.Metadata.Disk.MergeKey] = value;
-        }
-
-        /// <summary>
-        /// Disk region
-        /// </summary>
-        [JsonProperty("region", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("region")]
-        public string? Region
-        {
-            get => _internal.ReadString(Models.Metadata.Disk.RegionKey);
-            set => _internal[Models.Metadata.Disk.RegionKey] = value;
-        }
-
-        /// <summary>
-        /// Disk index
-        /// </summary>
-        [JsonProperty("index", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("index")]
-        public string? Index
-        {
-            get => _internal.ReadString(Models.Metadata.Disk.IndexKey);
-            set => _internal[Models.Metadata.Disk.IndexKey] = value;
-        }
-
-        /// <summary>
-        /// Disk writable flag
-        /// </summary>
-        [JsonProperty("writable", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("writable")]
-        public bool? Writable
-        {
-            get => _internal.ReadBool(Models.Metadata.Disk.WritableKey);
-            set => _internal[Models.Metadata.Disk.WritableKey] = value;
-        }
-
-        [JsonIgnore]
-        public bool WritableSpecified { get { return Writable != null; } }
-
-        /// <summary>
-        /// Disk dump status
-        /// </summary>
-        [JsonProperty("status", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("status")]
-        [JsonConverter(typeof(StringEnumConverter))]
-        public ItemStatus ItemStatus
-        {
-            get => _internal.ReadString(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>();
-            set => _internal[Models.Metadata.Disk.StatusKey] = value.AsStringValue<ItemStatus>(useSecond: false);
-        }
-
-        [JsonIgnore]
-        public bool ItemStatusSpecified { get { return ItemStatus != ItemStatus.NULL; } }
-
-        /// <summary>
-        /// Determine if the disk is optional in the set
-        /// </summary>
-        [JsonProperty("optional", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("optional")]
-        public bool? Optional
-        {
-            get => _internal.ReadBool(Models.Metadata.Disk.OptionalKey);
-            set => _internal[Models.Metadata.Disk.OptionalKey] = value;
-        }
-
-        [JsonIgnore]
-        public bool OptionalSpecified { get { return Optional != null; } }
-
-        #endregion
-
-        #region SoftwareList
-
-        /// <summary>
-        /// Disk area information
-        /// </summary>
-        /// <remarks>Hack on top of internal model</remarks>
-        [JsonProperty("diskarea", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("diskarea")]
-        public DiskArea? DiskArea
-        {
-            get => _internal.Read<DiskArea>("DISKAREA");
-            set => _internal["DISKAREA"] = value;
-        }
-
         [JsonIgnore]
         public bool DiskAreaSpecified
         {
             get
             {
-                return DiskArea != null
-                    && !string.IsNullOrEmpty(DiskArea.GetName());
+                var diskArea = GetFieldValue<DiskArea?>("DISKAREA");
+                return diskArea != null && !string.IsNullOrEmpty(diskArea.GetName());
             }
-        }
-
-        /// <summary>
-        /// Original hardware part associated with the item
-        /// </summary>
-        /// <remarks>Hack on top of internal model</remarks>
-        [JsonProperty("part", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("part")]
-        public Part? Part
-        {
-            get => _internal.Read<Part>("PART");
-            set => _internal["PART"] = value;
         }
 
         [JsonIgnore]
@@ -148,15 +29,14 @@ namespace SabreTools.DatItems.Formats
         {
             get
             {
-                return Part != null
-                    && (!string.IsNullOrEmpty(Part.GetName())
-                        || !string.IsNullOrEmpty(Part.Interface));
+                var part = GetFieldValue<Part?>("PART");
+                return part != null
+                    && (!string.IsNullOrEmpty(part.GetName())
+                        || !string.IsNullOrEmpty(part.GetFieldValue<string?>(Models.Metadata.Part.InterfaceKey)));
             }
         }
 
         #endregion
-
-        #endregion // Fields
 
         #region Accessors
 
@@ -181,7 +61,7 @@ namespace SabreTools.DatItems.Formats
             SetName(string.Empty);
             ItemType = ItemType.Disk;
             DupeType = 0x00;
-            ItemStatus = ItemStatus.None;
+            SetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey, ItemStatus.None);
         }
 
         /// <summary>
@@ -193,12 +73,12 @@ namespace SabreTools.DatItems.Formats
             Machine = new Machine();
 
             SetName(baseFile.Filename);
-            MD5 = TextHelper.ByteArrayToString(baseFile.MD5);
-            SHA1 = TextHelper.ByteArrayToString(baseFile.SHA1);
+            SetFieldValue<string?>(Models.Metadata.Disk.MD5Key, TextHelper.ByteArrayToString(baseFile.MD5));
+            SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, TextHelper.ByteArrayToString(baseFile.SHA1));
 
             ItemType = ItemType.Disk;
             DupeType = 0x00;
-            ItemStatus = ItemStatus.None;
+            SetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey, ItemStatus.None);
         }
 
         #endregion
@@ -230,8 +110,8 @@ namespace SabreTools.DatItems.Formats
             {
                 Filename = this.GetName(),
                 Parent = this.Machine.Name,
-                MD5 = TextHelper.StringToByteArray(this.MD5),
-                SHA1 = TextHelper.StringToByteArray(this.SHA1),
+                MD5 = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Disk.MD5Key)),
+                SHA1 = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key)),
             };
         }
 
@@ -249,12 +129,9 @@ namespace SabreTools.DatItems.Formats
                 Machine = this.Machine.Clone() as Machine ?? new Machine(),
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
-
-                DataArea = new DataArea(),
-                Part = this.Part,
             };
 
-            rom.DataArea.SetName(this.DiskArea?.GetName());
+            rom.GetFieldValue<DataArea?>("DATAAREA")?.SetName(this.GetFieldValue<DiskArea?>("DISKAREA")?.GetName());
 
             return rom;
         }
@@ -289,11 +166,11 @@ namespace SabreTools.DatItems.Formats
             switch (bucketedBy)
             {
                 case ItemKey.MD5:
-                    key = MD5;
+                    key = GetFieldValue<string?>(Models.Metadata.Disk.MD5Key);
                     break;
 
                 case ItemKey.SHA1:
-                    key = SHA1;
+                    key = GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key);
                     break;
 
                 // Let the base handle generic stuff

@@ -106,11 +106,10 @@ namespace SabreTools.DatFiles.Formats
             {
                 var infoItem = new Info
                 {
-                    Value = info.Value,
-
                     Source = new Source { Index = indexId, Name = filename },
                 };
                 infoItem.SetName(info.Name);
+                infoItem.SetFieldValue<string?>(Models.Metadata.Info.ValueKey, info.Value);
 
                 infoItem.CopyMachineInformation(machine);
                 ParseAddHelper(infoItem, statsOnly);
@@ -121,11 +120,10 @@ namespace SabreTools.DatFiles.Formats
             {
                 var sharedfeatItem = new SharedFeature
                 {
-                    Value = sharedfeat.Value,
-
                     Source = new Source { Index = indexId, Name = filename },
                 };
                 sharedfeatItem.SetName(sharedfeat.Name);
+                sharedfeatItem.SetFieldValue<string?>(Models.Metadata.SharedFeat.ValueKey, sharedfeat.Value);
 
                 sharedfeatItem.CopyMachineInformation(machine);
                 ParseAddHelper(sharedfeatItem, statsOnly);
@@ -169,12 +167,11 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Part
                 {
-                    Interface = part.Interface,
-                    Features = CreateFeatures(part.Feature, machine, filename, indexId, statsOnly),
-
                     Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(part.Name);
+                item.SetFieldValue<string?>(Models.Metadata.Part.InterfaceKey, part.Interface);
+                item.SetFieldValue<PartFeature[]?>(Models.Metadata.Part.FeatureKey, CreateFeatures(part.Feature, machine, filename, indexId, statsOnly));
 
                 item.CopyMachineInformation(machine);
 
@@ -192,7 +189,7 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private static List<PartFeature>? CreateFeatures(Models.SoftwareList.Feature[]? features, Machine machine, string filename, int indexId, bool statsOnly)
+        private static PartFeature[]? CreateFeatures(Models.SoftwareList.Feature[]? features, Machine machine, string filename, int indexId, bool statsOnly)
         {
             // If the feature array is missing, we can't do anything
             if (features == null || !features.Any())
@@ -203,17 +200,16 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new PartFeature
                 {
-                    Value = feature.Value,
-
                     Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(feature.Name);
+                item.SetFieldValue<string?>(Models.Metadata.Feature.ValueKey, feature.Value);
 
                 item.CopyMachineInformation(machine);
                 partFeatures.Add(item);
             }
 
-            return partFeatures;
+            return [.. partFeatures];
         }
 
         /// <summary>
@@ -236,13 +232,12 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new DataArea
                 {
-                    Size = NumberHelper.ConvertToInt64(dataarea.Size),
-                    Width = NumberHelper.ConvertToInt64(dataarea.Width),
-                    Endianness = dataarea.Endianness.AsEnumValue<Endianness>(),
-
                     Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(dataarea.Name);
+                item.SetFieldValue<Endianness?>(Models.Metadata.DataArea.EndiannessKey, dataarea.Endianness.AsEnumValue<Endianness>());
+                item.SetFieldValue<long?>(Models.Metadata.DataArea.SizeKey, NumberHelper.ConvertToInt64(dataarea.Size));
+                item.SetFieldValue<long?>(Models.Metadata.DataArea.WidthKey, NumberHelper.ConvertToInt64(dataarea.Width));
 
                 item.CopyMachineInformation(machine);
                 ConvertRoms(dataarea.Rom, part, item, machine, filename, indexId, statsOnly, ref containsItems);
@@ -271,20 +266,18 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Rom
                 {
-                    Size = NumberHelper.ConvertToInt64(rom.Size ?? rom.Length),
-                    CRC = rom.CRC,
-                    SHA1 = rom.SHA1,
-                    Offset = rom.Offset,
-                    Value = rom.Value,
-                    ItemStatus = rom.Status.AsEnumValue<ItemStatus>(),
-                    LoadFlag = rom.LoadFlag.AsEnumValue<LoadFlag>(),
-
-                    Part = part,
-                    DataArea = dataarea,
-
                     Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(rom.Name);
+                item.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, NumberHelper.ConvertToInt64(rom.Size ?? rom.Length));
+                item.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, rom.CRC);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, rom.SHA1);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.OffsetKey, rom.Offset);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.ValueKey, rom.Value);
+                item.SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, rom.Status.AsEnumValue<ItemStatus>());
+                item.SetFieldValue<LoadFlag>(Models.Metadata.Rom.LoadFlagKey, rom.LoadFlag.AsEnumValue<LoadFlag>());
+                item.SetFieldValue<Part?>("PART", part);
+                item.SetFieldValue<DataArea?>("DATAAREA", dataarea);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -342,17 +335,15 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new Disk
                 {
-                    MD5 = disk.MD5,
-                    SHA1 = disk.SHA1,
-                    ItemStatus = disk.Status.AsEnumValue<ItemStatus>(),
-                    Writable = disk.Writeable.AsYesNo(),
-
-                    Part = part,
-                    DiskArea = diskarea,
-
                     Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(disk.Name);
+                item.SetFieldValue<DiskArea?>("DISKAREA", diskarea);
+                item.SetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey, disk.Status?.AsEnumValue<ItemStatus>() ?? ItemStatus.NULL);
+                item.SetFieldValue<string?>(Models.Metadata.Disk.MD5Key, disk.MD5);
+                item.SetFieldValue<Part?>("PART", part);
+                item.SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, disk.SHA1);
+                item.SetFieldValue<bool?>(Models.Metadata.Disk.WritableKey, disk.Writeable.AsYesNo());
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -379,15 +370,13 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new DipSwitch
                 {
-                    Tag = dipswitch.Tag,
-                    Mask = dipswitch.Mask,
-                    Values = CreateDipValues(dipswitch.DipValue, machine, filename, indexId),
-
-                    Part = part,
-
                     Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(dipswitch.Name);
+                item.SetFieldValue<DipValue[]?>(Models.Metadata.DipSwitch.DipValueKey, CreateDipValues(dipswitch.DipValue, machine, filename, indexId)?.ToArray());
+                item.SetFieldValue<Part?>("PART", part);
+                item.SetFieldValue<string?>(Models.Metadata.DipSwitch.MaskKey, dipswitch.Mask);
+                item.SetFieldValue<string?>(Models.Metadata.DipSwitch.TagKey, dipswitch.Tag);
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
@@ -412,12 +401,11 @@ namespace SabreTools.DatFiles.Formats
             {
                 var item = new DipValue
                 {
-                    Value = dipvalue.Value,
-                    Default = dipvalue.Default.AsYesNo(),
-
                     Source = new Source { Index = indexId, Name = filename },
                 };
                 item.SetName(dipvalue.Name);
+                item.SetFieldValue<bool?>(Models.Metadata.DipValue.DefaultKey, dipvalue.Default.AsYesNo());
+                item.SetFieldValue<string?>(Models.Metadata.DipValue.ValueKey, dipvalue.Value);
 
                 item.CopyMachineInformation(machine);
                 settings.Add(item);

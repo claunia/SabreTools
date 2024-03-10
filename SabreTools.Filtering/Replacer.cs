@@ -107,14 +107,14 @@ namespace SabreTools.Filtering
         {
             if (datItemFields.Contains(Models.Metadata.Disk.MD5Key))
             {
-                if (string.IsNullOrEmpty(disk.MD5) && !string.IsNullOrEmpty(newItem.MD5))
-                    disk.MD5 = newItem.MD5;
+                if (string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key)) && !string.IsNullOrEmpty(newItem.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key)))
+                    disk.SetFieldValue<string?>(Models.Metadata.Disk.MD5Key, newItem.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key));
             }
 
             if (datItemFields.Contains(Models.Metadata.Disk.SHA1Key))
             {
-                if (string.IsNullOrEmpty(disk.SHA1) && !string.IsNullOrEmpty(newItem.SHA1))
-                    disk.SHA1 = newItem.SHA1;
+                if (string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key)) && !string.IsNullOrEmpty(newItem.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key)))
+                    disk.SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, newItem.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key));
             }
         }
 
@@ -128,26 +128,26 @@ namespace SabreTools.Filtering
         {
             if (datItemFields.Contains(Models.Metadata.Media.MD5Key))
             {
-                if (string.IsNullOrEmpty(media.MD5) && !string.IsNullOrEmpty(newItem.MD5))
-                    media.MD5 = newItem.MD5;
+                if (string.IsNullOrEmpty(media.GetFieldValue<string?>(Models.Metadata.Media.MD5Key)) && !string.IsNullOrEmpty(newItem.GetFieldValue<string?>(Models.Metadata.Media.MD5Key)))
+                    media.SetFieldValue<string?>(Models.Metadata.Media.MD5Key, newItem.GetFieldValue<string?>(Models.Metadata.Media.MD5Key));
             }
 
             if (datItemFields.Contains(Models.Metadata.Media.SHA1Key))
             {
-                if (string.IsNullOrEmpty(media.SHA1) && !string.IsNullOrEmpty(newItem.SHA1))
-                    media.SHA1 = newItem.SHA1;
+                if (string.IsNullOrEmpty(media.GetFieldValue<string?>(Models.Metadata.Media.SHA1Key)) && !string.IsNullOrEmpty(newItem.GetFieldValue<string?>(Models.Metadata.Media.SHA1Key)))
+                    media.SetFieldValue<string?>(Models.Metadata.Media.SHA1Key, newItem.GetFieldValue<string?>(Models.Metadata.Media.SHA1Key));
             }
 
             if (datItemFields.Contains(Models.Metadata.Media.SHA256Key))
             {
-                if (string.IsNullOrEmpty(media.SHA256) && !string.IsNullOrEmpty(newItem.SHA256))
-                    media.SHA256 = newItem.SHA256;
+                if (string.IsNullOrEmpty(media.GetFieldValue<string?>(Models.Metadata.Media.SHA256Key)) && !string.IsNullOrEmpty(newItem.GetFieldValue<string?>(Models.Metadata.Media.SHA256Key)))
+                    media.SetFieldValue<string?>(Models.Metadata.Media.SHA256Key, newItem.GetFieldValue<string?>(Models.Metadata.Media.SHA256Key));
             }
 
             if (datItemFields.Contains(Models.Metadata.Media.SpamSumKey))
             {
-                if (string.IsNullOrEmpty(media.SpamSum) && !string.IsNullOrEmpty(newItem.SpamSum))
-                    media.SpamSum = newItem.SpamSum;
+                if (string.IsNullOrEmpty(media.GetFieldValue<string?>(Models.Metadata.Media.SpamSumKey)) && !string.IsNullOrEmpty(newItem.GetFieldValue<string?>(Models.Metadata.Media.SpamSumKey)))
+                    media.SetFieldValue<string?>(Models.Metadata.Media.SpamSumKey, newItem.GetFieldValue<string?>(Models.Metadata.Media.SpamSumKey));
             }
         }
 
@@ -161,44 +161,44 @@ namespace SabreTools.Filtering
         {
             if (datItemFields.Contains(Models.Metadata.Rom.CRCKey))
             {
-                if (string.IsNullOrEmpty(rom.CRC) && !string.IsNullOrEmpty(newItem.CRC))
-                    rom.CRC = newItem.CRC;
+                if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey)) && !string.IsNullOrEmpty(newItem.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey)))
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, newItem.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey));
             }
 
             if (datItemFields.Contains(Models.Metadata.Rom.MD5Key))
             {
-                if (string.IsNullOrEmpty(rom.MD5) && !string.IsNullOrEmpty(newItem.MD5))
-                    rom.MD5 = newItem.MD5;
+                if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key)) && !string.IsNullOrEmpty(newItem.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key)))
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, newItem.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key));
             }
 
             if (datItemFields.Contains(Models.Metadata.Rom.SHA1Key))
             {
-                if (string.IsNullOrEmpty(rom.SHA1) && !string.IsNullOrEmpty(newItem.SHA1))
-                    rom.SHA1 = newItem.SHA1;
+                if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key)) && !string.IsNullOrEmpty(newItem.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key)))
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, newItem.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key));
             }
 
             if (datItemFields.Contains(Models.Metadata.Rom.SHA256Key))
             {
-                if (string.IsNullOrEmpty(rom.SHA256) && !string.IsNullOrEmpty(newItem.SHA256))
-                    rom.SHA256 = newItem.SHA256;
+                if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA256Key)) && !string.IsNullOrEmpty(newItem.GetFieldValue<string?>(Models.Metadata.Rom.SHA256Key)))
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA256Key, newItem.GetFieldValue<string?>(Models.Metadata.Rom.SHA256Key));
             }
 
             if (datItemFields.Contains(Models.Metadata.Rom.SHA384Key))
             {
-                if (string.IsNullOrEmpty(rom.SHA384) && !string.IsNullOrEmpty(newItem.SHA384))
-                    rom.SHA384 = newItem.SHA384;
+                if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA384Key)) && !string.IsNullOrEmpty(newItem.GetFieldValue<string?>(Models.Metadata.Rom.SHA384Key)))
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA384Key, newItem.GetFieldValue<string?>(Models.Metadata.Rom.SHA384Key));
             }
 
             if (datItemFields.Contains(Models.Metadata.Rom.SHA512Key))
             {
-                if (string.IsNullOrEmpty(rom.SHA512) && !string.IsNullOrEmpty(newItem.SHA512))
-                    rom.SHA512 = newItem.SHA512;
+                if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA512Key)) && !string.IsNullOrEmpty(newItem.GetFieldValue<string?>(Models.Metadata.Rom.SHA512Key)))
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key, newItem.GetFieldValue<string?>(Models.Metadata.Rom.SHA512Key));
             }
 
             if (datItemFields.Contains(Models.Metadata.Rom.SpamSumKey))
             {
-                if (string.IsNullOrEmpty(rom.SpamSum) && !string.IsNullOrEmpty(newItem.SpamSum))
-                    rom.SpamSum = newItem.SpamSum;
+                if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey)) && !string.IsNullOrEmpty(newItem.GetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey)))
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey, newItem.GetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey));
             }
         }
     }

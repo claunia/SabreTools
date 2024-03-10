@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
 
@@ -14,28 +12,15 @@ namespace SabreTools.DatItems.Formats
     {
         #region Fields
 
-        /// <summary>
-        /// Tag for the port
-        /// </summary>
-        [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tag")]
-        public string? Tag
-        {
-            get => _internal.ReadString(Models.Metadata.Port.TagKey);
-            set => _internal[Models.Metadata.Port.TagKey] = value;
-        }
-
-        /// <summary>
-        /// List of analogs on the port
-        /// </summary>
-        [JsonProperty("analogs", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("analogs")]
-        public List<Analog>? Analogs
-        {
-            get => _internal.Read<Analog[]>(Models.Metadata.Port.AnalogKey)?.ToList();
-            set => _internal[Models.Metadata.Port.AnalogKey] = value?.ToArray();
-        }
-
         [JsonIgnore]
-        public bool AnalogsSpecified { get { return Analogs != null && Analogs.Count > 0; } }
+        public bool AnalogsSpecified
+        {
+            get
+            {
+                var analogs = GetFieldValue<Analog[]?>(Models.Metadata.Port.AnalogKey);
+                return analogs != null && analogs.Length > 0;
+            }
+        }
 
         #endregion
 

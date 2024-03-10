@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
@@ -14,41 +12,15 @@ namespace SabreTools.DatItems.Formats
     {
         #region Fields
 
-        /// <summary>
-        /// Setting value
-        /// </summary>
-        [JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("value")]
-        public string? Value
-        {
-            get => _internal.ReadString(Models.Metadata.DipValue.ValueKey);
-            set => _internal[Models.Metadata.DipValue.ValueKey] = value;
-        }
-
-        /// <summary>
-        /// Determines if the setting is default or not
-        /// </summary>
-        [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("default")]
-        public bool? Default
-        {
-            get => _internal.ReadBool(Models.Metadata.DipValue.DefaultKey);
-            set => _internal[Models.Metadata.DipValue.DefaultKey] = value;
-        }
-
         [JsonIgnore]
-        public bool DefaultSpecified { get { return Default != null; } }
-
-        /// <summary>
-        /// List of conditions on the setting
-        /// </summary>
-        [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("conditions")]
-        public List<Condition>? Conditions
+        public bool ConditionsSpecified
         {
-            get => _internal.Read<Condition[]>(Models.Metadata.DipValue.ConditionKey)?.ToList();
-            set => _internal[Models.Metadata.DipValue.ConditionKey] = value?.ToArray();
+            get
+            {
+                var conditions = GetFieldValue<Condition[]?>(Models.Metadata.DipValue.ConditionKey);
+                return conditions != null && conditions.Length > 0;
+            }
         }
-
-        [JsonIgnore]
-        public bool ConditionsSpecified { get { return Conditions != null && Conditions.Count > 0; } }
 
         #endregion
 

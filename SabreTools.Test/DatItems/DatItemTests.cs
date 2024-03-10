@@ -49,24 +49,19 @@ namespace SabreTools.Test.DatItems
         {
             var romA = new Rom
             {
-                CRC = "DEADBEEF",
-                Machine = new Machine
-                {
-                    Name = "name-same",
-                },
+                Machine = new Machine { Name = "name-same" },
                 Source = new Source { Index = 0 },
             };
             romA.SetName("same-name");
+            romA.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+
             var romB = new Rom
             {
-                CRC = "DEADBEEF",
-                Machine = new Machine
-                {
-                    Name = "name-same",
-                },
+                Machine = new Machine { Name = "name-same" },
                 Source = new Source { Index = 1 },
             };
             romB.SetName("same-name");
+            romB.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
 
             var actual = romA.GetDuplicateStatus(romB);
             Assert.Equal(DupeType.External | DupeType.All, actual);
@@ -77,24 +72,19 @@ namespace SabreTools.Test.DatItems
         {
             var romA = new Rom
             {
-                CRC = "DEADBEEF",
-                Machine = new Machine
-                {
-                    Name = "name-same",
-                },
+                Machine = new Machine { Name = "name-same" },
                 Source = new Source { Index = 0 },
             };
             romA.SetName("same-name");
+            romA.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+
             var romB = new Rom
             {
-                CRC = "DEADBEEF",
-                Machine = new Machine
-                {
-                    Name = "not-name-same",
-                },
+                Machine = new Machine { Name = "not-name-same" },
                 Source = new Source { Index = 1 },
             };
             romB.SetName("same-name");
+            romB.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
 
             var actual = romA.GetDuplicateStatus(romB);
             Assert.Equal(DupeType.External | DupeType.Hash, actual);
@@ -105,24 +95,19 @@ namespace SabreTools.Test.DatItems
         {
             var romA = new Rom
             {
-                CRC = "DEADBEEF",
-                Machine = new Machine
-                {
-                    Name = "name-same",
-                },
+                Machine = new Machine { Name = "name-same" },
                 Source = new Source { Index = 0 },
             };
             romA.SetName("same-name");
+            romA.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+
             var romB = new Rom
             {
-                CRC = "DEADBEEF",
-                Machine = new Machine
-                {
-                    Name = "name-same",
-                },
+                Machine = new Machine { Name = "name-same" },
                 Source = new Source { Index = 0 },
             };
             romB.SetName("same-name");
+            romB.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
 
             var actual = romA.GetDuplicateStatus(romB);
             Assert.Equal(DupeType.Internal | DupeType.All, actual);
@@ -133,24 +118,19 @@ namespace SabreTools.Test.DatItems
         {
             var romA = new Rom
             {
-                CRC = "DEADBEEF",
-                Machine = new Machine
-                {
-                    Name = "name-same",
-                },
+                Machine = new Machine { Name = "name-same" },
                 Source = new Source { Index = 0 },
             };
             romA.SetName("same-name");
+            romA.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+
             var romB = new Rom
             {
-                CRC = "DEADBEEF",
-                Machine = new Machine
-                {
-                    Name = "not-name-same",
-                },
+                Machine = new Machine { Name = "not-name-same" },
                 Source = new Source { Index = 0 },
             };
             romB.SetName("same-name");
+            romB.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
 
             var actual = romA.GetDuplicateStatus(romB);
             Assert.Equal(DupeType.Internal | DupeType.Hash, actual);

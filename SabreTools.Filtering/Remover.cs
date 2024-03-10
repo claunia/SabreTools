@@ -296,7 +296,7 @@ namespace SabreTools.Filtering
         {
             if (configuration.ConditionsSpecified)
             {
-                foreach (Condition subCondition in configuration.Conditions!)
+                foreach (Condition subCondition in configuration.GetFieldValue<Condition[]?>(Models.Metadata.Configuration.ConditionKey)!)
                 {
                     RemoveFields(subCondition);
                 }
@@ -304,7 +304,7 @@ namespace SabreTools.Filtering
 
             if (configuration.LocationsSpecified)
             {
-                foreach (ConfLocation subLocation in configuration.Locations!)
+                foreach (ConfLocation subLocation in configuration.GetFieldValue<ConfLocation[]?>(Models.Metadata.Configuration.ConfLocationKey)!)
                 {
                     RemoveFields(subLocation);
                 }
@@ -312,7 +312,7 @@ namespace SabreTools.Filtering
 
             if (configuration.SettingsSpecified)
             {
-                foreach (ConfSetting subSetting in configuration.Settings!)
+                foreach (ConfSetting subSetting in configuration.GetFieldValue<ConfSetting[]?>(Models.Metadata.Configuration.ConfSettingKey)!)
                 {
                     RemoveFields(subSetting as DatItem);
                 }
@@ -327,7 +327,7 @@ namespace SabreTools.Filtering
         {
             if (confsetting.ConditionsSpecified)
             {
-                foreach (Condition subCondition in confsetting.Conditions!)
+                foreach (Condition subCondition in confsetting.GetFieldValue<Condition[]?>(Models.Metadata.ConfSetting.ConditionKey)!)
                 {
                     RemoveFields(subCondition);
                 }
@@ -342,7 +342,7 @@ namespace SabreTools.Filtering
         {
             if (device.ExtensionsSpecified)
             {
-                foreach (Extension subExtension in device.Extensions!)
+                foreach (Extension subExtension in device.GetFieldValue<Extension[]?>(Models.Metadata.Device.ExtensionKey)!)
                 {
                     RemoveFields(subExtension);
                 }
@@ -350,7 +350,7 @@ namespace SabreTools.Filtering
 
             if (device.InstancesSpecified)
             {
-                foreach (Instance subInstance in device.Instances!)
+                foreach (Instance subInstance in device.GetFieldValue<Instance[]?>(Models.Metadata.Device.InstanceKey)!)
                 {
                     RemoveFields(subInstance);
                 }
@@ -365,7 +365,7 @@ namespace SabreTools.Filtering
         {
             if (dipSwitch.ConditionsSpecified)
             {
-                foreach (Condition subCondition in dipSwitch.Conditions!)
+                foreach (Condition subCondition in dipSwitch.GetFieldValue<Condition[]?>(Models.Metadata.DipSwitch.ConditionKey)!)
                 {
                     RemoveFields(subCondition);
                 }
@@ -373,7 +373,7 @@ namespace SabreTools.Filtering
 
             if (dipSwitch.LocationsSpecified)
             {
-                foreach (DipLocation subLocation in dipSwitch.Locations!)
+                foreach (DipLocation subLocation in dipSwitch.GetFieldValue<DipLocation[]?>(Models.Metadata.DipSwitch.DipLocationKey)!)
                 {
                     RemoveFields(subLocation);
                 }
@@ -381,14 +381,14 @@ namespace SabreTools.Filtering
 
             if (dipSwitch.ValuesSpecified)
             {
-                foreach (DipValue subValue in dipSwitch.Values!)
+                foreach (DipValue subValue in dipSwitch.GetFieldValue<DipValue[]?>(Models.Metadata.DipSwitch.DipValueKey)!)
                 {
                     RemoveFields(subValue as DatItem);
                 }
             }
 
             if (dipSwitch.PartSpecified)
-                RemoveFields(dipSwitch.Part! as DatItem);
+                RemoveFields(dipSwitch.GetFieldValue<Part?>("PART")! as DatItem);
         }
 
         /// <summary>
@@ -399,7 +399,7 @@ namespace SabreTools.Filtering
         {
             if (dipValue.ConditionsSpecified)
             {
-                foreach (Condition subCondition in dipValue.Conditions!)
+                foreach (Condition subCondition in dipValue.GetFieldValue<Condition[]?>(Models.Metadata.DipValue.ConditionKey)!)
                 {
                     RemoveFields(subCondition);
                 }
@@ -413,10 +413,10 @@ namespace SabreTools.Filtering
         private void RemoveFields(Disk disk)
         {
             if (disk.DiskAreaSpecified)
-                RemoveFields(disk.DiskArea);
+                RemoveFields(disk.GetFieldValue<DiskArea?>("DISKAREA")! as DatItem);
 
             if (disk.PartSpecified)
-                RemoveFields(disk.Part! as DatItem);
+                RemoveFields(disk.GetFieldValue<Part?>("PART")! as DatItem);
         }
 
         /// <summary>
@@ -427,7 +427,7 @@ namespace SabreTools.Filtering
         {
             if (input.ControlsSpecified)
             {
-                foreach (Control subControl in input.Controls!)
+                foreach (Control subControl in input.GetFieldValue<Control[]?>(Models.Metadata.Input.ControlKey)!)
                 {
                     RemoveFields(subControl);
                 }
@@ -442,7 +442,7 @@ namespace SabreTools.Filtering
         {
             if (part.FeaturesSpecified)
             {
-                foreach (PartFeature subPartFeature in part.Features!)
+                foreach (PartFeature subPartFeature in part.GetFieldValue<PartFeature[]?>(Models.Metadata.Part.FeatureKey)!)
                 {
                     RemoveFields(subPartFeature);
                 }
@@ -457,7 +457,7 @@ namespace SabreTools.Filtering
         {
             if (port.AnalogsSpecified)
             {
-                foreach (Analog subAnalog in port.Analogs!)
+                foreach (Analog subAnalog in port.GetFieldValue<Analog[]?>(Models.Metadata.Port.AnalogKey)!)
                 {
                     RemoveFields(subAnalog);
                 }
@@ -471,10 +471,10 @@ namespace SabreTools.Filtering
         private void RemoveFields(Rom rom)
         {
             if (rom.DataAreaSpecified)
-                RemoveFields(rom.DataArea!);
+                RemoveFields(rom.GetFieldValue<DataArea?>("DATAAREA")!);
 
             if (rom.PartSpecified)
-                RemoveFields(rom.Part! as DatItem);
+                RemoveFields(rom.GetFieldValue<Part?>("PART")! as DatItem);
         }
 
         /// <summary>
@@ -485,7 +485,7 @@ namespace SabreTools.Filtering
         {
             if (slot.SlotOptionsSpecified)
             {
-                foreach (SlotOption subSlotOption in slot.SlotOptions!)
+                foreach (SlotOption subSlotOption in slot.GetFieldValue<SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey)!)
                 {
                     RemoveFields(subSlotOption);
                 }

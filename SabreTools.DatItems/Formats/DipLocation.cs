@@ -10,36 +10,6 @@ namespace SabreTools.DatItems.Formats
     [JsonObject("diplocation"), XmlRoot("diplocation")]
     public class DipLocation : DatItem
     {
-        #region Fields
-
-        /// <summary>
-        /// Location ID
-        /// </summary>
-        [JsonProperty("number", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("number")]
-        public long? Number
-        {
-            get => _internal.ReadLong(Models.Metadata.DipLocation.NameKey);
-            set => _internal[Models.Metadata.DipLocation.NameKey] = value;
-        }
-
-        [JsonIgnore]
-        public bool NumberSpecified { get { return Number != null; } }
-
-        /// <summary>
-        /// Determines if location is inverted or not
-        /// </summary>
-        [JsonProperty("inverted", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("inverted")]
-        public bool? Inverted
-        {
-            get => _internal.ReadBool(Models.Metadata.DipLocation.InvertedKey);
-            set => _internal[Models.Metadata.DipLocation.InvertedKey] = value;
-        }
-
-        [JsonIgnore]
-        public bool InvertedSpecified { get { return Inverted != null; } }
-
-        #endregion
-
         #region Accessors
 
         /// <inheritdoc/>

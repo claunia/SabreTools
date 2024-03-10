@@ -10,20 +10,6 @@ namespace SabreTools.DatItems.Formats
     [JsonObject("analog"), XmlRoot("analog")]
     public class Analog : DatItem
     {
-        #region Fields
-
-        /// <summary>
-        /// Analog mask value
-        /// </summary>
-        [JsonProperty("mask", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("mask")]
-        public string? Mask
-        {
-            get => _internal.ReadString(Models.Metadata.Analog.MaskKey);
-            set => _internal[Models.Metadata.Analog.MaskKey] = value;
-        }
-
-        #endregion
-
         #region Constructors
 
         /// <summary>

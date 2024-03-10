@@ -45,9 +45,6 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("size", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("size")]
         public long? Size { get; set; } = null;
 
-        [JsonIgnore]
-        public bool SizeSpecified { get { return Size != null; } }
-
         /// <summary>
         /// File CRC32 hash
         /// </summary>
@@ -177,13 +174,12 @@ namespace SabreTools.DatItems.Formats
                 Machine = this.Machine.Clone() as Machine ?? new Machine(),
                 Source = this.Source?.Clone() as Source,
                 Remove = this.Remove,
-
-                CRC = this.CRC,
-                MD5 = this.MD5,
-                SHA1 = this.SHA1,
-                SHA256 = this.SHA256,
             };
             rom.SetName($"{this.Id}.{this.Extension}");
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, CRC);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, MD5);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, SHA1);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA256Key, SHA256);
 
             return rom;
         }

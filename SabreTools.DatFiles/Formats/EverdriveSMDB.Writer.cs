@@ -33,13 +33,13 @@ namespace SabreTools.DatFiles.Formats
             switch (datItem)
             {
                 case Rom rom:
-                    if (string.IsNullOrEmpty(rom.SHA256))
+                    if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA256Key)))
                         missingFields.Add(Models.Metadata.Rom.SHA256Key);
-                    if (string.IsNullOrEmpty(rom.SHA1))
+                    if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key)))
                         missingFields.Add(Models.Metadata.Rom.SHA1Key);
-                    if (string.IsNullOrEmpty(rom.MD5))
+                    if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key)))
                         missingFields.Add(Models.Metadata.Rom.MD5Key);
-                    if (string.IsNullOrEmpty(rom.CRC))
+                    if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey)))
                         missingFields.Add(Models.Metadata.Rom.CRCKey);
                     break;
             }
@@ -138,12 +138,12 @@ namespace SabreTools.DatFiles.Formats
         {
             var row = new Models.EverdriveSMDB.Row
             {
-                SHA256 = rom.SHA256,
+                SHA256 = rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA256Key),
                 Name = $"{rom.Machine.Name ?? string.Empty}/{rom.GetName()}",
-                SHA1 = rom.SHA1,
-                MD5 = rom.MD5,
-                CRC32 = rom.CRC,
-                Size = rom.Size?.ToString(),
+                SHA1 = rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key),
+                MD5 = rom.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key),
+                CRC32 = rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey),
+                Size = rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey)?.ToString(),
             };
             return row;
         }

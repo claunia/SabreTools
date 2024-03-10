@@ -84,43 +84,40 @@ namespace SabreTools.DatFiles.Formats
                 case ItemType.Disk:
                     item = new Disk
                     {
-                        MD5 = row.MD5,
-                        SHA1 = row.SHA1,
-                        ItemStatus = row.Status.AsEnumValue<ItemStatus>(),
-
                         Source = new Source { Index = indexId, Name = filename },
                     };
                     item.SetName(row.DiskName);
+                    item.SetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey, row.Status?.AsEnumValue<ItemStatus>() ?? ItemStatus.NULL);
+                    item.SetFieldValue<string?>(Models.Metadata.Disk.MD5Key, row.MD5);
+                    item.SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, row.SHA1);
                     break;
 
                 case ItemType.Media:
                     item = new Media
                     {
-                        MD5 = row.MD5,
-                        SHA1 = row.SHA1,
-                        SHA256 = row.SHA256,
-                        SpamSum = row.SpamSum,
-
                         Source = new Source { Index = indexId, Name = filename },
                     };
                     item.SetName(row.DiskName);
+                    item.SetFieldValue<string?>(Models.Metadata.Media.MD5Key, row.MD5);
+                    item.SetFieldValue<string?>(Models.Metadata.Media.SHA1Key, row.SHA1);
+                    item.SetFieldValue<string?>(Models.Metadata.Media.SHA256Key, row.SHA256);
+                    item.SetFieldValue<string?>(Models.Metadata.Media.SpamSumKey, row.SpamSum);
                     break;
 
                 case ItemType.Rom:
                     item = new Rom
                     {
-                        CRC = row.CRC,
-                        MD5 = row.MD5,
-                        SHA1 = row.SHA1,
-                        SHA256 = row.SHA256,
-                        SHA384 = row.SHA384,
-                        SHA512 = row.SHA512,
-                        SpamSum = row.SpamSum,
-                        ItemStatus = row.Status.AsEnumValue<ItemStatus>(),
-
                         Source = new Source { Index = indexId, Name = filename },
                     };
                     item.SetName(row.RomName);
+                    item.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, row.CRC);
+                    item.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, row.MD5);
+                    item.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, row.SHA1);
+                    item.SetFieldValue<string?>(Models.Metadata.Rom.SHA256Key, row.SHA256);
+                    item.SetFieldValue<string?>(Models.Metadata.Rom.SHA384Key, row.SHA384);
+                    item.SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key, row.SHA512);
+                    item.SetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey, row.SpamSum);
+                    item.SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, row.Status.AsEnumValue<ItemStatus>());
                     break;
             }
 

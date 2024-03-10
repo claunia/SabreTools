@@ -10,20 +10,6 @@ namespace SabreTools.DatItems.Formats
     [JsonObject("instance"), XmlRoot("instance")]
     public class Instance : DatItem
     {
-        #region Fields
-
-        /// <summary>
-        /// Short name for the instance
-        /// </summary>
-        [JsonProperty("briefname", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("briefname")]
-        public string? BriefName
-        {
-            get => _internal.ReadString(Models.Metadata.Instance.BriefNameKey);
-            set => _internal[Models.Metadata.Instance.BriefNameKey] = value;
-        }
-
-        #endregion
-
         #region Accessors
 
         /// <inheritdoc/>

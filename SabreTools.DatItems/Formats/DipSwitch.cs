@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
 
@@ -14,92 +12,49 @@ namespace SabreTools.DatItems.Formats
     {
         #region Fields
 
-        #region Common
-
-        /// <summary>
-        /// Tag associated with the dipswitch
-        /// </summary>
-        [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tag")]
-        public string? Tag
+        [JsonIgnore]
+        public bool ConditionsSpecified
         {
-            get => _internal.ReadString(Models.Metadata.DipSwitch.TagKey);
-            set => _internal[Models.Metadata.DipSwitch.TagKey] = value;
-        }
-
-        /// <summary>
-        /// Mask associated with the dipswitch
-        /// </summary>
-        [JsonProperty("mask", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("mask")]
-        public string? Mask
-        {
-            get => _internal.ReadString(Models.Metadata.DipSwitch.MaskKey);
-            set => _internal[Models.Metadata.DipSwitch.MaskKey] = value;
-        }
-
-        /// <summary>
-        /// Conditions associated with the dipswitch
-        /// </summary>
-        [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("conditions")]
-        public List<Condition>? Conditions
-        {
-            get => _internal.Read<Condition[]>(Models.Metadata.DipSwitch.ConditionKey)?.ToList();
-            set => _internal[Models.Metadata.DipSwitch.ConditionKey] = value?.ToArray();
+            get
+            {
+                var conditions = GetFieldValue<Condition[]?>(Models.Metadata.DipSwitch.ConditionKey);
+                return conditions != null && conditions.Length > 0;
+            }
         }
 
         [JsonIgnore]
-        public bool ConditionsSpecified { get { return Conditions != null && Conditions.Count > 0; } }
-
-        /// <summary>
-        /// Locations associated with the dipswitch
-        /// </summary>
-        [JsonProperty("locations", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("locations")]
-        public List<DipLocation>? Locations
+        public bool LocationsSpecified
         {
-            get => _internal.Read<DipLocation[]>(Models.Metadata.DipSwitch.DipLocationKey)?.ToList();
-            set => _internal[Models.Metadata.DipSwitch.DipLocationKey] = value?.ToArray();
+            get
+            {
+                var locations = GetFieldValue<DipLocation[]?>(Models.Metadata.DipSwitch.DipLocationKey);
+                return locations != null && locations.Length > 0;
+            }
         }
 
         [JsonIgnore]
-        public bool LocationsSpecified { get { return Locations != null && Locations.Count > 0; } }
-
-        /// <summary>
-        /// Settings associated with the dipswitch
-        /// </summary>
-        [JsonProperty("values", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("values")]
-        public List<DipValue>? Values
+        public bool ValuesSpecified
         {
-            get => _internal.Read<DipValue[]>(Models.Metadata.DipSwitch.DipValueKey)?.ToList();
-            set => _internal[Models.Metadata.DipSwitch.DipValueKey] = value?.ToArray();
+            get
+            {
+                var values = GetFieldValue<DipValue[]?>(Models.Metadata.DipSwitch.DipValueKey);
+                return values != null && values.Length > 0;
+            }
         }
-
-        [JsonIgnore]
-        public bool ValuesSpecified { get { return Values != null && Values.Count > 0; } }
-
-        #endregion
-
-        #region SoftwareList
-
-        /// <summary>
-        /// Original hardware part associated with the item
-        /// </summary>
-        /// <remarks>This is inverted from the internal model</remarks>
-        [JsonProperty("part", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("part")]
-        public Part? Part { get; set; }
 
         [JsonIgnore]
         public bool PartSpecified
         {
             get
             {
-                return Part != null
-                    && (!string.IsNullOrEmpty(Part.GetName())
-                        || !string.IsNullOrEmpty(Part.Interface));
+                var part = GetFieldValue<Part?>("PART");
+                return part != null
+                    && (!string.IsNullOrEmpty(part.GetName())
+                        || !string.IsNullOrEmpty(part.GetFieldValue<string?>(Models.Metadata.Part.InterfaceKey)));
             }
         }
 
         #endregion
-
-        #endregion // Fields
 
         #region Accessors
 
@@ -142,8 +97,6 @@ namespace SabreTools.DatItems.Formats
                 Remove = this.Remove,
 
                 _internal = this._internal?.Clone() as Models.Metadata.DipSwitch ?? [],
-
-                Part = this.Part,
             };
         }
 

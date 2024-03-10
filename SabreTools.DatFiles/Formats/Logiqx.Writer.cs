@@ -37,29 +37,29 @@ namespace SabreTools.DatFiles.Formats
                 case Release release:
                     if (string.IsNullOrEmpty(release.GetName()))
                         missingFields.Add(Models.Metadata.Release.NameKey);
-                    if (string.IsNullOrEmpty(release.Region))
+                    if (string.IsNullOrEmpty(release.GetFieldValue<string?>(Models.Metadata.Release.RegionKey)))
                         missingFields.Add(Models.Metadata.Release.RegionKey);
                     break;
 
                 case BiosSet biosset:
                     if (string.IsNullOrEmpty(biosset.GetName()))
                         missingFields.Add(Models.Metadata.BiosSet.NameKey);
-                    if (string.IsNullOrEmpty(biosset.Description))
+                    if (string.IsNullOrEmpty(biosset.GetFieldValue<string?>(Models.Metadata.BiosSet.DescriptionKey)))
                         missingFields.Add(Models.Metadata.BiosSet.DescriptionKey);
                     break;
 
                 case Rom rom:
                     if (string.IsNullOrEmpty(rom.GetName()))
                         missingFields.Add(Models.Metadata.Rom.NameKey);
-                    if (rom.Size == null || rom.Size < 0)
+                    if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null || rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) < 0)
                         missingFields.Add(Models.Metadata.Rom.SizeKey);
-                    if (string.IsNullOrEmpty(rom.CRC)
-                        && string.IsNullOrEmpty(rom.MD5)
-                        && string.IsNullOrEmpty(rom.SHA1)
-                        && string.IsNullOrEmpty(rom.SHA256)
-                        && string.IsNullOrEmpty(rom.SHA384)
-                        && string.IsNullOrEmpty(rom.SHA512)
-                        && string.IsNullOrEmpty(rom.SpamSum))
+                    if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey))
+                        && string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key))
+                        && string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key))
+                        && string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA256Key))
+                        && string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA384Key))
+                        && string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA512Key))
+                        && string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey)))
                     {
                         missingFields.Add(Models.Metadata.Rom.SHA1Key);
                     }
@@ -68,8 +68,8 @@ namespace SabreTools.DatFiles.Formats
                 case Disk disk:
                     if (string.IsNullOrEmpty(disk.GetName()))
                         missingFields.Add(Models.Metadata.Disk.NameKey);
-                    if (string.IsNullOrEmpty(disk.MD5)
-                        && string.IsNullOrEmpty(disk.SHA1))
+                    if (string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key))
+                        && string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key)))
                     {
                         missingFields.Add(Models.Metadata.Disk.SHA1Key);
                     }
@@ -78,10 +78,10 @@ namespace SabreTools.DatFiles.Formats
                 case Media media:
                     if (string.IsNullOrEmpty(media.GetName()))
                         missingFields.Add(Models.Metadata.Media.NameKey);
-                    if (string.IsNullOrEmpty(media.MD5)
-                        && string.IsNullOrEmpty(media.SHA1)
-                        && string.IsNullOrEmpty(media.SHA256)
-                        && string.IsNullOrEmpty(media.SpamSum))
+                    if (string.IsNullOrEmpty(media.GetFieldValue<string?>(Models.Metadata.Media.MD5Key))
+                        && string.IsNullOrEmpty(media.GetFieldValue<string?>(Models.Metadata.Media.SHA1Key))
+                        && string.IsNullOrEmpty(media.GetFieldValue<string?>(Models.Metadata.Media.SHA256Key))
+                        && string.IsNullOrEmpty(media.GetFieldValue<string?>(Models.Metadata.Media.SpamSumKey)))
                     {
                         missingFields.Add(Models.Metadata.Media.SHA1Key);
                     }
@@ -103,22 +103,22 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case Driver driver:
-                    if (!driver.StatusSpecified)
+                    if (driver.GetFieldValue<SupportStatus>(Models.Metadata.Driver.StatusKey) == SupportStatus.NULL)
                         missingFields.Add(Models.Metadata.Driver.StatusKey);
-                    if (!driver.EmulationSpecified)
+                    if (driver.GetFieldValue<SupportStatus>(Models.Metadata.Driver.EmulationKey) == SupportStatus.NULL)
                         missingFields.Add(Models.Metadata.Driver.EmulationKey);
-                    if (!driver.CocktailSpecified)
+                    if (driver.GetFieldValue<SupportStatus>(Models.Metadata.Driver.CocktailKey) == SupportStatus.NULL)
                         missingFields.Add(Models.Metadata.Driver.CocktailKey);
-                    if (!driver.SaveStateSpecified)
+                    if (driver.GetFieldValue<SupportStatus>(Models.Metadata.Driver.SaveStateKey) == SupportStatus.NULL)
                         missingFields.Add(Models.Metadata.Driver.SaveStateKey);
                     break;
 
                 case DatItems.Formats.SoftwareList softwarelist:
-                    if (string.IsNullOrEmpty(softwarelist.Tag))
+                    if (string.IsNullOrEmpty(softwarelist.GetFieldValue<string?>(Models.Metadata.SoftwareList.TagKey)))
                         missingFields.Add(Models.Metadata.SoftwareList.TagKey);
                     if (string.IsNullOrEmpty(softwarelist.GetName()))
                         missingFields.Add(Models.Metadata.SoftwareList.NameKey);
-                    if (!softwarelist.StatusSpecified)
+                    if (softwarelist.GetFieldValue<SoftwareListStatus?>(Models.Metadata.SoftwareList.StatusKey) == SoftwareListStatus.None)
                         missingFields.Add(Models.Metadata.SoftwareList.StatusKey);
                     break;
             }
@@ -485,13 +485,11 @@ namespace SabreTools.DatFiles.Formats
             var release = new Models.Logiqx.Release
             {
                 Name = item.GetName(),
-                Region = item.Region,
-                Language = item.Language,
-                Date = item.Date,
+                Region = item.GetFieldValue<string?>(Models.Metadata.Release.RegionKey),
+                Language = item.GetFieldValue<string?>(Models.Metadata.Release.LanguageKey),
+                Date = item.GetFieldValue<string?>(Models.Metadata.Release.DateKey),
+                Default = item.GetFieldValue<bool?>(Models.Metadata.Release.DefaultKey).FromYesNo(),
             };
-
-            if (item.DefaultSpecified)
-                release.Default = item.Default.FromYesNo();
 
             return release;
         }
@@ -504,11 +502,9 @@ namespace SabreTools.DatFiles.Formats
             var biosset = new Models.Logiqx.BiosSet
             {
                 Name = item.GetName(),
-                Description = item.Description,
+                Default = item.GetFieldValue<bool?>(Models.Metadata.BiosSet.DefaultKey).FromYesNo(),
+                Description = item.GetFieldValue<string?>(Models.Metadata.BiosSet.DescriptionKey),
             };
-
-            if (item.DefaultSpecified)
-                biosset.Default = item.Default.FromYesNo();
 
             return biosset;
         }
@@ -521,28 +517,26 @@ namespace SabreTools.DatFiles.Formats
             var rom = new Models.Logiqx.Rom
             {
                 Name = item.GetName(),
-                Size = item.Size?.ToString(),
-                CRC = item.CRC,
-                MD5 = item.MD5,
-                SHA1 = item.SHA1,
-                SHA256 = item.SHA256,
-                SHA384 = item.SHA384,
-                SHA512 = item.SHA512,
-                SpamSum = item.SpamSum,
-                //xxHash364 = item.xxHash364, // TODO: Add to internal model
-                //xxHash3128 = item.xxHash3128, // TODO: Add to internal model
-                Merge = item.MergeTag,
-                //Serial = item.Serial, // TODO: Add to internal model
-                //Header = item.Header, // TODO: Add to internal model
-                Date = item.Date,
+                Size = item.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey)?.ToString(),
+                CRC = item.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey),
+                MD5 = item.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key),
+                SHA1 = item.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key),
+                SHA256 = item.GetFieldValue<string?>(Models.Metadata.Rom.SHA256Key),
+                SHA384 = item.GetFieldValue<string?>(Models.Metadata.Rom.SHA384Key),
+                SHA512 = item.GetFieldValue<string?>(Models.Metadata.Rom.SHA512Key),
+                SpamSum = item.GetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey),
+                xxHash364 = item.GetFieldValue<string?>(Models.Metadata.Rom.xxHash364Key),
+                xxHash3128 = item.GetFieldValue<string?>(Models.Metadata.Rom.xxHash3128Key),
+                Merge = item.GetFieldValue<string?>(Models.Metadata.Rom.MergeKey),
+                Serial = item.GetFieldValue<string?>(Models.Metadata.Rom.SerialKey),
+                Header = item.GetFieldValue<string?>(Models.Metadata.Rom.HeaderKey),
+                Date = item.GetFieldValue<string?>(Models.Metadata.Rom.DateKey),
+                Inverted = item.GetFieldValue<bool?>(Models.Metadata.Rom.InvertedKey).FromYesNo(),
+                MIA = item.GetFieldValue<bool?>(Models.Metadata.Rom.MIAKey).FromYesNo(),
             };
 
             if (item.ItemStatusSpecified)
-                rom.Status = item.ItemStatus.AsStringValue<ItemStatus>(useSecond: false);
-            if (item.InvertedSpecified)
-                rom.Inverted = item.Inverted.FromYesNo();
-            if (item.MIASpecified)
-                rom.MIA = item.MIA.FromYesNo();
+                rom.Status = item.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey).AsStringValue<ItemStatus>(useSecond: false);
 
             return rom;
         }
@@ -555,14 +549,14 @@ namespace SabreTools.DatFiles.Formats
             var disk = new Models.Logiqx.Disk
             {
                 Name = item.GetName(),
-                MD5 = item.MD5,
-                SHA1 = item.SHA1,
-                Merge = item.MergeTag,
-                Region = item.Region,
+                MD5 = item.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key),
+                SHA1 = item.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key),
+                Merge = item.GetFieldValue<string?>(Models.Metadata.Disk.MergeKey),
+                Region = item.GetFieldValue<string?>(Models.Metadata.Disk.RegionKey),
             };
 
-            if (item.ItemStatusSpecified)
-                disk.Status = item.ItemStatus.AsStringValue<ItemStatus>(useSecond: false);
+            if (item.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey) != ItemStatus.NULL)
+                disk.Status = item.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey).AsStringValue<ItemStatus>(useSecond: false);
 
             return disk;
         }
@@ -575,10 +569,10 @@ namespace SabreTools.DatFiles.Formats
             var media = new Models.Logiqx.Media
             {
                 Name = item.GetName(),
-                MD5 = item.MD5,
-                SHA1 = item.SHA1,
-                SHA256 = item.SHA256,
-                SpamSum = item.SpamSum,
+                MD5 = item.GetFieldValue<string?>(Models.Metadata.Media.MD5Key),
+                SHA1 = item.GetFieldValue<string?>(Models.Metadata.Media.SHA1Key),
+                SHA256 = item.GetFieldValue<string?>(Models.Metadata.Media.SHA256Key),
+                SpamSum = item.GetFieldValue<string?>(Models.Metadata.Media.SpamSumKey),
             };
             return media;
         }
@@ -626,20 +620,15 @@ namespace SabreTools.DatFiles.Formats
         {
             var driver = new Models.Logiqx.Driver
             {
-                Status = item.Status.AsStringValue<SupportStatus>(),
-                Emulation = item.Emulation.AsStringValue<SupportStatus>(),
-                Cocktail = item.Cocktail.AsStringValue<SupportStatus>(),
-                SaveState = item.SaveState.AsStringValue<Supported>(useSecond: true),
+                Status = item.GetFieldValue<SupportStatus>(Models.Metadata.Driver.StatusKey).AsStringValue<SupportStatus>(),
+                Emulation = item.GetFieldValue<SupportStatus>(Models.Metadata.Driver.EmulationKey).AsStringValue<SupportStatus>(),
+                Cocktail = item.GetFieldValue<SupportStatus>(Models.Metadata.Driver.CocktailKey).AsStringValue<SupportStatus>(),
+                SaveState = item.GetFieldValue<Supported>(Models.Metadata.Driver.SaveStateKey).AsStringValue<Supported>(useSecond: true),
+                RequiresArtwork = item.GetFieldValue<bool?>(Models.Metadata.Driver.RequiresArtworkKey).FromYesNo(),
+                Unofficial = item.GetFieldValue<bool?>(Models.Metadata.Driver.UnofficialKey).FromYesNo(),
+                NoSoundHardware = item.GetFieldValue<bool?>(Models.Metadata.Driver.NoSoundHardwareKey).FromYesNo(),
+                Incomplete = item.GetFieldValue<bool?>(Models.Metadata.Driver.IncompleteKey).FromYesNo(),
             };
-
-            if (item.RequiresArtworkSpecified)
-                driver.RequiresArtwork = item.RequiresArtwork.FromYesNo();
-            if (item.UnofficialSpecified)
-                driver.Unofficial = item.Unofficial.FromYesNo();
-            if (item.NoSoundHardwareSpecified)
-                driver.NoSoundHardware = item.NoSoundHardware.FromYesNo();
-            if (item.IncompleteSpecified)
-                driver.Incomplete = item.Incomplete.FromYesNo();
 
             return driver;
         }
@@ -651,13 +640,13 @@ namespace SabreTools.DatFiles.Formats
         {
             var softwarelist = new Models.Logiqx.SoftwareList
             {
-                Tag = item.Tag,
+                Tag = item.GetFieldValue<string?>(Models.Metadata.SoftwareList.TagKey),
                 Name = item.GetName(),
-                Filter = item.Filter,
+                Filter = item.GetFieldValue<string?>(Models.Metadata.SoftwareList.FilterKey),
             };
 
-            if (item.StatusSpecified)
-                softwarelist.Status = item.Status.AsStringValue<SoftwareListStatus>();
+            if (item.GetFieldValue<SoftwareListStatus?>(Models.Metadata.SoftwareList.StatusKey) != SoftwareListStatus.None)
+                softwarelist.Status = item.GetFieldValue<SoftwareListStatus>(Models.Metadata.SoftwareList.StatusKey).AsStringValue<SoftwareListStatus>();
 
             return softwarelist;
         }

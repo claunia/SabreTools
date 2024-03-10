@@ -33,9 +33,9 @@ namespace SabreTools.DatFiles.Formats
             switch (datItem)
             {
                 case Rom rom:
-                    if (string.IsNullOrEmpty(rom.CRC))
+                    if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey)))
                         missingFields.Add(Models.Metadata.Rom.CRCKey);
-                    if (!rom.SizeSpecified)
+                    if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null)
                         missingFields.Add(Models.Metadata.Rom.SizeKey);
                     break;
             }
@@ -188,10 +188,10 @@ namespace SabreTools.DatFiles.Formats
                 GameName = item.Machine.Name,
                 GameDescription = item.Machine.Description,
                 RomName = item.GetName(),
-                RomCRC = item.CRC,
-                RomSize = item.Size?.ToString(),
+                RomCRC = item.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey),
+                RomSize = item.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey)?.ToString(),
                 RomOf = item.Machine.RomOf,
-                MergeName = item.MergeTag,
+                MergeName = item.GetFieldValue<string?>(Models.Metadata.Rom.MergeKey),
             };
             return rom;
         }

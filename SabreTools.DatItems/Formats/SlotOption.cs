@@ -10,33 +10,6 @@ namespace SabreTools.DatItems.Formats
     [JsonObject("slotoption"), XmlRoot("slotoption")]
     public class SlotOption : DatItem
     {
-        #region Fields
-
-        /// <summary>
-        /// Referenced device name
-        /// </summary>
-        [JsonProperty("devname"), XmlElement("devname")]
-        public string? DeviceName
-        {
-            get => _internal.ReadString(Models.Metadata.SlotOption.DevNameKey);
-            set => _internal[Models.Metadata.SlotOption.DevNameKey] = value;
-        }
-
-        /// <summary>
-        /// Determines if this slot option is default or not
-        /// </summary>
-        [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("default")]
-        public bool? Default
-        {
-            get => _internal.ReadBool(Models.Metadata.SlotOption.DefaultKey);
-            set => _internal[Models.Metadata.SlotOption.DefaultKey] = value;
-        }
-
-        [JsonIgnore]
-        public bool DefaultSpecified { get { return Default != null; } }
-
-        #endregion
-
         #region Accessors
 
         /// <inheritdoc/>

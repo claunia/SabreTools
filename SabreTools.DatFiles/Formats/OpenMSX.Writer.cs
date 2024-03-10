@@ -33,7 +33,7 @@ namespace SabreTools.DatFiles.Formats
             switch (datItem)
             {
                 case Rom rom:
-                    if (string.IsNullOrEmpty(rom.SHA1))
+                    if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key)))
                         missingFields.Add(Models.Metadata.Rom.SHA1Key);
                     break;
             }
@@ -151,24 +151,24 @@ namespace SabreTools.DatFiles.Formats
         private static Models.OpenMSX.Dump CreateDump(Rom item)
         {
             Models.OpenMSX.Original? original = null;
-            if (item.OriginalSpecified && item.Original != null)
+            if (item.OriginalSpecified && item.GetFieldValue<Original?>("ORIGINAL") != null)
             {
-                original = new Models.OpenMSX.Original { Content = item.Original.Content };
-                if (item.Original.Value != null)
-                    original.Value = item.Original.Value.ToString();
+                original = new Models.OpenMSX.Original { Content = item.GetFieldValue<Original?>("ORIGINAL")!.Content };
+                if (item.GetFieldValue<Original?>("ORIGINAL")!.Value != null)
+                    original.Value = item.GetFieldValue<Original?>("ORIGINAL")!.Value.ToString();
             }
 
-            Models.OpenMSX.RomBase rom = item.OpenMSXSubType switch
+            Models.OpenMSX.RomBase rom = item.GetFieldValue<OpenMSXSubType>(Models.Metadata.Rom.OpenMSXMediaType) switch
             {
                 OpenMSXSubType.MegaRom => new Models.OpenMSX.MegaRom(),
                 OpenMSXSubType.SCCPlusCart => new Models.OpenMSX.SCCPlusCart(),
                 _ => new Models.OpenMSX.Rom(),
             };
 
-            rom.Start = item.Offset;
-            rom.Type = item.OpenMSXType;
-            rom.Hash = item.SHA1;
-            rom.Remark = item.Remark;
+            rom.Start = item.GetFieldValue<string?>(Models.Metadata.Rom.OffsetKey);
+            rom.Type = item.GetFieldValue<string?>(Models.Metadata.Rom.OpenMSXType);
+            rom.Hash = item.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key);
+            rom.Remark = item.GetFieldValue<string?>(Models.Metadata.Rom.RemarkKey);
 
             var dump = new Models.OpenMSX.Dump
             {

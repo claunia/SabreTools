@@ -34,19 +34,19 @@ namespace SabreTools.DatFiles.Formats
             switch (datItem)
             {
                 case Disk disk:
-                    if (string.IsNullOrEmpty(disk.MD5)
-                        && string.IsNullOrEmpty(disk.SHA1))
+                    if (string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key))
+                        && string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key)))
                     {
                         missingFields.Add(Models.Metadata.Disk.SHA1Key);
                     }
                     break;
 
                 case Rom rom:
-                    if (rom.Size == null || rom.Size < 0)
+                    if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null || rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) < 0)
                         missingFields.Add(Models.Metadata.Rom.SizeKey);
-                    if (string.IsNullOrEmpty(rom.CRC))
+                    if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey)))
                         missingFields.Add(Models.Metadata.Rom.CRCKey);
-                    if (string.IsNullOrEmpty(rom.SHA1))
+                    if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key)))
                         missingFields.Add(Models.Metadata.Rom.SHA1Key);
                     break;
             }
@@ -166,7 +166,7 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         private static Models.Listrom.Row? CreateRow(Disk disk)
         {
-            if (disk.ItemStatus == ItemStatus.Nodump)
+            if (disk.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey) == ItemStatus.Nodump)
             {
                 return new Models.Listrom.Row
                 {
@@ -174,7 +174,7 @@ namespace SabreTools.DatFiles.Formats
                     NoGoodDumpKnown = true,
                 };
             }
-            else if (disk.ItemStatus == ItemStatus.BadDump)
+            else if (disk.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey) == ItemStatus.BadDump)
             {
                 var row = new Models.Listrom.Row
                 {
@@ -182,10 +182,10 @@ namespace SabreTools.DatFiles.Formats
                     Bad = true,
                 };
 
-                if (!string.IsNullOrEmpty(disk.MD5))
-                    row.MD5 = disk.MD5;
+                if (!string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key)))
+                    row.MD5 = disk.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key);
                 else
-                    row.SHA1 = disk.SHA1;
+                    row.SHA1 = disk.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key);
 
                 return row;
             }
@@ -196,10 +196,10 @@ namespace SabreTools.DatFiles.Formats
                     Name = disk.GetName(),
                 };
 
-                if (!string.IsNullOrEmpty(disk.MD5))
-                    row.MD5 = disk.MD5;
+                if (!string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key)))
+                    row.MD5 = disk.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key);
                 else
-                    row.SHA1 = disk.SHA1;
+                    row.SHA1 = disk.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key);
 
                 return row;
             }
@@ -210,24 +210,24 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         private static Models.Listrom.Row? CreateRow(Rom rom)
         {
-            if (rom.ItemStatus == ItemStatus.Nodump)
+            if (rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) == ItemStatus.Nodump)
             {
                 return new Models.Listrom.Row
                 {
                     Name = rom.GetName(),
-                    Size = rom.Size?.ToString(),
+                    Size = rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey)?.ToString(),
                     NoGoodDumpKnown = true,
                 };
             }
-            else if (rom.ItemStatus == ItemStatus.BadDump)
+            else if (rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) == ItemStatus.BadDump)
             {
                 return new Models.Listrom.Row
                 {
                     Name = rom.GetName(),
-                    Size = rom.Size?.ToString(),
+                    Size = rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey)?.ToString(),
                     Bad = true,
-                    CRC = rom.CRC,
-                    SHA1 = rom.SHA1,
+                    CRC = rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey),
+                    SHA1 = rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key),
                 };
             }
             else
@@ -235,9 +235,9 @@ namespace SabreTools.DatFiles.Formats
                 return new Models.Listrom.Row
                 {
                     Name = rom.GetName(),
-                    Size = rom.Size?.ToString(),
-                    CRC = rom.CRC,
-                    SHA1 = rom.SHA1,
+                    Size = rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey)?.ToString(),
+                    CRC = rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey),
+                    SHA1 = rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key),
                 };
             }
         }

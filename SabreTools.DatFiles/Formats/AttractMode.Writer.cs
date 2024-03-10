@@ -137,8 +137,8 @@ namespace SabreTools.DatFiles.Formats
                 Status = rom.Machine.Status,
                 DisplayCount = rom.Machine.DisplayCount,
                 DisplayType = rom.Machine.DisplayType,
-                AltRomname = rom.AltName,
-                AltTitle = rom.AltTitle,
+                AltRomname = rom.GetFieldValue<string?>(Models.Metadata.Rom.AltRomnameKey),
+                AltTitle = rom.GetFieldValue<string?>(Models.Metadata.Rom.AltTitleKey),
                 Extra = rom.Machine.Comment,
                 Buttons = rom.Machine.Buttons,
                 // TODO: Add extended fields

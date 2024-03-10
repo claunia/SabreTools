@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
 
@@ -14,18 +12,15 @@ namespace SabreTools.DatItems.Formats
     {
         #region Fields
 
-        /// <summary>
-        /// Slot options associated with the slot
-        /// </summary>
-        [JsonProperty("slotoptions", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("slotoptions")]
-        public List<SlotOption>? SlotOptions
-        {
-            get => _internal.Read<SlotOption[]>(Models.Metadata.Slot.SlotOptionKey)?.ToList();
-            set => _internal[Models.Metadata.Slot.SlotOptionKey] = value?.ToArray();
-        }
-
         [JsonIgnore]
-        public bool SlotOptionsSpecified { get { return SlotOptions != null && SlotOptions.Count > 0; } }
+        public bool SlotOptionsSpecified
+        {
+            get
+            {
+                var slotOptions = GetFieldValue<SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey);
+                return slotOptions != null && slotOptions.Length > 0;
+            }
+        }
 
         #endregion
 

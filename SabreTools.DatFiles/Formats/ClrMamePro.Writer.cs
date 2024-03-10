@@ -43,29 +43,29 @@ namespace SabreTools.DatFiles.Formats
                 case Release release:
                     if (string.IsNullOrEmpty(release.GetName()))
                         missingFields.Add(Models.Metadata.Release.NameKey);
-                    if (string.IsNullOrEmpty(release.Region))
+                    if (string.IsNullOrEmpty(release.GetFieldValue<string?>(Models.Metadata.Release.RegionKey)))
                         missingFields.Add(Models.Metadata.Release.RegionKey);
                     break;
 
                 case BiosSet biosset:
                     if (string.IsNullOrEmpty(biosset.GetName()))
                         missingFields.Add(Models.Metadata.BiosSet.NameKey);
-                    if (string.IsNullOrEmpty(biosset.Description))
+                    if (string.IsNullOrEmpty(biosset.GetFieldValue<string?>(Models.Metadata.BiosSet.DescriptionKey)))
                         missingFields.Add(Models.Metadata.BiosSet.DescriptionKey);
                     break;
 
                 case Rom rom:
                     if (string.IsNullOrEmpty(rom.GetName()))
                         missingFields.Add(Models.Metadata.Rom.NameKey);
-                    if (rom.Size == null || rom.Size < 0)
+                    if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null || rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) < 0)
                         missingFields.Add(Models.Metadata.Rom.SizeKey);
-                    if (string.IsNullOrEmpty(rom.CRC)
-                        && string.IsNullOrEmpty(rom.MD5)
-                        && string.IsNullOrEmpty(rom.SHA1)
-                        && string.IsNullOrEmpty(rom.SHA256)
-                        && string.IsNullOrEmpty(rom.SHA384)
-                        && string.IsNullOrEmpty(rom.SHA512)
-                        && string.IsNullOrEmpty(rom.SpamSum))
+                    if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey))
+                        && string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key))
+                        && string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key))
+                        && string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA256Key))
+                        && string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA384Key))
+                        && string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA512Key))
+                        && string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey)))
                     {
                         missingFields.Add(Models.Metadata.Rom.SHA1Key);
                     }
@@ -74,8 +74,8 @@ namespace SabreTools.DatFiles.Formats
                 case Disk disk:
                     if (string.IsNullOrEmpty(disk.GetName()))
                         missingFields.Add(Models.Metadata.Disk.NameKey);
-                    if (string.IsNullOrEmpty(disk.MD5)
-                        && string.IsNullOrEmpty(disk.SHA1))
+                    if (string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key))
+                        && string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key)))
                     {
                         missingFields.Add(Models.Metadata.Disk.SHA1Key);
                     }
@@ -92,26 +92,26 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case Chip chip:
-                    if (!chip.ChipTypeSpecified)
+                    if (chip.GetFieldValue<ChipType>(Models.Metadata.Chip.ChipTypeKey) == ChipType.NULL)
                         missingFields.Add(Models.Metadata.Chip.ChipTypeKey);
                     if (string.IsNullOrEmpty(chip.GetName()))
                         missingFields.Add(Models.Metadata.Chip.NameKey);
                     break;
 
                 case Display display:
-                    if (!display.DisplayTypeSpecified)
+                    if (display.GetFieldValue<DisplayType>(Models.Metadata.Display.DisplayTypeKey) == DisplayType.NULL)
                         missingFields.Add(Models.Metadata.Display.DisplayTypeKey);
-                    if (!display.RotateSpecified)
+                    if (display.GetFieldValue<long?>(Models.Metadata.Display.RotateKey) == null)
                         missingFields.Add(Models.Metadata.Display.RotateKey);
                     break;
 
                 case Sound sound:
-                    if (!sound.ChannelsSpecified)
+                    if (sound.GetFieldValue<long?>(Models.Metadata.Sound.ChannelsKey) == null)
                         missingFields.Add(Models.Metadata.Sound.ChannelsKey);
                     break;
 
                 case Input input:
-                    if (!input.PlayersSpecified)
+                    if (input.GetFieldValue<long?>(Models.Metadata.Input.PlayersKey) == null)
                         missingFields.Add(Models.Metadata.Input.PlayersKey);
                     if (!input.ControlsSpecified)
                         missingFields.Add(Models.Metadata.Input.ControlKey);
@@ -123,9 +123,9 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case Driver driver:
-                    if (!driver.StatusSpecified)
+                    if (driver.GetFieldValue<SupportStatus>(Models.Metadata.Driver.StatusKey) == SupportStatus.NULL)
                         missingFields.Add(Models.Metadata.Driver.StatusKey);
-                    if (!driver.EmulationSpecified)
+                    if (driver.GetFieldValue<SupportStatus>(Models.Metadata.Driver.EmulationKey) == SupportStatus.NULL)
                         missingFields.Add(Models.Metadata.Driver.EmulationKey);
                     break;
             }
@@ -338,13 +338,11 @@ namespace SabreTools.DatFiles.Formats
             var release = new Models.ClrMamePro.Release
             {
                 Name = item.GetName(),
-                Region = item.Region,
-                Language = item.Language,
-                Date = item.Date,
+                Region = item.GetFieldValue<string?>(Models.Metadata.Release.RegionKey),
+                Language = item.GetFieldValue<string?>(Models.Metadata.Release.LanguageKey),
+                Date = item.GetFieldValue<string?>(Models.Metadata.Release.DateKey),
+                Default = item.GetFieldValue<bool?>(Models.Metadata.Release.DefaultKey).FromYesNo(),
             };
-
-            if (item.DefaultSpecified)
-                release.Default = item.Default.FromYesNo();
 
             return release;
         }
@@ -357,11 +355,9 @@ namespace SabreTools.DatFiles.Formats
             var biosset = new Models.ClrMamePro.BiosSet
             {
                 Name = item.GetName(),
-                Description = item.Description,
+                Default = item.GetFieldValue<bool?>(Models.Metadata.BiosSet.DefaultKey).FromYesNo(),
+                Description = item.GetFieldValue<string?>(Models.Metadata.BiosSet.DescriptionKey),
             };
-
-            if (item.DefaultSpecified)
-                biosset.Default = item.Default.FromYesNo();
 
             return biosset;
         }
@@ -374,31 +370,29 @@ namespace SabreTools.DatFiles.Formats
             var rom = new Models.ClrMamePro.Rom
             {
                 Name = item.GetName(),
-                Size = item.Size?.ToString(),
-                CRC = item.CRC,
-                MD5 = item.MD5,
-                SHA1 = item.SHA1,
-                SHA256 = item.SHA256,
-                SHA384 = item.SHA384,
-                SHA512 = item.SHA512,
-                SpamSum = item.SpamSum,
-                //xxHash364 = item.xxHash364, // TODO: Add to internal model
-                //xxHash3128 = item.xxHash3128, // TODO: Add to internal model
-                Merge = item.MergeTag,
-                Region = item.Region,
-                //Flags = item.Flags, // TODO: Add to internal model
-                Offs = item.Offset,
-                //Serial = item.Serial, // TODO: Add to internal model
-                //Header = item.Header, // TODO: Add to internal model
-                Date = item.Date,
+                Size = item.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey)?.ToString(),
+                CRC = item.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey),
+                MD5 = item.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key),
+                SHA1 = item.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key),
+                SHA256 = item.GetFieldValue<string?>(Models.Metadata.Rom.SHA256Key),
+                SHA384 = item.GetFieldValue<string?>(Models.Metadata.Rom.SHA384Key),
+                SHA512 = item.GetFieldValue<string?>(Models.Metadata.Rom.SHA512Key),
+                SpamSum = item.GetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey),
+                xxHash364 = item.GetFieldValue<string?>(Models.Metadata.Rom.xxHash364Key),
+                xxHash3128 = item.GetFieldValue<string?>(Models.Metadata.Rom.xxHash3128Key),
+                Merge = item.GetFieldValue<string?>(Models.Metadata.Rom.MergeKey),
+                Region = item.GetFieldValue<string?>(Models.Metadata.Rom.RegionKey),
+                Flags = item.GetFieldValue<string?>(Models.Metadata.Rom.FlagsKey),
+                Date = item.GetFieldValue<string?>(Models.Metadata.Rom.DateKey),
+                Offs = item.GetFieldValue<string?>(Models.Metadata.Rom.OffsetKey),
+                Serial = item.GetFieldValue<string?>(Models.Metadata.Rom.SerialKey),
+                Header = item.GetFieldValue<string?>(Models.Metadata.Rom.HeaderKey),
+                Inverted = item.GetFieldValue<bool?>(Models.Metadata.Rom.InvertedKey).FromYesNo(),
+                MIA = item.GetFieldValue<bool?>(Models.Metadata.Rom.MIAKey).FromYesNo(),
             };
 
             if (item.ItemStatusSpecified)
-                rom.Status = item.ItemStatus.AsStringValue<ItemStatus>(useSecond: false);
-            if (item.InvertedSpecified)
-                rom.Inverted = item.Inverted.FromYesNo();
-            if (item.MIASpecified)
-                rom.MIA = item.MIA.FromYesNo();
+                rom.Status = item.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey).AsStringValue<ItemStatus>(useSecond: false);
 
             return rom;
         }
@@ -411,14 +405,14 @@ namespace SabreTools.DatFiles.Formats
             var disk = new Models.ClrMamePro.Disk
             {
                 Name = item.GetName(),
-                MD5 = item.MD5,
-                SHA1 = item.SHA1,
-                Merge = item.MergeTag,
-                //Flags = item.Flags, // TODO: Add to internal model
+                MD5 = item.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key),
+                SHA1 = item.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key),
+                Merge = item.GetFieldValue<string?>(Models.Metadata.Disk.MergeKey),
+                Flags = item.GetFieldValue<string?>(Models.Metadata.Disk.FlagsKey),
             };
 
-            if (item.ItemStatusSpecified)
-                disk.Status = item.ItemStatus.AsStringValue<ItemStatus>(useSecond: false);
+            if (item.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey) != ItemStatus.NULL)
+                disk.Status = item.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey).AsStringValue<ItemStatus>(useSecond: false);
 
             return disk;
         }
@@ -431,10 +425,10 @@ namespace SabreTools.DatFiles.Formats
             var media = new Models.ClrMamePro.Media
             {
                 Name = item.GetName(),
-                MD5 = item.MD5,
-                SHA1 = item.SHA1,
-                SHA256 = item.SHA256,
-                SpamSum = item.SpamSum,
+                MD5 = item.GetFieldValue<string?>(Models.Metadata.Media.MD5Key),
+                SHA1 = item.GetFieldValue<string?>(Models.Metadata.Media.SHA1Key),
+                SHA256 = item.GetFieldValue<string?>(Models.Metadata.Media.SHA256Key),
+                SpamSum = item.GetFieldValue<string?>(Models.Metadata.Media.SpamSumKey),
             };
             return media;
         }
@@ -470,10 +464,10 @@ namespace SabreTools.DatFiles.Formats
         {
             var chip = new Models.ClrMamePro.Chip
             {
-                Type = item.ChipType.AsStringValue<ChipType>(),
+                Type = item.GetFieldValue<ChipType>(Models.Metadata.Chip.ChipTypeKey).AsStringValue<ChipType>(),
                 Name = item.GetName(),
-                //Flags = item.Flags, // TODO: Add to internal model
-                Clock = item.Clock?.ToString(),
+                Flags = item.GetFieldValue<string?>(Models.Metadata.Chip.FlagsKey),
+                Clock = item.GetFieldValue<long?>(Models.Metadata.Chip.ClockKey)?.ToString(),
             };
             return chip;
         }
@@ -485,15 +479,15 @@ namespace SabreTools.DatFiles.Formats
         {
             var video = new Models.ClrMamePro.Video
             {
-                Screen = item.DisplayType.AsStringValue<DisplayType>(),
-                X = item.Width?.ToString(),
-                Y = item.Height?.ToString(),
-                //AspectX = item.AspectX, // TODO: Add to internal model or find mapping
-                //AspectY = item.AspectY, // TODO: Add to internal model or find mapping
-                Freq = item.Refresh?.ToString(),
+                Screen = item.GetFieldValue<DisplayType>(Models.Metadata.Display.DisplayTypeKey).AsStringValue<DisplayType>(),
+                X = item.GetFieldValue<long?>(Models.Metadata.Display.WidthKey)?.ToString(),
+                Y = item.GetFieldValue<long?>(Models.Metadata.Display.HeightKey)?.ToString(),
+                AspectX = item.GetFieldValue<string?>("ASPECTX"),
+                AspectY = item.GetFieldValue<string?>("ASPECTY"),
+                Freq = item.GetFieldValue<double?>(Models.Metadata.Display.RefreshKey)?.ToString(),
             };
 
-            switch (item.Rotate)
+            switch (item.GetFieldValue<long?>(Models.Metadata.Display.RotateKey))
             {
                 case 0:
                 case 180:
@@ -515,7 +509,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var sound = new Models.ClrMamePro.Sound
             {
-                Channels = item.Channels?.ToString(),
+                Channels = item.GetFieldValue<long?>(Models.Metadata.Sound.ChannelsKey)?.ToString(),
             };
             return sound;
         }
@@ -527,15 +521,15 @@ namespace SabreTools.DatFiles.Formats
         {
             var input = new Models.ClrMamePro.Input
             {
-                Players = item.Players?.ToString(),
-                //Control = item.Control, // TODO: Add to internal model or find mapping
-                Coins = item.Coins?.ToString(),
-                Tilt = item.Tilt.FromYesNo(),
-                Service = item.Service.FromYesNo(),
+                Players = item.GetFieldValue<long?>(Models.Metadata.Input.PlayersKey)?.ToString(),
+                //Control = item.GetFieldValue<string?>(Models.Metadata.Input.ControlKey),
+                Coins = item.GetFieldValue<long?>(Models.Metadata.Input.CoinsKey)?.ToString(),
+                Tilt = item.GetFieldValue<bool?>(Models.Metadata.Input.TiltKey).FromYesNo(),
+                Service = item.GetFieldValue<bool?>(Models.Metadata.Input.ServiceKey).FromYesNo(),
             };
 
             if (item.ControlsSpecified)
-                input.Buttons = item.Controls![0].Buttons?.ToString();
+                input.Buttons = item.GetFieldValue<Control[]?>(Models.Metadata.Input.ControlKey)![0].GetFieldValue<long?>(Models.Metadata.Control.ButtonsKey)?.ToString();
 
             return input;
         }
@@ -553,11 +547,11 @@ namespace SabreTools.DatFiles.Formats
             if (item.ValuesSpecified)
             {
                 var entries = new List<string>();
-                foreach (var setting in item.Values!)
+                foreach (var setting in item.GetFieldValue<DipValue[]?>(Models.Metadata.DipSwitch.DipValueKey)!)
                 {
-                    entries.Add(setting.Value!);
-                    if (setting.Default == true)
-                        dipswitch.Default = setting.Value;
+                    entries.Add(setting.GetFieldValue<string?>(Models.Metadata.DipValue.ValueKey)!);
+                    if (setting.GetFieldValue<bool?>(Models.Metadata.DipValue.DefaultKey) == true)
+                        dipswitch.Default = setting.GetFieldValue<string?>(Models.Metadata.DipValue.ValueKey);
                 }
 
                 dipswitch.Entry = [.. entries];
@@ -573,12 +567,11 @@ namespace SabreTools.DatFiles.Formats
         {
             var driver = new Models.ClrMamePro.Driver
             {
-                Status = item.Status.AsStringValue<SupportStatus>(),
-                //Color = item.Color, // TODO: Add to internal model or find mapping
-                //Sound = item.Sound, // TODO: Add to internal model or find mapping
-                //PaletteSize = item.PaletteSize, // TODO: Add to internal model or find mapping
-                //Blit = item.Blit, // TODO: Add to internal model or find mapping
-
+                Status = item.GetFieldValue<SupportStatus>(Models.Metadata.Driver.StatusKey).AsStringValue<SupportStatus>(),
+                Color = item.GetFieldValue<SupportStatus>(Models.Metadata.Driver.ColorKey).AsStringValue<SupportStatus>(),
+                Sound = item.GetFieldValue<SupportStatus>(Models.Metadata.Driver.SoundKey).AsStringValue<SupportStatus>(),
+                PaletteSize = item.GetFieldValue<long?>(Models.Metadata.Driver.PaletteSizeKey)?.ToString(),
+                Blit = item.GetFieldValue<string?>(Models.Metadata.Driver.BlitKey),
             };
             return driver;
         }

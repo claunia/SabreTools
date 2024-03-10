@@ -94,28 +94,28 @@ namespace RombaSharp.Features
 
                     foreach (Rom rom in roms)
                     {
-                        if (hashes.Contains(rom.SHA1!))
+                        if (hashes.Contains(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)!))
                         {
-                            dupehashes.Add(rom.SHA1!);
-                            hashes.Remove(rom.SHA1!);
+                            dupehashes.Add(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)!);
+                            hashes.Remove(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)!);
                         }
-                        else if (!dupehashes.Contains(rom.SHA1!))
+                        else if (!dupehashes.Contains(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)!))
                         {
-                            if (!string.IsNullOrWhiteSpace(rom.CRC))
-                                crcquery += $" (\"{rom.CRC}\"),";
+                            if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.CRCKey)))
+                                crcquery += $" (\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.CRCKey)}\"),";
 
-                            if (!string.IsNullOrWhiteSpace(rom.MD5))
-                                md5query += $" (\"{rom.MD5}\"),";
+                            if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.MD5Key)))
+                                md5query += $" (\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.MD5Key)}\"),";
 
-                            if (!string.IsNullOrWhiteSpace(rom.SHA1))
+                            if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)))
                             {
-                                sha1query += $" (\"{rom.SHA1}\", \"{depotname}\"),";
+                                sha1query += $" (\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)}\", \"{depotname}\"),";
 
-                                if (!string.IsNullOrWhiteSpace(rom.CRC))
-                                    crcsha1query += $" (\"{rom.CRC}\", \"{rom.SHA1}\"),";
+                                if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.CRCKey)))
+                                    crcsha1query += $" (\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.CRCKey)}\", \"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)}\"),";
 
-                                if (!string.IsNullOrWhiteSpace(rom.MD5))
-                                    md5sha1query += $" (\"{rom.MD5}\", \"{rom.SHA1}\"),";
+                                if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.MD5Key)))
+                                    md5sha1query += $" (\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.MD5Key)}\", \"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)}\"),";
                             }
                         }
                     }

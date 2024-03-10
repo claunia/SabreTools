@@ -10,53 +10,6 @@ namespace SabreTools.DatItems.Formats
     [JsonObject("release"), XmlRoot("release")]
     public class Release : DatItem
     {
-        #region Fields
-
-        /// <summary>
-        /// Release region(s)
-        /// </summary>
-        [JsonProperty("region", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("region")]
-        public string? Region
-        {
-            get => _internal.ReadString(Models.Metadata.Release.RegionKey);
-            set => _internal[Models.Metadata.Release.RegionKey] = value;
-        }
-
-        /// <summary>
-        /// Release language(s)
-        /// </summary>
-        [JsonProperty("language", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("language")]
-        public string? Language
-        {
-            get => _internal.ReadString(Models.Metadata.Release.LanguageKey);
-            set => _internal[Models.Metadata.Release.LanguageKey] = value;
-        }
-
-        /// <summary>
-        /// Date of release
-        /// </summary>
-        [JsonProperty("date", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("date")]
-        public string? Date
-        {
-            get => _internal.ReadString(Models.Metadata.Release.DateKey);
-            set => _internal[Models.Metadata.Release.DateKey] = value;
-        }
-
-        /// <summary>
-        /// Default release, if applicable
-        /// </summary>
-        [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("default")]
-        public bool? Default
-        {
-            get => _internal.ReadBool(Models.Metadata.Release.DefaultKey);
-            set => _internal[Models.Metadata.Release.DefaultKey] = value;
-        }
-
-        [JsonIgnore]
-        public bool DefaultSpecified { get { return Default != null; } }
-
-        #endregion
-
         #region Accessors
 
         /// <inheritdoc/>
@@ -79,10 +32,6 @@ namespace SabreTools.DatItems.Formats
 
             SetName(string.Empty);
             ItemType = ItemType.Release;
-            Region = string.Empty;
-            Language = string.Empty;
-            Date = string.Empty;
-            Default = null;
         }
 
         #endregion

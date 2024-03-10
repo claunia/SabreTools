@@ -33,11 +33,11 @@ namespace SabreTools.DatFiles.Formats
             switch (datItem)
             {
                 case Rom rom:
-                    if (rom.Size == null || rom.Size < 0)
+                    if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null || rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) < 0)
                         missingFields.Add(Models.Metadata.Rom.SizeKey);
-                    if (string.IsNullOrEmpty(rom.CRC)
-                        && string.IsNullOrEmpty(rom.MD5)
-                        && string.IsNullOrEmpty(rom.SHA1))
+                    if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey))
+                        && string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key))
+                        && string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key)))
                     {
                         missingFields.Add(Models.Metadata.Rom.SHA1Key);
                     }
@@ -126,72 +126,72 @@ namespace SabreTools.DatFiles.Formats
             var file = new Models.ArchiveDotOrg.File
             {
                 Name = item.GetName(),
-                Source = item.ArchiveDotOrgSource,
-                //BitTorrentMagnetHash = item.BitTorrentMagnetHash, // TODO: Add to internal model
-                Size = item.Size?.ToString(),
-                MD5 = item.MD5,
-                CRC32 = item.CRC,
-                SHA1 = item.SHA1,
-                //FileCount = item.FileCount, // TODO: Add to internal model
-                Format = item.ArchiveDotOrgFormat,
-                //Original = item.Original, // TODO: Add to internal model
-                Summation = item.Summation,
-                //MatrixNumber = item.MatrixNumber, // TODO: Add to internal model
-                //CollectionCatalogNumber = item.CollectionCatalogNumber, // TODO: Add to internal model
+                Source = item.GetFieldValue<string?>(Models.Metadata.Rom.SourceKey),
+                BitTorrentMagnetHash = item.GetFieldValue<string?>(Models.Metadata.Rom.BitTorrentMagnetHashKey),
+                Size = item.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey)?.ToString(),
+                MD5 = item.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key),
+                CRC32 = item.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey),
+                SHA1 = item.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key),
+                FileCount = item.GetFieldValue<string?>(Models.Metadata.Rom.FileCountKey),
+                Format = item.GetFieldValue<string?>(Models.Metadata.Rom.FormatKey),
+                Original = item.GetFieldValue<string?>(Models.Metadata.Rom.OriginalKey),
+                Summation = item.GetFieldValue<string?>(Models.Metadata.Rom.SummationKey),
+                MatrixNumber = item.GetFieldValue<string?>(Models.Metadata.Rom.MatrixNumberKey),
+                CollectionCatalogNumber = item.GetFieldValue<string?>(Models.Metadata.Rom.CollectionCatalogNumberKey),
 
                 // ASR-Related
-                //ASRDetectedLang = item.ASRDetectedLang, // TODO: Add to internal model
-                //ASRDetectedLangConf = item.ASRDetectedLangConf, // TODO: Add to internal model
-                //ASRTranscribedLang = item.ASRTranscribedLang, // TODO: Add to internal model
-                //WhisperASRModuleVersion = item.WhisperASRModuleVersion, // TODO: Add to internal model
-                //WhisperModelHash = item.WhisperModelHash, // TODO: Add to internal model
-                //WhisperModelName = item.WhisperModelName, // TODO: Add to internal model
-                //WhisperVersion = item.WhisperVersion, // TODO: Add to internal model
+                ASRDetectedLang = item.GetFieldValue<string?>(Models.Metadata.Rom.ASRDetectedLangKey),
+                ASRDetectedLangConf = item.GetFieldValue<string?>(Models.Metadata.Rom.ASRDetectedLangConfKey),
+                ASRTranscribedLang = item.GetFieldValue<string?>(Models.Metadata.Rom.ASRTranscribedLangKey),
+                WhisperASRModuleVersion = item.GetFieldValue<string?>(Models.Metadata.Rom.WhisperASRModuleVersionKey),
+                WhisperModelHash = item.GetFieldValue<string?>(Models.Metadata.Rom.WhisperModelHashKey),
+                WhisperModelName = item.GetFieldValue<string?>(Models.Metadata.Rom.WhisperModelNameKey),
+                WhisperVersion = item.GetFieldValue<string?>(Models.Metadata.Rom.WhisperVersionKey),
 
                 // OCR-Related
-                //ClothCoverDetectionModuleVersion = item.ClothCoverDetectionModuleVersions, // TODO: Add to internal model
-                //hOCRCharToWordhOCRVersion = item.hOCRCharToWordhOCRVersion, // TODO: Add to internal model
-                //hOCRCharToWordModuleVersion = item.hOCRCharToWordModuleVersion, // TODO: Add to internal model
-                //hOCRFtsTexthOCRVersion = item.hOCRFtsTexthOCRVersion, // TODO: Add to internal model
-                //hOCRFtsTextModuleVersion = item.hOCRFtsTextModuleVersion, // TODO: Add to internal model
-                //hOCRPageIndexhOCRVersion = item.hOCRPageIndexhOCRVersion, // TODO: Add to internal model
-                //hOCRPageIndexModuleVersion = item.hOCRPageIndexModuleVersion, // TODO: Add to internal model
-                //TesseractOCR = item.TesseractOCR, // TODO: Add to internal model
-                //TesseractOCRConverted = item.TesseractOCRConverted, // TODO: Add to internal model
-                //TesseractOCRDetectedLang = item.TesseractOCRDetectedLang, // TODO: Add to internal model
-                //TesseractOCRDetectedLangConf = item.TesseractOCRDetectedLangConf, // TODO: Add to internal model
-                //TesseractOCRDetectedScript = item.TesseractOCRDetectedScript, // TODO: Add to internal model
-                //TesseractOCRDetectedScriptConf = item.TesseractOCRDetectedScriptConf, // TODO: Add to internal model
-                //TesseractOCRParameters = item.TesseractOCRParameters, // TODO: Add to internal model
-                //TesseractOCRModuleVersion = item.TesseractOCRModuleVersion, // TODO: Add to internal model
-                //PDFModuleVersion = item.PDFModuleVersion, // TODO: Add to internal model
-                //WordConfidenceInterval0To10 = item.WordConfidenceInterval0To10, // TODO: Add to internal model
-                //WordConfidenceInterval11To20 = item.WordConfidenceInterval11To20, // TODO: Add to internal model
-                //WordConfidenceInterval21To30 = item.WordConfidenceInterval21To30, // TODO: Add to internal model
-                //WordConfidenceInterval31To40 = item.WordConfidenceInterval31To40, // TODO: Add to internal model
-                //WordConfidenceInterval41To50 = item.WordConfidenceInterval41To50, // TODO: Add to internal model
-                //WordConfidenceInterval51To60 = item.WordConfidenceInterval51To60, // TODO: Add to internal model
-                //WordConfidenceInterval61To70 = item.WordConfidenceInterval61To70, // TODO: Add to internal model
-                //WordConfidenceInterval71To80 = item.WordConfidenceInterval71To80, // TODO: Add to internal model
-                //WordConfidenceInterval81To90 = item.WordConfidenceInterval81To90, // TODO: Add to internal model
-                //WordConfidenceInterval91To100 = item.WordConfidenceInterval91To100, // TODO: Add to internal model
+                ClothCoverDetectionModuleVersion = item.GetFieldValue<string?>(Models.Metadata.Rom.ClothCoverDetectionModuleVersionKey),
+                hOCRCharToWordhOCRVersion = item.GetFieldValue<string?>(Models.Metadata.Rom.hOCRCharToWordhOCRVersionKey),
+                hOCRCharToWordModuleVersion = item.GetFieldValue<string?>(Models.Metadata.Rom.hOCRCharToWordModuleVersionKey),
+                hOCRFtsTexthOCRVersion = item.GetFieldValue<string?>(Models.Metadata.Rom.hOCRFtsTexthOCRVersionKey),
+                hOCRFtsTextModuleVersion = item.GetFieldValue<string?>(Models.Metadata.Rom.hOCRFtsTextModuleVersionKey),
+                hOCRPageIndexhOCRVersion = item.GetFieldValue<string?>(Models.Metadata.Rom.hOCRPageIndexhOCRVersionKey),
+                hOCRPageIndexModuleVersion = item.GetFieldValue<string?>(Models.Metadata.Rom.hOCRPageIndexModuleVersionKey),
+                TesseractOCR = item.GetFieldValue<string?>(Models.Metadata.Rom.TesseractOCRKey),
+                TesseractOCRConverted = item.GetFieldValue<string?>(Models.Metadata.Rom.TesseractOCRConvertedKey),
+                TesseractOCRDetectedLang = item.GetFieldValue<string?>(Models.Metadata.Rom.TesseractOCRDetectedLangKey),
+                TesseractOCRDetectedLangConf = item.GetFieldValue<string?>(Models.Metadata.Rom.TesseractOCRDetectedLangConfKey),
+                TesseractOCRDetectedScript = item.GetFieldValue<string?>(fieldName: Models.Metadata.Rom.TesseractOCRDetectedScriptKey),
+                TesseractOCRDetectedScriptConf = item.GetFieldValue<string?>(Models.Metadata.Rom.TesseractOCRDetectedScriptConfKey),
+                TesseractOCRParameters = item.GetFieldValue<string?>(Models.Metadata.Rom.TesseractOCRParametersKey),
+                TesseractOCRModuleVersion = item.GetFieldValue<string?>(Models.Metadata.Rom.TesseractOCRModuleVersionKey),
+                PDFModuleVersion = item.GetFieldValue<string?>(Models.Metadata.Rom.PDFModuleVersionKey),
+                WordConfidenceInterval0To10 = item.GetFieldValue<string?>(Models.Metadata.Rom.WordConfidenceInterval0To10Key),
+                WordConfidenceInterval11To20 = item.GetFieldValue<string?>(Models.Metadata.Rom.WordConfidenceInterval11To20Key),
+                WordConfidenceInterval21To30 = item.GetFieldValue<string?>(Models.Metadata.Rom.WordConfidenceInterval21To30Key),
+                WordConfidenceInterval31To40 = item.GetFieldValue<string?>(Models.Metadata.Rom.WordConfidenceInterval31To40Key),
+                WordConfidenceInterval41To50 = item.GetFieldValue<string?>(Models.Metadata.Rom.WordConfidenceInterval41To50Key),
+                WordConfidenceInterval51To60 = item.GetFieldValue<string?>(Models.Metadata.Rom.WordConfidenceInterval51To60Key),
+                WordConfidenceInterval61To70 = item.GetFieldValue<string?>(Models.Metadata.Rom.WordConfidenceInterval61To70Key),
+                WordConfidenceInterval71To80 = item.GetFieldValue<string?>(Models.Metadata.Rom.WordConfidenceInterval71To80Key),
+                WordConfidenceInterval81To90 = item.GetFieldValue<string?>(Models.Metadata.Rom.WordConfidenceInterval81To90Key),
+                WordConfidenceInterval91To100 = item.GetFieldValue<string?>(Models.Metadata.Rom.WordConfidenceInterval91To100Key),
 
                 // Media-Related
-                //Album = item.Album, // TODO: Add to internal model
-                //Artist = item.Artist, // TODO: Add to internal model
-                //Bitrate = item.Bitrate, // TODO: Add to internal model
-                //Creator = item.Creator, // TODO: Add to internal model
-                //Height = item.Height, // TODO: Add to internal model
-                //Length = item.Length, // TODO: Add to internal model
-                //PreviewImage = item.PreviewImage, // TODO: Add to internal model
-                //Rotation = item.Rotation, // TODO: Add to internal model
-                //Title = item.Title, // TODO: Add to internal model
-                //Track = item.Track, // TODO: Add to internal model
-                //Width = item.Width, // TODO: Add to internal model
+                Album = item.GetFieldValue<string?>(Models.Metadata.Rom.AlbumKey),
+                Artist = item.GetFieldValue<string?>(Models.Metadata.Rom.ArtistKey),
+                Bitrate = item.GetFieldValue<string?>(Models.Metadata.Rom.BitrateKey),
+                Creator = item.GetFieldValue<string?>(Models.Metadata.Rom.CreatorKey),
+                Height = item.GetFieldValue<string?>(Models.Metadata.Rom.HeightKey),
+                Length = item.GetFieldValue<string?>(Models.Metadata.Rom.LengthKey),
+                PreviewImage = item.GetFieldValue<string?>(Models.Metadata.Rom.PreviewImageKey),
+                Rotation = item.GetFieldValue<string?>(Models.Metadata.Rom.RotationKey),
+                Title = item.GetFieldValue<string?>(Models.Metadata.Rom.TitleKey),
+                Track = item.GetFieldValue<string?>(Models.Metadata.Rom.TrackKey),
+                Width = item.GetFieldValue<string?>(Models.Metadata.Rom.WidthKey),
 
             };
 
-            if (long.TryParse(item.Date ?? string.Empty, out long lastModifiedTime))
+            if (long.TryParse(item.GetFieldValue<string?>(Models.Metadata.Rom.DateKey) ?? string.Empty, out long lastModifiedTime))
                 file.LastModifiedTime = lastModifiedTime.ToString();
 
             return file;

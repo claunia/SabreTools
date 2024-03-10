@@ -12,50 +12,6 @@ namespace SabreTools.DatItems.Formats
     [JsonObject("media"), XmlRoot("media")]
     public class Media : DatItem
     {
-        #region Fields
-
-        /// <summary>
-        /// Data MD5 hash
-        /// </summary>
-        [JsonProperty("md5", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("md5")]
-        public string? MD5
-        {
-            get => _internal.ReadString(Models.Metadata.Media.MD5Key);
-            set => _internal[Models.Metadata.Media.MD5Key] = TextHelper.NormalizeMD5(value);
-        }
-
-        /// <summary>
-        /// Data SHA-1 hash
-        /// </summary>
-        [JsonProperty("sha1", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha1")]
-        public string? SHA1
-        {
-            get => _internal.ReadString(Models.Metadata.Media.SHA1Key);
-            set => _internal[Models.Metadata.Media.SHA1Key] = TextHelper.NormalizeSHA1(value);
-        }
-
-        /// <summary>
-        /// Data SHA-256 hash
-        /// </summary>
-        [JsonProperty("sha256", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha256")]
-        public string? SHA256
-        {
-            get => _internal.ReadString(Models.Metadata.Media.SHA256Key);
-            set => _internal[Models.Metadata.Media.SHA256Key] = TextHelper.NormalizeSHA256(value);
-        }
-
-        /// <summary>
-        /// File SpamSum fuzzy hash
-        /// </summary>
-        [JsonProperty("spamsum", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("spamsum")]
-        public string? SpamSum
-        {
-            get => _internal.ReadString(Models.Metadata.Media.SpamSumKey);
-            set => _internal[Models.Metadata.Media.SpamSumKey] = value;
-        }
-
-        #endregion
-
         #region Accessors
 
         /// <inheritdoc/>
@@ -91,10 +47,10 @@ namespace SabreTools.DatItems.Formats
             Machine = new Machine();
 
             SetName(baseFile.Filename);
-            MD5 = TextHelper.ByteArrayToString(baseFile.MD5);
-            SHA1 = TextHelper.ByteArrayToString(baseFile.SHA1);
-            SHA256 = TextHelper.ByteArrayToString(baseFile.SHA256);
-            SpamSum = System.Text.Encoding.UTF8.GetString(baseFile.SpamSum ?? []);
+            SetFieldValue<string?>(Models.Metadata.Media.MD5Key, TextHelper.ByteArrayToString(baseFile.MD5));
+            SetFieldValue<string?>(Models.Metadata.Media.SHA1Key, TextHelper.ByteArrayToString(baseFile.SHA1));
+            SetFieldValue<string?>(Models.Metadata.Media.SHA256Key, TextHelper.ByteArrayToString(baseFile.SHA256));
+            SetFieldValue<string?>(Models.Metadata.Media.SpamSumKey, System.Text.Encoding.UTF8.GetString(baseFile.SpamSum ?? []));
 
             ItemType = ItemType.Media;
             DupeType = 0x00;
@@ -129,10 +85,10 @@ namespace SabreTools.DatItems.Formats
             {
                 Filename = this.GetName(),
                 Parent = this.Machine.Name,
-                MD5 = TextHelper.StringToByteArray(this.MD5),
-                SHA1 = TextHelper.StringToByteArray(this.SHA1),
-                SHA256 = TextHelper.StringToByteArray(this.SHA256),
-                SpamSum = System.Text.Encoding.UTF8.GetBytes(this.SpamSum ?? string.Empty),
+                MD5 = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Media.MD5Key)),
+                SHA1 = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Media.SHA1Key)),
+                SHA256 = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Media.SHA256Key)),
+                SpamSum = System.Text.Encoding.UTF8.GetBytes(GetFieldValue<string?>(Models.Metadata.Media.SpamSumKey) ?? string.Empty),
             };
         }
 
@@ -185,19 +141,19 @@ namespace SabreTools.DatItems.Formats
             switch (bucketedBy)
             {
                 case ItemKey.MD5:
-                    key = MD5;
+                    key = GetFieldValue<string?>(Models.Metadata.Media.MD5Key);
                     break;
 
                 case ItemKey.SHA1:
-                    key = SHA1;
+                    key = GetFieldValue<string?>(Models.Metadata.Media.SHA1Key);
                     break;
 
                 case ItemKey.SHA256:
-                    key = SHA256;
+                    key = GetFieldValue<string?>(Models.Metadata.Media.SHA256Key);
                     break;
 
                 case ItemKey.SpamSum:
-                    key = SpamSum;
+                    key = GetFieldValue<string?>(Models.Metadata.Media.SpamSumKey);
                     break;
 
                 // Let the base handle generic stuff

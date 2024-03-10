@@ -557,13 +557,13 @@ namespace SabreTools.DatItems
                 }
 
                 // If it's a nodump, add and skip
-                if (file is Rom rom && rom.ItemStatus == ItemStatus.Nodump)
+                if (file is Rom rom && rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) == ItemStatus.Nodump)
                 {
                     outfiles.Add(file);
                     nodumpCount++;
                     continue;
                 }
-                else if (file is Disk disk && disk.ItemStatus == ItemStatus.Nodump)
+                else if (file is Disk disk && disk.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey) == ItemStatus.Nodump)
                 {
                     outfiles.Add(file);
                     nodumpCount++;

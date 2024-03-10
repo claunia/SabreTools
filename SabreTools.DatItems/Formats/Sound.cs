@@ -10,23 +10,6 @@ namespace SabreTools.DatItems.Formats
     [JsonObject("sound"), XmlRoot("sound")]
     public class Sound : DatItem
     {
-        #region Fields
-
-        /// <summary>
-        /// Number of speakers or channels
-        /// </summary>
-        [JsonProperty("channels", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("channels")]
-        public long? Channels
-        {
-            get => _internal.ReadLong(Models.Metadata.Sound.ChannelsKey);
-            set => _internal[Models.Metadata.Sound.ChannelsKey] = value;
-        }
-
-        [JsonIgnore]
-        public bool ChannelsSpecified { get { return Channels != null; } }
-
-        #endregion
-
         #region Constructors
 
         /// <summary>

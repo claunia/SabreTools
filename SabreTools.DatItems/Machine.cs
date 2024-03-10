@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -491,6 +492,26 @@ namespace SabreTools.DatItems
         /// </summary>
         public Machine()
         {
+        }
+
+        /// <summary>
+        /// Create a new Machine object from an existing metadata model
+        /// </summary>
+        /// <param name="machine">Machine metadata model</param>
+        public Machine(Models.Metadata.Machine machine)
+        {
+            // Get all fields to automatically copy without processing
+            var nonItemFields = TypeHelper.GetConstants(typeof(Models.Metadata.Machine));
+            if (nonItemFields == null)
+                return;
+
+            // Populate the internal machine from non-filter fields
+            _machine = [];
+            foreach (string fieldName in nonItemFields)
+            {
+                if (machine.ContainsKey(fieldName))
+                    _machine[fieldName] = machine[fieldName];
+            }
         }
 
         /// <summary>

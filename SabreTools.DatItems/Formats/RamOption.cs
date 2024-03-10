@@ -10,33 +10,6 @@ namespace SabreTools.DatItems.Formats
     [JsonObject("ramoption"), XmlRoot("ramoption")]
     public class RamOption : DatItem
     {
-        #region Fields
-
-        /// <summary>
-        /// Determine whether the RamOption is default
-        /// </summary>
-        [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("default")]
-        public bool? Default
-        {
-            get => _internal.ReadBool(Models.Metadata.RamOption.DefaultKey);
-            set => _internal[Models.Metadata.RamOption.DefaultKey] = value;
-        }
-
-        [JsonIgnore]
-        public bool DefaultSpecified { get { return Default != null; } }
-
-        /// <summary>
-        /// Determines the content of the RamOption
-        /// </summary>
-        [JsonProperty("content", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("content")]
-        public string? Content
-        {
-            get => _internal.ReadString(Models.Metadata.RamOption.ContentKey);
-            set => _internal[Models.Metadata.RamOption.ContentKey] = value;
-        }
-
-        #endregion
-
         #region Accessors
 
         /// <inheritdoc/>

@@ -263,7 +263,7 @@ namespace SabreTools.DatFiles
         {
             if (configuration.ConditionsSpecified)
             {
-                foreach (Condition subCondition in configuration.Conditions!)
+                foreach (Condition subCondition in configuration.GetFieldValue<Condition[]?>(Models.Metadata.Configuration.ConditionKey)!)
                 {
                     SetFields(subCondition);
                 }
@@ -271,7 +271,7 @@ namespace SabreTools.DatFiles
 
             if (configuration.LocationsSpecified)
             {
-                foreach (ConfLocation subLocation in configuration.Locations!)
+                foreach (ConfLocation subLocation in configuration.GetFieldValue<ConfLocation[]?>(Models.Metadata.Configuration.ConfLocationKey)!)
                 {
                     SetFields(subLocation);
                 }
@@ -279,7 +279,7 @@ namespace SabreTools.DatFiles
 
             if (configuration.SettingsSpecified)
             {
-                foreach (ConfSetting subSetting in configuration.Settings!)
+                foreach (ConfSetting subSetting in configuration.GetFieldValue<ConfSetting[]?>(Models.Metadata.Configuration.ConfSettingKey)!)
                 {
                     SetFields(subSetting as DatItem);
                 }
@@ -294,7 +294,7 @@ namespace SabreTools.DatFiles
         {
             if (confSetting.ConditionsSpecified)
             {
-                foreach (Condition subCondition in confSetting.Conditions!)
+                foreach (Condition subCondition in confSetting.GetFieldValue<Condition[]?>(Models.Metadata.ConfSetting.ConditionKey)!)
                 {
                     SetFields(subCondition);
                 }
@@ -309,7 +309,7 @@ namespace SabreTools.DatFiles
         {
             if (device.ExtensionsSpecified)
             {
-                foreach (Extension subExtension in device.Extensions!)
+                foreach (Extension subExtension in device.GetFieldValue<Extension[]?>(Models.Metadata.Device.ExtensionKey)!)
                 {
                     SetFields(subExtension);
                 }
@@ -317,7 +317,7 @@ namespace SabreTools.DatFiles
 
             if (device.InstancesSpecified)
             {
-                foreach (Instance subInstance in device.Instances!)
+                foreach (Instance subInstance in device.GetFieldValue<Instance[]?>(Models.Metadata.Device.InstanceKey)!)
                 {
                     SetFields(subInstance);
                 }
@@ -332,7 +332,7 @@ namespace SabreTools.DatFiles
         {
             if (dipSwitch.ConditionsSpecified)
             {
-                foreach (Condition subCondition in dipSwitch.Conditions!)
+                foreach (Condition subCondition in dipSwitch.GetFieldValue<Condition[]?>(Models.Metadata.DipSwitch.ConditionKey)!)
                 {
                     SetFields(subCondition);
                 }
@@ -340,7 +340,7 @@ namespace SabreTools.DatFiles
 
             if (dipSwitch.LocationsSpecified)
             {
-                foreach (DipLocation subLocation in dipSwitch.Locations!)
+                foreach (DipLocation subLocation in dipSwitch.GetFieldValue<DipLocation[]?>(Models.Metadata.DipSwitch.DipLocationKey)!)
                 {
                     SetFields(subLocation);
                 }
@@ -348,14 +348,16 @@ namespace SabreTools.DatFiles
 
             if (dipSwitch.ValuesSpecified)
             {
-                foreach (DipValue subValue in dipSwitch.Values!)
+                foreach (DipValue subValue in dipSwitch.GetFieldValue<DipValue[]?>(Models.Metadata.DipSwitch.DipValueKey)!)
                 {
                     SetFields(subValue as DatItem);
                 }
             }
 
-            dipSwitch.Part ??= new Part();
-            SetFields(dipSwitch.Part as DatItem);
+            if (!dipSwitch.PartSpecified)
+                dipSwitch.SetFieldValue<Part?>("PART", new Part());
+
+            SetFields((dipSwitch.GetFieldValue<Part?>("PART") as DatItem)!);
         }
 
         /// <summary>
@@ -366,7 +368,7 @@ namespace SabreTools.DatFiles
         {
             if (dipValue.ConditionsSpecified)
             {
-                foreach (Condition subCondition in dipValue.Conditions!)
+                foreach (Condition subCondition in dipValue.GetFieldValue<Condition[]?>(Models.Metadata.DipValue.ConditionKey)!)
                 {
                     SetFields(subCondition);
                 }
@@ -379,11 +381,15 @@ namespace SabreTools.DatFiles
         /// <param name="disk">Disk to remove replace fields in</param>
         private void SetFields(Disk disk)
         {
-            disk.DiskArea ??= new DiskArea();
-            SetFields(disk.DiskArea);
+            if (!disk.DiskAreaSpecified)
+                disk.SetFieldValue<DiskArea?>("DISKAREA", new DiskArea());
 
-            disk.Part ??= new Part();
-            SetFields(disk.Part as DatItem);
+            SetFields(disk.GetFieldValue<DiskArea?>("DISKAREA")! as DatItem);
+
+            if (!disk.PartSpecified)
+                disk.SetFieldValue<Part?>("PART", new Part());
+
+            SetFields(disk.GetFieldValue<Part?>("PART")! as DatItem);
         }
 
         /// <summary>
@@ -394,7 +400,7 @@ namespace SabreTools.DatFiles
         {
             if (input.ControlsSpecified)
             {
-                foreach (Control subControl in input.Controls!)
+                foreach (Control subControl in input.GetFieldValue<Control[]?>(Models.Metadata.Input.ControlKey)!)
                 {
                     SetFields(subControl);
                 }
@@ -409,7 +415,7 @@ namespace SabreTools.DatFiles
         {
             if (part.FeaturesSpecified)
             {
-                foreach (PartFeature subPartFeature in part.Features!)
+                foreach (PartFeature subPartFeature in part.GetFieldValue<PartFeature[]?>(Models.Metadata.Part.FeatureKey)!)
                 {
                     SetFields(subPartFeature);
                 }
@@ -424,7 +430,7 @@ namespace SabreTools.DatFiles
         {
             if (port.AnalogsSpecified)
             {
-                foreach (Analog subAnalog in port.Analogs!)
+                foreach (Analog subAnalog in port.GetFieldValue<Analog[]?>(Models.Metadata.Port.AnalogKey)!)
                 {
                     SetFields(subAnalog);
                 }
@@ -437,11 +443,15 @@ namespace SabreTools.DatFiles
         /// <param name="rom">Rom to remove replace fields in</param>
         private void SetFields(Rom rom)
         {
-            rom.DataArea ??= new DataArea();
-            SetFields(rom.DataArea);
+            if (!rom.DataAreaSpecified)
+                rom.SetFieldValue<DataArea?>("DATAAREA", new DataArea());
 
-            rom.Part ??= new Part();
-            SetFields(rom.Part as DatItem);
+            SetFields(rom.GetFieldValue<DataArea?>("DATAAREA")! as DatItem);
+
+            if (!rom.PartSpecified)
+                rom.SetFieldValue<Part?>("PART", new Part());
+
+            SetFields(rom.GetFieldValue<Part?>("PART")! as DatItem);
         }
 
         /// <summary>
@@ -452,7 +462,7 @@ namespace SabreTools.DatFiles
         {
             if (slot.SlotOptionsSpecified)
             {
-                foreach (SlotOption subSlotOption in slot.SlotOptions!)
+                foreach (SlotOption subSlotOption in slot.GetFieldValue<SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey)!)
                 {
                     SetFields(subSlotOption);
                 }
