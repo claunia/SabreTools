@@ -25,7 +25,7 @@ namespace SabreTools.DatFiles
             // TODO: Add header parsing
 
             // Get the machines from the metadata
-            var machines = item.Read<Models.Metadata.Machine[]>(Models.Metadata.MetadataFile.MachineKey);
+            var machines = ReadItemArray<Models.Metadata.Machine>(item, Models.Metadata.MetadataFile.MachineKey);
             if (machines == null)
                 return;
 
