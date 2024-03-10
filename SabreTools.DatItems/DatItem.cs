@@ -16,9 +16,6 @@ namespace SabreTools.DatItems
     /// <summary>
     /// Base class for all items included in a set
     /// </summary>
-    /// <remarks>
-    /// TODO: Can this be made into a `record` type for easier comparison?
-    /// </remarks>
     [JsonObject("datitem"), XmlRoot("datitem")]
     [XmlInclude(typeof(Adjuster))]
     [XmlInclude(typeof(Analog))]
@@ -699,5 +696,56 @@ namespace SabreTools.DatItems
         #endregion
 
         #endregion // Static Methods
+    }
+
+    /// <summary>
+    /// Base class for all items included in a set that are backed by an internal model
+    /// </summary>
+    public abstract class DatItem<T> : DatItem, IEquatable<DatItem<T>>, IComparable<DatItem<T>>, ICloneable where T : Models.Metadata.DatItem
+    {
+        #region Cloning Methods
+
+        /// <summary>
+        /// Clone the DatItem
+        /// </summary>
+        /// <returns>Clone of the DatItem</returns>
+        public override abstract object Clone();
+
+        #endregion
+
+        #region Comparision Methods
+
+        /// <inheritdoc/>
+        public int CompareTo(DatItem<T>? other)
+        {
+            try
+            {
+                if (GetName() == other?.GetName())
+                    return Equals(other) ? 0 : 1;
+
+                return string.Compare(GetName(), other?.GetName());
+            }
+            catch
+            {
+                return 1;
+            }
+        }
+
+        /// <summary>
+        /// Determine if an item is a duplicate using partial matching logic
+        /// </summary>
+        /// <param name="other">DatItem to use as a baseline</param>
+        /// <returns>True if the items are duplicates, false otherwise</returns>
+        public virtual bool Equals(DatItem<T>? other)
+        {
+            // If we don't have a matched type, return false
+            if (GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) != other?.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey))
+                return false;
+
+            // Compare the internal models
+            return _internal.EqualTo(other._internal);
+        }
+
+        #endregion
     }
 }
