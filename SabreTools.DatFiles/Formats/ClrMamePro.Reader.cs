@@ -44,28 +44,43 @@ namespace SabreTools.DatFiles.Formats
             if (cmp == null)
                 return;
 
-            Header.Name ??= cmp.Name;
-            Header.Description ??= cmp.Description;
-            Header.RootDir ??= cmp.RootDir;
-            Header.Category ??= cmp.Category;
-            Header.Version ??= cmp.Version;
-            Header.Date ??= cmp.Date;
-            Header.Author ??= cmp.Author;
-            Header.Homepage ??= cmp.Homepage;
-            Header.Url ??= cmp.Url;
-            Header.Comment ??= cmp.Comment;
-            Header.HeaderSkipper ??= cmp.Header;
-            Header.Type ??= cmp.Type;
-            if (Header.ForceMerging == MergingFlag.None)
-                Header.ForceMerging = cmp.ForceMerging?.AsEnumValue<MergingFlag>() ?? MergingFlag.None;
-            if (Header.ForcePacking == PackingFlag.None)
-                Header.ForcePacking = cmp.ForceZipping?.AsEnumValue<PackingFlag>() ?? PackingFlag.None;
-            if (Header.ForcePacking == PackingFlag.None)
-                Header.ForcePacking = cmp.ForcePacking?.AsEnumValue<PackingFlag>() ?? PackingFlag.None;
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, cmp.Name);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, cmp.Description);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.RootDirKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.RootDirKey, cmp.RootDir);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.CategoryKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.CategoryKey, cmp.Category);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.VersionKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.VersionKey, cmp.Version);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.DateKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.DateKey, cmp.Date);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.AuthorKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, cmp.Author);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.HomepageKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, cmp.Homepage);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.UrlKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.UrlKey, cmp.Url);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.CommentKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.CommentKey, cmp.Comment);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, cmp.Header);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.TypeKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, cmp.Type);
+            if (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey) == MergingFlag.None)
+                Header.SetFieldValue<MergingFlag>(Models.Metadata.Header.ForcePackingKey, cmp.ForceMerging?.AsEnumValue<MergingFlag>() ?? MergingFlag.None);
+            if (Header.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey) == PackingFlag.None)
+                Header.SetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey, cmp.ForceZipping?.AsEnumValue<PackingFlag>() ?? PackingFlag.None);
+            if (Header.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey) == PackingFlag.None)
+                Header.SetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey, cmp.ForcePacking?.AsEnumValue<PackingFlag>() ?? PackingFlag.None);
 
             // Handle implied SuperDAT
             if (cmp.Name?.Contains(" - SuperDAT") == true && keep)
-                Header.Type ??= "SuperDAT";
+            {
+                if (Header.GetFieldValue<string?>(Models.Metadata.Header.TypeKey) == null)
+                    Header.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, "SuperDAT");
+            }
         }
 
         #endregion

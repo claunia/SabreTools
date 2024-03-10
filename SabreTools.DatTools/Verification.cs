@@ -105,8 +105,8 @@ namespace SabreTools.DatTools
 
             // Set fixdat headers in case of writing out
             datFile.Header.FileName = $"fixDAT_{datFile.Header.FileName}";
-            datFile.Header.Name = $"fixDAT_{datFile.Header.Name}";
-            datFile.Header.Description = $"fixDAT_{datFile.Header.Description}";
+            datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, $"fixDAT_{datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)}");
+            datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, $"fixDAT_{datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)}");
             datFile.Items.ClearMarked();
 
             return success;
@@ -154,8 +154,8 @@ namespace SabreTools.DatTools
 
             // Set fixdat headers in case of writing out
             datFile.Header.FileName = $"fixDAT_{datFile.Header.FileName}";
-            datFile.Header.Name = $"fixDAT_{datFile.Header.Name}";
-            datFile.Header.Description = $"fixDAT_{datFile.Header.Description}";
+            datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, $"fixDAT_{datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)}");
+            datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, $"fixDAT_{datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)}");
             datFile.Items.ClearMarked();
 
             return success;

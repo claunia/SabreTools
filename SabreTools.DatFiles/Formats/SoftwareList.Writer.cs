@@ -166,9 +166,9 @@ namespace SabreTools.DatFiles.Formats
         {
             var softwarelist = new Models.SoftwareList.SoftwareList
             {
-                Name = Header.Name,
-                Description = Header.Description,
-                Notes = Header.Comment,
+                Name = Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey),
+                Description = Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey),
+                Notes = Header.GetFieldValue<string?>(Models.Metadata.Header.CommentKey),
                 Software = CreateSoftware(ignoreblanks),
             };
 

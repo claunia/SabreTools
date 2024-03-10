@@ -128,23 +128,23 @@ namespace SabreTools.DatFiles
         public void FillHeaderFromPath(string path, bool bare)
         {
             // If the description is defined but not the name, set the name from the description
-            if (string.IsNullOrEmpty(Header.Name) && !string.IsNullOrEmpty(Header.Description))
+            if (string.IsNullOrEmpty(Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)) && !string.IsNullOrEmpty(Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)))
             {
-                Header.Name = Header.Description;
+                Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey));
             }
 
             // If the name is defined but not the description, set the description from the name
-            else if (!string.IsNullOrEmpty(Header.Name) && string.IsNullOrEmpty(Header.Description))
+            else if (!string.IsNullOrEmpty(Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)) && string.IsNullOrEmpty(Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)))
             {
-                Header.Description = Header.Name + (bare ? string.Empty : $" ({Header.Date})");
+                Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) + (bare ? string.Empty : $" ({Header.GetFieldValue<string?>(Models.Metadata.Header.DateKey)})"));
             }
 
             // If neither the name or description are defined, set them from the automatic values
-            else if (string.IsNullOrEmpty(Header.Name) && string.IsNullOrEmpty(Header.Description))
+            else if (string.IsNullOrEmpty(Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)) && string.IsNullOrEmpty(Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)))
             {
                 string[] splitpath = path.TrimEnd(Path.DirectorySeparatorChar).Split(Path.DirectorySeparatorChar);
-                Header.Name = splitpath.Last();
-                Header.Description = Header.Name + (bare ? string.Empty : $" ({Header.Date})");
+                Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, splitpath.Last());
+                Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) + (bare ? string.Empty : $" ({Header.GetFieldValue<string?>(Models.Metadata.Header.DateKey)})"));
             }
         }
 

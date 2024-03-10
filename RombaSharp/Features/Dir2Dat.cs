@@ -55,8 +55,8 @@ namespace RombaSharp.Features
 
             // Create and write the encapsulating datfile
             DatFile datfile = DatFile.Create();
-            datfile.Header.Name = string.IsNullOrWhiteSpace(name) ? "untitled" : name;
-            datfile.Header.Description = description;
+            datfile.Header.SetFieldValue<string?>(SabreTools.Models.Metadata.Header.NameKey, string.IsNullOrWhiteSpace(name) ? "untitled" : name);
+            datfile.Header.SetFieldValue<string?>(SabreTools.Models.Metadata.Header.DescriptionKey, description);
             DatFromDir.PopulateFromDir(datfile, source, asFiles: TreatAsFile.NonArchive, hashes: [HashType.CRC32, HashType.MD5, HashType.SHA1]);
             Writer.Write(datfile, outdat!);
             return true;

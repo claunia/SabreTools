@@ -96,13 +96,13 @@ namespace SabreTools.DatFiles.Formats
 
             var clrMamePro = new Models.DosCenter.DosCenter
             {
-                Name = Header.Name,
-                Description = Header.Description,
-                Version = Header.Version,
-                Date = Header.Date,
-                Author = Header.Author,
-                Homepage = Header.Homepage,
-                Comment = Header.Comment,
+                Name = Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey),
+                Description = Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey),
+                Version = Header.GetFieldValue<string?>(Models.Metadata.Header.VersionKey),
+                Date = Header.GetFieldValue<string?>(Models.Metadata.Header.DateKey),
+                Author = Header.GetFieldValue<string?>(Models.Metadata.Header.AuthorKey),
+                Homepage = Header.GetFieldValue<string?>(Models.Metadata.Header.HomepageKey),
+                Comment = Header.GetFieldValue<string?>(Models.Metadata.Header.CommentKey),
             };
 
             return clrMamePro;

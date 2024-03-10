@@ -53,7 +53,7 @@ namespace SabreTools.Filtering
             {
                 // If we are using tags from the DAT, set the proper input for split type unless overridden
                 if (useTags && SplitType == MergingFlag.None)
-                    SplitType = datFile.Header.ForceMerging;
+                    SplitType = datFile.Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey);
 
                 // Run internal splitting
                 switch (SplitType)

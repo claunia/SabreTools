@@ -153,30 +153,49 @@ namespace SabreTools.DatTools
             // Empty FileName
             if (string.IsNullOrEmpty(datFile.Header.FileName))
             {
-                if (string.IsNullOrEmpty(datFile.Header.Name) && string.IsNullOrEmpty(datFile.Header.Description))
-                    datFile.Header.FileName = datFile.Header.Name = datFile.Header.Description = "Default";
+                if (string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)) && string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)))
+                {
+                    datFile.Header.FileName = "Default";
+                    datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, "Default");
+                    datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, "Default");
+                }
 
-                else if (string.IsNullOrEmpty(datFile.Header.Name) && !string.IsNullOrEmpty(datFile.Header.Description))
-                    datFile.Header.FileName = datFile.Header.Name = datFile.Header.Description;
+                else if (string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)) && !string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)))
+                {
+                    datFile.Header.FileName = datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey);
+                    datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey));
+                }
 
-                else if (!string.IsNullOrEmpty(datFile.Header.Name) && string.IsNullOrEmpty(datFile.Header.Description))
-                    datFile.Header.FileName = datFile.Header.Description = datFile.Header.Name;
+                else if (!string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)) && string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)))
+                {
+                    datFile.Header.FileName = datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey);
+                    datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey));
+                }
 
-                else if (!string.IsNullOrEmpty(datFile.Header.Name) && !string.IsNullOrEmpty(datFile.Header.Description))
-                    datFile.Header.FileName = datFile.Header.Description;
+                else if (!string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)) && !string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)))
+                {
+                    datFile.Header.FileName = datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey);
+                }
             }
 
             // Filled FileName
             else
             {
-                if (string.IsNullOrEmpty(datFile.Header.Name) && string.IsNullOrEmpty(datFile.Header.Description))
-                    datFile.Header.Name = datFile.Header.Description = datFile.Header.FileName;
+                if (string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)) && string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)))
+                {
+                    datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, datFile.Header.FileName);
+                    datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, datFile.Header.FileName);
+                }
 
-                else if (string.IsNullOrEmpty(datFile.Header.Name) && !string.IsNullOrEmpty(datFile.Header.Description))
-                    datFile.Header.Name = datFile.Header.Description;
+                else if (string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)) && !string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)))
+                {
+                    datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey));
+                }
 
-                else if (!string.IsNullOrEmpty(datFile.Header.Name) && string.IsNullOrEmpty(datFile.Header.Description))
-                    datFile.Header.Description = datFile.Header.Name;
+                else if (!string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)) && string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)))
+                {
+                    datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey));
+                }
             }
         }
 

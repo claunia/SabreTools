@@ -36,9 +36,18 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Convert header information
+        /// </summary>
+        /// <param name="item">Header to convert</param>
+        private void ConvertHeader(Models.Metadata.Header? item)
+        {
+
+        }
+
+        /// <summary>
         /// Convert machine information
         /// </summary>
-        /// <param name="metadata">Metadata file to convert</param>
+        /// <param name="item">Machine to convert</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>

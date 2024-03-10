@@ -212,9 +212,11 @@ namespace SabreTools.DatFiles.Formats
         {
             var datafile = new Models.Listxml.Mame
             {
-                Build = Header.Name ?? Header.Description ?? Header.Build,
-                Debug = Header.Debug.FromYesNo(),
-                MameConfig = Header.MameConfig,
+                Build = Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)
+                    ?? Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)
+                    ?? Header.GetFieldValue<string?>(Models.Metadata.Header.BuildKey),
+                Debug = Header.GetFieldValue<bool?>(Models.Metadata.Header.DebugKey).FromYesNo(),
+                MameConfig = Header.GetFieldValue<string?>(Models.Metadata.Header.MameConfigKey),
 
                 Game = CreateGames(ignoreblanks)
             };

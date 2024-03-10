@@ -97,17 +97,17 @@ namespace SabreTools.DatFiles.Formats
 
             var configuration = new Models.OfflineList.Configuration
             {
-                DatName = Header.Name,
-                //ImFolder = Header.ImFolder; // TODO: Add to internal model
-                DatVersion = Header.Version,
-                System = Header.System,
-                ScreenshotsWidth = Header.ScreenshotsWidth,
-                ScreenshotsHeight = Header.ScreenshotsHeight,
+                DatName = Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey),
+                ImFolder = Header.GetFieldValue<string?>(Models.Metadata.Header.ImFolderKey),
+                DatVersion = Header.GetFieldValue<string?>(Models.Metadata.Header.DatVersionKey),
+                System = Header.GetFieldValue<string?>(Models.Metadata.Header.SystemKey),
+                ScreenshotsWidth = Header.GetFieldValue<string?>(Models.Metadata.Header.ScreenshotsWidthKey),
+                ScreenshotsHeight = Header.GetFieldValue<string?>(Models.Metadata.Header.ScreenshotsHeightKey),
                 Infos = CreateInfos(),
                 CanOpen = CreateCanOpen(),
                 NewDat = CreateNewDat(),
                 Search = CreateSearch(),
-                RomTitle = Header.RomTitle,
+                RomTitle = Header.GetFieldValue<string?>(Models.Metadata.Header.RomTitleKey),
             };
 
             return configuration;
@@ -119,11 +119,11 @@ namespace SabreTools.DatFiles.Formats
         private Models.OfflineList.Infos? CreateInfos()
         {
             // If we don't have infos, we can't do anything
-            if (!Header.InfosSpecified || Header.Infos == null)
+            if (!Header.InfosSpecified)
                 return null;
 
             var infos = new Models.OfflineList.Infos();
-            foreach (var info in Header.Infos)
+            foreach (var info in Header.GetFieldValue<OfflineListInfo[]?>(Models.Metadata.Header.InfosKey)!)
             {
                 switch (info.Name)
                 {
@@ -255,12 +255,12 @@ namespace SabreTools.DatFiles.Formats
         private Models.OfflineList.CanOpen? CreateCanOpen()
         {
             // If we don't have a canopen, we can't do anything
-            if (!Header.CanOpenSpecified || Header.CanOpen == null)
+            if (!Header.CanOpenSpecified || Header.GetFieldValue<string[]?>(Models.Metadata.Header.CanOpenKey) == null)
                 return null;
 
             var canOpen = new Models.OfflineList.CanOpen
             {
-                Extension = [.. Header.CanOpen],
+                Extension = [.. Header.GetFieldValue<string[]?>(Models.Metadata.Header.CanOpenKey)],
             };
 
             return canOpen;
@@ -277,9 +277,9 @@ namespace SabreTools.DatFiles.Formats
 
             var newDat = new Models.OfflineList.NewDat
             {
-                DatVersionUrl = Header.Url,
-                //DatUrl = Header.DatUrl; // TODO: Add to internal model
-                //ImUrl = Header.ImUrl; // TODO: Add to internal model
+                DatVersionUrl = Header.GetFieldValue<string?>("DATVERSIONURL"),
+                //DatUrl = Header.GetFieldValue<Models.OfflineList.DatUrl?>("DATURL"); // TODO: Add to internal model
+                ImUrl = Header.GetFieldValue<string?>("IMURL"),
             };
 
             return newDat;

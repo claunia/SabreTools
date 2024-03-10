@@ -160,8 +160,8 @@ namespace SabreTools.DatFiles.Formats
             var row = new Models.SeparatedValue.Row
             {
                 FileName = Header.FileName,
-                InternalName = Header.Name,
-                Description = Header.Description,
+                InternalName = Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey),
+                Description = Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey),
                 GameName = disk.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
                 GameDescription = disk.Machine.GetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey),
                 Type = disk.GetFieldValue<ItemType>(Models.Metadata.Disk.TypeKey).AsStringValue<ItemType>(),
@@ -188,8 +188,8 @@ namespace SabreTools.DatFiles.Formats
             var row = new Models.SeparatedValue.Row
             {
                 FileName = Header.FileName,
-                InternalName = Header.Name,
-                Description = Header.Description,
+                InternalName = Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey),
+                Description = Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey),
                 GameName = media.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
                 GameDescription = media.Machine.GetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey),
                 Type = media.ItemType.AsStringValue<ItemType>(),
@@ -216,8 +216,8 @@ namespace SabreTools.DatFiles.Formats
             var row = new Models.SeparatedValue.Row
             {
                 FileName = Header.FileName,
-                InternalName = Header.Name,
-                Description = Header.Description,
+                InternalName = Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey),
+                Description = Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey),
                 GameName = rom.Machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
                 GameDescription = rom.Machine.GetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey),
                 Type = rom.ItemType.AsStringValue<ItemType>(),

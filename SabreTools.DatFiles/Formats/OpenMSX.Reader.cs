@@ -45,9 +45,12 @@ namespace SabreTools.DatFiles.Formats
             if (softwaredb == null)
                 return;
 
-            Header.Name ??= "openMSX Software List";
-            Header.Description ??= Header.Name;
-            Header.Date ??= softwaredb.Timestamp;
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, "openMSX Software List");
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey));
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.DateKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.DateKey, softwaredb.Timestamp);
         }
 
         /// <summary>

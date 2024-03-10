@@ -1806,7 +1806,7 @@ Some special strings that can be used:
         /// Pre-configured Remover
         /// </summary>
         protected Remover? Remover { get; set; }
-        
+
         /// <summary>
         /// Determines if scripting mode is enabled
         /// </summary>
@@ -1904,11 +1904,11 @@ Some special strings that can be used:
             // Set threading flag, if necessary
             if (features.ContainsKey(ThreadsInt32Value))
                 Globals.MaxThreads = GetInt32(features, ThreadsInt32Value);
-            
+
             // Failure conditions
             if (Header == null)
                 return false;
-            
+
             return true;
         }
 
@@ -2153,30 +2153,15 @@ Some special strings that can be used:
             var datHeader = new DatHeader()
             {
                 AddExtension = GetString(features, AddExtensionStringValue),
-                Author = GetString(features, AuthorStringValue),
-                Category = GetString(features, CategoryStringValue),
-                Comment = GetString(features, CommentStringValue),
-                Date = GetString(features, DateStringValue),
-                Description = GetString(features, DescriptionStringValue),
-                Email = GetString(features, EmailStringValue),
                 FileName = GetString(features, FilenameStringValue),
-                ForceMerging = GetString(features, ForceMergingStringValue).AsEnumValue<MergingFlag>(),
-                ForceNodump = GetString(features, ForceNodumpStringValue).AsEnumValue<NodumpFlag>(),
-                ForcePacking = GetString(features, ForcePackingStringValue).AsEnumValue<PackingFlag>(),
                 GameName = GetBoolean(features, GamePrefixValue),
-                HeaderSkipper = GetString(features, HeaderStringValue),
-                Homepage = GetString(features, HomepageStringValue),
-                Name = GetString(features, NameStringValue),
                 Postfix = GetString(features, PostfixStringValue),
                 Prefix = GetString(features, PrefixStringValue),
                 Quotes = GetBoolean(features, QuotesValue),
                 RemoveExtension = GetBoolean(features, RemoveExtensionsValue),
                 ReplaceExtension = GetString(features, ReplaceExtensionStringValue),
-                RootDir = GetString(features, RootStringValue),
-                Type = GetBoolean(features, SuperdatValue) ? "SuperDAT" : null,
-                Url = GetString(features, UrlStringValue),
                 UseRomName = GetBoolean(features, RomsValue),
-                Version = GetString(features, VersionStringValue),
+
                 // Get the depot information
                 InputDepot = new DepotInformation(
                 GetBoolean(features, DepotValue),
@@ -2185,6 +2170,22 @@ Some special strings that can be used:
                 GetBoolean(features, RombaValue),
                 GetInt32(features, RombaDepthInt32Value))
             };
+            datHeader.SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, GetString(features, AuthorStringValue));
+            datHeader.SetFieldValue<string?>(Models.Metadata.Header.CategoryKey, GetString(features, CategoryStringValue));
+            datHeader.SetFieldValue<string?>(Models.Metadata.Header.CommentKey, GetString(features, CommentStringValue));
+            datHeader.SetFieldValue<string?>(Models.Metadata.Header.DateKey, GetString(features, DateStringValue));
+            datHeader.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, GetString(features, DescriptionStringValue));
+            datHeader.SetFieldValue<string?>(Models.Metadata.Header.EmailKey, GetString(features, EmailStringValue));
+            datHeader.SetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey, GetString(features, ForceMergingStringValue).AsEnumValue<MergingFlag>());
+            datHeader.SetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey, GetString(features, ForceNodumpStringValue).AsEnumValue<NodumpFlag>());
+            datHeader.SetFieldValue<PackingFlag>(Models.Metadata.Header.ForceNodumpKey, GetString(features, ForcePackingStringValue).AsEnumValue<PackingFlag>());
+            datHeader.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, GetString(features, HeaderStringValue));
+            datHeader.SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, GetString(features, HomepageStringValue));
+            datHeader.SetFieldValue<string?>(Models.Metadata.Header.NameKey, GetString(features, NameStringValue));
+            datHeader.SetFieldValue<string?>(Models.Metadata.Header.RootDirKey, GetString(features, RootStringValue));
+            datHeader.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, GetBoolean(features, SuperdatValue) ? "SuperDAT" : null);
+            datHeader.SetFieldValue<string?>(Models.Metadata.Header.UrlKey, GetString(features, UrlStringValue));
+            datHeader.SetFieldValue<string?>(Models.Metadata.Header.VersionKey, GetString(features, VersionStringValue));
 
             bool deprecated = GetBoolean(features, DeprecatedValue);
             foreach (string ot in GetList(features, OutputTypeListValue))
@@ -2253,7 +2254,7 @@ Some special strings that can be used:
         private static Remover GetRemover(Dictionary<string, Feature?> features)
         {
             Remover remover = new();
-            
+
             // Populate field exclusions
             List<string> exclusionFields = GetList(features, ExcludeFieldListValue);
             remover.PopulateExclusionsFromList(exclusionFields);
@@ -2296,7 +2297,7 @@ Some special strings that can be used:
         }
 
         #endregion
-    
+
         #region Protected Helpers
 
         /// <summary>
@@ -2387,7 +2388,7 @@ CREATE TABLE IF NOT EXISTS data (
                 _ => 0x0,
             };
         }
-    
+
         #endregion
     }
 }

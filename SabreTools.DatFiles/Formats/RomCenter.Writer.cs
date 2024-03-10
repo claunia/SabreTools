@@ -92,13 +92,13 @@ namespace SabreTools.DatFiles.Formats
         {
             var credits = new Models.RomCenter.Credits
             {
-                Author = Header.Author,
-                Version = Header.Version,
-                Email = Header.Email,
-                Homepage = Header.Homepage,
-                Url = Header.Url,
-                Date = Header.Date,
-                Comment = Header.Comment,
+                Author = Header.GetFieldValue<string?>(Models.Metadata.Header.AuthorKey),
+                Version = Header.GetFieldValue<string?>(Models.Metadata.Header.VersionKey),
+                Email = Header.GetFieldValue<string?>(Models.Metadata.Header.EmailKey),
+                Homepage = Header.GetFieldValue<string?>(Models.Metadata.Header.HomepageKey),
+                Url = Header.GetFieldValue<string?>(Models.Metadata.Header.UrlKey),
+                Date = Header.GetFieldValue<string?>(Models.Metadata.Header.DateKey),
+                Comment = Header.GetFieldValue<string?>(Models.Metadata.Header.CommentKey),
             };
             return credits;
         }
@@ -110,10 +110,10 @@ namespace SabreTools.DatFiles.Formats
         {
             var dat = new Models.RomCenter.Dat
             {
-                Version = Header.RomCenterVersion,
-                Plugin = Header.System,
-                Split = (Header.ForceMerging == MergingFlag.Split ? "1" : "0"),
-                Merge = (Header.ForceMerging == MergingFlag.Merged || Header.ForceMerging == MergingFlag.FullMerged ? "1" : "0"),
+                Version = Header.GetFieldValue<string?>(Models.Metadata.Header.DatVersionKey),
+                Plugin = Header.GetFieldValue<string?>(Models.Metadata.Header.SystemKey),
+                Split = (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey) == MergingFlag.Split ? "1" : "0"),
+                Merge = (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey) == MergingFlag.Merged || Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey) == MergingFlag.FullMerged ? "1" : "0"),
             };
             return dat;
         }
@@ -125,8 +125,8 @@ namespace SabreTools.DatFiles.Formats
         {
             var emulator = new Models.RomCenter.Emulator
             {
-                RefName = Header.Name,
-                Version = Header.Description,
+                RefName = Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey),
+                Version = Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey),
             };
             return emulator;
         }

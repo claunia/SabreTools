@@ -184,24 +184,24 @@ namespace SabreTools.DatFiles.Formats
 
             var clrMamePro = new Models.ClrMamePro.ClrMamePro
             {
-                Name = Header.Name,
-                Description = Header.Description,
-                RootDir = Header.RootDir,
-                Category = Header.Category,
-                Version = Header.Version,
-                Date = Header.Date,
-                Author = Header.Author,
-                Homepage = Header.Homepage,
-                Url = Header.Url,
-                Comment = Header.Comment,
-                Header = Header.HeaderSkipper,
-                Type = Header.Type,
+                Name = Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey),
+                Description = Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey),
+                RootDir = Header.GetFieldValue<string?>(Models.Metadata.Header.RootDirKey),
+                Category = Header.GetFieldValue<string?>(Models.Metadata.Header.CategoryKey),
+                Version = Header.GetFieldValue<string?>(Models.Metadata.Header.VersionKey),
+                Date = Header.GetFieldValue<string?>(Models.Metadata.Header.DateKey),
+                Author = Header.GetFieldValue<string?>(Models.Metadata.Header.AuthorKey),
+                Homepage = Header.GetFieldValue<string?>(Models.Metadata.Header.HomepageKey),
+                Url = Header.GetFieldValue<string?>(Models.Metadata.Header.UrlKey),
+                Comment = Header.GetFieldValue<string?>(Models.Metadata.Header.CommentKey),
+                Header = Header.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey),
+                Type = Header.GetFieldValue<string?>(Models.Metadata.Header.TypeKey),
             };
 
-            if (Header.ForceMergingSpecified)
-                clrMamePro.ForceMerging = Header.ForceMerging.AsStringValue<MergingFlag>(useSecond: false);
-            if (Header.ForcePackingSpecified)
-                clrMamePro.ForcePacking = Header.ForcePacking.AsStringValue<PackingFlag>(useSecond: false);
+            if (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey) != MergingFlag.None)
+                clrMamePro.ForceMerging = Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey).AsStringValue<MergingFlag>(useSecond: false);
+            if (Header.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey) != PackingFlag.None)
+                clrMamePro.ForcePacking = Header.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey).AsStringValue<PackingFlag>(useSecond: false);
 
             return clrMamePro;
         }

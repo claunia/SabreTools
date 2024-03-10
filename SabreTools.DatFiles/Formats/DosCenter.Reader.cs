@@ -42,17 +42,27 @@ namespace SabreTools.DatFiles.Formats
             if (doscenter == null)
                 return;
 
-            Header.Name ??= doscenter.Name;
-            Header.Description ??= doscenter.Description;
-            Header.Version ??= doscenter.Version;
-            Header.Date ??= doscenter.Date;
-            Header.Author ??= doscenter.Author;
-            Header.Homepage ??= doscenter.Homepage;
-            Header.Comment ??= doscenter.Comment;
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.AuthorKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, doscenter.Author);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.CommentKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.CommentKey, doscenter.Comment);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.DateKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.DateKey, doscenter.Date);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, doscenter.Description);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.HomepageKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, doscenter.Homepage);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, doscenter.Name);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.VersionKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.VersionKey, doscenter.Version);
 
             // Handle implied SuperDAT
             if (doscenter.Name?.Contains(" - SuperDAT") == true && keep)
-                Header.Type ??= "SuperDAT";
+            {
+                if (Header.GetFieldValue<string?>(Models.Metadata.Header.TypeKey) == null)
+                    Header.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, "SuperDAT");
+            }
         }
     
         #endregion

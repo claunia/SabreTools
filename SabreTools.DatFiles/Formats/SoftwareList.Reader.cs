@@ -47,13 +47,19 @@ namespace SabreTools.DatFiles.Formats
             if (softwarelist == null)
                 return;
 
-            Header.Name ??= softwarelist.Name;
-            Header.Description ??= softwarelist.Description;
-            Header.Comment ??= softwarelist.Notes;
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, softwarelist.Name);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, softwarelist.Description);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.CommentKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.CommentKey, softwarelist.Notes);
 
             // Handle implied SuperDAT
-            if (Header.Name?.Contains(" - SuperDAT") == true && keep)
-                Header.Type ??= "SuperDAT";
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)?.Contains(" - SuperDAT") == true && keep)
+            {
+                if (Header.GetFieldValue<string?>(Models.Metadata.Header.TypeKey) == null)
+                    Header.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, "SuperDAT");
+            }
         }
 
         /// <summary>

@@ -62,8 +62,8 @@ in -old DAT file. Ignores those entries in -old that are not in -new.";
 
             // Create the encapsulating datfile
             DatFile datfile = DatFile.Create();
-            datfile.Header.Name = name;
-            datfile.Header.Description = description;
+            datfile.Header.SetFieldValue<string?>(SabreTools.Models.Metadata.Header.NameKey, name);
+            datfile.Header.SetFieldValue<string?>(SabreTools.Models.Metadata.Header.DescriptionKey, description);
             Parser.ParseInto(datfile, olddat);
 
             // Diff against the new datfile

@@ -381,17 +381,17 @@ namespace SabreTools.DatTools
             if (string.IsNullOrEmpty(datFile.Header.FileName))
                 datFile.Header.FileName = "All DATs";
 
-            if (string.IsNullOrEmpty(datFile.Header.Name))
-                datFile.Header.Name = "datFile.All DATs";
+            if (string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)))
+                datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, "datFile.All DATs");
 
-            if (string.IsNullOrEmpty(datFile.Header.Description))
-                datFile.Header.Description = "datFile.All DATs";
+            if (string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)))
+                datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, "datFile.All DATs");
 
             string post = " (Duplicates)";
             DatFile dupeData = DatFile.Create(datFile.Header);
             dupeData.Header.FileName += post;
-            dupeData.Header.Name += post;
-            dupeData.Header.Description += post;
+            dupeData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, dupeData.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) + post);
+            dupeData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, dupeData.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) + post);
             dupeData.Items = [];
 
             watch.Stop();
@@ -470,11 +470,11 @@ namespace SabreTools.DatTools
             if (string.IsNullOrEmpty(datFile.Header.FileName))
                 datFile.Header.FileName = "All DATs";
 
-            if (string.IsNullOrEmpty(datFile.Header.Name))
-                datFile.Header.Name = "All DATs";
+            if (string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)))
+                datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, "All DATs");
 
-            if (string.IsNullOrEmpty(datFile.Header.Description))
-                datFile.Header.Description = "All DATs";
+            if (string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)))
+                datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, "All DATs");
 
             // Loop through each of the inputs and get or create a new DatData object
             DatFile[] outDatsArray = new DatFile[inputs.Count];
@@ -490,8 +490,8 @@ namespace SabreTools.DatTools
                 string innerpost = $" ({j} - {inputs[j].GetNormalizedFileName(true)} Only)";
                 DatFile diffData = DatFile.Create(datFile.Header);
                 diffData.Header.FileName += innerpost;
-                diffData.Header.Name += innerpost;
-                diffData.Header.Description += innerpost;
+                diffData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, diffData.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) + innerpost);
+                diffData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, diffData.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) + innerpost);
                 diffData.Items = [];
                 outDatsArray[j] = diffData;
 #if NET40_OR_GREATER || NETCOREAPP
@@ -574,17 +574,17 @@ namespace SabreTools.DatTools
             if (string.IsNullOrEmpty(datFile.Header.FileName))
                 datFile.Header.FileName = "All DATs";
 
-            if (string.IsNullOrEmpty(datFile.Header.Name))
-                datFile.Header.Name = "All DATs";
+            if (string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)))
+                datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, "All DATs");
 
-            if (string.IsNullOrEmpty(datFile.Header.Description))
-                datFile.Header.Description = "All DATs";
+            if (string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)))
+                datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, "All DATs");
 
             string post = " (No Duplicates)";
             DatFile outerDiffData = DatFile.Create(datFile.Header);
             outerDiffData.Header.FileName += post;
-            outerDiffData.Header.Name += post;
-            outerDiffData.Header.Description += post;
+            outerDiffData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, outerDiffData.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) + post);
+            outerDiffData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, outerDiffData.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) + post);
             outerDiffData.Items = [];
 
             watch.Stop();

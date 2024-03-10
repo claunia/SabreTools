@@ -65,8 +65,8 @@ namespace SabreTools.DatTools
             outDir = outDir.Ensure(create: true);
 
             // Now we want to get forcepack flag if it's not overridden
-            if (outputFormat == OutputFormat.Folder && datFile.Header.ForcePacking != PackingFlag.None)
-                outputFormat = GetOutputFormat(datFile.Header.ForcePacking);
+            if (outputFormat == OutputFormat.Folder && datFile.Header.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey) != PackingFlag.None)
+                outputFormat = GetOutputFormat(datFile.Header.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey));
 
             #endregion
 
@@ -219,8 +219,8 @@ namespace SabreTools.DatTools
             }
 
             // Now we want to get forcepack flag if it's not overridden
-            if (outputFormat == OutputFormat.Folder && datFile.Header.ForcePacking != PackingFlag.None)
-                outputFormat = GetOutputFormat(datFile.Header.ForcePacking);
+            if (outputFormat == OutputFormat.Folder && datFile.Header.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey) != PackingFlag.None)
+                outputFormat = GetOutputFormat(datFile.Header.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey));
 
 
             #endregion
@@ -427,7 +427,7 @@ namespace SabreTools.DatTools
 
                 // Special case for partial packing mode
                 bool shouldCheck = false;
-                if (outputFormat == OutputFormat.Folder && datFile.Header.ForcePacking == PackingFlag.Partial)
+                if (outputFormat == OutputFormat.Folder && datFile.Header.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey) == PackingFlag.Partial)
                 {
                     shouldCheck = true;
                     datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, lower: false);
@@ -459,11 +459,11 @@ namespace SabreTools.DatTools
             }
 
             // Now we want to take care of headers, if applicable
-            if (datFile.Header.HeaderSkipper != null)
+            if (datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey) != null)
             {
                 // Check to see if we have a matching header first
                 SkipperMatch.Init();
-                Rule rule = SkipperMatch.GetMatchingRule(fileStream, Path.GetFileNameWithoutExtension(datFile.Header.HeaderSkipper));
+                Rule rule = SkipperMatch.GetMatchingRule(fileStream, Path.GetFileNameWithoutExtension(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey)!));
 
                 // If there's a match, create the new file to write
                 if (rule.Tests != null && rule.Tests.Length != 0)

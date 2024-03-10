@@ -417,7 +417,7 @@ namespace SabreTools.Filtering
         internal static void SetOneRomPerGame(DatFile datFile)
         {
             // Because this introduces subfolders, we need to set the SuperDAT type
-            datFile.Header.Type = "SuperDAT";
+            datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, "SuperDAT");
 
             // For each rom, we want to update the game to be "<game name>/<rom name>"
 #if NET452_OR_GREATER || NETCOREAPP

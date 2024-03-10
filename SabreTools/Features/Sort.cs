@@ -6,6 +6,7 @@ using SabreTools.FileTypes;
 using SabreTools.Help;
 using SabreTools.IO;
 using SabreTools.Logging;
+using SabreTools.Models.InstallShieldCabinet;
 
 namespace SabreTools.Features
 {
@@ -101,8 +102,8 @@ namespace SabreTools.Features
                     datdata.Header.OutputDepot = Header.OutputDepot?.Clone() as DepotInformation;
 
                     // If we have overridden the header skipper, set it now
-                    if (!string.IsNullOrEmpty(Header.HeaderSkipper))
-                        datdata.Header.HeaderSkipper = Header.HeaderSkipper;
+                    if (!string.IsNullOrEmpty(Header.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey)))
+                        datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, Header.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey));
 
                     // If we have the depot flag, respect it
                     bool success;
@@ -115,8 +116,8 @@ namespace SabreTools.Features
                     if (success && updateDat)
                     {
                         datdata.Header.FileName = $"fixDAT_{Header.FileName}";
-                        datdata.Header.Name = $"fixDAT_{Header.Name}";
-                        datdata.Header.Description = $"fixDAT_{Header.Description}";
+                        datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, $"fixDAT_{Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)}");
+                        datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, $"fixDAT_{Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)}");
                         datdata.Items.ClearMarked();
                         Writer.Write(datdata, OutputDir);
                     }
@@ -140,8 +141,8 @@ namespace SabreTools.Features
                 datdata.Header.OutputDepot = Header.OutputDepot?.Clone() as DepotInformation;
 
                 // If we have overridden the header skipper, set it now
-                if (!string.IsNullOrEmpty(Header.HeaderSkipper))
-                    datdata.Header.HeaderSkipper = Header.HeaderSkipper;
+                if (!string.IsNullOrEmpty(Header.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey)))
+                    datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, Header.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey));
 
                 watch.Stop();
 
@@ -156,8 +157,8 @@ namespace SabreTools.Features
                 if (success && updateDat)
                 {
                     datdata.Header.FileName = $"fixDAT_{Header.FileName}";
-                    datdata.Header.Name = $"fixDAT_{Header.Name}";
-                    datdata.Header.Description = $"fixDAT_{Header.Description}";
+                    datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, $"fixDAT_{Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)}");
+                    datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, $"fixDAT_{Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)}");
                     datdata.Items.ClearMarked();
                     Writer.Write(datdata, OutputDir);
                 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 using SabreTools.Core.Tools;
 
 namespace SabreTools.DatFiles.Formats
@@ -63,21 +64,24 @@ namespace SabreTools.DatFiles.Formats
             if (config == null)
                 return;
 
-            Header.Name ??= config.DatName;
-            //Header.ImFolder ??= config.ImFolder; // TODO: Add to internal model
-            Header.Version = config.DatVersion;
-            Header.System = config.System;
-            Header.ScreenshotsWidth = config.ScreenshotsWidth;
-            Header.ScreenshotsHeight = config.ScreenshotsHeight;
-            ConvertInfos(config.Infos);
+            Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, config.DatName);
+            Header.SetFieldValue<string?>(Models.Metadata.Header.DatVersionKey, config.DatVersion);
+            Header.SetFieldValue<string?>(Models.Metadata.Header.ImFolderKey, config.ImFolder);
+            Header.SetFieldValue<string?>(Models.Metadata.Header.RomTitleKey, config.RomTitle);
+            Header.SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsHeightKey, config.ScreenshotsHeight);
+            Header.SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsWidthKey, config.ScreenshotsWidth);
+            Header.SetFieldValue<string?>(Models.Metadata.Header.SystemKey, config.System);
             ConvertCanOpen(config.CanOpen);
+            ConvertInfos(config.Infos);
             ConvertNewDat(config.NewDat);
             ConvertSearch(config.Search);
-            Header.RomTitle = config.RomTitle;
 
             // Handle implied SuperDAT
             if (config.DatName?.Contains(" - SuperDAT") == true && keep)
-                Header.Type ??= "SuperDAT";
+            {
+                if (Header.GetFieldValue<string?>(Models.Metadata.Header.TypeKey) == null)
+                    Header.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, "SuperDAT");
+            }
         }
 
         /// <summary>
@@ -223,7 +227,7 @@ namespace SabreTools.DatFiles.Formats
                 });
             }
 
-            Header.Infos = offlineListInfos;
+            Header.SetFieldValue<OfflineListInfo[]?>(Models.Metadata.Header.InfosKey, [.. offlineListInfos]);
         }
 
         /// <summary>
@@ -236,7 +240,7 @@ namespace SabreTools.DatFiles.Formats
             if (canOpen?.Extension == null)
                 return;
 
-            Header.CanOpen = new List<string>(canOpen.Extension);
+            Header.SetFieldValue<string[]?>(Models.Metadata.Header.CanOpenKey, canOpen.Extension); 
         }
 
         /// <summary>
@@ -249,9 +253,9 @@ namespace SabreTools.DatFiles.Formats
             if (newDat == null)
                 return;
 
-            Header.Url = newDat.DatVersionUrl;
-            //Header.DatUrl = newDat.DatUrl; // TODO: Add to internal model
-            //Header.ImUrl = newDat.ImUrl; // TODO: Add to internal model
+            Header.SetFieldValue<string?>("DATVERSIONURL", newDat.DatVersionUrl);
+            //Header.SetFieldValue<Models.OfflineList.DatUrl?>("DATURL", newDat.DatUrl); // TODO: Add to internal model
+            Header.SetFieldValue<string?>("IMURL", newDat.DatVersionUrl);
         }
 
         /// <summary>

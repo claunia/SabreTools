@@ -48,15 +48,23 @@ namespace SabreTools.DatFiles.Formats
             if (mame == null)
                 return;
 
-            Header.Name ??= mame.Build;
-            Header.Description ??= mame.Build;
-            Header.Build ??= mame.Build;
-            Header.Debug ??= mame.Debug.AsYesNo();
-            Header.MameConfig ??= mame.MameConfig;
+           if (Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, mame.Build);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, mame.Build);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.BuildKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.BuildKey, mame.Build);
+            if (Header.GetFieldValue<bool?>(Models.Metadata.Header.DebugKey) == null)
+                Header.SetFieldValue<bool?> (Models.Metadata.Header.DebugKey, mame.Debug.AsYesNo());
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.MameConfigKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.MameConfigKey, mame.MameConfig);
 
             // Handle implied SuperDAT
-            if (Header.Name?.Contains(" - SuperDAT") == true && keep)
-                Header.Type ??= "SuperDAT";
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)?.Contains(" - SuperDAT") == true && keep)
+            {
+                if (Header.GetFieldValue<string?>(Models.Metadata.Header.TypeKey) == null)
+                    Header.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, "SuperDAT");
+            }
         }
 
         /// <summary>

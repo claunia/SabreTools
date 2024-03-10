@@ -137,7 +137,7 @@ namespace SabreTools.DatFiles.Formats
 
                 // Only write the doctype if we don't have No-Intro data
                 bool success;
-                if (string.IsNullOrEmpty(Header.NoIntroID))
+                if (string.IsNullOrEmpty(Header.GetFieldValue<string?>(Models.Metadata.Header.IdKey)))
                     success = new Serialization.Files.Logiqx().SerializeToFileWithDocType(datafile, outfile);
                 else
                     success = new Serialization.Files.Logiqx().Serialize(datafile, outfile);
@@ -168,14 +168,14 @@ namespace SabreTools.DatFiles.Formats
         {
             var datafile = new Models.Logiqx.Datafile
             {
-                Build = Header.Build,
-                Debug = Header.Debug.FromYesNo(),
+                Build = Header.GetFieldValue<string?>(Models.Metadata.Header.BuildKey),
+                Debug = Header.GetFieldValue<bool?>(Models.Metadata.Header.DebugKey).FromYesNo(),
 
                 Header = CreateHeader(),
                 Game = CreateGames(ignoreblanks)
             };
 
-            if (!string.IsNullOrEmpty(Header.NoIntroID))
+            if (!string.IsNullOrEmpty(Header.GetFieldValue<string?>(Models.Metadata.Header.IdKey)))
                 datafile.SchemaLocation = "https://datomatic.no-intro.org/stuff https://datomatic.no-intro.org/stuff/schema_nointro_datfile_v3.xsd";
 
             return datafile;
@@ -192,19 +192,19 @@ namespace SabreTools.DatFiles.Formats
 
             var header = new Models.Logiqx.Header
             {
-                Id = Header.NoIntroID,
-                Name = Header.Name,
-                Description = Header.Description,
-                RootDir = Header.RootDir,
-                Category = Header.Category,
-                Version = Header.Version,
-                Date = Header.Date,
-                Author = Header.Author,
-                Email = Header.Email,
-                Homepage = Header.Homepage,
-                Url = Header.Url,
-                Comment = Header.Comment,
-                Type = Header.Type,
+                Id = Header.GetFieldValue<string?>(Models.Metadata.Header.IdKey),
+                Name = Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey),
+                Description = Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey),
+                RootDir = Header.GetFieldValue<string?>(Models.Metadata.Header.RootDirKey),
+                Category = Header.GetFieldValue<string?>(Models.Metadata.Header.CategoryKey),
+                Version = Header.GetFieldValue<string?>(Models.Metadata.Header.VersionKey),
+                Date = Header.GetFieldValue<string?>(Models.Metadata.Header.DateKey),
+                Author = Header.GetFieldValue<string?>(Models.Metadata.Header.AuthorKey),
+                Email = Header.GetFieldValue<string?>(Models.Metadata.Header.EmailKey),
+                Homepage = Header.GetFieldValue<string?>(Models.Metadata.Header.HomepageKey),
+                Url = Header.GetFieldValue<string?>(Models.Metadata.Header.UrlKey),
+                Comment = Header.GetFieldValue<string?>(Models.Metadata.Header.CommentKey),
+                Type = Header.GetFieldValue<string?>(Models.Metadata.Header.TypeKey),
 
                 ClrMamePro = CreateClrMamePro(),
                 RomCenter = CreateRomCenter(),
@@ -219,25 +219,25 @@ namespace SabreTools.DatFiles.Formats
         private Models.Logiqx.ClrMamePro? CreateClrMamePro()
         {
             // If we don't have subheader values, we can't do anything
-            if (!Header.ForceMergingSpecified
-                && !Header.ForceNodumpSpecified
-                && !Header.ForcePackingSpecified
-                && string.IsNullOrEmpty(Header.HeaderSkipper))
+            if (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey) == MergingFlag.None
+                && Header.GetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey) == NodumpFlag.None
+                && Header.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey) == PackingFlag.None
+                && string.IsNullOrEmpty(Header.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey)))
             {
                 return null;
             }
 
             var subheader = new Models.Logiqx.ClrMamePro
             {
-                Header = Header.HeaderSkipper,
+                Header = Header.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey),
             };
 
-            if (Header.ForceMergingSpecified)
-                subheader.ForceMerging = Header.ForceMerging.AsStringValue<MergingFlag>(useSecond: false);
-            if (Header.ForceNodumpSpecified)
-                subheader.ForceNodump = Header.ForceNodump.AsStringValue<NodumpFlag>();
-            if (Header.ForcePackingSpecified)
-                subheader.ForcePacking = Header.ForcePacking.AsStringValue<PackingFlag>(useSecond: false);
+            if (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey) != MergingFlag.None)
+                subheader.ForceMerging = Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey).AsStringValue<MergingFlag>(useSecond: false);
+            if (Header.GetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey) != NodumpFlag.None)
+                subheader.ForceNodump = Header.GetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey).AsStringValue<NodumpFlag>();
+            if (Header.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey) != PackingFlag.None)
+                subheader.ForcePacking = Header.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey).AsStringValue<PackingFlag>(useSecond: false);
 
             return subheader;
         }
@@ -248,35 +248,35 @@ namespace SabreTools.DatFiles.Formats
         private Models.Logiqx.RomCenter? CreateRomCenter()
         {
             // If we don't have subheader values, we can't do anything
-            if (string.IsNullOrEmpty(Header.System)
-                && !Header.RomModeSpecified
-                && !Header.BiosModeSpecified
-                && !Header.SampleModeSpecified
-                && !Header.LockRomModeSpecified
-                && !Header.LockBiosModeSpecified
-                && !Header.LockSampleModeSpecified)
+            if (string.IsNullOrEmpty(Header.GetFieldValue<string?>(Models.Metadata.Header.SystemKey))
+                && Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.BiosModeKey) == MergingFlag.None
+                && Header.GetFieldValue<bool?>(Models.Metadata.Header.LockBiosModeKey) == null
+                && Header.GetFieldValue<bool?>(Models.Metadata.Header.LockRomModeKey) == null
+                && Header.GetFieldValue<bool?>(Models.Metadata.Header.LockSampleModeKey) == null
+                && Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.RomModeKey) == MergingFlag.None
+                && Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.SampleModeKey) == MergingFlag.None)
             {
                 return null;
             }
 
             var subheader = new Models.Logiqx.RomCenter
             {
-                Plugin = Header.System,
+                Plugin = Header.GetFieldValue<string?>(Models.Metadata.Header.PluginKey),
             };
 
-            if (Header.RomModeSpecified)
-                subheader.RomMode = Header.RomMode.AsStringValue<MergingFlag>(useSecond: true);
-            if (Header.BiosModeSpecified)
-                subheader.BiosMode = Header.BiosMode.AsStringValue<MergingFlag>(useSecond: true);
-            if (Header.SampleModeSpecified)
-                subheader.SampleMode = Header.SampleMode.AsStringValue<MergingFlag>(useSecond: true);
+            if (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.RomModeKey) != MergingFlag.None)
+                subheader.RomMode = Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.RomModeKey).AsStringValue<MergingFlag>(useSecond: true);
+            if (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.BiosModeKey) != MergingFlag.None)
+                subheader.BiosMode = Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.BiosModeKey).AsStringValue<MergingFlag>(useSecond: true);
+            if (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.SampleModeKey) != MergingFlag.None)
+                subheader.SampleMode = Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.SampleModeKey).AsStringValue<MergingFlag>(useSecond: true);
 
-            if (Header.LockRomModeSpecified)
-                subheader.LockRomMode = Header.LockRomMode.FromYesNo();
-            if (Header.LockBiosModeSpecified)
-                subheader.LockBiosMode = Header.LockBiosMode.FromYesNo();
-            if (Header.LockSampleModeSpecified)
-                subheader.LockSampleMode = Header.LockSampleMode.FromYesNo();
+            if (Header.GetFieldValue<bool?>(Models.Metadata.Header.LockRomModeKey) != null)
+                subheader.LockRomMode = Header.GetFieldValue<bool?>(Models.Metadata.Header.LockRomModeKey).FromYesNo();
+            if (Header.GetFieldValue<bool?>(Models.Metadata.Header.LockBiosModeKey) != null)
+                subheader.LockBiosMode = Header.GetFieldValue<bool?>(Models.Metadata.Header.LockBiosModeKey).FromYesNo();
+            if (Header.GetFieldValue<bool?>(Models.Metadata.Header.LockSampleModeKey) != null)
+                subheader.LockSampleMode = Header.GetFieldValue<bool?>(Models.Metadata.Header.LockSampleModeKey).FromYesNo();
 
             return subheader;
         }

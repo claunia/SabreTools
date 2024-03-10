@@ -69,7 +69,7 @@ contents of any changed dats.";
 
             // First get a list of SHA-1's from the input DATs
             DatFile datroot = DatFile.Create();
-            datroot.Header.Type = "SuperDAT";
+            datroot.Header.SetFieldValue<string?>(SabreTools.Models.Metadata.Header.TypeKey, "SuperDAT");
             DatFromDir.PopulateFromDir(datroot, _dats, asFiles: TreatAsFile.NonArchive, hashes: [HashType.CRC32, HashType.MD5, HashType.SHA1]);
             datroot.Items.BucketBy(ItemKey.SHA1, DedupeType.None);
 

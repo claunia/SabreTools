@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
@@ -18,8 +17,6 @@ namespace SabreTools.DatFiles
     {
         #region Fields
 
-        #region Common
-
         /// <summary>
         /// External name of the DAT
         /// </summary>
@@ -28,317 +25,36 @@ namespace SabreTools.DatFiles
         public string? FileName { get; set; }
 
         /// <summary>
-        /// Internal name of the DAT
-        /// </summary>
-        [JsonProperty("name", DefaultValueHandling = DefaultValueHandling.Include)]
-        [XmlElement("name")]
-        public string? Name { get; set; }
-
-        /// <summary>
-        /// DAT description
-        /// </summary>
-        [JsonProperty("description", DefaultValueHandling = DefaultValueHandling.Include)]
-        [XmlElement("description")]
-        public string? Description { get; set; }
-
-        /// <summary>
-        /// Root directory for the files; currently TruRip/EmuARC-exclusive
-        /// </summary>
-        [JsonProperty("rootdir", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("rootdir")]
-        public string? RootDir { get; set; }
-
-        /// <summary>
-        /// General category of items found in the DAT
-        /// </summary>
-        [JsonProperty("category", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("category")]
-        public string? Category { get; set; }
-
-        /// <summary>
-        /// Version of the DAT
-        /// </summary>
-        [JsonProperty("version", DefaultValueHandling = DefaultValueHandling.Include)]
-        [XmlElement("version")]
-        public string? Version { get; set; }
-
-        /// <summary>
-        /// Creation or modification date
-        /// </summary>
-        [JsonProperty("date", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("date")]
-        public string? Date { get; set; }
-
-        /// <summary>
-        /// List of authors who contributed to the DAT
-        /// </summary>
-        [JsonProperty("author", DefaultValueHandling = DefaultValueHandling.Include)]
-        [XmlElement("author")]
-        public string? Author { get; set; }
-
-        /// <summary>
-        /// Email address for DAT author(s)
-        /// </summary>
-        [JsonProperty("email", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("email")]
-        public string? Email { get; set; }
-
-        /// <summary>
-        /// Author or distribution homepage name
-        /// </summary>
-        [JsonProperty("homepage", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("homepage")]
-        public string? Homepage { get; set; }
-
-        /// <summary>
-        /// Author or distribution URL
-        /// </summary>
-        [JsonProperty("url", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("url")]
-        public string? Url { get; set; }
-
-        /// <summary>
-        /// Any comment that does not already fit an existing field
-        /// </summary>
-        [JsonProperty("comment", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("comment")]
-        public string? Comment { get; set; }
-
-        /// <summary>
-        /// Header skipper to be used when loading the DAT
-        /// </summary>
-        [JsonProperty("header", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("header")]
-        public string? HeaderSkipper { get; set; }
-
-        /// <summary>
-        /// Classification of the DAT. Generally only used for SuperDAT
-        /// </summary>
-        [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("type")]
-        public string? Type { get; set; }
-
-        /// <summary>
-        /// Force a merging style when loaded
-        /// </summary>
-        [JsonProperty("forcemerging", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("forcemerging")]
-        public MergingFlag ForceMerging { get; set; }
-
-        [JsonIgnore]
-        public bool ForceMergingSpecified { get { return ForceMerging != MergingFlag.None; } }
-
-        /// <summary>
-        /// Force nodump handling when loaded
-        /// </summary>
-        [JsonProperty("forcenodump", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("forcenodump")]
-        public NodumpFlag ForceNodump { get; set; }
-
-        [JsonIgnore]
-        public bool ForceNodumpSpecified { get { return ForceNodump != NodumpFlag.None; } }
-
-        /// <summary>
-        /// Force output packing when loaded
-        /// </summary>
-        [JsonProperty("forcepacking", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("forcepacking")]
-        public PackingFlag ForcePacking { get; set; }
-
-        [JsonIgnore]
-        public bool ForcePackingSpecified { get { return ForcePacking != PackingFlag.None; } }
-
-        /// <summary>
         /// Read or write format
         /// </summary>
         [JsonIgnore, XmlIgnore]
         public DatFormat DatFormat { get; set; }
 
-        #endregion
-
-        #region ListXML
-
-        /// <summary>
-        /// Debug build flag
-        /// </summary>
-        /// <remarks>Also in Logiqx</remarks>
-        [JsonProperty("debug", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("debug")]
-        public bool? Debug { get; set; } = null;
+        [JsonIgnore]
+        public bool InfosSpecified
+        {
+            get
+            {
+                var infos = GetFieldValue<OfflineListInfo[]?>(Models.Metadata.Header.InfosKey);
+                return infos != null && infos.Length > 0;
+            }
+        }
 
         [JsonIgnore]
-        public bool DebugSpecified { get { return Debug != null; } }
-
-        /// <summary>
-        /// MAME configuration name
-        /// </summary>
-        [JsonProperty("mameconfig", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("mameconfig")]
-        public string? MameConfig { get; set; }
-
-        #endregion
-
-        #region Logiqx
-
-        /// <summary>
-        /// No-Intro system ID
-        /// </summary>
-        [JsonProperty("nointroid", DefaultValueHandling = DefaultValueHandling.Include)]
-        [XmlElement("nointroid")]
-        public string? NoIntroID { get; set; }
-
-        /// <summary>
-        /// Build version
-        /// </summary>
-        [JsonProperty("build", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("build")]
-        public string? Build { get; set; }
-
-        /// <summary>
-        /// Logiqx/RomCenter plugin, OfflineList System
-        /// </summary>
-        [JsonProperty("system", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("system")]
-        public string? System { get; set; }
-
-        /// <summary>
-        /// RomCenter rom mode
-        /// </summary>
-        /// <remarks>(merged|split|unmerged) "split"</remarks>
-        [JsonProperty("rommode", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("rommode")]
-        public MergingFlag RomMode { get; set; }
-
-        [JsonIgnore]
-        public bool RomModeSpecified { get { return RomMode != MergingFlag.None; } }
-
-        /// <summary>
-        /// RomCenter bios mode
-        /// </summary>
-        /// <remarks>(merged|split|unmerged) "split"</remarks>
-        [JsonProperty("biosmode", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("biosmode")]
-        public MergingFlag BiosMode { get; set; }
-
-        [JsonIgnore]
-        public bool BiosModeSpecified { get { return BiosMode != MergingFlag.None; } }
-
-        /// <summary>
-        /// RomCenter sample mode
-        /// </summary>
-        /// <remarks>(merged|unmerged) "merged"</remarks>
-        [JsonProperty("samplemode", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("samplemode")]
-        public MergingFlag SampleMode { get; set; }
-
-        [JsonIgnore]
-        public bool SampleModeSpecified { get { return SampleMode != MergingFlag.None; } }
-
-        /// <summary>
-        /// RomCenter lock rom mode
-        /// </summary>
-        [JsonProperty("lockrommode", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("lockrommode")]
-        public bool? LockRomMode { get; set; }
-
-        [JsonIgnore]
-        public bool LockRomModeSpecified { get { return LockRomMode != null; } }
-
-        /// <summary>
-        /// RomCenter lock bios mode
-        /// </summary>
-        [JsonProperty("lockbiosmode", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("lockbiosmode")]
-        public bool? LockBiosMode { get; set; }
-
-        [JsonIgnore]
-        public bool LockBiosModeSpecified { get { return LockBiosMode != null; } }
-
-        /// <summary>
-        /// RomCenter lock sample mode
-        /// </summary>
-        [JsonProperty("locksamplemode", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("locksamplemode")]
-        public bool? LockSampleMode { get; set; }
-
-        [JsonIgnore]
-        public bool LockSampleModeSpecified { get { return LockSampleMode != null; } }
-
-        #endregion
-
-        #region Missfile
+        public bool CanOpenSpecified
+        {
+            get
+            {
+                var canOpen = GetFieldValue<string[]?>(Models.Metadata.Header.CanOpenKey);
+                return canOpen != null && canOpen.Length > 0;
+            }
+        }
 
         /// <summary>
         /// Output the item name
         /// </summary>
         [JsonIgnore, XmlIgnore]
         public bool UseRomName { get; set; }
-
-        #endregion
-
-        #region OfflineList
-
-        /// <summary>
-        /// Screenshots width
-        /// </summary>
-        [JsonProperty("screenshotswidth", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("screenshotswidth")]
-        public string? ScreenshotsWidth { get; set; }
-
-        /// <summary>
-        /// Screenshots height
-        /// </summary>
-        [JsonProperty("screenshotsheight", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("screenshotsheight")]
-        public string? ScreenshotsHeight { get; set; }
-
-        /// <summary>
-        /// OfflineList info list
-        /// </summary>
-        [JsonProperty("infos", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("infos")]
-        public List<OfflineListInfo>? Infos { get; set; }
-
-        [JsonIgnore]
-        public bool InfosSpecified { get { return Infos != null && Infos.Count > 0; } }
-
-        /// <summary>
-        /// OfflineList can-open extensions
-        /// </summary>
-        [JsonProperty("canopen", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("canopen")]
-        public List<string>? CanOpen { get; set; }
-
-        [JsonIgnore]
-        public bool CanOpenSpecified { get { return CanOpen != null && CanOpen.Count > 0; } }
-
-        // TODO: Implement the following header values:
-        // - newdat.datversionurl (currently reads and writes to Header.Url, not strictly correct)
-        // - newdat.daturl (currently writes to Header.Url, not strictly correct)
-        // - newdat.daturl[fileName] (currently writes to Header.FileName + ".zip", not strictly correct)
-        // - newdat.imurl (currently writes to Header.Url, not strictly correct)
-        // - search[...].to.find[operation, value (Int32?)]
-        // - search[...].to[value, default (true|false), auto (true, false)]
-
-        /// <summary>
-        /// Rom title
-        /// </summary>
-        [JsonProperty("romtitle", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("romtitle")]
-        public string? RomTitle { get; set; }
-
-        #endregion
-
-        #region RomCenter
-
-        /// <summary>
-        /// RomCenter DAT format version
-        /// </summary>
-        [JsonProperty("rcversion", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("rcversion")]
-        public string? RomCenterVersion { get; set; }
-
-        #endregion
 
         #region Write pre-processing
 
@@ -402,9 +118,53 @@ namespace SabreTools.DatFiles
 
         #endregion
 
+        /// <summary>
+        /// Internal Header model
+        /// </summary>
+        [JsonIgnore]
+        private Models.Metadata.Header _header = [];
+
         #endregion
 
         #region Instance Methods
+
+        #region Accessors
+
+        /// <summary>
+        /// Get the value from a field based on the type provided
+        /// </summary>
+        /// <typeparam name="T">Type of the value to get from the internal model</typeparam>
+        /// <param name="fieldName">Field to retrieve</param>
+        /// <returns>Value from the field, if possible</returns>
+        public T? GetFieldValue<T>(string? fieldName)
+        {
+            // Invalid field cannot be processed
+            if (string.IsNullOrEmpty(fieldName))
+                return default;
+
+            // Get the value based on the type
+            return _header.Read<T>(fieldName!);
+        }
+
+        /// <summary>
+        /// Set the value from a field based on the type provided
+        /// </summary>
+        /// <typeparam name="T">Type of the value to set in the internal model</typeparam>
+        /// <param name="fieldName">Field to set</param>
+        /// <param name="value">Value to set</param>
+        /// <returns>True if the value was set, false otherwise</returns>
+        public bool SetFieldValue<T>(string? fieldName, T? value)
+        {
+            // Invalid field cannot be processed
+            if (string.IsNullOrEmpty(fieldName))
+                return false;
+
+            // Set the value based on the type
+            _header[fieldName!] = value;
+            return true;
+        }
+
+        #endregion
 
         #region Cloning Methods
 
@@ -413,47 +173,10 @@ namespace SabreTools.DatFiles
         /// </summary>
         public object Clone()
         {
-            return new DatHeader()
+            var header = new DatHeader()
             {
                 FileName = this.FileName,
-                Name = this.Name,
-                Description = this.Description,
-                RootDir = this.RootDir,
-                Category = this.Category,
-                Version = this.Version,
-                Date = this.Date,
-                Author = this.Author,
-                Email = this.Email,
-                Homepage = this.Homepage,
-                Url = this.Url,
-                Comment = this.Comment,
-                HeaderSkipper = this.HeaderSkipper,
-                Type = this.Type,
-                ForceMerging = this.ForceMerging,
-                ForceNodump = this.ForceNodump,
-                ForcePacking = this.ForcePacking,
                 DatFormat = this.DatFormat,
-
-                Debug = this.Debug,
-                MameConfig = this.MameConfig,
-
-                NoIntroID = this.NoIntroID,
-                Build = this.Build,
-                System = this.System,
-                RomMode = this.RomMode,
-                BiosMode = this.BiosMode,
-                SampleMode = this.SampleMode,
-                LockRomMode = this.LockRomMode,
-                LockBiosMode = this.LockBiosMode,
-                LockSampleMode = this.LockSampleMode,
-
-                ScreenshotsWidth = this.ScreenshotsWidth,
-                ScreenshotsHeight = this.ScreenshotsHeight,
-                Infos = this.Infos, // TODO: Perform a deep clone
-                CanOpen = this.CanOpen, // TODO: Perform a deep clone
-                RomTitle = this.RomTitle,
-
-                RomCenterVersion = this.RomCenterVersion,
 
                 UseRomName = this.UseRomName,
                 Prefix = this.Prefix,
@@ -466,6 +189,41 @@ namespace SabreTools.DatFiles
                 InputDepot = this.InputDepot?.Clone() as DepotInformation,
                 OutputDepot = this.OutputDepot?.Clone() as DepotInformation,
             };
+            header.SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, GetFieldValue<string?>(Models.Metadata.Header.AuthorKey));
+            header.SetFieldValue<MergingFlag>(Models.Metadata.Header.BiosModeKey, GetFieldValue<MergingFlag>(Models.Metadata.Header.BiosModeKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.BuildKey, GetFieldValue<string?>(Models.Metadata.Header.BuildKey));
+            header.SetFieldValue<string[]?>(Models.Metadata.Header.CanOpenKey, GetFieldValue<string[]?>(Models.Metadata.Header.CanOpenKey)); // TODO: Perform a deep clone
+            header.SetFieldValue<string?>(Models.Metadata.Header.CategoryKey, GetFieldValue<string?>(Models.Metadata.Header.CategoryKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.CommentKey, GetFieldValue<string?>(Models.Metadata.Header.CommentKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.DateKey, GetFieldValue<string?>(Models.Metadata.Header.DateKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.DatVersionKey, GetFieldValue<string?>(Models.Metadata.Header.DatVersionKey));
+            header.SetFieldValue<bool?>(Models.Metadata.Header.DebugKey, GetFieldValue<bool?>(Models.Metadata.Header.DebugKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.EmailKey, GetFieldValue<string?>(Models.Metadata.Header.EmailKey));
+            header.SetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey, GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey));
+            header.SetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey, GetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey));
+            header.SetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey, GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, GetFieldValue<string?>(Models.Metadata.Header.HeaderKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, GetFieldValue<string?>(Models.Metadata.Header.HomepageKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.IdKey, GetFieldValue<string?>(Models.Metadata.Header.IdKey));
+            header.SetFieldValue<OfflineListInfo[]?>(Models.Metadata.Header.InfosKey, GetFieldValue<OfflineListInfo[]?>(Models.Metadata.Header.InfosKey)); // TODO: Perform a deep clone
+            header.SetFieldValue<bool?>(Models.Metadata.Header.LockBiosModeKey, GetFieldValue<bool?>(Models.Metadata.Header.LockBiosModeKey));
+            header.SetFieldValue<bool?>(Models.Metadata.Header.LockRomModeKey, GetFieldValue<bool?>(Models.Metadata.Header.LockRomModeKey));
+            header.SetFieldValue<bool?>(Models.Metadata.Header.LockSampleModeKey, GetFieldValue<bool?>(Models.Metadata.Header.LockSampleModeKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.MameConfigKey, GetFieldValue<string?>(Models.Metadata.Header.MameConfigKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, GetFieldValue<string?>(Models.Metadata.Header.NameKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.RomTitleKey, GetFieldValue<string?>(Models.Metadata.Header.RomTitleKey));
+            header.SetFieldValue<MergingFlag>(Models.Metadata.Header.RomModeKey, GetFieldValue<MergingFlag>(Models.Metadata.Header.RomModeKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.RootDirKey, GetFieldValue<string?>(Models.Metadata.Header.RootDirKey));
+            header.SetFieldValue<MergingFlag>(Models.Metadata.Header.SampleModeKey, GetFieldValue<MergingFlag>(Models.Metadata.Header.SampleModeKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsHeightKey, GetFieldValue<string?>(Models.Metadata.Header.ScreenshotsHeightKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsWidthKey, GetFieldValue<string?>(Models.Metadata.Header.ScreenshotsWidthKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.SystemKey, GetFieldValue<string?>(Models.Metadata.Header.SystemKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, GetFieldValue<string?>(Models.Metadata.Header.TypeKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.UrlKey, GetFieldValue<string?>(Models.Metadata.Header.UrlKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.VersionKey, GetFieldValue<string?>(Models.Metadata.Header.VersionKey));
+
+            return header;
         }
 
         /// <summary>
@@ -473,27 +231,29 @@ namespace SabreTools.DatFiles
         /// </summary>
         public DatHeader CloneStandard()
         {
-            return new DatHeader()
+            var header = new DatHeader()
             {
                 FileName = this.FileName,
-                Name = this.Name,
-                Description = this.Description,
-                RootDir = this.RootDir,
-                Category = this.Category,
-                Version = this.Version,
-                Date = this.Date,
-                Author = this.Author,
-                Email = this.Email,
-                Homepage = this.Homepage,
-                Url = this.Url,
-                Comment = this.Comment,
-                HeaderSkipper = this.HeaderSkipper,
-                Type = this.Type,
-                ForceMerging = this.ForceMerging,
-                ForceNodump = this.ForceNodump,
-                ForcePacking = this.ForcePacking,
                 DatFormat = this.DatFormat,
             };
+            header.SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, GetFieldValue<string?>(Models.Metadata.Header.AuthorKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.CategoryKey, GetFieldValue<string?>(Models.Metadata.Header.CategoryKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.CommentKey, GetFieldValue<string?>(Models.Metadata.Header.CommentKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.DateKey, GetFieldValue<string?>(Models.Metadata.Header.DateKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.EmailKey, GetFieldValue<string?>(Models.Metadata.Header.EmailKey));
+            header.SetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey, GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey));
+            header.SetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey, GetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey));
+            header.SetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey, GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, GetFieldValue<string?>(Models.Metadata.Header.HeaderKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, GetFieldValue<string?>(Models.Metadata.Header.HomepageKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, GetFieldValue<string?>(Models.Metadata.Header.NameKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.RootDirKey, GetFieldValue<string?>(Models.Metadata.Header.RootDirKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, GetFieldValue<string?>(Models.Metadata.Header.TypeKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.UrlKey, GetFieldValue<string?>(Models.Metadata.Header.UrlKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.VersionKey, GetFieldValue<string?>(Models.Metadata.Header.VersionKey));
+
+            return header;
         }
 
         /// <summary>
@@ -530,53 +290,53 @@ namespace SabreTools.DatFiles
             if (!string.IsNullOrEmpty(datHeader.FileName))
                 FileName = datHeader.FileName;
 
-            if (!string.IsNullOrEmpty(datHeader.Name))
-                Name = datHeader.Name;
+            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(Models.Metadata.Header.NameKey)))
+                SetFieldValue<string?>(Models.Metadata.Header.NameKey, datHeader.GetFieldValue<string?>(Models.Metadata.Header.NameKey));
 
-            if (!string.IsNullOrEmpty(datHeader.Description))
-                Description = datHeader.Description;
+            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)))
+                SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, datHeader.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey));
 
-            if (!string.IsNullOrEmpty(datHeader.RootDir))
-                RootDir = datHeader.RootDir;
+            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(Models.Metadata.Header.RootDirKey)))
+                SetFieldValue<string?>(Models.Metadata.Header.RootDirKey, datHeader.GetFieldValue<string?>(Models.Metadata.Header.RootDirKey));
 
-            if (!string.IsNullOrEmpty(datHeader.Category))
-                Category = datHeader.Category;
+            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(Models.Metadata.Header.CategoryKey)))
+                SetFieldValue<string?>(Models.Metadata.Header.CategoryKey, datHeader.GetFieldValue<string?>(Models.Metadata.Header.CategoryKey));
 
-            if (!string.IsNullOrEmpty(datHeader.Version))
-                Version = datHeader.Version;
+            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(Models.Metadata.Header.VersionKey)))
+                SetFieldValue<string?>(Models.Metadata.Header.VersionKey, datHeader.GetFieldValue<string?>(Models.Metadata.Header.VersionKey));
 
-            if (!string.IsNullOrEmpty(datHeader.Date))
-                Date = datHeader.Date;
+            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(Models.Metadata.Header.DateKey)))
+                SetFieldValue<string?>(Models.Metadata.Header.DateKey, datHeader.GetFieldValue<string?>(Models.Metadata.Header.DateKey));
 
-            if (!string.IsNullOrEmpty(datHeader.Author))
-                Author = datHeader.Author;
+            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(Models.Metadata.Header.AuthorKey)))
+                SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, datHeader.GetFieldValue<string?>(Models.Metadata.Header.AuthorKey));
 
-            if (!string.IsNullOrEmpty(datHeader.Email))
-                Email = datHeader.Email;
+            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(Models.Metadata.Header.EmailKey)))
+                SetFieldValue<string?>(Models.Metadata.Header.EmailKey, datHeader.GetFieldValue<string?>(Models.Metadata.Header.EmailKey));
 
-            if (!string.IsNullOrEmpty(datHeader.Homepage))
-                Homepage = datHeader.Homepage;
+            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(Models.Metadata.Header.HomepageKey)))
+                SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, datHeader.GetFieldValue<string?>(Models.Metadata.Header.HomepageKey));
 
-            if (!string.IsNullOrEmpty(datHeader.Url))
-                Url = datHeader.Url;
+            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(Models.Metadata.Header.UrlKey)))
+                SetFieldValue<string?>(Models.Metadata.Header.UrlKey, datHeader.GetFieldValue<string?>(Models.Metadata.Header.UrlKey));
 
-            if (!string.IsNullOrEmpty(datHeader.Comment))
-                Comment = datHeader.Comment;
+            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(Models.Metadata.Header.CommentKey)))
+                SetFieldValue<string?>(Models.Metadata.Header.CommentKey, datHeader.GetFieldValue<string?>(Models.Metadata.Header.CommentKey));
 
-            if (!string.IsNullOrEmpty(datHeader.HeaderSkipper))
-                HeaderSkipper = datHeader.HeaderSkipper;
+            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey)))
+                SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, datHeader.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey));
 
-            if (!string.IsNullOrEmpty(datHeader.Type))
-                Type = datHeader.Type;
+            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(Models.Metadata.Header.TypeKey)))
+                SetFieldValue<string?>(Models.Metadata.Header.TypeKey, datHeader.GetFieldValue<string?>(Models.Metadata.Header.TypeKey));
 
-            if (datHeader.ForceMerging != MergingFlag.None)
-                ForceMerging = datHeader.ForceMerging;
+            if (datHeader.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey) != MergingFlag.None)
+                SetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey, datHeader.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey));
 
-            if (datHeader.ForceNodump != NodumpFlag.None)
-                ForceNodump = datHeader.ForceNodump;
+            if (datHeader.GetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey) != NodumpFlag.None)
+                SetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey, datHeader.GetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey));
 
-            if (datHeader.ForcePacking != PackingFlag.None)
-                ForcePacking = datHeader.ForcePacking;
+            if (datHeader.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey) != PackingFlag.None)
+                SetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey, datHeader.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey));
 
             if (datHeader.DatFormat != 0x00)
                 DatFormat = datHeader.DatFormat;
@@ -605,7 +365,7 @@ namespace SabreTools.DatFiles
 
         #region Manipulation
 
-        //// <summary>
+        /// <summary>
         /// Remove a field from the header
         /// </summary>
         /// <param name="fieldName">Field to remove</param>
@@ -615,43 +375,43 @@ namespace SabreTools.DatFiles
             DatHeaderField datHeaderField = fieldName.AsDatHeaderField();
             switch (datHeaderField)
             {
-                case DatHeaderField.Author: Author = null; break;
-                case DatHeaderField.BiosMode: BiosMode = MergingFlag.None; break;
-                case DatHeaderField.Build: Build = null; break;
-                case DatHeaderField.CanOpen: CanOpen = null; break;
-                case DatHeaderField.Category: Category = null; break;
-                case DatHeaderField.Comment: Comment = null; break;
-                case DatHeaderField.Date: Date = null; break;
-                case DatHeaderField.Debug: Debug = null; break;
-                case DatHeaderField.Description: Description = null; break;
-                case DatHeaderField.Email: Email = null; break;
+                case DatHeaderField.Author: SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, null); break;
+                case DatHeaderField.BiosMode: SetFieldValue<MergingFlag>(Models.Metadata.Header.BiosModeKey, MergingFlag.None); break;
+                case DatHeaderField.Build: SetFieldValue<string?>(Models.Metadata.Header.BuildKey, null); break;
+                case DatHeaderField.CanOpen: SetFieldValue<string[]?>(Models.Metadata.Header.CanOpenKey, null); break;
+                case DatHeaderField.Category: SetFieldValue<string?>(Models.Metadata.Header.CategoryKey, null); break;
+                case DatHeaderField.Comment: SetFieldValue<string?>(Models.Metadata.Header.CommentKey, null); break;
+                case DatHeaderField.Date: SetFieldValue<string?>(Models.Metadata.Header.DateKey, null); break;
+                case DatHeaderField.Debug: SetFieldValue<bool?>(Models.Metadata.Header.DebugKey, null); break;
+                case DatHeaderField.Description: SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, null); break;
+                case DatHeaderField.Email: SetFieldValue<string?>(Models.Metadata.Header.EmailKey, null); break;
                 case DatHeaderField.FileName: FileName = null; break;
-                case DatHeaderField.ForceMerging: ForceMerging = MergingFlag.None; break;
-                case DatHeaderField.ForceNodump: ForceNodump = NodumpFlag.None; break;
-                case DatHeaderField.ForcePacking: ForcePacking = PackingFlag.None; break;
-                case DatHeaderField.HeaderSkipper: HeaderSkipper = null; break;
-                case DatHeaderField.Homepage: Homepage = null; break;
-                case DatHeaderField.ID: NoIntroID = null; break;
+                case DatHeaderField.ForceMerging: SetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey, MergingFlag.None); break;
+                case DatHeaderField.ForceNodump: SetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey, NodumpFlag.None); break;
+                case DatHeaderField.ForcePacking: SetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey, PackingFlag.None); break;
+                case DatHeaderField.HeaderSkipper: SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, null); break;
+                case DatHeaderField.Homepage: SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, null); break;
+                case DatHeaderField.ID: SetFieldValue<string?>(Models.Metadata.Header.IdKey, null); break;
                 // case DatHeaderField.Info_Default: Info_Default = null; break;
                 // case DatHeaderField.Info_IsNamingOption: Info_IsNamingOption = null; break;
                 // case DatHeaderField.Info_Name: Info_Name = null; break;
                 // case DatHeaderField.Info_Visible: Info_Visible = null; break;
-                case DatHeaderField.LockBiosMode: LockBiosMode = null; break;
-                case DatHeaderField.LockRomMode: LockRomMode = null; break;
-                case DatHeaderField.LockSampleMode: LockSampleMode = null; break;
-                case DatHeaderField.MameConfig: MameConfig = null; break;
-                case DatHeaderField.Name: Name = null; break;
-                case DatHeaderField.RomCenterVersion: RomCenterVersion = null; break;
-                case DatHeaderField.RomMode: RomMode = MergingFlag.None; break;
-                case DatHeaderField.RomTitle: RomTitle = null; break;
-                case DatHeaderField.RootDir: RootDir = null; break;
-                case DatHeaderField.SampleMode: SampleMode = MergingFlag.None; break;
-                case DatHeaderField.ScreenshotsHeight: ScreenshotsHeight = null; break;
-                case DatHeaderField.ScreenshotsWidth: ScreenshotsWidth = null; break;
-                case DatHeaderField.System: System = null; break;
-                case DatHeaderField.Type: Type = null; break;
-                case DatHeaderField.Url: Url = null; break;
-                case DatHeaderField.Version: Version = null; break;
+                case DatHeaderField.LockBiosMode: SetFieldValue<bool?>(Models.Metadata.Header.LockBiosModeKey, null); break;
+                case DatHeaderField.LockRomMode: SetFieldValue<bool?>(Models.Metadata.Header.LockRomModeKey, null); break;
+                case DatHeaderField.LockSampleMode: SetFieldValue<bool?>(Models.Metadata.Header.LockSampleModeKey, null); break;
+                case DatHeaderField.MameConfig: SetFieldValue<string?>(Models.Metadata.Header.MameConfigKey, null); break;
+                case DatHeaderField.Name: SetFieldValue<string?>(Models.Metadata.Header.NameKey, null); break;
+                case DatHeaderField.RomCenterVersion: SetFieldValue<string?>(Models.Metadata.Header.DatVersionKey, null); break;
+                case DatHeaderField.RomMode: SetFieldValue<MergingFlag>(Models.Metadata.Header.RomModeKey, MergingFlag.None); break;
+                case DatHeaderField.RomTitle: SetFieldValue<string?>(Models.Metadata.Header.RomTitleKey, null); break;
+                case DatHeaderField.RootDir: SetFieldValue<string?>(Models.Metadata.Header.RootDirKey, null); break;
+                case DatHeaderField.SampleMode: SetFieldValue<MergingFlag>(Models.Metadata.Header.SampleModeKey, MergingFlag.None); break;
+                case DatHeaderField.ScreenshotsHeight: SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsHeightKey, null); break;
+                case DatHeaderField.ScreenshotsWidth: SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsWidthKey, null); break;
+                case DatHeaderField.System: SetFieldValue<string?>(Models.Metadata.Header.SystemKey, null); break;
+                case DatHeaderField.Type: SetFieldValue<string?>(Models.Metadata.Header.TypeKey, null); break;
+                case DatHeaderField.Url: SetFieldValue<string?>(Models.Metadata.Header.UrlKey, null); break;
+                case DatHeaderField.Version: SetFieldValue<string?>(Models.Metadata.Header.VersionKey, null); break;
                 default: return false;
             }
 
@@ -670,43 +430,43 @@ namespace SabreTools.DatFiles
             DatHeaderField datHeaderField = fieldName.AsDatHeaderField();
             switch (datHeaderField)
             {
-                case DatHeaderField.Author: Author = value; break;
-                case DatHeaderField.BiosMode: BiosMode = value.AsEnumValue<MergingFlag>(); break;
-                case DatHeaderField.Build: Build = value; break;
-                case DatHeaderField.CanOpen: CanOpen = [.. value.Split(',')]; break;
-                case DatHeaderField.Category: Category = value; break;
-                case DatHeaderField.Comment: Comment = value; break;
-                case DatHeaderField.Date: Date = value; break;
-                case DatHeaderField.Debug: Debug = value.AsYesNo(); break;
-                case DatHeaderField.Description: Description = value; break;
-                case DatHeaderField.Email: Email = value; break;
+                case DatHeaderField.Author: SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, value); break;
+                case DatHeaderField.BiosMode: SetFieldValue<MergingFlag>(Models.Metadata.Header.BiosModeKey, value.AsEnumValue<MergingFlag>()); break;
+                case DatHeaderField.Build: SetFieldValue<string?>(Models.Metadata.Header.BuildKey, value); break;
+                case DatHeaderField.CanOpen: SetFieldValue<string[]?>(Models.Metadata.Header.CanOpenKey,[.. value.Split(',')]); break;
+                case DatHeaderField.Category: SetFieldValue<string?>(Models.Metadata.Header.CategoryKey, value); break;
+                case DatHeaderField.Comment: SetFieldValue<string?>(Models.Metadata.Header.CommentKey, value); break;
+                case DatHeaderField.Date: SetFieldValue<string?>(Models.Metadata.Header.DateKey, value); break;
+                case DatHeaderField.Debug: SetFieldValue<bool?>(Models.Metadata.Header.DebugKey, value.AsYesNo()); break;
+                case DatHeaderField.Description: SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, value); break;
+                case DatHeaderField.Email: SetFieldValue<string?>(Models.Metadata.Header.EmailKey, value); break;
                 case DatHeaderField.FileName: FileName = value; break;
-                case DatHeaderField.ForceMerging: ForceMerging = value.AsEnumValue<MergingFlag>(); break;
-                case DatHeaderField.ForceNodump: ForceNodump = value.AsEnumValue<NodumpFlag>(); break;
-                case DatHeaderField.ForcePacking: ForcePacking = value.AsEnumValue<PackingFlag>(); break;
-                case DatHeaderField.HeaderSkipper: HeaderSkipper = value; break;
-                case DatHeaderField.Homepage: Homepage = value; break;
-                case DatHeaderField.ID: NoIntroID = value; break;
+                case DatHeaderField.ForceMerging: SetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey, value.AsEnumValue<MergingFlag>()); break;
+                case DatHeaderField.ForceNodump: SetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey, value.AsEnumValue<NodumpFlag>()); break;
+                case DatHeaderField.ForcePacking: SetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey, value.AsEnumValue<PackingFlag>()); break;
+                case DatHeaderField.HeaderSkipper: SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, value); break;
+                case DatHeaderField.Homepage: SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, value); break;
+                case DatHeaderField.ID: SetFieldValue<string?>(Models.Metadata.Header.IdKey, value); break;
                 // case DatHeaderField.Info_Default: Info_Default = value; break;
                 // case DatHeaderField.Info_IsNamingOption: Info_IsNamingOption = value; break;
                 // case DatHeaderField.Info_Name: Info_Name = value; break;
                 // case DatHeaderField.Info_Visible: Info_Visible = value; break;
-                case DatHeaderField.LockBiosMode: LockBiosMode = value.AsYesNo(); break;
-                case DatHeaderField.LockRomMode: LockRomMode = value.AsYesNo(); break;
-                case DatHeaderField.LockSampleMode: LockSampleMode = value.AsYesNo(); break;
-                case DatHeaderField.MameConfig: MameConfig = value; break;
-                case DatHeaderField.Name: Name = value; break;
-                case DatHeaderField.RomCenterVersion: RomCenterVersion = value; break;
-                case DatHeaderField.RomMode: RomMode = value.AsEnumValue<MergingFlag>(); break;
-                case DatHeaderField.RomTitle: RomTitle = value; break;
-                case DatHeaderField.RootDir: RootDir = value; break;
-                case DatHeaderField.SampleMode: SampleMode = value.AsEnumValue<MergingFlag>(); break;
-                case DatHeaderField.ScreenshotsHeight: ScreenshotsHeight = value; break;
-                case DatHeaderField.ScreenshotsWidth: ScreenshotsWidth = value; break;
-                case DatHeaderField.System: System = value; break;
-                case DatHeaderField.Type: Type = value; break;
-                case DatHeaderField.Url: Url = value; break;
-                case DatHeaderField.Version: Version = value; break;
+                case DatHeaderField.LockBiosMode: SetFieldValue<bool?>(Models.Metadata.Header.LockBiosModeKey, value.AsYesNo()); break;
+                case DatHeaderField.LockRomMode: SetFieldValue<bool?>(Models.Metadata.Header.LockRomModeKey, value.AsYesNo()); break;
+                case DatHeaderField.LockSampleMode: SetFieldValue<bool?>(Models.Metadata.Header.LockSampleModeKey, value.AsYesNo()); break;
+                case DatHeaderField.MameConfig: SetFieldValue<string?>(Models.Metadata.Header.MameConfigKey, value); break;
+                case DatHeaderField.Name: SetFieldValue<string?>(Models.Metadata.Header.NameKey, value); break;
+                case DatHeaderField.RomCenterVersion: SetFieldValue<string?>(Models.Metadata.Header.DatVersionKey, value); break;
+                case DatHeaderField.RomMode: SetFieldValue<MergingFlag>(Models.Metadata.Header.RomModeKey, value.AsEnumValue<MergingFlag>()); break;
+                case DatHeaderField.RomTitle: SetFieldValue<string?>(Models.Metadata.Header.RomTitleKey, value); break;
+                case DatHeaderField.RootDir: SetFieldValue<string?>(Models.Metadata.Header.RootDirKey, value); break;
+                case DatHeaderField.SampleMode: SetFieldValue<MergingFlag>(Models.Metadata.Header.SampleModeKey, value.AsEnumValue<MergingFlag>()); break;
+                case DatHeaderField.ScreenshotsHeight: SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsHeightKey, value); break;
+                case DatHeaderField.ScreenshotsWidth: SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsWidthKey, value); break;
+                case DatHeaderField.System: SetFieldValue<string?>(Models.Metadata.Header.SystemKey, value); break;
+                case DatHeaderField.Type: SetFieldValue<string?>(Models.Metadata.Header.TypeKey, value); break;
+                case DatHeaderField.Url: SetFieldValue<string?>(Models.Metadata.Header.UrlKey, value); break;
+                case DatHeaderField.Version: SetFieldValue<string?>(Models.Metadata.Header.VersionKey, value); break;
                 default: return false;
             }
 
@@ -1177,7 +937,7 @@ namespace SabreTools.DatFiles
         /// <returns>String containing the new filename</returns>
         private string CreateOutFileNamesHelper(string outDir, string extension, bool overwrite)
         {
-            string? filename = string.IsNullOrEmpty(FileName) ? Description : FileName;
+            string? filename = string.IsNullOrEmpty(FileName) ? GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) : FileName;
 
             // Strip off the extension if it's a holdover from the DAT
             if (Utilities.HasValidDatExtension(filename))

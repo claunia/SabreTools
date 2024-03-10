@@ -1,5 +1,6 @@
 using System;
 using SabreTools.Core;
+using SabreTools.Models.RomCenter;
 
 namespace SabreTools.DatFiles.Formats
 {
@@ -48,13 +49,20 @@ namespace SabreTools.DatFiles.Formats
             if (credits == null)
                 return;
 
-            Header.Author ??= credits.Author;
-            Header.Version ??= credits.Version;
-            Header.Email ??= credits.Email;
-            Header.Homepage ??= credits.Homepage;
-            Header.Url ??= credits.Url;
-            Header.Date ??= credits.Date;
-            Header.Comment ??= credits.Comment;
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.AuthorKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, credits.Author);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.CommentKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.CommentKey, credits.Comment);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.DateKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.DateKey, credits.Date);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.EmailKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.EmailKey, credits.Email);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.HomepageKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, credits.Homepage);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.UrlKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.UrlKey, credits.Url);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.VersionKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.VersionKey, credits.Version);
         }
 
         /// <summary>
@@ -67,12 +75,14 @@ namespace SabreTools.DatFiles.Formats
             if (dat == null)
                 return;
 
-            Header.RomCenterVersion ??= dat.Version;
-            Header.System ??= dat.Plugin;
-            if (Header.ForceMerging == MergingFlag.None && dat.Split == "1")
-                Header.ForceMerging = MergingFlag.Split;
-            if (Header.ForceMerging == MergingFlag.None && dat.Merge == "1")
-                Header.ForceMerging = MergingFlag.Merged;
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.DatVersionKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.DatVersionKey, dat.Version);
+            if (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey) == MergingFlag.None && dat.Split == "1")
+                Header.SetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey, MergingFlag.Split);
+            if (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey) == MergingFlag.None && dat.Merge == "1")
+                Header.SetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey, MergingFlag.Merged);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.SystemKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.SystemKey, dat.Plugin);
         }
 
         /// <summary>
@@ -85,8 +95,10 @@ namespace SabreTools.DatFiles.Formats
             if (emulator == null)
                 return;
 
-            Header.Name ??= emulator.RefName;
-            Header.Description ??= emulator.Version;
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.EmulatorVersionKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.EmulatorVersionKey, emulator.Version);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.RefNameKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.RefNameKey, emulator.RefName);
         }
 
         #endregion

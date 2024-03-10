@@ -76,7 +76,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var softwaredb = new Models.OpenMSX.SoftwareDb
             {
-                Timestamp = Header.Date,
+                Timestamp = Header.GetFieldValue<string?>(Models.Metadata.Header.DateKey),
                 Software = CreateSoftwares(ignoreblanks)
             };
             return softwaredb;

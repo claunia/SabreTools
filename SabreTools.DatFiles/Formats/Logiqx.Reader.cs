@@ -44,8 +44,10 @@ namespace SabreTools.DatFiles.Formats
             if (datafile == null)
                 return;
 
-            Header.Build ??= datafile.Build;
-            Header.Debug ??= datafile.Debug.AsYesNo();
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.BuildKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.BuildKey, datafile.Build);
+            if (Header.GetFieldValue<bool?>(Models.Metadata.Header.DebugKey) == null)
+                Header.SetFieldValue<bool?>(Models.Metadata.Header.DebugKey, datafile.Debug.AsYesNo());
             // SchemaLocation is specifically skipped
 
             ConvertHeader(datafile.Header, keep);
@@ -62,26 +64,42 @@ namespace SabreTools.DatFiles.Formats
             if (header == null)
                 return;
 
-            Header.NoIntroID ??= header.Id;
-            Header.Name ??= header.Name;
-            Header.Description ??= header.Description;
-            Header.RootDir ??= header.RootDir;
-            Header.Category ??= header.Category;
-            Header.Version ??= header.Version;
-            Header.Date ??= header.Date;
-            Header.Author ??= header.Author;
-            Header.Email ??= header.Email;
-            Header.Homepage ??= header.Homepage;
-            Header.Url ??= header.Url;
-            Header.Comment ??= header.Comment;
-            Header.Type ??= header.Type;
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.IdKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.IdKey, header.Id);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, header.Name);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, header.Description);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.RootDirKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.RootDirKey, header.RootDir);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.CategoryKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.CategoryKey, header.Category);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.VersionKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.VersionKey, header.Version);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.DateKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.DateKey, header.Date);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.AuthorKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, header.Author);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.EmailKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.EmailKey, header.Email);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.HomepageKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, header.Homepage);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.UrlKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.UrlKey, header.Url);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.CommentKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.CommentKey, header.Comment);
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.TypeKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, header.Type);
 
             ConvertSubheader(header.ClrMamePro);
             ConvertSubheader(header.RomCenter);
 
             // Handle implied SuperDAT
             if (header.Name?.Contains(" - SuperDAT") == true && keep)
-                Header.Type ??= "SuperDAT";
+            {
+                if (Header.GetFieldValue<string?>(Models.Metadata.Header.TypeKey) == null)
+                    Header.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, "SuperDAT");
+            }
         }
 
         /// <summary>
@@ -94,14 +112,14 @@ namespace SabreTools.DatFiles.Formats
             if (clrMamePro == null)
                 return;
 
-            Header.HeaderSkipper ??= clrMamePro.Header;
-
-            if (Header.ForceMerging == MergingFlag.None)
-                Header.ForceMerging = clrMamePro.ForceMerging.AsEnumValue<MergingFlag>();
-            if (Header.ForceNodump == NodumpFlag.None)
-                Header.ForceNodump = clrMamePro.ForceNodump.AsEnumValue<NodumpFlag>();
-            if (Header.ForcePacking == PackingFlag.None)
-                Header.ForcePacking = clrMamePro.ForcePacking.AsEnumValue<PackingFlag>();
+            if (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey) == MergingFlag.None)
+                Header.SetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey, clrMamePro.ForceMerging.AsEnumValue<MergingFlag>());
+            if (Header.GetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey) == NodumpFlag.None)
+                Header.SetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey, clrMamePro.ForceNodump.AsEnumValue<NodumpFlag>());
+            if (Header.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey) == PackingFlag.None)
+                Header.SetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey, clrMamePro.ForcePacking.AsEnumValue<PackingFlag>());
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, clrMamePro.Header);
         }
 
         /// <summary>
@@ -114,18 +132,21 @@ namespace SabreTools.DatFiles.Formats
             if (romCenter == null)
                 return;
 
-            Header.System ??= romCenter.Plugin;
+            if (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.BiosModeKey) == MergingFlag.None)
+                Header.SetFieldValue<MergingFlag>(Models.Metadata.Header.BiosModeKey, romCenter.BiosMode.AsEnumValue<MergingFlag>());
+            if (Header.GetFieldValue<bool?>(Models.Metadata.Header.LockBiosModeKey) == null)
+                Header.SetFieldValue<bool?>(Models.Metadata.Header.LockBiosModeKey, romCenter.LockBiosMode.AsYesNo());
+            if (Header.GetFieldValue<bool?>(Models.Metadata.Header.LockRomModeKey) == null)
+                Header.SetFieldValue<bool?>(Models.Metadata.Header.LockRomModeKey, romCenter.LockRomMode.AsYesNo());
+            if (Header.GetFieldValue<bool?>(Models.Metadata.Header.LockSampleModeKey) == null)
+                Header.SetFieldValue<bool?>(Models.Metadata.Header.LockSampleModeKey, romCenter.LockSampleMode.AsYesNo());
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.PluginKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.PluginKey, romCenter.Plugin);
+            if (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.RomModeKey) == MergingFlag.None)
+                Header.SetFieldValue<MergingFlag>(Models.Metadata.Header.RomModeKey, romCenter.RomMode.AsEnumValue<MergingFlag>());
+            if (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.SampleModeKey) == MergingFlag.None)
+                Header.SetFieldValue<MergingFlag>(Models.Metadata.Header.SampleModeKey, romCenter.SampleMode.AsEnumValue<MergingFlag>());
 
-            if (Header.RomMode == MergingFlag.None)
-                Header.RomMode = romCenter.RomMode.AsEnumValue<MergingFlag>();
-            if (Header.BiosMode == MergingFlag.None)
-                Header.BiosMode = romCenter.BiosMode.AsEnumValue<MergingFlag>();
-            if (Header.SampleMode == MergingFlag.None)
-                Header.SampleMode = romCenter.SampleMode.AsEnumValue<MergingFlag>();
-
-            Header.LockRomMode ??= romCenter.LockRomMode.AsYesNo();
-            Header.LockBiosMode ??= romCenter.LockBiosMode.AsYesNo();
-            Header.LockSampleMode ??= romCenter.LockSampleMode.AsYesNo();
         }
 
         #endregion

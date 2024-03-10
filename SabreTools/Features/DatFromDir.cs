@@ -72,7 +72,7 @@ namespace SabreTools.Features
 
             // Create a new DATFromDir object and process the inputs
             DatFile basedat = DatFile.Create(Header!);
-            basedat.Header.Date = DateTime.Now.ToString("yyyy-MM-dd");
+            basedat.Header.SetFieldValue<string?>(Models.Metadata.Header.DateKey, DateTime.Now.ToString("yyyy-MM-dd"));
 
             // For each input directory, create a DAT
             foreach (string path in Inputs)
