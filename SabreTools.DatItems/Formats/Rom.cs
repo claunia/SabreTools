@@ -1,8 +1,10 @@
-﻿using System.Xml.Serialization;
+﻿using System.Reflection;
+using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.FileTypes;
+using SabreTools.Filter;
 
 namespace SabreTools.DatItems.Formats
 {

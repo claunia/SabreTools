@@ -7,7 +7,7 @@ namespace SabreTools.DatFiles
     // TODO: Determine which items need to have their values flipped (e.g. Part, DiskArea, DataArea)
     public partial class DatFile
     {
-         #region Converters
+        #region Converters
 
         /// <summary>
         /// Convert metadata information
@@ -110,9 +110,8 @@ namespace SabreTools.DatFiles
             }
             if (item.ContainsKey(Models.Metadata.Machine.DumpKey))
             {
-                // TODO: Figure out what this maps to
-                // var items = item.Read<Models.Metadata.Dump[]>(Models.Metadata.Machine.DumpKey);
-                // ProcessItems(items, machine, filename, indexId, statsOnly);
+                var items = ReadItemArray<Models.Metadata.Dump>(item, Models.Metadata.Machine.DumpKey);
+                ProcessItems(items, machine, filename, indexId, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.FeatureKey))
             {
@@ -597,6 +596,27 @@ namespace SabreTools.DatFiles
                 };
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
+            }
+        }
+
+        /// <summary>
+        /// Convert Dump information 
+        /// </summary>
+        /// <param name="items">Array of internal items to convert</param>
+        /// <param name="machine">Machine to use with the converted items</param>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        private void ProcessItems(Models.Metadata.Dump[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        {
+            // If the array is null or empty, return without processing
+            if (items == null || items.Length == 0)
+                return;
+
+            // Loop through the items and add
+            foreach (var item in items)
+            {
+                // TODO: Handle processing of Dump items (rom, megarom, sccpluscart)
             }
         }
 
