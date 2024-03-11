@@ -113,7 +113,7 @@ namespace SabreTools.DatFiles
         /// Internal Header model
         /// </summary>
         [JsonIgnore]
-        private Models.Metadata.Header _header = [];
+        private readonly Models.Metadata.Header _header = [];
 
         #endregion
 
