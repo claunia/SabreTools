@@ -97,8 +97,19 @@ namespace SabreTools.DatFiles
         {
             get
             {
-                var canOpen = GetFieldValue<string[]?>(Models.Metadata.Header.CanOpenKey);
+                var canOpen = GetFieldValue<Models.OfflineList.CanOpen[]?>(Models.Metadata.Header.CanOpenKey);
                 return canOpen != null && canOpen.Length > 0;
+            }
+        }
+
+        [JsonIgnore]
+        public bool NewDatSpecified
+        {
+            get
+            {
+                return GetFieldValue<string?>("DATVERSIONURL") != null
+                    //&& GetFieldValue<Models.OfflineList.DatUrl?>("DATURL") != null // TODO: Add to internal model
+                    && GetFieldValue<string?>("IMURL") != null;
             }
         }
 
