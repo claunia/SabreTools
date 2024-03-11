@@ -253,12 +253,12 @@ namespace SabreTools.DatFiles
                             AppendToMachineKey(machine, Models.Metadata.Machine.DeviceRefKey, deviceRefItem);
                             break;
                         case DatItems.Formats.DipSwitch dipSwitch:
-                            var dipSwitchItem = ProcessItem(dipSwitch);
+                            var dipSwitchItem = ProcessItem(dipSwitch, machine);
                             EnsureMachineKey<Models.Metadata.DipSwitch[]?>(machine, Models.Metadata.Machine.DipSwitchKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.DipSwitchKey, dipSwitchItem);
                             break;
                         case DatItems.Formats.Disk disk:
-                            var diskItem = ProcessItem(disk);
+                            var diskItem = ProcessItem(disk, machine);
                             EnsureMachineKey<Models.Metadata.Disk[]?>(machine, Models.Metadata.Machine.DiskKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.DiskKey, diskItem);
                             break;
@@ -310,7 +310,7 @@ namespace SabreTools.DatFiles
                             break;
                         case DatItems.Formats.Rom rom:
                             // TODO: Handle cases where it's actually a Dump
-                            var romItem = ProcessItem(rom);
+                            var romItem = ProcessItem(rom, machine);
                             EnsureMachineKey<Models.Metadata.Rom[]?>(machine, Models.Metadata.Machine.RomKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.RomKey, romItem);
                             break;
@@ -438,7 +438,8 @@ namespace SabreTools.DatFiles
         /// Convert DipSwitch information
         /// </summary>
         /// <param name="item">Item to convert</param>
-        private static Models.Metadata.DipSwitch ProcessItem(DatItems.Formats.DipSwitch item)
+        /// <param name="machine">Machine to use for Part</param>
+        private static Models.Metadata.DipSwitch ProcessItem(DatItems.Formats.DipSwitch item, Models.Metadata.Machine machine)
         {
             var dipSwitchItem = item.GetInternalClone();
 
@@ -481,7 +482,8 @@ namespace SabreTools.DatFiles
         /// Convert Disk information
         /// </summary>
         /// <param name="item">Item to convert</param>
-        private static Models.Metadata.Disk ProcessItem(DatItems.Formats.Disk item)
+        /// <param name="machine">Machine to use for Part and DiskArea</param>
+        private static Models.Metadata.Disk ProcessItem(DatItems.Formats.Disk item, Models.Metadata.Machine machine)
         {
             var diskItem = item.GetInternalClone();
 
@@ -543,7 +545,8 @@ namespace SabreTools.DatFiles
         /// Convert Rom information
         /// </summary>
         /// <param name="item">Item to convert</param>
-        private static Models.Metadata.Rom ProcessItem(DatItems.Formats.Rom item)
+        /// <param name="machine">Machine to use for Part and DataArea</param>
+        private static Models.Metadata.Rom ProcessItem(DatItems.Formats.Rom item, Models.Metadata.Machine machine)
         {
             var romItem = item.GetInternalClone();
 
