@@ -1,43 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace SabreTools.Core.Tools
 {
     public static class Converters
     {
         #region String to Enum
-
-        /// <summary>
-        /// Get DatHeaderField value from input string
-        /// </summary>
-        /// <param name="DatHeaderField">String to get value from</param>
-        /// <returns>DatHeaderField value corresponding to the string</returns>
-        public static DatHeaderField AsDatHeaderField(this string? input)
-        {
-            // If the input is empty, we return null
-            if (string.IsNullOrEmpty(input))
-                return DatHeaderField.NULL;
-
-            // Normalize the input
-            input = input!.ToLowerInvariant();
-
-            // Create regex
-            string headerRegex = @"^(dat|header|datheader)[.\-_\s]";
-
-            // If we don't have a header field, skip
-            if (!Regex.IsMatch(input, headerRegex))
-                return DatHeaderField.NULL;
-
-            // Replace the match and re-normalize
-            string headerInput = Regex.Replace(input, headerRegex, string.Empty)
-                .Replace(' ', '_')
-                .Replace('-', '_')
-                .Replace('.', '_');
-
-            return AsEnumValue<DatHeaderField>(headerInput);
-        }
 
         /// <summary>
         /// Get bool? value from input string

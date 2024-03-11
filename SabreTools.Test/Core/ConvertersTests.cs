@@ -42,30 +42,6 @@ namespace SabreTools.Test.Core
         }
 
         [Theory]
-        [InlineData(null, DatHeaderField.NULL)]
-        [InlineData("datname", DatHeaderField.NULL)]
-        [InlineData("dat-datname", DatHeaderField.Name)]
-        [InlineData("dat.datname", DatHeaderField.Name)]
-        [InlineData("dat_datname", DatHeaderField.Name)]
-        [InlineData("dat datname", DatHeaderField.Name)]
-        [InlineData("datheader-datname", DatHeaderField.Name)]
-        [InlineData("datheader.datname", DatHeaderField.Name)]
-        [InlineData("datheader_datname", DatHeaderField.Name)]
-        [InlineData("datheader datname", DatHeaderField.Name)]
-        [InlineData("header-datname", DatHeaderField.Name)]
-        [InlineData("header.datname", DatHeaderField.Name)]
-        [InlineData("header_datname", DatHeaderField.Name)]
-        [InlineData("header datname", DatHeaderField.Name)]
-        [InlineData("DAT.DATNAME", DatHeaderField.Name)]
-        [InlineData("dAt.DAtnamE", DatHeaderField.Name)]
-        public void AsDatHeaderFieldProcessingTest(string? field, DatHeaderField expected)
-        {
-            // TODO: Write new test for all supported fields
-            DatHeaderField actual = field.AsDatHeaderField();
-            Assert.Equal(expected, actual);
-        }
-
-        [Theory]
         [InlineData(null, DeviceType.NULL)]
         [InlineData("unknown", DeviceType.Unknown)]
         [InlineData("cartridge", DeviceType.Cartridge)]
@@ -749,7 +725,6 @@ namespace SabreTools.Test.Core
         [Theory]
         [InlineData(ChipType.NULL, 2)]
         [InlineData(ControlType.NULL, 15)]
-        [InlineData(DatHeaderField.NULL, 94)]
         [InlineData(DeviceType.NULL, 21)]
         [InlineData(DisplayType.NULL, 5)]
         [InlineData(Endianness.NULL, 2)]

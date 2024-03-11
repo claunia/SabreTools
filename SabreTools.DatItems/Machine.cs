@@ -152,17 +152,8 @@ namespace SabreTools.DatItems
 
         #region Constructors
 
-        /// <summary>
-        /// Create a new Machine object
-        /// </summary>
-        public Machine()
-        {
-        }
+        public Machine() { }
 
-        /// <summary>
-        /// Create a new Machine object from an existing metadata model
-        /// </summary>
-        /// <param name="machine">Machine metadata model</param>
         public Machine(Models.Metadata.Machine machine)
         {
             // Get all fields to automatically copy without processing
@@ -178,12 +169,7 @@ namespace SabreTools.DatItems
                     _machine[fieldName] = machine[fieldName];
             }
         }
-
-        /// <summary>
-        /// Create a new Machine object with the included information
-        /// </summary>
-        /// <param name="name">Name of the machine</param>
-        /// <param name="description">Description of the machine</param>
+        
         public Machine(string name, string description)
         {
             SetFieldValue<string?>(Models.Metadata.Machine.NameKey, name);

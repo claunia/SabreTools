@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles.Formats;
+using SabreTools.Filter;
 
 namespace SabreTools.DatFiles
 {
@@ -361,57 +362,28 @@ namespace SabreTools.DatFiles
         #region Manipulation
 
         /// <summary>
+        /// Runs a filter and determines if it passes or not
+        /// </summary>
+        /// <param name="filterRunner">Filter runner to use for checking</param>
+        /// <returns>True if the Machine passes the filter, false otherwise</returns>
+        public bool PassesFilter(FilterRunner filterRunner) => filterRunner.Run(_header);
+
+        /// <summary>
         /// Remove a field from the header
         /// </summary>
         /// <param name="fieldName">Field to remove</param>
         /// <returns>True if the removal was successful, false otherwise</returns>
         public bool RemoveField(string fieldName)
-        {
-            DatHeaderField datHeaderField = fieldName.AsDatHeaderField();
-            switch (datHeaderField)
-            {
-                case DatHeaderField.Author: SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, null); break;
-                case DatHeaderField.BiosMode: SetFieldValue<MergingFlag>(Models.Metadata.Header.BiosModeKey, MergingFlag.None); break;
-                case DatHeaderField.Build: SetFieldValue<string?>(Models.Metadata.Header.BuildKey, null); break;
-                case DatHeaderField.CanOpen: SetFieldValue<string[]?>(Models.Metadata.Header.CanOpenKey, null); break;
-                case DatHeaderField.Category: SetFieldValue<string?>(Models.Metadata.Header.CategoryKey, null); break;
-                case DatHeaderField.Comment: SetFieldValue<string?>(Models.Metadata.Header.CommentKey, null); break;
-                case DatHeaderField.Date: SetFieldValue<string?>(Models.Metadata.Header.DateKey, null); break;
-                case DatHeaderField.Debug: SetFieldValue<bool?>(Models.Metadata.Header.DebugKey, null); break;
-                case DatHeaderField.Description: SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, null); break;
-                case DatHeaderField.Email: SetFieldValue<string?>(Models.Metadata.Header.EmailKey, null); break;
-                case DatHeaderField.FileName: FileName = null; break;
-                case DatHeaderField.ForceMerging: SetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey, MergingFlag.None); break;
-                case DatHeaderField.ForceNodump: SetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey, NodumpFlag.None); break;
-                case DatHeaderField.ForcePacking: SetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey, PackingFlag.None); break;
-                case DatHeaderField.HeaderSkipper: SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, null); break;
-                case DatHeaderField.Homepage: SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, null); break;
-                case DatHeaderField.ID: SetFieldValue<string?>(Models.Metadata.Header.IdKey, null); break;
-                // case DatHeaderField.Info_Default: Info_Default = null; break;
-                // case DatHeaderField.Info_IsNamingOption: Info_IsNamingOption = null; break;
-                // case DatHeaderField.Info_Name: Info_Name = null; break;
-                // case DatHeaderField.Info_Visible: Info_Visible = null; break;
-                case DatHeaderField.LockBiosMode: SetFieldValue<bool?>(Models.Metadata.Header.LockBiosModeKey, null); break;
-                case DatHeaderField.LockRomMode: SetFieldValue<bool?>(Models.Metadata.Header.LockRomModeKey, null); break;
-                case DatHeaderField.LockSampleMode: SetFieldValue<bool?>(Models.Metadata.Header.LockSampleModeKey, null); break;
-                case DatHeaderField.MameConfig: SetFieldValue<string?>(Models.Metadata.Header.MameConfigKey, null); break;
-                case DatHeaderField.Name: SetFieldValue<string?>(Models.Metadata.Header.NameKey, null); break;
-                case DatHeaderField.RomCenterVersion: SetFieldValue<string?>(Models.Metadata.Header.DatVersionKey, null); break;
-                case DatHeaderField.RomMode: SetFieldValue<MergingFlag>(Models.Metadata.Header.RomModeKey, MergingFlag.None); break;
-                case DatHeaderField.RomTitle: SetFieldValue<string?>(Models.Metadata.Header.RomTitleKey, null); break;
-                case DatHeaderField.RootDir: SetFieldValue<string?>(Models.Metadata.Header.RootDirKey, null); break;
-                case DatHeaderField.SampleMode: SetFieldValue<MergingFlag>(Models.Metadata.Header.SampleModeKey, MergingFlag.None); break;
-                case DatHeaderField.ScreenshotsHeight: SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsHeightKey, null); break;
-                case DatHeaderField.ScreenshotsWidth: SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsWidthKey, null); break;
-                case DatHeaderField.System: SetFieldValue<string?>(Models.Metadata.Header.SystemKey, null); break;
-                case DatHeaderField.Type: SetFieldValue<string?>(Models.Metadata.Header.TypeKey, null); break;
-                case DatHeaderField.Url: SetFieldValue<string?>(Models.Metadata.Header.UrlKey, null); break;
-                case DatHeaderField.Version: SetFieldValue<string?>(Models.Metadata.Header.VersionKey, null); break;
-                default: return false;
-            }
+            => FieldManipulator.RemoveField(_header, fieldName);
 
-            return true;
-        }
+        /// <summary>
+        /// Replace a field from another DatHeader
+        /// </summary>
+        /// <param name="other">DatHeader to replace field from</param>
+        /// <param name="fieldName">Field to replace</param>
+        /// <returns>True if the replacement was successful, false otherwise</returns>
+        public bool ReplaceField(DatHeader? other, string? fieldName)
+            => FieldManipulator.ReplaceField(other?._header, _header, fieldName);
 
         /// <summary>
         /// Set a field in the header from a mapping string
@@ -421,52 +393,7 @@ namespace SabreTools.DatFiles
         /// <returns>True if the setting was successful, false otherwise</returns>
         /// <remarks>This only performs minimal validation before setting</remarks>
         public bool SetField(string? fieldName, string value)
-        {
-            DatHeaderField datHeaderField = fieldName.AsDatHeaderField();
-            switch (datHeaderField)
-            {
-                case DatHeaderField.Author: SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, value); break;
-                case DatHeaderField.BiosMode: SetFieldValue<MergingFlag>(Models.Metadata.Header.BiosModeKey, value.AsEnumValue<MergingFlag>()); break;
-                case DatHeaderField.Build: SetFieldValue<string?>(Models.Metadata.Header.BuildKey, value); break;
-                case DatHeaderField.CanOpen: SetFieldValue<string[]?>(Models.Metadata.Header.CanOpenKey,[.. value.Split(',')]); break;
-                case DatHeaderField.Category: SetFieldValue<string?>(Models.Metadata.Header.CategoryKey, value); break;
-                case DatHeaderField.Comment: SetFieldValue<string?>(Models.Metadata.Header.CommentKey, value); break;
-                case DatHeaderField.Date: SetFieldValue<string?>(Models.Metadata.Header.DateKey, value); break;
-                case DatHeaderField.Debug: SetFieldValue<bool?>(Models.Metadata.Header.DebugKey, value.AsYesNo()); break;
-                case DatHeaderField.Description: SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, value); break;
-                case DatHeaderField.Email: SetFieldValue<string?>(Models.Metadata.Header.EmailKey, value); break;
-                case DatHeaderField.FileName: FileName = value; break;
-                case DatHeaderField.ForceMerging: SetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey, value.AsEnumValue<MergingFlag>()); break;
-                case DatHeaderField.ForceNodump: SetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey, value.AsEnumValue<NodumpFlag>()); break;
-                case DatHeaderField.ForcePacking: SetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey, value.AsEnumValue<PackingFlag>()); break;
-                case DatHeaderField.HeaderSkipper: SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, value); break;
-                case DatHeaderField.Homepage: SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, value); break;
-                case DatHeaderField.ID: SetFieldValue<string?>(Models.Metadata.Header.IdKey, value); break;
-                // case DatHeaderField.Info_Default: Info_Default = value; break;
-                // case DatHeaderField.Info_IsNamingOption: Info_IsNamingOption = value; break;
-                // case DatHeaderField.Info_Name: Info_Name = value; break;
-                // case DatHeaderField.Info_Visible: Info_Visible = value; break;
-                case DatHeaderField.LockBiosMode: SetFieldValue<bool?>(Models.Metadata.Header.LockBiosModeKey, value.AsYesNo()); break;
-                case DatHeaderField.LockRomMode: SetFieldValue<bool?>(Models.Metadata.Header.LockRomModeKey, value.AsYesNo()); break;
-                case DatHeaderField.LockSampleMode: SetFieldValue<bool?>(Models.Metadata.Header.LockSampleModeKey, value.AsYesNo()); break;
-                case DatHeaderField.MameConfig: SetFieldValue<string?>(Models.Metadata.Header.MameConfigKey, value); break;
-                case DatHeaderField.Name: SetFieldValue<string?>(Models.Metadata.Header.NameKey, value); break;
-                case DatHeaderField.RomCenterVersion: SetFieldValue<string?>(Models.Metadata.Header.DatVersionKey, value); break;
-                case DatHeaderField.RomMode: SetFieldValue<MergingFlag>(Models.Metadata.Header.RomModeKey, value.AsEnumValue<MergingFlag>()); break;
-                case DatHeaderField.RomTitle: SetFieldValue<string?>(Models.Metadata.Header.RomTitleKey, value); break;
-                case DatHeaderField.RootDir: SetFieldValue<string?>(Models.Metadata.Header.RootDirKey, value); break;
-                case DatHeaderField.SampleMode: SetFieldValue<MergingFlag>(Models.Metadata.Header.SampleModeKey, value.AsEnumValue<MergingFlag>()); break;
-                case DatHeaderField.ScreenshotsHeight: SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsHeightKey, value); break;
-                case DatHeaderField.ScreenshotsWidth: SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsWidthKey, value); break;
-                case DatHeaderField.System: SetFieldValue<string?>(Models.Metadata.Header.SystemKey, value); break;
-                case DatHeaderField.Type: SetFieldValue<string?>(Models.Metadata.Header.TypeKey, value); break;
-                case DatHeaderField.Url: SetFieldValue<string?>(Models.Metadata.Header.UrlKey, value); break;
-                case DatHeaderField.Version: SetFieldValue<string?>(Models.Metadata.Header.VersionKey, value); break;
-                default: return false;
-            }
-
-            return true;
-        }
+            => FieldManipulator.SetField(_header, fieldName, value);
 
         #endregion
 

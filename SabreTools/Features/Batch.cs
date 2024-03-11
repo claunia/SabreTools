@@ -706,7 +706,7 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override void Process(BatchState batchState)
             {
-                Remover remover = new();
+                var remover = new Remover();
                 remover.PopulateExclusionsFromList(Arguments);
                 remover.ApplyRemovals(batchState.DatFile);
             }
@@ -802,10 +802,11 @@ Reset the internal state:           reset();";
                     return (false, message);
                 }
 
-                DatHeaderField field = Arguments[0].AsDatHeaderField();
-
+                // Read in the individual arguments
+                (string? type, string? key) = FilterParser.ParseFilterId(Arguments[0]);
+                
                 // If we had an invalid input, log and continue
-                if (field == DatHeaderField.NULL)
+                if ((type == null || !string.Equals(type, Models.Metadata.MetadataFile.HeaderKey, StringComparison.OrdinalIgnoreCase)) && key == null)
                 {
                     string message = $"{Arguments[0]} was an invalid field name";
                     return (false, message);

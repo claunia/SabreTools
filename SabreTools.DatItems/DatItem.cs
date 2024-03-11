@@ -273,12 +273,16 @@ namespace SabreTools.DatItems
 
             // If the duplicate is external already or should be, set it
 #if NETFRAMEWORK
-            if ((lastItem.GetFieldValue<DupeType>(DatItem.DupeTypeKey) & DupeType.External) != 0 || lastItem?.GetFieldValue<Source?>(DatItem.SourceKey)?.Index != GetFieldValue<Source?>(DatItem.SourceKey)?.Index)
+            if ((lastItem.GetFieldValue<DupeType>(DatItem.DupeTypeKey) & DupeType.External) != 0
+                || lastItem?.GetFieldValue<Source?>(DatItem.SourceKey)?.Index != GetFieldValue<Source?>(DatItem.SourceKey)?.Index)
 #else
-            if (lastItem.GetFieldValue<DupeType>(DatItem.DupeTypeKey).HasFlag(DupeType.External) || lastItem?.GetFieldValue<Source?>(DatItem.SourceKey)?.Index != GetFieldValue<Source?>(DatItem.SourceKey)?.Index)
+            if (lastItem.GetFieldValue<DupeType>(DatItem.DupeTypeKey).HasFlag(DupeType.External)
+                || lastItem?.GetFieldValue<Source?>(DatItem.SourceKey)?.Index != GetFieldValue<Source?>(DatItem.SourceKey)?.Index)
 #endif
             {
-                if (lastItem?.GetFieldValue<Machine>(DatItem.MachineKey)?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) == GetFieldValue<Machine>(DatItem.MachineKey)?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) && lastItem?.GetName() == GetName())
+                var currentMachine = GetFieldValue<Machine>(DatItem.MachineKey);
+                var lastMachine = lastItem?.GetFieldValue<Machine>(DatItem.MachineKey);
+                if (lastMachine?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) == currentMachine?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) && lastItem?.GetName() == GetName())
                     output = DupeType.External | DupeType.All;
                 else
                     output = DupeType.External | DupeType.Hash;
@@ -287,7 +291,9 @@ namespace SabreTools.DatItems
             // Otherwise, it's considered an internal dupe
             else
             {
-                if (lastItem?.GetFieldValue<Machine>(DatItem.MachineKey)?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) == GetFieldValue<Machine>(DatItem.MachineKey)?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) && lastItem?.GetName() == GetName())
+                var currentMachine = GetFieldValue<Machine>(DatItem.MachineKey);
+                var lastMachine = lastItem?.GetFieldValue<Machine>(DatItem.MachineKey);
+                if (lastMachine?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) == currentMachine?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) && lastItem?.GetName() == GetName())
                     output = DupeType.Internal | DupeType.All;
                 else
                     output = DupeType.Internal | DupeType.Hash;
