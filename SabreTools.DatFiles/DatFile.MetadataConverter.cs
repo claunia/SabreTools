@@ -7,7 +7,7 @@ namespace SabreTools.DatFiles
 {
     public partial class DatFile
     {
-        #region Converters
+        #region From Metadata
 
         /// <summary>
         /// Convert metadata information
@@ -1409,6 +1409,12 @@ namespace SabreTools.DatFiles
 
             return items;
         }
+
+        #endregion
+    
+        #region To Metadata
+
+
 
         #endregion
     }
