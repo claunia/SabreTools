@@ -112,6 +112,28 @@ namespace SabreTools.DatFiles
 
         #region Instance Methods
 
+        #region Constructors
+
+        public DatHeader() { }
+
+        public DatHeader(Models.Metadata.Header header)
+        {
+            // Get all fields to automatically copy without processing
+            var nonItemFields = TypeHelper.GetConstants(typeof(Models.Metadata.Header));
+            if (nonItemFields == null)
+                return;
+
+            // Populate the internal machine from non-filter fields
+            _header = [];
+            foreach (string fieldName in nonItemFields)
+            {
+                if (header.ContainsKey(fieldName))
+                    _header[fieldName] = header[fieldName];
+            }
+        }
+
+        #endregion
+
         #region Accessors
 
         /// <summary>

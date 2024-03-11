@@ -17,7 +17,7 @@ namespace SabreTools.DatFiles.Formats
                 var metadata = new Serialization.CrossModel.Hashfile().Serialize(hashfile);
 
                 // Convert to the internal format
-                ConvertMetadata(metadata, filename, indexId, statsOnly);
+                ConvertMetadata(metadata, filename, indexId, keep, statsOnly);
             }
             catch (Exception ex) when (!throwOnError)
             {

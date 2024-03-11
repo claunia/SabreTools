@@ -27,7 +27,7 @@ namespace SabreTools.DatFiles.Formats
                 ConvertConfiguration(dat?.Configuration, keep);
 
                 // Convert to the internal format
-                ConvertMetadata(metadata, filename, indexId, statsOnly);
+                ConvertMetadata(metadata, filename, indexId, keep, statsOnly);
 
                 // Convert the GUI to the internal format
                 ConvertGUI(dat?.GUI);

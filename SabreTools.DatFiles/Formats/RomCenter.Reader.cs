@@ -28,7 +28,7 @@ namespace SabreTools.DatFiles.Formats
                 ConvertEmulator(metadataFile?.Emulator);
 
                 // Convert to the internal format
-                ConvertMetadata(metadata, filename, indexId, statsOnly);
+                ConvertMetadata(metadata, filename, indexId, keep, statsOnly);
             }
             catch (Exception ex) when (!throwOnError)
             {

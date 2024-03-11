@@ -3,7 +3,6 @@ using System.Linq;
 namespace SabreTools.DatFiles
 {
     // TODO: Convert nested items (e.g. Configuration, DipLocation)
-    // TODO: Determine which items need to have their values flipped (e.g. Part, DiskArea, DataArea)
     public partial class DatFile
     {
         #region Converters
@@ -14,25 +13,23 @@ namespace SabreTools.DatFiles
         /// <param name="item">Metadata file to convert</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        public void ConvertMetadata(Models.Metadata.MetadataFile? item, string filename, int indexId, bool statsOnly)
+        public void ConvertMetadata(Models.Metadata.MetadataFile? item, string filename, int indexId, bool keep, bool statsOnly)
         {
             // If the metadata file is invalid, we can't do anything
             if (item == null || !item.Any())
                 return;
 
-            // TODO: Add header parsing
+            // Get the header from the metadata
+            var header = item.Read<Models.Metadata.Header>(Models.Metadata.MetadataFile.HeaderKey);
+            if (header != null)
+                ConvertHeader(header);
 
             // Get the machines from the metadata
             var machines = ReadItemArray<Models.Metadata.Machine>(item, Models.Metadata.MetadataFile.MachineKey);
-            if (machines == null)
-                return;
-
-            // Loop through the machines and add
-            foreach (var machine in machines)
-            {
-                ConvertMachine(machine, filename, indexId, statsOnly);
-            }
+            if (machines != null)
+                ConvertMachines(machines, filename, indexId, statsOnly);
         }
 
         /// <summary>
@@ -41,7 +38,65 @@ namespace SabreTools.DatFiles
         /// <param name="item">Header to convert</param>
         private void ConvertHeader(Models.Metadata.Header? item)
         {
+            // If the header is invalid, we can't do anything
+            if (item == null || !item.Any())
+                return;
 
+            // Create an internal header
+            var header = new DatFiles.DatHeader(item);
+
+            // Convert subheader values
+            if (item.ContainsKey(Models.Metadata.Header.CanOpenKey))
+            {
+                // TODO: Implement
+            }
+            if (item.ContainsKey(Models.Metadata.Header.ImagesKey))
+            {
+                // TODO: Implement
+            }
+            if (item.ContainsKey(Models.Metadata.Header.InfosKey))
+            {
+                // TODO: Implement
+            }
+            if (item.ContainsKey(Models.Metadata.Header.NewDatKey))
+            {
+                // TODO: Implement
+            }
+            if (item.ContainsKey(Models.Metadata.Header.SearchKey))
+            {
+                // TODO: Implement
+            }
+
+            // Get all fields that can be set
+            var nonItemFields = Filter.TypeHelper.GetConstants(typeof(Models.Metadata.Header));
+            if (nonItemFields == null)
+                return;
+
+            // Loop through and selectively set all fields
+            foreach (string field in nonItemFields)
+            {
+                // TODO: Implement selective setting of all fields in Header
+            }
+        }
+
+        /// <summary>
+        /// Convert machines information
+        /// </summary>
+        /// <param name="items">Machine array to convert</param>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        private void ConvertMachines(Models.Metadata.Machine[]? items, string filename, int indexId, bool statsOnly)
+        {
+            // If the array is invalid, we can't do anything
+            if (items == null || !items.Any())
+                return;
+
+            // Loop through the machines and add
+            foreach (var machine in items)
+            {
+                ConvertMachine(machine, filename, indexId, statsOnly);
+            }
         }
 
         /// <summary>
@@ -195,22 +250,6 @@ namespace SabreTools.DatFiles
                 var items = ReadItemArray<Models.Metadata.Video>(item, Models.Metadata.Machine.VideoKey);
                 ProcessItems(items, machine, filename, indexId, statsOnly);
             }
-        }
-
-        /// <summary>
-        /// Read an item array from a given key, if possible
-        /// </summary>
-        private static T[]? ReadItemArray<T>(Models.Metadata.DictionaryBase item, string key) where T : Models.Metadata.DictionaryBase
-        {
-            var items = item.Read<T[]>(key);
-            if (items == default)
-            {
-                var single = item.Read<T>(key);
-                if (single != default)
-                    items = [single];
-            }
-
-            return items;
         }
 
         /// <summary>
@@ -936,6 +975,22 @@ namespace SabreTools.DatFiles
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
             }
+        }
+
+        /// <summary>
+        /// Read an item array from a given key, if possible
+        /// </summary>
+        private static T[]? ReadItemArray<T>(Models.Metadata.DictionaryBase item, string key) where T : Models.Metadata.DictionaryBase
+        {
+            var items = item.Read<T[]>(key);
+            if (items == default)
+            {
+                var single = item.Read<T>(key);
+                if (single != default)
+                    items = [single];
+            }
+
+            return items;
         }
 
         #endregion

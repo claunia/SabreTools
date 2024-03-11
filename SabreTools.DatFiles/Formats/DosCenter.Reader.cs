@@ -20,7 +20,7 @@ namespace SabreTools.DatFiles.Formats
                 ConvertHeader(metadataFile?.DosCenter, keep);
 
                 // Convert to the internal format
-                ConvertMetadata(metadata, filename, indexId, statsOnly);
+                ConvertMetadata(metadata, filename, indexId, keep, statsOnly);
             }
             catch (Exception ex) when (!throwOnError)
             {
