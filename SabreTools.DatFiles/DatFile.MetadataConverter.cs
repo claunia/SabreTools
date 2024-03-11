@@ -846,9 +846,55 @@ namespace SabreTools.DatFiles
                 return;
 
             // Loop through the items and add
-            foreach (var item in items)
+            int index = 0;
+            foreach (var dump in items)
             {
-                // TODO: Handle processing of Dump items (rom, megarom, sccpluscart)
+                // If we don't have rom data, we can't do anything
+                Models.Metadata.Rom? rom = null;
+                OpenMSXSubType subType = OpenMSXSubType.NULL;
+                if (dump?.Read<Models.Metadata.Rom>(Models.Metadata.Dump.RomKey) != null)
+                {
+                    rom = dump.Read<Models.Metadata.Rom>(Models.Metadata.Dump.RomKey);
+                    subType = OpenMSXSubType.Rom;
+                }
+                else if (dump?.Read<Models.Metadata.Rom>(Models.Metadata.Dump.MegaRomKey) != null)
+                {
+                    rom = dump.Read<Models.Metadata.Rom>(Models.Metadata.Dump.MegaRomKey);
+                    subType = OpenMSXSubType.MegaRom;
+                }
+                else if (dump?.Read<Models.Metadata.Rom>(Models.Metadata.Dump.SCCPlusCartKey) != null)
+                {
+                    rom = dump.Read<Models.Metadata.Rom>(Models.Metadata.Dump.SCCPlusCartKey);
+                    subType = OpenMSXSubType.SCCPlusCart;
+                }
+                else
+                {
+                    continue;
+                }
+
+                string name = $"{machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)}_{index++}{(!string.IsNullOrEmpty(rom!.ReadString(Models.Metadata.Rom.RemarkKey)) ? $" {rom.ReadString(Models.Metadata.Rom.RemarkKey)}" : string.Empty)}";
+
+                var item = new DatItems.Formats.Rom();
+                item.SetName(name);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.OffsetKey, rom.ReadString(Models.Metadata.Rom.OffsetKey));
+                item.SetFieldValue<OpenMSXSubType>(Models.Metadata.Rom.OpenMSXMediaType, subType);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.OpenMSXType, rom.ReadString(Models.Metadata.Rom.OpenMSXType));
+                item.SetFieldValue<string?>(Models.Metadata.Rom.RemarkKey, rom.ReadString(Models.Metadata.Rom.RemarkKey));
+                item.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, rom.ReadString(Models.Metadata.Rom.SHA1Key));
+                item.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+
+                if (dump.Read<Models.OpenMSX.Original>(Models.Metadata.Dump.OriginalKey) != null)
+                {
+                    var original = dump.Read<Models.OpenMSX.Original>(Models.Metadata.Dump.OriginalKey)!;
+                    item.SetFieldValue<DatItems.Formats.Original?>("ORIGINAL", new DatItems.Formats.Original
+                    {
+                        Value = original.Value.AsYesNo(),
+                        Content = original.Content,
+                    });
+                }
+
+                item.CopyMachineInformation(machine);
+                ParseAddHelper(item, statsOnly);
             }
         }
 
