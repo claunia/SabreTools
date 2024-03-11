@@ -57,7 +57,7 @@ namespace SabreTools.DatFiles.Formats
                 case Rom rom:
                     if (string.IsNullOrEmpty(rom.GetName()))
                         missingFields.Add(Models.Metadata.Rom.NameKey);
-                    if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null || rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) < 0)
+                    if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null || NumberHelper.ConvertToInt64(rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey)) < 0)
                         missingFields.Add(Models.Metadata.Rom.SizeKey);
                     if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey))
                         && string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key)))
@@ -420,7 +420,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 Name = item.GetName(),
                 Bios = item.GetFieldValue<string?>(Models.Metadata.Rom.BiosKey),
-                Size = item.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey)?.ToString(),
+                Size = item.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey),
                 CRC = item.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey),
                 SHA1 = item.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key),
                 Merge = item.GetFieldValue<string?>(Models.Metadata.Rom.MergeKey),

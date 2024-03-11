@@ -25,28 +25,28 @@ namespace SabreTools.Test.DatFiles
             rom1.SetName("rom-1");
             rom1.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "DEADBEEF");
             rom1.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "0000000fbbb37f8488100b1b4697012de631a5e6");
-            rom1.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, 1024);
+            rom1.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, "1024");
             rom1.CopyMachineInformation(machine1);
 
             var rom2 = new Rom();
             rom2.SetName("rom-2");
             rom2.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "DEADBEEF");
             rom2.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "000000e948edcb4f7704b8af85a77a3339ecce44");
-            rom2.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, 1024);
+            rom2.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, "1024");
             rom1.CopyMachineInformation(machine1);
 
             var rom3 = new Rom();
             rom3.SetName("rom-3");
             rom3.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "DEADBEEF");
             rom3.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "00000ea4014ce66679e7e17d56ac510f67e39e26");
-            rom3.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, 1024);
+            rom3.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, "1024");
             rom1.CopyMachineInformation(machine2);
 
             var rom4 = new Rom();
             rom4.SetName("rom-4");
             rom4.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "DEADBEEF");
             rom4.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "00000151d437442e74e5134023fab8bf694a2487");
-            rom4.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, 1024);
+            rom4.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, "1024");
             rom1.CopyMachineInformation(machine2);
 
             // Setup the dictionary
@@ -86,7 +86,7 @@ namespace SabreTools.Test.DatFiles
             rom1.SetName("rom-1");
             rom1.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "DEADBEEF");
             rom1.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "0000000fbbb37f8488100b1b4697012de631a5e6");
-            rom1.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, 1024);
+            rom1.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, "1024");
             rom1.CopyMachineInformation(machine1);
 
             var rom2 = new Rom();
@@ -94,7 +94,7 @@ namespace SabreTools.Test.DatFiles
             rom2.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "DEADBEEF");
             rom2.SetFieldValue<bool?>(DatItem.RemoveKey, true);
             rom2.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "000000e948edcb4f7704b8af85a77a3339ecce44");
-            rom2.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, 1024);
+            rom2.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, "1024");
             rom1.CopyMachineInformation(machine1);
 
             // Setup the dictionary
@@ -122,13 +122,13 @@ namespace SabreTools.Test.DatFiles
             var rom1 = new Rom();
             rom1.SetName("rom-1");
             rom1.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "0000000fbbb37f8488100b1b4697012de631a5e6");
-            rom1.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, 1024);
+            rom1.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, "1024");
             rom1.CopyMachineInformation(machine1);
 
             var rom2 = new Rom();
             rom2.SetName("rom-2");
             rom2.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "000000e948edcb4f7704b8af85a77a3339ecce44");
-            rom2.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, 1024);
+            rom2.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, "1024");
             rom1.CopyMachineInformation(machine1);
 
             // Setup the dictionary
@@ -141,7 +141,7 @@ namespace SabreTools.Test.DatFiles
             var rom = new Rom();
             rom.SetName("rom-1");
             rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "0000000fbbb37f8488100b1b4697012de631a5e6");
-            rom.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, hasDuplicate ? 1024 : 2048);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, hasDuplicate ? "1024" : "2048");
             rom1.CopyMachineInformation(machine1);
 
             var actual = dict.GetDuplicates(rom);
@@ -160,13 +160,13 @@ namespace SabreTools.Test.DatFiles
             var rom1 = new Rom();
             rom1.SetName("rom-1");
             rom1.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "0000000fbbb37f8488100b1b4697012de631a5e6");
-            rom1.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, 1024);
+            rom1.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, "1024");
             rom1.CopyMachineInformation(machine1);
 
             var rom2 = new Rom();
             rom2.SetName("rom-2");
             rom2.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "000000e948edcb4f7704b8af85a77a3339ecce44");
-            rom2.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, 1024);
+            rom2.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, "1024");
             rom1.CopyMachineInformation(machine1);
 
             // Setup the dictionary
@@ -179,7 +179,7 @@ namespace SabreTools.Test.DatFiles
             var rom = new Rom();
             rom.SetName("rom-1");
             rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "0000000fbbb37f8488100b1b4697012de631a5e6");
-            rom.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, expected ? 1024 : 2048);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, expected ? "1024" : "2048");
             rom1.CopyMachineInformation(machine1);
 
             bool actual = dict.HasDuplicates(rom);

@@ -45,6 +45,14 @@ namespace SabreTools.DatFiles
             // Create an internal header
             var header = Header.GetInternalClone();
 
+            // Remove fields with default values
+            if (header.Read<Core.MergingFlag>(Models.Metadata.Header.ForceMergingKey) == Core.MergingFlag.None)
+                header.Remove(Models.Metadata.Header.ForceMergingKey);
+            if (header.Read<Core.NodumpFlag>(Models.Metadata.Header.ForceNodumpKey) == Core.NodumpFlag.None)
+                header.Remove(Models.Metadata.Header.ForceNodumpKey);
+            if (header.Read<Core.PackingFlag>(Models.Metadata.Header.ForcePackingKey) == Core.PackingFlag.None)
+                header.Remove(Models.Metadata.Header.ForcePackingKey);
+
             // Convert subheader values
             if (Header.CanOpenSpecified)
                 header[Models.Metadata.Header.CanOpenKey] = Header.GetFieldValue<Models.OfflineList.CanOpen[]?>(Models.Metadata.Header.CanOpenKey);

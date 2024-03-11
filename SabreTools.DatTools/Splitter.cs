@@ -7,6 +7,7 @@ using System.Net;
 using System.Threading.Tasks;
 #endif
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -412,15 +413,15 @@ namespace SabreTools.DatTools
                         lessThan.Items.Add(key, item);
 
                     // If the file is a Rom and has no size, put it in the "lesser" dat
-                    else if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null)
+                    else if (rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey) == null)
                         lessThan.Items.Add(key, item);
 
                     // If the file is a Rom and less than the radix, put it in the "lesser" dat
-                    else if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) < radix)
+                    else if (NumberHelper.ConvertToInt64(rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey)) < radix)
                         lessThan.Items.Add(key, item);
 
                     // If the file is a Rom and greater than or equal to the radix, put it in the "greater" dat
-                    else if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) >= radix)
+                    else if (NumberHelper.ConvertToInt64(rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey)) >= radix)
                         greaterThan.Items.Add(key, item);
                 }
 #if NET40_OR_GREATER || NETCOREAPP
@@ -484,8 +485,8 @@ namespace SabreTools.DatTools
                     if (item is Rom rom)
                     {
                         // TODO: Should there be more than just a log if a single item is larger than the chunksize?
-                        machineSize += rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) ?? 0;
-                        if ((rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) ?? 0) > chunkSize)
+                        machineSize += NumberHelper.ConvertToInt64(rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey)) ?? 0;
+                        if ((NumberHelper.ConvertToInt64(rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey)) ?? 0) > chunkSize)
                             logger.Error($"{rom.GetName() ?? string.Empty} in {machine} is larger than {chunkSize}");
                     }
                 }

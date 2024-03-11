@@ -134,7 +134,7 @@ namespace SabreTools.DatFiles.Formats
                 rom.SetName(row.Name);
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, row.CRC);
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, row.SHA1);
-                rom.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, NumberHelper.ConvertToInt64(row.Size));
+                rom.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, NumberHelper.ConvertToInt64(row.Size).ToString());
                 rom.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
                 rom.SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.None);
 
@@ -190,7 +190,7 @@ namespace SabreTools.DatFiles.Formats
                 rom.SetName(row.Name);
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, row.CRC);
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, row.SHA1);
-                rom.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, NumberHelper.ConvertToInt64(row.Size));
+                rom.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, NumberHelper.ConvertToInt64(row.Size).ToString());
                 rom.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
                 rom.SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.BadDump);
 
@@ -207,7 +207,7 @@ namespace SabreTools.DatFiles.Formats
                 rom.SetName(row.Name);
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, null);
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, null);
-                rom.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, NumberHelper.ConvertToInt64(row.Size));
+                rom.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, NumberHelper.ConvertToInt64(row.Size).ToString());
                 rom.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
                 rom.SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.Nodump);
 

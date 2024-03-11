@@ -44,7 +44,7 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case Rom rom:
-                    if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null || rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) < 0)
+                    if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null || NumberHelper.ConvertToInt64(rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey)) < 0)
                         missingFields.Add(Models.Metadata.Rom.SizeKey);
                     if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey))
                         && string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key))
@@ -223,7 +223,7 @@ namespace SabreTools.DatFiles.Formats
                 Type = rom.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey).AsStringValue<ItemType>(),
                 RomName = rom.GetName(),
                 DiskName = string.Empty,
-                Size = rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey)?.ToString(),
+                Size = rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey),
                 CRC = rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey),
                 MD5 = rom.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key),
                 SHA1 = rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key),

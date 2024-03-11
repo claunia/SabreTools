@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 
@@ -35,7 +36,7 @@ namespace SabreTools.DatFiles.Formats
                 case Rom rom:
                     if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey)))
                         missingFields.Add(Models.Metadata.Rom.CRCKey);
-                    if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null)
+                    if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null || NumberHelper.ConvertToInt64(rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey)) < 0)
                         missingFields.Add(Models.Metadata.Rom.SizeKey);
                     break;
             }
@@ -189,7 +190,7 @@ namespace SabreTools.DatFiles.Formats
                 GameDescription = item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey),
                 RomName = item.GetName(),
                 RomCRC = item.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey),
-                RomSize = item.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey)?.ToString(),
+                RomSize = item.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey),
                 RomOf = item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.RomOfKey),
                 MergeName = item.GetFieldValue<string?>(Models.Metadata.Rom.MergeKey),
             };

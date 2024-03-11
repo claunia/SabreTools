@@ -143,7 +143,7 @@ namespace SabreTools.DatFiles.Formats
                 SHA1 = rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key),
                 MD5 = rom.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key),
                 CRC32 = rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey),
-                Size = rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey)?.ToString(),
+                Size = rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey),
             };
             return row;
         }

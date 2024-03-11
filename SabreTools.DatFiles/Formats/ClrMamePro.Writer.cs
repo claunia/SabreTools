@@ -57,7 +57,7 @@ namespace SabreTools.DatFiles.Formats
                 case Rom rom:
                     if (string.IsNullOrEmpty(rom.GetName()))
                         missingFields.Add(Models.Metadata.Rom.NameKey);
-                    if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null || rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) < 0)
+                    if (rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey) == null || NumberHelper.ConvertToInt64(rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey)) < 0)
                         missingFields.Add(Models.Metadata.Rom.SizeKey);
                     if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey))
                         && string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key))
@@ -140,7 +140,11 @@ namespace SabreTools.DatFiles.Formats
             {
                 logger.User($"Writing to '{outfile}'...");
 
-                var metadataFile = CreateMetadataFile(ignoreblanks);
+                //var metadataFile = CreateMetadataFile(ignoreblanks);
+
+                // Serialize the input file
+                var metadata = ConvertMetadata(ignoreblanks);
+                var metadataFile = new Serialization.CrossModel.ClrMamePro().Deserialize(metadata);
                 if (!(new Serialization.Files.ClrMamePro().Serialize(metadataFile, outfile, Quotes)))
                 {
                     logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
@@ -370,7 +374,7 @@ namespace SabreTools.DatFiles.Formats
             var rom = new Models.ClrMamePro.Rom
             {
                 Name = item.GetName(),
-                Size = item.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey)?.ToString(),
+                Size = item.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey),
                 CRC = item.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey),
                 MD5 = item.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key),
                 SHA1 = item.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key),

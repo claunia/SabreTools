@@ -10,6 +10,7 @@ using System.Xml.Serialization;
 using Microsoft.Data.Sqlite;
 using Newtonsoft.Json;
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using SabreTools.Hashing;
@@ -366,7 +367,7 @@ namespace SabreTools.DatFiles
                     case Rom rom:
                         if (rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) != ItemStatus.Nodump)
                         {
-                            TotalSize += rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) ?? 0;
+                            TotalSize += NumberHelper.ConvertToInt64(rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey)) ?? 0;
                             AddHashCount(HashType.CRC32, string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey)) ? 0 : 1);
                             AddHashCount(HashType.MD5, string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key)) ? 0 : 1);
                             AddHashCount(HashType.SHA1, string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key)) ? 0 : 1);
@@ -674,7 +675,7 @@ namespace SabreTools.DatFiles
                     case Rom rom:
                         if (rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) != ItemStatus.Nodump)
                         {
-                            TotalSize -= rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) ?? 0;
+                            TotalSize -= NumberHelper.ConvertToInt64(rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey)) ?? 0;
                             RemoveHashCount(HashType.CRC32, string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey)) ? 0 : 1);
                             RemoveHashCount(HashType.MD5, string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key)) ? 0 : 1);
                             RemoveHashCount(HashType.SHA1, string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key)) ? 0 : 1);

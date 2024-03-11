@@ -246,19 +246,21 @@ namespace SabreTools.DatFiles
             }
             else if (item is Rom rom)
             {
+                long? size = NumberHelper.ConvertToInt64(rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey));
+
                 // If we have the case where there is SHA-1 and nothing else, we don't fill in any other part of the data
-                if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null && !rom.HasHashes())
+                if (size == null && !rom.HasHashes())
                 {
                     // No-op, just catch it so it doesn't go further
                     logger.Verbose($"{Header.GetFieldValue<string?>(DatHeader.FileNameKey)}: Entry with only SHA-1 found - '{rom.GetName()}'");
                 }
 
                 // If we have a rom and it's missing size AND the hashes match a 0-byte file, fill in the rest of the info
-                else if ((rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == 0 || rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null)
+                else if ((size == 0 || size == null)
                     && (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey)) || rom.HasZeroHash()))
                 {
                     // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
-                    rom.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, Constants.SizeZero);
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, Constants.SizeZero.ToString());
                     rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, Constants.CRCZero);
                     rom.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, Constants.MD5Zero);
                     rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, Constants.SHA1Zero);
@@ -269,7 +271,7 @@ namespace SabreTools.DatFiles
                 }
 
                 // If the file has no size and it's not the above case, skip and log
-                else if (rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) != ItemStatus.Nodump && (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == 0 || rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null))
+                else if (rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) != ItemStatus.Nodump && (size == 0 || size == null))
                 {
                     logger.Verbose($"{Header.GetFieldValue<string?>(DatHeader.FileNameKey)}: Incomplete entry for '{rom.GetName()}' will be output as nodump");
                     rom.SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.Nodump);
@@ -277,7 +279,7 @@ namespace SabreTools.DatFiles
 
                 // If the file has a size but aboslutely no hashes, skip and log
                 else if (rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) != ItemStatus.Nodump
-                    && rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) != null && rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) > 0
+                    && size != null && size > 0
                     && !rom.HasHashes())
                 {
                     logger.Verbose($"{Header.GetFieldValue<string?>(DatHeader.FileNameKey)}: Incomplete entry for '{rom.GetName()}' will be output as nodump");
@@ -406,7 +408,7 @@ namespace SabreTools.DatFiles
                 sha256 = rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA256Key) ?? string.Empty;
                 sha384 = rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA384Key) ?? string.Empty;
                 sha512 = rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA512Key) ?? string.Empty;
-                size = rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey)?.ToString() ?? string.Empty;
+                size = rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey) ?? string.Empty;
                 spamsum = rom.GetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey) ?? string.Empty;
             }
 
@@ -540,7 +542,7 @@ namespace SabreTools.DatFiles
                 logger.Verbose($"Empty folder found: {datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)}");
 
                 rom.SetName(rom.GetName() == "null" ? "-" : rom.GetName());
-                rom.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, Constants.SizeZero);
+                rom.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, Constants.SizeZero.ToString());
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey) == "null" ? Constants.CRCZero : null);
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, rom.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key) == "null" ? Constants.MD5Zero : null);
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key) == "null" ? Constants.SHA1Zero : null);
@@ -624,7 +626,8 @@ namespace SabreTools.DatFiles
             if (ignoreBlanks && datItem is Rom rom)
             {
                 // If we have a 0-size or blank rom, then we ignore
-                if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == 0 || rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null)
+                long? size = NumberHelper.ConvertToInt64(rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey));
+                if (size == 0 || size == null)
                 {
                     string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
                     logger?.Verbose($"Item '{itemString}' was skipped because it had an invalid size");

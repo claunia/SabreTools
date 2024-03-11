@@ -395,7 +395,7 @@ namespace SabreTools.DatFiles.Formats
             var rom = new Models.SoftwareList.Rom
             {
                 Name = item.GetName(),
-                Size = item.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey)?.ToString(),
+                Size = item.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey),
                 Length = null,
                 CRC = item.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey),
                 SHA1 = item.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key),

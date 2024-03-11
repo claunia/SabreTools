@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 
@@ -33,7 +34,7 @@ namespace SabreTools.DatFiles.Formats
             switch (datItem)
             {
                 case Rom rom:
-                    if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null)
+                    if (rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey) == null || NumberHelper.ConvertToInt64(rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey)) < 0)
                         missingFields.Add(Models.Metadata.Rom.SizeKey);
                     // if (string.IsNullOrEmpty(rom.Date))
                     //     missingFields.Add(Models.Metadata.Rom.DateKey);
@@ -179,7 +180,7 @@ namespace SabreTools.DatFiles.Formats
             var rom = new Models.DosCenter.File
             {
                 Name = item.GetName(),
-                Size = item.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey)?.ToString(),
+                Size = item.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey),
                 CRC = item.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey),
                 Date = item.GetFieldValue<string?>(Models.Metadata.Rom.DateKey),
             };

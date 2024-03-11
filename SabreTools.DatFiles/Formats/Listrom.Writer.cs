@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 
@@ -42,7 +43,7 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case Rom rom:
-                    if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null || rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) < 0)
+                    if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null || NumberHelper.ConvertToInt64(rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey)) < 0)
                         missingFields.Add(Models.Metadata.Rom.SizeKey);
                     if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey)))
                         missingFields.Add(Models.Metadata.Rom.CRCKey);
@@ -214,7 +215,7 @@ namespace SabreTools.DatFiles.Formats
                 return new Models.Listrom.Row
                 {
                     Name = rom.GetName(),
-                    Size = rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey)?.ToString(),
+                    Size = rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey),
                     NoGoodDumpKnown = true,
                 };
             }
@@ -223,7 +224,7 @@ namespace SabreTools.DatFiles.Formats
                 return new Models.Listrom.Row
                 {
                     Name = rom.GetName(),
-                    Size = rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey)?.ToString(),
+                    Size = rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey),
                     Bad = true,
                     CRC = rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey),
                     SHA1 = rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key),
@@ -234,7 +235,7 @@ namespace SabreTools.DatFiles.Formats
                 return new Models.Listrom.Row
                 {
                     Name = rom.GetName(),
-                    Size = rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey)?.ToString(),
+                    Size = rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey),
                     CRC = rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey),
                     SHA1 = rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key),
                 };
