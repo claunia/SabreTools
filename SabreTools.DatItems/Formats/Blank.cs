@@ -8,7 +8,7 @@ namespace SabreTools.DatItems.Formats
     /// Represents a blank set from an input DAT
     /// </summary>
     [JsonObject("blank"), XmlRoot("blank")]
-    public class Blank : DatItem
+    public sealed class Blank : DatItem
     {
         #region Constructors
 

@@ -8,7 +8,7 @@ namespace SabreTools.DatItems.Formats
     /// Represents which DIP Switch(es) is associated with a set
     /// </summary>
     [JsonObject("dipswitch"), XmlRoot("dipswitch")]
-    public class DipSwitch : DatItem
+    public sealed class DipSwitch : DatItem<Models.Metadata.DipSwitch>
     {
         #region Constants
 
@@ -20,6 +20,12 @@ namespace SabreTools.DatItems.Formats
         #endregion
 
         #region Fields
+
+        /// <inheritdoc>/>
+        protected override ItemType ItemType => ItemType.DipSwitch;
+
+        /// <inheritdoc>/>
+        protected override string? NameKey => Models.Metadata.DipSwitch.NameKey;
 
         [JsonIgnore]
         public bool ConditionsSpecified
@@ -65,53 +71,10 @@ namespace SabreTools.DatItems.Formats
 
         #endregion
 
-        #region Accessors
-
-        /// <inheritdoc/>
-        public override string? GetName() => GetFieldValue<string>(Models.Metadata.DipSwitch.NameKey);
-
-        /// <inheritdoc/>
-        public override void SetName(string? name) => SetFieldValue(Models.Metadata.DipSwitch.NameKey, name);
-
-        #endregion
-
         #region Constructors
 
-        /// <summary>
-        /// Create a default, empty DipSwitch object
-        /// </summary>
-        public DipSwitch()
-        {
-            _internal = new Models.Metadata.DipSwitch();
-
-            SetName(string.Empty);
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.DipSwitch);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
-
-        /// <summary>
-        /// Create a DipSwitch object from the internal model
-        /// </summary>
-        public DipSwitch(Models.Metadata.DipSwitch item)
-        {
-            _internal = item;
-
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.DipSwitch);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
-
-        #endregion
-
-        #region Cloning Methods
-
-        /// <inheritdoc/>
-        public override object Clone()
-        {
-            return new DipSwitch()
-            {
-                _internal = this._internal?.Clone() as Models.Metadata.DipSwitch ?? [],
-            };
-        }
+        public DipSwitch() : base() { }
+        public DipSwitch(Models.Metadata.DipSwitch item) : base(item) { }
 
         #endregion
     }

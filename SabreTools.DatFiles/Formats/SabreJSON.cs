@@ -250,8 +250,8 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Device:
                         datItem = datItemObj.ToObject<Device>();
                         break;
-                    case ItemType.DeviceReference:
-                        datItem = datItemObj.ToObject<DeviceReference>();
+                    case ItemType.DeviceRef:
+                        datItem = datItemObj.ToObject<DeviceRef>();
                         break;
                     case ItemType.DipLocation:
                         datItem = datItemObj.ToObject<DipLocation>();
@@ -319,8 +319,8 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Serials:
                         datItem = datItemObj.ToObject<Serials>();
                         break;
-                    case ItemType.SharedFeature:
-                        datItem = datItemObj.ToObject<SharedFeature>();
+                    case ItemType.SharedFeat:
+                        datItem = datItemObj.ToObject<SharedFeat>();
                         break;
                     case ItemType.Slot:
                         datItem = datItemObj.ToObject<Slot>();

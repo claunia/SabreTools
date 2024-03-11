@@ -30,7 +30,7 @@ namespace SabreTools.DatItems
     [XmlInclude(typeof(Control))]
     [XmlInclude(typeof(DataArea))]
     [XmlInclude(typeof(Device))]
-    [XmlInclude(typeof(DeviceReference))]
+    [XmlInclude(typeof(DeviceRef))]
     [XmlInclude(typeof(DipLocation))]
     [XmlInclude(typeof(DipSwitch))]
     [XmlInclude(typeof(DipValue))]
@@ -51,7 +51,7 @@ namespace SabreTools.DatItems
     [XmlInclude(typeof(Release))]
     [XmlInclude(typeof(Rom))]
     [XmlInclude(typeof(Sample))]
-    [XmlInclude(typeof(SharedFeature))]
+    [XmlInclude(typeof(SharedFeat))]
     [XmlInclude(typeof(Slot))]
     [XmlInclude(typeof(SlotOption))]
     [XmlInclude(typeof(SoftwareList))]
@@ -703,12 +703,18 @@ namespace SabreTools.DatItems
     /// </summary>
     public abstract class DatItem<T> : DatItem, IEquatable<DatItem<T>>, IComparable<DatItem<T>>, ICloneable where T : Models.Metadata.DatItem
     {
+        // TODO: Move to base class after implementation
         #region Fields
 
         /// <summary>
         /// Item type for the object
         /// </summary>
         protected abstract ItemType ItemType { get; }
+
+        /// <summary>
+        /// Key for accessing the item name, if it exists
+        /// </summary>
+        protected abstract string? NameKey { get; }
 
         #endregion
 
@@ -739,6 +745,26 @@ namespace SabreTools.DatItems
 
         #endregion
 
+        #region Accessors
+
+        /// <inheritdoc/>
+        public override string? GetName()
+        {
+            if (NameKey != null)
+                return GetFieldValue<string?>(NameKey);
+
+            return null;
+        }
+
+        /// <inheritdoc/>
+        public override void SetName(string? name)
+        {
+            if (NameKey != null)
+                SetFieldValue(NameKey, name);
+        }
+
+        #endregion
+
         // TODO: Figure out how to replace individual versions with this
         #region Cloning Methods
 
@@ -746,7 +772,12 @@ namespace SabreTools.DatItems
         /// Clone the DatItem
         /// </summary>
         /// <returns>Clone of the DatItem</returns>
-        public override abstract object Clone();
+        public override object Clone()
+        {
+            var clone = Activator.CreateInstance<DatItem<T>>();
+            clone._internal = _internal?.Clone() as T ?? Activator.CreateInstance<T>();
+            return clone;
+        }
 
         #endregion
 

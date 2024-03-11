@@ -10,7 +10,7 @@ namespace SabreTools.DatItems.Formats
     /// Represents a generic file within a set
     /// </summary>
     [JsonObject("rom"), XmlRoot("rom")]
-    public class Rom : DatItem
+    public sealed class Rom : DatItem<Models.Metadata.Rom>
     {
         #region Constants
 
@@ -27,6 +27,12 @@ namespace SabreTools.DatItems.Formats
         #endregion
 
         #region Fields
+
+        /// <inheritdoc>/>
+        protected override ItemType ItemType => ItemType.Rom;
+
+        /// <inheritdoc>/>
+        protected override string? NameKey => Models.Metadata.Rom.NameKey;
 
         [JsonIgnore]
         public bool ItemStatusSpecified
@@ -76,99 +82,49 @@ namespace SabreTools.DatItems.Formats
 
         #endregion
 
-        #region Accessors
-
-        /// <inheritdoc/>
-        public override string? GetName() => GetFieldValue<string>(Models.Metadata.Rom.NameKey);
-
-        /// <inheritdoc/>
-        public override void SetName(string? name) => SetFieldValue(Models.Metadata.Rom.NameKey, name);
-
-        #endregion
-
         #region Constructors
 
-        /// <summary>
-        /// Create a default, empty Rom object
-        /// </summary>
-        public Rom()
+        public Rom() : base()
         {
-            _internal = new Models.Metadata.Rom();
-
-            SetName(null);
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Rom);
             SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
             SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.None);
         }
 
-        /// <summary>
-        /// Create a "blank" Rom object
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="machineName"></param>
-        /// <param name="omitFromScan"></param>
-        public Rom(string name, string machineName)
+        public Rom(string name, string machineName) : base()
         {
-            _internal = new Models.Metadata.Rom();
             SetName(name);
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Rom);
             SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, null);
             SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.None);
-
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
             GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, machineName);
             GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineName);
         }
 
-        /// <summary>
-        /// Create a Rom object from a BaseFile
-        /// </summary>
-        /// <param name="baseFile"></param>
-        public Rom(BaseFile baseFile)
+        public Rom(BaseFile baseFile) : base()
         {
-            _internal = new Models.Metadata.Rom();
-
             SetName(baseFile.Filename);
-            SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, baseFile.Size);
+            SetFieldValue<string?>(Models.Metadata.Rom.DateKey, baseFile.Date);
             SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, TextHelper.ByteArrayToString(baseFile.CRC));
             SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, TextHelper.ByteArrayToString(baseFile.MD5));
             SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, TextHelper.ByteArrayToString(baseFile.SHA1));
             SetFieldValue<string?>(Models.Metadata.Rom.SHA256Key, TextHelper.ByteArrayToString(baseFile.SHA256));
             SetFieldValue<string?>(Models.Metadata.Rom.SHA384Key, TextHelper.ByteArrayToString(baseFile.SHA384));
             SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key, TextHelper.ByteArrayToString(baseFile.SHA512));
+            SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, baseFile.Size);
             SetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey, System.Text.Encoding.UTF8.GetString(baseFile.SpamSum ?? []));
 
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Rom);
             SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
             SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.None);
-            SetFieldValue<string?>(Models.Metadata.Rom.DateKey, baseFile.Date);
         }
 
-        /// <summary>
-        /// Create a Rom object from the internal model
-        /// </summary>
-        public Rom(Models.Metadata.Rom item)
+        public Rom(Models.Metadata.Rom item) : base(item)
         {
-            _internal = item;
-
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Rom);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
+            SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
+            SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.None);
         }
 
         #endregion
 
         #region Cloning Methods
-
-        /// <inheritdoc/>
-        public override object Clone()
-        {
-            return new Rom()
-            {
-                _internal = this._internal?.Clone() as Models.Metadata.Rom ?? [],
-            };
-        }
 
         /// <summary>
         /// Convert Rom object to a BaseFile

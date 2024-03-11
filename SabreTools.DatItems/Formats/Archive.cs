@@ -8,7 +8,7 @@ namespace SabreTools.DatItems.Formats
     /// Represents generic archive files to be included in a set
     /// </summary>
     [JsonObject("archive"), XmlRoot("archive")]
-    public class Archive : DatItem
+    public sealed class Archive : DatItem
     {
         #region Fields
 
@@ -79,16 +79,6 @@ namespace SabreTools.DatItems.Formats
 
         #endregion
 
-        #region Accessors
-
-        /// <inheritdoc/>
-        public override string? GetName() => GetFieldValue<string>(Models.Metadata.Archive.NameKey);
-
-        /// <inheritdoc/>
-        public override void SetName(string? name) => SetFieldValue(Models.Metadata.Archive.NameKey, name);
-        
-        #endregion
-
         #region Constructors
 
         /// <summary>
@@ -114,6 +104,16 @@ namespace SabreTools.DatItems.Formats
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 
+        #endregion
+
+        #region Accessors
+
+        /// <inheritdoc/>
+        public override string? GetName() => GetFieldValue<string>(Models.Metadata.Archive.NameKey);
+
+        /// <inheritdoc/>
+        public override void SetName(string? name) => SetFieldValue(Models.Metadata.Archive.NameKey, name);
+        
         #endregion
 
         #region Cloning Methods

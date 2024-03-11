@@ -8,44 +8,22 @@ namespace SabreTools.DatItems.Formats
     /// Represents a single analog item
     /// </summary>
     [JsonObject("analog"), XmlRoot("analog")]
-    public class Analog : DatItem
+    public sealed class Analog : DatItem<Models.Metadata.Analog>
     {
-        #region Constructors
+        #region Fields
 
-        /// <summary>
-        /// Create a default, empty Analog object
-        /// </summary>
-        public Analog()
-        {
-            _internal = new Models.Metadata.Analog();
+        /// <inheritdoc>/>
+        protected override ItemType ItemType => ItemType.Analog;
 
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Analog);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
-
-        /// <summary>
-        /// Create an Analog object from the internal model
-        /// </summary>
-        public Analog(Models.Metadata.Analog item)
-        {
-            _internal = item;
-
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Analog);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
+        /// <inheritdoc>/>
+        protected override string? NameKey => null;
 
         #endregion
 
-        #region Cloning Methods
+        #region Constructors
 
-        /// <inheritdoc/>
-        public override object Clone()
-        {
-            return new Analog()
-            {
-                _internal = this._internal?.Clone() as Models.Metadata.Analog ?? [],
-            };
-        }
+        public Analog() : base() { }
+        public Analog(Models.Metadata.Analog item) : base(item) { }
 
         #endregion
     }

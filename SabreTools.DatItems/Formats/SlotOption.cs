@@ -8,55 +8,22 @@ namespace SabreTools.DatItems.Formats
     /// Represents one ListXML slotoption
     /// </summary>
     [JsonObject("slotoption"), XmlRoot("slotoption")]
-    public class SlotOption : DatItem
+    public sealed class SlotOption : DatItem<Models.Metadata.SlotOption>
     {
-        #region Accessors
+        #region Fields
 
-        /// <inheritdoc/>
-        public override string? GetName() => GetFieldValue<string>(Models.Metadata.SlotOption.NameKey);
+        /// <inheritdoc>/>
+        protected override ItemType ItemType => ItemType.SlotOption;
 
-        /// <inheritdoc/>
-        public override void SetName(string? name) => SetFieldValue(Models.Metadata.SlotOption.NameKey, name);
+        /// <inheritdoc>/>
+        protected override string? NameKey => Models.Metadata.SlotOption.NameKey;
 
         #endregion
 
         #region Constructors
 
-        /// <summary>
-        /// Create a default, empty SlotOption object
-        /// </summary>
-        public SlotOption()
-        {
-            _internal = new Models.Metadata.SlotOption();
-
-            SetName(string.Empty);
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.SlotOption);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
-
-        /// <summary>
-        /// Create a SlotOption object from the internal model
-        /// </summary>
-        public SlotOption(Models.Metadata.SlotOption item)
-        {
-            _internal = item;
-
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.SlotOption);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
-
-        #endregion
-
-        #region Cloning Methods
-
-        /// <inheritdoc/>
-        public override object Clone()
-        {
-            return new SlotOption()
-            {
-                _internal = this._internal?.Clone() as Models.Metadata.SlotOption ?? [],
-            };
-        }
+        public SlotOption() : base() { }
+        public SlotOption(Models.Metadata.SlotOption item) : base(item) { }
 
         #endregion
     }

@@ -447,7 +447,7 @@ namespace SabreTools.Core
         Device,
 
         [Mapping("device_ref", "deviceref")]
-        DeviceReference,
+        DeviceRef,
 
         [Mapping("diplocation")]
         DipLocation,
@@ -510,7 +510,7 @@ namespace SabreTools.Core
         Serials,
 
         [Mapping("sharedfeat", "shared_feat", "sharedfeature", "shared_feature")]
-        SharedFeature,
+        SharedFeat,
 
         [Mapping("slot")]
         Slot,

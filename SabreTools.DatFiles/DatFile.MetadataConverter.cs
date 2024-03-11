@@ -400,7 +400,7 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.DeviceReference(item);
+                var datItem = new DatItems.Formats.DeviceRef(item);
                 datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
@@ -859,7 +859,7 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.SharedFeature(item);
+                var datItem = new DatItems.Formats.SharedFeat(item);
                 datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);

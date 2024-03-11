@@ -8,9 +8,15 @@ namespace SabreTools.DatItems.Formats
     /// Represents a single port on a machine
     /// </summary>
     [JsonObject("port"), XmlRoot("port")]
-    public class Port : DatItem
+    public sealed class Port : DatItem<Models.Metadata.Port>
     {
         #region Fields
+
+        /// <inheritdoc>/>
+        protected override ItemType ItemType => ItemType.Port;
+
+        /// <inheritdoc>/>
+        protected override string? NameKey => null;
 
         [JsonIgnore]
         public bool AnalogsSpecified
@@ -26,40 +32,8 @@ namespace SabreTools.DatItems.Formats
 
         #region Constructors
 
-        /// <summary>
-        /// Create a default, empty Port object
-        /// </summary>
-        public Port()
-        {
-            _internal = new Models.Metadata.Port();
-
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Port);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
-
-        /// <summary>
-        /// Create a Port object from the internal model
-        /// </summary>
-        public Port(Models.Metadata.Port item)
-        {
-            _internal = item;
-
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Port);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
-
-        #endregion
-
-        #region Cloning Methods
-
-        /// <inheritdoc/>
-        public override object Clone()
-        {
-            return new Port()
-            {
-                _internal = this._internal?.Clone() as Models.Metadata.Port ?? [],
-            };
-        }
+        public Port() : base() { }
+        public Port(Models.Metadata.Port item) : base(item) { }
 
         #endregion
     }

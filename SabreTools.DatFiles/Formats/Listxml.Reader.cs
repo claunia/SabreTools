@@ -272,7 +272,7 @@ namespace SabreTools.DatFiles.Formats
             containsItems = true;
             foreach (var deviceref in devicerefs)
             {
-                var item = new DeviceReference();
+                var item = new DeviceRef();
                 item.SetName(deviceref.Name);
                 item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
 

@@ -8,44 +8,22 @@ namespace SabreTools.DatItems.Formats
     /// Represents the a feature of the machine
     /// </summary>
     [JsonObject("feature"), XmlRoot("feature")]
-    public class Feature : DatItem
+    public sealed class Feature : DatItem<Models.Metadata.Feature>
     {
-        #region Constructors
+        #region Fields
 
-        /// <summary>
-        /// Create a default, empty Feature object
-        /// </summary>
-        public Feature()
-        {
-            _internal = new Models.Metadata.Feature();
+        /// <inheritdoc>/>
+        protected override ItemType ItemType => ItemType.Feature;
 
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Feature);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
-
-        /// <summary>
-        /// Create a Feature object from the internal model
-        /// </summary>
-        public Feature(Models.Metadata.Feature item)
-        {
-            _internal = item;
-
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Feature);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
+        /// <inheritdoc>/>
+        protected override string? NameKey => null;
 
         #endregion
 
-        #region Cloning Methods
+        #region Constructors
 
-        /// <inheritdoc/>
-        public override object Clone()
-        {
-            return new Feature()
-            {
-                _internal = this._internal?.Clone() as Models.Metadata.Feature ?? [],
-            };
-        }
+        public Feature() : base() { }
+        public Feature(Models.Metadata.Feature item) : base(item) { }
 
         #endregion
     }

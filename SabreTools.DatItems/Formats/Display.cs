@@ -8,55 +8,27 @@ namespace SabreTools.DatItems.Formats
     /// Represents one machine display
     /// </summary>
     [JsonObject("display"), XmlRoot("display")]
-    public class Display : DatItem
+    public sealed class Display : DatItem<Models.Metadata.Display>
     {
-        #region Constructors
+        #region Fields
 
-        /// <summary>
-        /// Create a default, empty Display object
-        /// </summary>
-        public Display()
-        {
-            _internal = new Models.Metadata.Display();
+        /// <inheritdoc>/>
+        protected override ItemType ItemType => ItemType.Display;
 
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Display);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
-
-        /// <summary>
-        /// Create a Display object from the internal model
-        /// </summary>
-        public Display(Models.Metadata.Display item)
-        {
-            _internal = item;
-
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Display);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
-
-        /// <summary>
-        /// Create a Display object from the internal model
-        /// </summary>
-        public Display(Models.Metadata.Video item)
-        {
-            // TODO: Determine what transformation is needed here
-            _internal = item;
-
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Display);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
+        /// <inheritdoc>/>
+        protected override string? NameKey => null;
 
         #endregion
 
-        #region Cloning Methods
+        #region Constructors
 
-        /// <inheritdoc/>
-        public override object Clone()
+        public Display() : base() { }
+        public Display(Models.Metadata.Display item) : base(item) { }
+
+        public Display(Models.Metadata.Video item) : base()
         {
-            return new Display()
-            {
-                _internal = this._internal?.Clone() as Models.Metadata.Display ?? [],
-            };
+            // TODO: Determine what transformation is needed here
+            _internal = item;
         }
 
         #endregion

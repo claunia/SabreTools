@@ -10,7 +10,7 @@ namespace SabreTools.DatItems.Formats
     /// Represents Compressed Hunks of Data (CHD) formatted disks which use internal hashes
     /// </summary>
     [JsonObject("disk"), XmlRoot("disk")]
-    public class Disk : DatItem
+    public sealed class Disk : DatItem<Models.Metadata.Disk>
     {
         #region Constants
 
@@ -27,6 +27,12 @@ namespace SabreTools.DatItems.Formats
         #endregion
 
         #region Fields
+
+        /// <inheritdoc>/>
+        protected override ItemType ItemType => ItemType.Disk;
+
+        /// <inheritdoc>/>
+        protected override string? NameKey => Models.Metadata.Disk.NameKey;
 
         [JsonIgnore]
         public bool DiskAreaSpecified
@@ -52,72 +58,33 @@ namespace SabreTools.DatItems.Formats
 
         #endregion
 
-        #region Accessors
-
-        /// <inheritdoc/>
-        public override string? GetName() => GetFieldValue<string>(Models.Metadata.Disk.NameKey);
-
-        /// <inheritdoc/>
-        public override void SetName(string? name) => SetFieldValue(Models.Metadata.Disk.NameKey, name);
-
-        #endregion
-
         #region Constructors
 
-        /// <summary>
-        /// Create a default, empty Disk object
-        /// </summary>
-        public Disk()
+        public Disk() : base()
         {
-            _internal = new Models.Metadata.Disk();
-
-            SetName(string.Empty);
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Disk);
             SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
             SetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey, ItemStatus.None);
         }
 
-        /// <summary>
-        /// Create a Disk object from a BaseFile
-        /// </summary>
-        public Disk(BaseFile baseFile)
+        public Disk(Models.Metadata.Disk item) : base(item)
         {
-            _internal = new Models.Metadata.Disk();
+            SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
+            SetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey, ItemStatus.None);
+        }
 
+        public Disk(BaseFile baseFile) : base()
+        {
             SetName(baseFile.Filename);
             SetFieldValue<string?>(Models.Metadata.Disk.MD5Key, TextHelper.ByteArrayToString(baseFile.MD5));
             SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, TextHelper.ByteArrayToString(baseFile.SHA1));
 
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Disk);
             SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
             SetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey, ItemStatus.None);
-        }
-
-        /// <summary>
-        /// Create a Disk object from the internal model
-        /// </summary>
-        public Disk(Models.Metadata.Disk item)
-        {
-            _internal = item;
-
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Disk);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 
         #endregion
 
         #region Cloning Methods
-
-        /// <inheritdoc/>
-        public override object Clone()
-        {
-            return new Disk()
-            {
-                _internal = this._internal?.Clone() as Models.Metadata.Disk ?? [],
-            };
-        }
 
         /// <summary>
         /// Convert Disk object to a BaseFile

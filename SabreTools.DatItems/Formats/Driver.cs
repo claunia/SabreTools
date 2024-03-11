@@ -7,48 +7,23 @@ namespace SabreTools.DatItems.Formats
     /// <summary>
     /// Represents the a driver of the machine
     /// </summary>
-    /// <remarks>
-    /// TODO: Add new fields to documentation
-    /// </remarks>
     [JsonObject("driver"), XmlRoot("driver")]
-    public class Driver : DatItem
+    public sealed class Driver : DatItem<Models.Metadata.Driver>
     {
-        #region Constructors
+        #region Fields
 
-        /// <summary>
-        /// Create a default, empty Driver object
-        /// </summary>
-        public Driver()
-        {
-            _internal = new Models.Metadata.Driver();
+        /// <inheritdoc>/>
+        protected override ItemType ItemType => ItemType.Driver;
 
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Driver);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
-
-        /// <summary>
-        /// Create a Driver object from the internal model
-        /// </summary>
-        public Driver(Models.Metadata.Driver item)
-        {
-            _internal = item;
-
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Driver);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
+        /// <inheritdoc>/>
+        protected override string? NameKey => null;
 
         #endregion
 
-        #region Cloning Methods
+        #region Constructors
 
-        /// <inheritdoc/>
-        public override object Clone()
-        {
-            return new Driver()
-            {
-                _internal = this._internal?.Clone() as Models.Metadata.Driver ?? [],
-            };
-        }
+        public Driver() : base() { }
+        public Driver(Models.Metadata.Driver item) : base(item) { }
 
         #endregion
     }

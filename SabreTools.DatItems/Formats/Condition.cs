@@ -8,44 +8,22 @@ namespace SabreTools.DatItems.Formats
     /// Represents a condition on a machine or other item
     /// </summary>
     [JsonObject("condition"), XmlRoot("condition")]
-    public class Condition : DatItem
+    public sealed class Condition : DatItem<Models.Metadata.Condition>
     {
-        #region Constructors
+        #region Fields
 
-        /// <summary>
-        /// Create a default, empty Condition object
-        /// </summary>
-        public Condition()
-        {
-            _internal = new Models.Metadata.Condition();
+        /// <inheritdoc>/>
+        protected override ItemType ItemType => ItemType.Condition;
 
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Condition);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
-
-        /// <summary>
-        /// Create a Condition object from the internal model
-        /// </summary>
-        public Condition(Models.Metadata.Condition item)
-        {
-            _internal = item;
-
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Condition);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
+        /// <inheritdoc>/>
+        protected override string? NameKey => null;
 
         #endregion
 
-        #region Cloning Methods
+        #region Constructors
 
-        /// <inheritdoc/>
-        public override object Clone()
-        {
-            return new Condition()
-            {
-                _internal = this._internal?.Clone() as Models.Metadata.Condition ?? [],
-            };
-        }
+        public Condition() : base() { }
+        public Condition(Models.Metadata.Condition item) : base(item) { }
 
         #endregion
     }

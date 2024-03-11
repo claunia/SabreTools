@@ -8,55 +8,22 @@ namespace SabreTools.DatItems.Formats
     /// Represents a matchable extension
     /// </summary>
     [JsonObject("extension"), XmlRoot("extension")]
-    public class Extension : DatItem
+    public sealed class Extension : DatItem<Models.Metadata.Extension>
     {
-        #region Accessors
+        #region Fields
 
-        /// <inheritdoc/>
-        public override string? GetName() => GetFieldValue<string>(Models.Metadata.Extension.NameKey);
+        /// <inheritdoc>/>
+        protected override ItemType ItemType => ItemType.Extension;
 
-        /// <inheritdoc/>
-        public override void SetName(string? name) => SetFieldValue(Models.Metadata.Extension.NameKey, name);
+        /// <inheritdoc>/>
+        protected override string? NameKey => Models.Metadata.Extension.NameKey;
 
         #endregion
 
         #region Constructors
 
-        /// <summary>
-        /// Create a default, empty Extension object
-        /// </summary>
-        public Extension()
-        {
-            _internal = new Models.Metadata.Extension();
-
-            SetName(string.Empty);
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Extension);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
-
-        /// <summary>
-        /// Create an Extension object from the internal model
-        /// </summary>
-        public Extension(Models.Metadata.Extension item)
-        {
-            _internal = item;
-
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Extension);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
-
-        #endregion
-
-        #region Cloning Methods
-
-        /// <inheritdoc/>
-        public override object Clone()
-        {
-            return new Extension()
-            {
-                _internal = this._internal?.Clone() as Models.Metadata.Extension ?? [],
-            };
-        }
+        public Extension() : base() { }
+        public Extension(Models.Metadata.Extension item) : base(item) { }
 
         #endregion
     }

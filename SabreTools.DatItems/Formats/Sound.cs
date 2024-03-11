@@ -8,44 +8,22 @@ namespace SabreTools.DatItems.Formats
     /// Represents the sound output for a machine
     /// </summary>
     [JsonObject("sound"), XmlRoot("sound")]
-    public class Sound : DatItem
+    public sealed class Sound : DatItem<Models.Metadata.Sound>
     {
-        #region Constructors
+        #region Fields
 
-        /// <summary>
-        /// Create a default, empty Sound object
-        /// </summary>
-        public Sound()
-        {
-            _internal = new Models.Metadata.Sound();
+        /// <inheritdoc>/>
+        protected override ItemType ItemType => ItemType.Sound;
 
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Sound);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
-
-        /// <summary>
-        /// Create a Sound object from the internal model
-        /// </summary>
-        public Sound(Models.Metadata.Sound item)
-        {
-            _internal = item;
-
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Sound);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
+        /// <inheritdoc>/>
+        protected override string? NameKey => null;
 
         #endregion
 
-        #region Cloning Methods
+        #region Constructors
 
-        /// <inheritdoc/>
-        public override object Clone()
-        {
-            return new Sound()
-            {
-                _internal = this._internal?.Clone() as Models.Metadata.Sound ?? [],
-            };
-        }
+        public Sound() : base() { }
+        public Sound(Models.Metadata.Sound item) : base(item) { }
 
         #endregion
     }

@@ -14,7 +14,7 @@ namespace SabreTools.DatItems.Formats
     /// Represents a single file item
     /// </summary>
     [JsonObject("file"), XmlRoot("file")]
-    public class File : DatItem
+    public sealed class File : DatItem
     {
         #region Private instance variables
 

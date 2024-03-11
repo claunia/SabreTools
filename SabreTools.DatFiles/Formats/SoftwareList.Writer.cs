@@ -22,7 +22,7 @@ namespace SabreTools.DatFiles.Formats
                 ItemType.Disk,
                 ItemType.Info,
                 ItemType.Rom,
-                ItemType.SharedFeature,
+                ItemType.SharedFeat,
             ];
         }
 
@@ -120,7 +120,7 @@ namespace SabreTools.DatFiles.Formats
                     }
                     break;
 
-                case SharedFeature sharedFeat:
+                case SharedFeat sharedFeat:
                     if (string.IsNullOrEmpty(sharedFeat.GetName()))
                         missingFields.Add(Models.Metadata.SharedFeat.NameKey);
                     break;
@@ -222,7 +222,7 @@ namespace SabreTools.DatFiles.Formats
                         case Info info:
                             infos.Add(CreateInfo(info));
                             break;
-                        case SharedFeature sharedFeature:
+                        case SharedFeat sharedFeature:
                             sharedfeats.Add(CreateSharedFeat(sharedFeature));
                             break;
                         case Rom rom:
@@ -287,7 +287,7 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         /// Create a SharedFeat from the current SharedFeature DatItem
         /// <summary>
-        private static Models.SoftwareList.SharedFeat CreateSharedFeat(SharedFeature item)
+        private static Models.SoftwareList.SharedFeat CreateSharedFeat(SharedFeat item)
         {
             var sharedfeat = new Models.SoftwareList.SharedFeat
             {

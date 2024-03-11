@@ -8,55 +8,22 @@ namespace SabreTools.DatItems.Formats
     /// Represents one conflocation
     /// </summary>
     [JsonObject("conflocation"), XmlRoot("conflocation")]
-    public class ConfLocation : DatItem
+    public sealed class ConfLocation : DatItem<Models.Metadata.ConfLocation>
     {
-        #region Accessors
+        #region Fields
 
-        /// <inheritdoc/>
-        public override string? GetName() => GetFieldValue<string>(Models.Metadata.ConfLocation.NameKey);
+        /// <inheritdoc>/>
+        protected override ItemType ItemType => ItemType.ConfLocation;
 
-        /// <inheritdoc/>
-        public override void SetName(string? name) => SetFieldValue(Models.Metadata.ConfLocation.NameKey, name);
+        /// <inheritdoc>/>
+        protected override string? NameKey => Models.Metadata.ConfLocation.NameKey;
 
         #endregion
 
         #region Constructors
 
-        /// <summary>
-        /// Create a default, empty ConfLocation object
-        /// </summary>
-        public ConfLocation()
-        {
-            _internal = new Models.Metadata.ConfLocation();
-
-            SetName(string.Empty);
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.ConfLocation);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
-
-        /// <summary>
-        /// Create a ConfLocation object from the internal model
-        /// </summary>
-        public ConfLocation(Models.Metadata.ConfLocation item)
-        {
-            _internal = item;
-
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.ConfLocation);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
-
-        #endregion
-
-        #region Cloning Methods
-
-        /// <inheritdoc/>
-        public override object Clone()
-        {
-            return new ConfLocation()
-            {
-                _internal = this._internal?.Clone() as Models.Metadata.ConfLocation ?? [],
-            };
-        }
+        public ConfLocation() : base() { }
+        public ConfLocation(Models.Metadata.ConfLocation item) : base(item) { }
 
         #endregion
     }

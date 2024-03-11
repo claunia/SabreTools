@@ -87,7 +87,7 @@ namespace SabreTools.DatFiles.Formats
                     }
                     break;
 
-                case DeviceReference deviceref:
+                case DeviceRef deviceref:
                     if (string.IsNullOrEmpty(deviceref.GetName()))
                         missingFields.Add(Models.Metadata.DeviceRef.NameKey);
                     break;
@@ -352,7 +352,7 @@ namespace SabreTools.DatFiles.Formats
                         case Archive archive:
                             archives.Add(CreateArchive(archive));
                             break;
-                        case DeviceReference deviceref:
+                        case DeviceRef deviceref:
                             devicerefs.Add(CreateDeviceRef(deviceref));
                             break;
                         case Driver driver:
@@ -595,7 +595,7 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         /// Create a DeviceRef from the current Chip DatItem
         /// <summary>
-        private static Models.Logiqx.DeviceRef CreateDeviceRef(DeviceReference item)
+        private static Models.Logiqx.DeviceRef CreateDeviceRef(DeviceRef item)
         {
             var deviceref = new Models.Logiqx.DeviceRef
             {

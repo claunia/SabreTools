@@ -24,7 +24,7 @@ namespace SabreTools.DatFiles.Formats
                 ItemType.Condition,
                 ItemType.Configuration,
                 ItemType.Device,
-                ItemType.DeviceReference,
+                ItemType.DeviceRef,
                 ItemType.DipSwitch,
                 ItemType.Disk,
                 ItemType.Display,
@@ -76,7 +76,7 @@ namespace SabreTools.DatFiles.Formats
                     }
                     break;
 
-                case DeviceReference deviceref:
+                case DeviceRef deviceref:
                     if (string.IsNullOrEmpty(deviceref.GetName()))
                         missingFields.Add(Models.Metadata.DeviceRef.NameKey);
                     break;
@@ -290,7 +290,7 @@ namespace SabreTools.DatFiles.Formats
                         case Disk disk:
                             disks.Add(CreateDisk(disk));
                             break;
-                        case DeviceReference deviceref:
+                        case DeviceRef deviceref:
                             deviceRefs.Add(CreateDeviceRef(deviceref));
                             break;
                         case Sample sample:
@@ -459,7 +459,7 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         /// Create a DeviceRef from the current DeviceReference DatItem
         /// <summary>
-        private static Models.Listxml.DeviceRef CreateDeviceRef(DeviceReference item)
+        private static Models.Listxml.DeviceRef CreateDeviceRef(DeviceRef item)
         {
             var deviceref = new Models.Listxml.DeviceRef
             {

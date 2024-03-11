@@ -8,55 +8,22 @@ namespace SabreTools.DatItems.Formats
     /// Represents which RAM option(s) is associated with a set
     /// </summary>
     [JsonObject("ramoption"), XmlRoot("ramoption")]
-    public class RamOption : DatItem
+    public sealed class RamOption : DatItem<Models.Metadata.RamOption>
     {
-        #region Accessors
+        #region Fields
 
-        /// <inheritdoc/>
-        public override string? GetName() => GetFieldValue<string>(Models.Metadata.RamOption.NameKey);
+        /// <inheritdoc>/>
+        protected override ItemType ItemType => ItemType.RamOption;
 
-        /// <inheritdoc/>
-        public override void SetName(string? name) => SetFieldValue(Models.Metadata.RamOption.NameKey, name);
+        /// <inheritdoc>/>
+        protected override string? NameKey => Models.Metadata.RamOption.NameKey;
 
         #endregion
 
         #region Constructors
 
-        /// <summary>
-        /// Create a default, empty RamOption object
-        /// </summary>
-        public RamOption()
-        {
-            _internal = new Models.Metadata.RamOption();
-
-            SetName(string.Empty);
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.RamOption);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
-
-        /// <summary>
-        /// Create a RamOption object from the internal model
-        /// </summary>
-        public RamOption(Models.Metadata.RamOption item)
-        {
-            _internal = item;
-
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.RamOption);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
-
-        #endregion
-
-        #region Cloning Methods
-
-        /// <inheritdoc/>
-        public override object Clone()
-        {
-            return new RamOption()
-            {
-                _internal = this._internal?.Clone() as Models.Metadata.RamOption ?? [],
-            };
-        }
+        public RamOption() : base() { }
+        public RamOption(Models.Metadata.RamOption item) : base(item) { }
 
         #endregion
     }

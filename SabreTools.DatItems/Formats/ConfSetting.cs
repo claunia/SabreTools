@@ -8,9 +8,15 @@ namespace SabreTools.DatItems.Formats
     /// Represents one ListXML confsetting
     /// </summary>
     [JsonObject("confsetting"), XmlRoot("confsetting")]
-    public class ConfSetting : DatItem
+    public sealed class ConfSetting : DatItem<Models.Metadata.ConfSetting>
     {
         #region Fields
+
+        /// <inheritdoc>/>
+        protected override ItemType ItemType => ItemType.ConfSetting;
+
+        /// <inheritdoc>/>
+        protected override string? NameKey => Models.Metadata.ConfSetting.NameKey;
 
         [JsonIgnore]
         public bool ConditionsSpecified
@@ -24,53 +30,10 @@ namespace SabreTools.DatItems.Formats
 
         #endregion
 
-        #region Accessors
-
-        /// <inheritdoc/>
-        public override string? GetName() => GetFieldValue<string>(Models.Metadata.ConfSetting.NameKey);
-
-        /// <inheritdoc/>
-        public override void SetName(string? name) => SetFieldValue(Models.Metadata.ConfSetting.NameKey, name);
-
-        #endregion
-
         #region Constructors
 
-        /// <summary>
-        /// Create a default, empty ConfSetting object
-        /// </summary>
-        public ConfSetting()
-        {
-            _internal = new Models.Metadata.ConfSetting();
-
-            SetName(string.Empty);
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.ConfSetting);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
-
-        /// <summary>
-        /// Create a ConfSetting object from the internal model
-        /// </summary>
-        public ConfSetting(Models.Metadata.ConfSetting item)
-        {
-            _internal = item;
-
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.ConfSetting);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
-
-        #endregion
-
-        #region Cloning Methods
-
-        /// <inheritdoc/>
-        public override object Clone()
-        {
-            return new ConfSetting()
-            {
-                _internal = this._internal?.Clone() as Models.Metadata.ConfSetting ?? [],
-            };
-        }
+        public ConfSetting() : base() { }
+        public ConfSetting(Models.Metadata.ConfSetting item) : base(item) { }
 
         #endregion
     }

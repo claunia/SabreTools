@@ -8,9 +8,15 @@ namespace SabreTools.DatItems.Formats
     /// Represents one ListXML dipvalue
     /// </summary>
     [JsonObject("dipvalue"), XmlRoot("dipvalue")]
-    public class DipValue : DatItem
+    public sealed class DipValue : DatItem<Models.Metadata.DipValue>
     {
         #region Fields
+
+        /// <inheritdoc>/>
+        protected override ItemType ItemType => ItemType.DipValue;
+
+        /// <inheritdoc>/>
+        protected override string? NameKey => Models.Metadata.DipValue.NameKey;
 
         [JsonIgnore]
         public bool ConditionsSpecified
@@ -24,53 +30,10 @@ namespace SabreTools.DatItems.Formats
 
         #endregion
 
-        #region Accessors
-
-        /// <inheritdoc/>
-        public override string? GetName() => GetFieldValue<string>(Models.Metadata.DipValue.NameKey);
-
-        /// <inheritdoc/>
-        public override void SetName(string? name) => SetFieldValue(Models.Metadata.DipValue.NameKey, name);
-
-        #endregion
-
         #region Constructors
 
-        /// <summary>
-        /// Create a default, empty DipValue object
-        /// </summary>
-        public DipValue()
-        {
-            _internal = new Models.Metadata.DipValue();
-
-            SetName(string.Empty);
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.DipValue);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
-
-        /// <summary>
-        /// Create a DipValue object from the internal model
-        /// </summary>
-        public DipValue(Models.Metadata.DipValue item)
-        {
-            _internal = item;
-
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.DipValue);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
-
-        #endregion
-
-        #region Cloning Methods
-
-        /// <inheritdoc/>
-        public override object Clone()
-        {
-            return new DipValue()
-            {
-                _internal = this._internal?.Clone() as Models.Metadata.DipValue ?? [],
-            };
-        }
+        public DipValue() : base() { }
+        public DipValue(Models.Metadata.DipValue item) : base(item) { }
 
         #endregion
     }

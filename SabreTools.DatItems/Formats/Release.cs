@@ -8,55 +8,22 @@ namespace SabreTools.DatItems.Formats
     /// Represents release information about a set
     /// </summary>
     [JsonObject("release"), XmlRoot("release")]
-    public class Release : DatItem
+    public sealed class Release : DatItem<Models.Metadata.Release>
     {
-        #region Accessors
+        #region Fields
 
-        /// <inheritdoc/>
-        public override string? GetName() => GetFieldValue<string>(Models.Metadata.Release.NameKey);
+        /// <inheritdoc>/>
+        protected override ItemType ItemType => ItemType.Release;
 
-        /// <inheritdoc/>
-        public override void SetName(string? name) => SetFieldValue(Models.Metadata.Release.NameKey, name);
+        /// <inheritdoc>/>
+        protected override string? NameKey => Models.Metadata.Release.NameKey;
 
         #endregion
 
         #region Constructors
 
-        /// <summary>
-        /// Create a default, empty Release object
-        /// </summary>
-        public Release()
-        {
-            _internal = new Models.Metadata.Release();
-
-            SetName(string.Empty);
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Release);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
-
-        /// <summary>
-        /// Create a Release object from the internal model
-        /// </summary>
-        public Release(Models.Metadata.Release item)
-        {
-            _internal = item;
-
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Release);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
-
-        #endregion
-
-        #region Cloning Methods
-
-        /// <inheritdoc/>
-        public override object Clone()
-        {
-            return new Release()
-            {
-                _internal = this._internal?.Clone() as Models.Metadata.Release ?? [],
-            };
-        }
+        public Release() : base() { }
+        public Release(Models.Metadata.Release item) : base(item) { }
 
         #endregion
     }

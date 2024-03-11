@@ -7,58 +7,23 @@ namespace SabreTools.DatItems.Formats
     /// <summary>
     /// Represents which SoftwareList(s) is associated with a set
     /// </summary>
-    /// <remarks>
-    /// TODO: Add new fields to documentation
-    /// </remarks>
     [JsonObject("softwarelist"), XmlRoot("softwarelist")]
-    public class SoftwareList : DatItem
+    public sealed class SoftwareList : DatItem<Models.Metadata.SoftwareList>
     {
-        #region Accessors
+        #region Fields
 
-        /// <inheritdoc/>
-        public override string? GetName() => GetFieldValue<string>(Models.Metadata.SoftwareList.NameKey);
+        /// <inheritdoc>/>
+        protected override ItemType ItemType => ItemType.SoftwareList;
 
-        /// <inheritdoc/>
-        public override void SetName(string? name) => SetFieldValue(Models.Metadata.SoftwareList.NameKey, name);
+        /// <inheritdoc>/>
+        protected override string? NameKey => Models.Metadata.SoftwareList.NameKey;
 
         #endregion
 
         #region Constructors
 
-        /// <summary>
-        /// Create a default, empty SoftwareList object
-        /// </summary>
-        public SoftwareList()
-        {
-            _internal = new Models.Metadata.SoftwareList();
-
-            SetName(string.Empty);
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.SoftwareList);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
-
-        /// <summary>
-        /// Create a SoftwareList object from the internal model
-        /// </summary>
-        public SoftwareList(Models.Metadata.SoftwareList item)
-        {
-            _internal = item;
-
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.SoftwareList);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
-
-        #endregion
-
-        #region Cloning Methods
-
-        public override object Clone()
-        {
-            return new SoftwareList()
-            {
-                _internal = this._internal?.Clone() as Models.Metadata.SoftwareList ?? [],
-            };
-        }
+        public SoftwareList() : base() { }
+        public SoftwareList(Models.Metadata.SoftwareList item) : base(item) { }
 
         #endregion
     }

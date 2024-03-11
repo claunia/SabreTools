@@ -207,7 +207,10 @@ namespace SabreTools.DatFiles
 
             // If the field specifically contains Name, set it separately
             if (fieldMappings.Keys.Contains(Models.Metadata.Rom.NameKey))
+            {
                 datItem.SetName(fieldMappings[Models.Metadata.Rom.NameKey]);
+                fieldMappings.Remove(Models.Metadata.Rom.NameKey);
+            }
 
             #endregion
 

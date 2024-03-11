@@ -120,7 +120,7 @@ namespace SabreTools.DatFiles.Formats
             // Add all SharedFeat objects
             foreach (var sharedfeat in software.SharedFeat ?? [])
             {
-                var sharedfeatItem = new SharedFeature();
+                var sharedfeatItem = new SharedFeat();
                 sharedfeatItem.SetName(sharedfeat.Name);
                 sharedfeatItem.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
                 sharedfeatItem.SetFieldValue<string?>(Models.Metadata.SharedFeat.ValueKey, sharedfeat.Value);

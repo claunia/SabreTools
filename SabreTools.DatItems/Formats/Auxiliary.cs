@@ -14,7 +14,7 @@ namespace SabreTools.DatItems.Formats
     /// Represents the OpenMSX original value
     /// </summary>
     [JsonObject("original"), XmlRoot("original")]
-    public class Original
+    public sealed class Original
     {
         [JsonProperty("value"), XmlElement("value")]
         public bool? Value

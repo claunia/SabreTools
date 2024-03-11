@@ -9,7 +9,7 @@ namespace SabreTools.DatItems.Formats
     /// Represents a single release details item
     /// </summary>
     [JsonObject("release_details"), XmlRoot("release_details")]
-    public class ReleaseDetails : DatItem
+    public sealed class ReleaseDetails : DatItem
     {
         #region Fields
 

@@ -295,8 +295,8 @@ namespace SabreTools.Filtering
 
                 // Get all device reference names from the current machine
                 List<string?> deviceReferences = datFile.Items[machine]!
-                    .Where(i => i is DeviceReference)
-                    .Select(i => i as DeviceReference)
+                    .Where(i => i is DeviceRef)
+                    .Select(i => i as DeviceRef)
                     .Select(dr => dr!.GetName())
                     .Distinct()
                     .ToList();
@@ -328,8 +328,8 @@ namespace SabreTools.Filtering
                             continue;
 
                         newDeviceReferences.AddRange(devItems
-                            .Where(i => i is DeviceReference)
-                            .Select(i => (i as DeviceReference)!.GetName()!));
+                            .Where(i => i is DeviceRef)
+                            .Select(i => (i as DeviceRef)!.GetName()!));
 
                         // Set new machine information and add to the current machine
                         DatItem copyFrom = datFile.Items[machine]![0];
@@ -354,7 +354,7 @@ namespace SabreTools.Filtering
                     {
                         if (!deviceReferences.Contains(deviceReference))
                         {
-                            var deviceRef = new DeviceReference();
+                            var deviceRef = new DeviceRef();
                             deviceRef.SetName(deviceReference);
                             datFile.Items[machine]!.Add(deviceRef);
                         }

@@ -9,7 +9,7 @@ namespace SabreTools.DatItems.Formats
     /// Represents a single serials item
     /// </summary>
     [JsonObject("serials"), XmlRoot("serials")]
-    public class Serials : DatItem
+    public sealed class Serials : DatItem
     {
         #region Fields
 

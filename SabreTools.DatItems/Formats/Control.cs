@@ -8,44 +8,22 @@ namespace SabreTools.DatItems.Formats
     /// Represents control for an input
     /// </summary>
     [JsonObject("control"), XmlRoot("control")]
-    public class Control : DatItem
+    public sealed class Control : DatItem<Models.Metadata.Control>
     {
-        #region Constructors
+        #region Fields
 
-        /// <summary>
-        /// Create a default, empty Control object
-        /// </summary>
-        public Control()
-        {
-            _internal = new Models.Metadata.Control();
+        /// <inheritdoc>/>
+        protected override ItemType ItemType => ItemType.Control;
 
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Control);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
-
-        /// <summary>
-        /// Create a Control object from the internal model
-        /// </summary>
-        public Control(Models.Metadata.Control item)
-        {
-            _internal = item;
-
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Control);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
+        /// <inheritdoc>/>
+        protected override string? NameKey => null;
 
         #endregion
 
-        #region Cloning Methods
+        #region Constructors
 
-        /// <inheritdoc/>
-        public override object Clone()
-        {
-            return new Control()
-            {
-                _internal = this._internal?.Clone() as Models.Metadata.Control ?? [],
-            };
-        }
+        public Control() : base() { }
+        public Control(Models.Metadata.Control item) : base(item) { }
 
         #endregion
     }

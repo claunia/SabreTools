@@ -10,76 +10,44 @@ namespace SabreTools.DatItems.Formats
     /// Represents Aaruformat images which use internal hashes
     /// </summary>
     [JsonObject("media"), XmlRoot("media")]
-    public class Media : DatItem
+    public sealed class Media : DatItem<Models.Metadata.Media>
     {
-        #region Accessors
+        #region Fields
 
-        /// <inheritdoc/>
-        public override string? GetName() => GetFieldValue<string>(Models.Metadata.Media.NameKey);
+        /// <inheritdoc>/>
+        protected override ItemType ItemType => ItemType.Media;
 
-        /// <inheritdoc/>
-        public override void SetName(string? name) => SetFieldValue(Models.Metadata.Media.NameKey, name);
+        /// <inheritdoc>/>
+        protected override string? NameKey => Models.Metadata.Media.NameKey;
 
         #endregion
 
         #region Constructors
 
-        /// <summary>
-        /// Create a default, empty Media object
-        /// </summary>
-        public Media()
+        public Media() : base()
         {
-            _internal = new Models.Metadata.Media();
-
-            SetName(string.Empty);
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Media);
             SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 
-        /// <summary>
-        /// Create a Media object from the internal model
-        /// </summary>
-        public Media(Models.Metadata.Media item)
+        public Media(Models.Metadata.Media item) : base(item)
         {
-            _internal = item;
-
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Media);
             SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 
-        /// <summary>
-        /// Create a Media object from a BaseFile
-        /// </summary>
-        /// <param name="baseFile"></param>
-        public Media(BaseFile baseFile)
+        public Media(BaseFile baseFile) : base()
         {
-            _internal = new Models.Metadata.Media();
-
             SetName(baseFile.Filename);
             SetFieldValue<string?>(Models.Metadata.Media.MD5Key, TextHelper.ByteArrayToString(baseFile.MD5));
             SetFieldValue<string?>(Models.Metadata.Media.SHA1Key, TextHelper.ByteArrayToString(baseFile.SHA1));
             SetFieldValue<string?>(Models.Metadata.Media.SHA256Key, TextHelper.ByteArrayToString(baseFile.SHA256));
             SetFieldValue<string?>(Models.Metadata.Media.SpamSumKey, System.Text.Encoding.UTF8.GetString(baseFile.SpamSum ?? []));
 
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Media);
             SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 
         #endregion
 
         #region Cloning Methods
-
-        /// <inheritdoc/>
-        public override object Clone()
-        {
-            return new Media()
-            {
-                _internal = this._internal?.Clone() as Models.Metadata.Media ?? [],
-            };
-        }
 
         /// <summary>
         /// Convert Media object to a BaseFile
