@@ -14,11 +14,9 @@ namespace SabreTools.Test.DatFiles
         public void CreateOutFileNamesTest(DatFormat datFormat, string extension)
         {
             // Create the empty DatHeader
-            var datHeader = new DatHeader
-            {
-                DatFormat = datFormat,
-            };
+            var datHeader = new DatHeader();
             datHeader.SetFieldValue<string?>(DatHeader.FileNameKey, "test.dat");
+            datHeader.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, datFormat);
 
             // Invoke the method
             string outDir = "C:\\Test";
@@ -34,11 +32,9 @@ namespace SabreTools.Test.DatFiles
         public void CreateOutFileNamesAllOutputsTest()
         {
             // Create the empty DatHeader
-            var datHeader = new DatHeader
-            {
-                DatFormat = DatFormat.ALL,
-            };
+            var datHeader = new DatHeader();
             datHeader.SetFieldValue<string?>(DatHeader.FileNameKey, "test.dat");
+            datHeader.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, DatFormat.ALL);
 
             // Invoke the method
             string outDir = "C:\\Test";

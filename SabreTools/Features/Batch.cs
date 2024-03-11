@@ -480,10 +480,10 @@ Reset the internal state:           reset();";
             public override void Process(BatchState batchState)
             {
                 // Assume there could be multiple
-                batchState.DatFile.Header.DatFormat = 0x00;
+                batchState.DatFile.Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, 0x00);
                 foreach (string format in Arguments)
                 {
-                    batchState.DatFile.Header.DatFormat |= GetDatFormat(format);
+                    batchState.DatFile.Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, batchState.DatFile.Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey) | GetDatFormat(format));
                 }
             }
         }
@@ -804,7 +804,7 @@ Reset the internal state:           reset();";
 
                 // Read in the individual arguments
                 (string? type, string? key) = FilterParser.ParseFilterId(Arguments[0]);
-                
+
                 // If we had an invalid input, log and continue
                 if ((type == null || !string.Equals(type, Models.Metadata.MetadataFile.HeaderKey, StringComparison.OrdinalIgnoreCase)) && key == null)
                 {

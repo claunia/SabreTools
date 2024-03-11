@@ -2198,11 +2198,11 @@ Some special strings that can be used:
                 }
                 else if (dftemp == DatFormat.Logiqx && deprecated)
                 {
-                    datHeader.DatFormat |= DatFormat.LogiqxDeprecated;
+                    datHeader.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, datHeader.GetFieldValue<DatFormat>(DatHeader.DatFormatKey) | DatFormat.LogiqxDeprecated);
                 }
                 else
                 {
-                    datHeader.DatFormat |= dftemp;
+                    datHeader.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, datHeader.GetFieldValue<DatFormat>(DatHeader.DatFormatKey) | dftemp);
                 }
             }
 

@@ -42,7 +42,7 @@ namespace SabreTools.Test.DatTools
                 filename = Path.Combine(Environment.CurrentDirectory, "TestData", filename);
         
             var datFile = SabreTools.DatTools.Parser.CreateAndParse(filename, throwOnError: true);
-            Assert.Equal(datFormat, datFile.Header.DatFormat);
+            Assert.Equal(datFormat, datFile.Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey));
             Assert.Equal(totalCount, datFile.Items.TotalCount);
         }
     }

@@ -167,9 +167,9 @@ namespace SabreTools.Features
                     DatFile datFile = DatFile.Create(Header);
                     logger.User($"Processing '{Path.GetFileName(inputPath.CurrentPath)}'");
                     Parser.ParseInto(datFile, inputPath, keep: true,
-                        keepext: datFile.Header.DatFormat.HasFlag(DatFormat.TSV)
-                            || datFile.Header.DatFormat.HasFlag(DatFormat.CSV)
-                            || datFile.Header.DatFormat.HasFlag(DatFormat.SSV));
+                        keepext: datFile.Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.TSV)
+                            || datFile.Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.CSV)
+                            || datFile.Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.SSV));
 
                     // Perform additional processing steps
                     Extras!.ApplyExtras(datFile);

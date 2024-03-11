@@ -115,7 +115,7 @@ namespace SabreTools.DatFiles
         /// <param name="datHeader">DatHeader to get the values from</param>
         public static DatFile Create(DatHeader datHeader)
         {
-            DatFile datFile = Create(datHeader.DatFormat);
+            DatFile datFile = Create(datHeader.GetFieldValue<DatFormat>(DatHeader.DatFormatKey));
             datFile.Header = (DatHeader)datHeader.Clone();
             return datFile;
         }
@@ -636,7 +636,7 @@ namespace SabreTools.DatFiles
             if (!GetSupportedTypes().Contains(datItem.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey)))
             {
                 string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
-                logger?.Verbose($"Item '{itemString}' was skipped because it was not supported in {Header?.DatFormat}");
+                logger?.Verbose($"Item '{itemString}' was skipped because it was not supported in {Header?.GetFieldValue<DatFormat>(DatHeader.DatFormatKey)}");
                 return true;
             }
 
@@ -646,9 +646,9 @@ namespace SabreTools.DatFiles
             {
                 string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
 #if NET20 || NET35
-                logger?.Verbose($"Item '{itemString}' was skipped because it was missing required fields for {Header?.DatFormat}: {string.Join(", ", [.. missingFields])}");
+                logger?.Verbose($"Item '{itemString}' was skipped because it was missing required fields for {Header?.GetFieldValue<DatFormat>(DatHeader.DatFormatKey)}: {string.Join(", ", [.. missingFields])}");
 #else
-                logger?.Verbose($"Item '{itemString}' was skipped because it was missing required fields for {Header?.DatFormat}: {string.Join(", ", missingFields)}");
+                logger?.Verbose($"Item '{itemString}' was skipped because it was missing required fields for {Header?.GetFieldValue<DatFormat>(DatHeader.DatFormatKey)}: {string.Join(", ", missingFields)}");
 #endif
                 return true;
             }
