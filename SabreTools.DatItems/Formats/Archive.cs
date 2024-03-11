@@ -12,6 +12,9 @@ namespace SabreTools.DatItems.Formats
     {
         #region Fields
 
+        /// <inheritdoc>/>
+        protected override ItemType ItemType => ItemType.Archive;
+
         /// <summary>
         /// Archive ID number
         /// </summary>
@@ -89,7 +92,7 @@ namespace SabreTools.DatItems.Formats
             _internal = new Models.Metadata.Archive();
 
             SetName(string.Empty);
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Archive);
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 
@@ -100,7 +103,7 @@ namespace SabreTools.DatItems.Formats
         {
             _internal = item;
 
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Archive);
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType);
             SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
         }
 

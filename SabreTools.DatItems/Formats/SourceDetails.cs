@@ -13,6 +13,9 @@ namespace SabreTools.DatItems.Formats
     {
         #region Fields
 
+        /// <inheritdoc>/>
+        protected override ItemType ItemType => ItemType.SourceDetails;
+
         /// <summary>
         /// Id value
         /// </summary>

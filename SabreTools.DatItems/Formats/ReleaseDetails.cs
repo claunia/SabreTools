@@ -13,6 +13,9 @@ namespace SabreTools.DatItems.Formats
     {
         #region Fields
 
+        /// <inheritdoc>/>
+        protected override ItemType ItemType => ItemType.ReleaseDetails;
+
         /// <summary>
         /// Id value
         /// </summary>
@@ -113,7 +116,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public ReleaseDetails()
         {
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.ReleaseDetails);
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType);
         }
 
         #endregion

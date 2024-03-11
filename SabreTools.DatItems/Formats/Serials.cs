@@ -13,6 +13,9 @@ namespace SabreTools.DatItems.Formats
     {
         #region Fields
 
+        /// <inheritdoc>/>
+        protected override ItemType ItemType => ItemType.Serials;
+
         /// <summary>
         /// Digital serial 1 value
         /// </summary>
@@ -106,7 +109,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Serials()
         {
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Serials);
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType);
         }
 
         #endregion

@@ -27,6 +27,9 @@ namespace SabreTools.DatItems.Formats
 
         #region Fields
 
+        /// <inheritdoc>/>
+        protected override ItemType ItemType => ItemType.File;
+
         /// <summary>
         /// ID value
         /// </summary>
@@ -100,7 +103,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public File()
         {
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.File);
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType);
         }
 
         /// <summary>
@@ -114,7 +117,7 @@ namespace SabreTools.DatItems.Formats
             _sha1 = baseFile.SHA1;
             _sha256 = baseFile.SHA256;
 
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.File);
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType);
             SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
         }
 

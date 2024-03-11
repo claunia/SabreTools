@@ -10,6 +10,13 @@ namespace SabreTools.DatItems.Formats
     [JsonObject("blank"), XmlRoot("blank")]
     public sealed class Blank : DatItem
     {
+        #region Fields
+
+        /// <inheritdoc>/>
+        protected override ItemType ItemType => ItemType.Blank;
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
@@ -17,7 +24,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public Blank()
         {
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType.Blank);
+            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType);
         }
 
         #endregion

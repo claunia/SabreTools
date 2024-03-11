@@ -85,6 +85,11 @@ namespace SabreTools.DatItems
         #region Fields
 
         /// <summary>
+        /// Item type for the object
+        /// </summary>
+        protected abstract ItemType ItemType { get; }
+
+        /// <summary>
         /// Internal model wrapped by this DatItem
         /// </summary>
         [JsonIgnore, XmlIgnore]
@@ -703,13 +708,7 @@ namespace SabreTools.DatItems
     /// </summary>
     public abstract class DatItem<T> : DatItem, IEquatable<DatItem<T>>, IComparable<DatItem<T>>, ICloneable where T : Models.Metadata.DatItem
     {
-        // TODO: Move to base class after implementation
         #region Fields
-
-        /// <summary>
-        /// Item type for the object
-        /// </summary>
-        protected abstract ItemType ItemType { get; }
 
         /// <summary>
         /// Key for accessing the item name, if it exists
@@ -765,7 +764,6 @@ namespace SabreTools.DatItems
 
         #endregion
 
-        // TODO: Figure out how to replace individual versions with this
         #region Cloning Methods
 
         /// <summary>
