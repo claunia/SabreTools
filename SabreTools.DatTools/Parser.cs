@@ -248,6 +248,13 @@ namespace SabreTools.DatTools
 #endif
                 return DatFormat.AttractMode;
 
+#if NETFRAMEWORK
+            else if (first.ToLowerInvariant().Contains("#romname;title;emulator;cloneof;year;manufacturer;category;players;rotation;control;status;displaycount;displaytype;altromname;alttitle;extra"))
+#else
+            else if (first.Contains("#RomName;Title;Emulator;CloneOf;Year;Manufacturer;Category;Players;Rotation;Control;Status;DisplayCount;DisplayType;AltRomname;AltTitle;Extra", StringComparison.InvariantCultureIgnoreCase))
+#endif
+                return DatFormat.AttractMode;
+
             else
                 return DatFormat.ClrMamePro;
         }
