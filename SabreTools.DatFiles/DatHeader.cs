@@ -181,6 +181,11 @@ namespace SabreTools.DatFiles
             return true;
         }
 
+        /// <summary>
+        /// Get a clone of the current internal model
+        /// </summary>
+        public Models.Metadata.Header GetInternalClone() => (_header.Clone() as Models.Metadata.Header)!;
+
         #endregion
 
         #region Cloning Methods

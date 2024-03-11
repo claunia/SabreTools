@@ -8,12 +8,17 @@ namespace SabreTools.DatItems.Formats
     /// Represents generic archive files to be included in a set
     /// </summary>
     [JsonObject("archive"), XmlRoot("archive")]
-    public sealed class Archive : DatItem
+    public sealed class Archive : DatItem<Models.Metadata.Archive>
     {
         #region Fields
 
         /// <inheritdoc>/>
         protected override ItemType ItemType => ItemType.Archive;
+
+        /// <inheritdoc>/>
+        protected override string? NameKey => Models.Metadata.Archive.NameKey;
+
+        // TODO: None of the following are used or checked
 
         /// <summary>
         /// Archive ID number
@@ -84,51 +89,8 @@ namespace SabreTools.DatItems.Formats
 
         #region Constructors
 
-        /// <summary>
-        /// Create a default, empty Archive object
-        /// </summary>
-        public Archive()
-        {
-            _internal = new Models.Metadata.Archive();
-
-            SetName(string.Empty);
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
-
-        /// <summary>
-        /// Create an Archive object from the internal model
-        /// </summary>
-        public Archive(Models.Metadata.Archive item)
-        {
-            _internal = item;
-
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
-        }
-
-        #endregion
-
-        #region Accessors
-
-        /// <inheritdoc/>
-        public override string? GetName() => GetFieldValue<string>(Models.Metadata.Archive.NameKey);
-
-        /// <inheritdoc/>
-        public override void SetName(string? name) => SetFieldValue(Models.Metadata.Archive.NameKey, name);
-        
-        #endregion
-
-        #region Cloning Methods
-
-        /// <inheritdoc/>
-        public override object Clone()
-        {
-            return new Archive()
-            {
-                _internal = this._internal?.Clone() as Models.Metadata.Archive ?? [],
-            };
-        }
+        public Archive() : base() { }
+        public Archive(Models.Metadata.Archive item) : base(item) { }
 
         #endregion
     }

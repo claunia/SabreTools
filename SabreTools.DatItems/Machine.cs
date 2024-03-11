@@ -148,6 +148,11 @@ namespace SabreTools.DatItems
             return true;
         }
 
+        /// <summary>
+        /// Get a clone of the current internal model
+        /// </summary>
+        public Models.Metadata.Machine GetInternalClone() => (_machine.Clone() as Models.Metadata.Machine)!;
+
         #endregion
 
         #region Constructors
