@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 #endif
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -416,7 +417,7 @@ namespace SabreTools.DatTools
         {
             // If we didn't get an accepted parsed type somehow, cancel out
             List<ItemType> parsed = [ItemType.Disk, ItemType.File, ItemType.Media, ItemType.Rom];
-            if (!parsed.Contains(datItem.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey)))
+            if (!parsed.Contains(datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>()))
                 return;
 
             try

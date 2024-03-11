@@ -185,7 +185,7 @@ namespace SabreTools.DatTools
                     switch (item)
                     {
                         case Disk disk:
-                            if (disk.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey) == ItemStatus.Nodump)
+                            if (disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump)
                                 fieldDats[Models.Metadata.Disk.StatusKey].Items.Add(key, item);
                             else if (!string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)))
                                 fieldDats[Models.Metadata.Disk.SHA1Key].Items.Add(key, item);
@@ -209,7 +209,7 @@ namespace SabreTools.DatTools
                             break;
 
                         case Rom rom:
-                            if (rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) == ItemStatus.Nodump)
+                            if (rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump)
                                 fieldDats[Models.Metadata.Rom.StatusKey].Items.Add(key, item);
                             else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA512Key)))
                                 fieldDats[Models.Metadata.Rom.SHA512Key].Items.Add(key, item);
@@ -605,7 +605,7 @@ namespace SabreTools.DatTools
 
                 foreach (DatItem item in items)
                 {
-                    if (item.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) == itemType)
+                    if (item.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>() == itemType)
                         indexDat.Items.Add(key, item);
                 }
 #if NET40_OR_GREATER || NETCOREAPP

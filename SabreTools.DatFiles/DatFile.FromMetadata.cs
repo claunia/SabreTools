@@ -802,6 +802,13 @@ namespace SabreTools.DatFiles
                 var datItem = new DatItems.Formats.Disk(item);
                 datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
+
+                // Process hash values
+                if (datItem.GetStringFieldValue(Models.Metadata.Disk.MD5Key) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Disk.MD5Key, TextHelper.NormalizeMD5(datItem.GetStringFieldValue(Models.Metadata.Disk.MD5Key)));
+                if (datItem.GetStringFieldValue(Models.Metadata.Disk.SHA1Key) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, TextHelper.NormalizeSHA1(datItem.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)));
+
                 ParseAddHelper(datItem, statsOnly);
             }
         }
@@ -917,6 +924,23 @@ namespace SabreTools.DatFiles
                 }
 
                 item.CopyMachineInformation(machine);
+
+                // Process hash values
+                if (item.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) != null)
+                    item.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, item.GetInt64FieldValue(Models.Metadata.Rom.SizeKey).ToString());
+                if (item.GetStringFieldValue(Models.Metadata.Rom.CRCKey) != null)
+                    item.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, TextHelper.NormalizeCRC32(item.GetStringFieldValue(Models.Metadata.Rom.CRCKey)));
+                if (item.GetStringFieldValue(Models.Metadata.Rom.MD5Key) != null)
+                    item.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, TextHelper.NormalizeMD5(item.GetStringFieldValue(Models.Metadata.Rom.MD5Key)));
+                if (item.GetStringFieldValue(Models.Metadata.Rom.SHA1Key) != null)
+                    item.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, TextHelper.NormalizeSHA1(item.GetStringFieldValue(Models.Metadata.Rom.SHA1Key)));
+                if (item.GetStringFieldValue(Models.Metadata.Rom.SHA256Key) != null)
+                    item.SetFieldValue<string?>(Models.Metadata.Rom.SHA256Key, TextHelper.NormalizeSHA256(item.GetStringFieldValue(Models.Metadata.Rom.SHA256Key)));
+                if (item.GetStringFieldValue(Models.Metadata.Rom.SHA384Key) != null)
+                    item.SetFieldValue<string?>(Models.Metadata.Rom.SHA384Key, TextHelper.NormalizeSHA384(item.GetStringFieldValue(Models.Metadata.Rom.SHA384Key)));
+                if (item.GetStringFieldValue(Models.Metadata.Rom.SHA512Key) != null)
+                    item.SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key, TextHelper.NormalizeSHA512(item.GetStringFieldValue(Models.Metadata.Rom.SHA512Key)));
+
                 ParseAddHelper(item, statsOnly);
             }
         }
@@ -1028,6 +1052,15 @@ namespace SabreTools.DatFiles
                 var datItem = new DatItems.Formats.Media(item);
                 datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
+
+                // Process hash values
+                if (datItem.GetStringFieldValue(Models.Metadata.Media.MD5Key) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Media.MD5Key, TextHelper.NormalizeMD5(datItem.GetStringFieldValue(Models.Metadata.Media.MD5Key)));
+                if (datItem.GetStringFieldValue(Models.Metadata.Media.SHA1Key) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Media.SHA1Key, TextHelper.NormalizeSHA1(datItem.GetStringFieldValue(Models.Metadata.Media.SHA1Key)));
+                if (datItem.GetStringFieldValue(Models.Metadata.Media.SHA256Key) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Media.SHA256Key, TextHelper.NormalizeSHA256(datItem.GetStringFieldValue(Models.Metadata.Media.SHA256Key)));
+
                 ParseAddHelper(datItem, statsOnly);
             }
         }
@@ -1069,6 +1102,23 @@ namespace SabreTools.DatFiles
                             romItem.SetFieldValue<DatItems.Formats.Part?>(DatItems.Formats.Rom.PartKey, partItem);
                             romItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                             romItem.CopyMachineInformation(machine);
+
+                            // Process hash values
+                            if (romItem.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) != null)
+                                romItem.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, romItem.GetInt64FieldValue(Models.Metadata.Rom.SizeKey).ToString());
+                            if (romItem.GetStringFieldValue(Models.Metadata.Rom.CRCKey) != null)
+                                romItem.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, TextHelper.NormalizeCRC32(romItem.GetStringFieldValue(Models.Metadata.Rom.CRCKey)));
+                            if (romItem.GetStringFieldValue(Models.Metadata.Rom.MD5Key) != null)
+                                romItem.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, TextHelper.NormalizeMD5(romItem.GetStringFieldValue(Models.Metadata.Rom.MD5Key)));
+                            if (romItem.GetStringFieldValue(Models.Metadata.Rom.SHA1Key) != null)
+                                romItem.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, TextHelper.NormalizeSHA1(romItem.GetStringFieldValue(Models.Metadata.Rom.SHA1Key)));
+                            if (romItem.GetStringFieldValue(Models.Metadata.Rom.SHA256Key) != null)
+                                romItem.SetFieldValue<string?>(Models.Metadata.Rom.SHA256Key, TextHelper.NormalizeSHA256(romItem.GetStringFieldValue(Models.Metadata.Rom.SHA256Key)));
+                            if (romItem.GetStringFieldValue(Models.Metadata.Rom.SHA384Key) != null)
+                                romItem.SetFieldValue<string?>(Models.Metadata.Rom.SHA384Key, TextHelper.NormalizeSHA384(romItem.GetStringFieldValue(Models.Metadata.Rom.SHA384Key)));
+                            if (romItem.GetStringFieldValue(Models.Metadata.Rom.SHA512Key) != null)
+                                romItem.SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key, TextHelper.NormalizeSHA512(romItem.GetStringFieldValue(Models.Metadata.Rom.SHA512Key)));
+
                             ParseAddHelper(romItem, statsOnly);
                         }
                     }
@@ -1091,6 +1141,13 @@ namespace SabreTools.DatFiles
                             diskItem.SetFieldValue<DatItems.Formats.Part?>(DatItems.Formats.Disk.PartKey, partItem);
                             diskItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                             diskItem.CopyMachineInformation(machine);
+
+                            // Process hash values
+                            if (diskItem.GetStringFieldValue(Models.Metadata.Disk.MD5Key) != null)
+                                diskItem.SetFieldValue<string?>(Models.Metadata.Disk.MD5Key, TextHelper.NormalizeMD5(diskItem.GetStringFieldValue(Models.Metadata.Disk.MD5Key)));
+                            if (diskItem.GetStringFieldValue(Models.Metadata.Disk.SHA1Key) != null)
+                                diskItem.SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, TextHelper.NormalizeSHA1(diskItem.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)));
+
                             ParseAddHelper(diskItem, statsOnly);
                         }
                     }
@@ -1231,6 +1288,23 @@ namespace SabreTools.DatFiles
                 var datItem = new DatItems.Formats.Rom(item);
                 datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
+
+                // Process hash values
+                if (datItem.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, datItem.GetInt64FieldValue(Models.Metadata.Rom.SizeKey).ToString());
+                if (datItem.GetStringFieldValue(Models.Metadata.Rom.CRCKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, TextHelper.NormalizeCRC32(datItem.GetStringFieldValue(Models.Metadata.Rom.CRCKey)));
+                if (datItem.GetStringFieldValue(Models.Metadata.Rom.MD5Key) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, TextHelper.NormalizeMD5(datItem.GetStringFieldValue(Models.Metadata.Rom.MD5Key)));
+                if (datItem.GetStringFieldValue(Models.Metadata.Rom.SHA1Key) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, TextHelper.NormalizeSHA1(datItem.GetStringFieldValue(Models.Metadata.Rom.SHA1Key)));
+                if (datItem.GetStringFieldValue(Models.Metadata.Rom.SHA256Key) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Rom.SHA256Key, TextHelper.NormalizeSHA256(datItem.GetStringFieldValue(Models.Metadata.Rom.SHA256Key)));
+                if (datItem.GetStringFieldValue(Models.Metadata.Rom.SHA384Key) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Rom.SHA384Key, TextHelper.NormalizeSHA384(datItem.GetStringFieldValue(Models.Metadata.Rom.SHA384Key)));
+                if (datItem.GetStringFieldValue(Models.Metadata.Rom.SHA512Key) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key, TextHelper.NormalizeSHA512(datItem.GetStringFieldValue(Models.Metadata.Rom.SHA512Key)));
+
                 ParseAddHelper(datItem, statsOnly);
             }
         }

@@ -326,7 +326,7 @@ namespace SabreTools.DatItems
         public virtual bool Equals(DatItem? other)
         {
             // If we don't have a matched type, return false
-            if (GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) != other?.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey))
+            if (GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>() != other?.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>())
                 return false;
 
             // Compare the internal models
@@ -528,13 +528,13 @@ namespace SabreTools.DatItems
                 }
 
                 // If it's a nodump, add and skip
-                if (item is Rom rom && rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) == ItemStatus.Nodump)
+                if (item is Rom rom && rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump)
                 {
                     outfiles.Add(item);
                     nodumpCount++;
                     continue;
                 }
-                else if (item is Disk disk && disk.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey) == ItemStatus.Nodump)
+                else if (item is Disk disk && disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump)
                 {
                     outfiles.Add(item);
                     nodumpCount++;
@@ -643,10 +643,10 @@ namespace SabreTools.DatItems
                 }
 
                 // Get the last item name, if applicable
-                string lastItemName = lastItem.GetName() ?? lastItem.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey).ToString();
+                string lastItemName = lastItem.GetName() ?? lastItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue() ?? string.Empty;
 
                 // Get the current item name, if applicable
-                string datItemName = datItem.GetName() ?? datItem.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey).ToString();
+                string datItemName = datItem.GetName() ?? datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue() ?? string.Empty;
 
                 // If the current item exactly matches the last item, then we don't add it
 #if NETFRAMEWORK
@@ -739,7 +739,7 @@ namespace SabreTools.DatItems
                     if (x.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) == y.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey))
                     {
                         // If item types match, more refinement is needed
-                        if (x.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) == y.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey))
+                        if (x.GetStringFieldValue(Models.Metadata.DatItem.TypeKey) == y.GetStringFieldValue(Models.Metadata.DatItem.TypeKey))
                         {
                             string? xDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty));
                             string? yDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty));
@@ -763,7 +763,7 @@ namespace SabreTools.DatItems
                         }
 
                         // Otherwise, just sort based on item type
-                        return x.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) - y.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey);
+                        return x.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>() - y.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>();
                     }
 
                     // Otherwise, just sort based on machine name
@@ -891,7 +891,7 @@ namespace SabreTools.DatItems
         public virtual bool Equals(DatItem<T>? other)
         {
             // If we don't have a matched type, return false
-            if (GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) != other?.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey))
+            if (GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>() != other?.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>())
                 return false;
 
             // Compare the internal models

@@ -145,7 +145,7 @@ namespace SabreTools.Help
             if (!features.ContainsKey(key))
                 return null;
 
-            return features[key]!.GetStringValue();
+            return features[key]!.GetStringFieldValue();
         }
 
         #endregion

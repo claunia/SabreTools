@@ -1,6 +1,7 @@
 ﻿using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -38,7 +39,7 @@ namespace SabreTools.DatItems.Formats
             blank.SetFieldValue<Machine>(DatItem.MachineKey, GetFieldValue<Machine>(DatItem.MachineKey));
             blank.SetFieldValue<bool?>(DatItem.RemoveKey, GetBoolFieldValue(DatItem.RemoveKey));
             blank.SetFieldValue<Source?>(DatItem.SourceKey, GetFieldValue<Source?>(DatItem.SourceKey));
-            blank.SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey));
+            blank.SetFieldValue<string?>(Models.Metadata.DatItem.TypeKey, GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue());
 
             return blank;
         }
@@ -51,7 +52,7 @@ namespace SabreTools.DatItems.Formats
         public override bool Equals(DatItem? other)
         {
             // If we don't have a blank, return false
-            if (GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) != other?.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey))
+            if (GetStringFieldValue(Models.Metadata.DatItem.TypeKey) != other?.GetStringFieldValue(Models.Metadata.DatItem.TypeKey))
                 return false;
 
             // Otherwise, treat it as a Blank

@@ -376,7 +376,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 Name = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey),
                 SourceFile = machine.GetStringFieldValue(Models.Metadata.Machine.SourceFileKey),
-                Runnable = machine.GetFieldValue<Runnable>(Models.Metadata.Machine.RunnableKey).AsStringValue<Runnable>(),
+                Runnable = machine.GetStringFieldValue(Models.Metadata.Machine.RunnableKey).AsEnumValue<Runnable>().AsStringValue(),
                 CloneOf = machine.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey),
                 RomOf = machine.GetStringFieldValue(Models.Metadata.Machine.RomOfKey),
                 SampleOf = machine.GetStringFieldValue(Models.Metadata.Machine.SampleOfKey),
@@ -426,7 +426,7 @@ namespace SabreTools.DatFiles.Formats
                 Merge = item.GetStringFieldValue(Models.Metadata.Rom.MergeKey),
                 Region = item.GetStringFieldValue(Models.Metadata.Rom.RegionKey),
                 Offset = item.GetStringFieldValue(Models.Metadata.Rom.OffsetKey),
-                Status = item.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey).AsStringValue<ItemStatus>(useSecond: false),
+                Status = item.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>().AsStringValue(useSecond: false),
                 Optional = item.GetBoolFieldValue(Models.Metadata.Rom.OptionalKey).FromYesNo(),
                 Dispose = item.GetBoolFieldValue(Models.Metadata.Rom.DisposeKey).FromYesNo(),
                 SoundOnly = item.GetBoolFieldValue(Models.Metadata.Rom.SoundOnlyKey).FromYesNo(),
@@ -449,7 +449,7 @@ namespace SabreTools.DatFiles.Formats
                 Region = item.GetStringFieldValue(Models.Metadata.Disk.RegionKey),
                 Index = item.GetStringFieldValue(Models.Metadata.Disk.IndexKey),
                 Writable = item.GetBoolFieldValue(Models.Metadata.Disk.WritableKey).FromYesNo(),
-                Status = item.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey).AsStringValue<ItemStatus>(useSecond: false),
+                Status = item.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>().AsStringValue(useSecond: false),
                 Optional = item.GetBoolFieldValue(Models.Metadata.Disk.OptionalKey).FromYesNo(),
             };
 
@@ -491,7 +491,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 Name = item.GetName(),
                 Tag = item.GetStringFieldValue(Models.Metadata.Chip.TagKey),
-                Type = item.GetFieldValue<ChipType>(Models.Metadata.Chip.ChipTypeKey).AsStringValue<ChipType>(),
+                Type = item.GetStringFieldValue(Models.Metadata.Chip.ChipTypeKey).AsEnumValue<ChipType>().AsStringValue(),
                 SoundOnly = item.GetBoolFieldValue(Models.Metadata.Chip.SoundOnlyKey).FromYesNo(),
                 Clock = item.GetInt64FieldValue(Models.Metadata.Chip.TagKey)?.ToString(),
             };
@@ -507,7 +507,7 @@ namespace SabreTools.DatFiles.Formats
             var display = new Models.Listxml.Display
             {
                 Tag = item.GetStringFieldValue(Models.Metadata.Display.TagKey),
-                Type = item.GetFieldValue<DisplayType>(Models.Metadata.Display.DisplayTypeKey).AsStringValue<DisplayType>(),
+                Type = item.GetStringFieldValue(Models.Metadata.Display.DisplayTypeKey).AsEnumValue<DisplayType>().AsStringValue(),
                 Rotate = item.GetInt64FieldValue(Models.Metadata.Display.RotateKey)?.ToString(),
                 FlipX = item.GetBoolFieldValue(Models.Metadata.Display.FlipXKey).FromYesNo(),
                 Width = item.GetStringFieldValue(Models.Metadata.Display.WidthKey)?.ToString(),
@@ -573,7 +573,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var control = new Models.Listxml.Control
             {
-                Type = item.GetFieldValue<ControlType>(Models.Metadata.Control.ControlTypeKey).AsStringValue<ControlType>(),
+                Type = item.GetStringFieldValue(Models.Metadata.Control.ControlTypeKey).AsEnumValue<ControlType>().AsStringValue(),
                 Player = item.GetInt64FieldValue(Models.Metadata.Control.PlayerKey)?.ToString(),
                 Buttons = item.GetInt64FieldValue(Models.Metadata.Control.ButtonsKey)?.ToString(),
                 ReqButtons = item.GetInt64FieldValue(Models.Metadata.Control.ReqButtonsKey)?.ToString(),

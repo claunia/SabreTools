@@ -221,12 +221,12 @@ namespace SabreTools.DatFiles
             if (item is Disk disk)
             {
                 // If the file has aboslutely no hashes, skip and log
-                if (disk.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey) != ItemStatus.Nodump
+                if (disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() != ItemStatus.Nodump
                     && string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key))
                     && string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)))
                 {
                     logger.Verbose($"Incomplete entry for '{disk.GetName()}' will be output as nodump");
-                    disk.SetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey, ItemStatus.Nodump);
+                    disk.SetFieldValue<string?>(Models.Metadata.Disk.StatusKey, ItemStatus.Nodump.AsStringValue());
                 }
 
                 item = disk;
@@ -271,14 +271,14 @@ namespace SabreTools.DatFiles
                 }
 
                 // If the file has no size and it's not the above case, skip and log
-                else if (rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) != ItemStatus.Nodump && (size == 0 || size == null))
+                else if (rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() != ItemStatus.Nodump && (size == 0 || size == null))
                 {
                     logger.Verbose($"{Header.GetStringFieldValue(DatHeader.FileNameKey)}: Incomplete entry for '{rom.GetName()}' will be output as nodump");
-                    rom.SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.Nodump);
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.StatusKey, ItemStatus.Nodump.AsStringValue());
                 }
 
                 // If the file has a size but aboslutely no hashes, skip and log
-                else if (rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) != ItemStatus.Nodump
+                else if (rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() != ItemStatus.Nodump
                     && size != null && size > 0
                     && !rom.HasHashes())
                 {
@@ -369,7 +369,7 @@ namespace SabreTools.DatFiles
             // Initialize strings
             string fix,
                 game = item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty,
-                name = item.GetName() ?? item.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey).ToString(),
+                name = item.GetName() ?? item.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue() ?? string.Empty,
                 crc = string.Empty,
                 md5 = string.Empty,
                 sha1 = string.Empty,
@@ -584,7 +584,7 @@ namespace SabreTools.DatFiles
 
             foreach (DatItem datItem in datItems)
             {
-                if (GetSupportedTypes().Contains(datItem.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey)))
+                if (GetSupportedTypes().Contains(datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>()))
                     return true;
             }
 
@@ -636,7 +636,7 @@ namespace SabreTools.DatFiles
             }
 
             // If we have an item type not in the list of supported values
-            if (!GetSupportedTypes().Contains(datItem.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey)))
+            if (!GetSupportedTypes().Contains(datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>()))
             {
                 string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
                 logger?.Verbose($"Item '{itemString}' was skipped because it was not supported in {Header?.GetFieldValue<DatFormat>(DatHeader.DatFormatKey)}");

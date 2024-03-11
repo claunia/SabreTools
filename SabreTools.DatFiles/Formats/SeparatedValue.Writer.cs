@@ -164,7 +164,7 @@ namespace SabreTools.DatFiles.Formats
                 Description = Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey),
                 GameName = disk.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey),
                 GameDescription = disk.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey),
-                Type = disk.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey).AsStringValue<ItemType>(),
+                Type = disk.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue(),
                 RomName = string.Empty,
                 DiskName = disk.GetName(),
                 Size = string.Empty,
@@ -175,7 +175,7 @@ namespace SabreTools.DatFiles.Formats
                 SHA384 = string.Empty,
                 SHA512 = string.Empty,
                 SpamSum = string.Empty,
-                Status = disk.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey).AsStringValue<ItemStatus>(useSecond: false),
+                Status = disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>().AsStringValue(useSecond: false),
             };
             return row;
         }
@@ -192,7 +192,7 @@ namespace SabreTools.DatFiles.Formats
                 Description = Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey),
                 GameName = media.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey),
                 GameDescription = media.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey),
-                Type = media.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey).AsStringValue<ItemType>(),
+                Type = media.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue(),
                 RomName = string.Empty,
                 DiskName = media.GetName(),
                 Size = string.Empty,
@@ -220,7 +220,7 @@ namespace SabreTools.DatFiles.Formats
                 Description = Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey),
                 GameName = rom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey),
                 GameDescription = rom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey),
-                Type = rom.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey).AsStringValue<ItemType>(),
+                Type = rom.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue(),
                 RomName = rom.GetName(),
                 DiskName = string.Empty,
                 Size = rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey).ToString(),
@@ -231,7 +231,7 @@ namespace SabreTools.DatFiles.Formats
                 SHA384 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA384Key),
                 SHA512 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA512Key),
                 SpamSum = rom.GetStringFieldValue(Models.Metadata.Rom.SpamSumKey),
-                Status = rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey).AsStringValue<ItemStatus>(useSecond: false),
+                Status = rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>().AsStringValue(useSecond: false),
             };
             return row;
         }

@@ -1,4 +1,5 @@
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using SabreTools.FileTypes;
@@ -21,7 +22,7 @@ namespace SabreTools.Test.DatItems
         {
             var baseFile = CreateBaseFile(fileType);
             var actual = DatItem.Create(baseFile);
-            Assert.Equal(expected, actual?.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey));
+            Assert.Equal(expected, actual?.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>());
         }
     
         [Fact]

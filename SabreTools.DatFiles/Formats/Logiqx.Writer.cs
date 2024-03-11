@@ -527,7 +527,7 @@ namespace SabreTools.DatFiles.Formats
             };
 
             if (item.ItemStatusSpecified)
-                rom.Status = item.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey).AsStringValue<ItemStatus>(useSecond: false);
+                rom.Status = item.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>().AsStringValue(useSecond: false);
 
             return rom;
         }
@@ -546,8 +546,8 @@ namespace SabreTools.DatFiles.Formats
                 Region = item.GetStringFieldValue(Models.Metadata.Disk.RegionKey),
             };
 
-            if (item.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey) != ItemStatus.NULL)
-                disk.Status = item.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey).AsStringValue<ItemStatus>(useSecond: false);
+            if (item.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() != ItemStatus.NULL)
+                disk.Status = item.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>().AsStringValue(useSecond: false);
 
             return disk;
         }

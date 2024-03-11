@@ -166,7 +166,7 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         private static Models.Listrom.Row? CreateRow(Disk disk)
         {
-            if (disk.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey) == ItemStatus.Nodump)
+            if (disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump)
             {
                 return new Models.Listrom.Row
                 {
@@ -174,7 +174,7 @@ namespace SabreTools.DatFiles.Formats
                     NoGoodDumpKnown = true,
                 };
             }
-            else if (disk.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey) == ItemStatus.BadDump)
+            else if (disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.BadDump)
             {
                 var row = new Models.Listrom.Row
                 {
@@ -210,7 +210,7 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         private static Models.Listrom.Row? CreateRow(Rom rom)
         {
-            if (rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) == ItemStatus.Nodump)
+            if (rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump)
             {
                 return new Models.Listrom.Row
                 {
@@ -219,7 +219,7 @@ namespace SabreTools.DatFiles.Formats
                     NoGoodDumpKnown = true,
                 };
             }
-            else if (rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) == ItemStatus.BadDump)
+            else if (rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.BadDump)
             {
                 return new Models.Listrom.Row
                 {

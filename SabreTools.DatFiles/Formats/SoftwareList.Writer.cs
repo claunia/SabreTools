@@ -261,7 +261,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 Name = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey),
                 CloneOf = machine.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey),
-                Supported = machine.GetFieldValue<Supported>(Models.Metadata.Machine.SupportedKey).AsStringValue<Supported>(useSecond: true),
+                Supported = machine.GetStringFieldValue(Models.Metadata.Machine.SupportedKey).AsEnumValue<Supported>().AsStringValue(useSecond: true),
                 Description = machine.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey),
                 Year = machine.GetStringFieldValue(Models.Metadata.Machine.YearKey),
                 Publisher = machine.GetStringFieldValue(Models.Metadata.Machine.PublisherKey),
@@ -381,7 +381,7 @@ namespace SabreTools.DatFiles.Formats
                 Name = item.GetFieldValue<DataArea?>(Rom.DataAreaKey)?.GetName(),
                 Size = item.GetFieldValue<DataArea?>(Rom.DataAreaKey)?.GetInt64FieldValue(Models.Metadata.DataArea.SizeKey)?.ToString(),
                 Width = item.GetFieldValue<DataArea?>(Rom.DataAreaKey)?.GetInt64FieldValue(Models.Metadata.DataArea.WidthKey)?.ToString(),
-                Endianness = item.GetFieldValue<DataArea?>(Rom.DataAreaKey)?.GetFieldValue<Endianness>(Models.Metadata.DataArea.EndiannessKey).AsStringValue<Endianness>(),
+                Endianness = item.GetFieldValue<DataArea?>(Rom.DataAreaKey)?.GetStringFieldValue(Models.Metadata.DataArea.EndiannessKey).AsEnumValue<Endianness>().AsStringValue(),
                 Rom = CreateRom(item),
             };
             return [dataArea];
@@ -401,8 +401,8 @@ namespace SabreTools.DatFiles.Formats
                 SHA1 = item.GetStringFieldValue(Models.Metadata.Rom.SHA1Key),
                 Offset = item.GetStringFieldValue(Models.Metadata.Rom.OffsetKey),
                 Value = item.GetStringFieldValue(Models.Metadata.Rom.ValueKey),
-                Status = item.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey).AsStringValue<ItemStatus>(useSecond: false),
-                LoadFlag = item.GetFieldValue<LoadFlag>(Models.Metadata.Rom.LoadFlagKey).AsStringValue<LoadFlag>(),
+                Status = item.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>().AsStringValue(useSecond: false),
+                LoadFlag = item.GetStringFieldValue(Models.Metadata.Rom.LoadFlagKey).AsEnumValue<LoadFlag>().AsStringValue(),
             };
             return [rom];
         }
@@ -429,7 +429,7 @@ namespace SabreTools.DatFiles.Formats
                 Name = item.GetName(),
                 MD5 = item.GetStringFieldValue(Models.Metadata.Disk.MD5Key),
                 SHA1 = item.GetStringFieldValue(Models.Metadata.Disk.SHA1Key),
-                Status = item.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey).AsStringValue<ItemStatus>(useSecond: false),
+                Status = item.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>().AsStringValue(useSecond: false),
                 Writeable = item.GetBoolFieldValue(Models.Metadata.Disk.WritableKey)?.ToString(),
             };
             return [disk];

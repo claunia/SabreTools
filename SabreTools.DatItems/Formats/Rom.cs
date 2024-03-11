@@ -39,7 +39,7 @@ namespace SabreTools.DatItems.Formats
         {
             get
             {
-                var status = GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey);
+                var status = GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>();
                 return status != ItemStatus.NULL && status != ItemStatus.None;
             }
         }

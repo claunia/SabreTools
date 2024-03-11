@@ -1,6 +1,7 @@
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 
 // TODO: Add item mappings for all fields
 namespace SabreTools.DatItems.Formats
@@ -183,7 +184,7 @@ namespace SabreTools.DatItems.Formats
             sourceDetails.SetFieldValue<Machine>(DatItem.MachineKey, GetFieldValue<Machine>(DatItem.MachineKey));
             sourceDetails.SetFieldValue<bool?>(DatItem.RemoveKey, GetBoolFieldValue(DatItem.RemoveKey));
             sourceDetails.SetFieldValue<Source?>(DatItem.SourceKey, GetFieldValue<Source?>(DatItem.SourceKey));
-            sourceDetails.SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey));
+            sourceDetails.SetFieldValue<string?>(Models.Metadata.DatItem.TypeKey, GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue());
 
             return sourceDetails;
         }
@@ -196,7 +197,7 @@ namespace SabreTools.DatItems.Formats
         public override bool Equals(DatItem? other)
         {
             // If we don't have a SourceDetails, return false
-            if (GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) != other?.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey))
+            if (GetStringFieldValue(Models.Metadata.DatItem.TypeKey) != other?.GetStringFieldValue(Models.Metadata.DatItem.TypeKey))
                 return false;
 
             // Otherwise, treat it as a SourceDetails

@@ -227,7 +227,7 @@ namespace SabreTools.Filtering
                 return;
 
             // If there are no field names for this type or generic, return
-            string? itemType = datItem.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey).AsStringValue<ItemType>();
+            string? itemType = datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue();
             if (itemType == null || (!ItemFieldNames.ContainsKey(itemType) && !ItemFieldNames.ContainsKey("item")))
                 return;
 

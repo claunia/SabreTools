@@ -157,11 +157,11 @@ namespace SabreTools.DatTools
 
                 // Otherwise, we rebuild that file to all locations that we need to
                 bool usedInternally;
-                if (items[0].GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) == ItemType.Disk)
+                if (items[0].GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>() == ItemType.Disk)
                     usedInternally = RebuildIndividualFile(datFile, new Disk(fileinfo), foundpath, outDir, date, inverse, outputFormat, isZip: false);
-                else if (items[0].GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) == ItemType.File)
+                else if (items[0].GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>() == ItemType.File)
                     usedInternally = RebuildIndividualFile(datFile, new DatItems.Formats.File(fileinfo), foundpath, outDir, date, inverse, outputFormat, isZip: false);
-                else if (items[0].GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) == ItemType.Media)
+                else if (items[0].GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>() == ItemType.Media)
                     usedInternally = RebuildIndividualFile(datFile, new Media(fileinfo), foundpath, outDir, date, inverse, outputFormat, isZip: false);
                 else
                     usedInternally = RebuildIndividualFile(datFile, new Rom(fileinfo), foundpath, outDir, date, inverse, outputFormat, isZip: false);
@@ -422,7 +422,7 @@ namespace SabreTools.DatTools
                 if (RebuildTorrentXz(datFile, datItem, file, outDir, outputFormat, isZip))
                     return true;
 
-                logger.User($"{(inverse ? "No matches" : "Matches")} found for '{Path.GetFileName(datItem.GetName() ?? datItem.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey).ToString())}', rebuilding accordingly...");
+                logger.User($"{(inverse ? "No matches" : "Matches")} found for '{Path.GetFileName(datItem.GetName() ?? datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue())}', rebuilding accordingly...");
                 rebuilt = true;
 
                 // Special case for partial packing mode
@@ -478,7 +478,7 @@ namespace SabreTools.DatTools
                         // If we have duplicates and we're not filtering
                         if (ShouldRebuild(datFile, headerless, transformStream, false, out dupes))
                         {
-                            logger.User($"Headerless matches found for '{Path.GetFileName(datItem.GetName() ?? datItem.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey).ToString())}', rebuilding accordingly...");
+                            logger.User($"Headerless matches found for '{Path.GetFileName(datItem.GetName() ?? datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue())}', rebuilding accordingly...");
                             rebuilt = true;
 
                             // Now loop through the list and rebuild accordingly
@@ -678,7 +678,7 @@ namespace SabreTools.DatTools
             {
                 BaseArchive? archive = BaseArchive.Create(file);
                 if (archive != null)
-                    (stream, _) = archive.CopyToStream(datItem.GetName() ?? datItem.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey).ToString());
+                    (stream, _) = archive.CopyToStream(datItem.GetName() ?? datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue() ?? string.Empty);
             }
             // Otherwise, just open the filestream
             else

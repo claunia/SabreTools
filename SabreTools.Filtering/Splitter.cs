@@ -336,7 +336,7 @@ namespace SabreTools.Filtering
                         foreach (DatItem item in devItems)
                         {
                             // If the parent machine doesn't already contain this item, add it
-                            if (!datFile.Items[machine]!.Any(i => i.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) == item.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) && i.GetName() == item.GetName()))
+                            if (!datFile.Items[machine]!.Any(i => i.GetStringFieldValue(Models.Metadata.DatItem.TypeKey) == item.GetStringFieldValue(Models.Metadata.DatItem.TypeKey) && i.GetName() == item.GetName()))
                             {
                                 // Set that we found new items
                                 foundnew = true;
@@ -388,7 +388,7 @@ namespace SabreTools.Filtering
                         foreach (DatItem item in slotItems)
                         {
                             // If the parent machine doesn't already contain this item, add it
-                            if (!datFile.Items[machine]!.Any(i => i.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) == item.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) && i.GetName() == item.GetName()))
+                            if (!datFile.Items[machine]!.Any(i => i.GetStringFieldValue(Models.Metadata.DatItem.TypeKey) == item.GetStringFieldValue(Models.Metadata.DatItem.TypeKey) && i.GetName() == item.GetName()))
                             {
                                 // Set that we found new items
                                 foundnew = true;

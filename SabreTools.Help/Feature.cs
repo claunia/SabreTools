@@ -520,7 +520,7 @@ namespace SabreTools.Help
         /// <summary>
         /// Get the string value associated with this feature
         /// </summary>
-        public string? GetStringValue()
+        public string? GetStringFieldValue()
         {
             if (_featureType != ParameterType.String)
                 throw new ArgumentException("Feature is not a string");

@@ -192,7 +192,7 @@ namespace SabreTools.DatItems.Formats
             bool dupefound = false;
 
             // If we don't have a file, return false
-            if (GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) != other?.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey))
+            if (GetStringFieldValue(Models.Metadata.DatItem.TypeKey) != other?.GetStringFieldValue(Models.Metadata.DatItem.TypeKey))
                 return dupefound;
 
             // Otherwise, treat it as a File
