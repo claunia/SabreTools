@@ -1,6 +1,7 @@
 ﻿using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -27,8 +28,22 @@ namespace SabreTools.DatItems.Formats
 
         public Display(Models.Metadata.Video item) : base()
         {
-            // TODO: Determine what transformation is needed here
-            _internal = item;
+            SetFieldValue<long?>("ASPECTX", NumberHelper.ConvertToInt64(item.ReadString(Models.Metadata.Video.AspectXKey)));
+            SetFieldValue<long?>("ASPECTY", NumberHelper.ConvertToInt64(item.ReadString(Models.Metadata.Video.AspectYKey)));
+            SetFieldValue<DisplayType>(Models.Metadata.Display.DisplayTypeKey, item.ReadString(Models.Metadata.Video.ScreenKey)?.AsEnumValue<DisplayType>() ?? DisplayType.NULL);
+            SetFieldValue<long?>(Models.Metadata.Display.HeightKey, NumberHelper.ConvertToInt64(item.ReadString(Models.Metadata.Video.HeightKey)));
+            SetFieldValue<double?>(Models.Metadata.Display.RefreshKey, NumberHelper.ConvertToDouble(item.ReadString(Models.Metadata.Video.RefreshKey)));
+            SetFieldValue<long?>(Models.Metadata.Display.WidthKey, NumberHelper.ConvertToInt64(item.ReadString(Models.Metadata.Video.WidthKey)));
+
+            switch (item.ReadString(Models.Metadata.Video.OrientationKey))
+            {
+                case "horizontal":
+                    SetFieldValue<long?>(Models.Metadata.Display.RotateKey, 0);
+                    break;
+                case "vertical":
+                    SetFieldValue<long?>(Models.Metadata.Display.RotateKey, 90);
+                    break;
+            }
         }
 
         #endregion

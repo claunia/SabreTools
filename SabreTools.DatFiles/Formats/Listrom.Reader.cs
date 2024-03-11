@@ -152,7 +152,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 var disk = new Disk();
                 disk.SetName(row.Name);
-                disk.SetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey, value: ItemStatus.BadDump);
+                disk.SetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey, ItemStatus.BadDump);
                 disk.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
 
                 if (!string.IsNullOrEmpty(row.MD5))

@@ -259,8 +259,10 @@ namespace SabreTools.DatFiles
                 Header.SetFieldValue<bool?>(Models.Metadata.Header.LockRomModeKey, header.GetFieldValue<bool?>(Models.Metadata.Header.LockRomModeKey));
             if (Header.GetFieldValue<bool?>(Models.Metadata.Header.LockSampleModeKey) == null)
                 Header.SetFieldValue<bool?>(Models.Metadata.Header.LockSampleModeKey, header.GetFieldValue<bool?>(Models.Metadata.Header.LockSampleModeKey));
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.MameConfigKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.MameConfigKey, header.GetFieldValue<string?>(Models.Metadata.Header.NameKey));
             if (Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) == null)
-                Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, header.GetFieldValue<string?>(Models.Metadata.Header.NameKey));
+                Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, header.GetFieldValue<string?>(Models.Metadata.Header.MameConfigKey));
             if (Header.GetFieldValue<string?>(Models.Metadata.Header.PluginKey) == null)
                 Header.SetFieldValue<string?>(Models.Metadata.Header.PluginKey, header.GetFieldValue<string?>(Models.Metadata.Header.PluginKey));
             if (Header.GetFieldValue<string?>(Models.Metadata.Header.RefNameKey) == null)
@@ -446,6 +448,11 @@ namespace SabreTools.DatFiles
                 var items = ReadItemArray<Models.Metadata.SharedFeat>(item, Models.Metadata.Machine.SharedFeatKey);
                 ProcessItems(items, machine, filename, indexId, statsOnly);
             }
+            if (item.ContainsKey(Models.Metadata.Machine.SlotKey))
+            {
+                var items = ReadItemArray<Models.Metadata.Slot>(item, Models.Metadata.Machine.SlotKey);
+                ProcessItems(items, machine, filename, indexId, statsOnly);
+            }
             if (item.ContainsKey(Models.Metadata.Machine.SoftwareListKey))
             {
                 var items = ReadItemArray<Models.Metadata.SoftwareList>(item, Models.Metadata.Machine.SoftwareListKey);
@@ -487,6 +494,15 @@ namespace SabreTools.DatFiles
                 var datItem = new DatItems.Formats.Adjuster(item);
                 datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
+
+                // Handle subitems
+                var condition = item.Read<Models.Metadata.Condition>(Models.Metadata.Adjuster.ConditionKey);
+                if (condition != null)
+                {
+                    var subItem = new DatItems.Formats.Condition(condition);
+                    datItem.SetFieldValue<DatItems.Formats.Condition?>(Models.Metadata.Adjuster.ConditionKey, subItem);
+                }
+
                 ParseAddHelper(datItem, statsOnly);
             }
         }
@@ -583,6 +599,49 @@ namespace SabreTools.DatFiles
                 var datItem = new DatItems.Formats.Configuration(item);
                 datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
+
+                // Handle subitems
+                var condition = item.Read<Models.Metadata.Condition>(Models.Metadata.Configuration.ConditionKey);
+                if (condition != null)
+                {
+                    var subItem = new DatItems.Formats.Condition(condition);
+                    datItem.SetFieldValue<DatItems.Formats.Condition?>(Models.Metadata.Configuration.ConditionKey, subItem);
+                }
+
+                var confLocations = ReadItemArray<Models.Metadata.ConfLocation>(item, Models.Metadata.Configuration.ConfLocationKey);
+                if (confLocations != null)
+                {
+                    var subLocations = new List<DatItems.Formats.ConfLocation>();
+                    foreach (var location in confLocations)
+                    {
+                        var subItem = new DatItems.Formats.ConfLocation(location);
+                        subLocations.Add(subItem);
+                    }
+
+                    datItem.SetFieldValue<DatItems.Formats.ConfLocation[]?>(Models.Metadata.Configuration.ConfLocationKey, [.. subLocations]);
+                }
+
+                var confSettings = ReadItemArray<Models.Metadata.ConfSetting>(item, Models.Metadata.Configuration.ConfSettingKey);
+                if (confSettings != null)
+                {
+                    var subValues = new List<DatItems.Formats.ConfSetting>();
+                    foreach (var setting in confSettings)
+                    {
+                        var subItem = new DatItems.Formats.ConfSetting(setting);
+
+                        var subCondition = item.Read<Models.Metadata.Condition>(Models.Metadata.ConfSetting.ConditionKey);
+                        if (subCondition != null)
+                        {
+                            var subSubItem = new DatItems.Formats.Condition(subCondition);
+                            subItem.SetFieldValue<DatItems.Formats.Condition?>(Models.Metadata.ConfSetting.ConditionKey, subSubItem);
+                        }
+
+                        subValues.Add(subItem);
+                    }
+
+                    datItem.SetFieldValue<DatItems.Formats.ConfSetting[]?>(Models.Metadata.Configuration.ConfSettingKey, [.. subValues]);
+                }
+
                 ParseAddHelper(datItem, statsOnly);
             }
         }
@@ -633,6 +692,28 @@ namespace SabreTools.DatFiles
                 var datItem = new DatItems.Formats.Device(item);
                 datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
+
+                // Handle subitems
+                var instance = item.Read<Models.Metadata.Instance>(Models.Metadata.Device.InstanceKey);
+                if (instance != null)
+                {
+                    var subItem = new DatItems.Formats.Instance(instance);
+                    datItem.SetFieldValue<DatItems.Formats.Instance?>(Models.Metadata.Device.InstanceKey, subItem);
+                }
+
+                var extensions = ReadItemArray<Models.Metadata.Extension>(item, Models.Metadata.Device.ExtensionKey);
+                if (extensions != null)
+                {
+                    var subExtensions = new List<DatItems.Formats.Extension>();
+                    foreach (var extension in extensions)
+                    {
+                        var subItem = new DatItems.Formats.Extension(extension);
+                        subExtensions.Add(subItem);
+                    }
+
+                    datItem.SetFieldValue<DatItems.Formats.Extension[]?>(Models.Metadata.Device.ExtensionKey, [.. subExtensions]);
+                }
+
                 ParseAddHelper(datItem, statsOnly);
             }
         }
@@ -705,6 +786,49 @@ namespace SabreTools.DatFiles
                 var datItem = new DatItems.Formats.DipSwitch(item);
                 datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
+
+                // Handle subitems
+                var condition = item.Read<Models.Metadata.Condition>(Models.Metadata.DipSwitch.ConditionKey);
+                if (condition != null)
+                {
+                    var subItem = new DatItems.Formats.Condition(condition);
+                    datItem.SetFieldValue<DatItems.Formats.Condition?>(Models.Metadata.DipSwitch.ConditionKey, subItem);
+                }
+
+                var dipLocations = ReadItemArray<Models.Metadata.DipLocation>(item, Models.Metadata.DipSwitch.DipLocationKey);
+                if (dipLocations != null)
+                {
+                    var subLocations = new List<DatItems.Formats.DipLocation>();
+                    foreach (var location in dipLocations)
+                    {
+                        var subItem = new DatItems.Formats.DipLocation(location);
+                        subLocations.Add(subItem);
+                    }
+
+                    datItem.SetFieldValue<DatItems.Formats.DipLocation[]?>(Models.Metadata.DipSwitch.DipLocationKey, [.. subLocations]);
+                }
+
+                var dipValues = ReadItemArray<Models.Metadata.DipValue>(item, Models.Metadata.DipSwitch.DipValueKey);
+                if (dipValues != null)
+                {
+                    var subValues = new List<DatItems.Formats.DipValue>();
+                    foreach (var value in dipValues)
+                    {
+                        var subItem = new DatItems.Formats.DipValue(value);
+
+                        var subCondition = item.Read<Models.Metadata.Condition>(Models.Metadata.DipValue.ConditionKey);
+                        if (subCondition != null)
+                        {
+                            var subSubItem = new DatItems.Formats.Condition(subCondition);
+                            subItem.SetFieldValue<DatItems.Formats.Condition?>(Models.Metadata.DipValue.ConditionKey, subSubItem);
+                        }
+
+                        subValues.Add(subItem);
+                    }
+
+                    datItem.SetFieldValue<DatItems.Formats.DipValue[]?>(Models.Metadata.DipSwitch.DipValueKey, [.. subValues]);
+                }
+
                 ParseAddHelper(datItem, statsOnly);
             }
         }
@@ -966,6 +1090,21 @@ namespace SabreTools.DatFiles
                 var datItem = new DatItems.Formats.Input(item);
                 datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
+
+                // Handle subitems
+                var controls = ReadItemArray<Models.Metadata.Control>(item, Models.Metadata.Input.ControlKey);
+                if (controls != null)
+                {
+                    var subControls = new List<DatItems.Formats.Control>();
+                    foreach (var control in controls)
+                    {
+                        var subItem = new DatItems.Formats.Control(control);
+                        subControls.Add(subItem);
+                    }
+
+                    datItem.SetFieldValue<DatItems.Formats.Control[]?>(Models.Metadata.Input.ControlKey, [.. subControls]);
+                }
+
                 ParseAddHelper(datItem, statsOnly);
             }
         }
@@ -1042,6 +1181,21 @@ namespace SabreTools.DatFiles
                 var datItem = new DatItems.Formats.Port(item);
                 datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
+
+                // Handle subitems
+                var analogs = ReadItemArray<Models.Metadata.Analog>(item, Models.Metadata.Port.AnalogKey);
+                if (analogs != null)
+                {
+                    var subAnalogs = new List<DatItems.Formats.Analog>();
+                    foreach (var analog in analogs)
+                    {
+                        var subItem = new DatItems.Formats.Analog(analog);
+                        subAnalogs.Add(subItem);
+                    }
+
+                    datItem.SetFieldValue<DatItems.Formats.Analog[]?>(Models.Metadata.Port.AnalogKey, [.. subAnalogs]);
+                }
+
                 ParseAddHelper(datItem, statsOnly);
             }
         }
@@ -1162,6 +1316,45 @@ namespace SabreTools.DatFiles
                 var datItem = new DatItems.Formats.SharedFeat(item);
                 datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
+                ParseAddHelper(datItem, statsOnly);
+            }
+        }
+
+        /// <summary>
+        /// Convert Slot information 
+        /// </summary>
+        /// <param name="items">Array of internal items to convert</param>
+        /// <param name="machine">Machine to use with the converted items</param>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        private void ProcessItems(Models.Metadata.Slot[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        {
+            // If the array is null or empty, return without processing
+            if (items == null || items.Length == 0)
+                return;
+
+            // Loop through the items and add
+            foreach (var item in items)
+            {
+                var datItem = new DatItems.Formats.Slot(item);
+                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                datItem.CopyMachineInformation(machine);
+
+                // Handle subitems
+                var slotOptions = ReadItemArray<Models.Metadata.SlotOption>(item, Models.Metadata.Slot.SlotOptionKey);
+                if (slotOptions != null)
+                {
+                    var subOptions = new List<DatItems.Formats.SlotOption>();
+                    foreach (var slotOption in slotOptions)
+                    {
+                        var subItem = new DatItems.Formats.SlotOption(slotOption);
+                        subOptions.Add(subItem);
+                    }
+
+                    datItem.SetFieldValue<DatItems.Formats.SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey, [.. subOptions]);
+                }
+
                 ParseAddHelper(datItem, statsOnly);
             }
         }
