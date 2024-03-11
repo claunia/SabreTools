@@ -92,7 +92,7 @@ namespace SabreTools.DatFiles.Formats
             ProcessItemName(datItem, false, forceRomName: false);
 
             // Romba mode automatically uses item name
-            if (Header.OutputDepot?.IsActive == true || Header.GetFieldValue<bool>(DatHeader.UseRomNameKey))
+            if (Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.IsActive == true || Header.GetFieldValue<bool>(DatHeader.UseRomNameKey))
                 sw.Write($"{datItem.GetName() ?? string.Empty}\n");
             else if (!Header.GetFieldValue<bool>(DatHeader.UseRomNameKey) && datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) != lastgame)
                 sw.Write($"{datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) ?? string.Empty}\n");

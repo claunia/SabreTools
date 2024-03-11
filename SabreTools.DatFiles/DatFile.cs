@@ -456,14 +456,14 @@ namespace SabreTools.DatFiles
             string post = CreatePrefixPostfix(item, false);
 
             // If we're in Depot mode, take care of that instead
-            if (Header.OutputDepot?.IsActive == true)
+            if (Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.IsActive == true)
             {
                 if (item is Disk disk)
                 {
                     // We can only write out if there's a SHA-1
                     if (!string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key)))
                     {
-                        name = Utilities.GetDepotPath(disk.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key), Header.OutputDepot.Depth)?.Replace('\\', '/');
+                        name = Utilities.GetDepotPath(disk.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key), Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)!.Depth)?.Replace('\\', '/');
                         item.SetName($"{pre}{name}{post}");
                     }
                 }
@@ -472,7 +472,7 @@ namespace SabreTools.DatFiles
                     // We can only write out if there's a SHA-1
                     if (!string.IsNullOrEmpty(media.GetFieldValue<string?>(Models.Metadata.Media.SHA1Key)))
                     {
-                        name = Utilities.GetDepotPath(media.GetFieldValue<string?>(Models.Metadata.Media.SHA1Key), Header.OutputDepot.Depth)?.Replace('\\', '/');
+                        name = Utilities.GetDepotPath(media.GetFieldValue<string?>(Models.Metadata.Media.SHA1Key), Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)!.Depth)?.Replace('\\', '/');
                         item.SetName($"{pre}{name}{post}");
                     }
                 }
@@ -481,7 +481,7 @@ namespace SabreTools.DatFiles
                     // We can only write out if there's a SHA-1
                     if (!string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key)))
                     {
-                        name = Utilities.GetDepotPath(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key), Header.OutputDepot.Depth)?.Replace('\\', '/');
+                        name = Utilities.GetDepotPath(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key), Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)!.Depth)?.Replace('\\', '/');
                         item.SetName($"{pre}{name}{post}");
                     }
                 }

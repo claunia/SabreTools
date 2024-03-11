@@ -39,6 +39,16 @@ namespace SabreTools.DatFiles
         public const string GameNameKey = "GAMENAME";
 
         /// <summary>
+        /// Input depot information
+        /// </summary>
+        public const string InputDepotKey = "INPUTDEPOT";
+
+        /// <summary>
+        /// Output depot information
+        /// </summary>
+        public const string OutputDepotKey = "OUTPUTDEPOT";
+
+        /// <summary>
         /// Text to append to all outputted lines
         /// </summary>
         public const string PostfixKey = "POSTFIX";
@@ -91,22 +101,6 @@ namespace SabreTools.DatFiles
                 return canOpen != null && canOpen.Length > 0;
             }
         }
-
-        #region Depot Information
-
-        /// <summary>
-        /// Input depot information
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public DepotInformation? InputDepot { get; set; }
-
-        /// <summary>
-        /// Output depot information
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public DepotInformation? OutputDepot { get; set; }
-
-        #endregion
 
         /// <summary>
         /// Internal Header model
@@ -163,11 +157,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         public object Clone()
         {
-            var header = new DatHeader()
-            {
-                InputDepot = this.InputDepot?.Clone() as DepotInformation,
-                OutputDepot = this.OutputDepot?.Clone() as DepotInformation,
-            };
+            var header = new DatHeader();
             header.SetFieldValue<string?>(DatHeader.AddExtensionKey, GetFieldValue<string?>(DatHeader.AddExtensionKey));
             header.SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, GetFieldValue<string?>(Models.Metadata.Header.AuthorKey));
             header.SetFieldValue<MergingFlag>(Models.Metadata.Header.BiosModeKey, GetFieldValue<MergingFlag>(Models.Metadata.Header.BiosModeKey));
@@ -190,6 +180,8 @@ namespace SabreTools.DatFiles
             header.SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, GetFieldValue<string?>(Models.Metadata.Header.HomepageKey));
             header.SetFieldValue<string?>(Models.Metadata.Header.IdKey, GetFieldValue<string?>(Models.Metadata.Header.IdKey));
             header.SetFieldValue<OfflineListInfo[]?>(Models.Metadata.Header.InfosKey, GetFieldValue<OfflineListInfo[]?>(Models.Metadata.Header.InfosKey)); // TODO: Perform a deep clone
+            header.SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey, GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.Clone() as DepotInformation);
+            header.SetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey, GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.Clone() as DepotInformation);
             header.SetFieldValue<bool?>(Models.Metadata.Header.LockBiosModeKey, GetFieldValue<bool?>(Models.Metadata.Header.LockBiosModeKey));
             header.SetFieldValue<bool?>(Models.Metadata.Header.LockRomModeKey, GetFieldValue<bool?>(Models.Metadata.Header.LockRomModeKey));
             header.SetFieldValue<bool?>(Models.Metadata.Header.LockSampleModeKey, GetFieldValue<bool?>(Models.Metadata.Header.LockSampleModeKey));
@@ -248,14 +240,12 @@ namespace SabreTools.DatFiles
         /// </summary>
         public DatHeader CloneFiltering()
         {
-            var header = new DatHeader()
-            {
-                InputDepot = this.InputDepot?.Clone() as DepotInformation,
-                OutputDepot = this.OutputDepot?.Clone() as DepotInformation,
-            };
+            var header = new DatHeader();
             header.SetFieldValue<string?>(DatHeader.AddExtensionKey, GetFieldValue<string?>(DatHeader.AddExtensionKey));
             header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, GetFieldValue<DatFormat>(DatHeader.DatFormatKey));
             header.SetFieldValue<bool>(DatHeader.GameNameKey, GetFieldValue<bool>(DatHeader.GameNameKey));
+            header.SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey, GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.Clone() as DepotInformation);
+            header.SetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey, GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.Clone() as DepotInformation);
             header.SetFieldValue<string?>(DatHeader.PostfixKey, GetFieldValue<string?>(DatHeader.PostfixKey));
             header.SetFieldValue<string?>(DatHeader.PrefixKey, GetFieldValue<string?>(DatHeader.PrefixKey));
             header.SetFieldValue<bool>(DatHeader.RemoveExtensionKey, GetFieldValue<bool>(DatHeader.RemoveExtensionKey));
@@ -341,8 +331,8 @@ namespace SabreTools.DatFiles
             if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(DatHeader.ReplaceExtensionKey)))
                 SetFieldValue<string?>(DatHeader.ReplaceExtensionKey, datHeader.GetFieldValue<string?>(DatHeader.ReplaceExtensionKey));
 
-            InputDepot = datHeader.InputDepot?.Clone() as DepotInformation;
-            OutputDepot = datHeader.OutputDepot?.Clone() as DepotInformation;
+            SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey, datHeader.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.Clone() as DepotInformation);
+            SetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey, datHeader.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.Clone() as DepotInformation);
             SetFieldValue<bool>(DatHeader.GameNameKey, datHeader.GetFieldValue<bool>(DatHeader.GameNameKey));
             SetFieldValue<bool>(DatHeader.QuotesKey, datHeader.GetFieldValue<bool>(DatHeader.QuotesKey));
             SetFieldValue<bool>(DatHeader.RemoveExtensionKey, datHeader.GetFieldValue<bool>(DatHeader.RemoveExtensionKey));

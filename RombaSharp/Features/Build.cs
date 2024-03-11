@@ -58,8 +58,8 @@ structure according to the original DAT master directory tree structure.";
                 DatFile datFile = Parser.CreateAndParse(Path.Combine(_dats!, foundDats[key]));
 
                 // Set the depot values
-                datFile.Header.InputDepot = new DepotInformation(true, 4);
-                datFile.Header.OutputDepot = new DepotInformation(true, 4);
+                datFile.Header.SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey, new DepotInformation(true, 4));
+                datFile.Header.SetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey, new DepotInformation(true, 4));
 
                 // Create the new output directory if it doesn't exist
                 string outputFolder = Path.Combine(outdat, Path.GetFileNameWithoutExtension(foundDats[key]));

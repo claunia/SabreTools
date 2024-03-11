@@ -74,7 +74,7 @@ namespace SabreTools.Features
             var outputFormat = GetOutputFormat(features);
 
             // If we have the romba flag
-            if (Header!.OutputDepot?.IsActive == true)
+            if (Header!.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.IsActive == true)
             {
                 // Update TorrentGzip output
                 if (outputFormat == OutputFormat.TorrentGzip)
@@ -98,8 +98,8 @@ namespace SabreTools.Features
                     Parser.ParseInto(datdata, datfile, int.MaxValue, keep: true);
 
                     // Set depot information
-                    datdata.Header.InputDepot = Header.InputDepot?.Clone() as DepotInformation;
-                    datdata.Header.OutputDepot = Header.OutputDepot?.Clone() as DepotInformation;
+                    datdata.Header.SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey,  Header.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.Clone() as DepotInformation);
+                    datdata.Header.SetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey, Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.Clone() as DepotInformation);
 
                     // If we have overridden the header skipper, set it now
                     if (!string.IsNullOrEmpty(Header.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey)))
@@ -107,7 +107,7 @@ namespace SabreTools.Features
 
                     // If we have the depot flag, respect it
                     bool success;
-                    if (Header.InputDepot?.IsActive ?? false)
+                    if (Header.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.IsActive ?? false)
                         success = Rebuilder.RebuildDepot(datdata, Inputs, Path.Combine(OutputDir!, datdata.Header.GetFieldValue<string?>(DatHeader.FileNameKey)!), date, delete, inverse, outputFormat);
                     else
                         success = Rebuilder.RebuildGeneric(datdata, Inputs, Path.Combine(OutputDir!, datdata.Header.GetFieldValue<string?>(DatHeader.FileNameKey)!), quickScan, date, delete, inverse, outputFormat, asFiles);
@@ -137,8 +137,8 @@ namespace SabreTools.Features
                 }
 
                 // Set depot information
-                datdata.Header.InputDepot = Header.InputDepot?.Clone() as DepotInformation;
-                datdata.Header.OutputDepot = Header.OutputDepot?.Clone() as DepotInformation;
+                datdata.Header.SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey, Header.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.Clone() as DepotInformation);
+                datdata.Header.SetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey, Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.Clone() as DepotInformation);
 
                 // If we have overridden the header skipper, set it now
                 if (!string.IsNullOrEmpty(Header.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey)))
@@ -148,7 +148,7 @@ namespace SabreTools.Features
 
                 // If we have the depot flag, respect it
                 bool success;
-                if (Header.InputDepot?.IsActive ?? false)
+                if (Header.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.IsActive ?? false)
                     success = Rebuilder.RebuildDepot(datdata, Inputs, OutputDir!, date, delete, inverse, outputFormat);
                 else
                     success = Rebuilder.RebuildGeneric(datdata, Inputs, OutputDir!, quickScan, date, delete, inverse, outputFormat, asFiles);

@@ -2149,17 +2149,16 @@ Some special strings that can be used:
         /// </summary>
         private DatHeader? GetDatHeader(Dictionary<string, Feature?> features)
         {
-            // TODO: Sort this by region, like the actual header
-            var datHeader = new DatHeader()
-            {
-                // Get the depot information
-                InputDepot = new DepotInformation(
+            // Get the depot information
+            var inputDepot = new DepotInformation(
                 GetBoolean(features, DepotValue),
-                GetInt32(features, DepotDepthInt32Value)),
-                OutputDepot = new DepotInformation(
+                GetInt32(features, DepotDepthInt32Value));
+            var outputDepot = new DepotInformation(
                 GetBoolean(features, RombaValue),
-                GetInt32(features, RombaDepthInt32Value))
-            };
+                GetInt32(features, RombaDepthInt32Value));
+
+            var datHeader = new DatHeader();
+            datHeader.SetFieldValue<string?>(DatHeader.AddExtensionKey, GetString(features, AddExtensionStringValue));
             datHeader.SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, GetString(features, AuthorStringValue));
             datHeader.SetFieldValue<string?>(Models.Metadata.Header.CategoryKey, GetString(features, CategoryStringValue));
             datHeader.SetFieldValue<string?>(Models.Metadata.Header.CommentKey, GetString(features, CommentStringValue));
@@ -2170,22 +2169,22 @@ Some special strings that can be used:
             datHeader.SetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey, GetString(features, ForceMergingStringValue).AsEnumValue<MergingFlag>());
             datHeader.SetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey, GetString(features, ForceNodumpStringValue).AsEnumValue<NodumpFlag>());
             datHeader.SetFieldValue<PackingFlag>(Models.Metadata.Header.ForceNodumpKey, GetString(features, ForcePackingStringValue).AsEnumValue<PackingFlag>());
+            datHeader.SetFieldValue<bool>(DatHeader.GameNameKey, GetBoolean(features, GamePrefixValue));
             datHeader.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, GetString(features, HeaderStringValue));
             datHeader.SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, GetString(features, HomepageStringValue));
+            datHeader.SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey, inputDepot);
             datHeader.SetFieldValue<string?>(Models.Metadata.Header.NameKey, GetString(features, NameStringValue));
-            datHeader.SetFieldValue<string?>(Models.Metadata.Header.RootDirKey, GetString(features, RootStringValue));
-            datHeader.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, GetBoolean(features, SuperdatValue) ? "SuperDAT" : null);
-            datHeader.SetFieldValue<string?>(Models.Metadata.Header.UrlKey, GetString(features, UrlStringValue));
-            datHeader.SetFieldValue<string?>(Models.Metadata.Header.VersionKey, GetString(features, VersionStringValue));
-
-            datHeader.SetFieldValue<string?>(DatHeader.AddExtensionKey, GetString(features, AddExtensionStringValue));
-            datHeader.SetFieldValue<bool>(DatHeader.GameNameKey, GetBoolean(features, GamePrefixValue));
+            datHeader.SetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey, outputDepot);
             datHeader.SetFieldValue<string?>(DatHeader.PostfixKey, GetString(features, PostfixStringValue));
             datHeader.SetFieldValue<string?>(DatHeader.PrefixKey, GetString(features, PrefixStringValue));
             datHeader.SetFieldValue<bool>(DatHeader.QuotesKey, GetBoolean(features, QuotesValue));
             datHeader.SetFieldValue<bool>(DatHeader.RemoveExtensionKey, GetBoolean(features, RemoveExtensionsValue));
             datHeader.SetFieldValue<string?>(DatHeader.ReplaceExtensionKey, GetString(features, ReplaceExtensionStringValue));
             datHeader.SetFieldValue<bool>(DatHeader.UseRomNameKey, GetBoolean(features, RomsValue));
+            datHeader.SetFieldValue<string?>(Models.Metadata.Header.RootDirKey, GetString(features, RootStringValue));
+            datHeader.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, GetBoolean(features, SuperdatValue) ? "SuperDAT" : null);
+            datHeader.SetFieldValue<string?>(Models.Metadata.Header.UrlKey, GetString(features, UrlStringValue));
+            datHeader.SetFieldValue<string?>(Models.Metadata.Header.VersionKey, GetString(features, VersionStringValue));
 
             bool deprecated = GetBoolean(features, DeprecatedValue);
             foreach (string ot in GetList(features, OutputTypeListValue))

@@ -72,14 +72,14 @@ namespace SabreTools.Features
                     Remover!.ApplyRemovals(datdata);
 
                     // Set depot information
-                    datdata.Header.InputDepot = Header!.InputDepot?.Clone() as DepotInformation;
+                    datdata.Header.SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey, Header!.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.Clone() as DepotInformation);
 
                     // If we have overridden the header skipper, set it now
                     if (!string.IsNullOrEmpty(Header.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey)))
                         datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, Header.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey));
 
                     // If we have the depot flag, respect it
-                    if (Header.InputDepot?.IsActive ?? false)
+                    if (Header.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.IsActive ?? false)
                     {
                         Verification.VerifyDepot(datdata, Inputs);
                     }
@@ -120,7 +120,7 @@ namespace SabreTools.Features
                 Remover!.ApplyRemovals(datdata);
 
                 // Set depot information
-                datdata.Header.InputDepot = Header!.InputDepot?.Clone() as DepotInformation;
+                datdata.Header.SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey, Header!.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.Clone() as DepotInformation);
 
                 // If we have overridden the header skipper, set it now
                 if (!string.IsNullOrEmpty(Header.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey)))
@@ -129,7 +129,7 @@ namespace SabreTools.Features
                 watch.Stop();
 
                 // If we have the depot flag, respect it
-                if (Header.InputDepot?.IsActive ?? false)
+                if (Header.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.IsActive ?? false)
                 {
                     Verification.VerifyDepot(datdata, Inputs);
                 }
