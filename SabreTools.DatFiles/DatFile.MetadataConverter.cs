@@ -5,7 +5,6 @@ using SabreTools.Core.Tools;
 
 namespace SabreTools.DatFiles
 {
-    // TODO: Convert nested items (e.g. Configuration, DipLocation)
     public partial class DatFile
     {
         #region Converters
@@ -647,32 +646,6 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Convert DataArea information 
-        /// </summary>
-        /// <param name="items">Array of internal items to convert</param>
-        /// <param name="machine">Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
-        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.DataArea[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
-        {
-            // If the array is null or empty, return without processing
-            if (items == null || items.Length == 0)
-                return;
-
-            // TODO: Extract Roms
-
-            // Loop through the items and add
-            foreach (var item in items)
-            {
-                var datItem = new DatItems.Formats.DataArea(item);
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
-                datItem.CopyMachineInformation(machine);
-                ParseAddHelper(datItem, statsOnly);
-            }
-        }
-
-        /// <summary>
         /// Convert Device information 
         /// </summary>
         /// <param name="items">Array of internal items to convert</param>
@@ -736,30 +709,6 @@ namespace SabreTools.DatFiles
             foreach (var item in items)
             {
                 var datItem = new DatItems.Formats.DeviceRef(item);
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
-                datItem.CopyMachineInformation(machine);
-                ParseAddHelper(datItem, statsOnly);
-            }
-        }
-
-        /// <summary>
-        /// Convert DipLocation information 
-        /// </summary>
-        /// <param name="items">Array of internal items to convert</param>
-        /// <param name="machine">Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
-        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.DipLocation[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
-        {
-            // If the array is null or empty, return without processing
-            if (items == null || items.Length == 0)
-                return;
-
-            // Loop through the items and add
-            foreach (var item in items)
-            {
-                var datItem = new DatItems.Formats.DipLocation(item);
                 datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
@@ -834,30 +783,6 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Convert DipValue information 
-        /// </summary>
-        /// <param name="items">Array of internal items to convert</param>
-        /// <param name="machine">Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
-        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.DipValue[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
-        {
-            // If the array is null or empty, return without processing
-            if (items == null || items.Length == 0)
-                return;
-
-            // Loop through the items and add
-            foreach (var item in items)
-            {
-                var datItem = new DatItems.Formats.DipValue(item);
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
-                datItem.CopyMachineInformation(machine);
-                ParseAddHelper(datItem, statsOnly);
-            }
-        }
-
-        /// <summary>
         /// Convert Disk information 
         /// </summary>
         /// <param name="items">Array of internal items to convert</param>
@@ -875,32 +800,6 @@ namespace SabreTools.DatFiles
             foreach (var item in items)
             {
                 var datItem = new DatItems.Formats.Disk(item);
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
-                datItem.CopyMachineInformation(machine);
-                ParseAddHelper(datItem, statsOnly);
-            }
-        }
-
-        /// <summary>
-        /// Convert DiskArea information 
-        /// </summary>
-        /// <param name="items">Array of internal items to convert</param>
-        /// <param name="machine">Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
-        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.DiskArea[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
-        {
-            // If the array is null or empty, return without processing
-            if (items == null || items.Length == 0)
-                return;
-
-            // TODO: Extract Disks
-
-            // Loop through the items and add
-            foreach (var item in items)
-            {
-                var datItem = new DatItems.Formats.DiskArea(item);
                 datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
@@ -1147,17 +1046,81 @@ namespace SabreTools.DatFiles
             if (items == null || items.Length == 0)
                 return;
 
-            // TODO: Extract DataAreas
-            // TODO: Extract DiskAreas
-            // TODO: Extract DipSwitches
-
             // Loop through the items and add
             foreach (var item in items)
             {
-                var datItem = new DatItems.Formats.Part(item);
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
-                datItem.CopyMachineInformation(machine);
-                ParseAddHelper(datItem, statsOnly);
+                var partItem = new DatItems.Formats.Part(item);
+
+                // Handle subitems
+                var dataAreas = ReadItemArray<Models.Metadata.DataArea>(item, Models.Metadata.Part.DataAreaKey);
+                if (dataAreas != null)
+                {
+                    foreach (var dataArea in dataAreas)
+                    {
+                        var dataAreaItem = new DatItems.Formats.DataArea(dataArea);
+                        var roms = ReadItemArray<Models.Metadata.Rom>(dataArea, Models.Metadata.DataArea.RomKey);
+                        if (roms == null)
+                            continue;
+
+                        foreach (var rom in roms)
+                        {
+                            var romItem = new DatItems.Formats.Rom(rom);
+                            romItem.SetFieldValue<DatItems.Formats.DataArea?>(DatItems.Formats.Rom.DataAreaKey, dataAreaItem);
+                            romItem.SetFieldValue<DatItems.Formats.Part?>(DatItems.Formats.Rom.PartKey, partItem);
+                            romItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                            romItem.CopyMachineInformation(machine);
+                            ParseAddHelper(romItem, statsOnly);
+                        }
+                    }
+                }
+
+                var diskAreas = ReadItemArray<Models.Metadata.DiskArea>(item, Models.Metadata.Part.DiskAreaKey);
+                if (diskAreas != null)
+                {
+                    foreach (var diskArea in diskAreas)
+                    {
+                        var diskAreaitem = new DatItems.Formats.DiskArea(diskArea);
+                        var disks = ReadItemArray<Models.Metadata.Disk>(diskArea, Models.Metadata.DiskArea.DiskKey);
+                        if (disks == null)
+                            continue;
+
+                        foreach (var disk in disks)
+                        {
+                            var diskItem = new DatItems.Formats.Disk(disk);
+                            diskItem.SetFieldValue<DatItems.Formats.DiskArea?>(DatItems.Formats.Disk.DiskAreaKey, diskAreaitem);
+                            diskItem.SetFieldValue<DatItems.Formats.Part?>(DatItems.Formats.Disk.PartKey, partItem);
+                            diskItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                            diskItem.CopyMachineInformation(machine);
+                            ParseAddHelper(diskItem, statsOnly);
+                        }
+                    }
+
+                    var dipSwitches = ReadItemArray<Models.Metadata.DipSwitch>(item, Models.Metadata.Part.DipSwitchKey);
+                    if (dipSwitches != null)
+                    {
+                        foreach (var dipSwitch in dipSwitches)
+                        {
+                            var dipSwitchItem = new DatItems.Formats.DipSwitch(dipSwitch);
+                            dipSwitchItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                            dipSwitchItem.CopyMachineInformation(machine);
+
+                            var dipValues = ReadItemArray<Models.Metadata.DipValue>(dipSwitch, Models.Metadata.DipSwitch.DipValueKey);
+                            if (dipValues != null)
+                            {
+                                var subValues = new List<DatItems.Formats.DipValue>();
+                                foreach (var value in dipValues)
+                                {
+                                    var subItem = new DatItems.Formats.DipValue(value);
+                                    subValues.Add(subItem);
+                                }
+
+                                dipSwitchItem.SetFieldValue<DatItems.Formats.DipValue[]?>(Models.Metadata.DipSwitch.DipValueKey, [.. subValues]);
+                            }
+
+                            ParseAddHelper(dipSwitchItem, statsOnly);
+                        }
+                    }
+                }
             }
         }
 
