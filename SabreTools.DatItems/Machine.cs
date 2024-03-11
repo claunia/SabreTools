@@ -169,12 +169,6 @@ namespace SabreTools.DatItems
                     _machine[fieldName] = machine[fieldName];
             }
         }
-        
-        public Machine(string name, string description)
-        {
-            SetFieldValue<string?>(Models.Metadata.Machine.NameKey, name);
-            SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, description);
-        }
 
         #endregion
 

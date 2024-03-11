@@ -298,7 +298,13 @@ namespace SabreTools.DatTools
             foreach (var empty in empties)
 #endif
             {
-                Rom emptyRom = new(Path.Combine(empty, "_"), item);
+                var emptyMachine = new Machine();
+                emptyMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, item);
+
+                var emptyRom = new Rom();
+                emptyRom.SetName(Path.Combine(empty, "_"));
+                emptyRom.SetFieldValue<Machine?>(DatItem.MachineKey, emptyMachine);
+
                 ProcessFileHelper(datFile, item, emptyRom, basePath, parent);
 #if NET40_OR_GREATER || NETCOREAPP
             });
@@ -365,7 +371,15 @@ namespace SabreTools.DatTools
                 romname = romname.Trim(Path.DirectorySeparatorChar);
 
                 logger.Verbose($"Adding blank empty folder: {gamename}");
-                datFile.Items["null"]?.Add(new Rom(romname, gamename));
+
+                var blankMachine = new Machine();
+                blankMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, gamename);
+
+                var blankRom = new Rom();
+                blankRom.SetName(romname);
+                blankRom.SetFieldValue<Machine?>(DatItem.MachineKey, blankMachine);
+
+                datFile.Items["null"]?.Add(blankRom);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else

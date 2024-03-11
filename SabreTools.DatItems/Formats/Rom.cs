@@ -90,15 +90,6 @@ namespace SabreTools.DatItems.Formats
             SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.None);
         }
 
-        public Rom(string name, string machineName) : base()
-        {
-            SetName(name);
-            SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, null);
-            SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.None);
-            GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, machineName);
-            GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineName);
-        }
-
         public Rom(BaseFile baseFile) : base()
         {
             SetName(baseFile.Filename);
