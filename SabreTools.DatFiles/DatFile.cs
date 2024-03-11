@@ -250,7 +250,7 @@ namespace SabreTools.DatFiles
                 if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null && !rom.HasHashes())
                 {
                     // No-op, just catch it so it doesn't go further
-                    logger.Verbose($"{Header.FileName}: Entry with only SHA-1 found - '{rom.GetName()}'");
+                    logger.Verbose($"{Header.GetFieldValue<string?>(DatHeader.FileNameKey)}: Entry with only SHA-1 found - '{rom.GetName()}'");
                 }
 
                 // If we have a rom and it's missing size AND the hashes match a 0-byte file, fill in the rest of the info
@@ -271,7 +271,7 @@ namespace SabreTools.DatFiles
                 // If the file has no size and it's not the above case, skip and log
                 else if (rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) != ItemStatus.Nodump && (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == 0 || rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null))
                 {
-                    logger.Verbose($"{Header.FileName}: Incomplete entry for '{rom.GetName()}' will be output as nodump");
+                    logger.Verbose($"{Header.GetFieldValue<string?>(DatHeader.FileNameKey)}: Incomplete entry for '{rom.GetName()}' will be output as nodump");
                     rom.SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.Nodump);
                 }
 
@@ -280,7 +280,7 @@ namespace SabreTools.DatFiles
                     && rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) != null && rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) > 0
                     && !rom.HasHashes())
                 {
-                    logger.Verbose($"{Header.FileName}: Incomplete entry for '{rom.GetName()}' will be output as nodump");
+                    logger.Verbose($"{Header.GetFieldValue<string?>(DatHeader.FileNameKey)}: Incomplete entry for '{rom.GetName()}' will be output as nodump");
                     rom.SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.Nodump);
                 }
 

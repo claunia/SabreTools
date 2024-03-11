@@ -126,7 +126,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 Name = rom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
                 Title = rom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey),
-                Emulator = Header.FileName,
+                Emulator = Header.GetFieldValue<string?>(DatHeader.FileNameKey),
                 CloneOf = rom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey),
                 Year = rom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.YearKey),
                 Manufacturer = rom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.ManufacturerKey),

@@ -24,6 +24,11 @@ namespace SabreTools.DatFiles
         public const string AddExtensionKey = "ADDEXTENSION";
 
         /// <summary>
+        /// External name of the DAT
+        /// </summary>
+        public const string FileNameKey = "FILENAME";
+
+        /// <summary>
         /// Output the machine name
         /// </summary>
         public const string GameNameKey = "GAMENAME";
@@ -61,13 +66,6 @@ namespace SabreTools.DatFiles
         #endregion
 
         #region Fields
-
-        /// <summary>
-        /// External name of the DAT
-        /// </summary>
-        [JsonProperty("filename", DefaultValueHandling = DefaultValueHandling.Include)]
-        [XmlElement("filename")]
-        public string? FileName { get; set; }
 
         /// <summary>
         /// Read or write format
@@ -168,7 +166,6 @@ namespace SabreTools.DatFiles
         {
             var header = new DatHeader()
             {
-                FileName = this.FileName,
                 DatFormat = this.DatFormat,
 
                 InputDepot = this.InputDepot?.Clone() as DepotInformation,
@@ -185,6 +182,7 @@ namespace SabreTools.DatFiles
             header.SetFieldValue<bool?>(Models.Metadata.Header.DebugKey, GetFieldValue<bool?>(Models.Metadata.Header.DebugKey));
             header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey));
             header.SetFieldValue<string?>(Models.Metadata.Header.EmailKey, GetFieldValue<string?>(Models.Metadata.Header.EmailKey));
+            header.SetFieldValue<string?>(DatHeader.FileNameKey, GetFieldValue<string?>(DatHeader.FileNameKey));
             header.SetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey, GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey));
             header.SetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey, GetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey));
             header.SetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey, GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey));
@@ -227,7 +225,6 @@ namespace SabreTools.DatFiles
         {
             var header = new DatHeader()
             {
-                FileName = this.FileName,
                 DatFormat = this.DatFormat,
             };
             header.SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, GetFieldValue<string?>(Models.Metadata.Header.AuthorKey));
@@ -236,6 +233,7 @@ namespace SabreTools.DatFiles
             header.SetFieldValue<string?>(Models.Metadata.Header.DateKey, GetFieldValue<string?>(Models.Metadata.Header.DateKey));
             header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey));
             header.SetFieldValue<string?>(Models.Metadata.Header.EmailKey, GetFieldValue<string?>(Models.Metadata.Header.EmailKey));
+            header.SetFieldValue<string?>(DatHeader.FileNameKey, GetFieldValue<string?>(DatHeader.FileNameKey));
             header.SetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey, GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey));
             header.SetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey, GetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey));
             header.SetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey, GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey));
@@ -283,8 +281,8 @@ namespace SabreTools.DatFiles
             if (datHeader == null)
                 return;
 
-            if (!string.IsNullOrEmpty(datHeader.FileName))
-                FileName = datHeader.FileName;
+            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(DatHeader.FileNameKey)))
+                SetFieldValue<string?>(DatHeader.FileNameKey, datHeader.GetFieldValue<string?>(DatHeader.FileNameKey));
 
             if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(Models.Metadata.Header.NameKey)))
                 SetFieldValue<string?>(Models.Metadata.Header.NameKey, datHeader.GetFieldValue<string?>(Models.Metadata.Header.NameKey));
@@ -859,7 +857,9 @@ namespace SabreTools.DatFiles
         /// <returns>String containing the new filename</returns>
         private string CreateOutFileNamesHelper(string outDir, string extension, bool overwrite)
         {
-            string? filename = string.IsNullOrEmpty(FileName) ? GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) : FileName;
+            string? filename = string.IsNullOrEmpty(GetFieldValue<string?>(DatHeader.FileNameKey))
+                ? GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)
+                : GetFieldValue<string?>(DatHeader.FileNameKey);
 
             // Strip off the extension if it's a holdover from the DAT
             if (Utilities.HasValidDatExtension(filename))

@@ -108,14 +108,14 @@ namespace SabreTools.Features
                     // If we have the depot flag, respect it
                     bool success;
                     if (Header.InputDepot?.IsActive ?? false)
-                        success = Rebuilder.RebuildDepot(datdata, Inputs, Path.Combine(OutputDir!, datdata.Header.FileName!), date, delete, inverse, outputFormat);
+                        success = Rebuilder.RebuildDepot(datdata, Inputs, Path.Combine(OutputDir!, datdata.Header.GetFieldValue<string?>(DatHeader.FileNameKey)!), date, delete, inverse, outputFormat);
                     else
-                        success = Rebuilder.RebuildGeneric(datdata, Inputs, Path.Combine(OutputDir!, datdata.Header.FileName!), quickScan, date, delete, inverse, outputFormat, asFiles);
+                        success = Rebuilder.RebuildGeneric(datdata, Inputs, Path.Combine(OutputDir!, datdata.Header.GetFieldValue<string?>(DatHeader.FileNameKey)!), quickScan, date, delete, inverse, outputFormat, asFiles);
 
                     // If we have a success and we're updating the DAT, write it out
                     if (success && updateDat)
                     {
-                        datdata.Header.FileName = $"fixDAT_{Header.FileName}";
+                        datdata.Header.SetFieldValue<string?>(DatHeader.FileNameKey, $"fixDAT_{Header.GetFieldValue<string?>(DatHeader.FileNameKey)}");
                         datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, $"fixDAT_{Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)}");
                         datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, $"fixDAT_{Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)}");
                         datdata.Items.ClearMarked();
@@ -156,7 +156,7 @@ namespace SabreTools.Features
                 // If we have a success and we're updating the DAT, write it out
                 if (success && updateDat)
                 {
-                    datdata.Header.FileName = $"fixDAT_{Header.FileName}";
+                    datdata.Header.SetFieldValue<string?>(DatHeader.FileNameKey, $"fixDAT_{Header.GetFieldValue<string?>(DatHeader.FileNameKey)}");
                     datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, $"fixDAT_{Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)}");
                     datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, $"fixDAT_{Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)}");
                     datdata.Items.ClearMarked();

@@ -17,8 +17,8 @@ namespace SabreTools.Test.DatFiles
             var datHeader = new DatHeader
             {
                 DatFormat = datFormat,
-                FileName = "test.dat",
             };
+            datHeader.SetFieldValue<string?>(DatHeader.FileNameKey, "test.dat");
 
             // Invoke the method
             string outDir = "C:\\Test";
@@ -37,8 +37,8 @@ namespace SabreTools.Test.DatFiles
             var datHeader = new DatHeader
             {
                 DatFormat = DatFormat.ALL,
-                FileName = "test.dat",
             };
+            datHeader.SetFieldValue<string?>(DatHeader.FileNameKey, "test.dat");
 
             // Invoke the method
             string outDir = "C:\\Test";

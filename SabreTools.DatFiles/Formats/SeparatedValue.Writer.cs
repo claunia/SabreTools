@@ -159,7 +159,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var row = new Models.SeparatedValue.Row
             {
-                FileName = Header.FileName,
+                FileName = Header.GetFieldValue<string?>(DatHeader.FileNameKey),
                 InternalName = Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey),
                 Description = Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey),
                 GameName = disk.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
@@ -187,7 +187,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var row = new Models.SeparatedValue.Row
             {
-                FileName = Header.FileName,
+                FileName = Header.GetFieldValue<string?>(DatHeader.FileNameKey),
                 InternalName = Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey),
                 Description = Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey),
                 GameName = media.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
@@ -215,7 +215,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var row = new Models.SeparatedValue.Row
             {
-                FileName = Header.FileName,
+                FileName = Header.GetFieldValue<string?>(DatHeader.FileNameKey),
                 InternalName = Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey),
                 Description = Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey),
                 GameName = rom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),

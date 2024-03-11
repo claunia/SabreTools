@@ -289,7 +289,7 @@ namespace SabreTools.Features
                         string innerpost = $" ({j} - {inputPaths[j].GetNormalizedFileName(true)} Only)";
 
                         datHeaders[j] = userInputDat.Header;
-                        datHeaders[j].FileName += innerpost;
+                        datHeaders[j].SetFieldValue<string?>(DatHeader.FileNameKey, datHeaders[j].GetFieldValue<string?>(DatHeader.FileNameKey) + innerpost);
                         datHeaders[j].SetFieldValue<string?>(Models.Metadata.Header.NameKey, datHeaders[j].GetFieldValue<string?>(Models.Metadata.Header.NameKey) + innerpost);
                         datHeaders[j].SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, datHeaders[j].GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) + innerpost);
                     }

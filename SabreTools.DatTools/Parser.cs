@@ -94,11 +94,11 @@ namespace SabreTools.DatTools
                 return;
 
             // If the output filename isn't set already, get the internal filename
-            datFile.Header.FileName = string.IsNullOrEmpty(datFile.Header.FileName)
+            datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey, string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(DatHeader.FileNameKey))
                 ? (keepext
                     ? Path.GetFileName(currentPath)
                     : Path.GetFileNameWithoutExtension(currentPath))
-                : datFile.Header.FileName;
+                : datFile.Header.GetFieldValue<string?>(DatHeader.FileNameKey));
 
             // If the output type isn't set already, get the internal output type
             DatFormat currentPathFormat = GetDatFormat(currentPath);

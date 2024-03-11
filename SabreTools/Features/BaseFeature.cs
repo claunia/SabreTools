@@ -2152,8 +2152,6 @@ Some special strings that can be used:
             // TODO: Sort this by region, like the actual header
             var datHeader = new DatHeader()
             {
-                FileName = GetString(features, FilenameStringValue),
-
                 // Get the depot information
                 InputDepot = new DepotInformation(
                 GetBoolean(features, DepotValue),
@@ -2168,6 +2166,7 @@ Some special strings that can be used:
             datHeader.SetFieldValue<string?>(Models.Metadata.Header.DateKey, GetString(features, DateStringValue));
             datHeader.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, GetString(features, DescriptionStringValue));
             datHeader.SetFieldValue<string?>(Models.Metadata.Header.EmailKey, GetString(features, EmailStringValue));
+            datHeader.SetFieldValue<string?>(DatHeader.FileNameKey, GetString(features, FilenameStringValue));
             datHeader.SetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey, GetString(features, ForceMergingStringValue).AsEnumValue<MergingFlag>());
             datHeader.SetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey, GetString(features, ForceNodumpStringValue).AsEnumValue<NodumpFlag>());
             datHeader.SetFieldValue<PackingFlag>(Models.Metadata.Header.ForceNodumpKey, GetString(features, ForcePackingStringValue).AsEnumValue<PackingFlag>());
