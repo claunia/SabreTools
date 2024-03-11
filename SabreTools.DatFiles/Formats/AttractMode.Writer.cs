@@ -40,7 +40,7 @@ namespace SabreTools.DatFiles.Formats
 
                 // Serialize the input file
                 var metadata = ConvertMetadata(ignoreblanks);
-                var metadataFile = new Serialization.CrossModel.AttractMode().Deserialize(metadata);     
+                var metadataFile = new Serialization.CrossModel.AttractMode().Deserialize(metadata);
                 if (!(new Serialization.Files.AttractMode().Serialize(metadataFile, outfile)))
                 {
                     logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
