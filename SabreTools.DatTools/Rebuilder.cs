@@ -405,7 +405,7 @@ namespace SabreTools.DatTools
                 datItem = media.ConvertToRom();
 
             // Prepopluate a key string
-            string crc = (datItem as Rom)!.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey) ?? string.Empty;
+            string crc = (datItem as Rom)!.GetStringFieldValue(Models.Metadata.Rom.CRCKey) ?? string.Empty;
 
             // Try to get the stream for the file
             if (!GetFileStream(datItem, file, isZip, out Stream? fileStream))
@@ -437,11 +437,11 @@ namespace SabreTools.DatTools
                 foreach (DatItem item in dupes)
                 {
                     // If we don't have a proper machine
-                    if (item.GetFieldValue<Machine>(DatItem.MachineKey)!?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) == null || !datFile.Items.ContainsKey(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)!))
+                    if (item.GetFieldValue<Machine>(DatItem.MachineKey)!?.GetStringFieldValue(Models.Metadata.Machine.NameKey) == null || !datFile.Items.ContainsKey(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!))
                         continue;
 
                     // If we should check for the items in the machine
-                    var items = datFile.Items[item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)!];
+                    var items = datFile.Items[item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!];
                     if (shouldCheck && items!.Count > 1)
                         outputFormat = OutputFormat.Folder;
                     else if (shouldCheck && items!.Count == 1)
@@ -459,11 +459,11 @@ namespace SabreTools.DatTools
             }
 
             // Now we want to take care of headers, if applicable
-            if (datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey) != null)
+            if (datFile.Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey) != null)
             {
                 // Check to see if we have a matching header first
                 SkipperMatch.Init();
-                Rule rule = SkipperMatch.GetMatchingRule(fileStream, Path.GetFileNameWithoutExtension(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey)!));
+                Rule rule = SkipperMatch.GetMatchingRule(fileStream, Path.GetFileNameWithoutExtension(datFile.Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey)!));
 
                 // If there's a match, create the new file to write
                 if (rule.Tests != null && rule.Tests.Length != 0)
@@ -588,7 +588,7 @@ namespace SabreTools.DatTools
                 logger.User($"Matches found for '{Path.GetFileName(datItem.GetName() ?? string.Empty)}', rebuilding accordingly...");
 
                 // Get the proper output path
-                string sha1 = (datItem as Rom)!.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key) ?? string.Empty;
+                string sha1 = (datItem as Rom)!.GetStringFieldValue(Models.Metadata.Rom.SHA1Key) ?? string.Empty;
                 if (outputFormat == OutputFormat.TorrentGzipRomba)
                     outDir = Path.Combine(outDir, Utilities.GetDepotPath(sha1, datFile.Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.Depth ?? 0) ?? string.Empty);
                 else
@@ -634,7 +634,7 @@ namespace SabreTools.DatTools
                 logger.User($"Matches found for '{Path.GetFileName(datItem.GetName() ?? string.Empty)}', rebuilding accordingly...");
 
                 // Get the proper output path
-                string sha1 = (datItem as Rom)!.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key) ?? string.Empty;
+                string sha1 = (datItem as Rom)!.GetStringFieldValue(Models.Metadata.Rom.SHA1Key) ?? string.Empty;
                 if (outputFormat == OutputFormat.TorrentXZRomba)
                     outDir = Path.Combine(outDir, Utilities.GetDepotPath(sha1, datFile.Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.Depth ?? 0) ?? string.Empty).Replace(".gz", ".xz");
                 else

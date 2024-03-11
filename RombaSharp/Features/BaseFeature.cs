@@ -786,9 +786,9 @@ CREATE TABLE IF NOT EXISTS dat (
         {
             // Get the dat full path
             string fullpath = Path.Combine(_dats!,
-                (dat.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(SabreTools.Models.Metadata.Machine.NameKey) == "dats"
+                (dat.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(SabreTools.Models.Metadata.Machine.NameKey) == "dats"
                     ? string.Empty
-                    : dat.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(SabreTools.Models.Metadata.Machine.NameKey))!
+                    : dat.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(SabreTools.Models.Metadata.Machine.NameKey))!
                 , dat.GetName()!);
 
             // Parse the Dat if possible
@@ -815,51 +815,51 @@ CREATE TABLE IF NOT EXISTS dat (
                     {
                         hasItems = true;
 
-                        if (!string.IsNullOrWhiteSpace(disk.GetFieldValue<string?>(SabreTools.Models.Metadata.Disk.MD5Key)))
-                            md5query += $" (\"{disk.GetFieldValue<string?>(SabreTools.Models.Metadata.Disk.MD5Key)}\"),";
+                        if (!string.IsNullOrWhiteSpace(disk.GetStringFieldValue(SabreTools.Models.Metadata.Disk.MD5Key)))
+                            md5query += $" (\"{disk.GetStringFieldValue(SabreTools.Models.Metadata.Disk.MD5Key)}\"),";
 
-                        if (!string.IsNullOrWhiteSpace(disk.GetFieldValue<string?>(SabreTools.Models.Metadata.Disk.SHA1Key)))
+                        if (!string.IsNullOrWhiteSpace(disk.GetStringFieldValue(SabreTools.Models.Metadata.Disk.SHA1Key)))
                         {
-                            sha1query += $" (\"{disk.GetFieldValue<string?>(SabreTools.Models.Metadata.Disk.SHA1Key)}\"),";
+                            sha1query += $" (\"{disk.GetStringFieldValue(SabreTools.Models.Metadata.Disk.SHA1Key)}\"),";
 
-                            if (!string.IsNullOrWhiteSpace(disk.GetFieldValue<string?>(SabreTools.Models.Metadata.Disk.MD5Key)))
-                                md5sha1query += $" (\"{disk.GetFieldValue<string?>(SabreTools.Models.Metadata.Disk.MD5Key)}\", \"{disk.GetFieldValue<string?>(SabreTools.Models.Metadata.Disk.SHA1Key)}\"),";
+                            if (!string.IsNullOrWhiteSpace(disk.GetStringFieldValue(SabreTools.Models.Metadata.Disk.MD5Key)))
+                                md5sha1query += $" (\"{disk.GetStringFieldValue(SabreTools.Models.Metadata.Disk.MD5Key)}\", \"{disk.GetStringFieldValue(SabreTools.Models.Metadata.Disk.SHA1Key)}\"),";
                         }
                     }
                     else if (datItem is Media media)
                     {
                         hasItems = true;
 
-                        if (!string.IsNullOrWhiteSpace(media.GetFieldValue<string?>(SabreTools.Models.Metadata.Media.MD5Key)))
-                            md5query += $" (\"{media.GetFieldValue<string?>(SabreTools.Models.Metadata.Media.MD5Key)}\"),";
+                        if (!string.IsNullOrWhiteSpace(media.GetStringFieldValue(SabreTools.Models.Metadata.Media.MD5Key)))
+                            md5query += $" (\"{media.GetStringFieldValue(SabreTools.Models.Metadata.Media.MD5Key)}\"),";
 
-                        if (!string.IsNullOrWhiteSpace(media.GetFieldValue<string?>(SabreTools.Models.Metadata.Media.SHA1Key)))
+                        if (!string.IsNullOrWhiteSpace(media.GetStringFieldValue(SabreTools.Models.Metadata.Media.SHA1Key)))
                         {
-                            sha1query += $" (\"{media.GetFieldValue<string?>(SabreTools.Models.Metadata.Media.SHA1Key)}\"),";
+                            sha1query += $" (\"{media.GetStringFieldValue(SabreTools.Models.Metadata.Media.SHA1Key)}\"),";
 
-                            if (!string.IsNullOrWhiteSpace(media.GetFieldValue<string?>(SabreTools.Models.Metadata.Media.MD5Key)))
-                                md5sha1query += $" (\"{media.GetFieldValue<string?>(SabreTools.Models.Metadata.Media.MD5Key)}\", \"{media.GetFieldValue<string?>(SabreTools.Models.Metadata.Media.SHA1Key)}\"),";
+                            if (!string.IsNullOrWhiteSpace(media.GetStringFieldValue(SabreTools.Models.Metadata.Media.MD5Key)))
+                                md5sha1query += $" (\"{media.GetStringFieldValue(SabreTools.Models.Metadata.Media.MD5Key)}\", \"{media.GetStringFieldValue(SabreTools.Models.Metadata.Media.SHA1Key)}\"),";
                         }
                     }
                     else if (datItem is Rom rom)
                     {
                         hasItems = true;
 
-                        if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.CRCKey)))
-                            crcquery += $" (\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.CRCKey)}\"),";
+                        if (!string.IsNullOrWhiteSpace(rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.CRCKey)))
+                            crcquery += $" (\"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.CRCKey)}\"),";
 
-                        if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.MD5Key)))
-                            md5query += $" (\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.MD5Key)}\"),";
+                        if (!string.IsNullOrWhiteSpace(rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.MD5Key)))
+                            md5query += $" (\"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.MD5Key)}\"),";
 
-                        if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)))
+                        if (!string.IsNullOrWhiteSpace(rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.SHA1Key)))
                         {
-                            sha1query += $" (\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)}\"),";
+                            sha1query += $" (\"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.SHA1Key)}\"),";
 
-                            if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.CRCKey)))
-                                crcsha1query += $" (\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.CRCKey)}\", \"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)}\"),";
+                            if (!string.IsNullOrWhiteSpace(rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.CRCKey)))
+                                crcsha1query += $" (\"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.CRCKey)}\", \"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.SHA1Key)}\"),";
 
-                            if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.MD5Key)))
-                                md5sha1query += $" (\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.MD5Key)}\", \"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)}\"),";
+                            if (!string.IsNullOrWhiteSpace(rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.MD5Key)))
+                                md5sha1query += $" (\"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.MD5Key)}\", \"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.SHA1Key)}\"),";
                         }
                     }
                 }
@@ -899,7 +899,7 @@ CREATE TABLE IF NOT EXISTS dat (
             // Only add the DAT if it's non-empty
             if (hasItems)
             {
-                string datquery = $"INSERT OR IGNORE INTO dat (hash) VALUES (\"{dat.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)}\")";
+                string datquery = $"INSERT OR IGNORE INTO dat (hash) VALUES (\"{dat.GetStringFieldValue(SabreTools.Models.Metadata.Rom.SHA1Key)}\")";
                 slc = new SqliteCommand(datquery, dbc);
                 slc.ExecuteNonQuery();
             }

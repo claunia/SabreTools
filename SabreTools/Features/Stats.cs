@@ -49,7 +49,7 @@ The stats that are outputted are as follows:
             if (!base.ProcessFeatures(features))
                 return false;
 
-            string filename = Header!.GetFieldValue<string?>(DatFiles.DatHeader.FileNameKey)!;
+            string filename = Header!.GetStringFieldValue(DatFiles.DatHeader.FileNameKey)!;
             if (Path.GetFileName(filename) != filename)
             {
                 if (string.IsNullOrWhiteSpace(OutputDir))

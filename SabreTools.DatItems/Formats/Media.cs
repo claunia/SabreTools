@@ -57,11 +57,11 @@ namespace SabreTools.DatItems.Formats
             return new BaseFile()
             {
                 Filename = this.GetName(),
-                Parent = GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
-                MD5 = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Media.MD5Key)),
-                SHA1 = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Media.SHA1Key)),
-                SHA256 = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Media.SHA256Key)),
-                SpamSum = System.Text.Encoding.UTF8.GetBytes(GetFieldValue<string?>(Models.Metadata.Media.SpamSumKey) ?? string.Empty),
+                Parent = GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey),
+                MD5 = TextHelper.StringToByteArray(GetStringFieldValue(Models.Metadata.Media.MD5Key)),
+                SHA1 = TextHelper.StringToByteArray(GetStringFieldValue(Models.Metadata.Media.SHA1Key)),
+                SHA256 = TextHelper.StringToByteArray(GetStringFieldValue(Models.Metadata.Media.SHA256Key)),
+                SpamSum = System.Text.Encoding.UTF8.GetBytes(GetStringFieldValue(Models.Metadata.Media.SpamSumKey) ?? string.Empty),
             };
         }
 
@@ -74,7 +74,7 @@ namespace SabreTools.DatItems.Formats
             var rom = new Rom(_internal.ConvertToRom()!);
             rom.SetFieldValue<DupeType>(DatItem.DupeTypeKey, GetFieldValue<DupeType>(DatItem.DupeTypeKey));
             rom.SetFieldValue<Machine>(DatItem.MachineKey, GetFieldValue<Machine>(DatItem.MachineKey));
-            rom.SetFieldValue<bool?>(DatItem.RemoveKey, GetFieldValue<bool?>(DatItem.RemoveKey));
+            rom.SetFieldValue<bool?>(DatItem.RemoveKey, GetBoolFieldValue(DatItem.RemoveKey));
             rom.SetFieldValue<Source?>(DatItem.SourceKey, GetFieldValue<Source?>(DatItem.SourceKey));
 
             return rom;
@@ -110,19 +110,19 @@ namespace SabreTools.DatItems.Formats
             switch (bucketedBy)
             {
                 case ItemKey.MD5:
-                    key = GetFieldValue<string?>(Models.Metadata.Media.MD5Key);
+                    key = GetStringFieldValue(Models.Metadata.Media.MD5Key);
                     break;
 
                 case ItemKey.SHA1:
-                    key = GetFieldValue<string?>(Models.Metadata.Media.SHA1Key);
+                    key = GetStringFieldValue(Models.Metadata.Media.SHA1Key);
                     break;
 
                 case ItemKey.SHA256:
-                    key = GetFieldValue<string?>(Models.Metadata.Media.SHA256Key);
+                    key = GetStringFieldValue(Models.Metadata.Media.SHA256Key);
                     break;
 
                 case ItemKey.SpamSum:
-                    key = GetFieldValue<string?>(Models.Metadata.Media.SpamSumKey);
+                    key = GetStringFieldValue(Models.Metadata.Media.SpamSumKey);
                     break;
 
                 // Let the base handle generic stuff

@@ -102,22 +102,22 @@ namespace SabreTools.Features
                     datdata.Header.SetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey, Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.Clone() as DepotInformation);
 
                     // If we have overridden the header skipper, set it now
-                    if (!string.IsNullOrEmpty(Header.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey)))
-                        datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, Header.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey));
+                    if (!string.IsNullOrEmpty(Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey)))
+                        datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey));
 
                     // If we have the depot flag, respect it
                     bool success;
                     if (Header.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.IsActive ?? false)
-                        success = Rebuilder.RebuildDepot(datdata, Inputs, Path.Combine(OutputDir!, datdata.Header.GetFieldValue<string?>(DatHeader.FileNameKey)!), date, delete, inverse, outputFormat);
+                        success = Rebuilder.RebuildDepot(datdata, Inputs, Path.Combine(OutputDir!, datdata.Header.GetStringFieldValue(DatHeader.FileNameKey)!), date, delete, inverse, outputFormat);
                     else
-                        success = Rebuilder.RebuildGeneric(datdata, Inputs, Path.Combine(OutputDir!, datdata.Header.GetFieldValue<string?>(DatHeader.FileNameKey)!), quickScan, date, delete, inverse, outputFormat, asFiles);
+                        success = Rebuilder.RebuildGeneric(datdata, Inputs, Path.Combine(OutputDir!, datdata.Header.GetStringFieldValue(DatHeader.FileNameKey)!), quickScan, date, delete, inverse, outputFormat, asFiles);
 
                     // If we have a success and we're updating the DAT, write it out
                     if (success && updateDat)
                     {
-                        datdata.Header.SetFieldValue<string?>(DatHeader.FileNameKey, $"fixDAT_{Header.GetFieldValue<string?>(DatHeader.FileNameKey)}");
-                        datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, $"fixDAT_{Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)}");
-                        datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, $"fixDAT_{Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)}");
+                        datdata.Header.SetFieldValue<string?>(DatHeader.FileNameKey, $"fixDAT_{Header.GetStringFieldValue(DatHeader.FileNameKey)}");
+                        datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, $"fixDAT_{Header.GetStringFieldValue(Models.Metadata.Header.NameKey)}");
+                        datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, $"fixDAT_{Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)}");
                         datdata.Items.ClearMarked();
                         Writer.Write(datdata, OutputDir);
                     }
@@ -141,8 +141,8 @@ namespace SabreTools.Features
                 datdata.Header.SetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey, Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.Clone() as DepotInformation);
 
                 // If we have overridden the header skipper, set it now
-                if (!string.IsNullOrEmpty(Header.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey)))
-                    datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, Header.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey));
+                if (!string.IsNullOrEmpty(Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey)))
+                    datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey));
 
                 watch.Stop();
 
@@ -156,9 +156,9 @@ namespace SabreTools.Features
                 // If we have a success and we're updating the DAT, write it out
                 if (success && updateDat)
                 {
-                    datdata.Header.SetFieldValue<string?>(DatHeader.FileNameKey, $"fixDAT_{Header.GetFieldValue<string?>(DatHeader.FileNameKey)}");
-                    datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, $"fixDAT_{Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)}");
-                    datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, $"fixDAT_{Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)}");
+                    datdata.Header.SetFieldValue<string?>(DatHeader.FileNameKey, $"fixDAT_{Header.GetStringFieldValue(DatHeader.FileNameKey)}");
+                    datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, $"fixDAT_{Header.GetStringFieldValue(Models.Metadata.Header.NameKey)}");
+                    datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, $"fixDAT_{Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)}");
                     datdata.Items.ClearMarked();
                     Writer.Write(datdata, OutputDir);
                 }

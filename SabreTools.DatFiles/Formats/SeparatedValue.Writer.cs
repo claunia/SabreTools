@@ -36,23 +36,23 @@ namespace SabreTools.DatFiles.Formats
             switch (datItem)
             {
                 case Disk disk:
-                    if (string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key))
-                        && string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key)))
+                    if (string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key))
+                        && string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)))
                     {
                         missingFields.Add(Models.Metadata.Disk.SHA1Key);
                     }
                     break;
 
                 case Rom rom:
-                    if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null || NumberHelper.ConvertToInt64(rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey)) < 0)
+                    if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) == null || rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) < 0)
                         missingFields.Add(Models.Metadata.Rom.SizeKey);
-                    if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey))
-                        && string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key))
-                        && string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key))
-                        && string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA256Key))
-                        && string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA384Key))
-                        && string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA512Key))
-                        && string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey)))
+                    if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey))
+                        && string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key))
+                        && string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key))
+                        && string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key))
+                        && string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA384Key))
+                        && string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA512Key))
+                        && string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SpamSumKey)))
                     {
                         missingFields.Add(Models.Metadata.Rom.SHA1Key);
                     }
@@ -159,18 +159,18 @@ namespace SabreTools.DatFiles.Formats
         {
             var row = new Models.SeparatedValue.Row
             {
-                FileName = Header.GetFieldValue<string?>(DatHeader.FileNameKey),
-                InternalName = Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey),
-                Description = Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey),
-                GameName = disk.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
-                GameDescription = disk.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey),
+                FileName = Header.GetStringFieldValue(DatHeader.FileNameKey),
+                InternalName = Header.GetStringFieldValue(Models.Metadata.Header.NameKey),
+                Description = Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey),
+                GameName = disk.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey),
+                GameDescription = disk.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey),
                 Type = disk.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey).AsStringValue<ItemType>(),
                 RomName = string.Empty,
                 DiskName = disk.GetName(),
                 Size = string.Empty,
                 CRC = string.Empty,
-                MD5 = disk.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key),
-                SHA1 = disk.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key),
+                MD5 = disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key),
+                SHA1 = disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key),
                 SHA256 = string.Empty,
                 SHA384 = string.Empty,
                 SHA512 = string.Empty,
@@ -187,22 +187,22 @@ namespace SabreTools.DatFiles.Formats
         {
             var row = new Models.SeparatedValue.Row
             {
-                FileName = Header.GetFieldValue<string?>(DatHeader.FileNameKey),
-                InternalName = Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey),
-                Description = Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey),
-                GameName = media.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
-                GameDescription = media.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey),
+                FileName = Header.GetStringFieldValue(DatHeader.FileNameKey),
+                InternalName = Header.GetStringFieldValue(Models.Metadata.Header.NameKey),
+                Description = Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey),
+                GameName = media.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey),
+                GameDescription = media.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey),
                 Type = media.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey).AsStringValue<ItemType>(),
                 RomName = string.Empty,
                 DiskName = media.GetName(),
                 Size = string.Empty,
                 CRC = string.Empty,
-                MD5 = media.GetFieldValue<string?>(Models.Metadata.Media.MD5Key),
-                SHA1 = media.GetFieldValue<string?>(Models.Metadata.Media.SHA1Key),
-                SHA256 = media.GetFieldValue<string?>(Models.Metadata.Media.SHA256Key),
+                MD5 = media.GetStringFieldValue(Models.Metadata.Media.MD5Key),
+                SHA1 = media.GetStringFieldValue(Models.Metadata.Media.SHA1Key),
+                SHA256 = media.GetStringFieldValue(Models.Metadata.Media.SHA256Key),
                 SHA384 = string.Empty,
                 SHA512 = string.Empty,
-                SpamSum = media.GetFieldValue<string?>(Models.Metadata.Media.SpamSumKey),
+                SpamSum = media.GetStringFieldValue(Models.Metadata.Media.SpamSumKey),
                 Status = string.Empty,
             };
             return row;
@@ -215,22 +215,22 @@ namespace SabreTools.DatFiles.Formats
         {
             var row = new Models.SeparatedValue.Row
             {
-                FileName = Header.GetFieldValue<string?>(DatHeader.FileNameKey),
-                InternalName = Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey),
-                Description = Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey),
-                GameName = rom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
-                GameDescription = rom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey),
+                FileName = Header.GetStringFieldValue(DatHeader.FileNameKey),
+                InternalName = Header.GetStringFieldValue(Models.Metadata.Header.NameKey),
+                Description = Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey),
+                GameName = rom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey),
+                GameDescription = rom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey),
                 Type = rom.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey).AsStringValue<ItemType>(),
                 RomName = rom.GetName(),
                 DiskName = string.Empty,
-                Size = rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey),
-                CRC = rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey),
-                MD5 = rom.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key),
-                SHA1 = rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key),
-                SHA256 = rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA256Key),
-                SHA384 = rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA384Key),
-                SHA512 = rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA512Key),
-                SpamSum = rom.GetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey),
+                Size = rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey).ToString(),
+                CRC = rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey),
+                MD5 = rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key),
+                SHA1 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key),
+                SHA256 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key),
+                SHA384 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA384Key),
+                SHA512 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA512Key),
+                SpamSum = rom.GetStringFieldValue(Models.Metadata.Rom.SpamSumKey),
                 Status = rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey).AsStringValue<ItemStatus>(useSecond: false),
             };
             return row;

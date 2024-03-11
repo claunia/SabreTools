@@ -33,13 +33,13 @@ namespace SabreTools.DatFiles.Formats
             switch (datItem)
             {
                 case Rom rom:
-                    if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA256Key)))
+                    if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key)))
                         missingFields.Add(Models.Metadata.Rom.SHA256Key);
-                    if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key)))
+                    if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key)))
                         missingFields.Add(Models.Metadata.Rom.SHA1Key);
-                    if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key)))
+                    if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key)))
                         missingFields.Add(Models.Metadata.Rom.MD5Key);
-                    if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey)))
+                    if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey)))
                         missingFields.Add(Models.Metadata.Rom.CRCKey);
                     break;
             }
@@ -138,12 +138,12 @@ namespace SabreTools.DatFiles.Formats
         {
             var row = new Models.EverdriveSMDB.Row
             {
-                SHA256 = rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA256Key),
-                Name = $"{rom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) ?? string.Empty}/{rom.GetName()}",
-                SHA1 = rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key),
-                MD5 = rom.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key),
-                CRC32 = rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey),
-                Size = rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey),
+                SHA256 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key),
+                Name = $"{rom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty}/{rom.GetName()}",
+                SHA1 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key),
+                MD5 = rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key),
+                CRC32 = rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey),
+                Size = rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey).ToString(),
             };
             return row;
         }

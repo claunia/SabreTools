@@ -62,8 +62,8 @@ namespace SabreTools.DatItems.Formats
                 var dataArea = GetFieldValue<DataArea?>(Rom.DataAreaKey);
                 return dataArea != null
                     && (!string.IsNullOrEmpty(dataArea.GetName())
-                        || dataArea.GetFieldValue<long?>(Models.Metadata.DataArea.SizeKey) != null
-                        || dataArea.GetFieldValue<long?>(Models.Metadata.DataArea.WidthKey) != null
+                        || dataArea.GetInt64FieldValue(Models.Metadata.DataArea.SizeKey) != null
+                        || dataArea.GetInt64FieldValue(Models.Metadata.DataArea.WidthKey) != null
                         || dataArea.GetFieldValue<Endianness>(Models.Metadata.DataArea.EndiannessKey) != Endianness.NULL);
             }
         }
@@ -76,7 +76,7 @@ namespace SabreTools.DatItems.Formats
                 var part = GetFieldValue<Part?>(Rom.PartKey);
                 return part != null
                     && (!string.IsNullOrEmpty(part.GetName())
-                        || !string.IsNullOrEmpty(part.GetFieldValue<string?>(Models.Metadata.Part.InterfaceKey)));
+                        || !string.IsNullOrEmpty(part.GetStringFieldValue(Models.Metadata.Part.InterfaceKey)));
             }
         }
 
@@ -125,16 +125,16 @@ namespace SabreTools.DatItems.Formats
             return new BaseFile()
             {
                 Filename = GetName(),
-                Parent = GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
-                Date = GetFieldValue<string?>(Models.Metadata.Rom.DateKey),
-                Size = NumberHelper.ConvertToInt64(GetFieldValue<string?>(Models.Metadata.Rom.SizeKey)),
-                CRC = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Rom.CRCKey)),
-                MD5 = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Rom.MD5Key)),
-                SHA1 = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key)),
-                SHA256 = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Rom.SHA256Key)),
-                SHA384 = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Rom.SHA384Key)),
-                SHA512 = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Rom.SHA512Key)),
-                SpamSum = System.Text.Encoding.UTF8.GetBytes(GetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey) ?? string.Empty),
+                Parent = GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey),
+                Date = GetStringFieldValue(Models.Metadata.Rom.DateKey),
+                Size = NumberHelper.ConvertToInt64(GetStringFieldValue(Models.Metadata.Rom.SizeKey)),
+                CRC = TextHelper.StringToByteArray(GetStringFieldValue(Models.Metadata.Rom.CRCKey)),
+                MD5 = TextHelper.StringToByteArray(GetStringFieldValue(Models.Metadata.Rom.MD5Key)),
+                SHA1 = TextHelper.StringToByteArray(GetStringFieldValue(Models.Metadata.Rom.SHA1Key)),
+                SHA256 = TextHelper.StringToByteArray(GetStringFieldValue(Models.Metadata.Rom.SHA256Key)),
+                SHA384 = TextHelper.StringToByteArray(GetStringFieldValue(Models.Metadata.Rom.SHA384Key)),
+                SHA512 = TextHelper.StringToByteArray(GetStringFieldValue(Models.Metadata.Rom.SHA512Key)),
+                SpamSum = System.Text.Encoding.UTF8.GetBytes(GetStringFieldValue(Models.Metadata.Rom.SpamSumKey) ?? string.Empty),
             };
         }
 
@@ -180,31 +180,31 @@ namespace SabreTools.DatItems.Formats
             switch (bucketedBy)
             {
                 case ItemKey.CRC:
-                    key = GetFieldValue<string?>(Models.Metadata.Rom.CRCKey);
+                    key = GetStringFieldValue(Models.Metadata.Rom.CRCKey);
                     break;
 
                 case ItemKey.MD5:
-                    key = GetFieldValue<string?>(Models.Metadata.Rom.MD5Key);
+                    key = GetStringFieldValue(Models.Metadata.Rom.MD5Key);
                     break;
 
                 case ItemKey.SHA1:
-                    key = GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key);
+                    key = GetStringFieldValue(Models.Metadata.Rom.SHA1Key);
                     break;
 
                 case ItemKey.SHA256:
-                    key = GetFieldValue<string?>(Models.Metadata.Rom.SHA256Key);
+                    key = GetStringFieldValue(Models.Metadata.Rom.SHA256Key);
                     break;
 
                 case ItemKey.SHA384:
-                    key = GetFieldValue<string?>(Models.Metadata.Rom.SHA384Key);
+                    key = GetStringFieldValue(Models.Metadata.Rom.SHA384Key);
                     break;
 
                 case ItemKey.SHA512:
-                    key = GetFieldValue<string?>(Models.Metadata.Rom.SHA512Key);
+                    key = GetStringFieldValue(Models.Metadata.Rom.SHA512Key);
                     break;
 
                 case ItemKey.SpamSum:
-                    key = GetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey);
+                    key = GetStringFieldValue(Models.Metadata.Rom.SpamSumKey);
                     break;
 
                 // Let the base handle generic stuff

@@ -94,28 +94,28 @@ namespace RombaSharp.Features
 
                     foreach (Rom rom in roms)
                     {
-                        if (hashes.Contains(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)!))
+                        if (hashes.Contains(rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.SHA1Key)!))
                         {
-                            dupehashes.Add(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)!);
-                            hashes.Remove(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)!);
+                            dupehashes.Add(rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.SHA1Key)!);
+                            hashes.Remove(rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.SHA1Key)!);
                         }
-                        else if (!dupehashes.Contains(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)!))
+                        else if (!dupehashes.Contains(rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.SHA1Key)!))
                         {
-                            if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.CRCKey)))
-                                crcquery += $" (\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.CRCKey)}\"),";
+                            if (!string.IsNullOrWhiteSpace(rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.CRCKey)))
+                                crcquery += $" (\"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.CRCKey)}\"),";
 
-                            if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.MD5Key)))
-                                md5query += $" (\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.MD5Key)}\"),";
+                            if (!string.IsNullOrWhiteSpace(rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.MD5Key)))
+                                md5query += $" (\"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.MD5Key)}\"),";
 
-                            if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)))
+                            if (!string.IsNullOrWhiteSpace(rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.SHA1Key)))
                             {
-                                sha1query += $" (\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)}\", \"{depotname}\"),";
+                                sha1query += $" (\"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.SHA1Key)}\", \"{depotname}\"),";
 
-                                if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.CRCKey)))
-                                    crcsha1query += $" (\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.CRCKey)}\", \"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)}\"),";
+                                if (!string.IsNullOrWhiteSpace(rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.CRCKey)))
+                                    crcsha1query += $" (\"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.CRCKey)}\", \"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.SHA1Key)}\"),";
 
-                                if (!string.IsNullOrWhiteSpace(rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.MD5Key)))
-                                    md5sha1query += $" (\"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.MD5Key)}\", \"{rom.GetFieldValue<string?>(SabreTools.Models.Metadata.Rom.SHA1Key)}\"),";
+                                if (!string.IsNullOrWhiteSpace(rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.MD5Key)))
+                                    md5sha1query += $" (\"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.MD5Key)}\", \"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.SHA1Key)}\"),";
                             }
                         }
                     }

@@ -128,23 +128,23 @@ namespace SabreTools.DatFiles
         public void FillHeaderFromPath(string path, bool bare)
         {
             // If the description is defined but not the name, set the name from the description
-            if (string.IsNullOrEmpty(Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)) && !string.IsNullOrEmpty(Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)))
+            if (string.IsNullOrEmpty(Header.GetStringFieldValue(Models.Metadata.Header.NameKey)) && !string.IsNullOrEmpty(Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)))
             {
-                Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey));
+                Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey));
             }
 
             // If the name is defined but not the description, set the description from the name
-            else if (!string.IsNullOrEmpty(Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)) && string.IsNullOrEmpty(Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)))
+            else if (!string.IsNullOrEmpty(Header.GetStringFieldValue(Models.Metadata.Header.NameKey)) && string.IsNullOrEmpty(Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)))
             {
-                Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) + (bare ? string.Empty : $" ({Header.GetFieldValue<string?>(Models.Metadata.Header.DateKey)})"));
+                Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + (bare ? string.Empty : $" ({Header.GetStringFieldValue(Models.Metadata.Header.DateKey)})"));
             }
 
             // If neither the name or description are defined, set them from the automatic values
-            else if (string.IsNullOrEmpty(Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)) && string.IsNullOrEmpty(Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)))
+            else if (string.IsNullOrEmpty(Header.GetStringFieldValue(Models.Metadata.Header.NameKey)) && string.IsNullOrEmpty(Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)))
             {
                 string[] splitpath = path.TrimEnd(Path.DirectorySeparatorChar).Split(Path.DirectorySeparatorChar);
                 Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, splitpath.Last());
-                Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) + (bare ? string.Empty : $" ({Header.GetFieldValue<string?>(Models.Metadata.Header.DateKey)})"));
+                Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + (bare ? string.Empty : $" ({Header.GetStringFieldValue(Models.Metadata.Header.DateKey)})"));
             }
         }
 
@@ -222,8 +222,8 @@ namespace SabreTools.DatFiles
             {
                 // If the file has aboslutely no hashes, skip and log
                 if (disk.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey) != ItemStatus.Nodump
-                    && string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key))
-                    && string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key)))
+                    && string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key))
+                    && string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)))
                 {
                     logger.Verbose($"Incomplete entry for '{disk.GetName()}' will be output as nodump");
                     disk.SetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey, ItemStatus.Nodump);
@@ -234,10 +234,10 @@ namespace SabreTools.DatFiles
             if (item is Media media)
             {
                 // If the file has aboslutely no hashes, skip and log
-                if (string.IsNullOrEmpty(media.GetFieldValue<string?>(Models.Metadata.Media.MD5Key))
-                    && string.IsNullOrEmpty(media.GetFieldValue<string?>(Models.Metadata.Media.SHA1Key))
-                    && string.IsNullOrEmpty(media.GetFieldValue<string?>(Models.Metadata.Media.SHA256Key))
-                    && string.IsNullOrEmpty(media.GetFieldValue<string?>(Models.Metadata.Media.SpamSumKey)))
+                if (string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.MD5Key))
+                    && string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA1Key))
+                    && string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA256Key))
+                    && string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SpamSumKey)))
                 {
                     logger.Verbose($"Incomplete entry for '{media.GetName()}' will be output as nodump");
                 }
@@ -246,18 +246,18 @@ namespace SabreTools.DatFiles
             }
             else if (item is Rom rom)
             {
-                long? size = NumberHelper.ConvertToInt64(rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey));
+                long? size = rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey);
 
                 // If we have the case where there is SHA-1 and nothing else, we don't fill in any other part of the data
                 if (size == null && !rom.HasHashes())
                 {
                     // No-op, just catch it so it doesn't go further
-                    logger.Verbose($"{Header.GetFieldValue<string?>(DatHeader.FileNameKey)}: Entry with only SHA-1 found - '{rom.GetName()}'");
+                    logger.Verbose($"{Header.GetStringFieldValue(DatHeader.FileNameKey)}: Entry with only SHA-1 found - '{rom.GetName()}'");
                 }
 
                 // If we have a rom and it's missing size AND the hashes match a 0-byte file, fill in the rest of the info
                 else if ((size == 0 || size == null)
-                    && (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey)) || rom.HasZeroHash()))
+                    && (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey)) || rom.HasZeroHash()))
                 {
                     // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
                     rom.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, Constants.SizeZero.ToString());
@@ -273,7 +273,7 @@ namespace SabreTools.DatFiles
                 // If the file has no size and it's not the above case, skip and log
                 else if (rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) != ItemStatus.Nodump && (size == 0 || size == null))
                 {
-                    logger.Verbose($"{Header.GetFieldValue<string?>(DatHeader.FileNameKey)}: Incomplete entry for '{rom.GetName()}' will be output as nodump");
+                    logger.Verbose($"{Header.GetStringFieldValue(DatHeader.FileNameKey)}: Incomplete entry for '{rom.GetName()}' will be output as nodump");
                     rom.SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.Nodump);
                 }
 
@@ -282,7 +282,7 @@ namespace SabreTools.DatFiles
                     && size != null && size > 0
                     && !rom.HasHashes())
                 {
-                    logger.Verbose($"{Header.GetFieldValue<string?>(DatHeader.FileNameKey)}: Incomplete entry for '{rom.GetName()}' will be output as nodump");
+                    logger.Verbose($"{Header.GetStringFieldValue(DatHeader.FileNameKey)}: Incomplete entry for '{rom.GetName()}' will be output as nodump");
                     rom.SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.Nodump);
                 }
 
@@ -368,7 +368,7 @@ namespace SabreTools.DatFiles
         {
             // Initialize strings
             string fix,
-                game = item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) ?? string.Empty,
+                game = item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty,
                 name = item.GetName() ?? item.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey).ToString(),
                 crc = string.Empty,
                 md5 = string.Empty,
@@ -381,35 +381,35 @@ namespace SabreTools.DatFiles
 
             // If we have a prefix
             if (prefix)
-                fix = Header.GetFieldValue<string?>(DatHeader.PrefixKey) + (Header.GetFieldValue<bool>(DatHeader.QuotesKey) ? "\"" : string.Empty);
+                fix = Header.GetStringFieldValue(DatHeader.PrefixKey) + (Header.GetBoolFieldValue(DatHeader.QuotesKey) == true ? "\"" : string.Empty);
 
             // If we have a postfix
             else
-                fix = (Header.GetFieldValue<bool>(DatHeader.QuotesKey) ? "\"" : string.Empty) + Header.GetFieldValue<string?>(DatHeader.PostfixKey);
+                fix = (Header.GetBoolFieldValue(DatHeader.QuotesKey) == true ? "\"" : string.Empty) + Header.GetStringFieldValue(DatHeader.PostfixKey);
 
             // Ensure we have the proper values for replacement
             if (item is Disk disk)
             {
-                md5 = disk.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key) ?? string.Empty;
-                sha1 = disk.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key) ?? string.Empty;
+                md5 = disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key) ?? string.Empty;
+                sha1 = disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key) ?? string.Empty;
             }
             else if (item is Media media)
             {
-                md5 = media.GetFieldValue<string?>(Models.Metadata.Media.MD5Key) ?? string.Empty;
-                sha1 = media.GetFieldValue<string?>(Models.Metadata.Media.SHA1Key) ?? string.Empty;
-                sha256 = media.GetFieldValue<string?>(Models.Metadata.Media.SHA256Key) ?? string.Empty;
-                spamsum = media.GetFieldValue<string?>(Models.Metadata.Media.SpamSumKey) ?? string.Empty;
+                md5 = media.GetStringFieldValue(Models.Metadata.Media.MD5Key) ?? string.Empty;
+                sha1 = media.GetStringFieldValue(Models.Metadata.Media.SHA1Key) ?? string.Empty;
+                sha256 = media.GetStringFieldValue(Models.Metadata.Media.SHA256Key) ?? string.Empty;
+                spamsum = media.GetStringFieldValue(Models.Metadata.Media.SpamSumKey) ?? string.Empty;
             }
             else if (item is Rom rom)
             {
-                crc = rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey) ?? string.Empty;
-                md5 = rom.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key) ?? string.Empty;
-                sha1 = rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key) ?? string.Empty;
-                sha256 = rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA256Key) ?? string.Empty;
-                sha384 = rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA384Key) ?? string.Empty;
-                sha512 = rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA512Key) ?? string.Empty;
-                size = rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey) ?? string.Empty;
-                spamsum = rom.GetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey) ?? string.Empty;
+                crc = rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey) ?? string.Empty;
+                md5 = rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key) ?? string.Empty;
+                sha1 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key) ?? string.Empty;
+                sha256 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key) ?? string.Empty;
+                sha384 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA384Key) ?? string.Empty;
+                sha512 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA512Key) ?? string.Empty;
+                size = rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey).ToString() ?? string.Empty;
+                spamsum = rom.GetStringFieldValue(Models.Metadata.Rom.SpamSumKey) ?? string.Empty;
             }
 
             // Now do bulk replacement where possible
@@ -417,9 +417,9 @@ namespace SabreTools.DatFiles
                 .Replace("%game%", game)
                 .Replace("%machine%", game)
                 .Replace("%name%", name)
-                .Replace("%manufacturer%", item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.ManufacturerKey) ?? string.Empty)
-                .Replace("%publisher%", item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.PublisherKey) ?? string.Empty)
-                .Replace("%category%", item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.CategoryKey) ?? string.Empty)
+                .Replace("%manufacturer%", item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.ManufacturerKey) ?? string.Empty)
+                .Replace("%publisher%", item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.PublisherKey) ?? string.Empty)
+                .Replace("%category%", item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.CategoryKey) ?? string.Empty)
                 .Replace("%crc%", crc)
                 .Replace("%md5%", md5)
                 .Replace("%sha1%", sha1)
@@ -441,17 +441,17 @@ namespace SabreTools.DatFiles
         protected void ProcessItemName(DatItem item, bool forceRemoveQuotes, bool forceRomName = true)
         {
             // Backup relevant values and set new ones accordingly
-            bool quotesBackup = Header.GetFieldValue<bool>(DatHeader.QuotesKey);
-            bool useRomNameBackup = Header.GetFieldValue<bool>(DatHeader.UseRomNameKey);
+            bool? quotesBackup = Header.GetBoolFieldValue(DatHeader.QuotesKey);
+            bool? useRomNameBackup = Header.GetBoolFieldValue(DatHeader.UseRomNameKey);
             if (forceRemoveQuotes)
                 Header.SetFieldValue<bool>(DatHeader.QuotesKey, false);
             if (forceRomName)
                 Header.SetFieldValue<bool>(DatHeader.UseRomNameKey, true);
 
             // Get the name to update
-            string? name = (Header.GetFieldValue<bool>(DatHeader.UseRomNameKey)
+            string? name = (Header.GetBoolFieldValue(DatHeader.UseRomNameKey) == true
                 ? item.GetName()
-                : item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)) ?? string.Empty;
+                : item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)) ?? string.Empty;
 
             // Create the proper Prefix and Postfix
             string pre = CreatePrefixPostfix(item, true);
@@ -463,27 +463,27 @@ namespace SabreTools.DatFiles
                 if (item is Disk disk)
                 {
                     // We can only write out if there's a SHA-1
-                    if (!string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key)))
+                    if (!string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)))
                     {
-                        name = Utilities.GetDepotPath(disk.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key), Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)!.Depth)?.Replace('\\', '/');
+                        name = Utilities.GetDepotPath(disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key), Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)!.Depth)?.Replace('\\', '/');
                         item.SetName($"{pre}{name}{post}");
                     }
                 }
                 else if (item is Media media)
                 {
                     // We can only write out if there's a SHA-1
-                    if (!string.IsNullOrEmpty(media.GetFieldValue<string?>(Models.Metadata.Media.SHA1Key)))
+                    if (!string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA1Key)))
                     {
-                        name = Utilities.GetDepotPath(media.GetFieldValue<string?>(Models.Metadata.Media.SHA1Key), Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)!.Depth)?.Replace('\\', '/');
+                        name = Utilities.GetDepotPath(media.GetStringFieldValue(Models.Metadata.Media.SHA1Key), Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)!.Depth)?.Replace('\\', '/');
                         item.SetName($"{pre}{name}{post}");
                     }
                 }
                 else if (item is Rom rom)
                 {
                     // We can only write out if there's a SHA-1
-                    if (!string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key)))
+                    if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key)))
                     {
-                        name = Utilities.GetDepotPath(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key), Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)!.Depth)?.Replace('\\', '/');
+                        name = Utilities.GetDepotPath(rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key), Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)!.Depth)?.Replace('\\', '/');
                         item.SetName($"{pre}{name}{post}");
                     }
                 }
@@ -491,38 +491,38 @@ namespace SabreTools.DatFiles
                 return;
             }
 
-            if (!string.IsNullOrEmpty(Header.GetFieldValue<string?>(DatHeader.ReplaceExtensionKey)) || Header.GetFieldValue<bool>(DatHeader.RemoveExtensionKey))
+            if (!string.IsNullOrEmpty(Header.GetStringFieldValue(DatHeader.ReplaceExtensionKey)) || Header.GetBoolFieldValue(DatHeader.RemoveExtensionKey) == true)
             {
-                if (Header.GetFieldValue<bool>(DatHeader.RemoveExtensionKey))
+                if (Header.GetBoolFieldValue(DatHeader.RemoveExtensionKey) == true)
                     Header.SetFieldValue<string?>(DatHeader.ReplaceExtensionKey, string.Empty);
 
                 string? dir = Path.GetDirectoryName(name);
                 if (dir != null)
                 {
                     dir = dir.TrimStart(Path.DirectorySeparatorChar);
-                    name = Path.Combine(dir, Path.GetFileNameWithoutExtension(name) + Header.GetFieldValue<string?>(DatHeader.ReplaceExtensionKey));
+                    name = Path.Combine(dir, Path.GetFileNameWithoutExtension(name) + Header.GetStringFieldValue(DatHeader.ReplaceExtensionKey));
                 }
             }
 
-            if (!string.IsNullOrEmpty(Header.GetFieldValue<string?>(DatHeader.AddExtensionKey)))
-                name += Header.GetFieldValue<string?>(DatHeader.AddExtensionKey);
+            if (!string.IsNullOrEmpty(Header.GetStringFieldValue(DatHeader.AddExtensionKey)))
+                name += Header.GetStringFieldValue(DatHeader.AddExtensionKey);
 
-            if (Header.GetFieldValue<bool>(DatHeader.UseRomNameKey) && Header.GetFieldValue<bool>(DatHeader.GameNameKey))
-                name = Path.Combine(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) ?? string.Empty, name);
+            if (Header.GetBoolFieldValue(DatHeader.UseRomNameKey) == true && Header.GetBoolFieldValue(DatHeader.GameNameKey) == true)
+                name = Path.Combine(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty, name);
 
             // Now assign back the formatted name
             name = $"{pre}{name}{post}";
-            if (Header.GetFieldValue<bool>(DatHeader.UseRomNameKey))
+            if (Header.GetBoolFieldValue(DatHeader.UseRomNameKey) == true)
                 item.SetName(name);
             else if (item.GetFieldValue<Machine>(DatItem.MachineKey) != null)
                 item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, name);
 
             // Restore all relevant values
             if (forceRemoveQuotes)
-                Header.SetFieldValue<bool>(DatHeader.QuotesKey, quotesBackup);
+                Header.SetFieldValue<bool?>(DatHeader.QuotesKey, quotesBackup);
 
             if (forceRomName)
-                Header.SetFieldValue<bool>(DatHeader.UseRomNameKey, useRomNameBackup);
+                Header.SetFieldValue<bool?>(DatHeader.UseRomNameKey, useRomNameBackup);
         }
 
         /// <summary>
@@ -537,19 +537,19 @@ namespace SabreTools.DatFiles
                 return datItem;
 
             // If the Rom has "null" characteristics, ensure all fields
-            if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null && rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey) == "null")
+            if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) == null && rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey) == "null")
             {
-                logger.Verbose($"Empty folder found: {datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)}");
+                logger.Verbose($"Empty folder found: {datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)}");
 
                 rom.SetName(rom.GetName() == "null" ? "-" : rom.GetName());
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, Constants.SizeZero.ToString());
-                rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey) == "null" ? Constants.CRCZero : null);
-                rom.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, rom.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key) == "null" ? Constants.MD5Zero : null);
-                rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key) == "null" ? Constants.SHA1Zero : null);
-                rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA256Key, rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA256Key) == "null" ? Constants.SHA256Zero : null);
-                rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA384Key, rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA384Key) == "null" ? Constants.SHA384Zero : null);
-                rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key, rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA512Key) == "null" ? Constants.SHA512Zero : null);
-                rom.SetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey, rom.GetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey) == "null" ? Constants.SpamSumZero : null);
+                rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey) == "null" ? Constants.CRCZero : null);
+                rom.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key) == "null" ? Constants.MD5Zero : null);
+                rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key) == "null" ? Constants.SHA1Zero : null);
+                rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA256Key, rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key) == "null" ? Constants.SHA256Zero : null);
+                rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA384Key, rom.GetStringFieldValue(Models.Metadata.Rom.SHA384Key) == "null" ? Constants.SHA384Zero : null);
+                rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key, rom.GetStringFieldValue(Models.Metadata.Rom.SHA512Key) == "null" ? Constants.SHA512Zero : null);
+                rom.SetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey, rom.GetStringFieldValue(Models.Metadata.Rom.SpamSumKey) == "null" ? Constants.SpamSumZero : null);
             }
 
             return rom;
@@ -607,7 +607,7 @@ namespace SabreTools.DatFiles
             }
 
             // If the item is supposed to be removed, we ignore
-            if (datItem.GetFieldValue<bool?>(DatItem.RemoveKey) == true)
+            if (datItem.GetBoolFieldValue(DatItem.RemoveKey) == true)
             {
                 string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
                 logger?.Verbose($"Item '{itemString}' was skipped because it was marked for removal");
@@ -626,7 +626,7 @@ namespace SabreTools.DatFiles
             if (ignoreBlanks && datItem is Rom rom)
             {
                 // If we have a 0-size or blank rom, then we ignore
-                long? size = NumberHelper.ConvertToInt64(rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey));
+                long? size = rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey);
                 if (size == 0 || size == null)
                 {
                     string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);

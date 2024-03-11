@@ -34,9 +34,9 @@ namespace SabreTools.DatFiles.Formats
             switch (datItem)
             {
                 case Rom rom:
-                    if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null || NumberHelper.ConvertToInt64(rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey)) < 0)
+                    if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) == null || rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) < 0)
                         missingFields.Add(Models.Metadata.Rom.SizeKey);
-                    if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey)))
+                    if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey)))
                         missingFields.Add(Models.Metadata.Rom.CRCKey);
                     break;
             }
@@ -98,17 +98,17 @@ namespace SabreTools.DatFiles.Formats
 
             var configuration = new Models.OfflineList.Configuration
             {
-                DatName = Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey),
-                ImFolder = Header.GetFieldValue<string?>(Models.Metadata.Header.ImFolderKey),
-                DatVersion = Header.GetFieldValue<string?>(Models.Metadata.Header.DatVersionKey),
-                System = Header.GetFieldValue<string?>(Models.Metadata.Header.SystemKey),
-                ScreenshotsWidth = Header.GetFieldValue<string?>(Models.Metadata.Header.ScreenshotsWidthKey),
-                ScreenshotsHeight = Header.GetFieldValue<string?>(Models.Metadata.Header.ScreenshotsHeightKey),
+                DatName = Header.GetStringFieldValue(Models.Metadata.Header.NameKey),
+                ImFolder = Header.GetStringFieldValue(Models.Metadata.Header.ImFolderKey),
+                DatVersion = Header.GetStringFieldValue(Models.Metadata.Header.DatVersionKey),
+                System = Header.GetStringFieldValue(Models.Metadata.Header.SystemKey),
+                ScreenshotsWidth = Header.GetStringFieldValue(Models.Metadata.Header.ScreenshotsWidthKey),
+                ScreenshotsHeight = Header.GetStringFieldValue(Models.Metadata.Header.ScreenshotsHeightKey),
                 Infos = CreateInfos(),
                 CanOpen = CreateCanOpen(),
                 NewDat = CreateNewDat(),
                 Search = CreateSearch(),
-                RomTitle = Header.GetFieldValue<string?>(Models.Metadata.Header.RomTitleKey),
+                RomTitle = Header.GetStringFieldValue(Models.Metadata.Header.RomTitleKey),
             };
 
             return configuration;
@@ -256,12 +256,12 @@ namespace SabreTools.DatFiles.Formats
         private Models.OfflineList.CanOpen? CreateCanOpen()
         {
             // If we don't have a canopen, we can't do anything
-            if (!Header.CanOpenSpecified || Header.GetFieldValue<string[]?>(Models.Metadata.Header.CanOpenKey) == null)
+            if (!Header.CanOpenSpecified || Header.GetStringArrayFieldValue(Models.Metadata.Header.CanOpenKey) == null)
                 return null;
 
             var canOpen = new Models.OfflineList.CanOpen
             {
-                Extension = [.. Header.GetFieldValue<string[]?>(Models.Metadata.Header.CanOpenKey)],
+                Extension = [.. Header.GetStringArrayFieldValue(Models.Metadata.Header.CanOpenKey)],
             };
 
             return canOpen;
@@ -278,9 +278,9 @@ namespace SabreTools.DatFiles.Formats
 
             var newDat = new Models.OfflineList.NewDat
             {
-                DatVersionUrl = Header.GetFieldValue<string?>("DATVERSIONURL"),
+                DatVersionUrl = Header.GetStringFieldValue("DATVERSIONURL"),
                 //DatUrl = Header.GetFieldValue<Models.OfflineList.DatUrl?>("DATURL"); // TODO: Add to internal model
-                ImUrl = Header.GetFieldValue<string?>("IMURL"),
+                ImUrl = Header.GetStringFieldValue("IMURL"),
             };
 
             return newDat;
@@ -364,18 +364,18 @@ namespace SabreTools.DatFiles.Formats
         {
             var game = new Models.OfflineList.Game
             {
-                ImageNumber = machine.GetFieldValue<string?>(Models.Metadata.Machine.ImageNumberKey),
-                ReleaseNumber = machine.GetFieldValue<string?>(Models.Metadata.Machine.ReleaseNumberKey),
-                Title = machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
-                SaveType = machine.GetFieldValue<string?>(Models.Metadata.Machine.SaveTypeKey),
-                Publisher = machine.GetFieldValue<string?>(Models.Metadata.Machine.PublisherKey),
-                Location = machine.GetFieldValue<string?>(Models.Metadata.Machine.LocationKey),
-                SourceRom = machine.GetFieldValue<string?>(Models.Metadata.Machine.SourceRomKey),
-                Language = machine.GetFieldValue<string?>(Models.Metadata.Machine.LanguageKey),
-                Im1CRC = machine.GetFieldValue<string?>(Models.Metadata.Machine.Im1CRCKey),
-                Im2CRC = machine.GetFieldValue<string?>(Models.Metadata.Machine.Im2CRCKey),
-                Comment = machine.GetFieldValue<string?>(Models.Metadata.Machine.CommentKey),
-                DuplicateID = machine.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey),
+                ImageNumber = machine.GetStringFieldValue(Models.Metadata.Machine.ImageNumberKey),
+                ReleaseNumber = machine.GetStringFieldValue(Models.Metadata.Machine.ReleaseNumberKey),
+                Title = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey),
+                SaveType = machine.GetStringFieldValue(Models.Metadata.Machine.SaveTypeKey),
+                Publisher = machine.GetStringFieldValue(Models.Metadata.Machine.PublisherKey),
+                Location = machine.GetStringFieldValue(Models.Metadata.Machine.LocationKey),
+                SourceRom = machine.GetStringFieldValue(Models.Metadata.Machine.SourceRomKey),
+                Language = machine.GetStringFieldValue(Models.Metadata.Machine.LanguageKey),
+                Im1CRC = machine.GetStringFieldValue(Models.Metadata.Machine.Im1CRCKey),
+                Im2CRC = machine.GetStringFieldValue(Models.Metadata.Machine.Im2CRCKey),
+                Comment = machine.GetStringFieldValue(Models.Metadata.Machine.CommentKey),
+                DuplicateID = machine.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey),
             };
 
             return game;
@@ -388,7 +388,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var romCRC = new Models.OfflineList.FileRomCRC
             {
-                Content = item.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey),
+                Content = item.GetStringFieldValue(Models.Metadata.Rom.CRCKey),
             };
 
             return romCRC;

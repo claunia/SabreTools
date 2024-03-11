@@ -216,81 +216,81 @@ namespace SabreTools.DatFiles
             }
 
             // Selectively set all possible fields -- TODO: Figure out how to make this less manual
-            if (Header.GetFieldValue<string?>(Models.Metadata.Header.AuthorKey) == null)
-                Header.SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, header.GetFieldValue<string?>(Models.Metadata.Header.AuthorKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.AuthorKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, header.GetStringFieldValue(Models.Metadata.Header.AuthorKey));
             if (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.BiosModeKey) == MergingFlag.None)
                 Header.SetFieldValue<MergingFlag>(Models.Metadata.Header.BiosModeKey, header.GetFieldValue<MergingFlag>(Models.Metadata.Header.BiosModeKey));
-            if (Header.GetFieldValue<string?>(Models.Metadata.Header.BuildKey) == null)
-                Header.SetFieldValue<string?>(Models.Metadata.Header.BuildKey, header.GetFieldValue<string?>(Models.Metadata.Header.BuildKey));
-            if (Header.GetFieldValue<string?>(Models.Metadata.Header.CategoryKey) == null)
-                Header.SetFieldValue<string?>(Models.Metadata.Header.CategoryKey, header.GetFieldValue<string?>(Models.Metadata.Header.CategoryKey));
-            if (Header.GetFieldValue<string?>(Models.Metadata.Header.CommentKey) == null)
-                Header.SetFieldValue<string?>(Models.Metadata.Header.CommentKey, header.GetFieldValue<string?>(Models.Metadata.Header.CommentKey));
-            if (Header.GetFieldValue<string?>(Models.Metadata.Header.DateKey) == null)
-                Header.SetFieldValue<string?>(Models.Metadata.Header.DateKey, header.GetFieldValue<string?>(Models.Metadata.Header.DateKey));
-            if (Header.GetFieldValue<string?>(Models.Metadata.Header.DatVersionKey) == null)
-                Header.SetFieldValue<string?>(Models.Metadata.Header.DatVersionKey, header.GetFieldValue<string?>(Models.Metadata.Header.DatVersionKey));
-            if (Header.GetFieldValue<bool?>(Models.Metadata.Header.DebugKey) == null)
-                Header.SetFieldValue<bool?>(Models.Metadata.Header.DebugKey, header.GetFieldValue<bool?>(Models.Metadata.Header.DebugKey));
-            if (Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) == null)
-                Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey));
-            if (Header.GetFieldValue<string?>(Models.Metadata.Header.EmailKey) == null)
-                Header.SetFieldValue<string?>(Models.Metadata.Header.EmailKey, header.GetFieldValue<string?>(Models.Metadata.Header.EmailKey));
-            if (Header.GetFieldValue<string?>(Models.Metadata.Header.EmulatorVersionKey) == null)
-                Header.SetFieldValue<string?>(Models.Metadata.Header.EmulatorVersionKey, header.GetFieldValue<string?>(Models.Metadata.Header.EmulatorVersionKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.BuildKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.BuildKey, header.GetStringFieldValue(Models.Metadata.Header.BuildKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.CategoryKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.CategoryKey, header.GetStringFieldValue(Models.Metadata.Header.CategoryKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.CommentKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.CommentKey, header.GetStringFieldValue(Models.Metadata.Header.CommentKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.DateKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.DateKey, header.GetStringFieldValue(Models.Metadata.Header.DateKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.DatVersionKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.DatVersionKey, header.GetStringFieldValue(Models.Metadata.Header.DatVersionKey));
+            if (Header.GetBoolFieldValue(Models.Metadata.Header.DebugKey) == null)
+                Header.SetFieldValue<bool?>(Models.Metadata.Header.DebugKey, header.GetBoolFieldValue(Models.Metadata.Header.DebugKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.EmailKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.EmailKey, header.GetStringFieldValue(Models.Metadata.Header.EmailKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.EmulatorVersionKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.EmulatorVersionKey, header.GetStringFieldValue(Models.Metadata.Header.EmulatorVersionKey));
             if (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey) == MergingFlag.None)
                 Header.SetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey, header.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey));
             if (Header.GetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey) == NodumpFlag.None)
                 Header.SetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey, header.GetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey));
             if (Header.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey) == PackingFlag.None)
                 Header.SetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey, header.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey));
-            if (Header.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey) == null)
-                Header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, header.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey));
-            if (Header.GetFieldValue<string?>(Models.Metadata.Header.HomepageKey) == null)
-                Header.SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, header.GetFieldValue<string?>(Models.Metadata.Header.HomepageKey));
-            if (Header.GetFieldValue<string?>(Models.Metadata.Header.IdKey) == null)
-                Header.SetFieldValue<string?>(Models.Metadata.Header.IdKey, header.GetFieldValue<string?>(Models.Metadata.Header.IdKey));
-            if (Header.GetFieldValue<string?>(Models.Metadata.Header.ImFolderKey) == null)
-                Header.SetFieldValue<string?>(Models.Metadata.Header.ImFolderKey, header.GetFieldValue<string?>(Models.Metadata.Header.ImFolderKey));
-            if (Header.GetFieldValue<bool?>(Models.Metadata.Header.LockBiosModeKey) == null)
-                Header.SetFieldValue<bool?>(Models.Metadata.Header.LockBiosModeKey, header.GetFieldValue<bool?>(Models.Metadata.Header.LockBiosModeKey));
-            if (Header.GetFieldValue<bool?>(Models.Metadata.Header.LockRomModeKey) == null)
-                Header.SetFieldValue<bool?>(Models.Metadata.Header.LockRomModeKey, header.GetFieldValue<bool?>(Models.Metadata.Header.LockRomModeKey));
-            if (Header.GetFieldValue<bool?>(Models.Metadata.Header.LockSampleModeKey) == null)
-                Header.SetFieldValue<bool?>(Models.Metadata.Header.LockSampleModeKey, header.GetFieldValue<bool?>(Models.Metadata.Header.LockSampleModeKey));
-            if (Header.GetFieldValue<string?>(Models.Metadata.Header.MameConfigKey) == null)
-                Header.SetFieldValue<string?>(Models.Metadata.Header.MameConfigKey, header.GetFieldValue<string?>(Models.Metadata.Header.MameConfigKey));
-            if (Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) == null)
-                Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, header.GetFieldValue<string?>(Models.Metadata.Header.NameKey));
-            if (Header.GetFieldValue<string?>(Models.Metadata.Header.PluginKey) == null)
-                Header.SetFieldValue<string?>(Models.Metadata.Header.PluginKey, header.GetFieldValue<string?>(Models.Metadata.Header.PluginKey));
-            if (Header.GetFieldValue<string?>(Models.Metadata.Header.RefNameKey) == null)
-                Header.SetFieldValue<string?>(Models.Metadata.Header.RefNameKey, header.GetFieldValue<string?>(Models.Metadata.Header.RefNameKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, header.GetStringFieldValue(Models.Metadata.Header.HeaderKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.HomepageKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, header.GetStringFieldValue(Models.Metadata.Header.HomepageKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.IdKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.IdKey, header.GetStringFieldValue(Models.Metadata.Header.IdKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.ImFolderKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.ImFolderKey, header.GetStringFieldValue(Models.Metadata.Header.ImFolderKey));
+            if (Header.GetBoolFieldValue(Models.Metadata.Header.LockBiosModeKey) == null)
+                Header.SetFieldValue<bool?>(Models.Metadata.Header.LockBiosModeKey, header.GetBoolFieldValue(Models.Metadata.Header.LockBiosModeKey));
+            if (Header.GetBoolFieldValue(Models.Metadata.Header.LockRomModeKey) == null)
+                Header.SetFieldValue<bool?>(Models.Metadata.Header.LockRomModeKey, header.GetBoolFieldValue(Models.Metadata.Header.LockRomModeKey));
+            if (Header.GetBoolFieldValue(Models.Metadata.Header.LockSampleModeKey) == null)
+                Header.SetFieldValue<bool?>(Models.Metadata.Header.LockSampleModeKey, header.GetBoolFieldValue(Models.Metadata.Header.LockSampleModeKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.MameConfigKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.MameConfigKey, header.GetStringFieldValue(Models.Metadata.Header.MameConfigKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.NameKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, header.GetStringFieldValue(Models.Metadata.Header.NameKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.PluginKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.PluginKey, header.GetStringFieldValue(Models.Metadata.Header.PluginKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.RefNameKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.RefNameKey, header.GetStringFieldValue(Models.Metadata.Header.RefNameKey));
             if (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.RomModeKey) == MergingFlag.None)
                 Header.SetFieldValue<MergingFlag>(Models.Metadata.Header.RomModeKey, header.GetFieldValue<MergingFlag>(Models.Metadata.Header.RomModeKey));
-            if (Header.GetFieldValue<string?>(Models.Metadata.Header.RomTitleKey) == null)
-                Header.SetFieldValue<string?>(Models.Metadata.Header.RomTitleKey, header.GetFieldValue<string?>(Models.Metadata.Header.RomTitleKey));
-            if (Header.GetFieldValue<string?>(Models.Metadata.Header.RootDirKey) == null)
-                Header.SetFieldValue<string?>(Models.Metadata.Header.RootDirKey, header.GetFieldValue<string?>(Models.Metadata.Header.RootDirKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.RomTitleKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.RomTitleKey, header.GetStringFieldValue(Models.Metadata.Header.RomTitleKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.RootDirKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.RootDirKey, header.GetStringFieldValue(Models.Metadata.Header.RootDirKey));
             if (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.SampleModeKey) == MergingFlag.None)
                 Header.SetFieldValue<MergingFlag>(Models.Metadata.Header.SampleModeKey, header.GetFieldValue<MergingFlag>(Models.Metadata.Header.SampleModeKey));
-            if (Header.GetFieldValue<string?>(Models.Metadata.Header.ScreenshotsHeightKey) == null)
-                Header.SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsHeightKey, header.GetFieldValue<string?>(Models.Metadata.Header.ScreenshotsHeightKey));
-            if (Header.GetFieldValue<string?>(Models.Metadata.Header.ScreenshotsWidthKey) == null)
-                Header.SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsWidthKey, header.GetFieldValue<string?>(Models.Metadata.Header.ScreenshotsWidthKey));
-            if (Header.GetFieldValue<string?>(Models.Metadata.Header.SystemKey) == null)
-                Header.SetFieldValue<string?>(Models.Metadata.Header.SystemKey, header.GetFieldValue<string?>(Models.Metadata.Header.SystemKey));
-            if (Header.GetFieldValue<string?>(Models.Metadata.Header.TypeKey) == null)
-                Header.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, header.GetFieldValue<string?>(Models.Metadata.Header.TypeKey));
-            if (Header.GetFieldValue<string?>(Models.Metadata.Header.UrlKey) == null)
-                Header.SetFieldValue<string?>(Models.Metadata.Header.UrlKey, header.GetFieldValue<string?>(Models.Metadata.Header.UrlKey));
-            if (Header.GetFieldValue<string?>(Models.Metadata.Header.VersionKey) == null)
-                Header.SetFieldValue<string?>(Models.Metadata.Header.VersionKey, header.GetFieldValue<string?>(Models.Metadata.Header.VersionKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.ScreenshotsHeightKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsHeightKey, header.GetStringFieldValue(Models.Metadata.Header.ScreenshotsHeightKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.ScreenshotsWidthKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsWidthKey, header.GetStringFieldValue(Models.Metadata.Header.ScreenshotsWidthKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.SystemKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.SystemKey, header.GetStringFieldValue(Models.Metadata.Header.SystemKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.TypeKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, header.GetStringFieldValue(Models.Metadata.Header.TypeKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.UrlKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.UrlKey, header.GetStringFieldValue(Models.Metadata.Header.UrlKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.VersionKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.VersionKey, header.GetStringFieldValue(Models.Metadata.Header.VersionKey));
 
             // Handle implied SuperDAT
-            if (Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)?.Contains(" - SuperDAT") == true && keep)
+            if (Header.GetStringFieldValue(Models.Metadata.Header.NameKey)?.Contains(" - SuperDAT") == true && keep)
             {
-                if (Header.GetFieldValue<string?>(Models.Metadata.Header.TypeKey) == null)
+                if (Header.GetStringFieldValue(Models.Metadata.Header.TypeKey) == null)
                     Header.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, "SuperDAT");
             }
         }
@@ -895,7 +895,7 @@ namespace SabreTools.DatFiles
                     continue;
                 }
 
-                string name = $"{machine.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)}_{index++}{(!string.IsNullOrEmpty(rom!.ReadString(Models.Metadata.Rom.RemarkKey)) ? $" {rom.ReadString(Models.Metadata.Rom.RemarkKey)}" : string.Empty)}";
+                string name = $"{machine.GetStringFieldValue(Models.Metadata.Machine.NameKey)}_{index++}{(!string.IsNullOrEmpty(rom!.ReadString(Models.Metadata.Rom.RemarkKey)) ? $" {rom.ReadString(Models.Metadata.Rom.RemarkKey)}" : string.Empty)}";
 
                 var item = new DatItems.Formats.Rom();
                 item.SetName(name);

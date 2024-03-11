@@ -95,45 +95,45 @@ namespace SabreTools.Features
             var updateMode = GetUpdateMode(features);
 
             // Normalize the extensions
-            Header!.SetFieldValue<string?>(DatHeader.AddExtensionKey, (string.IsNullOrWhiteSpace(Header.GetFieldValue<string?>(DatHeader.AddExtensionKey)) || Header.GetFieldValue<string?>(DatHeader.AddExtensionKey)!.StartsWith(".")
-                ? Header.GetFieldValue<string?>(DatHeader.AddExtensionKey)
-                : $".{Header.GetFieldValue<string?>(DatHeader.AddExtensionKey)}"));
-            Header.SetFieldValue<string?>(DatHeader.ReplaceExtensionKey, (string.IsNullOrWhiteSpace(Header.GetFieldValue<string?>(DatHeader.ReplaceExtensionKey)) || Header.GetFieldValue<string?>(DatHeader.ReplaceExtensionKey)!.StartsWith(".")
-                ? Header.GetFieldValue<string?>(DatHeader.ReplaceExtensionKey)
-                : $".{Header.GetFieldValue<string?>(DatHeader.ReplaceExtensionKey)}"));
+            Header!.SetFieldValue<string?>(DatHeader.AddExtensionKey, (string.IsNullOrWhiteSpace(Header.GetStringFieldValue(DatHeader.AddExtensionKey)) || Header.GetStringFieldValue(DatHeader.AddExtensionKey)!.StartsWith(".")
+                ? Header.GetStringFieldValue(DatHeader.AddExtensionKey)
+                : $".{Header.GetStringFieldValue(DatHeader.AddExtensionKey)}"));
+            Header.SetFieldValue<string?>(DatHeader.ReplaceExtensionKey, (string.IsNullOrWhiteSpace(Header.GetStringFieldValue(DatHeader.ReplaceExtensionKey)) || Header.GetStringFieldValue(DatHeader.ReplaceExtensionKey)!.StartsWith(".")
+                ? Header.GetStringFieldValue(DatHeader.ReplaceExtensionKey)
+                : $".{Header.GetStringFieldValue(DatHeader.ReplaceExtensionKey)}"));
 
             // If we're in a non-replacement special update mode and the names aren't set, set defaults
             if (updateMode != 0
                 && !(updateMode.HasFlag(UpdateMode.DiffAgainst) || updateMode.HasFlag(UpdateMode.BaseReplace)))
             {
                 // Get the values that will be used
-                if (string.IsNullOrWhiteSpace(Header.GetFieldValue<string?>(Models.Metadata.Header.DateKey)))
+                if (string.IsNullOrWhiteSpace(Header.GetStringFieldValue(Models.Metadata.Header.DateKey)))
                     Header.SetFieldValue<string?>(Models.Metadata.Header.DateKey, DateTime.Now.ToString("yyyy-MM-dd"));
 
-                if (string.IsNullOrWhiteSpace(Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)))
+                if (string.IsNullOrWhiteSpace(Header.GetStringFieldValue(Models.Metadata.Header.NameKey)))
                 {
                     Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, (updateMode != 0 ? "DiffDAT" : "MergeDAT")
-                        + (Header.GetFieldValue<string?>(Models.Metadata.Header.TypeKey) == "SuperDAT" ? "-SuperDAT" : string.Empty)
+                        + (Header.GetStringFieldValue(Models.Metadata.Header.TypeKey) == "SuperDAT" ? "-SuperDAT" : string.Empty)
                         + (Cleaner!.DedupeRoms != DedupeType.None ? "-deduped" : string.Empty));
                 }
 
-                if (string.IsNullOrWhiteSpace(Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)))
+                if (string.IsNullOrWhiteSpace(Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)))
                 {
                     Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, (updateMode != 0 ? "DiffDAT" : "MergeDAT")
-                        + (Header.GetFieldValue<string?>(Models.Metadata.Header.TypeKey) == "SuperDAT" ? "-SuperDAT" : string.Empty)
+                        + (Header.GetStringFieldValue(Models.Metadata.Header.TypeKey) == "SuperDAT" ? "-SuperDAT" : string.Empty)
                         + (Cleaner!.DedupeRoms != DedupeType.None ? " - deduped" : string.Empty));
 
                     if (!GetBoolean(features, NoAutomaticDateValue))
-                        Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, $"{Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)} ({Header.GetFieldValue<string?>(Models.Metadata.Header.DateKey)})");
+                        Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, $"{Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)} ({Header.GetStringFieldValue(Models.Metadata.Header.DateKey)})");
                 }
 
-                if (string.IsNullOrWhiteSpace(Header.GetFieldValue<string?>(Models.Metadata.Header.CategoryKey)) && updateMode != 0)
+                if (string.IsNullOrWhiteSpace(Header.GetStringFieldValue(Models.Metadata.Header.CategoryKey)) && updateMode != 0)
                     Header.SetFieldValue<string?>(Models.Metadata.Header.CategoryKey, "DiffDAT");
 
-                if (string.IsNullOrWhiteSpace(Header.GetFieldValue<string?>(Models.Metadata.Header.AuthorKey)))
+                if (string.IsNullOrWhiteSpace(Header.GetStringFieldValue(Models.Metadata.Header.AuthorKey)))
                     Header.SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, $"SabreTools {Prepare.Version}");
 
-                if (string.IsNullOrWhiteSpace(Header.GetFieldValue<string?>(Models.Metadata.Header.CommentKey)))
+                if (string.IsNullOrWhiteSpace(Header.GetStringFieldValue(Models.Metadata.Header.CommentKey)))
                     Header.SetFieldValue<string?>(Models.Metadata.Header.CommentKey, $"Generated by SabreTools {Prepare.Version}");
             }
 
@@ -289,9 +289,9 @@ namespace SabreTools.Features
                         string innerpost = $" ({j} - {inputPaths[j].GetNormalizedFileName(true)} Only)";
 
                         datHeaders[j] = userInputDat.Header;
-                        datHeaders[j].SetFieldValue<string?>(DatHeader.FileNameKey, datHeaders[j].GetFieldValue<string?>(DatHeader.FileNameKey) + innerpost);
-                        datHeaders[j].SetFieldValue<string?>(Models.Metadata.Header.NameKey, datHeaders[j].GetFieldValue<string?>(Models.Metadata.Header.NameKey) + innerpost);
-                        datHeaders[j].SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, datHeaders[j].GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) + innerpost);
+                        datHeaders[j].SetFieldValue<string?>(DatHeader.FileNameKey, datHeaders[j].GetStringFieldValue(DatHeader.FileNameKey) + innerpost);
+                        datHeaders[j].SetFieldValue<string?>(Models.Metadata.Header.NameKey, datHeaders[j].GetStringFieldValue(Models.Metadata.Header.NameKey) + innerpost);
+                        datHeaders[j].SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, datHeaders[j].GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + innerpost);
                     }
 #if NET40_OR_GREATER || NETCOREAPP
                 });
@@ -409,7 +409,7 @@ namespace SabreTools.Features
             if (updateMode.HasFlag(UpdateMode.Merge))
             {
                 // If we're in SuperDAT mode, prefix all games with their respective DATs
-                if (string.Equals(userInputDat.Header.GetFieldValue<string?>(Models.Metadata.Header.TypeKey), "SuperDAT", StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(userInputDat.Header.GetStringFieldValue(Models.Metadata.Header.TypeKey), "SuperDAT", StringComparison.OrdinalIgnoreCase))
                     DatFileTool.ApplySuperDAT(userInputDat, inputPaths);
 
                 Writer.Write(userInputDat, OutputDir);

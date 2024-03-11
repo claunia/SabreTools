@@ -24,7 +24,7 @@ namespace SabreTools.Test.Filtering
             var remover = new Remover();
             remover.PopulateExclusions("Machine.Name");
             remover.RemoveFields(datItem);
-            Assert.Null(datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey));
+            Assert.Null(datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey));
         }
 
         /// <summary>

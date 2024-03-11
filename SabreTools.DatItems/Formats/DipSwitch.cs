@@ -65,7 +65,7 @@ namespace SabreTools.DatItems.Formats
                 var part = GetFieldValue<Part?>(DipSwitch.PartKey);
                 return part != null
                     && (!string.IsNullOrEmpty(part.GetName())
-                        || !string.IsNullOrEmpty(part.GetFieldValue<string?>(Models.Metadata.Part.InterfaceKey)));
+                        || !string.IsNullOrEmpty(part.GetStringFieldValue(Models.Metadata.Part.InterfaceKey)));
             }
         }
 

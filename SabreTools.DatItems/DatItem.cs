@@ -128,6 +128,81 @@ namespace SabreTools.DatItems
         }
 
         /// <summary>
+        /// Get the value from a field based on the type provided
+        /// </summary>
+        /// <param name="fieldName">Field to retrieve</param>
+        /// <returns>Value from the field, if possible</returns>
+        public bool? GetBoolFieldValue(string? fieldName)
+        {
+            // Invalid field cannot be processed
+            if (string.IsNullOrEmpty(fieldName) || !_internal.ContainsKey(fieldName!))
+                return default;
+
+            // Get the value based on the type
+            return _internal.ReadBool(fieldName!);
+        }
+
+        /// <summary>
+        /// Get the value from a field based on the type provided
+        /// </summary>
+        /// <param name="fieldName">Field to retrieve</param>
+        /// <returns>Value from the field, if possible</returns>
+        public double? GetDoubleFieldValue(string? fieldName)
+        {
+            // Invalid field cannot be processed
+            if (string.IsNullOrEmpty(fieldName) || !_internal.ContainsKey(fieldName!))
+                return default;
+
+            // Get the value based on the type
+            return _internal.ReadDouble(fieldName!);
+        }
+
+        /// <summary>
+        /// Get the value from a field based on the type provided
+        /// </summary>
+        /// <param name="fieldName">Field to retrieve</param>
+        /// <returns>Value from the field, if possible</returns>
+        public long? GetInt64FieldValue(string? fieldName)
+        {
+            // Invalid field cannot be processed
+            if (string.IsNullOrEmpty(fieldName) || !_internal.ContainsKey(fieldName!))
+                return default;
+
+            // Get the value based on the type
+            return _internal.ReadLong(fieldName!);
+        }
+
+        /// <summary>
+        /// Get the value from a field based on the type provided
+        /// </summary>
+        /// <param name="fieldName">Field to retrieve</param>
+        /// <returns>Value from the field, if possible</returns>
+        public string? GetStringFieldValue(string? fieldName)
+        {
+            // Invalid field cannot be processed
+            if (string.IsNullOrEmpty(fieldName) || !_internal.ContainsKey(fieldName!))
+                return default;
+
+            // Get the value based on the type
+            return _internal.ReadString(fieldName!);
+        }
+
+        /// <summary>
+        /// Get the value from a field based on the type provided
+        /// </summary>
+        /// <param name="fieldName">Field to retrieve</param>
+        /// <returns>Value from the field, if possible</returns>
+        public string[]? GetStringArrayFieldValue(string? fieldName)
+        {
+            // Invalid field cannot be processed
+            if (string.IsNullOrEmpty(fieldName) || !_internal.ContainsKey(fieldName!))
+                return default;
+
+            // Get the value based on the type
+            return _internal.ReadStringArray(fieldName!);
+        }
+
+        /// <summary>
         /// Set the value from a field based on the type provided
         /// </summary>
         /// <typeparam name="T">Type of the value to set in the internal model</typeparam>
@@ -282,7 +357,7 @@ namespace SabreTools.DatItems
             {
                 var currentMachine = GetFieldValue<Machine>(DatItem.MachineKey);
                 var lastMachine = lastItem?.GetFieldValue<Machine>(DatItem.MachineKey);
-                if (lastMachine?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) == currentMachine?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) && lastItem?.GetName() == GetName())
+                if (lastMachine?.GetStringFieldValue(Models.Metadata.Machine.NameKey) == currentMachine?.GetStringFieldValue(Models.Metadata.Machine.NameKey) && lastItem?.GetName() == GetName())
                     output = DupeType.External | DupeType.All;
                 else
                     output = DupeType.External | DupeType.Hash;
@@ -293,7 +368,7 @@ namespace SabreTools.DatItems
             {
                 var currentMachine = GetFieldValue<Machine>(DatItem.MachineKey);
                 var lastMachine = lastItem?.GetFieldValue<Machine>(DatItem.MachineKey);
-                if (lastMachine?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) == currentMachine?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) && lastItem?.GetName() == GetName())
+                if (lastMachine?.GetStringFieldValue(Models.Metadata.Machine.NameKey) == currentMachine?.GetStringFieldValue(Models.Metadata.Machine.NameKey) && lastItem?.GetName() == GetName())
                     output = DupeType.Internal | DupeType.All;
                 else
                     output = DupeType.Internal | DupeType.Hash;
@@ -373,9 +448,9 @@ namespace SabreTools.DatItems
                     key = (norename ? string.Empty
                         : GetFieldValue<Source?>(DatItem.SourceKey)?.Index.ToString().PadLeft(10, '0')
                             + "-")
-                    + (string.IsNullOrEmpty(GetFieldValue<Machine>(DatItem.MachineKey)?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey))
+                    + (string.IsNullOrEmpty(GetFieldValue<Machine>(DatItem.MachineKey)?.GetStringFieldValue(Models.Metadata.Machine.NameKey))
                             ? "Default"
-                            : GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)!);
+                            : GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!);
                     if (lower)
                         key = key.ToLowerInvariant();
 
@@ -510,8 +585,8 @@ namespace SabreTools.DatItems
                         }
 
                         // If the current machine is a child of the new machine, use the new machine instead
-                        if (saveditem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey) == item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)
-                            || saveditem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.RomOfKey) == item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey))
+                        if (saveditem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey) == item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)
+                            || saveditem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey) == item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey))
                         {
                             saveditem.CopyMachineInformation(item);
                             saveditem.SetName(item.GetName());
@@ -661,7 +736,7 @@ namespace SabreTools.DatItems
                     NaturalComparer nc = new();
 
                     // If machine names match, more refinement is needed
-                    if (x.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) == y.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey))
+                    if (x.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) == y.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey))
                     {
                         // If item types match, more refinement is needed
                         if (x.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey) == y.GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey))
@@ -677,7 +752,7 @@ namespace SabreTools.DatItems
 
                                 // If item names match, then compare on machine or source, depending on the flag
                                 if (xName == yName)
-                                    return (norename ? nc.Compare(x.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey), y.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)) : (x.GetFieldValue<Source?>(DatItem.SourceKey)?.Index - y.GetFieldValue<Source?>(DatItem.SourceKey)?.Index) ?? 0);
+                                    return (norename ? nc.Compare(x.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey), y.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)) : (x.GetFieldValue<Source?>(DatItem.SourceKey)?.Index - y.GetFieldValue<Source?>(DatItem.SourceKey)?.Index) ?? 0);
 
                                 // Otherwise, just sort based on item names
                                 return nc.Compare(xName, yName);
@@ -692,7 +767,7 @@ namespace SabreTools.DatItems
                     }
 
                     // Otherwise, just sort based on machine name
-                    return nc.Compare(x.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey), y.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey));
+                    return nc.Compare(x.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey), y.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey));
                 }
                 catch
                 {
@@ -756,7 +831,7 @@ namespace SabreTools.DatItems
         public override string? GetName()
         {
             if (NameKey != null)
-                return GetFieldValue<string?>(NameKey);
+                return GetStringFieldValue(NameKey);
 
             return null;
         }

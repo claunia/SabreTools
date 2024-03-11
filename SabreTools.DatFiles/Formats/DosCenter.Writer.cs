@@ -34,11 +34,11 @@ namespace SabreTools.DatFiles.Formats
             switch (datItem)
             {
                 case Rom rom:
-                    if (rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey) == null || NumberHelper.ConvertToInt64(rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey)) < 0)
+                    if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) == null || rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) < 0)
                         missingFields.Add(Models.Metadata.Rom.SizeKey);
                     // if (string.IsNullOrEmpty(rom.Date))
                     //     missingFields.Add(Models.Metadata.Rom.DateKey);
-                    if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey)))
+                    if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey)))
                         missingFields.Add(Models.Metadata.Rom.CRCKey);
                     break;
             }
@@ -97,13 +97,13 @@ namespace SabreTools.DatFiles.Formats
 
             var clrMamePro = new Models.DosCenter.DosCenter
             {
-                Name = Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey),
-                Description = Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey),
-                Version = Header.GetFieldValue<string?>(Models.Metadata.Header.VersionKey),
-                Date = Header.GetFieldValue<string?>(Models.Metadata.Header.DateKey),
-                Author = Header.GetFieldValue<string?>(Models.Metadata.Header.AuthorKey),
-                Homepage = Header.GetFieldValue<string?>(Models.Metadata.Header.HomepageKey),
-                Comment = Header.GetFieldValue<string?>(Models.Metadata.Header.CommentKey),
+                Name = Header.GetStringFieldValue(Models.Metadata.Header.NameKey),
+                Description = Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey),
+                Version = Header.GetStringFieldValue(Models.Metadata.Header.VersionKey),
+                Date = Header.GetStringFieldValue(Models.Metadata.Header.DateKey),
+                Author = Header.GetStringFieldValue(Models.Metadata.Header.AuthorKey),
+                Homepage = Header.GetStringFieldValue(Models.Metadata.Header.HomepageKey),
+                Comment = Header.GetStringFieldValue(Models.Metadata.Header.CommentKey),
             };
 
             return clrMamePro;
@@ -135,7 +135,7 @@ namespace SabreTools.DatFiles.Formats
                 // We re-add the missing parts of the game name
                 var game = new Models.DosCenter.Game
                 {
-                    Name = $"\"{machine?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) ?? string.Empty}.zip\""
+                    Name = $"\"{machine?.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty}.zip\""
                 };
 
                 // Create holders for all item types
@@ -180,9 +180,9 @@ namespace SabreTools.DatFiles.Formats
             var rom = new Models.DosCenter.File
             {
                 Name = item.GetName(),
-                Size = item.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey),
-                CRC = item.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey),
-                Date = item.GetFieldValue<string?>(Models.Metadata.Rom.DateKey),
+                Size = item.GetStringFieldValue(Models.Metadata.Rom.SizeKey),
+                CRC = item.GetStringFieldValue(Models.Metadata.Rom.CRCKey),
+                Date = item.GetStringFieldValue(Models.Metadata.Rom.DateKey),
             };
             return rom;
         }

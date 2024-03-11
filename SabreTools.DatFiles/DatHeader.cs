@@ -7,6 +7,7 @@ using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles.Formats;
 using SabreTools.Filter;
+using SabreTools.Serialization;
 
 namespace SabreTools.DatFiles
 {
@@ -107,9 +108,9 @@ namespace SabreTools.DatFiles
         {
             get
             {
-                return GetFieldValue<string?>("DATVERSIONURL") != null
+                return GetStringFieldValue("DATVERSIONURL") != null
                     //&& GetFieldValue<Models.OfflineList.DatUrl?>("DATURL") != null // TODO: Add to internal model
-                    && GetFieldValue<string?>("IMURL") != null;
+                    && GetStringFieldValue("IMURL") != null;
             }
         }
 
@@ -156,11 +157,86 @@ namespace SabreTools.DatFiles
         public T? GetFieldValue<T>(string? fieldName)
         {
             // Invalid field cannot be processed
-            if (string.IsNullOrEmpty(fieldName))
+            if (string.IsNullOrEmpty(fieldName) || !_header.ContainsKey(fieldName!))
                 return default;
 
             // Get the value based on the type
             return _header.Read<T>(fieldName!);
+        }
+
+        /// <summary>
+        /// Get the value from a field based on the type provided
+        /// </summary>
+        /// <param name="fieldName">Field to retrieve</param>
+        /// <returns>Value from the field, if possible</returns>
+        public bool? GetBoolFieldValue(string? fieldName)
+        {
+            // Invalid field cannot be processed
+            if (string.IsNullOrEmpty(fieldName) || !_header.ContainsKey(fieldName!))
+                return default;
+
+            // Get the value based on the type
+            return _header.ReadBool(fieldName!);
+        }
+
+        /// <summary>
+        /// Get the value from a field based on the type provided
+        /// </summary>
+        /// <param name="fieldName">Field to retrieve</param>
+        /// <returns>Value from the field, if possible</returns>
+        public double? GetDoubleFieldValue(string? fieldName)
+        {
+            // Invalid field cannot be processed
+            if (string.IsNullOrEmpty(fieldName) || !_header.ContainsKey(fieldName!))
+                return default;
+
+            // Get the value based on the type
+            return _header.ReadDouble(fieldName!);
+        }
+
+        /// <summary>
+        /// Get the value from a field based on the type provided
+        /// </summary>
+        /// <param name="fieldName">Field to retrieve</param>
+        /// <returns>Value from the field, if possible</returns>
+        public long? GetInt64FieldValue(string? fieldName)
+        {
+            // Invalid field cannot be processed
+            if (string.IsNullOrEmpty(fieldName) || !_header.ContainsKey(fieldName!))
+                return default;
+
+            // Get the value based on the type
+            return _header.ReadLong(fieldName!);
+        }
+
+        /// <summary>
+        /// Get the value from a field based on the type provided
+        /// </summary>
+        /// <param name="fieldName">Field to retrieve</param>
+        /// <returns>Value from the field, if possible</returns>
+        public string? GetStringFieldValue(string? fieldName)
+        {
+            // Invalid field cannot be processed
+            if (string.IsNullOrEmpty(fieldName) || !_header.ContainsKey(fieldName!))
+                return default;
+
+            // Get the value based on the type
+            return _header.ReadString(fieldName!);
+        }
+
+        /// <summary>
+        /// Get the value from a field based on the type provided
+        /// </summary>
+        /// <param name="fieldName">Field to retrieve</param>
+        /// <returns>Value from the field, if possible</returns>
+        public string[]? GetStringArrayFieldValue(string? fieldName)
+        {
+            // Invalid field cannot be processed
+            if (string.IsNullOrEmpty(fieldName) || !_header.ContainsKey(fieldName!))
+                return default;
+
+            // Get the value based on the type
+            return _header.ReadStringArray(fieldName!);
         }
 
         /// <summary>
@@ -196,51 +272,51 @@ namespace SabreTools.DatFiles
         public object Clone()
         {
             var header = new DatHeader();
-            header.SetFieldValue<string?>(DatHeader.AddExtensionKey, GetFieldValue<string?>(DatHeader.AddExtensionKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, GetFieldValue<string?>(Models.Metadata.Header.AuthorKey));
+            header.SetFieldValue<string?>(DatHeader.AddExtensionKey, GetStringFieldValue(DatHeader.AddExtensionKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, GetStringFieldValue(Models.Metadata.Header.AuthorKey));
             header.SetFieldValue<MergingFlag>(Models.Metadata.Header.BiosModeKey, GetFieldValue<MergingFlag>(Models.Metadata.Header.BiosModeKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.BuildKey, GetFieldValue<string?>(Models.Metadata.Header.BuildKey));
-            header.SetFieldValue<string[]?>(Models.Metadata.Header.CanOpenKey, GetFieldValue<string[]?>(Models.Metadata.Header.CanOpenKey)); // TODO: Perform a deep clone
-            header.SetFieldValue<string?>(Models.Metadata.Header.CategoryKey, GetFieldValue<string?>(Models.Metadata.Header.CategoryKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.CommentKey, GetFieldValue<string?>(Models.Metadata.Header.CommentKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.DateKey, GetFieldValue<string?>(Models.Metadata.Header.DateKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.BuildKey, GetStringFieldValue(Models.Metadata.Header.BuildKey));
+            header.SetFieldValue<string[]?>(Models.Metadata.Header.CanOpenKey, GetStringArrayFieldValue(Models.Metadata.Header.CanOpenKey)); // TODO: Perform a deep clone
+            header.SetFieldValue<string?>(Models.Metadata.Header.CategoryKey, GetStringFieldValue(Models.Metadata.Header.CategoryKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.CommentKey, GetStringFieldValue(Models.Metadata.Header.CommentKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.DateKey, GetStringFieldValue(Models.Metadata.Header.DateKey));
             header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, GetFieldValue<DatFormat>(DatHeader.DatFormatKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.DatVersionKey, GetFieldValue<string?>(Models.Metadata.Header.DatVersionKey));
-            header.SetFieldValue<bool?>(Models.Metadata.Header.DebugKey, GetFieldValue<bool?>(Models.Metadata.Header.DebugKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.EmailKey, GetFieldValue<string?>(Models.Metadata.Header.EmailKey));
-            header.SetFieldValue<string?>(DatHeader.FileNameKey, GetFieldValue<string?>(DatHeader.FileNameKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.DatVersionKey, GetStringFieldValue(Models.Metadata.Header.DatVersionKey));
+            header.SetFieldValue<bool?>(Models.Metadata.Header.DebugKey, GetBoolFieldValue(Models.Metadata.Header.DebugKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, GetStringFieldValue(Models.Metadata.Header.DescriptionKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.EmailKey, GetStringFieldValue(Models.Metadata.Header.EmailKey));
+            header.SetFieldValue<string?>(DatHeader.FileNameKey, GetStringFieldValue(DatHeader.FileNameKey));
             header.SetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey, GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey));
             header.SetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey, GetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey));
             header.SetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey, GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey));
-            header.SetFieldValue<bool>(DatHeader.GameNameKey, GetFieldValue<bool>(DatHeader.GameNameKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, GetFieldValue<string?>(Models.Metadata.Header.HeaderKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, GetFieldValue<string?>(Models.Metadata.Header.HomepageKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.IdKey, GetFieldValue<string?>(Models.Metadata.Header.IdKey));
+            header.SetFieldValue<bool?>(DatHeader.GameNameKey, GetBoolFieldValue(DatHeader.GameNameKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, GetStringFieldValue(Models.Metadata.Header.HeaderKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, GetStringFieldValue(Models.Metadata.Header.HomepageKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.IdKey, GetStringFieldValue(Models.Metadata.Header.IdKey));
             header.SetFieldValue<OfflineListInfo[]?>(Models.Metadata.Header.InfosKey, GetFieldValue<OfflineListInfo[]?>(Models.Metadata.Header.InfosKey)); // TODO: Perform a deep clone
             header.SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey, GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.Clone() as DepotInformation);
             header.SetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey, GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.Clone() as DepotInformation);
-            header.SetFieldValue<bool?>(Models.Metadata.Header.LockBiosModeKey, GetFieldValue<bool?>(Models.Metadata.Header.LockBiosModeKey));
-            header.SetFieldValue<bool?>(Models.Metadata.Header.LockRomModeKey, GetFieldValue<bool?>(Models.Metadata.Header.LockRomModeKey));
-            header.SetFieldValue<bool?>(Models.Metadata.Header.LockSampleModeKey, GetFieldValue<bool?>(Models.Metadata.Header.LockSampleModeKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.MameConfigKey, GetFieldValue<string?>(Models.Metadata.Header.MameConfigKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, GetFieldValue<string?>(Models.Metadata.Header.NameKey));
-            header.SetFieldValue<string?>(DatHeader.PostfixKey, GetFieldValue<string?>(DatHeader.PostfixKey));
-            header.SetFieldValue<string?>(DatHeader.PrefixKey, GetFieldValue<string?>(DatHeader.PrefixKey));
-            header.SetFieldValue<bool>(DatHeader.QuotesKey, GetFieldValue<bool>(DatHeader.QuotesKey));
-            header.SetFieldValue<bool>(DatHeader.RemoveExtensionKey, GetFieldValue<bool>(DatHeader.RemoveExtensionKey));
-            header.SetFieldValue<string?>(DatHeader.ReplaceExtensionKey, GetFieldValue<string?>(DatHeader.ReplaceExtensionKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.RomTitleKey, GetFieldValue<string?>(Models.Metadata.Header.RomTitleKey));
+            header.SetFieldValue<bool?>(Models.Metadata.Header.LockBiosModeKey, GetBoolFieldValue(Models.Metadata.Header.LockBiosModeKey));
+            header.SetFieldValue<bool?>(Models.Metadata.Header.LockRomModeKey, GetBoolFieldValue(Models.Metadata.Header.LockRomModeKey));
+            header.SetFieldValue<bool?>(Models.Metadata.Header.LockSampleModeKey, GetBoolFieldValue(Models.Metadata.Header.LockSampleModeKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.MameConfigKey, GetStringFieldValue(Models.Metadata.Header.MameConfigKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, GetStringFieldValue(Models.Metadata.Header.NameKey));
+            header.SetFieldValue<string?>(DatHeader.PostfixKey, GetStringFieldValue(DatHeader.PostfixKey));
+            header.SetFieldValue<string?>(DatHeader.PrefixKey, GetStringFieldValue(DatHeader.PrefixKey));
+            header.SetFieldValue<bool?>(DatHeader.QuotesKey, GetBoolFieldValue(DatHeader.QuotesKey));
+            header.SetFieldValue<bool?>(DatHeader.RemoveExtensionKey, GetBoolFieldValue(DatHeader.RemoveExtensionKey));
+            header.SetFieldValue<string?>(DatHeader.ReplaceExtensionKey, GetStringFieldValue(DatHeader.ReplaceExtensionKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.RomTitleKey, GetStringFieldValue(Models.Metadata.Header.RomTitleKey));
             header.SetFieldValue<MergingFlag>(Models.Metadata.Header.RomModeKey, GetFieldValue<MergingFlag>(Models.Metadata.Header.RomModeKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.RootDirKey, GetFieldValue<string?>(Models.Metadata.Header.RootDirKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.RootDirKey, GetStringFieldValue(Models.Metadata.Header.RootDirKey));
             header.SetFieldValue<MergingFlag>(Models.Metadata.Header.SampleModeKey, GetFieldValue<MergingFlag>(Models.Metadata.Header.SampleModeKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsHeightKey, GetFieldValue<string?>(Models.Metadata.Header.ScreenshotsHeightKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsWidthKey, GetFieldValue<string?>(Models.Metadata.Header.ScreenshotsWidthKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.SystemKey, GetFieldValue<string?>(Models.Metadata.Header.SystemKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, GetFieldValue<string?>(Models.Metadata.Header.TypeKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.UrlKey, GetFieldValue<string?>(Models.Metadata.Header.UrlKey));
-            header.SetFieldValue<bool>(DatHeader.UseRomNameKey, GetFieldValue<bool>(DatHeader.UseRomNameKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.VersionKey, GetFieldValue<string?>(Models.Metadata.Header.VersionKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsHeightKey, GetStringFieldValue(Models.Metadata.Header.ScreenshotsHeightKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsWidthKey, GetStringFieldValue(Models.Metadata.Header.ScreenshotsWidthKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.SystemKey, GetStringFieldValue(Models.Metadata.Header.SystemKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, GetStringFieldValue(Models.Metadata.Header.TypeKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.UrlKey, GetStringFieldValue(Models.Metadata.Header.UrlKey));
+            header.SetFieldValue<bool?>(DatHeader.UseRomNameKey, GetBoolFieldValue(DatHeader.UseRomNameKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.VersionKey, GetStringFieldValue(Models.Metadata.Header.VersionKey));
 
             return header;
         }
@@ -251,24 +327,24 @@ namespace SabreTools.DatFiles
         public DatHeader CloneStandard()
         {
             var header = new DatHeader();
-            header.SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, GetFieldValue<string?>(Models.Metadata.Header.AuthorKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.CategoryKey, GetFieldValue<string?>(Models.Metadata.Header.CategoryKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.CommentKey, GetFieldValue<string?>(Models.Metadata.Header.CommentKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.DateKey, GetFieldValue<string?>(Models.Metadata.Header.DateKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, GetStringFieldValue(Models.Metadata.Header.AuthorKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.CategoryKey, GetStringFieldValue(Models.Metadata.Header.CategoryKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.CommentKey, GetStringFieldValue(Models.Metadata.Header.CommentKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.DateKey, GetStringFieldValue(Models.Metadata.Header.DateKey));
             header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, GetFieldValue<DatFormat>(DatHeader.DatFormatKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.EmailKey, GetFieldValue<string?>(Models.Metadata.Header.EmailKey));
-            header.SetFieldValue<string?>(DatHeader.FileNameKey, GetFieldValue<string?>(DatHeader.FileNameKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, GetStringFieldValue(Models.Metadata.Header.DescriptionKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.EmailKey, GetStringFieldValue(Models.Metadata.Header.EmailKey));
+            header.SetFieldValue<string?>(DatHeader.FileNameKey, GetStringFieldValue(DatHeader.FileNameKey));
             header.SetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey, GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey));
             header.SetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey, GetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey));
             header.SetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey, GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, GetFieldValue<string?>(Models.Metadata.Header.HeaderKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, GetFieldValue<string?>(Models.Metadata.Header.HomepageKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, GetFieldValue<string?>(Models.Metadata.Header.NameKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.RootDirKey, GetFieldValue<string?>(Models.Metadata.Header.RootDirKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, GetFieldValue<string?>(Models.Metadata.Header.TypeKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.UrlKey, GetFieldValue<string?>(Models.Metadata.Header.UrlKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.VersionKey, GetFieldValue<string?>(Models.Metadata.Header.VersionKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, GetStringFieldValue(Models.Metadata.Header.HeaderKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, GetStringFieldValue(Models.Metadata.Header.HomepageKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, GetStringFieldValue(Models.Metadata.Header.NameKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.RootDirKey, GetStringFieldValue(Models.Metadata.Header.RootDirKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, GetStringFieldValue(Models.Metadata.Header.TypeKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.UrlKey, GetStringFieldValue(Models.Metadata.Header.UrlKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.VersionKey, GetStringFieldValue(Models.Metadata.Header.VersionKey));
 
             return header;
         }
@@ -279,17 +355,17 @@ namespace SabreTools.DatFiles
         public DatHeader CloneFiltering()
         {
             var header = new DatHeader();
-            header.SetFieldValue<string?>(DatHeader.AddExtensionKey, GetFieldValue<string?>(DatHeader.AddExtensionKey));
+            header.SetFieldValue<string?>(DatHeader.AddExtensionKey, GetStringFieldValue(DatHeader.AddExtensionKey));
             header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, GetFieldValue<DatFormat>(DatHeader.DatFormatKey));
-            header.SetFieldValue<bool>(DatHeader.GameNameKey, GetFieldValue<bool>(DatHeader.GameNameKey));
+            header.SetFieldValue<bool?>(DatHeader.GameNameKey, GetBoolFieldValue(DatHeader.GameNameKey));
             header.SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey, GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.Clone() as DepotInformation);
             header.SetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey, GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.Clone() as DepotInformation);
-            header.SetFieldValue<string?>(DatHeader.PostfixKey, GetFieldValue<string?>(DatHeader.PostfixKey));
-            header.SetFieldValue<string?>(DatHeader.PrefixKey, GetFieldValue<string?>(DatHeader.PrefixKey));
-            header.SetFieldValue<bool>(DatHeader.RemoveExtensionKey, GetFieldValue<bool>(DatHeader.RemoveExtensionKey));
-            header.SetFieldValue<string?>(DatHeader.ReplaceExtensionKey, GetFieldValue<string?>(DatHeader.ReplaceExtensionKey));
-            header.SetFieldValue<bool>(DatHeader.QuotesKey, GetFieldValue<bool>(DatHeader.QuotesKey));
-            header.SetFieldValue<bool>(DatHeader.UseRomNameKey, GetFieldValue<bool>(DatHeader.UseRomNameKey));
+            header.SetFieldValue<string?>(DatHeader.PostfixKey, GetStringFieldValue(DatHeader.PostfixKey));
+            header.SetFieldValue<string?>(DatHeader.PrefixKey, GetStringFieldValue(DatHeader.PrefixKey));
+            header.SetFieldValue<bool?>(DatHeader.RemoveExtensionKey, GetBoolFieldValue(DatHeader.RemoveExtensionKey));
+            header.SetFieldValue<string?>(DatHeader.ReplaceExtensionKey, GetStringFieldValue(DatHeader.ReplaceExtensionKey));
+            header.SetFieldValue<bool?>(DatHeader.QuotesKey, GetBoolFieldValue(DatHeader.QuotesKey));
+            header.SetFieldValue<bool?>(DatHeader.UseRomNameKey, GetBoolFieldValue(DatHeader.UseRomNameKey));
 
             return header;
         }
@@ -303,47 +379,47 @@ namespace SabreTools.DatFiles
             if (datHeader == null)
                 return;
 
-            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(DatHeader.FileNameKey)))
-                SetFieldValue<string?>(DatHeader.FileNameKey, datHeader.GetFieldValue<string?>(DatHeader.FileNameKey));
+            if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(DatHeader.FileNameKey)))
+                SetFieldValue<string?>(DatHeader.FileNameKey, datHeader.GetStringFieldValue(DatHeader.FileNameKey));
 
-            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(Models.Metadata.Header.NameKey)))
-                SetFieldValue<string?>(Models.Metadata.Header.NameKey, datHeader.GetFieldValue<string?>(Models.Metadata.Header.NameKey));
+            if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(Models.Metadata.Header.NameKey)))
+                SetFieldValue<string?>(Models.Metadata.Header.NameKey, datHeader.GetStringFieldValue(Models.Metadata.Header.NameKey));
 
-            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)))
-                SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, datHeader.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey));
+            if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)))
+                SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, datHeader.GetStringFieldValue(Models.Metadata.Header.DescriptionKey));
 
-            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(Models.Metadata.Header.RootDirKey)))
-                SetFieldValue<string?>(Models.Metadata.Header.RootDirKey, datHeader.GetFieldValue<string?>(Models.Metadata.Header.RootDirKey));
+            if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(Models.Metadata.Header.RootDirKey)))
+                SetFieldValue<string?>(Models.Metadata.Header.RootDirKey, datHeader.GetStringFieldValue(Models.Metadata.Header.RootDirKey));
 
-            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(Models.Metadata.Header.CategoryKey)))
-                SetFieldValue<string?>(Models.Metadata.Header.CategoryKey, datHeader.GetFieldValue<string?>(Models.Metadata.Header.CategoryKey));
+            if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(Models.Metadata.Header.CategoryKey)))
+                SetFieldValue<string?>(Models.Metadata.Header.CategoryKey, datHeader.GetStringFieldValue(Models.Metadata.Header.CategoryKey));
 
-            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(Models.Metadata.Header.VersionKey)))
-                SetFieldValue<string?>(Models.Metadata.Header.VersionKey, datHeader.GetFieldValue<string?>(Models.Metadata.Header.VersionKey));
+            if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(Models.Metadata.Header.VersionKey)))
+                SetFieldValue<string?>(Models.Metadata.Header.VersionKey, datHeader.GetStringFieldValue(Models.Metadata.Header.VersionKey));
 
-            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(Models.Metadata.Header.DateKey)))
-                SetFieldValue<string?>(Models.Metadata.Header.DateKey, datHeader.GetFieldValue<string?>(Models.Metadata.Header.DateKey));
+            if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(Models.Metadata.Header.DateKey)))
+                SetFieldValue<string?>(Models.Metadata.Header.DateKey, datHeader.GetStringFieldValue(Models.Metadata.Header.DateKey));
 
-            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(Models.Metadata.Header.AuthorKey)))
-                SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, datHeader.GetFieldValue<string?>(Models.Metadata.Header.AuthorKey));
+            if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(Models.Metadata.Header.AuthorKey)))
+                SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, datHeader.GetStringFieldValue(Models.Metadata.Header.AuthorKey));
 
-            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(Models.Metadata.Header.EmailKey)))
-                SetFieldValue<string?>(Models.Metadata.Header.EmailKey, datHeader.GetFieldValue<string?>(Models.Metadata.Header.EmailKey));
+            if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(Models.Metadata.Header.EmailKey)))
+                SetFieldValue<string?>(Models.Metadata.Header.EmailKey, datHeader.GetStringFieldValue(Models.Metadata.Header.EmailKey));
 
-            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(Models.Metadata.Header.HomepageKey)))
-                SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, datHeader.GetFieldValue<string?>(Models.Metadata.Header.HomepageKey));
+            if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(Models.Metadata.Header.HomepageKey)))
+                SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, datHeader.GetStringFieldValue(Models.Metadata.Header.HomepageKey));
 
-            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(Models.Metadata.Header.UrlKey)))
-                SetFieldValue<string?>(Models.Metadata.Header.UrlKey, datHeader.GetFieldValue<string?>(Models.Metadata.Header.UrlKey));
+            if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(Models.Metadata.Header.UrlKey)))
+                SetFieldValue<string?>(Models.Metadata.Header.UrlKey, datHeader.GetStringFieldValue(Models.Metadata.Header.UrlKey));
 
-            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(Models.Metadata.Header.CommentKey)))
-                SetFieldValue<string?>(Models.Metadata.Header.CommentKey, datHeader.GetFieldValue<string?>(Models.Metadata.Header.CommentKey));
+            if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(Models.Metadata.Header.CommentKey)))
+                SetFieldValue<string?>(Models.Metadata.Header.CommentKey, datHeader.GetStringFieldValue(Models.Metadata.Header.CommentKey));
 
-            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey)))
-                SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, datHeader.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey));
+            if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(Models.Metadata.Header.HeaderKey)))
+                SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, datHeader.GetStringFieldValue(Models.Metadata.Header.HeaderKey));
 
-            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(Models.Metadata.Header.TypeKey)))
-                SetFieldValue<string?>(Models.Metadata.Header.TypeKey, datHeader.GetFieldValue<string?>(Models.Metadata.Header.TypeKey));
+            if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(Models.Metadata.Header.TypeKey)))
+                SetFieldValue<string?>(Models.Metadata.Header.TypeKey, datHeader.GetStringFieldValue(Models.Metadata.Header.TypeKey));
 
             if (datHeader.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey) != MergingFlag.None)
                 SetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey, datHeader.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey));
@@ -357,24 +433,24 @@ namespace SabreTools.DatFiles
             if (datHeader.GetFieldValue<DatFormat>(DatHeader.DatFormatKey) != 0x00)
                 SetFieldValue<DatFormat>(DatHeader.DatFormatKey, datHeader.GetFieldValue<DatFormat>(DatHeader.DatFormatKey));
 
-            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(DatHeader.PrefixKey)))
-                SetFieldValue<string?>(DatHeader.PrefixKey, datHeader.GetFieldValue<string?>(DatHeader.PrefixKey));
+            if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(DatHeader.PrefixKey)))
+                SetFieldValue<string?>(DatHeader.PrefixKey, datHeader.GetStringFieldValue(DatHeader.PrefixKey));
 
-            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(DatHeader.PostfixKey)))
-                SetFieldValue<string?>(DatHeader.PostfixKey, datHeader.GetFieldValue<string?>(DatHeader.PostfixKey));
+            if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(DatHeader.PostfixKey)))
+                SetFieldValue<string?>(DatHeader.PostfixKey, datHeader.GetStringFieldValue(DatHeader.PostfixKey));
 
-            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(DatHeader.AddExtensionKey)))
-                SetFieldValue<string?>(DatHeader.AddExtensionKey, datHeader.GetFieldValue<string?>(DatHeader.AddExtensionKey));
+            if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(DatHeader.AddExtensionKey)))
+                SetFieldValue<string?>(DatHeader.AddExtensionKey, datHeader.GetStringFieldValue(DatHeader.AddExtensionKey));
 
-            if (!string.IsNullOrEmpty(datHeader.GetFieldValue<string?>(DatHeader.ReplaceExtensionKey)))
-                SetFieldValue<string?>(DatHeader.ReplaceExtensionKey, datHeader.GetFieldValue<string?>(DatHeader.ReplaceExtensionKey));
+            if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(DatHeader.ReplaceExtensionKey)))
+                SetFieldValue<string?>(DatHeader.ReplaceExtensionKey, datHeader.GetStringFieldValue(DatHeader.ReplaceExtensionKey));
 
             SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey, datHeader.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.Clone() as DepotInformation);
             SetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey, datHeader.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.Clone() as DepotInformation);
-            SetFieldValue<bool>(DatHeader.GameNameKey, datHeader.GetFieldValue<bool>(DatHeader.GameNameKey));
-            SetFieldValue<bool>(DatHeader.QuotesKey, datHeader.GetFieldValue<bool>(DatHeader.QuotesKey));
-            SetFieldValue<bool>(DatHeader.RemoveExtensionKey, datHeader.GetFieldValue<bool>(DatHeader.RemoveExtensionKey));
-            SetFieldValue<bool>(DatHeader.UseRomNameKey, datHeader.GetFieldValue<bool>(DatHeader.UseRomNameKey));
+            SetFieldValue<bool?>(DatHeader.GameNameKey, datHeader.GetBoolFieldValue(DatHeader.GameNameKey));
+            SetFieldValue<bool?>(DatHeader.QuotesKey, datHeader.GetBoolFieldValue(DatHeader.QuotesKey));
+            SetFieldValue<bool?>(DatHeader.RemoveExtensionKey, datHeader.GetBoolFieldValue(DatHeader.RemoveExtensionKey));
+            SetFieldValue<bool?>(DatHeader.UseRomNameKey, datHeader.GetBoolFieldValue(DatHeader.UseRomNameKey));
         }
 
         #endregion
@@ -879,9 +955,9 @@ namespace SabreTools.DatFiles
         /// <returns>String containing the new filename</returns>
         private string CreateOutFileNamesHelper(string outDir, string extension, bool overwrite)
         {
-            string? filename = string.IsNullOrEmpty(GetFieldValue<string?>(DatHeader.FileNameKey))
-                ? GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)
-                : GetFieldValue<string?>(DatHeader.FileNameKey);
+            string? filename = string.IsNullOrEmpty(GetStringFieldValue(DatHeader.FileNameKey))
+                ? GetStringFieldValue(Models.Metadata.Header.DescriptionKey)
+                : GetStringFieldValue(DatHeader.FileNameKey);
 
             // Strip off the extension if it's a holdover from the DAT
             if (Utilities.HasValidDatExtension(filename))

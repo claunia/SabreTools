@@ -52,7 +52,7 @@ namespace SabreTools.DatItems.Formats
                 var part = GetFieldValue<Part?>(Disk.PartKey);
                 return part != null
                     && (!string.IsNullOrEmpty(part.GetName())
-                        || !string.IsNullOrEmpty(part.GetFieldValue<string?>(Models.Metadata.Part.InterfaceKey)));
+                        || !string.IsNullOrEmpty(part.GetStringFieldValue(Models.Metadata.Part.InterfaceKey)));
             }
         }
 
@@ -94,9 +94,9 @@ namespace SabreTools.DatItems.Formats
             return new BaseFile()
             {
                 Filename = this.GetName(),
-                Parent = GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
-                MD5 = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Disk.MD5Key)),
-                SHA1 = TextHelper.StringToByteArray(GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key)),
+                Parent = GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey),
+                MD5 = TextHelper.StringToByteArray(GetStringFieldValue(Models.Metadata.Disk.MD5Key)),
+                SHA1 = TextHelper.StringToByteArray(GetStringFieldValue(Models.Metadata.Disk.SHA1Key)),
             };
         }
 
@@ -110,7 +110,7 @@ namespace SabreTools.DatItems.Formats
             rom.GetFieldValue<DataArea?>(Rom.DataAreaKey)?.SetName(this.GetFieldValue<DiskArea?>(Disk.DiskAreaKey)?.GetName());
             rom.SetFieldValue<DupeType>(DatItem.DupeTypeKey, GetFieldValue<DupeType>(DatItem.DupeTypeKey));
             rom.SetFieldValue<Machine>(DatItem.MachineKey, GetFieldValue<Machine>(DatItem.MachineKey)!.Clone() as Machine ?? new Machine());
-            rom.SetFieldValue<bool?>(DatItem.RemoveKey, GetFieldValue<bool?>(DatItem.RemoveKey));
+            rom.SetFieldValue<bool?>(DatItem.RemoveKey, GetBoolFieldValue(DatItem.RemoveKey));
             rom.SetFieldValue<Source?>(DatItem.SourceKey, GetFieldValue<Source?>(DatItem.SourceKey));
 
             return rom;
@@ -146,11 +146,11 @@ namespace SabreTools.DatItems.Formats
             switch (bucketedBy)
             {
                 case ItemKey.MD5:
-                    key = GetFieldValue<string?>(Models.Metadata.Disk.MD5Key);
+                    key = GetStringFieldValue(Models.Metadata.Disk.MD5Key);
                     break;
 
                 case ItemKey.SHA1:
-                    key = GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key);
+                    key = GetStringFieldValue(Models.Metadata.Disk.SHA1Key);
                     break;
 
                 // Let the base handle generic stuff

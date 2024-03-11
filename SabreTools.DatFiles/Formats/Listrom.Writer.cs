@@ -35,19 +35,19 @@ namespace SabreTools.DatFiles.Formats
             switch (datItem)
             {
                 case Disk disk:
-                    if (string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key))
-                        && string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key)))
+                    if (string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key))
+                        && string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)))
                     {
                         missingFields.Add(Models.Metadata.Disk.SHA1Key);
                     }
                     break;
 
                 case Rom rom:
-                    if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null || NumberHelper.ConvertToInt64(rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey)) < 0)
+                    if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) == null || rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) < 0)
                         missingFields.Add(Models.Metadata.Rom.SizeKey);
-                    if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey)))
+                    if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey)))
                         missingFields.Add(Models.Metadata.Rom.CRCKey);
-                    if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key)))
+                    if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key)))
                         missingFields.Add(Models.Metadata.Rom.SHA1Key);
                     break;
             }
@@ -117,11 +117,11 @@ namespace SabreTools.DatFiles.Formats
 
                 var set = new Models.Listrom.Set
                 {
-                    Driver = items[0]!.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<bool?>(Models.Metadata.Machine.IsDeviceKey) == true
-                        ? items[0]!.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)
+                    Driver = items[0]!.GetFieldValue<Machine>(DatItem.MachineKey)!.GetBoolFieldValue(Models.Metadata.Machine.IsDeviceKey) == true
+                        ? items[0]!.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)
                         : null,
-                    Device = items[0]!.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<bool?>(Models.Metadata.Machine.IsDeviceKey) == true
-                        ? items[0]!.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)
+                    Device = items[0]!.GetFieldValue<Machine>(DatItem.MachineKey)!.GetBoolFieldValue(Models.Metadata.Machine.IsDeviceKey) == true
+                        ? items[0]!.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)
                         : null,
                 };
 
@@ -182,10 +182,10 @@ namespace SabreTools.DatFiles.Formats
                     Bad = true,
                 };
 
-                if (!string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key)))
-                    row.MD5 = disk.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key);
+                if (!string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key)))
+                    row.MD5 = disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key);
                 else
-                    row.SHA1 = disk.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key);
+                    row.SHA1 = disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key);
 
                 return row;
             }
@@ -196,10 +196,10 @@ namespace SabreTools.DatFiles.Formats
                     Name = disk.GetName(),
                 };
 
-                if (!string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key)))
-                    row.MD5 = disk.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key);
+                if (!string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key)))
+                    row.MD5 = disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key);
                 else
-                    row.SHA1 = disk.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key);
+                    row.SHA1 = disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key);
 
                 return row;
             }
@@ -215,7 +215,7 @@ namespace SabreTools.DatFiles.Formats
                 return new Models.Listrom.Row
                 {
                     Name = rom.GetName(),
-                    Size = rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey),
+                    Size = rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey).ToString(),
                     NoGoodDumpKnown = true,
                 };
             }
@@ -224,10 +224,10 @@ namespace SabreTools.DatFiles.Formats
                 return new Models.Listrom.Row
                 {
                     Name = rom.GetName(),
-                    Size = rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey),
+                    Size = rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey).ToString(),
                     Bad = true,
-                    CRC = rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey),
-                    SHA1 = rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key),
+                    CRC = rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey),
+                    SHA1 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key),
                 };
             }
             else
@@ -235,9 +235,9 @@ namespace SabreTools.DatFiles.Formats
                 return new Models.Listrom.Row
                 {
                     Name = rom.GetName(),
-                    Size = rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey),
-                    CRC = rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey),
-                    SHA1 = rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key),
+                    Size = rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey).ToString(),
+                    CRC = rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey),
+                    SHA1 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key),
                 };
             }
         }

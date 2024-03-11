@@ -131,6 +131,81 @@ namespace SabreTools.DatItems
         }
 
         /// <summary>
+        /// Get the value from a field based on the type provided
+        /// </summary>
+        /// <param name="fieldName">Field to retrieve</param>
+        /// <returns>Value from the field, if possible</returns>
+        public bool? GetBoolFieldValue(string? fieldName)
+        {
+            // Invalid field cannot be processed
+            if (string.IsNullOrEmpty(fieldName) || !_machine.ContainsKey(fieldName!))
+                return default;
+
+            // Get the value based on the type
+            return _machine.ReadBool(fieldName!);
+        }
+
+        /// <summary>
+        /// Get the value from a field based on the type provided
+        /// </summary>
+        /// <param name="fieldName">Field to retrieve</param>
+        /// <returns>Value from the field, if possible</returns>
+        public double? GetDoubleFieldValue(string? fieldName)
+        {
+            // Invalid field cannot be processed
+            if (string.IsNullOrEmpty(fieldName) || !_machine.ContainsKey(fieldName!))
+                return default;
+
+            // Get the value based on the type
+            return _machine.ReadDouble(fieldName!);
+        }
+
+        /// <summary>
+        /// Get the value from a field based on the type provided
+        /// </summary>
+        /// <param name="fieldName">Field to retrieve</param>
+        /// <returns>Value from the field, if possible</returns>
+        public long? GetInt64FieldValue(string? fieldName)
+        {
+            // Invalid field cannot be processed
+            if (string.IsNullOrEmpty(fieldName) || !_machine.ContainsKey(fieldName!))
+                return default;
+
+            // Get the value based on the type
+            return _machine.ReadLong(fieldName!);
+        }
+
+        /// <summary>
+        /// Get the value from a field based on the type provided
+        /// </summary>
+        /// <param name="fieldName">Field to retrieve</param>
+        /// <returns>Value from the field, if possible</returns>
+        public string? GetStringFieldValue(string? fieldName)
+        {
+            // Invalid field cannot be processed
+            if (string.IsNullOrEmpty(fieldName) || !_machine.ContainsKey(fieldName!))
+                return default;
+
+            // Get the value based on the type
+            return _machine.ReadString(fieldName!);
+        }
+
+        /// <summary>
+        /// Get the value from a field based on the type provided
+        /// </summary>
+        /// <param name="fieldName">Field to retrieve</param>
+        /// <returns>Value from the field, if possible</returns>
+        public string[]? GetStringArrayFieldValue(string? fieldName)
+        {
+            // Invalid field cannot be processed
+            if (string.IsNullOrEmpty(fieldName) || !_machine.ContainsKey(fieldName!))
+                return default;
+
+            // Get the value based on the type
+            return _machine.ReadStringArray(fieldName!);
+        }
+
+        /// <summary>
         /// Set the value from a field based on the type provided
         /// </summary>
         /// <typeparam name="T">Type of the value to set in the internal model</typeparam>

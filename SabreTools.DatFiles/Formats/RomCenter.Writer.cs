@@ -34,9 +34,9 @@ namespace SabreTools.DatFiles.Formats
             switch (datItem)
             {
                 case Rom rom:
-                    if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey)))
+                    if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey)))
                         missingFields.Add(Models.Metadata.Rom.CRCKey);
-                    if (rom.GetFieldValue<long?>(Models.Metadata.Rom.SizeKey) == null || NumberHelper.ConvertToInt64(rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey)) < 0)
+                    if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) == null || rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) < 0)
                         missingFields.Add(Models.Metadata.Rom.SizeKey);
                     break;
             }
@@ -93,13 +93,13 @@ namespace SabreTools.DatFiles.Formats
         {
             var credits = new Models.RomCenter.Credits
             {
-                Author = Header.GetFieldValue<string?>(Models.Metadata.Header.AuthorKey),
-                Version = Header.GetFieldValue<string?>(Models.Metadata.Header.VersionKey),
-                Email = Header.GetFieldValue<string?>(Models.Metadata.Header.EmailKey),
-                Homepage = Header.GetFieldValue<string?>(Models.Metadata.Header.HomepageKey),
-                Url = Header.GetFieldValue<string?>(Models.Metadata.Header.UrlKey),
-                Date = Header.GetFieldValue<string?>(Models.Metadata.Header.DateKey),
-                Comment = Header.GetFieldValue<string?>(Models.Metadata.Header.CommentKey),
+                Author = Header.GetStringFieldValue(Models.Metadata.Header.AuthorKey),
+                Version = Header.GetStringFieldValue(Models.Metadata.Header.VersionKey),
+                Email = Header.GetStringFieldValue(Models.Metadata.Header.EmailKey),
+                Homepage = Header.GetStringFieldValue(Models.Metadata.Header.HomepageKey),
+                Url = Header.GetStringFieldValue(Models.Metadata.Header.UrlKey),
+                Date = Header.GetStringFieldValue(Models.Metadata.Header.DateKey),
+                Comment = Header.GetStringFieldValue(Models.Metadata.Header.CommentKey),
             };
             return credits;
         }
@@ -111,8 +111,8 @@ namespace SabreTools.DatFiles.Formats
         {
             var dat = new Models.RomCenter.Dat
             {
-                Version = Header.GetFieldValue<string?>(Models.Metadata.Header.DatVersionKey),
-                Plugin = Header.GetFieldValue<string?>(Models.Metadata.Header.SystemKey),
+                Version = Header.GetStringFieldValue(Models.Metadata.Header.DatVersionKey),
+                Plugin = Header.GetStringFieldValue(Models.Metadata.Header.SystemKey),
                 Split = (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey) == MergingFlag.Split ? "1" : "0"),
                 Merge = (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey) == MergingFlag.Merged || Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey) == MergingFlag.FullMerged ? "1" : "0"),
             };
@@ -126,8 +126,8 @@ namespace SabreTools.DatFiles.Formats
         {
             var emulator = new Models.RomCenter.Emulator
             {
-                RefName = Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey),
-                Version = Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey),
+                RefName = Header.GetStringFieldValue(Models.Metadata.Header.NameKey),
+                Version = Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey),
             };
             return emulator;
         }
@@ -184,15 +184,15 @@ namespace SabreTools.DatFiles.Formats
         {
             var rom = new Models.RomCenter.Rom
             {
-                ParentName = item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey),
-                //ParentDescription = item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.CloneOfDescription), // TODO: Add to internal model or find mapping
-                GameName = item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
-                GameDescription = item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey),
+                ParentName = item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey),
+                //ParentDescription = item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.CloneOfDescription), // TODO: Add to internal model or find mapping
+                GameName = item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey),
+                GameDescription = item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey),
                 RomName = item.GetName(),
-                RomCRC = item.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey),
-                RomSize = item.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey),
-                RomOf = item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.RomOfKey),
-                MergeName = item.GetFieldValue<string?>(Models.Metadata.Rom.MergeKey),
+                RomCRC = item.GetStringFieldValue(Models.Metadata.Rom.CRCKey),
+                RomSize = item.GetStringFieldValue(Models.Metadata.Rom.SizeKey),
+                RomOf = item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey),
+                MergeName = item.GetStringFieldValue(Models.Metadata.Rom.MergeKey),
             };
             return rom;
         }

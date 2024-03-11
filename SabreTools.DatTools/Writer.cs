@@ -71,7 +71,7 @@ namespace SabreTools.DatTools
             datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None);
 
             // Output the number of items we're going to be writing
-            logger.User($"A total of {datFile.Items.TotalCount - datFile.Items.RemovedCount} items will be written out to '{datFile.Header.GetFieldValue<string?>(DatHeader.FileNameKey)}'");
+            logger.User($"A total of {datFile.Items.TotalCount - datFile.Items.RemovedCount} items will be written out to '{datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)}'");
 
             // Get the outfile names
             Dictionary<DatFormat, string> outfiles = datFile.Header.CreateOutFileNames(outDir!, overwrite);
@@ -135,7 +135,7 @@ namespace SabreTools.DatTools
                 new()
                 {
                     Statistics = datFile.Items,
-                    DisplayName = datFile.Header.GetFieldValue<string?>(DatHeader.FileNameKey),
+                    DisplayName = datFile.Header.GetStringFieldValue(DatHeader.FileNameKey),
                     MachineCount = datFile.Items.Keys.Count,
                     IsDirectory = false,
                 },
@@ -151,50 +151,50 @@ namespace SabreTools.DatTools
         private static void EnsureHeaderFields(DatFile datFile)
         {
             // Empty FileName
-            if (string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(DatHeader.FileNameKey)))
+            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)))
             {
-                if (string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)) && string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)))
+                if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)) && string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)))
                 {
                     datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey,"Default");
                     datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, "Default");
                     datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, "Default");
                 }
 
-                else if (string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)) && !string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)))
+                else if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)) && !string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)))
                 {
-                    datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey,datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey));
-                    datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey));
+                    datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey,datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey));
+                    datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey));
                 }
 
-                else if (!string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)) && string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)))
+                else if (!string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)) && string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)))
                 {
-                    datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey, datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey));
-                    datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey));
+                    datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey, datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey));
+                    datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey));
                 }
 
-                else if (!string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)) && !string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)))
+                else if (!string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)) && !string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)))
                 {
-                    datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey, datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey));
+                    datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey, datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey));
                 }
             }
 
             // Filled FileName
             else
             {
-                if (string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)) && string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)))
+                if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)) && string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)))
                 {
-                    datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, datFile.Header.GetFieldValue<string?>(DatHeader.FileNameKey));
-                    datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, datFile.Header.GetFieldValue<string?>(DatHeader.FileNameKey));
+                    datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, datFile.Header.GetStringFieldValue(DatHeader.FileNameKey));
+                    datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, datFile.Header.GetStringFieldValue(DatHeader.FileNameKey));
                 }
 
-                else if (string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)) && !string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)))
+                else if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)) && !string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)))
                 {
-                    datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey));
+                    datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey));
                 }
 
-                else if (!string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)) && string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)))
+                else if (!string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)) && string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)))
                 {
-                    datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey));
+                    datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey));
                 }
             }
         }

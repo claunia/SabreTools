@@ -76,7 +76,7 @@ namespace SabreTools.DatTools
                     filename = filename.Remove(0, rootpath?.Length ?? 0);
                     newItem.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Path.GetDirectoryName(filename) + Path.DirectorySeparatorChar
                         + Path.GetFileNameWithoutExtension(filename) + Path.DirectorySeparatorChar
-                        + newItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey));
+                        + newItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey));
 
                     newItems.Add(newItem);
                 }
@@ -105,7 +105,7 @@ namespace SabreTools.DatTools
             Dictionary<string, List<string>> itemFieldNames,
             bool onlySame)
         {
-            InternalStopwatch watch = new($"Replacing items in '{intDat.Header.GetFieldValue<string?>(DatHeader.FileNameKey)}' from the base DAT");
+            InternalStopwatch watch = new($"Replacing items in '{intDat.Header.GetStringFieldValue(DatHeader.FileNameKey)}' from the base DAT");
 
             // If we are matching based on DatItem fields of any sort
             if (itemFieldNames.Any())
@@ -221,7 +221,7 @@ namespace SabreTools.DatTools
             else
                 datFile.Items.BucketBy(ItemKey.CRC, DedupeType.None);
 
-            InternalStopwatch watch = new($"Comparing '{intDat.Header.GetFieldValue<string?>(DatHeader.FileNameKey)}' to base DAT");
+            InternalStopwatch watch = new($"Comparing '{intDat.Header.GetStringFieldValue(DatHeader.FileNameKey)}' to base DAT");
 
             // For comparison's sake, we want to a the base bucketing
             if (useGames)
@@ -378,20 +378,20 @@ namespace SabreTools.DatTools
             InternalStopwatch watch = new("Initializing duplicate DAT");
 
             // Fill in any information not in the base DAT
-            if (string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(DatHeader.FileNameKey)))
+            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)))
                 datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey, "All DATs");
 
-            if (string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)))
+            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)))
                 datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, "datFile.All DATs");
 
-            if (string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)))
+            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)))
                 datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, "datFile.All DATs");
 
             string post = " (Duplicates)";
             DatFile dupeData = DatFile.Create(datFile.Header);
-            dupeData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, dupeData.Header.GetFieldValue<string?>(DatHeader.FileNameKey) + post);
-            dupeData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, dupeData.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) + post);
-            dupeData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, dupeData.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) + post);
+            dupeData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, dupeData.Header.GetStringFieldValue(DatHeader.FileNameKey) + post);
+            dupeData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, dupeData.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + post);
+            dupeData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, dupeData.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + post);
             dupeData.Items = [];
 
             watch.Stop();
@@ -430,7 +430,7 @@ namespace SabreTools.DatTools
                             continue;
 
                         if (item.GetFieldValue<Source?>(DatItem.SourceKey) != null)
-                            newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) + $" ({Path.GetFileNameWithoutExtension(inputs[item.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].CurrentPath)})");
+                            newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $" ({Path.GetFileNameWithoutExtension(inputs[item.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].CurrentPath)})");
 
                         dupeData.Items.Add(key, newrom);
                     }
@@ -467,13 +467,13 @@ namespace SabreTools.DatTools
             InternalStopwatch watch = new("Initializing all individual DATs");
 
             // Fill in any information not in the base DAT
-            if (string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(DatHeader.FileNameKey)))
+            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)))
                 datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey, "All DATs");
 
-            if (string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)))
+            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)))
                 datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, "All DATs");
 
-            if (string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)))
+            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)))
                 datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, "All DATs");
 
             // Loop through each of the inputs and get or create a new DatData object
@@ -489,9 +489,9 @@ namespace SabreTools.DatTools
             {
                 string innerpost = $" ({j} - {inputs[j].GetNormalizedFileName(true)} Only)";
                 DatFile diffData = DatFile.Create(datFile.Header);
-                diffData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, diffData.Header.GetFieldValue<string?>(DatHeader.FileNameKey) + innerpost);
-                diffData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, diffData.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) + innerpost);
-                diffData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, diffData.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) + innerpost);
+                diffData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, diffData.Header.GetStringFieldValue(DatHeader.FileNameKey) + innerpost);
+                diffData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, diffData.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + innerpost);
+                diffData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, diffData.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + innerpost);
                 diffData.Items = [];
                 outDatsArray[j] = diffData;
 #if NET40_OR_GREATER || NETCOREAPP
@@ -571,20 +571,20 @@ namespace SabreTools.DatTools
             InternalStopwatch watch = new("Initializing no duplicate DAT");
 
             // Fill in any information not in the base DAT
-            if (string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(DatHeader.FileNameKey)))
+            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)))
                 datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey, "All DATs");
 
-            if (string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)))
+            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)))
                 datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, "All DATs");
 
-            if (string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)))
+            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)))
                 datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, "All DATs");
 
             string post = " (No Duplicates)";
             DatFile outerDiffData = DatFile.Create(datFile.Header);
-            outerDiffData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, outerDiffData.Header.GetFieldValue<string?>(DatHeader.FileNameKey) + post);
-            outerDiffData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, outerDiffData.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) + post);
-            outerDiffData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, outerDiffData.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) + post);
+            outerDiffData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, outerDiffData.Header.GetStringFieldValue(DatHeader.FileNameKey) + post);
+            outerDiffData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, outerDiffData.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + post);
+            outerDiffData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, outerDiffData.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + post);
             outerDiffData.Items = [];
 
             watch.Stop();
@@ -622,7 +622,7 @@ namespace SabreTools.DatTools
                         if (item.Clone() is not DatItem newrom || newrom.GetFieldValue<Source?>(DatItem.SourceKey) == null)
                             continue;
 
-                        newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) + $" ({Path.GetFileNameWithoutExtension(inputs[newrom.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].CurrentPath)})");
+                        newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $" ({Path.GetFileNameWithoutExtension(inputs[newrom.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].CurrentPath)})");
                         outerDiffData.Items.Add(key, newrom);
                     }
                 }

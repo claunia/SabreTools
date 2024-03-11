@@ -24,7 +24,7 @@ namespace SabreTools.Test.DatFiles
             var setter = new Setter();
             setter.PopulateSetters("machine.name", "foo");
             setter.SetFields(datItem.GetFieldValue<Machine>(DatItem.MachineKey));
-            Assert.Equal("foo", datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey));
+            Assert.Equal("foo", datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey));
         }
 
         /// <summary>

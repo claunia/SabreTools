@@ -141,7 +141,7 @@ namespace SabreTools.DatItems.Formats
             };
             file.SetFieldValue<DupeType>(DatItem.DupeTypeKey, GetFieldValue<DupeType>(DatItem.DupeTypeKey));
             file.SetFieldValue<Machine>(DatItem.MachineKey, GetFieldValue<Machine>(DatItem.MachineKey)!.Clone() as Machine ?? new Machine());
-            file.SetFieldValue<bool?>(DatItem.RemoveKey, GetFieldValue<bool?>(DatItem.RemoveKey));
+            file.SetFieldValue<bool?>(DatItem.RemoveKey, GetBoolFieldValue(DatItem.RemoveKey));
             file.SetFieldValue<Source?>(DatItem.SourceKey, GetFieldValue<Source?>(DatItem.SourceKey));
 
             return file;
@@ -154,7 +154,7 @@ namespace SabreTools.DatItems.Formats
         {
             return new BaseFile()
             {
-                Parent = GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
+                Parent = GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey),
                 CRC = this._crc,
                 MD5 = this._md5,
                 SHA1 = this._sha1,
@@ -174,7 +174,7 @@ namespace SabreTools.DatItems.Formats
             rom.SetFieldValue<DupeType>(DatItem.DupeTypeKey, GetFieldValue<DupeType>(DatItem.DupeTypeKey));
             rom.SetFieldValue<Machine>(DatItem.MachineKey, GetFieldValue<Machine>(DatItem.MachineKey)!.Clone() as Machine ?? new Machine());
             rom.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, MD5);
-            rom.SetFieldValue<bool?>(DatItem.RemoveKey, GetFieldValue<bool?>(DatItem.RemoveKey));
+            rom.SetFieldValue<bool?>(DatItem.RemoveKey, GetBoolFieldValue(DatItem.RemoveKey));
             rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, SHA1);
             rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA256Key, SHA256);
             rom.SetFieldValue<Source?>(DatItem.SourceKey, GetFieldValue<Source?>(DatItem.SourceKey));

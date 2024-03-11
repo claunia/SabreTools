@@ -100,7 +100,7 @@ namespace SabreTools.DatTools
                     DatStatistics individualStats = new()
                     {
                         Statistics = datdata.Items,
-                        DisplayName = datdata.Header.GetFieldValue<string?>(DatHeader.FileNameKey),
+                        DisplayName = datdata.Header.GetStringFieldValue(DatHeader.FileNameKey),
                         MachineCount = datdata.Items.Keys.Count,
                         IsDirectory = false,
                     };

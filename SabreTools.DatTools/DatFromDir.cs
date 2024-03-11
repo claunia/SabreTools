@@ -341,7 +341,7 @@ namespace SabreTools.DatTools
                 string romname = string.Empty;
 
                 // If we have a SuperDAT, we want anything that's not the base path as the game, and the file as the rom
-                if (datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.TypeKey) == "SuperDAT")
+                if (datFile.Header.GetStringFieldValue(Models.Metadata.Header.TypeKey) == "SuperDAT")
                 {
                     if (basePath != null)
                         gamename = fulldir.Remove(0, basePath.Length + 1);
@@ -398,7 +398,7 @@ namespace SabreTools.DatTools
         private static void ProcessFile(DatFile datFile, string item, string? basePath, HashType[] hashes, TreatAsFile asFiles)
         {
             logger.Verbose($"'{Path.GetFileName(item)}' treated like a file");
-            BaseFile? baseFile = BaseFile.GetInfo(item, header: datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey), hashes: hashes, asFiles: asFiles);
+            BaseFile? baseFile = BaseFile.GetInfo(item, header: datFile.Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey), hashes: hashes, asFiles: asFiles);
             DatItem? datItem = DatItem.Create(baseFile);
             if (datItem != null)
                 ProcessFileHelper(datFile, item, datItem, basePath, string.Empty);
@@ -461,7 +461,7 @@ namespace SabreTools.DatTools
             if (string.IsNullOrEmpty(parent))
             {
                 // If we have a SuperDAT, we want anything that's not the base path as the game, and the file as the rom
-                if (datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.TypeKey) == "SuperDAT")
+                if (datFile.Header.GetStringFieldValue(Models.Metadata.Header.TypeKey) == "SuperDAT")
                 {
                     machineName = Path.GetDirectoryName(item.Remove(0, basepath?.Length ?? 0));
                     itemName = Path.GetFileName(item);
@@ -482,7 +482,7 @@ namespace SabreTools.DatTools
             else
             {
                 // If we have a SuperDAT, we want the archive name as the game, and the file as everything else (?)
-                if (datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.TypeKey) == "SuperDAT")
+                if (datFile.Header.GetStringFieldValue(Models.Metadata.Header.TypeKey) == "SuperDAT")
                 {
                     machineName = parent;
                     itemName = datItem.GetName();

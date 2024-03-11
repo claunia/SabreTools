@@ -179,9 +179,9 @@ namespace SabreTools.DatFiles
             {
                 var newDat = new Models.OfflineList.NewDat
                 {
-                    DatVersionUrl = Header.GetFieldValue<string?>("DATVERSIONURL"),
+                    DatVersionUrl = Header.GetStringFieldValue("DATVERSIONURL"),
                     //DatUrl = Header.GetFieldValue<Models.OfflineList.DatUrl?>("DATURL"), // TODO: Add to internal model
-                    ImUrl = Header.GetFieldValue<string?>("IMURL"),
+                    ImUrl = Header.GetStringFieldValue("IMURL"),
                 };
                 header[Models.Metadata.Header.NewDatKey] = newDat;
             }

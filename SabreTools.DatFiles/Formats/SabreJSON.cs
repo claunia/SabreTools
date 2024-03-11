@@ -395,11 +395,11 @@ namespace SabreTools.DatFiles.Formats
                         DatItem datItem = datItems[index];
 
                         // If we have a different game and we're not at the start of the list, output the end of last item
-                        if (lastgame != null && lastgame.ToLowerInvariant() != datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)?.ToLowerInvariant())
+                        if (lastgame != null && lastgame.ToLowerInvariant() != datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)?.ToLowerInvariant())
                             SabreJSON.WriteEndGame(jtw);
 
                         // If we have a new game, output the beginning of the new item
-                        if (lastgame == null || lastgame.ToLowerInvariant() != datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)?.ToLowerInvariant())
+                        if (lastgame == null || lastgame.ToLowerInvariant() != datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)?.ToLowerInvariant())
                             SabreJSON.WriteStartGame(jtw, datItem);
 
                         // Check for a "null" item
@@ -410,7 +410,7 @@ namespace SabreTools.DatFiles.Formats
                             WriteDatItem(jtw, datItem);
 
                         // Set the new data to compare against
-                        lastgame = datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey);
+                        lastgame = datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
                     }
                 }
 
@@ -457,8 +457,8 @@ namespace SabreTools.DatFiles.Formats
         private static void WriteStartGame(JsonTextWriter jtw, DatItem datItem)
         {
             // No game should start with a path separator
-            if (!string.IsNullOrEmpty(datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)))
-                datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey)!.TrimStart(Path.DirectorySeparatorChar));
+            if (!string.IsNullOrEmpty(datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)))
+                datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!.TrimStart(Path.DirectorySeparatorChar));
 
             // Build the state
             jtw.WriteStartObject();

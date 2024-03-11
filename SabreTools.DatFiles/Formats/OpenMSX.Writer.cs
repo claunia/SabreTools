@@ -33,7 +33,7 @@ namespace SabreTools.DatFiles.Formats
             switch (datItem)
             {
                 case Rom rom:
-                    if (string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key)))
+                    if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key)))
                         missingFields.Add(Models.Metadata.Rom.SHA1Key);
                     break;
             }
@@ -76,7 +76,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var softwaredb = new Models.OpenMSX.SoftwareDb
             {
-                Timestamp = Header.GetFieldValue<string?>(Models.Metadata.Header.DateKey),
+                Timestamp = Header.GetStringFieldValue(Models.Metadata.Header.DateKey),
                 Software = CreateSoftwares(ignoreblanks)
             };
             return softwaredb;
@@ -106,12 +106,12 @@ namespace SabreTools.DatFiles.Formats
                 var machine = items[0].GetFieldValue<Machine>(DatItem.MachineKey);
                 var software = new Models.OpenMSX.Software
                 {
-                    Title = machine?.GetFieldValue<string?>(Models.Metadata.Machine.NameKey),
-                    GenMSXID = machine?.GetFieldValue<string?>(Models.Metadata.Machine.GenMSXIDKey),
-                    System = machine?.GetFieldValue<string?>(Models.Metadata.Machine.SystemKey),
-                    Company = machine?.GetFieldValue<string?>(Models.Metadata.Machine.ManufacturerKey),
-                    Year = machine?.GetFieldValue<string?>(Models.Metadata.Machine.YearKey),
-                    Country = machine?.GetFieldValue<string?>(Models.Metadata.Machine.CountryKey),
+                    Title = machine?.GetStringFieldValue(Models.Metadata.Machine.NameKey),
+                    GenMSXID = machine?.GetStringFieldValue(Models.Metadata.Machine.GenMSXIDKey),
+                    System = machine?.GetStringFieldValue(Models.Metadata.Machine.SystemKey),
+                    Company = machine?.GetStringFieldValue(Models.Metadata.Machine.ManufacturerKey),
+                    Year = machine?.GetStringFieldValue(Models.Metadata.Machine.YearKey),
+                    Country = machine?.GetStringFieldValue(Models.Metadata.Machine.CountryKey),
                 };
 
                 // Create holder for dumps
@@ -165,10 +165,10 @@ namespace SabreTools.DatFiles.Formats
                 _ => new Models.OpenMSX.Rom(),
             };
 
-            rom.Start = item.GetFieldValue<string?>(Models.Metadata.Rom.OffsetKey);
-            rom.Type = item.GetFieldValue<string?>(Models.Metadata.Rom.OpenMSXType);
-            rom.Hash = item.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key);
-            rom.Remark = item.GetFieldValue<string?>(Models.Metadata.Rom.RemarkKey);
+            rom.Start = item.GetStringFieldValue(Models.Metadata.Rom.OffsetKey);
+            rom.Type = item.GetStringFieldValue(Models.Metadata.Rom.OpenMSXType);
+            rom.Hash = item.GetStringFieldValue(Models.Metadata.Rom.SHA1Key);
+            rom.Remark = item.GetStringFieldValue(Models.Metadata.Rom.RemarkKey);
 
             var dump = new Models.OpenMSX.Dump
             {

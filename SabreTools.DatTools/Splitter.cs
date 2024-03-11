@@ -56,14 +56,14 @@ namespace SabreTools.DatTools
 
             // Set all of the appropriate outputs for each of the subsets
             DatFile extADat = DatFile.Create(datFile.Header.CloneStandard());
-            extADat.Header.SetFieldValue<string?>(DatHeader.FileNameKey, extADat.Header.GetFieldValue<string?>(DatHeader.FileNameKey) + $" ({newExtAString})");
-            extADat.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, extADat.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) + $" ({newExtAString})");
-            extADat.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, extADat.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) + $" ({newExtAString})");
+            extADat.Header.SetFieldValue<string?>(DatHeader.FileNameKey, extADat.Header.GetStringFieldValue(DatHeader.FileNameKey) + $" ({newExtAString})");
+            extADat.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, extADat.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $" ({newExtAString})");
+            extADat.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, extADat.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" ({newExtAString})");
 
             DatFile extBDat = DatFile.Create(datFile.Header.CloneStandard());
-            extBDat.Header.SetFieldValue<string?>(DatHeader.FileNameKey, extBDat.Header.GetFieldValue<string?>(DatHeader.FileNameKey) + $" ({newExtBString})");
-            extBDat.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, extBDat.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) + $" ({newExtBString})");
-            extBDat.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, extBDat.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) + $" ({newExtBString})");
+            extBDat.Header.SetFieldValue<string?>(DatHeader.FileNameKey, extBDat.Header.GetStringFieldValue(DatHeader.FileNameKey) + $" ({newExtBString})");
+            extBDat.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, extBDat.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $" ({newExtBString})");
+            extBDat.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, extBDat.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" ({newExtBString})");
 
             // Now separate the roms accordingly
 #if NET452_OR_GREATER || NETCOREAPP
@@ -124,44 +124,44 @@ namespace SabreTools.DatTools
 
             // TODO: Can this be made into a loop?
             fieldDats[Models.Metadata.Rom.StatusKey] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats[Models.Metadata.Rom.StatusKey].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.StatusKey].Header.GetFieldValue<string?>(DatHeader.FileNameKey) + " (Nodump)");
-            fieldDats[Models.Metadata.Rom.StatusKey].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.StatusKey].Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) + " (Nodump)");
-            fieldDats[Models.Metadata.Rom.StatusKey].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.StatusKey].Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) + " (Nodump)");
+            fieldDats[Models.Metadata.Rom.StatusKey].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.StatusKey].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (Nodump)");
+            fieldDats[Models.Metadata.Rom.StatusKey].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.StatusKey].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (Nodump)");
+            fieldDats[Models.Metadata.Rom.StatusKey].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.StatusKey].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (Nodump)");
 
             fieldDats[Models.Metadata.Rom.SHA512Key] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats[Models.Metadata.Rom.SHA512Key].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.SHA512Key].Header.GetFieldValue<string?>(DatHeader.FileNameKey) + " (SHA-512)");
-            fieldDats[Models.Metadata.Rom.SHA512Key].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.SHA512Key].Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) + " (SHA-512)");
-            fieldDats[Models.Metadata.Rom.SHA512Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.SHA512Key].Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) + " (SHA-512)");
+            fieldDats[Models.Metadata.Rom.SHA512Key].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.SHA512Key].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (SHA-512)");
+            fieldDats[Models.Metadata.Rom.SHA512Key].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.SHA512Key].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (SHA-512)");
+            fieldDats[Models.Metadata.Rom.SHA512Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.SHA512Key].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (SHA-512)");
 
             fieldDats[Models.Metadata.Rom.SHA384Key] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats[Models.Metadata.Rom.SHA384Key].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.SHA384Key].Header.GetFieldValue<string?>(DatHeader.FileNameKey) + " (SHA-384)");
-            fieldDats[Models.Metadata.Rom.SHA384Key].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.SHA384Key].Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) + " (SHA-384)");
-            fieldDats[Models.Metadata.Rom.SHA384Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.SHA384Key].Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) + " (SHA-384)");
+            fieldDats[Models.Metadata.Rom.SHA384Key].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.SHA384Key].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (SHA-384)");
+            fieldDats[Models.Metadata.Rom.SHA384Key].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.SHA384Key].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (SHA-384)");
+            fieldDats[Models.Metadata.Rom.SHA384Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.SHA384Key].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (SHA-384)");
 
             fieldDats[Models.Metadata.Rom.SHA256Key] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats[Models.Metadata.Rom.SHA256Key].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.SHA256Key].Header.GetFieldValue<string?>(DatHeader.FileNameKey) + " (SHA-256)");
-            fieldDats[Models.Metadata.Rom.SHA256Key].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.SHA256Key].Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) + " (SHA-256)");
-            fieldDats[Models.Metadata.Rom.SHA256Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.SHA256Key].Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) + " (SHA-256)");
+            fieldDats[Models.Metadata.Rom.SHA256Key].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.SHA256Key].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (SHA-256)");
+            fieldDats[Models.Metadata.Rom.SHA256Key].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.SHA256Key].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (SHA-256)");
+            fieldDats[Models.Metadata.Rom.SHA256Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.SHA256Key].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (SHA-256)");
 
             fieldDats[Models.Metadata.Rom.SHA1Key] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats[Models.Metadata.Rom.SHA1Key].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.SHA1Key].Header.GetFieldValue<string?>(DatHeader.FileNameKey) + " (SHA-1)");
-            fieldDats[Models.Metadata.Rom.SHA1Key].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.SHA1Key].Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) + " (SHA-1)");
-            fieldDats[Models.Metadata.Rom.SHA1Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.SHA1Key].Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) + " (SHA-1)");
+            fieldDats[Models.Metadata.Rom.SHA1Key].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.SHA1Key].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (SHA-1)");
+            fieldDats[Models.Metadata.Rom.SHA1Key].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.SHA1Key].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (SHA-1)");
+            fieldDats[Models.Metadata.Rom.SHA1Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.SHA1Key].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (SHA-1)");
 
             fieldDats[Models.Metadata.Rom.MD5Key] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats[Models.Metadata.Rom.MD5Key].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.MD5Key].Header.GetFieldValue<string?>(DatHeader.FileNameKey) + " (MD5)");
-            fieldDats[Models.Metadata.Rom.MD5Key].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.MD5Key].Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) + " (MD5)");
-            fieldDats[Models.Metadata.Rom.MD5Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.MD5Key].Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) + " (MD5)");
+            fieldDats[Models.Metadata.Rom.MD5Key].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.MD5Key].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (MD5)");
+            fieldDats[Models.Metadata.Rom.MD5Key].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.MD5Key].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (MD5)");
+            fieldDats[Models.Metadata.Rom.MD5Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.MD5Key].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (MD5)");
 
             fieldDats[Models.Metadata.Rom.CRCKey] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats[Models.Metadata.Rom.CRCKey].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.CRCKey].Header.GetFieldValue<string?>(DatHeader.FileNameKey) + " (CRC)");
-            fieldDats[Models.Metadata.Rom.CRCKey].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.CRCKey].Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) + " (CRC)");
-            fieldDats[Models.Metadata.Rom.CRCKey].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.CRCKey].Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) + " (CRC)");
+            fieldDats[Models.Metadata.Rom.CRCKey].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.CRCKey].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (CRC)");
+            fieldDats[Models.Metadata.Rom.CRCKey].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.CRCKey].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (CRC)");
+            fieldDats[Models.Metadata.Rom.CRCKey].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.CRCKey].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (CRC)");
 
             fieldDats["null"] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats["null"].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats["null"].Header.GetFieldValue<string?>(DatHeader.FileNameKey) + " (Other)");
-            fieldDats["null"].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats["null"].Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) + " (Other)");
-            fieldDats["null"].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats["null"].Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) + " (Other)");
+            fieldDats["null"].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats["null"].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (Other)");
+            fieldDats["null"].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats["null"].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (Other)");
+            fieldDats["null"].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats["null"].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (Other)");
 
             // Now populate each of the DAT objects in turn
 #if NET452_OR_GREATER || NETCOREAPP
@@ -187,22 +187,22 @@ namespace SabreTools.DatTools
                         case Disk disk:
                             if (disk.GetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey) == ItemStatus.Nodump)
                                 fieldDats[Models.Metadata.Disk.StatusKey].Items.Add(key, item);
-                            else if (!string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.SHA1Key)))
+                            else if (!string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)))
                                 fieldDats[Models.Metadata.Disk.SHA1Key].Items.Add(key, item);
-                            else if (!string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key)))
+                            else if (!string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key)))
                                 fieldDats[Models.Metadata.Disk.MD5Key].Items.Add(key, item);
-                            else if (!string.IsNullOrEmpty(disk.GetFieldValue<string?>(Models.Metadata.Disk.MD5Key)))
+                            else if (!string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key)))
                                 fieldDats[Models.Metadata.Disk.MD5Key].Items.Add(key, item);
                             else
                                 fieldDats["null"].Items.Add(key, item);
                             break;
 
                         case Media media:
-                            if (!string.IsNullOrEmpty(media.GetFieldValue<string?>(Models.Metadata.Media.SHA256Key)))
+                            if (!string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA256Key)))
                                 fieldDats[Models.Metadata.Media.SHA256Key].Items.Add(key, item);
-                            else if (!string.IsNullOrEmpty(media.GetFieldValue<string?>(Models.Metadata.Media.SHA1Key)))
+                            else if (!string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA1Key)))
                                 fieldDats[Models.Metadata.Media.SHA1Key].Items.Add(key, item);
-                            else if (!string.IsNullOrEmpty(media.GetFieldValue<string?>(Models.Metadata.Media.MD5Key)))
+                            else if (!string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.MD5Key)))
                                 fieldDats[Models.Metadata.Media.MD5Key].Items.Add(key, item);
                             else
                                 fieldDats["null"].Items.Add(key, item);
@@ -211,17 +211,17 @@ namespace SabreTools.DatTools
                         case Rom rom:
                             if (rom.GetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey) == ItemStatus.Nodump)
                                 fieldDats[Models.Metadata.Rom.StatusKey].Items.Add(key, item);
-                            else if (!string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA512Key)))
+                            else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA512Key)))
                                 fieldDats[Models.Metadata.Rom.SHA512Key].Items.Add(key, item);
-                            else if (!string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA384Key)))
+                            else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA384Key)))
                                 fieldDats[Models.Metadata.Rom.SHA384Key].Items.Add(key, item);
-                            else if (!string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA256Key)))
+                            else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key)))
                                 fieldDats[Models.Metadata.Rom.SHA256Key].Items.Add(key, item);
-                            else if (!string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.SHA1Key)))
+                            else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key)))
                                 fieldDats[Models.Metadata.Rom.SHA1Key].Items.Add(key, item);
-                            else if (!string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.MD5Key)))
+                            else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key)))
                                 fieldDats[Models.Metadata.Rom.MD5Key].Items.Add(key, item);
-                            else if (!string.IsNullOrEmpty(rom.GetFieldValue<string?>(Models.Metadata.Rom.CRCKey)))
+                            else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey)))
                                 fieldDats[Models.Metadata.Rom.CRCKey].Items.Add(key, item);
                             else
                                 fieldDats["null"].Items.Add(key, item);
@@ -274,7 +274,7 @@ namespace SabreTools.DatTools
 #endif
             {
                 // Here, the key is the name of the game to be used for comparison
-                if (tempDat.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) != null && tempDat.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) != Path.GetDirectoryName(key))
+                if (tempDat.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) != null && tempDat.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) != Path.GetDirectoryName(key))
                 {
                     // Reset the DAT for the next items
                     tempDat = DatFile.Create(datFile.Header);
@@ -289,8 +289,8 @@ namespace SabreTools.DatTools
 #else
                     continue;
 #endif
-                items.ForEach(item => item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Path.GetFileName(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey))));
-                items.ForEach(item => item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, Path.GetFileName(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey))));
+                items.ForEach(item => item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Path.GetFileName(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey))));
+                items.ForEach(item => item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, Path.GetFileName(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey))));
 
                 // Now add the game to the output DAT
                 tempDat.Items.AddRange(key, items);
@@ -336,20 +336,20 @@ namespace SabreTools.DatTools
         private static void SplitByLevelHelper(DatFile datFile, DatFile newDatFile, string outDir, bool shortname, bool restore)
         {
             // Get the name from the DAT to use separately
-            string? name = newDatFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey);
+            string? name = newDatFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey);
             string? expName = name?.Replace("/", " - ")?.Replace("\\", " - ");
 
             // Now set the new output values
 #if NET20 || NET35
             newDatFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey, string.IsNullOrEmpty(name)
-                ? datFile.Header.GetFieldValue<string?>(DatHeader.FileNameKey)
+                ? datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)
                 : (shortname
                     ? Path.GetFileName(name)
                     : expName
                 ));
 #else
             newDatFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey, WebUtility.HtmlDecode(string.IsNullOrEmpty(name)
-                ? datFile.Header.GetFieldValue<string?>(DatHeader.FileNameKey)
+                ? datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)
                 : (shortname
                     ? Path.GetFileName(name)
                     : expName
@@ -357,12 +357,12 @@ namespace SabreTools.DatTools
                 ));
 #endif
             newDatFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey, restore
-                ? $"{datFile.Header.GetFieldValue<string?>(DatHeader.FileNameKey)} ({newDatFile.Header.GetFieldValue<string?>(DatHeader.FileNameKey)})"
-                : newDatFile.Header.GetFieldValue<string?>(DatHeader.FileNameKey));
-            newDatFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, $"{datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)} ({expName})");
-            newDatFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, string.IsNullOrEmpty(datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey))
-                ? newDatFile.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)
-                : $"{datFile.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey)} ({expName})");
+                ? $"{datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)} ({newDatFile.Header.GetStringFieldValue(DatHeader.FileNameKey)})"
+                : newDatFile.Header.GetStringFieldValue(DatHeader.FileNameKey));
+            newDatFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, $"{datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)} ({expName})");
+            newDatFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey))
+                ? newDatFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)
+                : $"{datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)} ({expName})");
             newDatFile.Header.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, null);
 
             // Write out the temporary DAT to the proper directory
@@ -381,14 +381,14 @@ namespace SabreTools.DatTools
             InternalStopwatch watch = new($"Splitting DAT by size");
 
             DatFile lessThan = DatFile.Create(datFile.Header.CloneStandard());
-            lessThan.Header.SetFieldValue<string?>(DatHeader.FileNameKey, lessThan.Header.GetFieldValue<string?>(DatHeader.FileNameKey) + $" (less than {radix})");
-            lessThan.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, lessThan.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) + $" (less than {radix})");
-            lessThan.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, lessThan.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) + $" (less than {radix})");
+            lessThan.Header.SetFieldValue<string?>(DatHeader.FileNameKey, lessThan.Header.GetStringFieldValue(DatHeader.FileNameKey) + $" (less than {radix})");
+            lessThan.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, lessThan.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $" (less than {radix})");
+            lessThan.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, lessThan.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" (less than {radix})");
 
             DatFile greaterThan = DatFile.Create(datFile.Header.CloneStandard());
-            greaterThan.Header.SetFieldValue<string?>(DatHeader.FileNameKey, greaterThan.Header.GetFieldValue<string?>(DatHeader.FileNameKey) + $" (equal-greater than {radix})");
-            greaterThan.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, greaterThan.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) + $" (equal-greater than {radix})");
-            greaterThan.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, greaterThan.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) + $" (equal-greater than {radix})");
+            greaterThan.Header.SetFieldValue<string?>(DatHeader.FileNameKey, greaterThan.Header.GetStringFieldValue(DatHeader.FileNameKey) + $" (equal-greater than {radix})");
+            greaterThan.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, greaterThan.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $" (equal-greater than {radix})");
+            greaterThan.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, greaterThan.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" (equal-greater than {radix})");
 
             // Now populate each of the DAT objects in turn
 #if NET452_OR_GREATER || NETCOREAPP
@@ -413,15 +413,15 @@ namespace SabreTools.DatTools
                         lessThan.Items.Add(key, item);
 
                     // If the file is a Rom and has no size, put it in the "lesser" dat
-                    else if (rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey) == null)
+                    else if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) == null)
                         lessThan.Items.Add(key, item);
 
                     // If the file is a Rom and less than the radix, put it in the "lesser" dat
-                    else if (NumberHelper.ConvertToInt64(rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey)) < radix)
+                    else if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) < radix)
                         lessThan.Items.Add(key, item);
 
                     // If the file is a Rom and greater than or equal to the radix, put it in the "greater" dat
-                    else if (NumberHelper.ConvertToInt64(rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey)) >= radix)
+                    else if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) >= radix)
                         greaterThan.Items.Add(key, item);
                 }
 #if NET40_OR_GREATER || NETCOREAPP
@@ -463,9 +463,9 @@ namespace SabreTools.DatTools
             long currentSize = 0;
             long currentIndex = 0;
             DatFile currentDat = DatFile.Create(datFile.Header.CloneStandard());
-            currentDat.Header.SetFieldValue<string?>(DatHeader.FileNameKey, currentDat.Header.GetFieldValue<string?>(DatHeader.FileNameKey) + $"_{currentIndex}");
-            currentDat.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, currentDat.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) + $"_{currentIndex}");
-            currentDat.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, currentDat.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) + $"_{currentIndex}");
+            currentDat.Header.SetFieldValue<string?>(DatHeader.FileNameKey, currentDat.Header.GetStringFieldValue(DatHeader.FileNameKey) + $"_{currentIndex}");
+            currentDat.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, currentDat.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $"_{currentIndex}");
+            currentDat.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, currentDat.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $"_{currentIndex}");
 
             // Loop through each machine 
             foreach (string machine in keys)
@@ -485,8 +485,8 @@ namespace SabreTools.DatTools
                     if (item is Rom rom)
                     {
                         // TODO: Should there be more than just a log if a single item is larger than the chunksize?
-                        machineSize += NumberHelper.ConvertToInt64(rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey)) ?? 0;
-                        if ((NumberHelper.ConvertToInt64(rom.GetFieldValue<string?>(Models.Metadata.Rom.SizeKey)) ?? 0) > chunkSize)
+                        machineSize += rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) ?? 0;
+                        if ((rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) ?? 0) > chunkSize)
                             logger.Error($"{rom.GetName() ?? string.Empty} in {machine} is larger than {chunkSize}");
                     }
                 }
@@ -506,9 +506,9 @@ namespace SabreTools.DatTools
                     currentSize = 0;
                     currentIndex++;
                     currentDat = DatFile.Create(datFile.Header.CloneStandard());
-                    currentDat.Header.SetFieldValue<string?>(DatHeader.FileNameKey, currentDat.Header.GetFieldValue<string?>(DatHeader.FileNameKey) + $"_{currentIndex}");
-                    currentDat.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, currentDat.Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) + $"_{currentIndex}");
-                    currentDat.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, currentDat.Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) + $"_{currentIndex}");
+                    currentDat.Header.SetFieldValue<string?>(DatHeader.FileNameKey, currentDat.Header.GetStringFieldValue(DatHeader.FileNameKey) + $"_{currentIndex}");
+                    currentDat.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, currentDat.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $"_{currentIndex}");
+                    currentDat.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, currentDat.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $"_{currentIndex}");
                 }
 
                 // Add the current machine to the current DatFile
@@ -550,9 +550,9 @@ namespace SabreTools.DatTools
             foreach (ItemType itemType in outputTypes)
             {
                 typeDats[itemType] = DatFile.Create(datFile.Header.CloneStandard());
-                typeDats[itemType].Header.SetFieldValue<string?>(DatHeader.FileNameKey, typeDats[itemType].Header.GetFieldValue<string?>(DatHeader.FileNameKey) + $" ({itemType})");
-                typeDats[itemType].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, typeDats[itemType].Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) + $" ({itemType})");
-                typeDats[itemType].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, typeDats[itemType].Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) + $" ({itemType})");
+                typeDats[itemType].Header.SetFieldValue<string?>(DatHeader.FileNameKey, typeDats[itemType].Header.GetStringFieldValue(DatHeader.FileNameKey) + $" ({itemType})");
+                typeDats[itemType].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, typeDats[itemType].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $" ({itemType})");
+                typeDats[itemType].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, typeDats[itemType].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" ({itemType})");
             }
 
             // Now populate each of the DAT objects in turn

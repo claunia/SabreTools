@@ -32,7 +32,7 @@ namespace SabreTools.Test.Filtering
             repDatItem.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "foo");
             List<string> fields = [Models.Metadata.Machine.NameKey];
             Replacer.ReplaceFields(datItem.GetFieldValue<Machine>(DatItem.MachineKey)!, repDatItem.GetFieldValue<Machine>(DatItem.MachineKey)!, fields, false);
-            Assert.Equal("foo", datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey));
+            Assert.Equal("foo", datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey));
         }
 
         /// <summary>
