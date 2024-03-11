@@ -39,7 +39,7 @@ namespace SabreTools.DatTools
         /// <returns>True if the DAT was written correctly, false otherwise</returns>
         public static bool Write(
             DatFile datFile,
-            string ?outDir,
+            string? outDir,
             bool overwrite = true,
             bool ignoreblanks = false,
             bool quotes = true,
@@ -53,7 +53,7 @@ namespace SabreTools.DatTools
             }
 
             // Ensure the output directory is set and created
-            outDir = outDir?.Ensure(create: true);
+            outDir = (outDir ?? string.Empty).Ensure(create: true);
 
             InternalStopwatch watch = new($"Writing out internal dat to '{outDir}'");
 
