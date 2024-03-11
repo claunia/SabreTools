@@ -92,7 +92,7 @@ namespace SabreTools.Test.DatFiles
             var rom2 = new Rom();
             rom2.SetName("rom-2");
             rom2.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "DEADBEEF");
-            rom2.SetFieldValue<bool>(DatItem.RemoveKey, true);
+            rom2.SetFieldValue<bool?>(DatItem.RemoveKey, true);
             rom2.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "000000e948edcb4f7704b8af85a77a3339ecce44");
             rom2.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, 1024);
             rom1.CopyMachineInformation(machine1);

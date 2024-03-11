@@ -110,7 +110,7 @@ namespace SabreTools.DatItems.Formats
             rom.GetFieldValue<DataArea?>(Rom.DataAreaKey)?.SetName(this.GetFieldValue<DiskArea?>(Disk.DiskAreaKey)?.GetName());
             rom.SetFieldValue<DupeType>(DatItem.DupeTypeKey, GetFieldValue<DupeType>(DatItem.DupeTypeKey));
             rom.SetFieldValue<Machine>(DatItem.MachineKey, GetFieldValue<Machine>(DatItem.MachineKey)!.Clone() as Machine ?? new Machine());
-            rom.SetFieldValue<bool>(DatItem.RemoveKey, GetFieldValue<bool>(DatItem.RemoveKey));
+            rom.SetFieldValue<bool?>(DatItem.RemoveKey, GetFieldValue<bool?>(DatItem.RemoveKey));
             rom.SetFieldValue<Source?>(DatItem.SourceKey, GetFieldValue<Source?>(DatItem.SourceKey));
 
             return rom;

@@ -219,7 +219,7 @@ namespace SabreTools.DatFiles
                 TotalCount++;
 
                 // Increment removal count
-                if (item.GetFieldValue<bool>(DatItem.RemoveKey))
+                if (item.GetFieldValue<bool?>(DatItem.RemoveKey) == true)
                     RemovedCount++;
 
                 // Increment the item count for the type
@@ -399,8 +399,8 @@ namespace SabreTools.DatFiles
 
                 // Filter the list
                 return fi.Where(i => i != null)
-                    .Where(i => !i.GetFieldValue<bool>(DatItem.RemoveKey))
-                    .Where(i => i.GetFieldValue<Machine>(DatItem.MachineKey)!.GetFieldValue<string?>(Models.Metadata.Machine.NameKey) != null)
+                    .Where(i => i.GetFieldValue<bool?>(DatItem.RemoveKey) != true)
+                    .Where(i => i.GetFieldValue<Machine>(DatItem.MachineKey) != null)
                     .ToConcurrentList();
             }
         }
@@ -500,7 +500,7 @@ namespace SabreTools.DatFiles
                 TotalCount--;
 
                 // Decrement removal count
-                if (item.GetFieldValue<bool>(DatItem.RemoveKey))
+                if (item.GetFieldValue<bool?>(DatItem.RemoveKey) == true)
                     RemovedCount--;
 
                 // Decrement the item count for the type
@@ -907,7 +907,7 @@ namespace SabreTools.DatFiles
             foreach (string key in keys)
             {
                 ConcurrentList<DatItem>? oldItemList = items[key];
-                ConcurrentList<DatItem>? newItemList = oldItemList?.Where(i => !i.GetFieldValue<bool>(DatItem.RemoveKey))?.ToConcurrentList();
+                ConcurrentList<DatItem>? newItemList = oldItemList?.Where(i => i.GetFieldValue<bool>(DatItem.RemoveKey) != true)?.ToConcurrentList();
 
                 Remove(key);
                 AddRange(key, newItemList);
@@ -944,12 +944,12 @@ namespace SabreTools.DatFiles
             for (int i = 0; i < roms.Count; i++)
             {
                 DatItem other = roms[i];
-                if (other.GetFieldValue<bool>(DatItem.RemoveKey))
+                if (other.GetFieldValue<bool?>(DatItem.RemoveKey) == true)
                     continue;
 
                 if (datItem.Equals(other))
                 {
-                    other.SetFieldValue<bool>(DatItem.RemoveKey, true);
+                    other.SetFieldValue<bool?>(DatItem.RemoveKey, true);
                     output.Add(other);
                 }
                 else

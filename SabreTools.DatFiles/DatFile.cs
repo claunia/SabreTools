@@ -605,7 +605,7 @@ namespace SabreTools.DatFiles
             }
 
             // If the item is supposed to be removed, we ignore
-            if (datItem.GetFieldValue<bool>(DatItem.RemoveKey))
+            if (datItem.GetFieldValue<bool?>(DatItem.RemoveKey) == true)
             {
                 string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
                 logger?.Verbose($"Item '{itemString}' was skipped because it was marked for removal");

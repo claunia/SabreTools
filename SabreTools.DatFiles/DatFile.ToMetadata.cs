@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using SabreTools.Core.Tools;
@@ -29,7 +28,7 @@ namespace SabreTools.DatFiles
             // Convert and assign the machines
             var machines = ConvertMachines(ignoreblanks);
             if (machines != null)
-                metadataFile[Models.Metadata.MetadataFile.MachineKey] = header;
+                metadataFile[Models.Metadata.MetadataFile.MachineKey] = machines;
 
             return metadataFile;
         }
@@ -219,124 +218,124 @@ namespace SabreTools.DatFiles
                     {
                         case DatItems.Formats.Adjuster adjuster:
                             var adjusterItem = ProcessItem(adjuster);
-                            EnsureMachineKey<Models.Metadata.Adjuster[]?>(machine, Models.Metadata.Machine.AdjusterKey);
+                            EnsureMachineKey<Models.Metadata.Adjuster?>(machine, Models.Metadata.Machine.AdjusterKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.AdjusterKey, adjusterItem);
                             break;
                         case DatItems.Formats.Archive archive:
                             var archiveItem = archive.GetInternalClone();
-                            EnsureMachineKey<Models.Metadata.Archive[]?>(machine, Models.Metadata.Machine.ArchiveKey);
+                            EnsureMachineKey<Models.Metadata.Archive?>(machine, Models.Metadata.Machine.ArchiveKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.ArchiveKey, archiveItem);
                             break;
                         case DatItems.Formats.BiosSet biosSet:
                             var biosSetItem = biosSet.GetInternalClone();
-                            EnsureMachineKey<Models.Metadata.BiosSet[]?>(machine, Models.Metadata.Machine.BiosSetKey);
+                            EnsureMachineKey<Models.Metadata.BiosSet?>(machine, Models.Metadata.Machine.BiosSetKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.BiosSetKey, biosSetItem);
                             break;
                         case DatItems.Formats.Chip chip:
                             var chipItem = chip.GetInternalClone();
-                            EnsureMachineKey<Models.Metadata.Chip[]?>(machine, Models.Metadata.Machine.ChipKey);
+                            EnsureMachineKey<Models.Metadata.Chip?>(machine, Models.Metadata.Machine.ChipKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.ChipKey, chipItem);
                             break;
                         case DatItems.Formats.Configuration configuration:
                             var configurationItem = ProcessItem(configuration);
-                            EnsureMachineKey<Models.Metadata.Configuration[]?>(machine, Models.Metadata.Machine.ConfigurationKey);
+                            EnsureMachineKey<Models.Metadata.Configuration?>(machine, Models.Metadata.Machine.ConfigurationKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.ConfigurationKey, configurationItem);
                             break;
                         case DatItems.Formats.Device device:
                             var deviceItem = ProcessItem(device);
-                            EnsureMachineKey<Models.Metadata.Device[]?>(machine, Models.Metadata.Machine.DeviceKey);
+                            EnsureMachineKey<Models.Metadata.Device?>(machine, Models.Metadata.Machine.DeviceKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.DeviceKey, deviceItem);
                             break;
                         case DatItems.Formats.DeviceRef deviceRef:
                             var deviceRefItem = deviceRef.GetInternalClone();
-                            EnsureMachineKey<Models.Metadata.DeviceRef[]?>(machine, Models.Metadata.Machine.DeviceRefKey);
+                            EnsureMachineKey<Models.Metadata.DeviceRef?>(machine, Models.Metadata.Machine.DeviceRefKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.DeviceRefKey, deviceRefItem);
                             break;
                         case DatItems.Formats.DipSwitch dipSwitch:
                             var dipSwitchItem = ProcessItem(dipSwitch, machine);
-                            EnsureMachineKey<Models.Metadata.DipSwitch[]?>(machine, Models.Metadata.Machine.DipSwitchKey);
+                            EnsureMachineKey<Models.Metadata.DipSwitch?>(machine, Models.Metadata.Machine.DipSwitchKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.DipSwitchKey, dipSwitchItem);
                             break;
                         case DatItems.Formats.Disk disk:
                             var diskItem = ProcessItem(disk, machine);
-                            EnsureMachineKey<Models.Metadata.Disk[]?>(machine, Models.Metadata.Machine.DiskKey);
+                            EnsureMachineKey<Models.Metadata.Disk?>(machine, Models.Metadata.Machine.DiskKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.DiskKey, diskItem);
                             break;
                         case DatItems.Formats.Display display:
                             // TODO: Handle cases where it's actually a Video
                             var displayItem = display.GetInternalClone();
-                            EnsureMachineKey<Models.Metadata.Display[]?>(machine, Models.Metadata.Machine.DisplayKey);
+                            EnsureMachineKey<Models.Metadata.Display?>(machine, Models.Metadata.Machine.DisplayKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.DisplayKey, displayItem);
                             break;
                         case DatItems.Formats.Driver driver:
                             var driverItem = driver.GetInternalClone();
-                            EnsureMachineKey<Models.Metadata.Driver[]?>(machine, Models.Metadata.Machine.DriverKey);
+                            EnsureMachineKey<Models.Metadata.Driver?>(machine, Models.Metadata.Machine.DriverKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.DriverKey, driverItem);
                             break;
                         case DatItems.Formats.Feature feature:
                             var featureItem = feature.GetInternalClone();
-                            EnsureMachineKey<Models.Metadata.Feature[]?>(machine, Models.Metadata.Machine.FeatureKey);
+                            EnsureMachineKey<Models.Metadata.Feature?>(machine, Models.Metadata.Machine.FeatureKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.FeatureKey, featureItem);
                             break;
                         case DatItems.Formats.Info info:
                             var infoItem = info.GetInternalClone();
-                            EnsureMachineKey<Models.Metadata.Info[]?>(machine, Models.Metadata.Machine.InfoKey);
+                            EnsureMachineKey<Models.Metadata.Info?>(machine, Models.Metadata.Machine.InfoKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.InfoKey, infoItem);
                             break;
                         case DatItems.Formats.Input input:
                             var inputItem = ProcessItem(input);
-                            EnsureMachineKey<Models.Metadata.Input[]?>(machine, Models.Metadata.Machine.InputKey);
+                            EnsureMachineKey<Models.Metadata.Input?>(machine, Models.Metadata.Machine.InputKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.InputKey, inputItem);
                             break;
                         case DatItems.Formats.Media media:
                             var mediaItem = media.GetInternalClone();
-                            EnsureMachineKey<Models.Metadata.Media[]?>(machine, Models.Metadata.Machine.MediaKey);
+                            EnsureMachineKey<Models.Metadata.Media?>(machine, Models.Metadata.Machine.MediaKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.MediaKey, mediaItem);
                             break;
                         case DatItems.Formats.Port port:
                             var portItem = ProcessItem(port);
-                            EnsureMachineKey<Models.Metadata.Port[]?>(machine, Models.Metadata.Machine.PortKey);
+                            EnsureMachineKey<Models.Metadata.Port?>(machine, Models.Metadata.Machine.PortKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.PortKey, portItem);
                             break;
                         case DatItems.Formats.RamOption ramOption:
                             var ramOptionItem = ramOption.GetInternalClone();
-                            EnsureMachineKey<Models.Metadata.RamOption[]?>(machine, Models.Metadata.Machine.RamOptionKey);
+                            EnsureMachineKey<Models.Metadata.RamOption?>(machine, Models.Metadata.Machine.RamOptionKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.RamOptionKey, ramOptionItem);
                             break;
                         case DatItems.Formats.Release release:
                             var releaseItem = release.GetInternalClone();
-                            EnsureMachineKey<Models.Metadata.Release[]?>(machine, Models.Metadata.Machine.ReleaseKey);
+                            EnsureMachineKey<Models.Metadata.Release?>(machine, Models.Metadata.Machine.ReleaseKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.ReleaseKey, releaseItem);
                             break;
                         case DatItems.Formats.Rom rom:
                             // TODO: Handle cases where it's actually a Dump
                             var romItem = ProcessItem(rom, machine);
-                            EnsureMachineKey<Models.Metadata.Rom[]?>(machine, Models.Metadata.Machine.RomKey);
+                            EnsureMachineKey<Models.Metadata.Rom?>(machine, Models.Metadata.Machine.RomKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.RomKey, romItem);
                             break;
                         case DatItems.Formats.Sample sample:
                             var sampleItem = sample.GetInternalClone();
-                            EnsureMachineKey<Models.Metadata.Sample[]?>(machine, Models.Metadata.Machine.SampleKey);
+                            EnsureMachineKey<Models.Metadata.Sample?>(machine, Models.Metadata.Machine.SampleKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.SampleKey, sampleItem);
                             break;
                         case DatItems.Formats.SharedFeat sharedFeat:
                             var sharedFeatItem = sharedFeat.GetInternalClone();
-                            EnsureMachineKey<Models.Metadata.SharedFeat[]?>(machine, Models.Metadata.Machine.SharedFeatKey);
+                            EnsureMachineKey<Models.Metadata.SharedFeat?>(machine, Models.Metadata.Machine.SharedFeatKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.SharedFeatKey, sharedFeatItem);
                             break;
                         case DatItems.Formats.Slot slot:
                             var slotItem = ProcessItem(slot);
-                            EnsureMachineKey<Models.Metadata.Slot[]?>(machine, Models.Metadata.Machine.SlotKey);
+                            EnsureMachineKey<Models.Metadata.Slot?>(machine, Models.Metadata.Machine.SlotKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.SlotKey, slotItem);
                             break;
                         case DatItems.Formats.SoftwareList softwareList:
                             var softwareListItem = softwareList.GetInternalClone();
-                            EnsureMachineKey<Models.Metadata.SoftwareList[]?>(machine, Models.Metadata.Machine.SoftwareListKey);
+                            EnsureMachineKey<Models.Metadata.SoftwareList?>(machine, Models.Metadata.Machine.SoftwareListKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.SoftwareListKey, softwareListItem);
                             break;
                         case DatItems.Formats.Sound sound:
                             var soundItem = sound.GetInternalClone();
-                            EnsureMachineKey<Models.Metadata.Sound[]?>(machine, Models.Metadata.Machine.SoundKey);
+                            EnsureMachineKey<Models.Metadata.Sound?>(machine, Models.Metadata.Machine.SoundKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.SoundKey, soundItem);
                             break;
                     }
@@ -585,8 +584,8 @@ namespace SabreTools.DatFiles
         /// </summary>
         private static void EnsureMachineKey<T>(Models.Metadata.Machine machine, string key)
         {
-            if (machine.Read<T>(key) == null)
-                machine[key] = Activator.CreateInstance<T>();
+            if (machine.Read<T[]?>(key) == null)
+                machine[key] = new T[0];
         }
 
         /// <summary>

@@ -36,7 +36,7 @@ namespace SabreTools.DatItems.Formats
         {
             var blank = new Blank();
             blank.SetFieldValue<Machine>(DatItem.MachineKey, GetFieldValue<Machine>(DatItem.MachineKey));
-            blank.SetFieldValue<bool>(DatItem.RemoveKey, GetFieldValue<bool>(DatItem.RemoveKey));
+            blank.SetFieldValue<bool?>(DatItem.RemoveKey, GetFieldValue<bool?>(DatItem.RemoveKey));
             blank.SetFieldValue<Source?>(DatItem.SourceKey, GetFieldValue<Source?>(DatItem.SourceKey));
             blank.SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, GetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey));
 
