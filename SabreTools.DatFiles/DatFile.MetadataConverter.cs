@@ -1,4 +1,7 @@
+using System.Collections.Generic;
 using System.Linq;
+using SabreTools.Core;
+using SabreTools.Core.Tools;
 
 namespace SabreTools.DatFiles
 {
@@ -13,7 +16,7 @@ namespace SabreTools.DatFiles
         /// <param name="item">Metadata file to convert</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
-        /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
+        /// <param name="keep">True if full pathnames are to be kept, false otherwise</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         public void ConvertMetadata(Models.Metadata.MetadataFile? item, string filename, int indexId, bool keep, bool statsOnly)
         {
@@ -24,7 +27,7 @@ namespace SabreTools.DatFiles
             // Get the header from the metadata
             var header = item.Read<Models.Metadata.Header>(Models.Metadata.MetadataFile.HeaderKey);
             if (header != null)
-                ConvertHeader(header);
+                ConvertHeader(header, keep);
 
             // Get the machines from the metadata
             var machines = ReadItemArray<Models.Metadata.Machine>(item, Models.Metadata.MetadataFile.MachineKey);
@@ -36,7 +39,8 @@ namespace SabreTools.DatFiles
         /// Convert header information
         /// </summary>
         /// <param name="item">Header to convert</param>
-        private void ConvertHeader(Models.Metadata.Header? item)
+        /// <param name="keep">True if full pathnames are to be kept, false otherwise</param>
+        private void ConvertHeader(Models.Metadata.Header? item, bool keep)
         {
             // If the header is invalid, we can't do anything
             if (item == null || !item.Any())
@@ -48,34 +52,245 @@ namespace SabreTools.DatFiles
             // Convert subheader values
             if (item.ContainsKey(Models.Metadata.Header.CanOpenKey))
             {
-                // TODO: Implement
+                var canOpen = item.Read<Models.OfflineList.CanOpen>(Models.Metadata.Header.CanOpenKey);
+                if (canOpen?.Extension != null)
+                    Header.SetFieldValue<string[]?>(Models.Metadata.Header.CanOpenKey, canOpen.Extension);
             }
             if (item.ContainsKey(Models.Metadata.Header.ImagesKey))
             {
-                // TODO: Implement
+                // TODO: Add to internal model
             }
             if (item.ContainsKey(Models.Metadata.Header.InfosKey))
             {
-                // TODO: Implement
+                var infos = item.Read<Models.OfflineList.Infos>(Models.Metadata.Header.InfosKey);
+                if (infos != null)
+                {
+                    var offlineListInfos = new List<Formats.OfflineListInfo>();
+
+                    if (infos.Title != null)
+                    {
+                        offlineListInfos.Add(new Formats.OfflineListInfo
+                        {
+                            Name = "title",
+                            Visible = infos.Title.Visible.AsYesNo(),
+                            InNamingOption = infos.Title.InNamingOption.AsYesNo(),
+                            Default = infos.Title.Default.AsYesNo(),
+                        });
+                    }
+                    if (infos.Location != null)
+                    {
+                        offlineListInfos.Add(new Formats.OfflineListInfo
+                        {
+                            Name = "location",
+                            Visible = infos.Location.Visible.AsYesNo(),
+                            InNamingOption = infos.Location.InNamingOption.AsYesNo(),
+                            Default = infos.Location.Default.AsYesNo(),
+                        });
+                    }
+                    if (infos.Publisher != null)
+                    {
+                        offlineListInfos.Add(new Formats.OfflineListInfo
+                        {
+                            Name = "publisher",
+                            Visible = infos.Publisher.Visible.AsYesNo(),
+                            InNamingOption = infos.Publisher.InNamingOption.AsYesNo(),
+                            Default = infos.Publisher.Default.AsYesNo(),
+                        });
+                    }
+                    if (infos.SourceRom != null)
+                    {
+                        offlineListInfos.Add(new Formats.OfflineListInfo
+                        {
+                            Name = "sourceRom",
+                            Visible = infos.SourceRom.Visible.AsYesNo(),
+                            InNamingOption = infos.SourceRom.InNamingOption.AsYesNo(),
+                            Default = infos.SourceRom.Default.AsYesNo(),
+                        });
+                    }
+                    if (infos.SaveType != null)
+                    {
+                        offlineListInfos.Add(new Formats.OfflineListInfo
+                        {
+                            Name = "saveType",
+                            Visible = infos.SaveType.Visible.AsYesNo(),
+                            InNamingOption = infos.SaveType.InNamingOption.AsYesNo(),
+                            Default = infos.SaveType.Default.AsYesNo(),
+                        });
+                    }
+                    if (infos.RomSize != null)
+                    {
+                        offlineListInfos.Add(new Formats.OfflineListInfo
+                        {
+                            Name = "romSize",
+                            Visible = infos.RomSize.Visible.AsYesNo(),
+                            InNamingOption = infos.RomSize.InNamingOption.AsYesNo(),
+                            Default = infos.RomSize.Default.AsYesNo(),
+                        });
+                    }
+                    if (infos.ReleaseNumber != null)
+                    {
+                        offlineListInfos.Add(new Formats.OfflineListInfo
+                        {
+                            Name = "releaseNumber",
+                            Visible = infos.ReleaseNumber.Visible.AsYesNo(),
+                            InNamingOption = infos.ReleaseNumber.InNamingOption.AsYesNo(),
+                            Default = infos.ReleaseNumber.Default.AsYesNo(),
+                        });
+                    }
+                    if (infos.LanguageNumber != null)
+                    {
+                        offlineListInfos.Add(new Formats.OfflineListInfo
+                        {
+                            Name = "languageNumber",
+                            Visible = infos.LanguageNumber.Visible.AsYesNo(),
+                            InNamingOption = infos.LanguageNumber.InNamingOption.AsYesNo(),
+                            Default = infos.LanguageNumber.Default.AsYesNo(),
+                        });
+                    }
+                    if (infos.Comment != null)
+                    {
+                        offlineListInfos.Add(new Formats.OfflineListInfo
+                        {
+                            Name = "comment",
+                            Visible = infos.Comment.Visible.AsYesNo(),
+                            InNamingOption = infos.Comment.InNamingOption.AsYesNo(),
+                            Default = infos.Comment.Default.AsYesNo(),
+                        });
+                    }
+                    if (infos.RomCRC != null)
+                    {
+                        offlineListInfos.Add(new Formats.OfflineListInfo
+                        {
+                            Name = "romCRC",
+                            Visible = infos.RomCRC.Visible.AsYesNo(),
+                            InNamingOption = infos.RomCRC.InNamingOption.AsYesNo(),
+                            Default = infos.RomCRC.Default.AsYesNo(),
+                        });
+                    }
+                    if (infos.Im1CRC != null)
+                    {
+                        offlineListInfos.Add(new Formats.OfflineListInfo
+                        {
+                            Name = "im1CRC",
+                            Visible = infos.Im1CRC.Visible.AsYesNo(),
+                            InNamingOption = infos.Im1CRC.InNamingOption.AsYesNo(),
+                            Default = infos.Im1CRC.Default.AsYesNo(),
+                        });
+                    }
+                    if (infos.Im2CRC != null)
+                    {
+                        offlineListInfos.Add(new Formats.OfflineListInfo
+                        {
+                            Name = "im2CRC",
+                            Visible = infos.Im2CRC.Visible.AsYesNo(),
+                            InNamingOption = infos.Im2CRC.InNamingOption.AsYesNo(),
+                            Default = infos.Im2CRC.Default.AsYesNo(),
+                        });
+                    }
+                    if (infos.Languages != null)
+                    {
+                        offlineListInfos.Add(new Formats.OfflineListInfo
+                        {
+                            Name = "languages",
+                            Visible = infos.Languages.Visible.AsYesNo(),
+                            InNamingOption = infos.Languages.InNamingOption.AsYesNo(),
+                            Default = infos.Languages.Default.AsYesNo(),
+                        });
+                    }
+
+                    Header.SetFieldValue<Formats.OfflineListInfo[]?>(Models.Metadata.Header.InfosKey, [.. offlineListInfos]);
+                }
             }
             if (item.ContainsKey(Models.Metadata.Header.NewDatKey))
             {
-                // TODO: Implement
+                var newDat = item.Read<Models.OfflineList.NewDat>(Models.Metadata.Header.NewDatKey);
+                if (newDat != null)
+                {
+                    Header.SetFieldValue<string?>("DATVERSIONURL", newDat.DatVersionUrl);
+                    //Header.SetFieldValue<Models.OfflineList.DatUrl?>("DATURL", newDat.DatUrl); // TODO: Add to internal model
+                    Header.SetFieldValue<string?>("IMURL", newDat.DatVersionUrl);
+                }
             }
             if (item.ContainsKey(Models.Metadata.Header.SearchKey))
             {
-                // TODO: Implement
+                // TODO: Add to internal model
             }
 
-            // Get all fields that can be set
-            var nonItemFields = Filter.TypeHelper.GetConstants(typeof(Models.Metadata.Header));
-            if (nonItemFields == null)
-                return;
+            // Selectively set all possible fields -- TODO: Figure out how to make this less manual
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.AuthorKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, header.GetFieldValue<string?>(Models.Metadata.Header.AuthorKey));
+            if (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.BiosModeKey) == MergingFlag.None)
+                Header.SetFieldValue<MergingFlag>(Models.Metadata.Header.BiosModeKey, header.GetFieldValue<MergingFlag>(Models.Metadata.Header.BiosModeKey));
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.BuildKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.BuildKey, header.GetFieldValue<string?>(Models.Metadata.Header.BuildKey));
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.CategoryKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.CategoryKey, header.GetFieldValue<string?>(Models.Metadata.Header.CategoryKey));
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.CommentKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.CommentKey, header.GetFieldValue<string?>(Models.Metadata.Header.CommentKey));
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.DateKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.DateKey, header.GetFieldValue<string?>(Models.Metadata.Header.DateKey));
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.DatVersionKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.DatVersionKey, header.GetFieldValue<string?>(Models.Metadata.Header.DatVersionKey));
+            if (Header.GetFieldValue<bool?>(Models.Metadata.Header.DebugKey) == null)
+                Header.SetFieldValue<bool?>(Models.Metadata.Header.DebugKey, header.GetFieldValue<bool?>(Models.Metadata.Header.DebugKey));
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, header.GetFieldValue<string?>(Models.Metadata.Header.DescriptionKey));
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.EmailKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.EmailKey, header.GetFieldValue<string?>(Models.Metadata.Header.EmailKey));
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.EmulatorVersionKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.EmulatorVersionKey, header.GetFieldValue<string?>(Models.Metadata.Header.EmulatorVersionKey));
+            if (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey) == MergingFlag.None)
+                Header.SetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey, header.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey));
+            if (Header.GetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey) == NodumpFlag.None)
+                Header.SetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey, header.GetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey));
+            if (Header.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey) == PackingFlag.None)
+                Header.SetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey, header.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey));
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, header.GetFieldValue<string?>(Models.Metadata.Header.HeaderKey));
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.HomepageKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, header.GetFieldValue<string?>(Models.Metadata.Header.HomepageKey));
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.IdKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.IdKey, header.GetFieldValue<string?>(Models.Metadata.Header.IdKey));
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.ImFolderKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.ImFolderKey, header.GetFieldValue<string?>(Models.Metadata.Header.ImFolderKey));
+            if (Header.GetFieldValue<bool?>(Models.Metadata.Header.LockBiosModeKey) == null)
+                Header.SetFieldValue<bool?>(Models.Metadata.Header.LockBiosModeKey, header.GetFieldValue<bool?>(Models.Metadata.Header.LockBiosModeKey));
+            if (Header.GetFieldValue<bool?>(Models.Metadata.Header.LockRomModeKey) == null)
+                Header.SetFieldValue<bool?>(Models.Metadata.Header.LockRomModeKey, header.GetFieldValue<bool?>(Models.Metadata.Header.LockRomModeKey));
+            if (Header.GetFieldValue<bool?>(Models.Metadata.Header.LockSampleModeKey) == null)
+                Header.SetFieldValue<bool?>(Models.Metadata.Header.LockSampleModeKey, header.GetFieldValue<bool?>(Models.Metadata.Header.LockSampleModeKey));
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, header.GetFieldValue<string?>(Models.Metadata.Header.NameKey));
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.PluginKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.PluginKey, header.GetFieldValue<string?>(Models.Metadata.Header.PluginKey));
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.RefNameKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.RefNameKey, header.GetFieldValue<string?>(Models.Metadata.Header.RefNameKey));
+            if (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.RomModeKey) == MergingFlag.None)
+                Header.SetFieldValue<MergingFlag>(Models.Metadata.Header.RomModeKey, header.GetFieldValue<MergingFlag>(Models.Metadata.Header.RomModeKey));
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.RomTitleKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.RomTitleKey, header.GetFieldValue<string?>(Models.Metadata.Header.RomTitleKey));
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.RootDirKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.RootDirKey, header.GetFieldValue<string?>(Models.Metadata.Header.RootDirKey));
+            if (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.SampleModeKey) == MergingFlag.None)
+                Header.SetFieldValue<MergingFlag>(Models.Metadata.Header.SampleModeKey, header.GetFieldValue<MergingFlag>(Models.Metadata.Header.SampleModeKey));
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.ScreenshotsHeightKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsHeightKey, header.GetFieldValue<string?>(Models.Metadata.Header.ScreenshotsHeightKey));
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.ScreenshotsWidthKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsWidthKey, header.GetFieldValue<string?>(Models.Metadata.Header.ScreenshotsWidthKey));
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.SystemKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.SystemKey, header.GetFieldValue<string?>(Models.Metadata.Header.SystemKey));
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.TypeKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, header.GetFieldValue<string?>(Models.Metadata.Header.TypeKey));
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.UrlKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.UrlKey, header.GetFieldValue<string?>(Models.Metadata.Header.UrlKey));
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.VersionKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.VersionKey, header.GetFieldValue<string?>(Models.Metadata.Header.VersionKey));
 
-            // Loop through and selectively set all fields
-            foreach (string field in nonItemFields)
+            // Handle implied SuperDAT
+            if (Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey)?.Contains(" - SuperDAT") == true && keep)
             {
-                // TODO: Implement selective setting of all fields in Header
+                if (Header.GetFieldValue<string?>(Models.Metadata.Header.TypeKey) == null)
+                    Header.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, "SuperDAT");
             }
         }
 

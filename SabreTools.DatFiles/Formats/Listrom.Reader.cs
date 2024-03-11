@@ -5,6 +5,7 @@ using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 
+// TODO: When Serialization is updated, this should work as there was a bug in the library
 namespace SabreTools.DatFiles.Formats
 {
     /// <summary>
