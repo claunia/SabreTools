@@ -259,9 +259,9 @@ namespace SabreTools.DatFiles
             if (Header.GetFieldValue<bool?>(Models.Metadata.Header.LockSampleModeKey) == null)
                 Header.SetFieldValue<bool?>(Models.Metadata.Header.LockSampleModeKey, header.GetFieldValue<bool?>(Models.Metadata.Header.LockSampleModeKey));
             if (Header.GetFieldValue<string?>(Models.Metadata.Header.MameConfigKey) == null)
-                Header.SetFieldValue<string?>(Models.Metadata.Header.MameConfigKey, header.GetFieldValue<string?>(Models.Metadata.Header.NameKey));
+                Header.SetFieldValue<string?>(Models.Metadata.Header.MameConfigKey, header.GetFieldValue<string?>(Models.Metadata.Header.MameConfigKey));
             if (Header.GetFieldValue<string?>(Models.Metadata.Header.NameKey) == null)
-                Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, header.GetFieldValue<string?>(Models.Metadata.Header.MameConfigKey));
+                Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, header.GetFieldValue<string?>(Models.Metadata.Header.NameKey));
             if (Header.GetFieldValue<string?>(Models.Metadata.Header.PluginKey) == null)
                 Header.SetFieldValue<string?>(Models.Metadata.Header.PluginKey, header.GetFieldValue<string?>(Models.Metadata.Header.PluginKey));
             if (Header.GetFieldValue<string?>(Models.Metadata.Header.RefNameKey) == null)
