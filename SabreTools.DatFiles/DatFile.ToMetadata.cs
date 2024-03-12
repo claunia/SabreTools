@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
-using SabreTools.DatItems.Formats;
 
 namespace SabreTools.DatFiles
 {
@@ -229,8 +228,8 @@ namespace SabreTools.DatFiles
 
                 // Create mapping dictionaries for the Parts, DataAreas, and DiskAreas associated with this machine
                 Dictionary<Models.Metadata.Part, Models.Metadata.DatItem> partMappings = [];
-                Dictionary<(Models.Metadata.Part, Models.Metadata.DataArea), Models.Metadata.Rom> dataAreaMapping = [];
-                Dictionary<(Models.Metadata.Part, Models.Metadata.DiskArea), Models.Metadata.Disk> diskAreaMapping = [];
+                Dictionary<Models.Metadata.Part, (Models.Metadata.DataArea, Models.Metadata.Rom)> dataAreaMappings = [];
+                Dictionary<Models.Metadata.Part, (Models.Metadata.DiskArea, Models.Metadata.Disk)> diskAreaMappings = [];
 
                 // Loop through and convert the items to respective lists
                 for (int index = 0; index < items.Count; index++)
@@ -313,7 +312,7 @@ namespace SabreTools.DatFiles
 
                                 var diskAreaItem = diskItem.Read<DatItems.Formats.DiskArea>(DatItems.Formats.Disk.DiskAreaKey);
                                 if (diskAreaItem != null)
-                                    diskAreaMapping[(partItem!.GetInternalClone(), diskAreaItem.GetInternalClone())] = diskItem;
+                                    diskAreaMappings[partItem!.GetInternalClone()] = (diskAreaItem.GetInternalClone(), diskItem);
                             }
                             break;
                         case DatItems.Formats.Display display:
@@ -391,7 +390,7 @@ namespace SabreTools.DatFiles
 
                                 var dataAreaItem = romItem.Read<DatItems.Formats.DataArea>(DatItems.Formats.Rom.DataAreaKey);
                                 if (dataAreaItem != null)
-                                    dataAreaMapping[(partItem!.GetInternalClone(), dataAreaItem.GetInternalClone())] = romItem;
+                                    dataAreaMappings[partItem!.GetInternalClone()] = (dataAreaItem.GetInternalClone(), romItem);
                             }
                             break;
                         case DatItems.Formats.Sample sample:
@@ -439,18 +438,81 @@ namespace SabreTools.DatFiles
                     // If there's no DiskArea mapping for a Disk, don't include it at all
 
                     // Create a collection to hold the inverted Parts
-                    Dictionary<string, Part> partItems = [];
+                    Dictionary<string, Models.Metadata.Part> partItems = [];
 
                     // Loop through the Part mappings
                     foreach (var partMapping in partMappings)
                     {
+                        // Get the mapping pieces
+                        var partItem = partMapping.Key;
+                        var datItem = partMapping.Value;
+
+                        // Get the part name and skip if there's none
+                        string? partName = partItem.ReadString(Models.Metadata.Part.NameKey);
+                        if (partName == null)
+                            continue;
+
+                        // Create the part in the dictionary, if needed
+                        if (!partItems.ContainsKey(partName))
+                            partItems[partName] = [];
+
                         // If the item has a DataArea mapping
+                        if (dataAreaMappings.ContainsKey(partItem))
+                        {
+                            // Get the mapped items
+                            var (dataArea, romItem) = dataAreaMappings[partItem];
 
+                            // Get the data area name and skip if there's none
+                            string? dataAreaName = dataArea.ReadString(Models.Metadata.DataArea.NameKey);
+                            if (dataAreaName != null)
+                            {
+                                // Create the data area array, if needed
+                                if (partItems[partName].Read<Models.Metadata.DataArea[]>(Models.Metadata.Part.DataAreaKey) == null)
+                                    partItems[partName][Models.Metadata.Part.DataAreaKey] = new Models.Metadata.DataArea[0];
 
+                                // Get existing data areas as a list
+                                var dataAreas = partItems[partName].Read<Models.Metadata.DataArea[]>(Models.Metadata.Part.DataAreaKey)?.ToList() ?? [];
+
+                                // Find the existing disk area to append to, otherwise create a new disk area
+                                int dataAreaIndex = dataAreas.FindIndex(da => da.ReadString(Models.Metadata.DataArea.NameKey) == dataAreaName);
+                                Models.Metadata.DataArea aggregateDataArea;
+                                if (dataAreaIndex > -1)
+                                    aggregateDataArea = dataAreas[dataAreaIndex];
+                                else
+                                    aggregateDataArea = [];
+
+                                // Add the disk to the data area
+                            }
+                        }
 
                         // If the item has a DiskArea mapping
+                        if (diskAreaMappings.ContainsKey(partItem))
+                        {
+                            // Get the mapped items
+                            var (diskArea, diskItem) = diskAreaMappings[partItem];
 
+                            // Get the disk area name and skip if there's none
+                            string? diskAreaName = diskArea.ReadString(Models.Metadata.DiskArea.NameKey);
+                            if (diskAreaName != null)
+                            {
+                                // Create the dosk area array, if needed
+                                if (partItems[partName].Read<Models.Metadata.DiskArea[]>(Models.Metadata.Part.DiskAreaKey) == null)
+                                    partItems[partName][Models.Metadata.Part.DiskAreaKey] = new Models.Metadata.DiskArea[0];
 
+                                // Get existing data areas as a list
+                                var diskAreas = partItems[partName].Read<Models.Metadata.DiskArea[]>(Models.Metadata.Part.DiskAreaKey)?.ToList() ?? [];
+
+                                // Find the existing disk area to append to, otherwise create a new disk area
+                                int diskAreaIndex = diskAreas.FindIndex(da => da.ReadString(Models.Metadata.DiskArea.NameKey) == diskAreaName);
+                                Models.Metadata.DiskArea aggregateDiskArea;
+                                if (diskAreaIndex > -1)
+                                    aggregateDiskArea = diskAreas[diskAreaIndex];
+                                else
+                                    aggregateDiskArea = [];
+
+                                // Add the disk to the disk area
+                            }
+                        }
 
                         // Add the nested items to the Part
 
