@@ -10,6 +10,15 @@ namespace SabreTools.DatItems.Formats
     [JsonObject("part_feature"), XmlRoot("part_feature")]
     public sealed class PartFeature : DatItem<Models.Metadata.Feature>
     {
+        #region Constants
+
+        /// <summary>
+        /// Non-standard key for inverted logic
+        /// </summary>
+        public const string PartKey = "PART";
+
+        #endregion
+
         #region Fields
 
         /// <inheritdoc>/>

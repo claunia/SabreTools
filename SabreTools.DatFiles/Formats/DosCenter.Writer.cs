@@ -53,7 +53,11 @@ namespace SabreTools.DatFiles.Formats
             {
                 logger.User($"Writing to '{outfile}'...");
 
-                var metadataFile = CreateMetadataFile(ignoreblanks);
+                //var metadataFile = CreateMetadataFile(ignoreblanks);
+
+                // Serialize the input file
+                var metadata = ConvertMetadata(ignoreblanks);
+                var metadataFile = new Serialization.CrossModel.DosCenter().Deserialize(metadata);
                 if (!(new Serialization.Files.DosCenter().Serialize(metadataFile, outfile)))
                 {
                     logger.Warning($"File '{outfile}' could not be written! See the log for more details.");

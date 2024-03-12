@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 
@@ -90,7 +91,7 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case Chip chip:
-                    if (chip.GetFieldValue<ChipType>(Models.Metadata.Chip.ChipTypeKey) == ChipType.NULL)
+                    if (chip.GetStringFieldValue(Models.Metadata.Chip.ChipTypeKey).AsEnumValue<ChipType>() == ChipType.NULL)
                         missingFields.Add(Models.Metadata.Chip.ChipTypeKey);
                     if (string.IsNullOrEmpty(chip.GetName()))
                         missingFields.Add(Models.Metadata.Chip.NameKey);

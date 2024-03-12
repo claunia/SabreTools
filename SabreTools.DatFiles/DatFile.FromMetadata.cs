@@ -331,6 +331,20 @@ namespace SabreTools.DatFiles
             // Create an internal machine
             var machine = new DatItems.Machine(item);
 
+            // Process flag values
+            if (machine.GetStringFieldValue(Models.Metadata.Machine.Im1CRCKey) != null)
+                machine.SetFieldValue<string?>(Models.Metadata.Machine.Im1CRCKey, TextHelper.NormalizeCRC32(machine.GetStringFieldValue(Models.Metadata.Machine.Im1CRCKey)));
+            if (machine.GetStringFieldValue(Models.Metadata.Machine.Im2CRCKey) != null)
+                machine.SetFieldValue<string?>(Models.Metadata.Machine.Im2CRCKey, TextHelper.NormalizeCRC32(machine.GetStringFieldValue(Models.Metadata.Machine.Im2CRCKey)));
+            if (machine.GetBoolFieldValue(Models.Metadata.Machine.IsBiosKey) != null)
+                machine.SetFieldValue<string?>(Models.Metadata.Machine.IsBiosKey, machine.GetBoolFieldValue(Models.Metadata.Machine.IsBiosKey).FromYesNo());
+            if (machine.GetBoolFieldValue(Models.Metadata.Machine.IsDeviceKey) != null)
+                machine.SetFieldValue<string?>(Models.Metadata.Machine.IsDeviceKey, machine.GetBoolFieldValue(Models.Metadata.Machine.IsDeviceKey).FromYesNo());
+            if (machine.GetBoolFieldValue(Models.Metadata.Machine.IsMechanicalKey) != null)
+                machine.SetFieldValue<string?>(Models.Metadata.Machine.IsMechanicalKey, machine.GetBoolFieldValue(Models.Metadata.Machine.IsMechanicalKey).FromYesNo());
+            if (machine.GetStringFieldValue(Models.Metadata.Machine.SupportedKey) != null)
+                machine.SetFieldValue<string?>(Models.Metadata.Machine.SupportedKey, machine.GetStringFieldValue(Models.Metadata.Machine.SupportedKey).AsEnumValue<Supported>().AsStringValue());
+
             // Convert items in the machine
             if (item.ContainsKey(Models.Metadata.Machine.AdjusterKey))
             {
@@ -494,11 +508,20 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
 
+                // Process flag values
+                if (datItem.GetBoolFieldValue(Models.Metadata.Adjuster.DefaultKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Adjuster.DefaultKey, datItem.GetBoolFieldValue(Models.Metadata.Adjuster.DefaultKey).FromYesNo());
+
                 // Handle subitems
                 var condition = item.Read<Models.Metadata.Condition>(Models.Metadata.Adjuster.ConditionKey);
                 if (condition != null)
                 {
                     var subItem = new DatItems.Formats.Condition(condition);
+
+                    // Process flag values
+                    if (subItem.GetStringFieldValue(Models.Metadata.Condition.RelationKey) != null)
+                        subItem.SetFieldValue<string?>(Models.Metadata.Condition.RelationKey, subItem.GetStringFieldValue(Models.Metadata.Condition.RelationKey).AsEnumValue<Relation>().AsStringValue());
+
                     datItem.SetFieldValue<DatItems.Formats.Condition?>(Models.Metadata.Adjuster.ConditionKey, subItem);
                 }
 
@@ -550,6 +573,11 @@ namespace SabreTools.DatFiles
                 var datItem = new DatItems.Formats.BiosSet(item);
                 datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
+
+                // Process flag values
+                if (datItem.GetBoolFieldValue(Models.Metadata.BiosSet.DefaultKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.BiosSet.DefaultKey, datItem.GetBoolFieldValue(Models.Metadata.BiosSet.DefaultKey).FromYesNo());
+
                 ParseAddHelper(datItem, statsOnly);
             }
         }
@@ -574,6 +602,13 @@ namespace SabreTools.DatFiles
                 var datItem = new DatItems.Formats.Chip(item);
                 datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
+
+                // Process flag values
+                if (datItem.GetBoolFieldValue(Models.Metadata.Chip.SoundOnlyKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Chip.SoundOnlyKey, datItem.GetBoolFieldValue(Models.Metadata.Chip.SoundOnlyKey).FromYesNo());
+                if (datItem.GetStringFieldValue(Models.Metadata.Chip.ChipTypeKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Chip.ChipTypeKey, datItem.GetStringFieldValue(Models.Metadata.Chip.ChipTypeKey).AsEnumValue<ChipType>().AsStringValue());
+
                 ParseAddHelper(datItem, statsOnly);
             }
         }
@@ -604,6 +639,11 @@ namespace SabreTools.DatFiles
                 if (condition != null)
                 {
                     var subItem = new DatItems.Formats.Condition(condition);
+
+                    // Process flag values
+                    if (subItem.GetStringFieldValue(Models.Metadata.Condition.RelationKey) != null)
+                        subItem.SetFieldValue<string?>(Models.Metadata.Condition.RelationKey, subItem.GetStringFieldValue(Models.Metadata.Condition.RelationKey).AsEnumValue<Relation>().AsStringValue());
+
                     datItem.SetFieldValue<DatItems.Formats.Condition?>(Models.Metadata.Configuration.ConditionKey, subItem);
                 }
 
@@ -614,6 +654,11 @@ namespace SabreTools.DatFiles
                     foreach (var location in confLocations)
                     {
                         var subItem = new DatItems.Formats.ConfLocation(location);
+
+                        // Process flag values
+                        if (subItem.GetBoolFieldValue(Models.Metadata.ConfLocation.InvertedKey) != null)
+                            subItem.SetFieldValue<string?>(Models.Metadata.ConfLocation.InvertedKey, subItem.GetBoolFieldValue(Models.Metadata.ConfLocation.InvertedKey).FromYesNo());
+
                         subLocations.Add(subItem);
                     }
 
@@ -628,10 +673,19 @@ namespace SabreTools.DatFiles
                     {
                         var subItem = new DatItems.Formats.ConfSetting(setting);
 
+                        // Process flag values
+                        if (subItem.GetBoolFieldValue(Models.Metadata.ConfSetting.DefaultKey) != null)
+                            subItem.SetFieldValue<string?>(Models.Metadata.ConfSetting.DefaultKey, subItem.GetBoolFieldValue(Models.Metadata.ConfSetting.DefaultKey).FromYesNo());
+
                         var subCondition = item.Read<Models.Metadata.Condition>(Models.Metadata.ConfSetting.ConditionKey);
                         if (subCondition != null)
                         {
                             var subSubItem = new DatItems.Formats.Condition(subCondition);
+
+                            // Process flag values
+                            if (subSubItem.GetStringFieldValue(Models.Metadata.Condition.RelationKey) != null)
+                                subSubItem.SetFieldValue<string?>(Models.Metadata.Condition.RelationKey, subSubItem.GetStringFieldValue(Models.Metadata.Condition.RelationKey).AsEnumValue<Relation>().AsStringValue());
+
                             subItem.SetFieldValue<DatItems.Formats.Condition?>(Models.Metadata.ConfSetting.ConditionKey, subSubItem);
                         }
 
@@ -665,6 +719,12 @@ namespace SabreTools.DatFiles
                 var datItem = new DatItems.Formats.Device(item);
                 datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
+
+                // Process flag values
+                if (datItem.GetBoolFieldValue(Models.Metadata.Device.MandatoryKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Device.MandatoryKey, datItem.GetBoolFieldValue(Models.Metadata.Device.MandatoryKey).FromYesNo());
+                if (datItem.GetStringFieldValue(Models.Metadata.Device.DeviceTypeKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Device.DeviceTypeKey, machine.GetStringFieldValue(Models.Metadata.Device.DeviceTypeKey).AsEnumValue<DeviceType>().AsStringValue());
 
                 // Handle subitems
                 var instance = item.Read<Models.Metadata.Instance>(Models.Metadata.Device.InstanceKey);
@@ -736,11 +796,20 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
 
+                // Process flag values
+                if (datItem.GetBoolFieldValue(Models.Metadata.DipSwitch.DefaultKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.DipSwitch.DefaultKey, machine.GetBoolFieldValue(Models.Metadata.DipSwitch.DefaultKey).FromYesNo());
+
                 // Handle subitems
                 var condition = item.Read<Models.Metadata.Condition>(Models.Metadata.DipSwitch.ConditionKey);
                 if (condition != null)
                 {
                     var subItem = new DatItems.Formats.Condition(condition);
+
+                    // Process flag values
+                    if (subItem.GetStringFieldValue(Models.Metadata.Condition.RelationKey) != null)
+                        subItem.SetFieldValue<string?>(Models.Metadata.Condition.RelationKey, subItem.GetStringFieldValue(Models.Metadata.Condition.RelationKey).AsEnumValue<Relation>().AsStringValue());
+
                     datItem.SetFieldValue<DatItems.Formats.Condition?>(Models.Metadata.DipSwitch.ConditionKey, subItem);
                 }
 
@@ -751,6 +820,11 @@ namespace SabreTools.DatFiles
                     foreach (var location in dipLocations)
                     {
                         var subItem = new DatItems.Formats.DipLocation(location);
+
+                        // Process flag values
+                        if (subItem.GetBoolFieldValue(Models.Metadata.DipLocation.InvertedKey) != null)
+                            subItem.SetFieldValue<string?>(Models.Metadata.DipLocation.InvertedKey, subItem.GetBoolFieldValue(Models.Metadata.DipLocation.InvertedKey).FromYesNo());
+
                         subLocations.Add(subItem);
                     }
 
@@ -765,10 +839,19 @@ namespace SabreTools.DatFiles
                     {
                         var subItem = new DatItems.Formats.DipValue(value);
 
+                        // Process flag values
+                        if (subItem.GetBoolFieldValue(Models.Metadata.DipValue.DefaultKey) != null)
+                            subItem.SetFieldValue<string?>(Models.Metadata.DipValue.DefaultKey, subItem.GetBoolFieldValue(Models.Metadata.DipValue.DefaultKey).FromYesNo());
+
                         var subCondition = item.Read<Models.Metadata.Condition>(Models.Metadata.DipValue.ConditionKey);
                         if (subCondition != null)
                         {
                             var subSubItem = new DatItems.Formats.Condition(subCondition);
+
+                            // Process flag values
+                            if (subSubItem.GetStringFieldValue(Models.Metadata.Condition.RelationKey) != null)
+                                subSubItem.SetFieldValue<string?>(Models.Metadata.Condition.RelationKey, subSubItem.GetStringFieldValue(Models.Metadata.Condition.RelationKey).AsEnumValue<Relation>().AsStringValue());
+
                             subItem.SetFieldValue<DatItems.Formats.Condition?>(Models.Metadata.DipValue.ConditionKey, subSubItem);
                         }
 
@@ -803,6 +886,14 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
 
+                // Process flag values
+                if (datItem.GetBoolFieldValue(Models.Metadata.Disk.OptionalKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Disk.OptionalKey, datItem.GetBoolFieldValue(Models.Metadata.Disk.OptionalKey).FromYesNo());
+                if (datItem.GetStringFieldValue(Models.Metadata.Disk.StatusKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Disk.StatusKey, datItem.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>().AsStringValue());
+                if (datItem.GetBoolFieldValue(Models.Metadata.Disk.WritableKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Disk.WritableKey, datItem.GetBoolFieldValue(Models.Metadata.Disk.WritableKey).FromYesNo());
+
                 // Process hash values
                 if (datItem.GetStringFieldValue(Models.Metadata.Disk.MD5Key) != null)
                     datItem.SetFieldValue<string?>(Models.Metadata.Disk.MD5Key, TextHelper.NormalizeMD5(datItem.GetStringFieldValue(Models.Metadata.Disk.MD5Key)));
@@ -833,6 +924,35 @@ namespace SabreTools.DatFiles
                 var datItem = new DatItems.Formats.Display(item);
                 datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
+
+                // Process flag values
+                if (datItem.GetBoolFieldValue(Models.Metadata.Display.FlipXKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Display.FlipXKey, datItem.GetBoolFieldValue(Models.Metadata.Display.FlipXKey).FromYesNo());
+                if (datItem.GetInt64FieldValue(Models.Metadata.Display.HBEndKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Display.HBEndKey, datItem.GetInt64FieldValue(Models.Metadata.Display.HBEndKey).ToString());
+                if (datItem.GetInt64FieldValue(Models.Metadata.Display.HBStartKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Display.HBStartKey, datItem.GetInt64FieldValue(Models.Metadata.Display.HBStartKey).ToString());
+                if (datItem.GetInt64FieldValue(Models.Metadata.Display.HeightKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Display.HeightKey, datItem.GetInt64FieldValue(Models.Metadata.Display.HeightKey).ToString());
+                if (datItem.GetInt64FieldValue(Models.Metadata.Display.HTotalKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Display.HTotalKey, datItem.GetInt64FieldValue(Models.Metadata.Display.HTotalKey).ToString());
+                if (datItem.GetInt64FieldValue(Models.Metadata.Display.PixClockKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Display.PixClockKey, datItem.GetInt64FieldValue(Models.Metadata.Display.PixClockKey).ToString());
+                if (datItem.GetDoubleFieldValue(Models.Metadata.Display.RefreshKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Display.RefreshKey, datItem.GetDoubleFieldValue(Models.Metadata.Display.RefreshKey).ToString());
+                if (datItem.GetInt64FieldValue(Models.Metadata.Display.RotateKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Display.RotateKey, datItem.GetInt64FieldValue(Models.Metadata.Display.RotateKey).ToString());
+                if (datItem.GetStringFieldValue(Models.Metadata.Display.DisplayTypeKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Display.DisplayTypeKey, datItem.GetStringFieldValue(Models.Metadata.Display.DisplayTypeKey).AsEnumValue<DisplayType>().AsStringValue());
+                if (datItem.GetInt64FieldValue(Models.Metadata.Display.VBEndKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Display.VBEndKey, datItem.GetInt64FieldValue(Models.Metadata.Display.VBEndKey).ToString());
+                if (datItem.GetInt64FieldValue(Models.Metadata.Display.VBStartKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Display.VBStartKey, datItem.GetInt64FieldValue(Models.Metadata.Display.VBStartKey).ToString());
+                if (datItem.GetInt64FieldValue(Models.Metadata.Display.VTotalKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Display.VTotalKey, datItem.GetInt64FieldValue(Models.Metadata.Display.VTotalKey).ToString());
+                if (datItem.GetInt64FieldValue(Models.Metadata.Display.WidthKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Display.WidthKey, datItem.GetInt64FieldValue(Models.Metadata.Display.WidthKey).ToString());
+
                 ParseAddHelper(datItem, statsOnly);
             }
         }
@@ -857,6 +977,31 @@ namespace SabreTools.DatFiles
                 var datItem = new DatItems.Formats.Driver(item);
                 datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
+
+                // Process flag values
+                if (datItem.GetStringFieldValue(Models.Metadata.Driver.CocktailKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Driver.CocktailKey, datItem.GetStringFieldValue(Models.Metadata.Driver.CocktailKey).AsEnumValue<SupportStatus>().AsStringValue());
+                if (datItem.GetStringFieldValue(Models.Metadata.Driver.ColorKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Driver.ColorKey, datItem.GetStringFieldValue(Models.Metadata.Driver.ColorKey).AsEnumValue<SupportStatus>().AsStringValue());
+                if (datItem.GetStringFieldValue(Models.Metadata.Driver.EmulationKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Driver.EmulationKey, datItem.GetStringFieldValue(Models.Metadata.Driver.EmulationKey).AsEnumValue<SupportStatus>().AsStringValue());
+                if (datItem.GetBoolFieldValue(Models.Metadata.Driver.IncompleteKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Driver.IncompleteKey, datItem.GetBoolFieldValue(Models.Metadata.Driver.EmulationKey).FromYesNo());
+                if (datItem.GetBoolFieldValue(Models.Metadata.Driver.NoSoundHardwareKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Driver.NoSoundHardwareKey, datItem.GetBoolFieldValue(Models.Metadata.Driver.NoSoundHardwareKey).FromYesNo());
+                if (datItem.GetInt64FieldValue(Models.Metadata.Driver.PaletteSizeKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Driver.PaletteSizeKey, datItem.GetInt64FieldValue(Models.Metadata.Driver.PaletteSizeKey).ToString());
+                if (datItem.GetBoolFieldValue(Models.Metadata.Driver.RequiresArtworkKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Driver.RequiresArtworkKey, datItem.GetBoolFieldValue(Models.Metadata.Driver.RequiresArtworkKey).FromYesNo());
+                if (datItem.GetStringFieldValue(Models.Metadata.Driver.SaveStateKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Driver.SaveStateKey, datItem.GetStringFieldValue(Models.Metadata.Driver.SaveStateKey).AsEnumValue<SupportStatus>().AsStringValue());
+                if (datItem.GetStringFieldValue(Models.Metadata.Driver.SoundKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Driver.SoundKey, datItem.GetStringFieldValue(Models.Metadata.Driver.SoundKey).AsEnumValue<SupportStatus>().AsStringValue());
+                if (datItem.GetStringFieldValue(Models.Metadata.Driver.StatusKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Driver.StatusKey, datItem.GetStringFieldValue(Models.Metadata.Driver.StatusKey).AsEnumValue<SupportStatus>().AsStringValue());
+                if (datItem.GetBoolFieldValue(Models.Metadata.Driver.UnofficialKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Driver.UnofficialKey, datItem.GetBoolFieldValue(Models.Metadata.Driver.UnofficialKey).FromYesNo());
+
                 ParseAddHelper(datItem, statsOnly);
             }
         }
@@ -965,6 +1110,15 @@ namespace SabreTools.DatFiles
                 var datItem = new DatItems.Formats.Feature(item);
                 datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
+
+                // Process flag values
+                if (datItem.GetStringFieldValue(Models.Metadata.Feature.OverallKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Feature.OverallKey, datItem.GetStringFieldValue(Models.Metadata.Feature.OverallKey).AsEnumValue<FeatureStatus>().AsStringValue());
+                if (datItem.GetStringFieldValue(Models.Metadata.Feature.StatusKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Feature.StatusKey, datItem.GetStringFieldValue(Models.Metadata.Feature.StatusKey).AsEnumValue<FeatureStatus>().AsStringValue());
+                if (datItem.GetStringFieldValue(Models.Metadata.Feature.FeatureTypeKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Feature.FeatureTypeKey, datItem.GetStringFieldValue(Models.Metadata.Feature.FeatureTypeKey).AsEnumValue<FeatureType>().AsStringValue());
+
                 ParseAddHelper(datItem, statsOnly);
             }
         }
@@ -1014,6 +1168,18 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
 
+                // Process flag values
+                if (datItem.GetInt64FieldValue(Models.Metadata.Input.ButtonsKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Input.ButtonsKey, datItem.GetInt64FieldValue(Models.Metadata.Input.ButtonsKey).ToString());
+                if (datItem.GetInt64FieldValue(Models.Metadata.Input.CoinsKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Input.CoinsKey, datItem.GetInt64FieldValue(Models.Metadata.Input.CoinsKey).ToString());
+                if (datItem.GetInt64FieldValue(Models.Metadata.Input.PlayersKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Input.PlayersKey, datItem.GetInt64FieldValue(Models.Metadata.Input.PlayersKey).ToString());
+                if (datItem.GetBoolFieldValue(Models.Metadata.Input.ServiceKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Input.ServiceKey, datItem.GetBoolFieldValue(Models.Metadata.Input.ServiceKey).FromYesNo());
+                if (datItem.GetBoolFieldValue(Models.Metadata.Input.TiltKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Input.TiltKey, datItem.GetBoolFieldValue(Models.Metadata.Input.TiltKey).FromYesNo());
+
                 // Handle subitems
                 var controls = ReadItemArray<Models.Metadata.Control>(item, Models.Metadata.Input.ControlKey);
                 if (controls != null)
@@ -1022,6 +1188,27 @@ namespace SabreTools.DatFiles
                     foreach (var control in controls)
                     {
                         var subItem = new DatItems.Formats.Control(control);
+
+                        // Process flag values
+                        if (subItem.GetInt64FieldValue(Models.Metadata.Control.ButtonsKey) != null)
+                            subItem.SetFieldValue<string?>(Models.Metadata.Control.ButtonsKey, subItem.GetInt64FieldValue(Models.Metadata.Control.ButtonsKey).ToString());
+                        if (subItem.GetInt64FieldValue(Models.Metadata.Control.KeyDeltaKey) != null)
+                            subItem.SetFieldValue<string?>(Models.Metadata.Control.KeyDeltaKey, subItem.GetInt64FieldValue(Models.Metadata.Control.KeyDeltaKey).ToString());
+                        if (subItem.GetInt64FieldValue(Models.Metadata.Control.MaximumKey) != null)
+                            subItem.SetFieldValue<string?>(Models.Metadata.Control.MaximumKey, subItem.GetInt64FieldValue(Models.Metadata.Control.MaximumKey).ToString());
+                        if (subItem.GetInt64FieldValue(Models.Metadata.Control.MinimumKey) != null)
+                            subItem.SetFieldValue<string?>(Models.Metadata.Control.MinimumKey, subItem.GetInt64FieldValue(Models.Metadata.Control.MinimumKey).ToString());
+                        if (subItem.GetInt64FieldValue(Models.Metadata.Control.PlayerKey) != null)
+                            subItem.SetFieldValue<string?>(Models.Metadata.Control.PlayerKey, subItem.GetInt64FieldValue(Models.Metadata.Control.PlayerKey).ToString());
+                        if (subItem.GetInt64FieldValue(Models.Metadata.Control.ReqButtonsKey) != null)
+                            subItem.SetFieldValue<string?>(Models.Metadata.Control.ReqButtonsKey, subItem.GetInt64FieldValue(Models.Metadata.Control.ReqButtonsKey).ToString());
+                        if (subItem.GetBoolFieldValue(Models.Metadata.Control.ReverseKey) != null)
+                            subItem.SetFieldValue<string?>(Models.Metadata.Control.ReverseKey, subItem.GetBoolFieldValue(Models.Metadata.Control.ReverseKey).FromYesNo());
+                        if (subItem.GetInt64FieldValue(Models.Metadata.Control.SensitivityKey) != null)
+                            subItem.SetFieldValue<string?>(Models.Metadata.Control.SensitivityKey, subItem.GetInt64FieldValue(Models.Metadata.Control.SensitivityKey).ToString());
+                        if (subItem.GetStringFieldValue(Models.Metadata.Control.ControlTypeKey) != null)
+                            subItem.SetFieldValue<string?>(Models.Metadata.Control.ControlTypeKey, subItem.GetStringFieldValue(Models.Metadata.Control.ControlTypeKey).AsEnumValue<ControlType>().AsStringValue());
+
                         subControls.Add(subItem);
                     }
 
@@ -1095,6 +1282,14 @@ namespace SabreTools.DatFiles
                         if (roms == null)
                             continue;
 
+                        // Process flag values
+                        if (dataAreaItem.GetStringFieldValue(Models.Metadata.DataArea.EndiannessKey) != null)
+                            dataAreaItem.SetFieldValue<string?>(Models.Metadata.DataArea.EndiannessKey, dataAreaItem.GetStringFieldValue(Models.Metadata.DataArea.EndiannessKey).AsEnumValue<Endianness>().AsStringValue());
+                        if (dataAreaItem.GetInt64FieldValue(Models.Metadata.DataArea.SizeKey) != null)
+                            dataAreaItem.SetFieldValue<string?>(Models.Metadata.DataArea.SizeKey, dataAreaItem.GetInt64FieldValue(Models.Metadata.DataArea.SizeKey).ToString());
+                        if (dataAreaItem.GetInt64FieldValue(Models.Metadata.DataArea.WidthKey) != null)
+                            dataAreaItem.SetFieldValue<string?>(Models.Metadata.DataArea.WidthKey, dataAreaItem.GetInt64FieldValue(Models.Metadata.DataArea.WidthKey).ToString());
+
                         foreach (var rom in roms)
                         {
                             var romItem = new DatItems.Formats.Rom(rom);
@@ -1102,6 +1297,24 @@ namespace SabreTools.DatFiles
                             romItem.SetFieldValue<DatItems.Formats.Part?>(DatItems.Formats.Rom.PartKey, partItem);
                             romItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                             romItem.CopyMachineInformation(machine);
+
+                            // Process flag values
+                            if (romItem.GetBoolFieldValue(Models.Metadata.Rom.DisposeKey) != null)
+                                romItem.SetFieldValue<string?>(Models.Metadata.Rom.DisposeKey, romItem.GetBoolFieldValue(Models.Metadata.Rom.DisposeKey).FromYesNo());
+                            if (romItem.GetBoolFieldValue(Models.Metadata.Rom.InvertedKey) != null)
+                                romItem.SetFieldValue<string?>(Models.Metadata.Rom.InvertedKey, romItem.GetBoolFieldValue(Models.Metadata.Rom.InvertedKey).FromYesNo());
+                            if (romItem.GetStringFieldValue(Models.Metadata.Rom.LoadFlagKey) != null)
+                                romItem.SetFieldValue<string?>(Models.Metadata.Rom.LoadFlagKey, romItem.GetStringFieldValue(Models.Metadata.Rom.LoadFlagKey).AsEnumValue<LoadFlag>().AsStringValue());
+                            if (romItem.GetStringFieldValue(Models.Metadata.Rom.OpenMSXMediaType) != null)
+                                romItem.SetFieldValue<string?>(Models.Metadata.Rom.OpenMSXMediaType, romItem.GetStringFieldValue(Models.Metadata.Rom.OpenMSXMediaType).AsEnumValue<OpenMSXSubType>().AsStringValue());
+                            if (romItem.GetBoolFieldValue(Models.Metadata.Rom.MIAKey) != null)
+                                romItem.SetFieldValue<string?>(Models.Metadata.Rom.MIAKey, romItem.GetBoolFieldValue(Models.Metadata.Rom.MIAKey).FromYesNo());
+                            if (romItem.GetBoolFieldValue(Models.Metadata.Rom.OptionalKey) != null)
+                                romItem.SetFieldValue<string?>(Models.Metadata.Rom.OptionalKey, romItem.GetBoolFieldValue(Models.Metadata.Rom.OptionalKey).FromYesNo());
+                            if (romItem.GetBoolFieldValue(Models.Metadata.Rom.SoundOnlyKey) != null)
+                                romItem.SetFieldValue<string?>(Models.Metadata.Rom.SoundOnlyKey, romItem.GetBoolFieldValue(Models.Metadata.Rom.SoundOnlyKey).FromYesNo());
+                            if (romItem.GetStringFieldValue(Models.Metadata.Rom.StatusKey) != null)
+                                romItem.SetFieldValue<string?>(Models.Metadata.Rom.StatusKey, romItem.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>().AsStringValue());
 
                             // Process hash values
                             if (romItem.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) != null)
@@ -1142,6 +1355,14 @@ namespace SabreTools.DatFiles
                             diskItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                             diskItem.CopyMachineInformation(machine);
 
+                            // Process flag values
+                            if (diskItem.GetBoolFieldValue(Models.Metadata.Disk.OptionalKey) != null)
+                                diskItem.SetFieldValue<string?>(Models.Metadata.Disk.OptionalKey, diskItem.GetBoolFieldValue(Models.Metadata.Disk.OptionalKey).FromYesNo());
+                            if (diskItem.GetStringFieldValue(Models.Metadata.Disk.StatusKey) != null)
+                                diskItem.SetFieldValue<string?>(Models.Metadata.Disk.StatusKey, diskItem.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>().AsStringValue());
+                            if (diskItem.GetBoolFieldValue(Models.Metadata.Disk.WritableKey) != null)
+                                diskItem.SetFieldValue<string?>(Models.Metadata.Disk.WritableKey, diskItem.GetBoolFieldValue(Models.Metadata.Disk.WritableKey).FromYesNo());
+
                             // Process hash values
                             if (diskItem.GetStringFieldValue(Models.Metadata.Disk.MD5Key) != null)
                                 diskItem.SetFieldValue<string?>(Models.Metadata.Disk.MD5Key, TextHelper.NormalizeMD5(diskItem.GetStringFieldValue(Models.Metadata.Disk.MD5Key)));
@@ -1151,31 +1372,106 @@ namespace SabreTools.DatFiles
                             ParseAddHelper(diskItem, statsOnly);
                         }
                     }
+                }
 
-                    var dipSwitches = ReadItemArray<Models.Metadata.DipSwitch>(item, Models.Metadata.Part.DipSwitchKey);
-                    if (dipSwitches != null)
+                var dipSwitches = ReadItemArray<Models.Metadata.DipSwitch>(item, Models.Metadata.Part.DipSwitchKey);
+                if (dipSwitches != null)
+                {
+                    foreach (var dipSwitch in dipSwitches)
                     {
-                        foreach (var dipSwitch in dipSwitches)
+                        var dipSwitchItem = new DatItems.Formats.DipSwitch(dipSwitch);
+                        dipSwitchItem.SetFieldValue<DatItems.Formats.Part?>(DatItems.Formats.DipSwitch.PartKey, partItem);
+                        dipSwitchItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                        dipSwitchItem.CopyMachineInformation(machine);
+
+                        // Process flag values
+                        if (dipSwitchItem.GetBoolFieldValue(Models.Metadata.DipSwitch.DefaultKey) != null)
+                            dipSwitchItem.SetFieldValue<string?>(Models.Metadata.DipSwitch.DefaultKey, dipSwitchItem.GetBoolFieldValue(Models.Metadata.DipSwitch.DefaultKey).FromYesNo());
+
+                        // Handle subitems
+                        var condition = dipSwitch.Read<Models.Metadata.Condition>(Models.Metadata.DipSwitch.ConditionKey);
+                        if (condition != null)
                         {
-                            var dipSwitchItem = new DatItems.Formats.DipSwitch(dipSwitch);
-                            dipSwitchItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
-                            dipSwitchItem.CopyMachineInformation(machine);
+                            var subItem = new DatItems.Formats.Condition(condition);
 
-                            var dipValues = ReadItemArray<Models.Metadata.DipValue>(dipSwitch, Models.Metadata.DipSwitch.DipValueKey);
-                            if (dipValues != null)
+                            // Process flag values
+                            if (subItem.GetStringFieldValue(Models.Metadata.Condition.RelationKey) != null)
+                                subItem.SetFieldValue<string?>(Models.Metadata.Condition.RelationKey, subItem.GetStringFieldValue(Models.Metadata.Condition.RelationKey).AsEnumValue<Relation>().AsStringValue());
+
+                            dipSwitchItem.SetFieldValue<DatItems.Formats.Condition?>(Models.Metadata.DipSwitch.ConditionKey, subItem);
+                        }
+
+                        var dipLocations = ReadItemArray<Models.Metadata.DipLocation>(dipSwitch, Models.Metadata.DipSwitch.DipLocationKey);
+                        if (dipLocations != null)
+                        {
+                            var subLocations = new List<DatItems.Formats.DipLocation>();
+                            foreach (var location in dipLocations)
                             {
-                                var subValues = new List<DatItems.Formats.DipValue>();
-                                foreach (var value in dipValues)
-                                {
-                                    var subItem = new DatItems.Formats.DipValue(value);
-                                    subValues.Add(subItem);
-                                }
+                                var subItem = new DatItems.Formats.DipLocation(location);
 
-                                dipSwitchItem.SetFieldValue<DatItems.Formats.DipValue[]?>(Models.Metadata.DipSwitch.DipValueKey, [.. subValues]);
+                                // Process flag values
+                                if (subItem.GetBoolFieldValue(Models.Metadata.DipLocation.InvertedKey) != null)
+                                    subItem.SetFieldValue<string?>(Models.Metadata.DipLocation.InvertedKey, subItem.GetBoolFieldValue(Models.Metadata.DipLocation.InvertedKey).FromYesNo());
+
+                                subLocations.Add(subItem);
                             }
 
-                            ParseAddHelper(dipSwitchItem, statsOnly);
+                            dipSwitchItem.SetFieldValue<DatItems.Formats.DipLocation[]?>(Models.Metadata.DipSwitch.DipLocationKey, [.. subLocations]);
                         }
+
+                        var dipValues = ReadItemArray<Models.Metadata.DipValue>(dipSwitch, Models.Metadata.DipSwitch.DipValueKey);
+                        if (dipValues != null)
+                        {
+                            var subValues = new List<DatItems.Formats.DipValue>();
+                            foreach (var value in dipValues)
+                            {
+                                var subItem = new DatItems.Formats.DipValue(value);
+
+                                // Process flag values
+                                if (subItem.GetBoolFieldValue(Models.Metadata.DipValue.DefaultKey) != null)
+                                    subItem.SetFieldValue<string?>(Models.Metadata.DipValue.DefaultKey, subItem.GetBoolFieldValue(Models.Metadata.DipValue.DefaultKey).FromYesNo());
+
+                                var subCondition = dipSwitch.Read<Models.Metadata.Condition>(Models.Metadata.DipValue.ConditionKey);
+                                if (subCondition != null)
+                                {
+                                    var subSubItem = new DatItems.Formats.Condition(subCondition);
+
+                                    // Process flag values
+                                    if (subSubItem.GetStringFieldValue(Models.Metadata.Condition.RelationKey) != null)
+                                        subSubItem.SetFieldValue<string?>(Models.Metadata.Condition.RelationKey, subSubItem.GetStringFieldValue(Models.Metadata.Condition.RelationKey).AsEnumValue<Relation>().AsStringValue());
+
+                                    subItem.SetFieldValue<DatItems.Formats.Condition?>(Models.Metadata.DipValue.ConditionKey, subSubItem);
+                                }
+
+                                subValues.Add(subItem);
+                            }
+
+                            dipSwitchItem.SetFieldValue<DatItems.Formats.DipValue[]?>(Models.Metadata.DipSwitch.DipValueKey, [.. subValues]);
+                        }
+
+                        ParseAddHelper(dipSwitchItem, statsOnly);
+                    }
+                }
+
+                var partFeatures = ReadItemArray<Models.Metadata.Feature>(item, Models.Metadata.Part.FeatureKey);
+                if (partFeatures != null)
+                {
+                    foreach (var partFeature in partFeatures)
+                    {
+                        var partFeatureItem = new DatItems.Formats.PartFeature(partFeature);
+                        partFeatureItem.SetFieldValue<DatItems.Formats.Part?>(DatItems.Formats.DipSwitch.PartKey, partItem);
+                        partFeatureItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                        partFeatureItem.CopyMachineInformation(machine);
+
+                        // Process flag values
+                        if (partFeatureItem.GetStringFieldValue(Models.Metadata.Feature.OverallKey) != null)
+                            partFeatureItem.SetFieldValue<string?>(Models.Metadata.Feature.OverallKey, partFeatureItem.GetStringFieldValue(Models.Metadata.Feature.OverallKey).AsEnumValue<FeatureStatus>().AsStringValue());
+                        if (partFeatureItem.GetStringFieldValue(Models.Metadata.Feature.StatusKey) != null)
+                            partFeatureItem.SetFieldValue<string?>(Models.Metadata.Feature.StatusKey, partFeatureItem.GetStringFieldValue(Models.Metadata.Feature.StatusKey).AsEnumValue<FeatureStatus>().AsStringValue());
+                        if (partFeatureItem.GetStringFieldValue(Models.Metadata.Feature.FeatureTypeKey) != null)
+                            partFeatureItem.SetFieldValue<string?>(Models.Metadata.Feature.FeatureTypeKey, partFeatureItem.GetStringFieldValue(Models.Metadata.Feature.FeatureTypeKey).AsEnumValue<FeatureType>().AsStringValue());
+
+                        ParseAddHelper(partFeatureItem, statsOnly);
                     }
                 }
             }
@@ -1240,6 +1536,11 @@ namespace SabreTools.DatFiles
                 var datItem = new DatItems.Formats.RamOption(item);
                 datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
+
+                // Process flag values
+                if (datItem.GetBoolFieldValue(Models.Metadata.RamOption.DefaultKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.RamOption.DefaultKey, datItem.GetBoolFieldValue(Models.Metadata.RamOption.DefaultKey).FromYesNo());
+
                 ParseAddHelper(datItem, statsOnly);
             }
         }
@@ -1264,6 +1565,11 @@ namespace SabreTools.DatFiles
                 var datItem = new DatItems.Formats.Release(item);
                 datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
+
+                // Process flag values
+                if (datItem.GetBoolFieldValue(Models.Metadata.Release.DefaultKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Release.DefaultKey, datItem.GetBoolFieldValue(Models.Metadata.Release.DefaultKey).FromYesNo());
+
                 ParseAddHelper(datItem, statsOnly);
             }
         }
@@ -1288,6 +1594,24 @@ namespace SabreTools.DatFiles
                 var datItem = new DatItems.Formats.Rom(item);
                 datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
+
+                // Process flag values
+                if (datItem.GetBoolFieldValue(Models.Metadata.Rom.DisposeKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Rom.DisposeKey, datItem.GetBoolFieldValue(Models.Metadata.Rom.DisposeKey).FromYesNo());
+                if (datItem.GetBoolFieldValue(Models.Metadata.Rom.InvertedKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Rom.InvertedKey, datItem.GetBoolFieldValue(Models.Metadata.Rom.InvertedKey).FromYesNo());
+                if (datItem.GetStringFieldValue(Models.Metadata.Rom.LoadFlagKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Rom.LoadFlagKey, datItem.GetStringFieldValue(Models.Metadata.Rom.LoadFlagKey).AsEnumValue<LoadFlag>().AsStringValue());
+                if (datItem.GetStringFieldValue(Models.Metadata.Rom.OpenMSXMediaType) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Rom.OpenMSXMediaType, datItem.GetStringFieldValue(Models.Metadata.Rom.OpenMSXMediaType).AsEnumValue<OpenMSXSubType>().AsStringValue());
+                if (datItem.GetBoolFieldValue(Models.Metadata.Rom.MIAKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Rom.MIAKey, datItem.GetBoolFieldValue(Models.Metadata.Rom.MIAKey).FromYesNo());
+                if (datItem.GetBoolFieldValue(Models.Metadata.Rom.OptionalKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Rom.OptionalKey, datItem.GetBoolFieldValue(Models.Metadata.Rom.OptionalKey).FromYesNo());
+                if (datItem.GetBoolFieldValue(Models.Metadata.Rom.SoundOnlyKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Rom.SoundOnlyKey, datItem.GetBoolFieldValue(Models.Metadata.Rom.SoundOnlyKey).FromYesNo());
+                if (datItem.GetStringFieldValue(Models.Metadata.Rom.StatusKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Rom.StatusKey, datItem.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>().AsStringValue());
 
                 // Process hash values
                 if (datItem.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) != null)
@@ -1386,6 +1710,11 @@ namespace SabreTools.DatFiles
                     foreach (var slotOption in slotOptions)
                     {
                         var subItem = new DatItems.Formats.SlotOption(slotOption);
+
+                        // Process flag values
+                        if (subItem.GetBoolFieldValue(Models.Metadata.SlotOption.DefaultKey) != null)
+                            subItem.SetFieldValue<string?>(Models.Metadata.SlotOption.DefaultKey, subItem.GetBoolFieldValue(Models.Metadata.SlotOption.DefaultKey).FromYesNo());
+
                         subOptions.Add(subItem);
                     }
 
@@ -1416,6 +1745,11 @@ namespace SabreTools.DatFiles
                 var datItem = new DatItems.Formats.SoftwareList(item);
                 datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
+
+                // Process flag values
+                if (datItem.GetStringFieldValue(Models.Metadata.SoftwareList.StatusKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.SoftwareList.StatusKey, datItem.GetStringFieldValue(Models.Metadata.SoftwareList.StatusKey).AsEnumValue<SoftwareListStatus>().AsStringValue());
+
                 ParseAddHelper(datItem, statsOnly);
             }
         }
@@ -1440,6 +1774,11 @@ namespace SabreTools.DatFiles
                 var datItem = new DatItems.Formats.Sound(item);
                 datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
+
+                // Process flag values
+                if (datItem.GetInt64FieldValue(Models.Metadata.Sound.ChannelsKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Sound.ChannelsKey, datItem.GetInt64FieldValue(Models.Metadata.Sound.ChannelsKey).ToString());
+
                 ParseAddHelper(datItem, statsOnly);
             }
         }
@@ -1464,6 +1803,21 @@ namespace SabreTools.DatFiles
                 var datItem = new DatItems.Formats.Display(item);
                 datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
                 datItem.CopyMachineInformation(machine);
+
+                // Process flag values
+                if (datItem.GetInt64FieldValue(Models.Metadata.Video.AspectXKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Video.AspectXKey, datItem.GetInt64FieldValue(Models.Metadata.Video.AspectXKey).ToString());
+                if (datItem.GetInt64FieldValue(Models.Metadata.Video.AspectYKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Video.AspectYKey, datItem.GetInt64FieldValue(Models.Metadata.Video.AspectYKey).ToString());
+                if (datItem.GetInt64FieldValue(Models.Metadata.Video.HeightKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Video.HeightKey, datItem.GetInt64FieldValue(Models.Metadata.Video.HeightKey).ToString());
+                if (datItem.GetDoubleFieldValue(Models.Metadata.Video.RefreshKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Video.RefreshKey, datItem.GetDoubleFieldValue(Models.Metadata.Video.RefreshKey).ToString());
+                if (datItem.GetStringFieldValue(Models.Metadata.Video.ScreenKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Video.ScreenKey, datItem.GetStringFieldValue(Models.Metadata.Video.ScreenKey).AsEnumValue<DisplayType>().AsStringValue());
+                if (datItem.GetInt64FieldValue(Models.Metadata.Video.WidthKey) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Video.WidthKey, datItem.GetInt64FieldValue(Models.Metadata.Video.WidthKey).ToString());
+
                 ParseAddHelper(datItem, statsOnly);
             }
         }
