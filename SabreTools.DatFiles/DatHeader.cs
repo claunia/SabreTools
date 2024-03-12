@@ -7,7 +7,6 @@ using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles.Formats;
 using SabreTools.Filter;
-using SabreTools.Serialization;
 
 namespace SabreTools.DatFiles
 {
@@ -98,7 +97,7 @@ namespace SabreTools.DatFiles
         {
             get
             {
-                var canOpen = GetFieldValue<Models.OfflineList.CanOpen[]?>(Models.Metadata.Header.CanOpenKey);
+                var canOpen = GetStringArrayFieldValue(Models.Metadata.Header.CanOpenKey);
                 return canOpen != null && canOpen.Length > 0;
             }
         }
@@ -109,8 +108,17 @@ namespace SabreTools.DatFiles
             get
             {
                 return GetStringFieldValue("DATVERSIONURL") != null
-                    //&& GetFieldValue<Models.OfflineList.DatUrl?>("DATURL") != null // TODO: Add to internal model
+                    && GetFieldValue<Models.OfflineList.DatUrl?>("DATURL") != null
                     && GetStringFieldValue("IMURL") != null;
+            }
+        }
+
+        [JsonIgnore]
+        public bool SearchSpecified
+        {
+            get
+            {
+                return GetFieldValue<Models.OfflineList.Search?>(Models.Metadata.Header.SearchKey) != null;
             }
         }
 
@@ -312,6 +320,7 @@ namespace SabreTools.DatFiles
             header.SetFieldValue<string?>(Models.Metadata.Header.SampleModeKey, GetStringFieldValue(Models.Metadata.Header.SampleModeKey).AsEnumValue<MergingFlag>().AsStringValue());
             header.SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsHeightKey, GetStringFieldValue(Models.Metadata.Header.ScreenshotsHeightKey));
             header.SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsWidthKey, GetStringFieldValue(Models.Metadata.Header.ScreenshotsWidthKey));
+            header.SetFieldValue<Models.OfflineList.Search?>(Models.Metadata.Header.SearchKey, GetFieldValue<Models.OfflineList.Search?>(Models.Metadata.Header.SearchKey)); // TODO: Perform a deep clone
             header.SetFieldValue<string?>(Models.Metadata.Header.SystemKey, GetStringFieldValue(Models.Metadata.Header.SystemKey));
             header.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, GetStringFieldValue(Models.Metadata.Header.TypeKey));
             header.SetFieldValue<string?>(Models.Metadata.Header.UrlKey, GetStringFieldValue(Models.Metadata.Header.UrlKey));

@@ -136,6 +136,17 @@ namespace SabreTools.DatFiles
                             Default = infos.ReleaseNumber.Default.AsYesNo(),
                         });
                     }
+                    // TODO: Uncomment this when the change to both Models and Serialization is done
+                    //if (infos.ImageNumber != null)
+                    //{
+                    //    offlineListInfos.Add(new Formats.OfflineListInfo
+                    //    {
+                    //        Name = "imageNumber",
+                    //        Visible = infos.ImageNumber.Visible.AsYesNo(),
+                    //        InNamingOption = infos.ImageNumber.InNamingOption.AsYesNo(),
+                    //        Default = infos.ImageNumber.Default.AsYesNo(),
+                    //    });
+                    //}
                     if (infos.LanguageNumber != null)
                     {
                         offlineListInfos.Add(new Formats.OfflineListInfo
@@ -206,13 +217,15 @@ namespace SabreTools.DatFiles
                 if (newDat != null)
                 {
                     Header.SetFieldValue<string?>("DATVERSIONURL", newDat.DatVersionUrl);
-                    //Header.SetFieldValue<Models.OfflineList.DatUrl?>("DATURL", newDat.DatUrl); // TODO: Add to internal model
+                    Header.SetFieldValue<Models.OfflineList.DatUrl?>("DATURL", newDat.DatUrl);
                     Header.SetFieldValue<string?>("IMURL", newDat.ImUrl);
                 }
             }
             if (item.ContainsKey(Models.Metadata.Header.SearchKey))
             {
-                // TODO: Add to internal model
+                var search = item.Read<Models.OfflineList.Search>(Models.Metadata.Header.SearchKey);
+                if (search != null)
+                    Header.SetFieldValue<Models.OfflineList.Search?>(Models.Metadata.Header.SearchKey, search);
             }
 
             // Selectively set all possible fields -- TODO: Figure out how to make this less manual

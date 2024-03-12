@@ -55,7 +55,7 @@ namespace SabreTools.DatFiles
 
             // Convert subheader values
             if (Header.CanOpenSpecified)
-                header[Models.Metadata.Header.CanOpenKey] = Header.GetFieldValue<Models.OfflineList.CanOpen[]?>(Models.Metadata.Header.CanOpenKey);
+                header[Models.Metadata.Header.CanOpenKey] = new Models.OfflineList.CanOpen { Extension = Header.GetStringArrayFieldValue(Models.Metadata.Header.CanOpenKey) };
             // if (Header.ImagesSpecified)
             //     // TODO: Add to internal model
             if (Header.InfosSpecified)
@@ -180,13 +180,13 @@ namespace SabreTools.DatFiles
                 var newDat = new Models.OfflineList.NewDat
                 {
                     DatVersionUrl = Header.GetStringFieldValue("DATVERSIONURL"),
-                    //DatUrl = Header.GetFieldValue<Models.OfflineList.DatUrl?>("DATURL"), // TODO: Add to internal model
+                    DatUrl = Header.GetFieldValue<Models.OfflineList.DatUrl?>("DATURL"),
                     ImUrl = Header.GetStringFieldValue("IMURL"),
                 };
                 header[Models.Metadata.Header.NewDatKey] = newDat;
             }
-            // if (Header.SearchSpecified)
-            //     // TODO: Add to internal model
+            if (Header.SearchSpecified)
+                header[Models.Metadata.Header.SearchKey] = Header.GetFieldValue<Models.OfflineList.Search>(Models.Metadata.Header.SearchKey);
 
             return header;
         }
