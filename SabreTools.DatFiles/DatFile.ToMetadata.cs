@@ -332,7 +332,6 @@ namespace SabreTools.DatFiles
                             AppendToMachineKey(machine, Models.Metadata.Machine.ReleaseKey, releaseItem);
                             break;
                         case DatItems.Formats.Rom rom:
-                            // TODO: Handle cases where it's actually a Dump
                             var romItem = ProcessItem(rom, machine);
                             EnsureMachineKey<Models.Metadata.Rom?>(machine, Models.Metadata.Machine.RomKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.RomKey, romItem);
