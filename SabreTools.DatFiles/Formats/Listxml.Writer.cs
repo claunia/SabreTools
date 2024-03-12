@@ -94,7 +94,7 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case Display display:
-                    if (display.GetFieldValue<DisplayType>(Models.Metadata.Display.DisplayTypeKey) == DisplayType.NULL)
+                    if (display.GetStringFieldValue(Models.Metadata.Display.DisplayTypeKey).AsEnumValue<DisplayType>() == DisplayType.NULL)
                         missingFields.Add(Models.Metadata.Display.DisplayTypeKey);
                     if (display.GetDoubleFieldValue(Models.Metadata.Display.RefreshKey) == null)
                         missingFields.Add(Models.Metadata.Display.RefreshKey);
@@ -135,23 +135,23 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case Driver driver:
-                    if (driver.GetFieldValue<SupportStatus>(Models.Metadata.Driver.StatusKey) == SupportStatus.NULL)
+                    if (driver.GetStringFieldValue(Models.Metadata.Driver.StatusKey).AsEnumValue<SupportStatus>() == SupportStatus.NULL)
                         missingFields.Add(Models.Metadata.Driver.StatusKey);
-                    if (driver.GetFieldValue<SupportStatus>(Models.Metadata.Driver.EmulationKey) == SupportStatus.NULL)
+                    if (driver.GetStringFieldValue(Models.Metadata.Driver.EmulationKey).AsEnumValue<SupportStatus>() == SupportStatus.NULL)
                         missingFields.Add(Models.Metadata.Driver.EmulationKey);
-                    if (driver.GetFieldValue<SupportStatus>(Models.Metadata.Driver.CocktailKey) == SupportStatus.NULL)
+                    if (driver.GetStringFieldValue(Models.Metadata.Driver.CocktailKey).AsEnumValue<SupportStatus>() == SupportStatus.NULL)
                         missingFields.Add(Models.Metadata.Driver.CocktailKey);
-                    if (driver.GetFieldValue<SupportStatus>(Models.Metadata.Driver.SaveStateKey) == SupportStatus.NULL)
+                    if (driver.GetStringFieldValue(Models.Metadata.Driver.SaveStateKey).AsEnumValue<SupportStatus>() == SupportStatus.NULL)
                         missingFields.Add(Models.Metadata.Driver.SaveStateKey);
                     break;
 
                 case Feature feature:
-                    if (feature.GetFieldValue<FeatureType>(Models.Metadata.Feature.FeatureTypeKey) == FeatureType.NULL)
+                    if (feature.GetStringFieldValue(Models.Metadata.Feature.FeatureTypeKey).AsEnumValue<FeatureType>() == FeatureType.NULL)
                         missingFields.Add(Models.Metadata.Feature.FeatureTypeKey);
                     break;
 
                 case Device device:
-                    if (device.GetFieldValue<DeviceType>(Models.Metadata.Device.DeviceTypeKey) != DeviceType.NULL)
+                    if (device.GetStringFieldValue(Models.Metadata.Device.DeviceTypeKey).AsEnumValue<DeviceType>() != DeviceType.NULL)
                         missingFields.Add(Models.Metadata.Device.DeviceTypeKey);
                     break;
 
@@ -165,7 +165,7 @@ namespace SabreTools.DatFiles.Formats
                         missingFields.Add(Models.Metadata.SoftwareList.TagKey);
                     if (string.IsNullOrEmpty(softwarelist.GetName()))
                         missingFields.Add(Models.Metadata.SoftwareList.NameKey);
-                    if (softwarelist.GetFieldValue<SoftwareListStatus?>(Models.Metadata.SoftwareList.StatusKey) == SoftwareListStatus.None)
+                    if (softwarelist.GetStringFieldValue(Models.Metadata.SoftwareList.StatusKey).AsEnumValue<SoftwareListStatus>() == SoftwareListStatus.None)
                         missingFields.Add(Models.Metadata.SoftwareList.StatusKey);
                     break;
 
@@ -609,7 +609,7 @@ namespace SabreTools.DatFiles.Formats
                 {
                     Tag = conditionItem?.GetStringFieldValue(Models.Metadata.Condition.TagKey),
                     Mask = conditionItem?.GetStringFieldValue(Models.Metadata.Condition.MaskKey),
-                    Relation = conditionItem?.GetFieldValue<Relation>(Models.Metadata.Condition.RelationKey).AsStringValue<Relation>(),
+                    Relation = conditionItem?.GetStringFieldValue(Models.Metadata.Condition.RelationKey).AsEnumValue<Relation>().AsStringValue(),
                     Value = conditionItem?.GetStringFieldValue(Models.Metadata.Condition.ValueKey),
                 };
                 dipswitch.Condition = condition;
@@ -672,7 +672,7 @@ namespace SabreTools.DatFiles.Formats
                 {
                     Tag = conditionItem?.GetStringFieldValue(Models.Metadata.Condition.TagKey),
                     Mask = conditionItem?.GetStringFieldValue(Models.Metadata.Condition.MaskKey),
-                    Relation = conditionItem?.GetFieldValue<Relation>(Models.Metadata.Condition.RelationKey).AsStringValue<Relation>(),
+                    Relation = conditionItem?.GetStringFieldValue(Models.Metadata.Condition.RelationKey).AsEnumValue<Relation>().AsStringValue(),
                     Value = conditionItem?.GetStringFieldValue(Models.Metadata.Condition.ValueKey),
                 };
                 dipvalue.Condition = condition;
@@ -700,7 +700,7 @@ namespace SabreTools.DatFiles.Formats
                 {
                     Tag = conditionItem?.GetStringFieldValue(Models.Metadata.Condition.TagKey),
                     Mask = conditionItem?.GetStringFieldValue(Models.Metadata.Condition.MaskKey),
-                    Relation = conditionItem?.GetFieldValue<Relation>(Models.Metadata.Condition.RelationKey).AsStringValue<Relation>(),
+                    Relation = conditionItem?.GetStringFieldValue(Models.Metadata.Condition.RelationKey).AsEnumValue<Relation>().AsStringValue(),
                     Value = conditionItem?.GetStringFieldValue(Models.Metadata.Condition.ValueKey),
                 };
                 configuration.Condition = condition;
@@ -763,7 +763,7 @@ namespace SabreTools.DatFiles.Formats
                 {
                     Tag = conditionItem?.GetStringFieldValue(Models.Metadata.Condition.TagKey),
                     Mask = conditionItem?.GetStringFieldValue(Models.Metadata.Condition.MaskKey),
-                    Relation = conditionItem?.GetFieldValue<Relation>(Models.Metadata.Condition.RelationKey).AsStringValue<Relation>(),
+                    Relation = conditionItem?.GetStringFieldValue(Models.Metadata.Condition.RelationKey).AsEnumValue<Relation>().AsStringValue(),
                     Value = conditionItem?.GetStringFieldValue(Models.Metadata.Condition.ValueKey),
                 };
                 confsetting.Condition = condition;
@@ -803,7 +803,7 @@ namespace SabreTools.DatFiles.Formats
                 {
                     Tag = conditionItem?.GetStringFieldValue(Models.Metadata.Condition.TagKey),
                     Mask = conditionItem?.GetStringFieldValue(Models.Metadata.Condition.MaskKey),
-                    Relation = conditionItem?.GetFieldValue<Relation>(Models.Metadata.Condition.RelationKey).AsStringValue<Relation>(),
+                    Relation = conditionItem?.GetStringFieldValue(Models.Metadata.Condition.RelationKey).AsEnumValue<Relation>().AsStringValue(),
                     Value = conditionItem?.GetStringFieldValue(Models.Metadata.Condition.ValueKey),
                 };
                 adjuster.Condition = condition;
@@ -819,13 +819,13 @@ namespace SabreTools.DatFiles.Formats
         {
             var driver = new Models.Listxml.Driver
             {
-                Status = item.GetFieldValue<SupportStatus>(Models.Metadata.Driver.StatusKey).AsStringValue<SupportStatus>(),
-                Color = item.GetFieldValue<SupportStatus>(Models.Metadata.Driver.ColorKey).AsStringValue<SupportStatus>(),
-                Sound = item.GetFieldValue<SupportStatus>(Models.Metadata.Driver.SoundKey).AsStringValue<SupportStatus>(),
+                Status = item.GetStringFieldValue(Models.Metadata.Driver.StatusKey).AsEnumValue<SupportStatus>().AsStringValue(),
+                Color = item.GetStringFieldValue(Models.Metadata.Driver.ColorKey).AsEnumValue<SupportStatus>().AsStringValue(),
+                Sound = item.GetStringFieldValue(Models.Metadata.Driver.SoundKey).AsEnumValue<SupportStatus>().AsStringValue(),
                 PaletteSize = item.GetInt64FieldValue(Models.Metadata.Driver.PaletteSizeKey)?.ToString(),
-                Emulation = item.GetFieldValue<SupportStatus>(Models.Metadata.Driver.EmulationKey).AsStringValue<SupportStatus>(),
-                Cocktail = item.GetFieldValue<SupportStatus>(Models.Metadata.Driver.CocktailKey).AsStringValue<SupportStatus>(),
-                SaveState = item.GetFieldValue<Supported>(Models.Metadata.Driver.SaveStateKey).AsStringValue<Supported>(useSecond: true),
+                Emulation = item.GetStringFieldValue(Models.Metadata.Driver.EmulationKey).AsEnumValue<SupportStatus>().AsStringValue(),
+                Cocktail = item.GetStringFieldValue(Models.Metadata.Driver.CocktailKey).AsEnumValue<SupportStatus>().AsStringValue(),
+                SaveState = item.GetStringFieldValue(Models.Metadata.Driver.SaveStateKey).AsEnumValue<Supported>().AsStringValue(useSecond: true),
                 RequiresArtwork = item.GetBoolFieldValue(Models.Metadata.Driver.RequiresArtworkKey).FromYesNo(),
                 Unofficial = item.GetBoolFieldValue(Models.Metadata.Driver.UnofficialKey).FromYesNo(),
                 NoSoundHardware = item.GetBoolFieldValue(Models.Metadata.Driver.NoSoundHardwareKey).FromYesNo(),
@@ -842,9 +842,9 @@ namespace SabreTools.DatFiles.Formats
         {
             var feature = new Models.Listxml.Feature
             {
-                Type = item.GetFieldValue<FeatureType>(Models.Metadata.Feature.FeatureTypeKey).AsStringValue<FeatureType>(),
-                Status = item.GetFieldValue<FeatureStatus>(Models.Metadata.Feature.StatusKey).AsStringValue<FeatureStatus>(),
-                Overall = item.GetFieldValue<FeatureStatus>(Models.Metadata.Feature.OverallKey).AsStringValue<FeatureStatus>(),
+                Type = item.GetStringFieldValue(Models.Metadata.Feature.FeatureTypeKey).AsEnumValue<FeatureType>().AsStringValue(),
+                Status = item.GetStringFieldValue(Models.Metadata.Feature.StatusKey).AsEnumValue<FeatureStatus>().AsStringValue(),
+                Overall = item.GetStringFieldValue(Models.Metadata.Feature.OverallKey).AsEnumValue<FeatureStatus>().AsStringValue(),
             };
 
             return feature;
@@ -857,7 +857,7 @@ namespace SabreTools.DatFiles.Formats
         {
             var device = new Models.Listxml.Device
             {
-                Type = item.GetFieldValue<DeviceType>(Models.Metadata.Device.DeviceTypeKey).AsStringValue<DeviceType>(),
+                Type = item.GetStringFieldValue(Models.Metadata.Device.DeviceTypeKey).AsEnumValue<DeviceType>().AsStringValue(),
                 Tag = item.GetStringFieldValue(Models.Metadata.Device.TagKey),
                 FixedImage = item.GetStringFieldValue(Models.Metadata.Device.FixedImageKey),
                 Mandatory = item.GetInt64FieldValue(Models.Metadata.Device.MandatoryKey)?.ToString(),
@@ -928,7 +928,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 Tag = item.GetStringFieldValue(Models.Metadata.SoftwareList.TagKey),
                 Name = item.GetName(),
-                Status = item.GetFieldValue<SoftwareListStatus>(Models.Metadata.SoftwareList.StatusKey).AsStringValue<SoftwareListStatus>(),
+                Status = item.GetStringFieldValue(Models.Metadata.SoftwareList.StatusKey).AsEnumValue<SoftwareListStatus>().AsStringValue(),
                 Filter = item.GetStringFieldValue(Models.Metadata.SoftwareList.FilterKey),
             };
 

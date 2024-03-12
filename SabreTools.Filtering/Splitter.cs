@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -53,7 +53,7 @@ namespace SabreTools.Filtering
             {
                 // If we are using tags from the DAT, set the proper input for split type unless overridden
                 if (useTags && SplitType == MergingFlag.None)
-                    SplitType = datFile.Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey);
+                    SplitType = datFile.Header.GetStringFieldValue(Models.Metadata.Header.ForceMergingKey).AsEnumValue<MergingFlag>();
 
                 // Run internal splitting
                 switch (SplitType)

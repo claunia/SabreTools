@@ -274,7 +274,7 @@ namespace SabreTools.DatFiles
             var header = new DatHeader();
             header.SetFieldValue<string?>(DatHeader.AddExtensionKey, GetStringFieldValue(DatHeader.AddExtensionKey));
             header.SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, GetStringFieldValue(Models.Metadata.Header.AuthorKey));
-            header.SetFieldValue<MergingFlag>(Models.Metadata.Header.BiosModeKey, GetFieldValue<MergingFlag>(Models.Metadata.Header.BiosModeKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.BiosModeKey, GetStringFieldValue(Models.Metadata.Header.BiosModeKey).AsEnumValue<MergingFlag>().AsStringValue());
             header.SetFieldValue<string?>(Models.Metadata.Header.BuildKey, GetStringFieldValue(Models.Metadata.Header.BuildKey));
             header.SetFieldValue<string[]?>(Models.Metadata.Header.CanOpenKey, GetStringArrayFieldValue(Models.Metadata.Header.CanOpenKey)); // TODO: Perform a deep clone
             header.SetFieldValue<string?>(Models.Metadata.Header.CategoryKey, GetStringFieldValue(Models.Metadata.Header.CategoryKey));
@@ -286,9 +286,9 @@ namespace SabreTools.DatFiles
             header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, GetStringFieldValue(Models.Metadata.Header.DescriptionKey));
             header.SetFieldValue<string?>(Models.Metadata.Header.EmailKey, GetStringFieldValue(Models.Metadata.Header.EmailKey));
             header.SetFieldValue<string?>(DatHeader.FileNameKey, GetStringFieldValue(DatHeader.FileNameKey));
-            header.SetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey, GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey));
-            header.SetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey, GetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey));
-            header.SetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey, GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.ForceMergingKey, GetStringFieldValue(Models.Metadata.Header.ForceMergingKey).AsEnumValue<MergingFlag>().AsStringValue());
+            header.SetFieldValue<string?>(Models.Metadata.Header.ForceNodumpKey, GetStringFieldValue(Models.Metadata.Header.ForceNodumpKey).AsEnumValue<NodumpFlag>().AsStringValue());
+            header.SetFieldValue<string?>(Models.Metadata.Header.ForcePackingKey, GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>().AsStringValue());
             header.SetFieldValue<bool?>(DatHeader.GameNameKey, GetBoolFieldValue(DatHeader.GameNameKey));
             header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, GetStringFieldValue(Models.Metadata.Header.HeaderKey));
             header.SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, GetStringFieldValue(Models.Metadata.Header.HomepageKey));
@@ -307,9 +307,9 @@ namespace SabreTools.DatFiles
             header.SetFieldValue<bool?>(DatHeader.RemoveExtensionKey, GetBoolFieldValue(DatHeader.RemoveExtensionKey));
             header.SetFieldValue<string?>(DatHeader.ReplaceExtensionKey, GetStringFieldValue(DatHeader.ReplaceExtensionKey));
             header.SetFieldValue<string?>(Models.Metadata.Header.RomTitleKey, GetStringFieldValue(Models.Metadata.Header.RomTitleKey));
-            header.SetFieldValue<MergingFlag>(Models.Metadata.Header.RomModeKey, GetFieldValue<MergingFlag>(Models.Metadata.Header.RomModeKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.RomModeKey, GetStringFieldValue(Models.Metadata.Header.RomModeKey).AsEnumValue<MergingFlag>().AsStringValue());
             header.SetFieldValue<string?>(Models.Metadata.Header.RootDirKey, GetStringFieldValue(Models.Metadata.Header.RootDirKey));
-            header.SetFieldValue<MergingFlag>(Models.Metadata.Header.SampleModeKey, GetFieldValue<MergingFlag>(Models.Metadata.Header.SampleModeKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.SampleModeKey, GetStringFieldValue(Models.Metadata.Header.SampleModeKey).AsEnumValue<MergingFlag>().AsStringValue());
             header.SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsHeightKey, GetStringFieldValue(Models.Metadata.Header.ScreenshotsHeightKey));
             header.SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsWidthKey, GetStringFieldValue(Models.Metadata.Header.ScreenshotsWidthKey));
             header.SetFieldValue<string?>(Models.Metadata.Header.SystemKey, GetStringFieldValue(Models.Metadata.Header.SystemKey));
@@ -335,9 +335,9 @@ namespace SabreTools.DatFiles
             header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, GetStringFieldValue(Models.Metadata.Header.DescriptionKey));
             header.SetFieldValue<string?>(Models.Metadata.Header.EmailKey, GetStringFieldValue(Models.Metadata.Header.EmailKey));
             header.SetFieldValue<string?>(DatHeader.FileNameKey, GetStringFieldValue(DatHeader.FileNameKey));
-            header.SetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey, GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey));
-            header.SetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey, GetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey));
-            header.SetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey, GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.ForceMergingKey, GetStringFieldValue(Models.Metadata.Header.ForceMergingKey).AsEnumValue<MergingFlag>().AsStringValue());
+            header.SetFieldValue<string?>(Models.Metadata.Header.ForceNodumpKey, GetStringFieldValue(Models.Metadata.Header.ForceNodumpKey).AsEnumValue<NodumpFlag>().AsStringValue());
+            header.SetFieldValue<string?>(Models.Metadata.Header.ForcePackingKey, GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>().AsStringValue());
             header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, GetStringFieldValue(Models.Metadata.Header.HeaderKey));
             header.SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, GetStringFieldValue(Models.Metadata.Header.HomepageKey));
             header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, GetStringFieldValue(Models.Metadata.Header.NameKey));
@@ -421,14 +421,14 @@ namespace SabreTools.DatFiles
             if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(Models.Metadata.Header.TypeKey)))
                 SetFieldValue<string?>(Models.Metadata.Header.TypeKey, datHeader.GetStringFieldValue(Models.Metadata.Header.TypeKey));
 
-            if (datHeader.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey) != MergingFlag.None)
-                SetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey, datHeader.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey));
+            if (datHeader.GetStringFieldValue(Models.Metadata.Header.ForceMergingKey).AsEnumValue<MergingFlag>() != MergingFlag.None)
+                SetFieldValue<string?>(Models.Metadata.Header.ForceMergingKey, datHeader.GetStringFieldValue(Models.Metadata.Header.ForceMergingKey).AsEnumValue<MergingFlag>().AsStringValue());
 
-            if (datHeader.GetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey) != NodumpFlag.None)
-                SetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey, datHeader.GetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey));
+            if (datHeader.GetStringFieldValue(Models.Metadata.Header.ForceNodumpKey).AsEnumValue<NodumpFlag>() != NodumpFlag.None)
+                SetFieldValue<string?>(Models.Metadata.Header.ForceNodumpKey, datHeader.GetStringFieldValue(Models.Metadata.Header.ForceNodumpKey).AsEnumValue<NodumpFlag>().AsStringValue());
 
-            if (datHeader.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey) != PackingFlag.None)
-                SetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey, datHeader.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey));
+            if (datHeader.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>() != PackingFlag.None)
+                SetFieldValue<string?>(Models.Metadata.Header.ForcePackingKey, datHeader.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>().AsStringValue());
 
             if (datHeader.GetFieldValue<DatFormat>(DatHeader.DatFormatKey) != 0x00)
                 SetFieldValue<DatFormat>(DatHeader.DatFormatKey, datHeader.GetFieldValue<DatFormat>(DatHeader.DatFormatKey));

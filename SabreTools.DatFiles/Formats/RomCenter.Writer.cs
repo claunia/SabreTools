@@ -113,8 +113,9 @@ namespace SabreTools.DatFiles.Formats
             {
                 Version = Header.GetStringFieldValue(Models.Metadata.Header.DatVersionKey),
                 Plugin = Header.GetStringFieldValue(Models.Metadata.Header.SystemKey),
-                Split = (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey) == MergingFlag.Split ? "1" : "0"),
-                Merge = (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey) == MergingFlag.Merged || Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey) == MergingFlag.FullMerged ? "1" : "0"),
+                Split = (Header.GetStringFieldValue(Models.Metadata.Header.ForceMergingKey).AsEnumValue<MergingFlag>() == MergingFlag.Split ? "1" : "0"),
+                Merge = (Header.GetStringFieldValue(Models.Metadata.Header.ForceMergingKey).AsEnumValue<MergingFlag>() == MergingFlag.Merged
+                    || Header.GetStringFieldValue(Models.Metadata.Header.ForceMergingKey).AsEnumValue<MergingFlag>() == MergingFlag.FullMerged ? "1" : "0"),
             };
             return dat;
         }

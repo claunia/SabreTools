@@ -218,8 +218,8 @@ namespace SabreTools.DatFiles
             // Selectively set all possible fields -- TODO: Figure out how to make this less manual
             if (Header.GetStringFieldValue(Models.Metadata.Header.AuthorKey) == null)
                 Header.SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, header.GetStringFieldValue(Models.Metadata.Header.AuthorKey));
-            if (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.BiosModeKey) == MergingFlag.None)
-                Header.SetFieldValue<MergingFlag>(Models.Metadata.Header.BiosModeKey, header.GetFieldValue<MergingFlag>(Models.Metadata.Header.BiosModeKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.BiosModeKey).AsEnumValue<MergingFlag>() == MergingFlag.None)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.BiosModeKey, header.GetStringFieldValue(Models.Metadata.Header.BiosModeKey).AsEnumValue<MergingFlag>().AsStringValue());
             if (Header.GetStringFieldValue(Models.Metadata.Header.BuildKey) == null)
                 Header.SetFieldValue<string?>(Models.Metadata.Header.BuildKey, header.GetStringFieldValue(Models.Metadata.Header.BuildKey));
             if (Header.GetStringFieldValue(Models.Metadata.Header.CategoryKey) == null)
@@ -238,12 +238,12 @@ namespace SabreTools.DatFiles
                 Header.SetFieldValue<string?>(Models.Metadata.Header.EmailKey, header.GetStringFieldValue(Models.Metadata.Header.EmailKey));
             if (Header.GetStringFieldValue(Models.Metadata.Header.EmulatorVersionKey) == null)
                 Header.SetFieldValue<string?>(Models.Metadata.Header.EmulatorVersionKey, header.GetStringFieldValue(Models.Metadata.Header.EmulatorVersionKey));
-            if (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey) == MergingFlag.None)
-                Header.SetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey, header.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey));
-            if (Header.GetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey) == NodumpFlag.None)
-                Header.SetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey, header.GetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey));
-            if (Header.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey) == PackingFlag.None)
-                Header.SetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey, header.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.ForceMergingKey).AsEnumValue<MergingFlag>() == MergingFlag.None)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.ForceMergingKey, header.GetStringFieldValue(Models.Metadata.Header.ForceMergingKey).AsEnumValue<MergingFlag>().AsStringValue());
+            if (Header.GetStringFieldValue(Models.Metadata.Header.ForceNodumpKey).AsEnumValue<NodumpFlag>() == NodumpFlag.None)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.ForceNodumpKey, header.GetStringFieldValue(Models.Metadata.Header.ForceNodumpKey).AsEnumValue<NodumpFlag>().AsStringValue());
+            if (Header.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>() == PackingFlag.None)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.ForcePackingKey, header.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>().AsStringValue());
             if (Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey) == null)
                 Header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, header.GetStringFieldValue(Models.Metadata.Header.HeaderKey));
             if (Header.GetStringFieldValue(Models.Metadata.Header.HomepageKey) == null)
@@ -266,14 +266,14 @@ namespace SabreTools.DatFiles
                 Header.SetFieldValue<string?>(Models.Metadata.Header.PluginKey, header.GetStringFieldValue(Models.Metadata.Header.PluginKey));
             if (Header.GetStringFieldValue(Models.Metadata.Header.RefNameKey) == null)
                 Header.SetFieldValue<string?>(Models.Metadata.Header.RefNameKey, header.GetStringFieldValue(Models.Metadata.Header.RefNameKey));
-            if (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.RomModeKey) == MergingFlag.None)
-                Header.SetFieldValue<MergingFlag>(Models.Metadata.Header.RomModeKey, header.GetFieldValue<MergingFlag>(Models.Metadata.Header.RomModeKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.RomModeKey).AsEnumValue<MergingFlag>() == MergingFlag.None)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.RomModeKey, header.GetStringFieldValue(Models.Metadata.Header.RomModeKey).AsEnumValue<MergingFlag>().AsStringValue());
             if (Header.GetStringFieldValue(Models.Metadata.Header.RomTitleKey) == null)
                 Header.SetFieldValue<string?>(Models.Metadata.Header.RomTitleKey, header.GetStringFieldValue(Models.Metadata.Header.RomTitleKey));
             if (Header.GetStringFieldValue(Models.Metadata.Header.RootDirKey) == null)
                 Header.SetFieldValue<string?>(Models.Metadata.Header.RootDirKey, header.GetStringFieldValue(Models.Metadata.Header.RootDirKey));
-            if (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.SampleModeKey) == MergingFlag.None)
-                Header.SetFieldValue<MergingFlag>(Models.Metadata.Header.SampleModeKey, header.GetFieldValue<MergingFlag>(Models.Metadata.Header.SampleModeKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.SampleModeKey).AsEnumValue<MergingFlag>() == MergingFlag.None)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.SampleModeKey, header.GetStringFieldValue(Models.Metadata.Header.SampleModeKey).AsEnumValue<MergingFlag>().AsStringValue());
             if (Header.GetStringFieldValue(Models.Metadata.Header.ScreenshotsHeightKey) == null)
                 Header.SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsHeightKey, header.GetStringFieldValue(Models.Metadata.Header.ScreenshotsHeightKey));
             if (Header.GetStringFieldValue(Models.Metadata.Header.ScreenshotsWidthKey) == null)

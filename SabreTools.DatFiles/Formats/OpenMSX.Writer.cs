@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 
@@ -158,7 +159,7 @@ namespace SabreTools.DatFiles.Formats
                     original.Value = item.GetFieldValue<Original?>("ORIGINAL")!.Value.ToString();
             }
 
-            Models.OpenMSX.RomBase rom = item.GetFieldValue<OpenMSXSubType>(Models.Metadata.Rom.OpenMSXMediaType) switch
+            Models.OpenMSX.RomBase rom = item.GetStringFieldValue(Models.Metadata.Rom.OpenMSXMediaType).AsEnumValue<OpenMSXSubType>() switch
             {
                 OpenMSXSubType.MegaRom => new Models.OpenMSX.MegaRom(),
                 OpenMSXSubType.SCCPlusCart => new Models.OpenMSX.SCCPlusCart(),

@@ -98,7 +98,7 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case Display display:
-                    if (display.GetFieldValue<DisplayType>(Models.Metadata.Display.DisplayTypeKey) == DisplayType.NULL)
+                    if (display.GetStringFieldValue(Models.Metadata.Display.DisplayTypeKey).AsEnumValue<DisplayType>() == DisplayType.NULL)
                         missingFields.Add(Models.Metadata.Display.DisplayTypeKey);
                     if (display.GetInt64FieldValue(Models.Metadata.Display.RotateKey) == null)
                         missingFields.Add(Models.Metadata.Display.RotateKey);
@@ -122,9 +122,9 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case Driver driver:
-                    if (driver.GetFieldValue<SupportStatus>(Models.Metadata.Driver.StatusKey) == SupportStatus.NULL)
+                    if (driver.GetStringFieldValue(Models.Metadata.Driver.StatusKey).AsEnumValue<SupportStatus>() == SupportStatus.NULL)
                         missingFields.Add(Models.Metadata.Driver.StatusKey);
-                    if (driver.GetFieldValue<SupportStatus>(Models.Metadata.Driver.EmulationKey) == SupportStatus.NULL)
+                    if (driver.GetStringFieldValue(Models.Metadata.Driver.EmulationKey).AsEnumValue<SupportStatus>() == SupportStatus.NULL)
                         missingFields.Add(Models.Metadata.Driver.EmulationKey);
                     break;
             }

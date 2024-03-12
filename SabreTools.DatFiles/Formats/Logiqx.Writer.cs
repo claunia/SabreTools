@@ -103,13 +103,13 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case Driver driver:
-                    if (driver.GetFieldValue<SupportStatus>(Models.Metadata.Driver.StatusKey) == SupportStatus.NULL)
+                    if (driver.GetStringFieldValue(Models.Metadata.Driver.StatusKey).AsEnumValue<SupportStatus>() == SupportStatus.NULL)
                         missingFields.Add(Models.Metadata.Driver.StatusKey);
-                    if (driver.GetFieldValue<SupportStatus>(Models.Metadata.Driver.EmulationKey) == SupportStatus.NULL)
+                    if (driver.GetStringFieldValue(Models.Metadata.Driver.EmulationKey).AsEnumValue<SupportStatus>() == SupportStatus.NULL)
                         missingFields.Add(Models.Metadata.Driver.EmulationKey);
-                    if (driver.GetFieldValue<SupportStatus>(Models.Metadata.Driver.CocktailKey) == SupportStatus.NULL)
+                    if (driver.GetStringFieldValue(Models.Metadata.Driver.CocktailKey).AsEnumValue<SupportStatus>() == SupportStatus.NULL)
                         missingFields.Add(Models.Metadata.Driver.CocktailKey);
-                    if (driver.GetFieldValue<SupportStatus>(Models.Metadata.Driver.SaveStateKey) == SupportStatus.NULL)
+                    if (driver.GetStringFieldValue(Models.Metadata.Driver.SaveStateKey).AsEnumValue<SupportStatus>() == SupportStatus.NULL)
                         missingFields.Add(Models.Metadata.Driver.SaveStateKey);
                     break;
 
@@ -118,7 +118,7 @@ namespace SabreTools.DatFiles.Formats
                         missingFields.Add(Models.Metadata.SoftwareList.TagKey);
                     if (string.IsNullOrEmpty(softwarelist.GetName()))
                         missingFields.Add(Models.Metadata.SoftwareList.NameKey);
-                    if (softwarelist.GetFieldValue<SoftwareListStatus?>(Models.Metadata.SoftwareList.StatusKey) == SoftwareListStatus.None)
+                    if (softwarelist.GetStringFieldValue(Models.Metadata.SoftwareList.StatusKey).AsEnumValue<SoftwareListStatus>() == SoftwareListStatus.None)
                         missingFields.Add(Models.Metadata.SoftwareList.StatusKey);
                     break;
             }
@@ -219,9 +219,9 @@ namespace SabreTools.DatFiles.Formats
         private Models.Logiqx.ClrMamePro? CreateClrMamePro()
         {
             // If we don't have subheader values, we can't do anything
-            if (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey) == MergingFlag.None
-                && Header.GetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey) == NodumpFlag.None
-                && Header.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey) == PackingFlag.None
+            if (Header.GetStringFieldValue(Models.Metadata.Header.ForceMergingKey).AsEnumValue<MergingFlag>() == MergingFlag.None
+                && Header.GetStringFieldValue(Models.Metadata.Header.ForceNodumpKey).AsEnumValue<NodumpFlag>() == NodumpFlag.None
+                && Header.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>() == PackingFlag.None
                 && string.IsNullOrEmpty(Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey)))
             {
                 return null;
@@ -232,12 +232,12 @@ namespace SabreTools.DatFiles.Formats
                 Header = Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey),
             };
 
-            if (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey) != MergingFlag.None)
-                subheader.ForceMerging = Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey).AsStringValue<MergingFlag>(useSecond: false);
-            if (Header.GetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey) != NodumpFlag.None)
-                subheader.ForceNodump = Header.GetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey).AsStringValue<NodumpFlag>();
-            if (Header.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey) != PackingFlag.None)
-                subheader.ForcePacking = Header.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey).AsStringValue<PackingFlag>(useSecond: false);
+            if (Header.GetStringFieldValue(Models.Metadata.Header.ForceMergingKey).AsEnumValue<MergingFlag>() != MergingFlag.None)
+                subheader.ForceMerging = Header.GetStringFieldValue(Models.Metadata.Header.ForceMergingKey).AsEnumValue<MergingFlag>().AsStringValue(useSecond: false);
+            if (Header.GetStringFieldValue(Models.Metadata.Header.ForceNodumpKey).AsEnumValue<NodumpFlag>() != NodumpFlag.None)
+                subheader.ForceNodump = Header.GetStringFieldValue(Models.Metadata.Header.ForceNodumpKey).AsEnumValue<NodumpFlag>().AsStringValue();
+            if (Header.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>() != PackingFlag.None)
+                subheader.ForcePacking = Header.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>().AsStringValue(useSecond: false);
 
             return subheader;
         }
@@ -249,12 +249,12 @@ namespace SabreTools.DatFiles.Formats
         {
             // If we don't have subheader values, we can't do anything
             if (string.IsNullOrEmpty(Header.GetStringFieldValue(Models.Metadata.Header.SystemKey))
-                && Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.BiosModeKey) == MergingFlag.None
+                && Header.GetStringFieldValue(Models.Metadata.Header.BiosModeKey).AsEnumValue<MergingFlag>() == MergingFlag.None
                 && Header.GetBoolFieldValue(Models.Metadata.Header.LockBiosModeKey) == null
                 && Header.GetBoolFieldValue(Models.Metadata.Header.LockRomModeKey) == null
                 && Header.GetBoolFieldValue(Models.Metadata.Header.LockSampleModeKey) == null
-                && Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.RomModeKey) == MergingFlag.None
-                && Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.SampleModeKey) == MergingFlag.None)
+                && Header.GetStringFieldValue(Models.Metadata.Header.RomModeKey).AsEnumValue<MergingFlag>() == MergingFlag.None
+                && Header.GetStringFieldValue(Models.Metadata.Header.SampleModeKey).AsEnumValue<MergingFlag>() == MergingFlag.None)
             {
                 return null;
             }
@@ -264,12 +264,12 @@ namespace SabreTools.DatFiles.Formats
                 Plugin = Header.GetStringFieldValue(Models.Metadata.Header.PluginKey),
             };
 
-            if (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.RomModeKey) != MergingFlag.None)
-                subheader.RomMode = Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.RomModeKey).AsStringValue<MergingFlag>(useSecond: true);
-            if (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.BiosModeKey) != MergingFlag.None)
-                subheader.BiosMode = Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.BiosModeKey).AsStringValue<MergingFlag>(useSecond: true);
-            if (Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.SampleModeKey) != MergingFlag.None)
-                subheader.SampleMode = Header.GetFieldValue<MergingFlag>(Models.Metadata.Header.SampleModeKey).AsStringValue<MergingFlag>(useSecond: true);
+            if (Header.GetStringFieldValue(Models.Metadata.Header.RomModeKey).AsEnumValue<MergingFlag>() != MergingFlag.None)
+                subheader.RomMode = Header.GetStringFieldValue(Models.Metadata.Header.RomModeKey).AsEnumValue<MergingFlag>().AsStringValue(useSecond: true);
+            if (Header.GetStringFieldValue(Models.Metadata.Header.BiosModeKey).AsEnumValue<MergingFlag>() != MergingFlag.None)
+                subheader.BiosMode = Header.GetStringFieldValue(Models.Metadata.Header.BiosModeKey).AsEnumValue<MergingFlag>().AsStringValue(useSecond: true);
+            if (Header.GetStringFieldValue(Models.Metadata.Header.SampleModeKey).AsEnumValue<MergingFlag>() != MergingFlag.None)
+                subheader.SampleMode = Header.GetStringFieldValue(Models.Metadata.Header.SampleModeKey).AsEnumValue<MergingFlag>().AsStringValue(useSecond: true);
 
             if (Header.GetBoolFieldValue(Models.Metadata.Header.LockRomModeKey) != null)
                 subheader.LockRomMode = Header.GetBoolFieldValue(Models.Metadata.Header.LockRomModeKey).FromYesNo();
@@ -404,7 +404,7 @@ namespace SabreTools.DatFiles.Formats
             game.RebuildTo = machine.GetStringFieldValue(Models.Metadata.Machine.RebuildToKey);
             game.Id = machine.GetStringFieldValue(Models.Metadata.Machine.IdKey);
             game.CloneOfId = machine.GetStringFieldValue(Models.Metadata.Machine.CloneOfIdKey);
-            game.Runnable = machine.GetFieldValue<Runnable>(Models.Metadata.Machine.RunnableKey).AsStringValue<Runnable>();
+            game.Runnable = machine.GetStringFieldValue(Models.Metadata.Machine.RunnableKey).AsEnumValue<Runnable>().AsStringValue();
             if (machine.GetStringFieldValue(Models.Metadata.Machine.CommentKey) != null)
             {
                 if (machine.GetStringFieldValue(Models.Metadata.Machine.CommentKey)!.Contains(';'))
@@ -611,10 +611,10 @@ namespace SabreTools.DatFiles.Formats
         {
             var driver = new Models.Logiqx.Driver
             {
-                Status = item.GetFieldValue<SupportStatus>(Models.Metadata.Driver.StatusKey).AsStringValue<SupportStatus>(),
-                Emulation = item.GetFieldValue<SupportStatus>(Models.Metadata.Driver.EmulationKey).AsStringValue<SupportStatus>(),
-                Cocktail = item.GetFieldValue<SupportStatus>(Models.Metadata.Driver.CocktailKey).AsStringValue<SupportStatus>(),
-                SaveState = item.GetFieldValue<Supported>(Models.Metadata.Driver.SaveStateKey).AsStringValue<Supported>(useSecond: true),
+                Status = item.GetStringFieldValue(Models.Metadata.Driver.StatusKey).AsEnumValue<SupportStatus>().AsStringValue<SupportStatus>(),
+                Emulation = item.GetStringFieldValue(Models.Metadata.Driver.EmulationKey).AsEnumValue<SupportStatus>().AsStringValue<SupportStatus>(),
+                Cocktail = item.GetStringFieldValue(Models.Metadata.Driver.CocktailKey).AsEnumValue<SupportStatus>().AsStringValue<SupportStatus>(),
+                SaveState = item.GetStringFieldValue(Models.Metadata.Driver.SaveStateKey).AsEnumValue<Supported>().AsStringValue<Supported>(useSecond: true),
                 RequiresArtwork = item.GetBoolFieldValue(Models.Metadata.Driver.RequiresArtworkKey).FromYesNo(),
                 Unofficial = item.GetBoolFieldValue(Models.Metadata.Driver.UnofficialKey).FromYesNo(),
                 NoSoundHardware = item.GetBoolFieldValue(Models.Metadata.Driver.NoSoundHardwareKey).FromYesNo(),
@@ -636,8 +636,8 @@ namespace SabreTools.DatFiles.Formats
                 Filter = item.GetStringFieldValue(Models.Metadata.SoftwareList.FilterKey),
             };
 
-            if (item.GetFieldValue<SoftwareListStatus?>(Models.Metadata.SoftwareList.StatusKey) != SoftwareListStatus.None)
-                softwarelist.Status = item.GetFieldValue<SoftwareListStatus>(Models.Metadata.SoftwareList.StatusKey).AsStringValue<SoftwareListStatus>();
+            if (item.GetStringFieldValue(Models.Metadata.SoftwareList.StatusKey).AsEnumValue<SoftwareListStatus>() != SoftwareListStatus.None)
+                softwarelist.Status = item.GetStringFieldValue(Models.Metadata.SoftwareList.StatusKey).AsEnumValue<SoftwareListStatus>().AsStringValue();
 
             return softwarelist;
         }

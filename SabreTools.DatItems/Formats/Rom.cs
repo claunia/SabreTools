@@ -64,7 +64,7 @@ namespace SabreTools.DatItems.Formats
                     && (!string.IsNullOrEmpty(dataArea.GetName())
                         || dataArea.GetInt64FieldValue(Models.Metadata.DataArea.SizeKey) != null
                         || dataArea.GetInt64FieldValue(Models.Metadata.DataArea.WidthKey) != null
-                        || dataArea.GetFieldValue<Endianness>(Models.Metadata.DataArea.EndiannessKey) != Endianness.NULL);
+                        || dataArea.GetStringFieldValue(Models.Metadata.DataArea.EndiannessKey).AsEnumValue<Endianness>() != Endianness.NULL);
             }
         }
 

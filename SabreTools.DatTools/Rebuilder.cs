@@ -65,8 +65,8 @@ namespace SabreTools.DatTools
             outDir = outDir.Ensure(create: true);
 
             // Now we want to get forcepack flag if it's not overridden
-            if (outputFormat == OutputFormat.Folder && datFile.Header.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey) != PackingFlag.None)
-                outputFormat = GetOutputFormat(datFile.Header.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey));
+            if (outputFormat == OutputFormat.Folder && datFile.Header.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>() != PackingFlag.None)
+                outputFormat = GetOutputFormat(datFile.Header.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>());
 
             #endregion
 
@@ -219,8 +219,8 @@ namespace SabreTools.DatTools
             }
 
             // Now we want to get forcepack flag if it's not overridden
-            if (outputFormat == OutputFormat.Folder && datFile.Header.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey) != PackingFlag.None)
-                outputFormat = GetOutputFormat(datFile.Header.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey));
+            if (outputFormat == OutputFormat.Folder && datFile.Header.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>() != PackingFlag.None)
+                outputFormat = GetOutputFormat(datFile.Header.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>());
 
 
             #endregion
@@ -427,7 +427,7 @@ namespace SabreTools.DatTools
 
                 // Special case for partial packing mode
                 bool shouldCheck = false;
-                if (outputFormat == OutputFormat.Folder && datFile.Header.GetFieldValue<PackingFlag>(Models.Metadata.Header.ForcePackingKey) == PackingFlag.Partial)
+                if (outputFormat == OutputFormat.Folder && datFile.Header.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>() == PackingFlag.Partial)
                 {
                     shouldCheck = true;
                     datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, lower: false);

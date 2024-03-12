@@ -413,13 +413,14 @@ namespace SabreTools.DatFiles
             }
 
             // Now do bulk replacement where possible
+            var machine = item.GetFieldValue<Machine>(DatItem.MachineKey);
             fix = fix
                 .Replace("%game%", game)
                 .Replace("%machine%", game)
                 .Replace("%name%", name)
-                .Replace("%manufacturer%", item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.ManufacturerKey) ?? string.Empty)
-                .Replace("%publisher%", item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.PublisherKey) ?? string.Empty)
-                .Replace("%category%", item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.CategoryKey) ?? string.Empty)
+                .Replace("%manufacturer%", machine!.GetStringFieldValue(Models.Metadata.Machine.ManufacturerKey) ?? string.Empty)
+                .Replace("%publisher%", machine!.GetStringFieldValue(Models.Metadata.Machine.PublisherKey) ?? string.Empty)
+                .Replace("%category%", machine!.GetStringFieldValue(Models.Metadata.Machine.CategoryKey) ?? string.Empty)
                 .Replace("%crc%", crc)
                 .Replace("%md5%", md5)
                 .Replace("%sha1%", sha1)
