@@ -466,10 +466,6 @@ namespace SabreTools.DatFiles
                             string? dataAreaName = dataArea.ReadString(Models.Metadata.DataArea.NameKey);
                             if (dataAreaName != null)
                             {
-                                // Create the data area array, if needed
-                                if (partItems[partName].Read<Models.Metadata.DataArea[]>(Models.Metadata.Part.DataAreaKey) == null)
-                                    partItems[partName][Models.Metadata.Part.DataAreaKey] = new Models.Metadata.DataArea[0];
-
                                 // Get existing data areas as a list
                                 var dataAreas = partItems[partName].Read<Models.Metadata.DataArea[]>(Models.Metadata.Part.DataAreaKey)?.ToList() ?? [];
 
@@ -481,7 +477,23 @@ namespace SabreTools.DatFiles
                                 else
                                     aggregateDataArea = [];
 
-                                // Add the disk to the data area
+                                // Get existing roms as a list
+                                var roms = aggregateDataArea.Read<Models.Metadata.Rom[]>(Models.Metadata.DataArea.RomKey)?.ToList() ?? [];
+
+                                // Add the rom to the data area
+                                roms.Add(romItem);
+
+                                // Assign back the roms
+                                aggregateDataArea[Models.Metadata.DataArea.RomKey] = roms.ToArray();
+
+                                // Assign back the data area
+                                if (dataAreaIndex > -1)
+                                    dataAreas[dataAreaIndex] = aggregateDataArea;
+                                else
+                                    dataAreas.Add(aggregateDataArea);
+
+                                // Assign back the data areas array
+                                partItems[partName][Models.Metadata.Part.DataAreaKey] = dataAreas.ToArray();
                             }
                         }
 
@@ -495,10 +507,6 @@ namespace SabreTools.DatFiles
                             string? diskAreaName = diskArea.ReadString(Models.Metadata.DiskArea.NameKey);
                             if (diskAreaName != null)
                             {
-                                // Create the dosk area array, if needed
-                                if (partItems[partName].Read<Models.Metadata.DiskArea[]>(Models.Metadata.Part.DiskAreaKey) == null)
-                                    partItems[partName][Models.Metadata.Part.DiskAreaKey] = new Models.Metadata.DiskArea[0];
-
                                 // Get existing data areas as a list
                                 var diskAreas = partItems[partName].Read<Models.Metadata.DiskArea[]>(Models.Metadata.Part.DiskAreaKey)?.ToList() ?? [];
 
@@ -510,7 +518,23 @@ namespace SabreTools.DatFiles
                                 else
                                     aggregateDiskArea = [];
 
-                                // Add the disk to the disk area
+                                // Get existing disks as a list
+                                var roms = aggregateDiskArea.Read<Models.Metadata.Disk[]>(Models.Metadata.DiskArea.DiskKey)?.ToList() ?? [];
+
+                                // Add the disk to the data area
+                                roms.Add(diskItem);
+
+                                // Assign back the disks
+                                aggregateDiskArea[Models.Metadata.DiskArea.DiskKey] = roms.ToArray();
+
+                                // Assign back the disk area
+                                if (diskAreaIndex > -1)
+                                    diskAreas[diskAreaIndex] = aggregateDiskArea;
+                                else
+                                    diskAreas.Add(aggregateDiskArea);
+
+                                // Assign back the disk areas array
+                                partItems[partName][Models.Metadata.Part.DiskAreaKey] = diskAreas.ToArray();
                             }
                         }
 
