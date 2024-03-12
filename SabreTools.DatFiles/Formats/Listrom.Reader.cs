@@ -72,7 +72,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 machine = new Machine();
                 machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, set.Device);
-                machine.SetFieldValue<bool?>(Models.Metadata.Machine.IsDeviceKey, true);
+                machine.SetFieldValue<string?>(Models.Metadata.Machine.IsDeviceKey, (true as bool?).FromYesNo());
             }
             else if (!string.IsNullOrEmpty(set.Driver))
             {
