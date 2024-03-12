@@ -155,8 +155,14 @@ namespace SabreTools.DatItems
             if (string.IsNullOrEmpty(fieldName) || !_internal.ContainsKey(fieldName!))
                 return default;
 
-            // Get the value based on the type
-            return _internal.ReadDouble(fieldName!);
+            // Try to parse directly
+            double? doubleValue = _internal.ReadDouble(fieldName!);
+            if (doubleValue != null)
+                return doubleValue;
+
+            // Try to parse from the string
+            string? stringValue = _internal.ReadString(fieldName!);
+            return NumberHelper.ConvertToDouble(stringValue);
         }
 
         /// <summary>
@@ -170,8 +176,14 @@ namespace SabreTools.DatItems
             if (string.IsNullOrEmpty(fieldName) || !_internal.ContainsKey(fieldName!))
                 return default;
 
-            // Get the value based on the type
-            return _internal.ReadLong(fieldName!);
+            // Try to parse directly
+            long? longValue = _internal.ReadLong(fieldName!);
+            if (longValue != null)
+                return longValue;
+
+            // Try to parse from the string
+            string? stringValue = _internal.ReadString(fieldName!);
+            return NumberHelper.ConvertToInt64(stringValue);
         }
 
         /// <summary>

@@ -110,7 +110,6 @@ namespace SabreTools.DatItems.Formats
         public Rom(Models.Metadata.Rom item) : base(item)
         {
             SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
-            SetFieldValue<string?>(Models.Metadata.Rom.StatusKey, ItemStatus.None.AsStringValue());
         }
 
         #endregion

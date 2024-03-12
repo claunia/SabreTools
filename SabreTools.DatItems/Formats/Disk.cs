@@ -69,7 +69,6 @@ namespace SabreTools.DatItems.Formats
         public Disk(Models.Metadata.Disk item) : base(item)
         {
             SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
-            SetFieldValue<string?>(Models.Metadata.Disk.StatusKey, ItemStatus.None.AsStringValue());
         }
 
         public Disk(BaseFile baseFile) : base()

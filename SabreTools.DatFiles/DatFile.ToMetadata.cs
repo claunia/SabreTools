@@ -308,11 +308,14 @@ namespace SabreTools.DatFiles
                             {
                                 var partItem = diskItem.Read<DatItems.Formats.Part>(DatItems.Formats.Disk.PartKey);
                                 if (partItem != null)
-                                    partMappings[partItem.GetInternalClone()] = diskItem;
+                                {
+                                    var partItemInternal = partItem.GetInternalClone();
+                                    partMappings[partItemInternal] = diskItem;
 
-                                var diskAreaItem = diskItem.Read<DatItems.Formats.DiskArea>(DatItems.Formats.Disk.DiskAreaKey);
-                                if (diskAreaItem != null)
-                                    diskAreaMappings[partItem!.GetInternalClone()] = (diskAreaItem.GetInternalClone(), diskItem);
+                                    var diskAreaItem = diskItem.Read<DatItems.Formats.DiskArea>(DatItems.Formats.Disk.DiskAreaKey);
+                                    if (diskAreaItem != null)
+                                        diskAreaMappings[partItemInternal] = (diskAreaItem.GetInternalClone(), diskItem);
+                                }
                             }
                             break;
                         case DatItems.Formats.Display display:
@@ -386,11 +389,14 @@ namespace SabreTools.DatFiles
                             {
                                 var partItem = romItem.Read<DatItems.Formats.Part>(DatItems.Formats.Rom.PartKey);
                                 if (partItem != null)
-                                    partMappings[partItem.GetInternalClone()] = romItem;
+                                {
+                                    var partItemInternal = partItem.GetInternalClone();
+                                    partMappings[partItemInternal] = romItem;
 
-                                var dataAreaItem = romItem.Read<DatItems.Formats.DataArea>(DatItems.Formats.Rom.DataAreaKey);
-                                if (dataAreaItem != null)
-                                    dataAreaMappings[partItem!.GetInternalClone()] = (dataAreaItem.GetInternalClone(), romItem);
+                                    var dataAreaItem = romItem.Read<DatItems.Formats.DataArea>(DatItems.Formats.Rom.DataAreaKey);
+                                    if (dataAreaItem != null)
+                                        dataAreaMappings[partItemInternal] = (dataAreaItem.GetInternalClone(), romItem);
+                                }
                             }
                             break;
                         case DatItems.Formats.Sample sample:
@@ -448,11 +454,17 @@ namespace SabreTools.DatFiles
                         if (!partItems[partName].ContainsKey(Models.Metadata.Part.InterfaceKey))
                             partItems[partName][Models.Metadata.Part.InterfaceKey] = partItem.ReadString(Models.Metadata.Part.InterfaceKey);
 
+                        // Clear any empty fields
+                        ClearEmptyKeys(partItems[partName]);
+
                         // If the item has a DataArea mapping
                         if (dataAreaMappings.ContainsKey(partItem))
                         {
                             // Get the mapped items
                             var (dataArea, romItem) = dataAreaMappings[partItem];
+
+                            // Clear any empty fields
+                            ClearEmptyKeys(romItem);
 
                             // Get the data area name and skip if there's none
                             string? dataAreaName = dataArea.ReadString(Models.Metadata.DataArea.NameKey);
@@ -465,9 +477,20 @@ namespace SabreTools.DatFiles
                                 int dataAreaIndex = dataAreas.FindIndex(da => da.ReadString(Models.Metadata.DataArea.NameKey) == dataAreaName);
                                 Models.Metadata.DataArea aggregateDataArea;
                                 if (dataAreaIndex > -1)
+                                {
                                     aggregateDataArea = dataAreas[dataAreaIndex];
+                                }
                                 else
+                                {
                                     aggregateDataArea = [];
+                                    aggregateDataArea[Models.Metadata.DataArea.EndiannessKey] = dataArea.ReadString(Models.Metadata.DataArea.EndiannessKey);
+                                    aggregateDataArea[Models.Metadata.DataArea.NameKey] = dataArea.ReadString(Models.Metadata.DataArea.NameKey);
+                                    aggregateDataArea[Models.Metadata.DataArea.SizeKey] = dataArea.ReadString(Models.Metadata.DataArea.SizeKey);
+                                    aggregateDataArea[Models.Metadata.DataArea.WidthKey] = dataArea.ReadString(Models.Metadata.DataArea.WidthKey);
+                                }
+
+                                // Clear any empty fields
+                                ClearEmptyKeys(aggregateDataArea);
 
                                 // Get existing roms as a list
                                 var roms = aggregateDataArea.Read<Models.Metadata.Rom[]>(Models.Metadata.DataArea.RomKey)?.ToList() ?? [];
@@ -495,6 +518,9 @@ namespace SabreTools.DatFiles
                             // Get the mapped items
                             var (diskArea, diskItem) = diskAreaMappings[partItem];
 
+                            // Clear any empty fields
+                            ClearEmptyKeys(diskItem);
+
                             // Get the disk area name and skip if there's none
                             string? diskAreaName = diskArea.ReadString(Models.Metadata.DiskArea.NameKey);
                             if (diskAreaName != null)
@@ -506,18 +532,26 @@ namespace SabreTools.DatFiles
                                 int diskAreaIndex = diskAreas.FindIndex(da => da.ReadString(Models.Metadata.DiskArea.NameKey) == diskAreaName);
                                 Models.Metadata.DiskArea aggregateDiskArea;
                                 if (diskAreaIndex > -1)
+                                {
                                     aggregateDiskArea = diskAreas[diskAreaIndex];
+                                }
                                 else
+                                {
                                     aggregateDiskArea = [];
+                                    aggregateDiskArea[Models.Metadata.DiskArea.NameKey] = diskArea.ReadString(Models.Metadata.DiskArea.NameKey);
+                                }
+
+                                // Clear any empty fields
+                                ClearEmptyKeys(aggregateDiskArea);
 
                                 // Get existing disks as a list
-                                var roms = aggregateDiskArea.Read<Models.Metadata.Disk[]>(Models.Metadata.DiskArea.DiskKey)?.ToList() ?? [];
+                                var disks = aggregateDiskArea.Read<Models.Metadata.Disk[]>(Models.Metadata.DiskArea.DiskKey)?.ToList() ?? [];
 
                                 // Add the disk to the data area
-                                roms.Add(diskItem);
+                                disks.Add(diskItem);
 
                                 // Assign back the disks
-                                aggregateDiskArea[Models.Metadata.DiskArea.DiskKey] = roms.ToArray();
+                                aggregateDiskArea[Models.Metadata.DiskArea.DiskKey] = disks.ToArray();
 
                                 // Assign back the disk area
                                 if (diskAreaIndex > -1)
@@ -536,18 +570,24 @@ namespace SabreTools.DatFiles
                             // Get existing dipswitches as a list
                             var dipSwitches = partItems[partName].Read<Models.Metadata.DipSwitch[]>(Models.Metadata.Part.DipSwitchKey)?.ToList() ?? [];
 
+                            // Clear any empty fields
+                            ClearEmptyKeys(dipSwitchItem);
+
                             // Add the dipswitch
                             dipSwitches.Add(dipSwitchItem);
 
                             // Assign back the dipswitches
                             partItems[partName][Models.Metadata.Part.DipSwitchKey] = dipSwitches.ToArray();
                         }
-                        
+
                         // If the item is a Feature
                         else if (datItem is Models.Metadata.Feature featureItem)
                         {
                             // Get existing features as a list
                             var features = partItems[partName].Read<Models.Metadata.Feature[]>(Models.Metadata.Part.FeatureKey)?.ToList() ?? [];
+
+                            // Clear any empty fields
+                            ClearEmptyKeys(featureItem);
 
                             // Add the feature
                             features.Add(featureItem);
@@ -906,15 +946,33 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Append to a machine key as if its an array
         /// </summary>
-        private static void AppendToMachineKey<T>(Models.Metadata.Machine machine, string key, T value)
+        private static void AppendToMachineKey<T>(Models.Metadata.Machine machine, string key, T value) where T : Models.Metadata.DatItem
         {
+            // Get the existing array
             var arr = machine.Read<T[]>(key);
             if (arr == null)
                 return;
 
+            // Trim all null fields
+            ClearEmptyKeys(value);
+
+            // Add to the array
             List<T> list = [.. arr];
             list.Add(value);
             machine[key] = list.ToArray();
+        }
+
+        /// <summary>
+        /// Clear empty keys from a DictionaryBase object
+        /// </summary>
+        private static void ClearEmptyKeys(Models.Metadata.DictionaryBase obj)
+        {
+            string[] fieldNames = obj.Keys.ToArray();
+            foreach (string fieldName in fieldNames)
+            {
+                if (obj[fieldName] == null)
+                    obj.Remove(fieldName);
+            }
         }
 
         #endregion
