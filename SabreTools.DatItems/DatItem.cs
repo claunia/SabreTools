@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
@@ -858,8 +860,12 @@ namespace SabreTools.DatItems
         /// <returns>Clone of the DatItem</returns>
         public override object Clone()
         {
-            var clone = Activator.CreateInstance<DatItem<T>>();
-            clone._internal = _internal?.Clone() as T ?? Activator.CreateInstance<T>();
+            var concrete = Assembly.GetExecutingAssembly()
+                .GetTypes()
+                .FirstOrDefault(t => !t.IsAbstract && t.IsClass && t.BaseType == typeof(DatItem<T>));
+
+            var clone = Activator.CreateInstance(concrete!);
+            (clone as DatItem<T>)!._internal = _internal?.Clone() as T ?? Activator.CreateInstance<T>();
             return clone;
         }
 

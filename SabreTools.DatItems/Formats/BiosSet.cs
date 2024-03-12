@@ -13,7 +13,7 @@ namespace SabreTools.DatItems.Formats
         #region Fields
 
         /// <inheritdoc>/>
-        protected override ItemType ItemType => ItemType.Analog;
+        protected override ItemType ItemType => ItemType.BiosSet;
 
         /// <inheritdoc>/>
         protected override string? NameKey => Models.Metadata.BiosSet.NameKey;

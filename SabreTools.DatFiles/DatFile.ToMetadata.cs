@@ -498,6 +498,7 @@ namespace SabreTools.DatFiles
             // Create a Part for every DipSwitch that includes it
             if (dipSwitchItem.ContainsKey(DatItems.Formats.DipSwitch.PartKey))
             {
+                // TODO: Figure out how to do Part-level aggregation
                 // TODO: Handle DipSwitch in Part inversion
             }
 
@@ -517,6 +518,8 @@ namespace SabreTools.DatFiles
             // Create a Part and a DiskArea for every Disk that includes them
             if (diskItem.ContainsKey(DatItems.Formats.Disk.PartKey) && diskItem.ContainsKey(DatItems.Formats.Disk.DiskAreaKey))
             {
+                // TODO: Figure out how to do Part-level aggregation
+                // TODO: Figure out how to do DiskArea-level aggregation
                 // TODO: Handle Disk in Part inversion
                 // TODO: Handle Disk in DiskArea inversion
             }
@@ -699,6 +702,8 @@ namespace SabreTools.DatFiles
             // Create a Part and a DataArea for every Rom that includes them
             if (romItem.ContainsKey(DatItems.Formats.Rom.PartKey) && romItem.ContainsKey(DatItems.Formats.Rom.DataAreaKey))
             {
+                // TODO: Figure out how to do Part-level aggregation
+                // TODO: Figure out how to do DataArea-level aggregation
                 // TODO: Handle Rom in Part inversion
                 // TODO: Handle Rom in DataArea inversion
             }
