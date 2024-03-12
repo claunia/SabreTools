@@ -226,6 +226,11 @@ namespace SabreTools.DatFiles
                     }
                 }
 
+                // Create mapping dictionaries for the Parts, DataAreas, and DiskAreas associated with this machine
+                Dictionary<string, Models.Metadata.Part> partMapping = [];
+                Dictionary<(string, string), Models.Metadata.DataArea> dataAreaMapping = [];
+                Dictionary<(string, string), Models.Metadata.DiskArea> diskAreaMapping = [];
+
                 // Loop through and convert the items to respective lists
                 for (int index = 0; index < items.Count; index++)
                 {
@@ -277,14 +282,38 @@ namespace SabreTools.DatFiles
                             AppendToMachineKey(machine, Models.Metadata.Machine.DeviceRefKey, deviceRefItem);
                             break;
                         case DatItems.Formats.DipSwitch dipSwitch:
-                            var dipSwitchItem = ProcessItem(dipSwitch, machine);
+                            var dipSwitchItem = ProcessItem(dipSwitch);
                             EnsureMachineKey<Models.Metadata.DipSwitch?>(machine, Models.Metadata.Machine.DipSwitchKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.DipSwitchKey, dipSwitchItem);
+
+                            // Add Part mapping
+                            bool dipSwitchContainsPart = dipSwitchItem.ContainsKey(DatItems.Formats.DipSwitch.PartKey);
+                            if (dipSwitchContainsPart)
+                            {
+                                var partItem = dipSwitchItem.Read<DatItems.Formats.Part>(DatItems.Formats.DipSwitch.PartKey);
+                                if (partItem != null)
+                                    partMapping[partItem.GetName()!] = partItem.GetInternalClone();
+                            }
+
                             break;
                         case DatItems.Formats.Disk disk:
-                            var diskItem = ProcessItem(disk, machine);
+                            var diskItem = disk.GetInternalClone();
                             EnsureMachineKey<Models.Metadata.Disk?>(machine, Models.Metadata.Machine.DiskKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.DiskKey, diskItem);
+
+                            // Add Part and DiskArea mappings
+                            bool diskContainsPart = diskItem.ContainsKey(DatItems.Formats.Disk.PartKey);
+                            bool diskContainsDiskArea = diskItem.ContainsKey(DatItems.Formats.Disk.DiskAreaKey);
+                            if (diskContainsPart && diskContainsDiskArea)
+                            {
+                                var partItem = diskItem.Read<DatItems.Formats.Part>(DatItems.Formats.Disk.PartKey);
+                                if (partItem != null)
+                                    partMapping[partItem.GetName()!] = partItem.GetInternalClone();
+
+                                var diskAreaItem = diskItem.Read<DatItems.Formats.DiskArea>(DatItems.Formats.Disk.DiskAreaKey);
+                                if (diskAreaItem != null)
+                                    diskAreaMapping[(partItem!.GetName()!, diskAreaItem.GetName()!)] = diskAreaItem.GetInternalClone();
+                            }
                             break;
                         case DatItems.Formats.Display display:
                             var displayItem = ProcessItem(display, machine);
@@ -335,6 +364,20 @@ namespace SabreTools.DatFiles
                             var romItem = ProcessItem(rom, machine);
                             EnsureMachineKey<Models.Metadata.Rom?>(machine, Models.Metadata.Machine.RomKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.RomKey, romItem);
+
+                            // Add Part and DataArea mappings
+                            bool romContainsPart = romItem.ContainsKey(DatItems.Formats.Rom.PartKey);
+                            bool romContainsDataArea = romItem.ContainsKey(DatItems.Formats.Rom.DataAreaKey);
+                            if (romContainsPart && romContainsDataArea)
+                            {
+                                var partItem = romItem.Read<DatItems.Formats.Part>(DatItems.Formats.Rom.PartKey);
+                                if (partItem != null)
+                                    partMapping[partItem.GetName()!] = partItem.GetInternalClone();
+
+                                var dataAreaItem = romItem.Read<DatItems.Formats.DataArea>(DatItems.Formats.Rom.DataAreaKey);
+                                if (dataAreaItem != null)
+                                    dataAreaMapping[(partItem!.GetName()!, dataAreaItem.GetName()!)] = dataAreaItem.GetInternalClone();
+                            }
                             break;
                         case DatItems.Formats.Sample sample:
                             var sampleItem = sample.GetInternalClone();
@@ -461,7 +504,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="item">Item to convert</param>
         /// <param name="machine">Machine to use for Part</param>
-        private static Models.Metadata.DipSwitch ProcessItem(DatItems.Formats.DipSwitch item, Models.Metadata.Machine machine)
+        private static Models.Metadata.DipSwitch ProcessItem(DatItems.Formats.DipSwitch item)
         {
             var dipSwitchItem = item.GetInternalClone();
 
@@ -495,36 +538,7 @@ namespace SabreTools.DatFiles
                 dipSwitchItem[Models.Metadata.DipSwitch.DipValueKey] = dipValueItems.ToArray();
             }
 
-            // Create a Part for every DipSwitch that includes it
-            if (dipSwitchItem.ContainsKey(DatItems.Formats.DipSwitch.PartKey))
-            {
-                // TODO: Figure out how to do Part-level aggregation
-                // TODO: Handle DipSwitch in Part inversion
-            }
-
-
             return dipSwitchItem;
-        }
-
-        /// <summary>
-        /// Convert Disk information
-        /// </summary>
-        /// <param name="item">Item to convert</param>
-        /// <param name="machine">Machine to use for Part and DiskArea</param>
-        private static Models.Metadata.Disk ProcessItem(DatItems.Formats.Disk item, Models.Metadata.Machine machine)
-        {
-            var diskItem = item.GetInternalClone();
-
-            // Create a Part and a DiskArea for every Disk that includes them
-            if (diskItem.ContainsKey(DatItems.Formats.Disk.PartKey) && diskItem.ContainsKey(DatItems.Formats.Disk.DiskAreaKey))
-            {
-                // TODO: Figure out how to do Part-level aggregation
-                // TODO: Figure out how to do DiskArea-level aggregation
-                // TODO: Handle Disk in Part inversion
-                // TODO: Handle Disk in DiskArea inversion
-            }
-
-            return diskItem;
         }
 
         /// <summary>
@@ -697,15 +711,6 @@ namespace SabreTools.DatFiles
                     EnsureMachineKey<Models.Metadata.Dump?>(machine, Models.Metadata.Machine.DumpKey);
                     AppendToMachineKey(machine, Models.Metadata.Machine.DumpKey, dumpSccPlusCart);
                     break;
-            }
-
-            // Create a Part and a DataArea for every Rom that includes them
-            if (romItem.ContainsKey(DatItems.Formats.Rom.PartKey) && romItem.ContainsKey(DatItems.Formats.Rom.DataAreaKey))
-            {
-                // TODO: Figure out how to do Part-level aggregation
-                // TODO: Figure out how to do DataArea-level aggregation
-                // TODO: Handle Rom in Part inversion
-                // TODO: Handle Rom in DataArea inversion
             }
 
             return romItem;
