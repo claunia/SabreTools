@@ -57,8 +57,8 @@ namespace SabreTools.DatFiles
             // Convert subheader values
             if (Header.CanOpenSpecified)
                 header[Models.Metadata.Header.CanOpenKey] = new Models.OfflineList.CanOpen { Extension = Header.GetStringArrayFieldValue(Models.Metadata.Header.CanOpenKey) };
-            // if (Header.ImagesSpecified)
-            //     // TODO: Add to internal model
+            if (Header.ImagesSpecified)
+                header[Models.Metadata.Header.ImagesKey] = Header.GetFieldValue<Models.OfflineList.Images>(Models.Metadata.Header.ImagesKey);
             if (Header.InfosSpecified)
             {
                 var infoItem = new Models.OfflineList.Infos();
@@ -210,6 +210,22 @@ namespace SabreTools.DatFiles
                 // Create a machine to hold everything
                 var machine = items[0].GetFieldValue<DatItems.Machine>(DatItems.DatItem.MachineKey)!.GetInternalClone();
 
+                // Handle Trurip object, if it exists
+                if (machine.ContainsKey(Models.Metadata.Machine.TruripKey))
+                {
+                    var trurip = machine.Read<DatItems.Trurip>(Models.Metadata.Machine.TruripKey);
+                    if (trurip != null)
+                    {
+                        var truripItem = trurip.ConvertToLogiqx();
+                        truripItem.Publisher = machine.ReadString(Models.Metadata.Machine.PublisherKey);
+                        truripItem.Year = machine.ReadString(Models.Metadata.Machine.YearKey);
+                        truripItem.Players = machine.ReadString(Models.Metadata.Machine.PlayersKey);
+                        truripItem.Source = machine.ReadString(Models.Metadata.Machine.SourceFileKey);
+                        truripItem.CloneOf = machine.ReadString(Models.Metadata.Machine.CloneOfKey);
+                        machine[Models.Metadata.Machine.TruripKey] = truripItem;
+                    }
+                }
+
                 // Loop through and convert the items to respective lists
                 for (int index = 0; index < items.Count; index++)
                 {
@@ -271,8 +287,7 @@ namespace SabreTools.DatFiles
                             AppendToMachineKey(machine, Models.Metadata.Machine.DiskKey, diskItem);
                             break;
                         case DatItems.Formats.Display display:
-                            // TODO: Handle cases where it's actually a Video
-                            var displayItem = display.GetInternalClone();
+                            var displayItem = ProcessItem(display);
                             EnsureMachineKey<Models.Metadata.Display?>(machine, Models.Metadata.Machine.DisplayKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.DisplayKey, displayItem);
                             break;
@@ -499,6 +514,20 @@ namespace SabreTools.DatFiles
             // TODO: Handle DipSwitch in DiskArea inversion
 
             return diskItem;
+        }
+
+        /// <summary>
+        /// Convert Display information
+        /// </summary>
+        /// <param name="item">Item to convert</param>
+        /// <param name="machine">Machine to use for Part and DiskArea</param>
+        private static Models.Metadata.Display ProcessItem(DatItems.Formats.Display item)
+        {
+            var displayItem = item.GetInternalClone();
+
+            // TODO: Handle cases where it's actually a Video
+
+            return displayItem;
         }
 
         /// <summary>

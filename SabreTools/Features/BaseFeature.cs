@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-
+using Microsoft.Data.Sqlite;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatTools;
 using SabreTools.FileTypes;
 using SabreTools.Filtering;
+using SabreTools.Hashing;
 using SabreTools.Help;
 using SabreTools.IO;
 using SabreTools.Logging;
 using SabreTools.Reports;
-using Microsoft.Data.Sqlite;
-using SabreTools.Hashing;
 
 namespace SabreTools.Features
 {
@@ -2238,11 +2237,15 @@ Some special strings that can be used:
         {
             // Populate filters
             List<string> filterPairs = GetList(features, FilterListValue);
-            var filterRunner = new Filter.FilterRunner(filterPairs.ToArray());
 
-            // TODO: Support this use case somehow
             // Include 'of" in game filters
-            //filter.MachineFilter.IncludeOfInGame = GetBoolean(features, MatchOfTagsValue);
+            bool matchOfTags = GetBoolean(features, MatchOfTagsValue);
+            if (matchOfTags)
+            {
+                // TODO: Support this use case somehow
+            }
+
+            var filterRunner = new Filter.FilterRunner(filterPairs.ToArray());
 
             return filterRunner;
         }

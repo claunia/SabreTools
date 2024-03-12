@@ -33,82 +33,33 @@ namespace SabreTools.DatItems
 
         #region Fields
 
-        // TODO: Should this be a separate object for TruRip?
-        #region Logiqx EmuArc
-
-        /// <summary>
-        /// Title ID
-        /// </summary>
-        [JsonProperty("titleid", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("titleid")]
-        public string? TitleID { get; set; } = null;
-
-        /// <summary>
-        /// Machine developer
-        /// </summary>
-        [JsonProperty("developer", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("developer")]
-        public string? Developer { get; set; } = null;
-
-        /// <summary>
-        /// Game genre
-        /// </summary>
-        [JsonProperty("genre", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("genre")]
-        public string? Genre { get; set; } = null;
-
-        /// <summary>
-        /// Game subgenre
-        /// </summary>
-        [JsonProperty("subgenre", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("subgenre")]
-        public string? Subgenre { get; set; } = null;
-
-        /// <summary>
-        /// Game ratings
-        /// </summary>
-        [JsonProperty("ratings", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("ratings")]
-        public string? Ratings { get; set; } = null;
-
-        /// <summary>
-        /// Game score
-        /// </summary>
-        [JsonProperty("score", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("score")]
-        public string? Score { get; set; } = null;
-
-        /// <summary>
-        /// Is the machine enabled
-        /// </summary>
-        [JsonProperty("enabled", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("enabled")]
-        public string? Enabled { get; set; } = null; // bool?
-
-        /// <summary>
-        /// Does the game have a CRC check
-        /// </summary>
-        [JsonProperty("hascrc", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("hascrc")]
-        public bool? Crc { get; set; } = null;
-
-        [JsonIgnore]
-        public bool CrcSpecified { get { return Crc != null; } }
-
-        /// <summary>
-        /// Machine relations
-        /// </summary>
-        [JsonProperty("relatedto", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("relatedto")]
-        public string? RelatedTo { get; set; } = null;
-
-        #endregion
-
         /// <summary>
         /// Internal Machine model
         /// </summary>
         [JsonIgnore]
         private Models.Metadata.Machine _machine = [];
+
+        #endregion
+
+        #region Constructors
+
+        public Machine() { }
+
+        public Machine(Models.Metadata.Machine machine)
+        {
+            // Get all fields to automatically copy without processing
+            var nonItemFields = TypeHelper.GetConstants(typeof(Models.Metadata.Machine));
+            if (nonItemFields == null)
+                return;
+
+            // Populate the internal machine from non-filter fields
+            _machine = [];
+            foreach (string fieldName in nonItemFields)
+            {
+                if (machine.ContainsKey(fieldName))
+                    _machine[fieldName] = machine[fieldName];
+            }
+        }
 
         #endregion
 
@@ -230,28 +181,6 @@ namespace SabreTools.DatItems
 
         #endregion
 
-        #region Constructors
-
-        public Machine() { }
-
-        public Machine(Models.Metadata.Machine machine)
-        {
-            // Get all fields to automatically copy without processing
-            var nonItemFields = TypeHelper.GetConstants(typeof(Models.Metadata.Machine));
-            if (nonItemFields == null)
-                return;
-
-            // Populate the internal machine from non-filter fields
-            _machine = [];
-            foreach (string fieldName in nonItemFields)
-            {
-                if (machine.ContainsKey(fieldName))
-                    _machine[fieldName] = machine[fieldName];
-            }
-        }
-
-        #endregion
-
         #region Cloning methods
 
         /// <summary>
@@ -262,25 +191,7 @@ namespace SabreTools.DatItems
         {
             return new Machine()
             {
-                #region Common
-
                 _machine = this._machine.Clone() as Models.Metadata.Machine ?? [],
-
-                #endregion
-
-                #region Logiqx EmuArc
-
-                TitleID = this.TitleID,
-                Developer = this.Developer,
-                Genre = this.Genre,
-                Subgenre = this.Subgenre,
-                Ratings = this.Ratings,
-                Score = this.Score,
-                Enabled = this.Enabled,
-                Crc = this.Crc,
-                RelatedTo = this.RelatedTo,
-
-                #endregion
             };
         }
 

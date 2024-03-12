@@ -83,22 +83,31 @@ namespace SabreTools.DatFiles
         #region Fields
 
         [JsonIgnore]
-        public bool InfosSpecified
-        {
-            get
-            {
-                var infos = GetFieldValue<OfflineListInfo[]?>(Models.Metadata.Header.InfosKey);
-                return infos != null && infos.Length > 0;
-            }
-        }
-
-        [JsonIgnore]
         public bool CanOpenSpecified
         {
             get
             {
                 var canOpen = GetStringArrayFieldValue(Models.Metadata.Header.CanOpenKey);
                 return canOpen != null && canOpen.Length > 0;
+            }
+        }
+
+        [JsonIgnore]
+        public bool ImagesSpecified
+        {
+            get
+            {
+                return GetFieldValue<Models.OfflineList.Images?>(Models.Metadata.Header.ImagesKey) != null;
+            }
+        }
+
+        [JsonIgnore]
+        public bool InfosSpecified
+        {
+            get
+            {
+                var infos = GetFieldValue<OfflineListInfo[]?>(Models.Metadata.Header.InfosKey);
+                return infos != null && infos.Length > 0;
             }
         }
 
@@ -302,6 +311,7 @@ namespace SabreTools.DatFiles
             header.SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, GetStringFieldValue(Models.Metadata.Header.HomepageKey));
             header.SetFieldValue<string?>(Models.Metadata.Header.IdKey, GetStringFieldValue(Models.Metadata.Header.IdKey));
             header.SetFieldValue<OfflineListInfo[]?>(Models.Metadata.Header.InfosKey, GetFieldValue<OfflineListInfo[]?>(Models.Metadata.Header.InfosKey)); // TODO: Perform a deep clone
+            header.SetFieldValue<Models.OfflineList.Images?>(Models.Metadata.Header.ImagesKey, GetFieldValue<Models.OfflineList.Images?>(Models.Metadata.Header.ImagesKey)); // TODO: Perform a deep clone
             header.SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey, GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.Clone() as DepotInformation);
             header.SetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey, GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.Clone() as DepotInformation);
             header.SetFieldValue<bool?>(Models.Metadata.Header.LockBiosModeKey, GetBoolFieldValue(Models.Metadata.Header.LockBiosModeKey));

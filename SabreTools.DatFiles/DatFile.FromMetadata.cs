@@ -57,7 +57,9 @@ namespace SabreTools.DatFiles
             }
             if (item.ContainsKey(Models.Metadata.Header.ImagesKey))
             {
-                // TODO: Add to internal model
+                var images = item.Read<Models.OfflineList.Images>(Models.Metadata.Header.ImagesKey);
+                if (images != null)
+                    Header.SetFieldValue<Models.OfflineList.Images?>(Models.Metadata.Header.ImagesKey, images);
             }
             if (item.ContainsKey(Models.Metadata.Header.InfosKey))
             {
@@ -358,6 +360,17 @@ namespace SabreTools.DatFiles
             if (machine.GetStringFieldValue(Models.Metadata.Machine.SupportedKey) != null)
                 machine.SetFieldValue<string?>(Models.Metadata.Machine.SupportedKey, machine.GetStringFieldValue(Models.Metadata.Machine.SupportedKey).AsEnumValue<Supported>().AsStringValue());
 
+            // Handle Trurip object, if it exists
+            if (item.ContainsKey(Models.Metadata.Machine.TruripKey))
+            {
+                var truripItem = item.Read<Models.Logiqx.Trurip>(Models.Metadata.Machine.TruripKey);
+                if (truripItem != null)
+                {
+                    var trurip = new DatItems.Trurip(truripItem);
+                    machine.SetFieldValue<DatItems.Trurip>(Models.Metadata.Machine.TruripKey, trurip);
+                }
+            }
+
             // Convert items in the machine
             if (item.ContainsKey(Models.Metadata.Machine.AdjusterKey))
             {
@@ -488,10 +501,6 @@ namespace SabreTools.DatFiles
             {
                 var items = ReadItemArray<Models.Metadata.Sound>(item, Models.Metadata.Machine.SoundKey);
                 ProcessItems(items, machine, filename, indexId, statsOnly);
-            }
-            if (item.ContainsKey(Models.Metadata.Machine.TruripKey))
-            {
-                // TODO: Figure out what this maps to
             }
             if (item.ContainsKey(Models.Metadata.Machine.VideoKey))
             {

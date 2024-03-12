@@ -259,7 +259,6 @@ namespace SabreTools.DatFiles
                 else if ((size == 0 || size == null)
                     && (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey)) || rom.HasZeroHash()))
                 {
-                    // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
                     rom.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, Constants.SizeZero.ToString());
                     rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, Constants.CRCZero);
                     rom.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, Constants.MD5Zero);

@@ -6,10 +6,6 @@ using Newtonsoft.Json;
 /// </summary>
 namespace SabreTools.DatItems.Formats
 {
-    #region DatItem
-
-    #region OpenMSX
-
     /// <summary>
     /// Represents the OpenMSX original value
     /// </summary>
@@ -36,8 +32,4 @@ namespace SabreTools.DatItems.Formats
         [JsonIgnore]
         private readonly Models.Metadata.Original _internal = [];
     }
-
-    #endregion
-
-    #endregion //DatItem
 }

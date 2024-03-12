@@ -13,9 +13,17 @@ namespace SabreTools.DatFiles.Formats
             try
             {
                 // Deserialize the input file
-                // TODO: Support M1 DATs again
                 var mame = new Serialization.Files.Listxml().Deserialize(filename);
-                var metadata = new Serialization.CrossModel.Listxml().Serialize(mame);
+                Models.Metadata.MetadataFile? metadata;
+                if (mame == null)
+                {
+                    var m1 = new Serialization.Files.M1().Deserialize(filename);
+                    metadata = new Serialization.CrossModel.M1().Serialize(m1);
+                }
+                else
+                {
+                    metadata = new Serialization.CrossModel.Listxml().Serialize(mame);
+                }
 
                 // Convert to the internal format
                 ConvertMetadata(metadata, filename, indexId, keep, statsOnly);

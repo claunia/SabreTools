@@ -404,8 +404,6 @@ namespace SabreTools.Test.Core
             Assert.Equal(expected, actual);
         }
 
-        // TODO: Write new test for all supported DatHeaderField values
-
         [Theory]
         [InlineData(DeviceType.NULL, null)]
         [InlineData(DeviceType.Unknown, "unknown")]

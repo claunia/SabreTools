@@ -38,7 +38,7 @@ namespace SabreTools.Filter
                 filters.Add(new FilterObject(filterString));
             }
 
-            this.Filters = filters.ToArray();
+            this.Filters = [.. filters];
         }
 
         /// <summary>
