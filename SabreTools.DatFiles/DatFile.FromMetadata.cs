@@ -138,17 +138,16 @@ namespace SabreTools.DatFiles
                             Default = infos.ReleaseNumber.Default.AsYesNo(),
                         });
                     }
-                    // TODO: Uncomment this when the change to both Models and Serialization is done
-                    //if (infos.ImageNumber != null)
-                    //{
-                    //    offlineListInfos.Add(new Formats.OfflineListInfo
-                    //    {
-                    //        Name = "imageNumber",
-                    //        Visible = infos.ImageNumber.Visible.AsYesNo(),
-                    //        InNamingOption = infos.ImageNumber.InNamingOption.AsYesNo(),
-                    //        Default = infos.ImageNumber.Default.AsYesNo(),
-                    //    });
-                    //}
+                    if (infos.ImageNumber != null)
+                    {
+                        offlineListInfos.Add(new Formats.OfflineListInfo
+                        {
+                            Name = "imageNumber",
+                            Visible = infos.ImageNumber.Visible.AsYesNo(),
+                            InNamingOption = infos.ImageNumber.InNamingOption.AsYesNo(),
+                            Default = infos.ImageNumber.Default.AsYesNo(),
+                        });
+                    }
                     if (infos.LanguageNumber != null)
                     {
                         offlineListInfos.Add(new Formats.OfflineListInfo

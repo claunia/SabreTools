@@ -53,7 +53,7 @@ namespace SabreTools.DatTools
             }
 
             // Ensure the output directory is set and created
-            outDir = (outDir ?? string.Empty).Ensure(create: true);
+            outDir = outDir.Ensure(create: true);
 
             InternalStopwatch watch = new($"Writing out internal dat to '{outDir}'");
 

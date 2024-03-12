@@ -45,7 +45,7 @@ in -old DAT file. Ignores those entries in -old that are not in -new.";
             string? outdat = GetString(features, OutStringValue);
 
             // Ensure the output directory
-            outdat = (outdat ?? string.Empty).Ensure(create: true);
+            outdat = outdat.Ensure(create: true);
 
             // Check that all required files exist
             if (!File.Exists(olddat))

@@ -171,7 +171,7 @@ namespace SabreTools.DatTools
                 reportName = "report";
 
             // Get the proper output directory name
-            outDir = (outDir ?? string.Empty).Ensure();
+            outDir = outDir.Ensure();
 
             InternalStopwatch watch = new($"Writing out report data to '{outDir}'");
 

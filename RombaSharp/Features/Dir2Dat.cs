@@ -44,7 +44,7 @@ namespace RombaSharp.Features
             string? outdat = GetString(features, OutStringValue);
 
             // Ensure the output directory
-            outdat = (outdat ?? string.Empty).Ensure(create: true);
+            outdat = outdat.Ensure(create: true);
 
             // Check that all required directories exist
             if (!Directory.Exists(source))

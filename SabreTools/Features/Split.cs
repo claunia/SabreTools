@@ -68,7 +68,7 @@ namespace SabreTools.Features
                 Parser.ParseInto(internalDat, file);
 
                 // Get the output directory
-                OutputDir = (OutputDir ?? string.Empty).Ensure();
+                OutputDir = OutputDir.Ensure();
                 OutputDir = file.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
 
                 // Extension splitting

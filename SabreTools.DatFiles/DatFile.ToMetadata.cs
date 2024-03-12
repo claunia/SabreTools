@@ -123,6 +123,14 @@ namespace SabreTools.DatFiles
                                 Default = info.Default.FromYesNo(),
                             };
                             break;
+                        case "imageNumber":
+                            infoItem.ImageNumber = new Models.OfflineList.ImageNumber
+                            {
+                                Visible = info.Visible.FromYesNo(),
+                                InNamingOption = info.InNamingOption.FromYesNo(),
+                                Default = info.Default.FromYesNo(),
+                            };
+                            break;
                         case "languageNumber":
                             infoItem.LanguageNumber = new Models.OfflineList.LanguageNumber
                             {
