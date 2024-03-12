@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
+using SabreTools.DatItems.Formats;
 
 namespace SabreTools.DatFiles
 {
@@ -227,9 +228,9 @@ namespace SabreTools.DatFiles
                 }
 
                 // Create mapping dictionaries for the Parts, DataAreas, and DiskAreas associated with this machine
-                Dictionary<string, Models.Metadata.Part> partMapping = [];
-                Dictionary<(string, string), Models.Metadata.DataArea> dataAreaMapping = [];
-                Dictionary<(string, string), Models.Metadata.DiskArea> diskAreaMapping = [];
+                Dictionary<Models.Metadata.Part, Models.Metadata.DatItem> partMappings = [];
+                Dictionary<(Models.Metadata.Part, Models.Metadata.DataArea), Models.Metadata.Rom> dataAreaMapping = [];
+                Dictionary<(Models.Metadata.Part, Models.Metadata.DiskArea), Models.Metadata.Disk> diskAreaMapping = [];
 
                 // Loop through and convert the items to respective lists
                 for (int index = 0; index < items.Count; index++)
@@ -292,7 +293,7 @@ namespace SabreTools.DatFiles
                             {
                                 var partItem = dipSwitchItem.Read<DatItems.Formats.Part>(DatItems.Formats.DipSwitch.PartKey);
                                 if (partItem != null)
-                                    partMapping[partItem.GetName()!] = partItem.GetInternalClone();
+                                    partMappings[partItem.GetInternalClone()] = dipSwitchItem;
                             }
 
                             break;
@@ -308,11 +309,11 @@ namespace SabreTools.DatFiles
                             {
                                 var partItem = diskItem.Read<DatItems.Formats.Part>(DatItems.Formats.Disk.PartKey);
                                 if (partItem != null)
-                                    partMapping[partItem.GetName()!] = partItem.GetInternalClone();
+                                    partMappings[partItem.GetInternalClone()] = diskItem;
 
                                 var diskAreaItem = diskItem.Read<DatItems.Formats.DiskArea>(DatItems.Formats.Disk.DiskAreaKey);
                                 if (diskAreaItem != null)
-                                    diskAreaMapping[(partItem!.GetName()!, diskAreaItem.GetName()!)] = diskAreaItem.GetInternalClone();
+                                    diskAreaMapping[(partItem!.GetInternalClone(), diskAreaItem.GetInternalClone())] = diskItem;
                             }
                             break;
                         case DatItems.Formats.Display display:
@@ -345,6 +346,20 @@ namespace SabreTools.DatFiles
                             EnsureMachineKey<Models.Metadata.Media?>(machine, Models.Metadata.Machine.MediaKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.MediaKey, mediaItem);
                             break;
+                        case DatItems.Formats.PartFeature partFeature:
+                            var partFeatureItem = partFeature.GetInternalClone();
+                            EnsureMachineKey<Models.Metadata.Feature?>(machine, Models.Metadata.Machine.FeatureKey);
+                            AppendToMachineKey(machine, Models.Metadata.Machine.FeatureKey, partFeatureItem);
+
+                            // Add Part mapping
+                            bool partFeatureContainsPart = partFeatureItem.ContainsKey(DatItems.Formats.PartFeature.PartKey);
+                            if (partFeatureContainsPart)
+                            {
+                                var partItem = partFeatureItem.Read<DatItems.Formats.Part>(DatItems.Formats.PartFeature.PartKey);
+                                if (partItem != null)
+                                    partMappings[partItem.GetInternalClone()] = partFeatureItem;
+                            }
+                            break;
                         case DatItems.Formats.Port port:
                             var portItem = ProcessItem(port);
                             EnsureMachineKey<Models.Metadata.Port?>(machine, Models.Metadata.Machine.PortKey);
@@ -372,11 +387,11 @@ namespace SabreTools.DatFiles
                             {
                                 var partItem = romItem.Read<DatItems.Formats.Part>(DatItems.Formats.Rom.PartKey);
                                 if (partItem != null)
-                                    partMapping[partItem.GetName()!] = partItem.GetInternalClone();
+                                    partMappings[partItem.GetInternalClone()] = romItem;
 
                                 var dataAreaItem = romItem.Read<DatItems.Formats.DataArea>(DatItems.Formats.Rom.DataAreaKey);
                                 if (dataAreaItem != null)
-                                    dataAreaMapping[(partItem!.GetName()!, dataAreaItem.GetName()!)] = dataAreaItem.GetInternalClone();
+                                    dataAreaMapping[(partItem!.GetInternalClone(), dataAreaItem.GetInternalClone())] = romItem;
                             }
                             break;
                         case DatItems.Formats.Sample sample:
@@ -405,6 +420,47 @@ namespace SabreTools.DatFiles
                             AppendToMachineKey(machine, Models.Metadata.Machine.SoundKey, soundItem);
                             break;
                     }
+                }
+
+                // Handle Part, DiskItem, and DatItem mappings, if they exist
+                if (partMappings.Any())
+                {
+                    // TODO: How do we aggregate the parts?
+                    //
+                    // One Part can contain multiple DataArea, DiskArea, DipSwitch, Feature (PartFeature)
+                    // One DataArea can contain multiple Rom
+                    // One DiskArea can contain multiple Disk
+                    //
+                    // If there is a DataArea mapping for the item, then we must have a Rom
+                    // If there is a DiskArea mapping for the item, then we must have a Disk
+                    // If neither exists, either it's either a DipSwitch or a Feature (PartFeature)
+                    //
+                    // If there's no DataArea mapping for a Rom, don't include it at all
+                    // If there's no DiskArea mapping for a Disk, don't include it at all
+
+                    // Create a collection to hold the inverted Parts
+                    Dictionary<string, Part> partItems = [];
+
+                    // Loop through the Part mappings
+                    foreach (var partMapping in partMappings)
+                    {
+                        // If the item has a DataArea mapping
+
+
+
+                        // If the item has a DiskArea mapping
+
+
+
+                        // Add the nested items to the Part
+
+
+
+                        // Aggregate in the part items dictionary based on Part name
+                    }
+
+                    // Assign the part array to the machine
+                    machine[Models.Metadata.Machine.PartKey] = partItems.Values.ToArray();
                 }
 
                 // Add the machine to the list
