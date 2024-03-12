@@ -287,7 +287,7 @@ namespace SabreTools.DatFiles
                             AppendToMachineKey(machine, Models.Metadata.Machine.DiskKey, diskItem);
                             break;
                         case DatItems.Formats.Display display:
-                            var displayItem = ProcessItem(display);
+                            var displayItem = ProcessItem(display, machine);
                             EnsureMachineKey<Models.Metadata.Display?>(machine, Models.Metadata.Machine.DisplayKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.DisplayKey, displayItem);
                             break;
@@ -495,7 +495,12 @@ namespace SabreTools.DatFiles
                 dipSwitchItem[Models.Metadata.DipSwitch.DipValueKey] = dipValueItems.ToArray();
             }
 
-            // TODO: Handle DipSwitch in Part inversion
+            // Create a Part for every DipSwitch that includes it
+            if (dipSwitchItem.ContainsKey(DatItems.Formats.DipSwitch.PartKey))
+            {
+                // TODO: Handle DipSwitch in Part inversion
+            }
+
 
             return dipSwitchItem;
         }
@@ -509,8 +514,12 @@ namespace SabreTools.DatFiles
         {
             var diskItem = item.GetInternalClone();
 
-            // TODO: Handle DipSwitch in Part inversion
-            // TODO: Handle DipSwitch in DiskArea inversion
+            // Create a Part and a DiskArea for every Disk that includes them
+            if (diskItem.ContainsKey(DatItems.Formats.Disk.PartKey) && diskItem.ContainsKey(DatItems.Formats.Disk.DiskAreaKey))
+            {
+                // TODO: Handle Disk in Part inversion
+                // TODO: Handle Disk in DiskArea inversion
+            }
 
             return diskItem;
         }
@@ -519,12 +528,25 @@ namespace SabreTools.DatFiles
         /// Convert Display information
         /// </summary>
         /// <param name="item">Item to convert</param>
-        /// <param name="machine">Machine to use for Part and DiskArea</param>
-        private static Models.Metadata.Display ProcessItem(DatItems.Formats.Display item)
+        /// <param name="machine">Machine to use for Video</param>
+        private static Models.Metadata.Display ProcessItem(DatItems.Formats.Display item, Models.Metadata.Machine machine)
         {
             var displayItem = item.GetInternalClone();
 
-            // TODO: Handle cases where it's actually a Video
+            // Create a Video for any item that has specific fields
+            if (displayItem.ContainsKey(Models.Metadata.Video.AspectXKey))
+            {
+                var videoItem = new Models.Metadata.Video();
+                videoItem[Models.Metadata.Video.AspectXKey] = displayItem.ReadLong(Models.Metadata.Video.AspectXKey).ToString();
+                videoItem[Models.Metadata.Video.AspectYKey] = displayItem.ReadLong(Models.Metadata.Video.AspectYKey).ToString();
+                videoItem[Models.Metadata.Video.HeightKey] = displayItem.ReadLong(Models.Metadata.Display.HeightKey).ToString();
+                videoItem[Models.Metadata.Video.RefreshKey] = displayItem.ReadDouble(Models.Metadata.Display.RefreshKey).ToString();
+                videoItem[Models.Metadata.Video.ScreenKey] = displayItem.ReadString(Models.Metadata.Display.DisplayTypeKey).AsEnumValue<DisplayType>().AsStringValue();
+                videoItem[Models.Metadata.Video.WidthKey] = displayItem.ReadLong(Models.Metadata.Display.WidthKey).ToString();
+
+                EnsureMachineKey<Models.Metadata.Video?>(machine, Models.Metadata.Machine.VideoKey);
+                AppendToMachineKey(machine, Models.Metadata.Machine.VideoKey, videoItem);
+            }
 
             return displayItem;
         }
@@ -674,8 +696,12 @@ namespace SabreTools.DatFiles
                     break;
             }
 
-            // TODO: Handle DipSwitch in Part inversion
-            // TODO: Handle DipSwitch in DataArea inversion
+            // Create a Part and a DataArea for every Rom that includes them
+            if (romItem.ContainsKey(DatItems.Formats.Rom.PartKey) && romItem.ContainsKey(DatItems.Formats.Rom.DataAreaKey))
+            {
+                // TODO: Handle Rom in Part inversion
+                // TODO: Handle Rom in DataArea inversion
+            }
 
             return romItem;
         }

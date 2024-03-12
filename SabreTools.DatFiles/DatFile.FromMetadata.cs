@@ -1833,13 +1833,13 @@ namespace SabreTools.DatFiles
                 if (datItem.GetInt64FieldValue(Models.Metadata.Video.AspectYKey) != null)
                     datItem.SetFieldValue<string?>(Models.Metadata.Video.AspectYKey, datItem.GetInt64FieldValue(Models.Metadata.Video.AspectYKey).ToString());
                 if (datItem.GetInt64FieldValue(Models.Metadata.Video.HeightKey) != null)
-                    datItem.SetFieldValue<string?>(Models.Metadata.Video.HeightKey, datItem.GetInt64FieldValue(Models.Metadata.Video.HeightKey).ToString());
+                    datItem.SetFieldValue<string?>(Models.Metadata.Display.HeightKey, datItem.GetInt64FieldValue(Models.Metadata.Video.HeightKey).ToString());
                 if (datItem.GetDoubleFieldValue(Models.Metadata.Video.RefreshKey) != null)
-                    datItem.SetFieldValue<string?>(Models.Metadata.Video.RefreshKey, datItem.GetDoubleFieldValue(Models.Metadata.Video.RefreshKey).ToString());
+                    datItem.SetFieldValue<string?>(Models.Metadata.Display.RefreshKey, datItem.GetDoubleFieldValue(Models.Metadata.Video.RefreshKey).ToString());
                 if (datItem.GetStringFieldValue(Models.Metadata.Video.ScreenKey) != null)
-                    datItem.SetFieldValue<string?>(Models.Metadata.Video.ScreenKey, datItem.GetStringFieldValue(Models.Metadata.Video.ScreenKey).AsEnumValue<DisplayType>().AsStringValue());
+                    datItem.SetFieldValue<string?>(Models.Metadata.Display.DisplayTypeKey, datItem.GetStringFieldValue(Models.Metadata.Video.ScreenKey).AsEnumValue<DisplayType>().AsStringValue());
                 if (datItem.GetInt64FieldValue(Models.Metadata.Video.WidthKey) != null)
-                    datItem.SetFieldValue<string?>(Models.Metadata.Video.WidthKey, datItem.GetInt64FieldValue(Models.Metadata.Video.WidthKey).ToString());
+                    datItem.SetFieldValue<string?>(Models.Metadata.Display.WidthKey, datItem.GetInt64FieldValue(Models.Metadata.Video.WidthKey).ToString());
 
                 ParseAddHelper(datItem, statsOnly);
             }
