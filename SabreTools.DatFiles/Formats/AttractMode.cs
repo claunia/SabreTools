@@ -1,9 +1,13 @@
-﻿namespace SabreTools.DatFiles.Formats
+﻿using System.Collections.Generic;
+using SabreTools.Core;
+using SabreTools.DatItems;
+
+namespace SabreTools.DatFiles.Formats
 {
     /// <summary>
     /// Represents an AttractMode DAT
     /// </summary>
-    internal partial class AttractMode : DatFile
+    internal sealed class AttractMode : SerializableDatFile<Models.AttractMode.MetadataFile, Serialization.Files.AttractMode, Serialization.CrossModel.AttractMode>
     {
         /// <summary>
         /// Constructor designed for casting a base DatFile
@@ -12,6 +16,27 @@
         public AttractMode(DatFile? datFile)
             : base(datFile)
         {
+        }
+
+        /// <inheritdoc/>
+        protected override ItemType[] GetSupportedTypes()
+        {
+            return
+            [
+                ItemType.Rom
+            ];
+        }
+
+        /// <inheritdoc/>
+        protected override List<string>? GetMissingRequiredFields(DatItem datItem)
+        {
+            var missingFields = new List<string>();
+
+            // Check item name
+            if (string.IsNullOrEmpty(datItem.GetName()))
+                missingFields.Add(Models.Metadata.Rom.NameKey);
+
+            return missingFields;
         }
     }
 }

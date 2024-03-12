@@ -1,9 +1,14 @@
-﻿namespace SabreTools.DatFiles.Formats
+﻿using System.Collections.Generic;
+using SabreTools.Core;
+using SabreTools.DatItems;
+using SabreTools.DatItems.Formats;
+
+namespace SabreTools.DatFiles.Formats
 {
     /// <summary>
     /// Represents an openMSX softawre list XML DAT
     /// </summary>
-    internal partial class OpenMSX : DatFile
+    internal sealed class OpenMSX : SerializableDatFile<Models.OpenMSX.SoftwareDb, Serialization.Files.OpenMSX, Serialization.CrossModel.OpenMSX>
     {
         /// <summary>
         /// DTD for original openMSX DATs
@@ -43,6 +48,35 @@ The softwaredb.xml file contains information about rom mapper types
         public OpenMSX(DatFile? datFile)
             : base(datFile)
         {
+        }
+
+        /// <inheritdoc/>
+        protected override ItemType[] GetSupportedTypes()
+        {
+            return
+            [
+                ItemType.Rom
+            ];
+        }
+
+        /// <inheritdoc/>
+        protected override List<string>? GetMissingRequiredFields(DatItem datItem)
+        {
+            var missingFields = new List<string>();
+
+            // Check item name
+            if (string.IsNullOrEmpty(datItem.GetName()))
+                missingFields.Add(Models.Metadata.Rom.NameKey);
+
+            switch (datItem)
+            {
+                case Rom rom:
+                    if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key)))
+                        missingFields.Add(Models.Metadata.Rom.SHA1Key);
+                    break;
+            }
+
+            return missingFields;
         }
     }
 }
