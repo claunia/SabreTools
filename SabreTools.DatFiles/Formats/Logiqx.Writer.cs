@@ -133,12 +133,16 @@ namespace SabreTools.DatFiles.Formats
             {
                 logger.User($"Writing to '{outfile}'...");
 
-                var datafile = CreateDatafile(ignoreblanks);
+                //var datafile = CreateDatafile(ignoreblanks);s
+
+                // Serialize the input file
+                var metadata = ConvertMetadata(ignoreblanks);
+                var datafile = new Serialization.CrossModel.Logiqx().Deserialize(metadata);
 
                 // Only write the doctype if we don't have No-Intro data
                 bool success;
                 if (string.IsNullOrEmpty(Header.GetStringFieldValue(Models.Metadata.Header.IdKey)))
-                    success = new Serialization.Files.Logiqx().SerializeToFileWithDocType(datafile, outfile);
+                    success = new Serialization.Files.Logiqx().SerializeToFileWithDocType(datafile!, outfile);
                 else
                     success = new Serialization.Files.Logiqx().Serialize(datafile, outfile);
 
