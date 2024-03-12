@@ -424,19 +424,6 @@ namespace SabreTools.DatFiles
                 // Handle Part, DiskItem, and DatItem mappings, if they exist
                 if (partMappings.Any())
                 {
-                    // TODO: How do we aggregate the parts?
-                    //
-                    // One Part can contain multiple DataArea, DiskArea, DipSwitch, Feature (PartFeature)
-                    // One DataArea can contain multiple Rom
-                    // One DiskArea can contain multiple Disk
-                    //
-                    // If there is a DataArea mapping for the item, then we must have a Rom
-                    // If there is a DiskArea mapping for the item, then we must have a Disk
-                    // If neither exists, either it's either a DipSwitch or a Feature (PartFeature)
-                    //
-                    // If there's no DataArea mapping for a Rom, don't include it at all
-                    // If there's no DiskArea mapping for a Disk, don't include it at all
-
                     // Create a collection to hold the inverted Parts
                     Dictionary<string, Models.Metadata.Part> partItems = [];
 
@@ -455,6 +442,11 @@ namespace SabreTools.DatFiles
                         // Create the part in the dictionary, if needed
                         if (!partItems.ContainsKey(partName))
                             partItems[partName] = [];
+
+                        // Copy over string values
+                        partItems[partName][Models.Metadata.Part.NameKey] = partName;
+                        if (!partItems[partName].ContainsKey(Models.Metadata.Part.InterfaceKey))
+                            partItems[partName][Models.Metadata.Part.InterfaceKey] = partItem.ReadString(Models.Metadata.Part.InterfaceKey);
 
                         // If the item has a DataArea mapping
                         if (dataAreaMappings.ContainsKey(partItem))
@@ -538,11 +530,31 @@ namespace SabreTools.DatFiles
                             }
                         }
 
-                        // Add the nested items to the Part
+                        // If the item is a DipSwitch
+                        if (datItem is Models.Metadata.DipSwitch dipSwitchItem)
+                        {
+                            // Get existing dipswitches as a list
+                            var dipSwitches = partItems[partName].Read<Models.Metadata.DipSwitch[]>(Models.Metadata.Part.DipSwitchKey)?.ToList() ?? [];
 
+                            // Add the dipswitch
+                            dipSwitches.Add(dipSwitchItem);
 
+                            // Assign back the dipswitches
+                            partItems[partName][Models.Metadata.Part.DipSwitchKey] = dipSwitches.ToArray();
+                        }
+                        
+                        // If the item is a Feature
+                        else if (datItem is Models.Metadata.Feature featureItem)
+                        {
+                            // Get existing features as a list
+                            var features = partItems[partName].Read<Models.Metadata.Feature[]>(Models.Metadata.Part.FeatureKey)?.ToList() ?? [];
 
-                        // Aggregate in the part items dictionary based on Part name
+                            // Add the feature
+                            features.Add(featureItem);
+
+                            // Assign back the features
+                            partItems[partName][Models.Metadata.Part.FeatureKey] = features.ToArray();
+                        }
                     }
 
                     // Assign the part array to the machine
