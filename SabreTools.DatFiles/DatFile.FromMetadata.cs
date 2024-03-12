@@ -1064,20 +1064,21 @@ namespace SabreTools.DatFiles
 
                 var item = new DatItems.Formats.Rom();
                 item.SetName(name);
-                item.SetFieldValue<string?>(Models.Metadata.Rom.OffsetKey, rom.ReadString(Models.Metadata.Rom.OffsetKey));
+                item.SetFieldValue<string?>(Models.Metadata.Rom.OffsetKey, rom.ReadString(Models.Metadata.Rom.StartKey));
                 item.SetFieldValue<string?>(Models.Metadata.Rom.OpenMSXMediaType, subType.AsStringValue());
-                item.SetFieldValue<string?>(Models.Metadata.Rom.OpenMSXType, rom.ReadString(Models.Metadata.Rom.OpenMSXType));
+                item.SetFieldValue<string?>(Models.Metadata.Rom.OpenMSXType, rom.ReadString(Models.Metadata.Rom.OpenMSXType) ?? rom.ReadString(Models.Metadata.Rom.TypeKey));
                 item.SetFieldValue<string?>(Models.Metadata.Rom.RemarkKey, rom.ReadString(Models.Metadata.Rom.RemarkKey));
                 item.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, rom.ReadString(Models.Metadata.Rom.SHA1Key));
+                item.SetFieldValue<string?>(Models.Metadata.Rom.StartKey, rom.ReadString(Models.Metadata.Rom.StartKey));
                 item.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
 
-                if (dump.Read<Models.OpenMSX.Original>(Models.Metadata.Dump.OriginalKey) != null)
+                if (dump.Read<Models.Metadata.Original>(Models.Metadata.Dump.OriginalKey) != null)
                 {
-                    var original = dump.Read<Models.OpenMSX.Original>(Models.Metadata.Dump.OriginalKey)!;
+                    var original = dump.Read<Models.Metadata.Original>(Models.Metadata.Dump.OriginalKey)!;
                     item.SetFieldValue<DatItems.Formats.Original?>("ORIGINAL", new DatItems.Formats.Original
                     {
-                        Value = original.Value.AsYesNo(),
-                        Content = original.Content,
+                        Value = original.ReadBool(Models.Metadata.Original.ValueKey),
+                        Content = original.ReadString(Models.Metadata.Original.ContentKey),
                     });
                 }
 

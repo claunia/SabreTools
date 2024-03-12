@@ -50,8 +50,12 @@ namespace SabreTools.DatFiles.Formats
                 logger.User($"Writing to '{outfile}'...");
 
                 // TODO: Write out comment prefix somehow
-                var softwaredb = CreateSoftwareDb(ignoreblanks);
-                if (!(new Serialization.Files.OpenMSX().SerializeToFileWithDocType(softwaredb, outfile)))
+                //var softwaredb = CreateSoftwareDb(ignoreblanks);
+
+                // Serialize the input file
+                var metadata = ConvertMetadata(ignoreblanks);
+                var softwaredb = new Serialization.CrossModel.OpenMSX().Deserialize(metadata);
+                if (!(new Serialization.Files.OpenMSX().SerializeToFileWithDocType(softwaredb!, outfile)))
                 {
                     logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
                     return false;
@@ -166,7 +170,7 @@ namespace SabreTools.DatFiles.Formats
                 _ => new Models.OpenMSX.Rom(),
             };
 
-            rom.Start = item.GetStringFieldValue(Models.Metadata.Rom.OffsetKey);
+            rom.Start = item.GetStringFieldValue(Models.Metadata.Rom.StartKey);
             rom.Type = item.GetStringFieldValue(Models.Metadata.Rom.OpenMSXType);
             rom.Hash = item.GetStringFieldValue(Models.Metadata.Rom.SHA1Key);
             rom.Remark = item.GetStringFieldValue(Models.Metadata.Rom.RemarkKey);

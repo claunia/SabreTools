@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using SabreTools.Core;
 using SabreTools.Core.Tools;
 
 namespace SabreTools.DatFiles
@@ -556,6 +557,94 @@ namespace SabreTools.DatFiles
         private static Models.Metadata.Rom ProcessItem(DatItems.Formats.Rom item, Models.Metadata.Machine machine)
         {
             var romItem = item.GetInternalClone();
+
+            // Create a Dump for every Rom that has a subtype
+            switch (romItem.ReadString(Models.Metadata.Rom.OpenMSXMediaType).AsEnumValue<OpenMSXSubType>())
+            {
+                case OpenMSXSubType.Rom:
+                    var dumpRom = new Models.Metadata.Dump();
+                    var rom = new Models.Metadata.Rom();
+
+                    rom[Models.Metadata.Rom.NameKey] = romItem.ReadString(Models.Metadata.Rom.NameKey);
+                    rom[Models.Metadata.Rom.OffsetKey] = romItem.ReadString(Models.Metadata.Rom.StartKey) ?? romItem.ReadString(Models.Metadata.Rom.OffsetKey);
+                    rom[Models.Metadata.Rom.OpenMSXType] = romItem.ReadString(Models.Metadata.Rom.OpenMSXType);
+                    rom[Models.Metadata.Rom.RemarkKey] = romItem.ReadString(Models.Metadata.Rom.RemarkKey);
+                    rom[Models.Metadata.Rom.SHA1Key] = romItem.ReadString(Models.Metadata.Rom.SHA1Key);
+                    rom[Models.Metadata.Rom.StartKey] = romItem.ReadString(Models.Metadata.Rom.StartKey) ?? romItem.ReadString(Models.Metadata.Rom.OffsetKey);
+
+                    dumpRom[Models.Metadata.Dump.RomKey] = rom;
+
+                    var romOriginal = romItem.Read<DatItems.Formats.Original>("ORIGINAL");
+                    if (romOriginal != null)
+                    {
+                        var newOriginal = new Models.Metadata.Original
+                        {
+                            [Models.Metadata.Original.ValueKey] = romOriginal.Value.FromYesNo(),
+                            [Models.Metadata.Original.ContentKey] = romOriginal.Content,
+                        };
+                        dumpRom[Models.Metadata.Dump.OriginalKey] = newOriginal;
+                    }
+
+                    EnsureMachineKey<Models.Metadata.Dump?>(machine, Models.Metadata.Machine.DumpKey);
+                    AppendToMachineKey(machine, Models.Metadata.Machine.DumpKey, dumpRom);
+                    break;
+
+                case OpenMSXSubType.MegaRom:
+                    var dumpMegaRom = new Models.Metadata.Dump();
+                    var megaRom = new Models.Metadata.Rom();
+
+                    megaRom[Models.Metadata.Rom.NameKey] = romItem.ReadString(Models.Metadata.Rom.NameKey);
+                    megaRom[Models.Metadata.Rom.OffsetKey] = romItem.ReadString(Models.Metadata.Rom.StartKey) ?? romItem.ReadString(Models.Metadata.Rom.OffsetKey);
+                    megaRom[Models.Metadata.Rom.OpenMSXType] = romItem.ReadString(Models.Metadata.Rom.OpenMSXType);
+                    megaRom[Models.Metadata.Rom.RemarkKey] = romItem.ReadString(Models.Metadata.Rom.RemarkKey);
+                    megaRom[Models.Metadata.Rom.SHA1Key] = romItem.ReadString(Models.Metadata.Rom.SHA1Key);
+                    megaRom[Models.Metadata.Rom.StartKey] = romItem.ReadString(Models.Metadata.Rom.StartKey) ?? romItem.ReadString(Models.Metadata.Rom.OffsetKey);
+
+                    dumpMegaRom[Models.Metadata.Dump.MegaRomKey] = megaRom;
+
+                    var megaRomOriginal = romItem.Read<DatItems.Formats.Original>("ORIGINAL");
+                    if (megaRomOriginal != null)
+                    {
+                        var newOriginal = new Models.Metadata.Original
+                        {
+                            [Models.Metadata.Original.ValueKey] = megaRomOriginal.Value.FromYesNo(),
+                            [Models.Metadata.Original.ContentKey] = megaRomOriginal.Content,
+                        };
+                        dumpMegaRom[Models.Metadata.Dump.OriginalKey] = newOriginal;
+                    }
+
+                    EnsureMachineKey<Models.Metadata.Dump?>(machine, Models.Metadata.Machine.DumpKey);
+                    AppendToMachineKey(machine, Models.Metadata.Machine.DumpKey, dumpMegaRom);
+                    break;
+
+                case OpenMSXSubType.SCCPlusCart:
+                    var dumpSccPlusCart = new Models.Metadata.Dump();
+                    var sccPlusCart = new Models.Metadata.Rom();
+
+                    sccPlusCart[Models.Metadata.Rom.NameKey] = romItem.ReadString(Models.Metadata.Rom.NameKey);
+                    sccPlusCart[Models.Metadata.Rom.OffsetKey] = romItem.ReadString(Models.Metadata.Rom.StartKey) ?? romItem.ReadString(Models.Metadata.Rom.OffsetKey);
+                    sccPlusCart[Models.Metadata.Rom.OpenMSXType] = romItem.ReadString(Models.Metadata.Rom.OpenMSXType);
+                    sccPlusCart[Models.Metadata.Rom.RemarkKey] = romItem.ReadString(Models.Metadata.Rom.RemarkKey);
+                    sccPlusCart[Models.Metadata.Rom.SHA1Key] = romItem.ReadString(Models.Metadata.Rom.SHA1Key);
+                    sccPlusCart[Models.Metadata.Rom.StartKey] = romItem.ReadString(Models.Metadata.Rom.StartKey) ?? romItem.ReadString(Models.Metadata.Rom.OffsetKey);
+
+                    dumpSccPlusCart[Models.Metadata.Dump.RomKey] = sccPlusCart;
+
+                    var sccPlusCartOriginal = romItem.Read<DatItems.Formats.Original>("ORIGINAL");
+                    if (sccPlusCartOriginal != null)
+                    {
+                        var newOriginal = new Models.Metadata.Original
+                        {
+                            [Models.Metadata.Original.ValueKey] = sccPlusCartOriginal.Value.FromYesNo(),
+                            [Models.Metadata.Original.ContentKey] = sccPlusCartOriginal.Content,
+                        };
+                        dumpSccPlusCart[Models.Metadata.Dump.OriginalKey] = newOriginal;
+                    }
+
+                    EnsureMachineKey<Models.Metadata.Dump?>(machine, Models.Metadata.Machine.DumpKey);
+                    AppendToMachineKey(machine, Models.Metadata.Machine.DumpKey, dumpSccPlusCart);
+                    break;
+            }
 
             // TODO: Handle DipSwitch in Part inversion
             // TODO: Handle DipSwitch in DataArea inversion
