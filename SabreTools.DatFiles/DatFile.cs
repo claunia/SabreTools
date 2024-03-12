@@ -283,7 +283,7 @@ namespace SabreTools.DatFiles
                     && !rom.HasHashes())
                 {
                     logger.Verbose($"{Header.GetStringFieldValue(DatHeader.FileNameKey)}: Incomplete entry for '{rom.GetName()}' will be output as nodump");
-                    rom.SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.Nodump);
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.StatusKey, ItemStatus.Nodump.AsStringValue());
                 }
 
                 item = rom;

@@ -1065,7 +1065,7 @@ namespace SabreTools.DatFiles
                 var item = new DatItems.Formats.Rom();
                 item.SetName(name);
                 item.SetFieldValue<string?>(Models.Metadata.Rom.OffsetKey, rom.ReadString(Models.Metadata.Rom.OffsetKey));
-                item.SetFieldValue<OpenMSXSubType>(Models.Metadata.Rom.OpenMSXMediaType, subType);
+                item.SetFieldValue<string?>(Models.Metadata.Rom.OpenMSXMediaType, subType.AsStringValue());
                 item.SetFieldValue<string?>(Models.Metadata.Rom.OpenMSXType, rom.ReadString(Models.Metadata.Rom.OpenMSXType));
                 item.SetFieldValue<string?>(Models.Metadata.Rom.RemarkKey, rom.ReadString(Models.Metadata.Rom.RemarkKey));
                 item.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, rom.ReadString(Models.Metadata.Rom.SHA1Key));

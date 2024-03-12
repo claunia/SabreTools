@@ -30,7 +30,7 @@ namespace SabreTools.DatItems.Formats
         {
             SetFieldValue<long?>(Models.Metadata.Video.AspectXKey, NumberHelper.ConvertToInt64(item.ReadString(Models.Metadata.Video.AspectXKey)));
             SetFieldValue<long?>(Models.Metadata.Video.AspectYKey, NumberHelper.ConvertToInt64(item.ReadString(Models.Metadata.Video.AspectYKey)));
-            SetFieldValue<DisplayType>(Models.Metadata.Display.DisplayTypeKey, item.ReadString(Models.Metadata.Video.ScreenKey)?.AsEnumValue<DisplayType>() ?? DisplayType.NULL);
+            SetFieldValue<string?>(Models.Metadata.Display.DisplayTypeKey, item.ReadString(Models.Metadata.Video.ScreenKey)?.AsEnumValue<DisplayType>().AsStringValue());
             SetFieldValue<long?>(Models.Metadata.Display.HeightKey, NumberHelper.ConvertToInt64(item.ReadString(Models.Metadata.Video.HeightKey)));
             SetFieldValue<double?>(Models.Metadata.Display.RefreshKey, NumberHelper.ConvertToDouble(item.ReadString(Models.Metadata.Video.RefreshKey)));
             SetFieldValue<long?>(Models.Metadata.Display.WidthKey, NumberHelper.ConvertToInt64(item.ReadString(Models.Metadata.Video.WidthKey)));

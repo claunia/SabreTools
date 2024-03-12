@@ -87,7 +87,7 @@ namespace SabreTools.DatItems.Formats
         public Rom() : base()
         {
             SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
-            SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.None);
+            SetFieldValue<string?>(Models.Metadata.Rom.StatusKey, ItemStatus.None.AsStringValue());
         }
 
         public Rom(BaseFile baseFile) : base()
@@ -104,13 +104,13 @@ namespace SabreTools.DatItems.Formats
             SetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey, System.Text.Encoding.UTF8.GetString(baseFile.SpamSum ?? []));
 
             SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
-            SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.None);
+            SetFieldValue<string?>(Models.Metadata.Rom.StatusKey, ItemStatus.None.AsStringValue());
         }
 
         public Rom(Models.Metadata.Rom item) : base(item)
         {
             SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
-            SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.None);
+            SetFieldValue<string?>(Models.Metadata.Rom.StatusKey, ItemStatus.None.AsStringValue());
         }
 
         #endregion

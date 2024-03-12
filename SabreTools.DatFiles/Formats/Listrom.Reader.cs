@@ -112,7 +112,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 var disk = new Disk();
                 disk.SetName(row.Name);
-                disk.SetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey, ItemStatus.None);
+                disk.SetFieldValue<string?>(Models.Metadata.Disk.StatusKey, ItemStatus.None.AsStringValue());
                 disk.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
 
                 if (!string.IsNullOrEmpty(row.MD5))
@@ -136,7 +136,7 @@ namespace SabreTools.DatFiles.Formats
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, row.SHA1);
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, NumberHelper.ConvertToInt64(row.Size).ToString());
                 rom.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
-                rom.SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.None);
+                rom.SetFieldValue<string?>(Models.Metadata.Rom.StatusKey, ItemStatus.None.AsStringValue());
 
                 // Now process and add the item
                 rom.CopyMachineInformation(machine);
@@ -152,7 +152,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 var disk = new Disk();
                 disk.SetName(row.Name);
-                disk.SetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey, ItemStatus.BadDump);
+                disk.SetFieldValue<string?>(Models.Metadata.Disk.StatusKey, ItemStatus.BadDump.AsStringValue());
                 disk.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
 
                 if (!string.IsNullOrEmpty(row.MD5))
@@ -174,7 +174,7 @@ namespace SabreTools.DatFiles.Formats
                 disk.SetFieldValue<string?>(Models.Metadata.Disk.MD5Key, null);
                 disk.SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, null);
                 disk.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
-                disk.SetFieldValue<ItemStatus?>(Models.Metadata.Disk.StatusKey, ItemStatus.Nodump);
+                disk.SetFieldValue<string?>(Models.Metadata.Disk.StatusKey, ItemStatus.Nodump.AsStringValue());
 
                 // Now process and add the item
                 disk.CopyMachineInformation(machine);
@@ -192,7 +192,7 @@ namespace SabreTools.DatFiles.Formats
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, row.SHA1);
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, NumberHelper.ConvertToInt64(row.Size).ToString());
                 rom.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
-                rom.SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.BadDump);
+                rom.SetFieldValue<string?>(Models.Metadata.Rom.StatusKey, ItemStatus.BadDump.AsStringValue());
 
                 // Now process and add the item
                 rom.CopyMachineInformation(machine);
@@ -209,7 +209,7 @@ namespace SabreTools.DatFiles.Formats
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, null);
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, NumberHelper.ConvertToInt64(row.Size).ToString());
                 rom.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
-                rom.SetFieldValue<ItemStatus>(Models.Metadata.Rom.StatusKey, ItemStatus.Nodump);
+                rom.SetFieldValue<string?>(Models.Metadata.Rom.StatusKey, ItemStatus.Nodump.AsStringValue());
 
                 // Now process and add the item
                 rom.CopyMachineInformation(machine);

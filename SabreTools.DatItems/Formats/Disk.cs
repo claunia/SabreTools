@@ -63,13 +63,13 @@ namespace SabreTools.DatItems.Formats
         public Disk() : base()
         {
             SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
-            SetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey, ItemStatus.None);
+            SetFieldValue<string?>(Models.Metadata.Disk.StatusKey, ItemStatus.None.AsStringValue());
         }
 
         public Disk(Models.Metadata.Disk item) : base(item)
         {
             SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
-            SetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey, ItemStatus.None);
+            SetFieldValue<string?>(Models.Metadata.Disk.StatusKey, ItemStatus.None.AsStringValue());
         }
 
         public Disk(BaseFile baseFile) : base()
@@ -79,7 +79,7 @@ namespace SabreTools.DatItems.Formats
             SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, TextHelper.ByteArrayToString(baseFile.SHA1));
 
             SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
-            SetFieldValue<ItemStatus>(Models.Metadata.Disk.StatusKey, ItemStatus.None);
+            SetFieldValue<string?>(Models.Metadata.Disk.StatusKey, ItemStatus.None.AsStringValue());
         }
 
         #endregion
