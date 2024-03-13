@@ -117,6 +117,22 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Remove all items marked for removal
+        /// </summary>
+        public void ClearMarked()
+        {
+            var itemIndices = _items.Keys;
+            foreach (long itemIndex in itemIndices)
+            {
+                var datItem = _items[itemIndex];
+                if (datItem == null || datItem.GetBoolFieldValue(DatItem.RemoveKey) != true)
+                    continue;
+
+                RemoveItem(itemIndex);
+            }
+        }
+
+        /// <summary>
         /// Get an item based on the index
         /// </summary>
         public DatItem? GetItemByIndex(long index)
