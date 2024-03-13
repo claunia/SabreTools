@@ -7,6 +7,7 @@ using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles.Formats;
 using SabreTools.Filter;
+using SabreTools.Serialization;
 
 namespace SabreTools.DatFiles
 {
@@ -207,8 +208,14 @@ namespace SabreTools.DatFiles
             if (string.IsNullOrEmpty(fieldName) || !_header.ContainsKey(fieldName!))
                 return default;
 
-            // Get the value based on the type
-            return _header.ReadDouble(fieldName!);
+            // Try to parse directly
+            double? doubleValue = _header.ReadDouble(fieldName!);
+            if (doubleValue != null)
+                return doubleValue;
+
+            // Try to parse from the string
+            string? stringValue = _header.ReadString(fieldName!);
+            return NumberHelper.ConvertToDouble(stringValue);
         }
 
         /// <summary>
@@ -222,8 +229,14 @@ namespace SabreTools.DatFiles
             if (string.IsNullOrEmpty(fieldName) || !_header.ContainsKey(fieldName!))
                 return default;
 
-            // Get the value based on the type
-            return _header.ReadLong(fieldName!);
+            // Try to parse directly
+            long? longValue = _header.ReadLong(fieldName!);
+            if (longValue != null)
+                return longValue;
+
+            // Try to parse from the string
+            string? stringValue = _header.ReadString(fieldName!);
+            return NumberHelper.ConvertToInt64(stringValue);
         }
 
         /// <summary>

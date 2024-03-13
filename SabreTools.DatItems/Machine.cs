@@ -2,6 +2,7 @@
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using SabreTools.Filter;
 
 namespace SabreTools.DatItems
@@ -107,8 +108,14 @@ namespace SabreTools.DatItems
             if (string.IsNullOrEmpty(fieldName) || !_machine.ContainsKey(fieldName!))
                 return default;
 
-            // Get the value based on the type
-            return _machine.ReadDouble(fieldName!);
+            // Try to parse directly
+            double? doubleValue = _machine.ReadDouble(fieldName!);
+            if (doubleValue != null)
+                return doubleValue;
+
+            // Try to parse from the string
+            string? stringValue = _machine.ReadString(fieldName!);
+            return NumberHelper.ConvertToDouble(stringValue);
         }
 
         /// <summary>
@@ -122,8 +129,14 @@ namespace SabreTools.DatItems
             if (string.IsNullOrEmpty(fieldName) || !_machine.ContainsKey(fieldName!))
                 return default;
 
-            // Get the value based on the type
-            return _machine.ReadLong(fieldName!);
+            // Try to parse directly
+            long? longValue = _machine.ReadLong(fieldName!);
+            if (longValue != null)
+                return longValue;
+
+            // Try to parse from the string
+            string? stringValue = _machine.ReadString(fieldName!);
+            return NumberHelper.ConvertToInt64(stringValue);
         }
 
         /// <summary>
