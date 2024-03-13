@@ -1,6 +1,7 @@
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
+using SabreTools.Logging;
 using Xunit;
 
 namespace SabreTools.Test.Core
