@@ -135,7 +135,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Get an item based on the index
         /// </summary>
-        public DatItem? GetItemByIndex(long index)
+        public DatItem? GetItem(long index)
         {
             if (!_items.ContainsKey(index))
                 return null;
@@ -146,7 +146,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Get a machine based on the index
         /// </summary>
-        public Machine? GetMachineByIndex(long index)
+        public Machine? GetMachine(long index)
         {
             if (!_machines.ContainsKey(index))
                 return null;
@@ -157,7 +157,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Get the machine associated with an item index
         /// </summary>
-        public Machine? GetMachineForItemByIndex(long itemIndex)
+        public Machine? GetMachineForItem(long itemIndex)
         {
             if (!_itemToMachineMapping.ContainsKey(itemIndex))
                 return null;
@@ -170,9 +170,29 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Get the items associated with a bucket name
+        /// </summary>
+        public DatItem[]? GetDatItemsForBucket(string bucketName)
+        {
+            if (!_buckets.ContainsKey(bucketName))
+                return null;
+
+            var itemIds = _buckets[bucketName];
+
+            var datItems = new List<DatItem>();
+            foreach (long itemId in itemIds)
+            {
+                if (_items.ContainsKey(itemId))
+                    datItems.Add(_items[itemId]);
+            }
+
+            return [.. datItems];
+        }
+
+        /// <summary>
         /// Get the items associated with a machine index
         /// </summary>
-        public DatItem[]? GetDatItemsForMachineByIndex(long machineIndex)
+        public DatItem[]? GetDatItemsForMachine(long machineIndex)
         {
             var itemIds = _itemToMachineMapping
                 .Where(mapping => mapping.Value == machineIndex)
@@ -185,7 +205,7 @@ namespace SabreTools.DatFiles
                     datItems.Add(_items[itemId]);
             }
 
-            return datItems.ToArray();
+            return [.. datItems];
         }
 
         /// <summary>
