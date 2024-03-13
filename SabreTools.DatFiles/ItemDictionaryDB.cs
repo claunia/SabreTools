@@ -1,20 +1,19 @@
-﻿#if NET462_OR_GREATER || NETCOREAPP
-
-using System;
-using System.Collections;
+﻿using System.Collections;
+#if NET40_OR_GREATER || NETCOREAPP
+using System.Collections.Concurrent;
+#endif
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+#if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
+#endif
 using System.Xml.Serialization;
-using Microsoft.Data.Sqlite;
 using Newtonsoft.Json;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using SabreTools.Hashing;
-using SabreTools.IO;
 using SabreTools.Logging;
 using SabreTools.Matching;
 
@@ -39,14 +38,22 @@ namespace SabreTools.DatFiles
         private DedupeType mergedBy;
 
         /// <summary>
-        /// Internal database connection for the class
+        /// Internal dictionary for all items
         /// </summary>
-        private readonly SqliteConnection? dbc = null;
+#if NET40_OR_GREATER || NETCOREAPP
+        private readonly ConcurrentDictionary<string, ConcurrentList<DatItem>?> items;
+#else
+        private readonly Dictionary<string, ConcurrentList<DatItem>?> items;
+#endif
 
         /// <summary>
-        /// Internal item dictionary name
+        /// Internal dictionary for all machines
         /// </summary>
-        private string? itemDictionaryFileName = null;
+#if NET40_OR_GREATER || NETCOREAPP
+        private readonly ConcurrentDictionary<string, Machine> machines;
+#else
+        private readonly Dictionary<string, Machine> machines;
+#endif
 
         /// <summary>
         /// Lock for statistics calculation
@@ -62,72 +69,16 @@ namespace SabreTools.DatFiles
 
         #region Publically available fields
 
-        #region Database
-
-        /// <summary>
-        /// Item dictionary file name
-        /// </summary>
-        public string? ItemDictionaryFileName
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(itemDictionaryFileName))
-                    itemDictionaryFileName = Path.Combine(PathTool.GetRuntimeDirectory(), $"itemDictionary{Guid.NewGuid()}.sqlite");
-
-                return itemDictionaryFileName;
-            }
-        }
-
-        /// <summary>
-        /// Item dictionary connection string
-        /// </summary>
-        public string ItemDictionaryConnectionString => $"Data Source={ItemDictionaryFileName};";
-
-        #endregion
-
         #region Keys
 
         /// <summary>
-        /// Get the keys from the file database
+        /// Get the keys from the file dictionary
         /// </summary>
         /// <returns>List of the keys</returns>
         [JsonIgnore, XmlIgnore]
         public ICollection<string> Keys
         {
-            get
-            {
-                // If we have no database connection, we can't do anything
-                if (dbc == null)
-                    return Array.Empty<string>();
-
-                // Open the database connection
-                dbc.Open();
-
-                string query = $"SELECT key FROM keys";
-                SqliteCommand slc = new(query, dbc);
-                SqliteDataReader sldr = slc.ExecuteReader();
-
-                List<string> keys = GetKeys();
-                if (sldr.HasRows)
-                {
-                    while (sldr.Read())
-                    {
-                        keys.Add(sldr.GetString(0));
-                    }
-                }
-
-                // Dispose of database objects
-                slc.Dispose();
-                sldr.Dispose();
-                dbc.Close();
-
-                return keys;
-            }
-        }
-
-        private static List<string> GetKeys()
-        {
-            return new List<string>();
+            get { return items.Keys; }
         }
 
         /// <summary>
@@ -135,14 +86,11 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <returns>List of the keys in sorted order</returns>
         [JsonIgnore, XmlIgnore]
-        public List<string>? SortedKeys
+        public List<string> SortedKeys
         {
             get
             {
-                if (Keys == null)
-                    return null;
-
-                var keys = Keys.ToList();
+                var keys = items.Keys.ToList();
                 keys.Sort(new NaturalComparer());
                 return keys;
             }
@@ -178,7 +126,7 @@ namespace SabreTools.DatFiles
         public long TotalSize { get; private set; } = 0;
 
         /// <summary>
-        /// Number of hashes for each hash type
+        /// Number of items for each hash type
         /// </summary>
         [JsonIgnore, XmlIgnore]
         public Dictionary<HashType, long> HashCounts { get; private set; } = [];
@@ -215,64 +163,17 @@ namespace SabreTools.DatFiles
                     // Ensure the key exists
                     EnsureKey(key);
 
-                    // If we have no database connection, we can't do anything
-                    if (dbc == null)
-                        return null;
-
-                    // Open the database connection
-                    dbc.Open();
-
-                    string query = $"SELECT item FROM groups WHERE key='{key}'";
-                    SqliteCommand slc = new(query, dbc);
-                    SqliteDataReader sldr = slc.ExecuteReader();
-
-                    ConcurrentList<DatItem> items = new();
-                    if (sldr.HasRows)
-                    {
-                        while (sldr.Read())
-                        {
-                            string itemString = sldr.GetString(0);
-                            DatItem? datItem = JsonConvert.DeserializeObject<DatItem>(itemString);
-                            if (datItem != null)
-                                items.Add(datItem);
-                        }
-                    }
-
-                    // Dispose of database objects
-                    slc.Dispose();
-                    sldr.Dispose();
-                    dbc.Close();
-
                     // Now return the value
-                    return items;
+                    return items[key];
                 }
             }
             set
             {
                 Remove(key);
                 if (value == null)
-                {
-                    // If we have no database connection, we can't do anything
-                    if (dbc == null)
-                        return;
-
-                    // Open the database connection
-                    dbc.Open();
-
-                    // Now remove the value
-                    string itemString = JsonConvert.SerializeObject(value);
-                    string query = $"DELETE FROM groups WHERE key='{key}'";
-                    SqliteCommand slc = new(query, dbc);
-                    slc.ExecuteNonQuery();
-
-                    // Dispose of database objects
-                    slc.Dispose();
-                    dbc.Close();
-                }
+                    items[key] = null;
                 else
-                {
                     AddRange(key, value);
-                }
             }
         }
 
@@ -293,22 +194,8 @@ namespace SabreTools.DatFiles
                 if (value == null)
                     return;
 
-                // If we have no database connection, we can't do anything
-                if (dbc == null)
-                    return;
-
-                // Open the database connection
-                dbc.Open();
-
                 // Now add the value
-                string itemString = JsonConvert.SerializeObject(value);
-                string query = $"INSERT INTO groups (key, item) VALUES ('{key}', '{itemString}')";
-                SqliteCommand slc = new(query, dbc);
-                slc.ExecuteNonQuery();
-
-                // Dispose of database objects
-                slc.Dispose();
-                dbc.Close();
+                items[key]!.Add(value);
 
                 // Now update the statistics
                 AddItemStatistics(value);
@@ -404,10 +291,7 @@ namespace SabreTools.DatFiles
                 EnsureKey(key);
 
                 // Now add the value
-                foreach (DatItem item in value)
-                {
-                    Add(key, item);
-                }
+                items[key]!.AddRange(value);
 
                 // Now update the statistics
                 foreach (DatItem item in value)
@@ -421,7 +305,7 @@ namespace SabreTools.DatFiles
         /// Add statistics from another DatStats object
         /// </summary>
         /// <param name="stats">DatStats object to add from</param>
-        public void AddStatistics(ItemDictionaryDB stats)
+        public void AddStatistics(ItemDictionary stats)
         {
             TotalCount += stats.Count;
 
@@ -464,7 +348,7 @@ namespace SabreTools.DatFiles
             // Explicit lock for some weird corner cases
             lock (key)
             {
-                return Keys?.Contains(key) == true;
+                return items.ContainsKey(key);
             }
         }
 
@@ -483,11 +367,11 @@ namespace SabreTools.DatFiles
             // Explicit lock for some weird corner cases
             lock (key)
             {
-                if (Keys?.Contains(key) != true)
-                    return false;
-
-                return this[key]?.Contains(value) == true;
+                if (items.ContainsKey(key) && items[key] != null)
+                    return items[key]!.Contains(value);
             }
+
+            return false;
         }
 
         /// <summary>
@@ -497,23 +381,12 @@ namespace SabreTools.DatFiles
         public void EnsureKey(string key)
         {
             // If the key is missing from the dictionary, add it
-            if (Keys?.Contains(key) == true)
-                return;
-
-            // If we have no database connection, we can't do anything
-            if (dbc == null)
-                return;
-
-            // Open the database connection
-            dbc.Open();
-
-            string query = $"INSERT INTO keys (key) VALUES ('{key}')";
-            SqliteCommand slc = new(query, dbc);
-            slc.ExecuteNonQuery();
-
-            // Dispose of database objects
-            slc.Dispose();
-            dbc.Close();
+            if (!items.ContainsKey(key))
+#if NET40_OR_GREATER || NETCOREAPP
+                items.TryAdd(key, []);
+#else
+                items[key] = [];
+#endif
         }
 
         /// <summary>
@@ -525,14 +398,14 @@ namespace SabreTools.DatFiles
             lock (key)
             {
                 // Get the list, if possible
-                ConcurrentList<DatItem>? fi = this[key];
+                ConcurrentList<DatItem>? fi = items[key];
                 if (fi == null)
-                    return new ConcurrentList<DatItem>();
+                    return [];
 
                 // Filter the list
                 return fi.Where(i => i != null)
                     .Where(i => i.GetBoolFieldValue(DatItem.RemoveKey) != true)
-                    .Where(i => i.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) != null)
+                    .Where(i => i.GetFieldValue<Machine>(DatItem.MachineKey) != null)
                     .ToConcurrentList();
             }
         }
@@ -547,18 +420,21 @@ namespace SabreTools.DatFiles
             lock (key)
             {
                 // If the key doesn't exist, return
-                if (!ContainsKey(key) || this[key] == null)
+                if (!ContainsKey(key) || items[key] == null)
                     return false;
 
                 // Remove the statistics first
-                foreach (DatItem item in this[key]!)
+                foreach (DatItem item in items[key]!)
                 {
                     RemoveItemStatistics(item);
                 }
 
                 // Remove the key from the dictionary
-                this[key] = null;
-                return true;
+#if NET40_OR_GREATER || NETCOREAPP
+                return items.TryRemove(key, out _);
+#else
+                return items.Remove(key);
+#endif
             }
         }
 
@@ -573,29 +449,13 @@ namespace SabreTools.DatFiles
             lock (key)
             {
                 // If the key and value doesn't exist, return
-                if (!Contains(key, value))
+                if (!Contains(key, value) || items[key] == null)
                     return false;
 
                 // Remove the statistics first
                 RemoveItemStatistics(value);
 
-                // If we have no database connection, we can't do anything
-                if (dbc == null)
-                    return false;
-
-                // Open the database connection
-                dbc.Open();
-
-                // Now remove the value
-                string itemString = JsonConvert.SerializeObject(value);
-                string query = $"DELETE FROM groups WHERE key='{key}' AND item='{itemString}'";
-                SqliteCommand slc = new(query, dbc);
-                slc.ExecuteNonQuery();
-
-                // Dispose of database objects
-                slc.Dispose();
-                dbc.Close();
-                return true;
+                return items[key]!.Remove(value);
             }
         }
 
@@ -606,17 +466,17 @@ namespace SabreTools.DatFiles
         public bool Reset(string key)
         {
             // If the key doesn't exist, return
-            if (!ContainsKey(key) || this[key] == null)
+            if (!ContainsKey(key) || items[key] == null)
                 return false;
 
             // Remove the statistics first
-            foreach (DatItem item in this[key]!)
+            foreach (DatItem item in items[key]!)
             {
                 RemoveItemStatistics(item);
             }
 
             // Remove the key from the dictionary
-            this[key] = null;
+            items[key] = [];
             return true;
         }
 
@@ -633,7 +493,7 @@ namespace SabreTools.DatFiles
         /// Remove from the statistics given a DatItem
         /// </summary>
         /// <param name="item">Item to remove info for</param>
-        public void RemoveItemStatistics(DatItem? item)
+        public void RemoveItemStatistics(DatItem item)
         {
             // If we have a null item, we can't do anything
             if (item == null)
@@ -861,50 +721,14 @@ namespace SabreTools.DatFiles
         {
             bucketedBy = ItemKey.NULL;
             mergedBy = DedupeType.None;
-            dbc = new SqliteConnection(ItemDictionaryConnectionString);
+#if NET40_OR_GREATER || NETCOREAPP
+            items = new ConcurrentDictionary<string, ConcurrentList<DatItem>?>();
+            machines = new ConcurrentDictionary<string, Machine>();
+#else
+            items = new Dictionary<string, ConcurrentList<DatItem>?>();
+            machines = new Dictionary<string, Machine>();
+#endif
             logger = new Logger(this);
-        }
-
-        #endregion
-
-        #region Database
-
-        /// <summary>
-        /// Ensure that the database exists and has the proper schema
-        /// </summary>
-        protected void EnsureDatabase()
-        {
-            // Make sure the file exists
-            if (ItemDictionaryFileName != null && !System.IO.File.Exists(ItemDictionaryFileName))
-                System.IO.File.Create(ItemDictionaryFileName);
-
-            // If we have no database connection, we can't do anything
-            if (dbc == null)
-                return;
-
-            // Open the database connection
-            dbc.Open();
-
-            // Make sure the database has the correct schema
-            string query = @"
-CREATE TABLE IF NOT EXISTS keys (
-    'key'		TEXT		NOT NULL
-    PRIMARY KEY (key)
-)";
-            SqliteCommand slc = new(query, dbc);
-            slc.ExecuteNonQuery();
-
-            query = @"
-CREATE TABLE IF NOT EXISTS groups (
-    'key'		TEXT		NOT NULL
-    'item`      TEXT        NOT NULL
-)";
-
-            slc = new SqliteCommand(query, dbc);
-            slc.ExecuteNonQuery();
-
-            slc.Dispose();
-            dbc.Close();
         }
 
         #endregion
@@ -920,8 +744,12 @@ CREATE TABLE IF NOT EXISTS groups (
         /// <param name="norename">True if games should only be compared on game and file name, false if system and source are counted</param>
         public void BucketBy(ItemKey bucketBy, DedupeType dedupeType, bool lower = true, bool norename = true)
         {
-            // If we have a situation where there's no database or no keys at all, we skip
-            if (dbc == null || Keys.Count == 0)
+            // If we have a situation where there's no dictionary or no keys at all, we skip
+#if NET40_OR_GREATER || NETCOREAPP
+            if (items == null || items.IsEmpty)
+#else
+            if (items == null || items.Count == 0)
+#endif
                 return;
 
             // If the sorted type isn't the same, we want to sort the dictionary accordingly
@@ -936,7 +764,8 @@ CREATE TABLE IF NOT EXISTS groups (
                 mergedBy = DedupeType.None;
 
                 // First do the initial sort of all of the roms inplace
-                List<string> oldkeys = Keys.ToList();
+                List<string> oldkeys = [.. Keys];
+
 #if NET452_OR_GREATER || NETCOREAPP
                 Parallel.For(0, oldkeys.Count, Globals.ParallelOptions, k =>
 #elif NET40_OR_GREATER
@@ -947,11 +776,7 @@ CREATE TABLE IF NOT EXISTS groups (
                 {
                     string key = oldkeys[k];
                     if (this[key] == null)
-#if NET40_OR_GREATER || NETCOREAPP
-                        return;
-#else
-                        continue;
-#endif
+                        Remove(key);
 
                     // Now add each of the roms to their respective keys
                     for (int i = 0; i < this[key]!.Count; i++)
@@ -990,7 +815,7 @@ CREATE TABLE IF NOT EXISTS groups (
                 // Set the sorted type
                 mergedBy = dedupeType;
 
-                List<string> keys = Keys.ToList();
+                List<string> keys = [.. Keys];
 #if NET452_OR_GREATER || NETCOREAPP
                 Parallel.ForEach(keys, Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
@@ -1002,7 +827,11 @@ CREATE TABLE IF NOT EXISTS groups (
                     // Get the possibly unsorted list
                     ConcurrentList<DatItem>? sortedlist = this[key]?.ToConcurrentList();
                     if (sortedlist == null)
+#if NET40_OR_GREATER || NETCOREAPP
                         return;
+#else
+                        continue;
+#endif
 
                     // Sort the list of items to be consistent
                     DatItem.Sort(ref sortedlist, false);
@@ -1023,7 +852,7 @@ CREATE TABLE IF NOT EXISTS groups (
             // If the merge type is the same, we want to sort the dictionary to be consistent
             else
             {
-                List<string> keys = Keys.ToList();
+                List<string> keys = [.. Keys];
 #if NET452_OR_GREATER || NETCOREAPP
                 Parallel.ForEach(keys, Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
@@ -1051,20 +880,28 @@ CREATE TABLE IF NOT EXISTS groups (
         /// </summary>
         public void ClearEmpty()
         {
-            var keys = Keys.Where(k => k != null).ToList();
+            var keys = items.Keys.Where(k => k != null).ToList();
             foreach (string key in keys)
             {
                 // If the key doesn't exist, skip
-                if (!Keys.Contains(key))
+                if (!items.ContainsKey(key))
                     continue;
 
                 // If the value is null, remove
-                else if (this[key] == null)
-                    this[key] = null;
+                else if (items[key] == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                    items.TryRemove(key, out _);
+#else
+                    items.Remove(key);
+#endif
 
                 // If there are no non-blank items, remove
-                else if (!this[key]!.Any(i => i != null && i is not Blank))
-                    this[key] = null;
+                else if (!items[key]!.Any(i => i != null && i is not Blank))
+#if NET40_OR_GREATER || NETCOREAPP
+                    items.TryRemove(key, out _);
+#else
+                    items.Remove(key);
+#endif
             }
         }
 
@@ -1073,13 +910,10 @@ CREATE TABLE IF NOT EXISTS groups (
         /// </summary>
         public void ClearMarked()
         {
-            if (Keys == null)
-                return;
-
-            var keys = Keys.ToList();
+            var keys = items.Keys.ToList();
             foreach (string key in keys)
             {
-                ConcurrentList<DatItem>? oldItemList = this[key];
+                ConcurrentList<DatItem>? oldItemList = items[key];
                 ConcurrentList<DatItem>? newItemList = oldItemList?.Where(i => i.GetBoolFieldValue(DatItem.RemoveKey) != true)?.ToConcurrentList();
 
                 Remove(key);
@@ -1095,7 +929,7 @@ CREATE TABLE IF NOT EXISTS groups (
         /// <returns>List of matched DatItem objects</returns>
         public ConcurrentList<DatItem> GetDuplicates(DatItem datItem, bool sorted = false)
         {
-            ConcurrentList<DatItem> output = new();
+            ConcurrentList<DatItem> output = [];
 
             // Check for an empty rom list first
             if (TotalCount == 0)
@@ -1105,12 +939,15 @@ CREATE TABLE IF NOT EXISTS groups (
             string key = SortAndGetKey(datItem, sorted);
 
             // If the key doesn't exist, return the empty list
-            if (!ContainsKey(key) || this[key] == null)
+            if (!ContainsKey(key))
                 return output;
 
             // Try to find duplicates
-            ConcurrentList<DatItem> roms = this[key]!;
-            ConcurrentList<DatItem> left = new();
+            ConcurrentList<DatItem>? roms = this[key];
+            if (roms == null)
+                return output;
+
+            ConcurrentList<DatItem> left = [];
             for (int i = 0; i < roms.Count; i++)
             {
                 DatItem other = roms[i];
@@ -1169,13 +1006,13 @@ CREATE TABLE IF NOT EXISTS groups (
             ResetStatistics();
 
             // If we have a blank Dat in any way, return
-            if (dbc == null || Keys == null)
+            if (items == null)
                 return;
 
             // Loop through and add
-            foreach (string key in Keys)
+            foreach (string key in items.Keys)
             {
-                ConcurrentList<DatItem>? datItems = this[key];
+                ConcurrentList<DatItem>? datItems = items[key];
                 if (datItems == null)
                     continue;
 
@@ -1256,30 +1093,52 @@ CREATE TABLE IF NOT EXISTS groups (
 
         #region IDictionary Implementations
 
-        public ICollection<ConcurrentList<DatItem>?> Values => throw new NotImplementedException();
+        public ICollection<ConcurrentList<DatItem>?> Values => ((IDictionary<string, ConcurrentList<DatItem>?>)items).Values;
 
-        public int Count => throw new NotImplementedException();
+        public int Count => ((ICollection<KeyValuePair<string, ConcurrentList<DatItem>?>>)items).Count;
 
-        public bool IsReadOnly => throw new NotImplementedException();
+        public bool IsReadOnly => ((ICollection<KeyValuePair<string, ConcurrentList<DatItem>?>>)items).IsReadOnly;
 
-        public bool TryGetValue(string key, out ConcurrentList<DatItem>? value) => throw new NotImplementedException();
+        public bool TryGetValue(string key, out ConcurrentList<DatItem>? value)
+        {
+            return ((IDictionary<string, ConcurrentList<DatItem>?>)items).TryGetValue(key, out value);
+        }
 
-        public void Add(KeyValuePair<string, ConcurrentList<DatItem>?> item) => throw new NotImplementedException();
+        public void Add(KeyValuePair<string, ConcurrentList<DatItem>?> item)
+        {
+            ((ICollection<KeyValuePair<string, ConcurrentList<DatItem>?>>)items).Add(item);
+        }
 
-        public void Clear() => throw new NotImplementedException();
+        public void Clear()
+        {
+            ((ICollection<KeyValuePair<string, ConcurrentList<DatItem>?>>)items).Clear();
+        }
 
-        public bool Contains(KeyValuePair<string, ConcurrentList<DatItem>?> item) => throw new NotImplementedException();
+        public bool Contains(KeyValuePair<string, ConcurrentList<DatItem>?> item)
+        {
+            return ((ICollection<KeyValuePair<string, ConcurrentList<DatItem>?>>)items).Contains(item);
+        }
 
-        public void CopyTo(KeyValuePair<string, ConcurrentList<DatItem>?>[] array, int arrayIndex) => throw new NotImplementedException();
+        public void CopyTo(KeyValuePair<string, ConcurrentList<DatItem>?>[] array, int arrayIndex)
+        {
+            ((ICollection<KeyValuePair<string, ConcurrentList<DatItem>?>>)items).CopyTo(array, arrayIndex);
+        }
 
-        public bool Remove(KeyValuePair<string, ConcurrentList<DatItem>?> item) => throw new NotImplementedException();
+        public bool Remove(KeyValuePair<string, ConcurrentList<DatItem>?> item)
+        {
+            return ((ICollection<KeyValuePair<string, ConcurrentList<DatItem>?>>)items).Remove(item);
+        }
 
-        public IEnumerator<KeyValuePair<string, ConcurrentList<DatItem>?>> GetEnumerator() => throw new NotImplementedException();
+        public IEnumerator<KeyValuePair<string, ConcurrentList<DatItem>?>> GetEnumerator()
+        {
+            return ((IEnumerable<KeyValuePair<string, ConcurrentList<DatItem>?>>)items).GetEnumerator();
+        }
 
-        IEnumerator IEnumerable.GetEnumerator() => throw new NotImplementedException();
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable)items).GetEnumerator();
+        }
 
         #endregion
     }
 }
-
-#endif
