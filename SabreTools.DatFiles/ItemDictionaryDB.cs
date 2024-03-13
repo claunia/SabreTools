@@ -3,9 +3,15 @@ using System.Collections.Concurrent;
 #endif
 using System.Collections.Generic;
 using System.Linq;
+#if NET40_OR_GREATER || NETCOREAPP
+using System.Threading.Tasks;
+#endif
 using System.Xml.Serialization;
 using Newtonsoft.Json;
+using SabreTools.Core;
 using SabreTools.DatItems;
+using SabreTools.DatItems.Formats;
+using SabreTools.Hashing;
 
 namespace SabreTools.DatFiles
 {
@@ -30,6 +36,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Current highest available item index
         /// </summary>
+        [JsonIgnore, XmlIgnore]
         private long _itemIndex = 0;
 
         /// <summary>
@@ -45,6 +52,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Current highest available machine index
         /// </summary>
+        [JsonIgnore, XmlIgnore]
         private long _machineIndex = 0;
 
         /// <summary>
@@ -57,7 +65,20 @@ namespace SabreTools.DatFiles
         private readonly Dictionary<long, long> _itemToMachineMapping = [];
 #endif
 
-        // TODO: Add another dictionary of string => ConcurrentList<long> representing a bucketed key to a set of item IDs
+        /// <summary>
+        /// Internal dictionary representing the current buckets
+        /// </summary>
+        [JsonIgnore, XmlIgnore]
+#if NET40_OR_GREATER || NETCOREAPP
+        private readonly ConcurrentDictionary<string, ConcurrentList<long>> _buckets = new ConcurrentDictionary<string, ConcurrentList<long>>();
+#else
+        private readonly Dictionary<string, ConcurrentList<long>> _buckets = [];
+#endif
+
+        /// <summary>
+        /// Current bucketed by value
+        /// </summary>
+        private ItemKey _bucketedBy = ItemKey.NULL;
 
         #endregion
 
@@ -202,6 +223,146 @@ namespace SabreTools.DatFiles
             return true;
         }
 
-#endregion
+        #endregion
+
+        #region Bucketing
+
+        /// <summary>
+        /// Update the bucketing dictionary
+        /// </summary>
+        /// <param name="bucketBy">ItemKey enum representing how to bucket the individual items</param>
+        /// <param name="lower">True if the key should be lowercased (default), false otherwise</param>
+        /// <param name="norename">True if games should only be compared on game and file name, false if system and source are counted</param>
+        /// <returns></returns>
+        public void UpdateBucketBy(ItemKey bucketBy, bool lower = true, bool norename = true)
+        {
+            // If the bucketing value is the same
+            if (bucketBy == _bucketedBy)
+                return;
+
+            // Reset the bucketing values
+            _bucketedBy = bucketBy;
+            _buckets.Clear();
+
+            // Get the current list of item indicies
+            long[] itemIndicies = _items.Keys.ToArray();
+
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.For(0, itemIndicies.Length, Globals.ParallelOptions, i =>
+#elif NET40_OR_GREATER
+            Parallel.For(0, itemIndicies.Length, i =>
+#else
+            for (int i = 0; i < itemIndicies.Length; i++)
+#endif
+            {
+                string? bucketKey = GetBucketKey(i, bucketBy);
+                EnsureBucketingKey(bucketKey);
+                _buckets[bucketKey].Add(i);
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
+        }
+
+        /// <summary>
+        /// Get the bucketing key for a given item index
+        /// </summary>
+        private string GetBucketKey(long itemIndex, ItemKey bucketBy)
+        {
+            if (!_items.ContainsKey(itemIndex))
+                return string.Empty;
+
+            var datItem = _items[itemIndex];
+            if (datItem == null)
+                return string.Empty;
+
+            if (!_itemToMachineMapping.ContainsKey(itemIndex))
+                return string.Empty;
+
+            long machineIndex = _itemToMachineMapping[itemIndex];
+            if (!_machines.ContainsKey(machineIndex))
+                return string.Empty;
+
+            var machine = _machines[machineIndex];
+            if (machine == null)
+                return string.Empty;
+
+            return bucketBy switch
+            {
+                ItemKey.Machine => machine.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty,
+                _ => GetBucketHashValue(datItem, bucketBy),
+            };
+        }
+
+        /// <summary>
+        /// Get the hash value for a given item, if possible
+        /// </summary>
+        private static string GetBucketHashValue(DatItem datItem, ItemKey bucketBy)
+        {
+            return datItem switch
+            {
+                Disk disk => bucketBy switch
+                {
+                    ItemKey.CRC => Constants.CRCZero,
+                    ItemKey.MD5 => disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key) ?? string.Empty,
+                    ItemKey.SHA1 => disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key) ?? string.Empty,
+                    ItemKey.SHA256 => Constants.SHA256Zero,
+                    ItemKey.SHA384 => Constants.SHA384Zero,
+                    ItemKey.SHA512 => Constants.SHA512Zero,
+                    ItemKey.SpamSum => Constants.SpamSumZero,
+                    _ => string.Empty,
+                },
+                Media media => bucketBy switch
+                {
+                    ItemKey.CRC => Constants.CRCZero,
+                    ItemKey.MD5 => media.GetStringFieldValue(Models.Metadata.Media.MD5Key) ?? string.Empty,
+                    ItemKey.SHA1 => media.GetStringFieldValue(Models.Metadata.Media.SHA1Key) ?? string.Empty,
+                    ItemKey.SHA256 => media.GetStringFieldValue(Models.Metadata.Media.SHA256Key) ?? string.Empty,
+                    ItemKey.SHA384 => Constants.SHA384Zero,
+                    ItemKey.SHA512 => Constants.SHA512Zero,
+                    ItemKey.SpamSum => media.GetStringFieldValue(Models.Metadata.Media.SpamSumKey) ?? string.Empty,
+                    _ => string.Empty,
+                },
+                Rom rom => bucketBy switch
+                {
+                    ItemKey.CRC => rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey) ?? string.Empty,
+                    ItemKey.MD5 => rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key) ?? string.Empty,
+                    ItemKey.SHA1 => rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key) ?? string.Empty,
+                    ItemKey.SHA256 => rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key) ?? string.Empty,
+                    ItemKey.SHA384 => rom.GetStringFieldValue(Models.Metadata.Rom.SHA384Key) ?? string.Empty,
+                    ItemKey.SHA512 => rom.GetStringFieldValue(Models.Metadata.Rom.SHA512Key) ?? string.Empty,
+                    ItemKey.SpamSum => rom.GetStringFieldValue(Models.Metadata.Rom.SpamSumKey) ?? string.Empty,
+                    _ => string.Empty,
+                },
+                _ => bucketBy switch
+                {
+                    ItemKey.CRC => Constants.CRCZero,
+                    ItemKey.MD5 => Constants.MD5Zero,
+                    ItemKey.SHA1 => Constants.SHA1Zero,
+                    ItemKey.SHA256 => Constants.SHA256Zero,
+                    ItemKey.SHA384 => Constants.SHA384Zero,
+                    ItemKey.SHA512 => Constants.SHA512Zero,
+                    ItemKey.SpamSum => Constants.SpamSumZero,
+                    _ => string.Empty,
+                },
+            };
+        }
+
+        /// <summary>
+        /// Ensure the key exists in the items dictionary
+        /// </summary>
+        private void EnsureBucketingKey(string key)
+        {
+            // If the key is missing from the dictionary, add it
+            if (!_buckets.ContainsKey(key))
+#if NET40_OR_GREATER || NETCOREAPP
+                _buckets.TryAdd(key, []);
+#else
+                _buckets[key] = [];
+#endif
+        }
+
+        #endregion
     }
 }
