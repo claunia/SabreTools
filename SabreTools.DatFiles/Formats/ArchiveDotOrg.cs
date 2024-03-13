@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using SabreTools.Core;
-using SabreTools.DatItems;
+﻿using SabreTools.Core;
 
 namespace SabreTools.DatFiles.Formats
 {
@@ -26,8 +24,5 @@ namespace SabreTools.DatFiles.Formats
                 ItemType.Rom,
             ];
         }
-
-        /// <inheritdoc/>
-        protected override List<string>? GetMissingRequiredFields(DatItem datItem) => null;
     }
 }
