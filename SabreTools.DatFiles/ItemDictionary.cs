@@ -391,122 +391,20 @@ namespace SabreTools.DatFiles
             if (bucketedBy != bucketBy && bucketBy != ItemKey.NULL)
             {
                 logger.User($"Organizing roms by {bucketBy}");
-
-                // Set the sorted type
-                bucketedBy = bucketBy;
-
-                // Reset the merged type since this might change the merge
-                mergedBy = DedupeType.None;
-
-                // First do the initial sort of all of the roms inplace
-                List<string> oldkeys = [.. Keys];
-
-#if NET452_OR_GREATER || NETCOREAPP
-                Parallel.For(0, oldkeys.Count, Globals.ParallelOptions, k =>
-#elif NET40_OR_GREATER
-                Parallel.For(0, oldkeys.Count, k =>
-#else
-                for (int k = 0; k < oldkeys.Count; k++)
-#endif
-                {
-                    string key = oldkeys[k];
-                    if (this[key] == null)
-                        Remove(key);
-
-                    // Now add each of the roms to their respective keys
-                    for (int i = 0; i < this[key]!.Count; i++)
-                    {
-                        DatItem item = this[key]![i];
-                        if (item == null)
-                            continue;
-
-                        // We want to get the key most appropriate for the given sorting type
-                        string newkey = item.GetKey(bucketBy, lower, norename);
-
-                        // If the key is different, move the item to the new key
-                        if (newkey != key)
-                        {
-                            Add(newkey, item);
-                            Remove(key, item);
-                            i--; // This make sure that the pointer stays on the correct since one was removed
-                        }
-                    }
-
-                    // If the key is now empty, remove it
-                    if (this[key]!.Count == 0)
-                        Remove(key);
-#if NET40_OR_GREATER || NETCOREAPP
-                });
-#else
-                }
-#endif
+                PerformBucketing(bucketBy, lower, norename);
             }
 
             // If the merge type isn't the same, we want to merge the dictionary accordingly
             if (mergedBy != dedupeType)
             {
                 logger.User($"Deduping roms by {dedupeType}");
-
-                // Set the sorted type
-                mergedBy = dedupeType;
-
-                List<string> keys = [.. Keys];
-#if NET452_OR_GREATER || NETCOREAPP
-                Parallel.ForEach(keys, Globals.ParallelOptions, key =>
-#elif NET40_OR_GREATER
-                Parallel.ForEach(keys, key =>
-#else
-                foreach (var key in keys)
-#endif
-                {
-                    // Get the possibly unsorted list
-                    ConcurrentList<DatItem>? sortedlist = this[key]?.ToConcurrentList();
-                    if (sortedlist == null)
-#if NET40_OR_GREATER || NETCOREAPP
-                        return;
-#else
-                        continue;
-#endif
-
-                    // Sort the list of items to be consistent
-                    DatItem.Sort(ref sortedlist, false);
-
-                    // If we're merging the roms, do so
-                    if (dedupeType == DedupeType.Full || (dedupeType == DedupeType.Game && bucketBy == ItemKey.Machine))
-                        sortedlist = DatItem.Merge(sortedlist);
-
-                    // Add the list back to the dictionary
-                    Reset(key);
-                    AddRange(key, sortedlist);
-#if NET40_OR_GREATER || NETCOREAPP
-                });
-#else
-                }
-#endif
+                PerformDeduplication(bucketBy, dedupeType);
             }
             // If the merge type is the same, we want to sort the dictionary to be consistent
             else
             {
-                List<string> keys = [.. Keys];
-#if NET452_OR_GREATER || NETCOREAPP
-                Parallel.ForEach(keys, Globals.ParallelOptions, key =>
-#elif NET40_OR_GREATER
-                Parallel.ForEach(keys, key =>
-#else
-                foreach (var key in keys)
-#endif
-                {
-                    // Get the possibly unsorted list
-                    ConcurrentList<DatItem>? sortedlist = this[key];
-
-                    // Sort the list of items to be consistent
-                    if (sortedlist != null)
-                        DatItem.Sort(ref sortedlist, false);
-#if NET40_OR_GREATER || NETCOREAPP
-                });
-#else
-                }
-#endif
+                logger.User($"Sorting roms by {bucketBy}");
+                PerformSorting();
             }
         }
 
@@ -692,6 +590,136 @@ namespace SabreTools.DatFiles
             // Otherwise, we bucket by CRC
             else
                 return ItemKey.CRC;
+        }
+
+        /// <summary>
+        /// Perform bucketing based on the item key provided
+        /// </summary>
+        /// <param name="bucketBy">ItemKey enum representing how to bucket the individual items</param>
+        /// <param name="lower">True if the key should be lowercased, false otherwise</param>
+        /// <param name="norename">True if games should only be compared on game and file name, false if system and source are counted</param>
+        private void PerformBucketing(ItemKey bucketBy, bool lower, bool norename)
+        {
+            // Set the sorted type
+            bucketedBy = bucketBy;
+
+            // Reset the merged type since this might change the merge
+            mergedBy = DedupeType.None;
+
+            // First do the initial sort of all of the roms inplace
+            List<string> oldkeys = [.. Keys];
+
+#if NET452_OR_GREATER || NETCOREAPP
+                Parallel.For(0, oldkeys.Count, Globals.ParallelOptions, k =>
+#elif NET40_OR_GREATER
+            Parallel.For(0, oldkeys.Count, k =>
+#else
+                for (int k = 0; k < oldkeys.Count; k++)
+#endif
+            {
+                string key = oldkeys[k];
+                if (this[key] == null)
+                    Remove(key);
+
+                // Now add each of the roms to their respective keys
+                for (int i = 0; i < this[key]!.Count; i++)
+                {
+                    DatItem item = this[key]![i];
+                    if (item == null)
+                        continue;
+
+                    // We want to get the key most appropriate for the given sorting type
+                    string newkey = item.GetKey(bucketBy, lower, norename);
+
+                    // If the key is different, move the item to the new key
+                    if (newkey != key)
+                    {
+                        Add(newkey, item);
+                        Remove(key, item);
+                        i--; // This make sure that the pointer stays on the correct since one was removed
+                    }
+                }
+
+                // If the key is now empty, remove it
+                if (this[key]!.Count == 0)
+                    Remove(key);
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+                }
+#endif
+        }
+
+        /// <summary>
+        /// Perform deduplication based on the deduplication type provided
+        /// </summary>
+        /// <param name="bucketBy">ItemKey enum representing how to bucket the individual items</param>
+        /// <param name="dedupeType">Dedupe type that should be used</param>
+        private void PerformDeduplication(ItemKey bucketBy, DedupeType dedupeType)
+        {
+            // Set the sorted type
+            mergedBy = dedupeType;
+
+            List<string> keys = [.. Keys];
+#if NET452_OR_GREATER || NETCOREAPP
+                Parallel.ForEach(keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(keys, key =>
+#else
+                foreach (var key in keys)
+#endif
+            {
+                // Get the possibly unsorted list
+                ConcurrentList<DatItem>? sortedlist = this[key]?.ToConcurrentList();
+                if (sortedlist == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                    return;
+#else
+                        continue;
+#endif
+
+                // Sort the list of items to be consistent
+                DatItem.Sort(ref sortedlist, false);
+
+                // If we're merging the roms, do so
+                if (dedupeType == DedupeType.Full || (dedupeType == DedupeType.Game && bucketBy == ItemKey.Machine))
+                    sortedlist = DatItem.Merge(sortedlist);
+
+                // Add the list back to the dictionary
+                Reset(key);
+                AddRange(key, sortedlist);
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+                }
+#endif
+        }
+
+        /// <summary>
+        /// Perform inplace sorting of the dictionary
+        /// </summary>
+        private void PerformSorting()
+        {
+            List<string> keys = [.. Keys];
+#if NET452_OR_GREATER || NETCOREAPP
+                Parallel.ForEach(keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(keys, key =>
+#else
+                foreach (var key in keys)
+#endif
+            {
+                // Get the possibly unsorted list
+                ConcurrentList<DatItem>? sortedlist = this[key];
+
+                // Sort the list of items to be consistent
+                if (sortedlist != null)
+                    DatItem.Sort(ref sortedlist, false);
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+                }
+#endif
         }
 
         /// <summary>
