@@ -412,31 +412,29 @@ namespace SabreTools.DatFiles
 #endif
         }
 
-        // TODO: Rewrite this to get the machine name from the mapping dictionary and not from the item itself
-
         /// <summary>
         /// Sort a list of File objects by SourceID, Game, and Name (in order)
         /// </summary>
         /// <param name="itemMappings">List of File objects representing the roms to be sorted</param>
         /// <param name="norename">True if files are not renamed, false otherwise</param>
         /// <returns>True if it sorted correctly, false otherwise</returns>
-        private static bool Sort(ref List<(long, DatItem)> itemMappings, bool norename)
+        private bool Sort(ref List<(long, DatItem)> itemMappings, bool norename)
         {
             itemMappings.Sort(delegate ((long, DatItem) x, (long, DatItem) y)
             {
                 try
                 {
-                    NaturalComparer nc = new();
+                    var nc = new NaturalComparer();
 
                     // Get all required values
                     string? xDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(x.Item2.GetName() ?? string.Empty));
-                    string? xMachineName = x.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    string? xMachineName = _machines[_itemToMachineMapping[x.Item1]].GetStringFieldValue(Models.Metadata.Machine.NameKey);
                     string? xName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(x.Item2.GetName() ?? string.Empty));
                     int? xSourceIndex = x.Item2.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
                     string? xType = x.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
 
                     string? yDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(y.Item2.GetName() ?? string.Empty));
-                    string? yMachineName = y.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    string? yMachineName = _machines[_itemToMachineMapping[y.Item1]].GetStringFieldValue(Models.Metadata.Machine.NameKey);
                     string? yName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(y.Item2.GetName() ?? string.Empty));
                     int? ySourceIndex = y.Item2.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
                     string? yType = y.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
@@ -478,6 +476,8 @@ namespace SabreTools.DatFiles
 
             return true;
         }
+
+        // TODO: Write a method that deduplicates items based on any of the fields selected
 
         #endregion
     }
