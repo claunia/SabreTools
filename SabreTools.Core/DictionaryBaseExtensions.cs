@@ -49,9 +49,9 @@ namespace SabreTools.Core
         #region Conversion
 
         /// <summary>
-        /// Convert a DatItem to a Rom
+        /// Convert a DictionaryBase to a Rom
         /// </summary>
-        public static Rom? ConvertToRom(this DatItem? self)
+        public static Rom? ConvertToRom(this DictionaryBase? self)
         {
             // If the DatItem is missing, we can't do anything
             if (self == null)
@@ -334,7 +334,7 @@ namespace SabreTools.Core
         /// <summary>
         /// Returns if any hashes exist
         /// </summary>
-        public static bool HasHashes(this DatItem self)
+        public static bool HasHashes(this DictionaryBase self)
         {
             return self switch
             {
@@ -348,7 +348,7 @@ namespace SabreTools.Core
         /// <summary>
         /// Returns if all of the hashes are set to their 0-byte values or null
         /// </summary>
-        public static bool HasZeroHash(this DatItem self)
+        public static bool HasZeroHash(this DictionaryBase self)
         {
             return self switch
             {
@@ -530,9 +530,9 @@ namespace SabreTools.Core
         #region Information Filling
 
         /// <summary>
-        /// Fill any missing size and hash information from another DatItem
+        /// Fill any missing size and hash information from another DictionaryBase
         /// </summary>
-        public static void FillMissingHashes(this DatItem? self, DatItem? other)
+        public static void FillMissingHashes(this DictionaryBase? self, DictionaryBase? other)
         {
             if (self == null || other == null)
                 return;
@@ -655,7 +655,7 @@ namespace SabreTools.Core
         /// <summary>
         /// Get unique duplicate suffix on name collision
         /// </summary>
-        public static string GetDuplicateSuffix(this DatItem? self)
+        public static string GetDuplicateSuffix(this DictionaryBase? self)
         {
             if (self == null)
                 return string.Empty;

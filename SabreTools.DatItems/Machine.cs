@@ -10,7 +10,7 @@ namespace SabreTools.DatItems
     /// Represents the information specific to a set/game/machine
     /// </summary>
     [JsonObject("machine"), XmlRoot("machine")]
-    public class Machine : ModelBackedItem<Models.Metadata.Machine>, ICloneable
+    public sealed class Machine : ModelBackedItem<Models.Metadata.Machine>, ICloneable
     {
         #region Constants
 

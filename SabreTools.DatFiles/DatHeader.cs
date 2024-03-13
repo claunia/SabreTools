@@ -14,7 +14,7 @@ namespace SabreTools.DatFiles
     /// Represents all possible DAT header information
     /// </summary>
     [JsonObject("header"), XmlRoot("header")]
-    public class DatHeader : ModelBackedItem<Models.Metadata.Header>, ICloneable
+    public sealed class DatHeader : ModelBackedItem<Models.Metadata.Header>, ICloneable
     {
         #region Constants
 
