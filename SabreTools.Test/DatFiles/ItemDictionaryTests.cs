@@ -189,9 +189,10 @@ namespace SabreTools.Test.DatFiles
         [Fact]
         public void ResetStatisticsTest()
         {
-            var dict = new ItemDictionary { GameCount = 1 };
-            dict.ResetStatistics();
-            Assert.Equal(0, dict.GameCount);
+            var dict = new ItemDictionary();
+            dict.DatStatistics.GameCount = 1;
+            dict.DatStatistics.ResetStatistics();
+            Assert.Equal(0, dict.DatStatistics.GameCount);
         }
     }
 }

@@ -55,7 +55,7 @@ namespace SabreTools.DatTools
             #region Perform setup
 
             // If the DAT is not populated and inverse is not set, inform the user and quit
-            if (datFile.Items.TotalCount == 0 && !inverse)
+            if (datFile.Items.DatStatistics.TotalCount == 0 && !inverse)
             {
                 logger.User("No entries were found to rebuild, exiting...");
                 return false;
@@ -205,7 +205,7 @@ namespace SabreTools.DatTools
             #region Perform setup
 
             // If the DAT is not populated and inverse is not set, inform the user and quit
-            if (datFile.Items.TotalCount == 0 && !inverse)
+            if (datFile.Items.DatStatistics.TotalCount == 0 && !inverse)
             {
                 logger.User("No entries were found to rebuild, exiting...");
                 return false;

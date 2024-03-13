@@ -42,7 +42,7 @@ namespace SabreTools.DatTools
         public static (DatFile? extADat, DatFile? extBDat) SplitByExtension(DatFile datFile, List<string> extA, List<string> extB)
         {
             // If roms is empty, return false
-            if (datFile.Items.TotalCount == 0)
+            if (datFile.Items.DatStatistics.TotalCount == 0)
                 return (null, null);
 
             InternalStopwatch watch = new($"Splitting DAT by extension");

@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Xml;
+using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.Hashing;
 using SabreTools.Logging;
@@ -228,7 +229,7 @@ body {
 
             xtw.WriteStartElement("td");
             xtw.WriteAttributeString("align", "right");
-            xtw.WriteString(GetBytesReadable(stat.Statistics!.TotalSize));
+            xtw.WriteString(GetBytesReadable(stat.TotalSize));
             xtw.WriteEndElement(); // td
 
             xtw.WriteStartElement("td");
@@ -238,39 +239,39 @@ body {
 
             xtw.WriteStartElement("td");
             xtw.WriteAttributeString("align", "right");
-            xtw.WriteString(stat.Statistics.GetItemCount(ItemType.Rom).ToString());
+            xtw.WriteString(stat.GetItemCount(ItemType.Rom).ToString());
             xtw.WriteEndElement(); // td
 
             xtw.WriteStartElement("td");
             xtw.WriteAttributeString("align", "right");
-            xtw.WriteString(stat.Statistics.GetItemCount(ItemType.Disk).ToString());
+            xtw.WriteString(stat.GetItemCount(ItemType.Disk).ToString());
             xtw.WriteEndElement(); // td
 
             xtw.WriteStartElement("td");
             xtw.WriteAttributeString("align", "right");
-            xtw.WriteString(stat.Statistics.GetHashCount(HashType.CRC32).ToString());
+            xtw.WriteString(stat.GetHashCount(HashType.CRC32).ToString());
             xtw.WriteEndElement(); // td
 
             xtw.WriteStartElement("td");
             xtw.WriteAttributeString("align", "right");
-            xtw.WriteString(stat.Statistics.GetHashCount(HashType.MD5).ToString());
+            xtw.WriteString(stat.GetHashCount(HashType.MD5).ToString());
             xtw.WriteEndElement(); // td
 
             xtw.WriteStartElement("td");
             xtw.WriteAttributeString("align", "right");
-            xtw.WriteString(stat.Statistics.GetHashCount(HashType.SHA1).ToString());
+            xtw.WriteString(stat.GetHashCount(HashType.SHA1).ToString());
             xtw.WriteEndElement(); // td
 
             xtw.WriteStartElement("td");
             xtw.WriteAttributeString("align", "right");
-            xtw.WriteString(stat.Statistics.GetHashCount(HashType.SHA256).ToString());
+            xtw.WriteString(stat.GetHashCount(HashType.SHA256).ToString());
             xtw.WriteEndElement(); // td
 
             if (baddumpCol)
             {
                 xtw.WriteStartElement("td");
                 xtw.WriteAttributeString("align", "right");
-                xtw.WriteString(stat.Statistics.GetStatusCount(ItemStatus.BadDump).ToString());
+                xtw.WriteString(stat.GetStatusCount(ItemStatus.BadDump).ToString());
                 xtw.WriteEndElement(); // td
             }
 
@@ -278,7 +279,7 @@ body {
             {
                 xtw.WriteStartElement("td");
                 xtw.WriteAttributeString("align", "right");
-                xtw.WriteString(stat.Statistics.GetStatusCount(ItemStatus.Nodump).ToString());
+                xtw.WriteString(stat.GetStatusCount(ItemStatus.Nodump).ToString());
                 xtw.WriteEndElement(); // td
             }
 

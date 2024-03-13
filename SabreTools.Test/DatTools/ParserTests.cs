@@ -43,7 +43,7 @@ namespace SabreTools.Test.DatTools
         
             var datFile = SabreTools.DatTools.Parser.CreateAndParse(filename, throwOnError: true);
             Assert.Equal(datFormat, datFile.Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey));
-            Assert.Equal(totalCount, datFile.Items.TotalCount);
+            Assert.Equal(totalCount, datFile.Items.DatStatistics.TotalCount);
         }
     }
 }

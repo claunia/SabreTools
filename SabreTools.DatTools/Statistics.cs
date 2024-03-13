@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices.ComTypes;
+
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
 #endif
@@ -50,7 +52,6 @@ namespace SabreTools.DatTools
             // Init total
             DatStatistics totalStats = new()
             {
-                Statistics = [],
                 DisplayName = "DIR: All DATs",
                 MachineCount = 0,
                 IsDirectory = true,
@@ -60,7 +61,6 @@ namespace SabreTools.DatTools
             string? lastdir = null;
             DatStatistics dirStats = new()
             {
-                Statistics = [],
                 MachineCount = 0,
                 IsDirectory = true,
             };
@@ -79,11 +79,10 @@ namespace SabreTools.DatTools
 #else
                     dirStats.DisplayName = $"DIR: {WebUtility.HtmlEncode(lastdir)}";
 #endif
-                    dirStats.MachineCount = dirStats.Statistics.GameCount;
+                    dirStats.MachineCount = dirStats.GameCount;
                     stats.Add(dirStats);
                     dirStats = new DatStatistics
                     {
-                        Statistics = [],
                         MachineCount = 0,
                         IsDirectory = true,
                     };
@@ -97,23 +96,20 @@ namespace SabreTools.DatTools
                 // Add single DAT stats (if asked)
                 if (single)
                 {
-                    DatStatistics individualStats = new()
-                    {
-                        Statistics = datdata.Items,
-                        DisplayName = datdata.Header.GetStringFieldValue(DatHeader.FileNameKey),
-                        MachineCount = datdata.Items.Keys.Count,
-                        IsDirectory = false,
-                    };
+                    DatStatistics individualStats = datdata.Items.DatStatistics;
+                    individualStats.DisplayName = datdata.Header.GetStringFieldValue(DatHeader.FileNameKey);
+                    individualStats.MachineCount = datdata.Items.Keys.Count;
+                    individualStats.IsDirectory = false;
                     stats.Add(individualStats);
                 }
 
                 // Add single DAT stats to dir
-                dirStats.Statistics.AddStatistics(datdata.Items);
-                dirStats.Statistics.GameCount += datdata.Items.Keys.Count;
+                dirStats.AddStatistics(datdata.Items.DatStatistics);
+                dirStats.GameCount += datdata.Items.Keys.Count;
 
                 // Add single DAT stats to totals
-                totalStats.Statistics.AddStatistics(datdata.Items);
-                totalStats.Statistics.GameCount += datdata.Items.Keys.Count;
+                totalStats.AddStatistics(datdata.Items.DatStatistics);
+                totalStats.GameCount += datdata.Items.Keys.Count;
 
                 // Make sure to assign the new directory
                 lastdir = thisdir;
@@ -129,12 +125,12 @@ namespace SabreTools.DatTools
 #else
                 dirStats.DisplayName = $"DIR: {WebUtility.HtmlEncode(lastdir)}";
 #endif
-                dirStats.MachineCount = dirStats.Statistics.GameCount;
+                dirStats.MachineCount = dirStats.GameCount;
                 stats.Add(dirStats);
             }
 
             // Add total DAT stats
-            totalStats.MachineCount = totalStats.Statistics.GameCount;
+            totalStats.MachineCount = totalStats.GameCount;
             stats.Add(totalStats);
 
             return stats;

@@ -71,7 +71,7 @@ namespace SabreTools.DatTools
             datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None);
 
             // Output the number of items we're going to be writing
-            logger.User($"A total of {datFile.Items.TotalCount - datFile.Items.RemovedCount} items will be written out to '{datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)}'");
+            logger.User($"A total of {datFile.Items.DatStatistics.TotalCount - datFile.Items.DatStatistics.RemovedCount} items will be written out to '{datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)}'");
 
             // Get the outfile names
             Dictionary<DatFormat, string> outfiles = datFile.Header.CreateOutFileNames(outDir!, overwrite);
@@ -121,24 +121,22 @@ namespace SabreTools.DatTools
         /// <param name="datFile">Current DatFile object to write from</param>
         public static void WriteStatsToConsole(DatFile datFile)
         {
-            long diskCount = datFile.Items.GetItemCount(ItemType.Disk);
-            long mediaCount = datFile.Items.GetItemCount(ItemType.Media);
-            long romCount = datFile.Items.GetItemCount(ItemType.Rom);
+            long diskCount = datFile.Items.DatStatistics.GetItemCount(ItemType.Disk);
+            long mediaCount = datFile.Items.DatStatistics.GetItemCount(ItemType.Media);
+            long romCount = datFile.Items.DatStatistics.GetItemCount(ItemType.Rom);
 
             if (diskCount + mediaCount + romCount == 0)
                 datFile.Items.RecalculateStats();
 
             datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
+            datFile.Items.DatStatistics.DisplayName = datFile.Header.GetStringFieldValue(DatHeader.FileNameKey);
+            datFile.Items.DatStatistics.MachineCount = datFile.Items.Keys.Count;
+            datFile.Items.DatStatistics.IsDirectory = false;
+
             var statsList = new List<DatStatistics>
             {
-                new()
-                {
-                    Statistics = datFile.Items,
-                    DisplayName = datFile.Header.GetStringFieldValue(DatHeader.FileNameKey),
-                    MachineCount = datFile.Items.Keys.Count,
-                    IsDirectory = false,
-                },
+                datFile.Items.DatStatistics,
             };
             var consoleOutput = BaseReport.Create(StatReportFormat.None, statsList);
             consoleOutput!.WriteToFile(null, true, true);
@@ -210,11 +208,11 @@ namespace SabreTools.DatTools
             datFile.Items.RecalculateStats();
 
             // If there's nothing there, abort
-            if (datFile.Items.TotalCount == 0)
+            if (datFile.Items.DatStatistics.TotalCount == 0)
                 return false;
 
             // If every item is removed, abort
-            if (datFile.Items.TotalCount == datFile.Items.RemovedCount)
+            if (datFile.Items.DatStatistics.TotalCount == datFile.Items.DatStatistics.RemovedCount)
                 return false;
 
             return true;

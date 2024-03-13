@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-
+using SabreTools.DatFiles;
 using SabreTools.Logging;
 using SabreTools.Reports.Formats;
 

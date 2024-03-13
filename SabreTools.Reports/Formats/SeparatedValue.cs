@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.Hashing;
 using SabreTools.IO.Writers;
@@ -130,18 +131,18 @@ namespace SabreTools.Reports.Formats
             string[] values =
             [
                 stat.DisplayName!,
-                stat.Statistics!.TotalSize.ToString(),
+                stat.TotalSize.ToString(),
                 stat.MachineCount.ToString(),
-                stat.Statistics.GetItemCount(ItemType.Rom).ToString(),
-                stat.Statistics.GetItemCount(ItemType.Disk).ToString(),
-                stat.Statistics.GetHashCount(HashType.CRC32).ToString(),
-                stat.Statistics.GetHashCount(HashType.MD5).ToString(),
-                stat.Statistics.GetHashCount(HashType.SHA1).ToString(),
-                stat.Statistics.GetHashCount(HashType.SHA256).ToString(),
-                stat.Statistics.GetHashCount(HashType.SHA384).ToString(),
-                stat.Statistics.GetHashCount(HashType.SHA512).ToString(),
-                baddumpCol ? stat.Statistics.GetStatusCount(ItemStatus.BadDump).ToString() : string.Empty,
-                nodumpCol ? stat.Statistics.GetStatusCount(ItemStatus.Nodump).ToString() : string.Empty,
+                stat.GetItemCount(ItemType.Rom).ToString(),
+                stat.GetItemCount(ItemType.Disk).ToString(),
+                stat.GetHashCount(HashType.CRC32).ToString(),
+                stat.GetHashCount(HashType.MD5).ToString(),
+                stat.GetHashCount(HashType.SHA1).ToString(),
+                stat.GetHashCount(HashType.SHA256).ToString(),
+                stat.GetHashCount(HashType.SHA384).ToString(),
+                stat.GetHashCount(HashType.SHA512).ToString(),
+                baddumpCol ? stat.GetStatusCount(ItemStatus.BadDump).ToString() : string.Empty,
+                nodumpCol ? stat.GetStatusCount(ItemStatus.Nodump).ToString() : string.Empty,
             ];
             svw.WriteValues(values);
             svw.Flush();

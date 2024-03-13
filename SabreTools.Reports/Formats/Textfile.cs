@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.Hashing;
 using SabreTools.Logging;
@@ -92,22 +93,22 @@ namespace SabreTools.Reports.Formats
         {
             string line = @"'" + stat.DisplayName + @"':
 --------------------------------------------------
-    Uncompressed size:       " + GetBytesReadable(stat.Statistics!.TotalSize) + @"
+    Uncompressed size:       " + GetBytesReadable(stat!.TotalSize) + @"
     Games found:             " + stat.MachineCount + @"
-    Roms found:              " + stat.Statistics.GetItemCount(ItemType.Rom) + @"
-    Disks found:             " + stat.Statistics.GetItemCount(ItemType.Disk) + @"
-    Roms with CRC:           " + stat.Statistics.GetHashCount(HashType.CRC32) + @"
-    Roms with MD5:           " + stat.Statistics.GetHashCount(HashType.MD5) + @"
-    Roms with SHA-1:         " + stat.Statistics.GetHashCount(HashType.SHA1) + @"
-    Roms with SHA-256:       " + stat.Statistics.GetHashCount(HashType.SHA256) + @"
-    Roms with SHA-384:       " + stat.Statistics.GetHashCount(HashType.SHA384) + @"
-    Roms with SHA-512:       " + stat.Statistics.GetHashCount(HashType.SHA512) + "\n";
+    Roms found:              " + stat.GetItemCount(ItemType.Rom) + @"
+    Disks found:             " + stat.GetItemCount(ItemType.Disk) + @"
+    Roms with CRC:           " + stat.GetHashCount(HashType.CRC32) + @"
+    Roms with MD5:           " + stat.GetHashCount(HashType.MD5) + @"
+    Roms with SHA-1:         " + stat.GetHashCount(HashType.SHA1) + @"
+    Roms with SHA-256:       " + stat.GetHashCount(HashType.SHA256) + @"
+    Roms with SHA-384:       " + stat.GetHashCount(HashType.SHA384) + @"
+    Roms with SHA-512:       " + stat.GetHashCount(HashType.SHA512) + "\n";
 
             if (baddumpCol)
-                line += "	Roms with BadDump status: " + stat.Statistics.GetStatusCount(ItemStatus.BadDump) + "\n";
+                line += "	Roms with BadDump status: " + stat.GetStatusCount(ItemStatus.BadDump) + "\n";
 
             if (nodumpCol)
-                line += "	Roms with Nodump status: " + stat.Statistics.GetStatusCount(ItemStatus.Nodump) + "\n";
+                line += "	Roms with Nodump status: " + stat.GetStatusCount(ItemStatus.Nodump) + "\n";
 
             // For spacing between DATs
             line += "\n\n";

@@ -296,7 +296,7 @@ namespace SabreTools.DatFiles
             if (statsOnly)
             {
                 Items.EnsureKey(key);
-                Items.AddItemStatistics(item);
+                Items.DatStatistics.AddItemStatistics(item);
             }
             else
             {

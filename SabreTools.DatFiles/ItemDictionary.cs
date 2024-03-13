@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
-using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using SabreTools.Hashing;
@@ -49,11 +48,6 @@ namespace SabreTools.DatFiles
 #else
         private readonly Dictionary<string, ConcurrentList<DatItem>?> items;
 #endif
-
-        /// <summary>
-        /// Lock for statistics calculation
-        /// </summary>
-        private readonly object statsLock = new();
 
         /// <summary>
         /// Logging object
@@ -96,47 +90,10 @@ namespace SabreTools.DatFiles
         #region Statistics
 
         /// <summary>
-        /// Overall item count
+        /// DAT statistics
         /// </summary>
         [JsonIgnore, XmlIgnore]
-        public long TotalCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of items for each item type
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public Dictionary<ItemType, long> ItemCounts { get; private set; } = [];
-
-        /// <summary>
-        /// Number of machines
-        /// </summary>
-        /// <remarks>Special count only used by statistics output</remarks>
-        [JsonIgnore, XmlIgnore]
-        public long GameCount { get; set; } = 0;
-
-        /// <summary>
-        /// Total uncompressed size
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long TotalSize { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of items for each hash type
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public Dictionary<HashType, long> HashCounts { get; private set; } = [];
-
-        /// <summary>
-        /// Number of items for each item status
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public Dictionary<ItemStatus, long> StatusCounts { get; private set; } = [];
-
-        /// <summary>
-        /// Number of items with the remove flag
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long RemovedCount { get; private set; } = 0;
+        public DatStatistics DatStatistics { get; } = new DatStatistics();
 
         #endregion
 
@@ -193,7 +150,7 @@ namespace SabreTools.DatFiles
                 items[key]!.Add(value);
 
                 // Now update the statistics
-                AddItemStatistics(value);
+                DatStatistics.AddItemStatistics(value);
             }
         }
 
@@ -205,67 +162,6 @@ namespace SabreTools.DatFiles
         public void Add(string key, ConcurrentList<DatItem>? value)
         {
             AddRange(key, value);
-        }
-
-        /// <summary>
-        /// Add to the statistics given a DatItem
-        /// </summary>
-        /// <param name="item">Item to add info from</param>
-        public void AddItemStatistics(DatItem item)
-        {
-            lock (statsLock)
-            {
-                // No matter what the item is, we increment the count
-                TotalCount++;
-
-                // Increment removal count
-                if (item.GetBoolFieldValue(DatItem.RemoveKey) == true)
-                    RemovedCount++;
-
-                // Increment the item count for the type
-                AddItemCount(item.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>());
-
-                // Some item types require special processing
-                switch (item)
-                {
-                    case Disk disk:
-                        if (disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() != ItemStatus.Nodump)
-                        {
-                            AddHashCount(HashType.MD5, string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key)) ? 0 : 1);
-                            AddHashCount(HashType.SHA1, string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)) ? 0 : 1);
-                        }
-
-                        AddStatusCount(ItemStatus.BadDump, disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.BadDump ? 1 : 0);
-                        AddStatusCount(ItemStatus.Good, disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Good ? 1 : 0);
-                        AddStatusCount(ItemStatus.Nodump, disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump ? 1 : 0);
-                        AddStatusCount(ItemStatus.Verified, disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Verified ? 1 : 0);
-                        break;
-                    case Media media:
-                        AddHashCount(HashType.MD5, string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.MD5Key)) ? 0 : 1);
-                        AddHashCount(HashType.SHA1, string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA1Key)) ? 0 : 1);
-                        AddHashCount(HashType.SHA256, string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA256Key)) ? 0 : 1);
-                        AddHashCount(HashType.SpamSum, string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SpamSumKey)) ? 0 : 1);
-                        break;
-                    case Rom rom:
-                        if (rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() != ItemStatus.Nodump)
-                        {
-                            TotalSize += rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) ?? 0;
-                            AddHashCount(HashType.CRC32, string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey)) ? 0 : 1);
-                            AddHashCount(HashType.MD5, string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key)) ? 0 : 1);
-                            AddHashCount(HashType.SHA1, string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key)) ? 0 : 1);
-                            AddHashCount(HashType.SHA256, string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key)) ? 0 : 1);
-                            AddHashCount(HashType.SHA384, string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA384Key)) ? 0 : 1);
-                            AddHashCount(HashType.SHA512, string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA512Key)) ? 0 : 1);
-                            AddHashCount(HashType.SpamSum, string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SpamSumKey)) ? 0 : 1);
-                        }
-
-                        AddStatusCount(ItemStatus.BadDump, rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.BadDump ? 1 : 0);
-                        AddStatusCount(ItemStatus.Good, rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Good ? 1 : 0);
-                        AddStatusCount(ItemStatus.Nodump, rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump ? 1 : 0);
-                        AddStatusCount(ItemStatus.Verified, rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Verified ? 1 : 0);
-                        break;
-                }
-            }
         }
 
         /// <summary>
@@ -291,42 +187,9 @@ namespace SabreTools.DatFiles
                 // Now update the statistics
                 foreach (DatItem item in value)
                 {
-                    AddItemStatistics(item);
+                    DatStatistics.AddItemStatistics(item);
                 }
             }
-        }
-
-        /// <summary>
-        /// Add statistics from another DatStats object
-        /// </summary>
-        /// <param name="stats">DatStats object to add from</param>
-        public void AddStatistics(ItemDictionary stats)
-        {
-            TotalCount += stats.Count;
-
-            // Loop through and add stats for all items
-            foreach (var itemCountKvp in stats.ItemCounts)
-            {
-                AddItemCount(itemCountKvp.Key, itemCountKvp.Value);
-            }
-
-            GameCount += stats.GameCount;
-
-            TotalSize += stats.TotalSize;
-
-            // Individual hash counts
-            foreach (var hashCountKvp in stats.HashCounts)
-            {
-                AddHashCount(hashCountKvp.Key, hashCountKvp.Value);
-            }
-
-            // Individual status counts
-            foreach (var statusCountKvp in stats.StatusCounts)
-            {
-                AddStatusCount(statusCountKvp.Key, statusCountKvp.Value);
-            }
-
-            RemovedCount += stats.RemovedCount;
         }
 
         /// <summary>
@@ -421,7 +284,7 @@ namespace SabreTools.DatFiles
                 // Remove the statistics first
                 foreach (DatItem item in items[key]!)
                 {
-                    RemoveItemStatistics(item);
+                    DatStatistics.RemoveItemStatistics(item);
                 }
 
                 // Remove the key from the dictionary
@@ -448,7 +311,7 @@ namespace SabreTools.DatFiles
                     return false;
 
                 // Remove the statistics first
-                RemoveItemStatistics(value);
+                DatStatistics.RemoveItemStatistics(value);
 
                 return items[key]!.Remove(value);
             }
@@ -467,7 +330,7 @@ namespace SabreTools.DatFiles
             // Remove the statistics first
             foreach (DatItem item in items[key]!)
             {
-                RemoveItemStatistics(item);
+                DatStatistics.RemoveItemStatistics(item);
             }
 
             // Remove the key from the dictionary
@@ -482,227 +345,6 @@ namespace SabreTools.DatFiles
         public void SetBucketedBy(ItemKey newBucket)
         {
             bucketedBy = newBucket;
-        }
-
-        /// <summary>
-        /// Remove from the statistics given a DatItem
-        /// </summary>
-        /// <param name="item">Item to remove info for</param>
-        public void RemoveItemStatistics(DatItem item)
-        {
-            // If we have a null item, we can't do anything
-            if (item == null)
-                return;
-
-            lock (statsLock)
-            {
-                // No matter what the item is, we decrease the count
-                TotalCount--;
-
-                // Decrement removal count
-                if (item.GetBoolFieldValue(DatItem.RemoveKey) == true)
-                    RemovedCount--;
-
-                // Decrement the item count for the type
-                RemoveItemCount(item.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>());
-
-                // Some item types require special processing
-                switch (item)
-                {
-                    case Disk disk:
-                        if (disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() != ItemStatus.Nodump)
-                        {
-                            RemoveHashCount(HashType.MD5, string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key)) ? 0 : 1);
-                            RemoveHashCount(HashType.SHA1, string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)) ? 0 : 1);
-                        }
-
-                        RemoveStatusCount(ItemStatus.BadDump, disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.BadDump ? 1 : 0);
-                        RemoveStatusCount(ItemStatus.Good, disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Good ? 1 : 0);
-                        RemoveStatusCount(ItemStatus.Nodump, disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump ? 1 : 0);
-                        RemoveStatusCount(ItemStatus.Verified, disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Verified ? 1 : 0);
-                        break;
-                    case Media media:
-                        RemoveHashCount(HashType.MD5, string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.MD5Key)) ? 0 : 1);
-                        RemoveHashCount(HashType.SHA1, string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA1Key)) ? 0 : 1);
-                        RemoveHashCount(HashType.SHA256, string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA256Key)) ? 0 : 1);
-                        RemoveHashCount(HashType.SpamSum, string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SpamSumKey)) ? 0 : 1);
-                        break;
-                    case Rom rom:
-                        if (rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() != ItemStatus.Nodump)
-                        {
-                            TotalSize -= rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) ?? 0;
-                            RemoveHashCount(HashType.CRC32, string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey)) ? 0 : 1);
-                            RemoveHashCount(HashType.MD5, string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key)) ? 0 : 1);
-                            RemoveHashCount(HashType.SHA1, string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key)) ? 0 : 1);
-                            RemoveHashCount(HashType.SHA256, string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key)) ? 0 : 1);
-                            RemoveHashCount(HashType.SHA384, string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA384Key)) ? 0 : 1);
-                            RemoveHashCount(HashType.SHA512, string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA512Key)) ? 0 : 1);
-                            RemoveHashCount(HashType.SpamSum, string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SpamSumKey)) ? 0 : 1);
-                        }
-
-                        RemoveStatusCount(ItemStatus.BadDump, rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.BadDump ? 1 : 0);
-                        RemoveStatusCount(ItemStatus.Good, rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Good ? 1 : 0);
-                        RemoveStatusCount(ItemStatus.Nodump, rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump ? 1 : 0);
-                        RemoveStatusCount(ItemStatus.Verified, rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Verified ? 1 : 0);
-                        break;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Get the item count for a given hash type, defaulting to 0 if it does not exist
-        /// </summary>
-        /// <param name="hashType">Hash type to retrieve</param>
-        /// <returns>The number of items with that hash, if it exists</returns>
-        public long GetHashCount(HashType hashType)
-        {
-            lock (HashCounts)
-            {
-                if (!HashCounts.ContainsKey(hashType))
-                    return 0;
-
-                return HashCounts[hashType];
-            }
-        }
-
-        /// <summary>
-        /// Get the item count for a given item type, defaulting to 0 if it does not exist
-        /// </summary>
-        /// <param name="itemType">Item type to retrieve</param>
-        /// <returns>The number of items of that type, if it exists</returns>
-        public long GetItemCount(ItemType itemType)
-        {
-            lock (ItemCounts)
-            {
-                if (!ItemCounts.ContainsKey(itemType))
-                    return 0;
-
-                return ItemCounts[itemType];
-            }
-        }
-
-        /// <summary>
-        /// Get the item count for a given item status, defaulting to 0 if it does not exist
-        /// </summary>
-        /// <param name="itemStatus">Item status to retrieve</param>
-        /// <returns>The number of items of that type, if it exists</returns>
-        public long GetStatusCount(ItemStatus itemStatus)
-        {
-            lock (StatusCounts)
-            {
-                if (!StatusCounts.ContainsKey(itemStatus))
-                    return 0;
-
-                return StatusCounts[itemStatus];
-            }
-        }
-
-        /// <summary>
-        /// Increment the hash count for a given hash type
-        /// </summary>
-        /// <param name="hashType">Hash type to increment</param>
-        /// <param name="interval">Amount to increment by, defaults to 1</param>
-        private void AddHashCount(HashType hashType, long interval = 1)
-        {
-            lock (HashCounts)
-            {
-                if (!HashCounts.ContainsKey(hashType))
-                    HashCounts[hashType] = 0;
-
-                HashCounts[hashType] += interval;
-                if (HashCounts[hashType] < 0)
-                    HashCounts[hashType] = 0;
-            }
-        }
-
-        /// <summary>
-        /// Decrement the hash count for a given hash type
-        /// </summary>
-        /// <param name="hashType">Hash type to increment</param>
-        /// <param name="interval">Amount to increment by, defaults to 1</param>
-        private void RemoveHashCount(HashType hashType, long interval = 1)
-        {
-            lock (HashCounts)
-            {
-                if (!HashCounts.ContainsKey(hashType))
-                    return;
-
-                HashCounts[hashType] -= interval;
-                if (HashCounts[hashType] < 0)
-                    HashCounts[hashType] = 0;
-            }
-        }
-
-        /// <summary>
-        /// Increment the item count for a given item type
-        /// </summary>
-        /// <param name="itemType">Item type to increment</param>
-        /// <param name="interval">Amount to increment by, defaults to 1</param>
-        private void AddItemCount(ItemType itemType, long interval = 1)
-        {
-            lock (ItemCounts)
-            {
-                if (!ItemCounts.ContainsKey(itemType))
-                    ItemCounts[itemType] = 0;
-
-                ItemCounts[itemType] += interval;
-                if (ItemCounts[itemType] < 0)
-                    ItemCounts[itemType] = 0;
-            }
-        }
-
-        /// <summary>
-        /// Decrement the item count for a given item type
-        /// </summary>
-        /// <param name="itemType">Item type to decrement</param>
-        /// <param name="interval">Amount to increment by, defaults to 1</param>
-        private void RemoveItemCount(ItemType itemType, long interval = 1)
-        {
-            lock (ItemCounts)
-            {
-                if (!ItemCounts.ContainsKey(itemType))
-                    return;
-
-                ItemCounts[itemType] -= interval;
-                if (ItemCounts[itemType] < 0)
-                    ItemCounts[itemType] = 0;
-            }
-        }
-
-        /// <summary>
-        /// Increment the item count for a given item status
-        /// </summary>
-        /// <param name="itemStatus">Item type to increment</param>
-        /// <param name="interval">Amount to increment by, defaults to 1</param>
-        private void AddStatusCount(ItemStatus itemStatus, long interval = 1)
-        {
-            lock (StatusCounts)
-            {
-                if (!StatusCounts.ContainsKey(itemStatus))
-                    StatusCounts[itemStatus] = 0;
-
-                StatusCounts[itemStatus] += interval;
-                if (StatusCounts[itemStatus] < 0)
-                    StatusCounts[itemStatus] = 0;
-            }
-        }
-
-        /// <summary>
-        /// Decrement the item count for a given item status
-        /// </summary>
-        /// <param name="itemStatus">Item type to decrement</param>
-        /// <param name="interval">Amount to increment by, defaults to 1</param>
-        private void RemoveStatusCount(ItemStatus itemStatus, long interval = 1)
-        {
-            lock (StatusCounts)
-            {
-                if (!StatusCounts.ContainsKey(itemStatus))
-                    return;
-
-                StatusCounts[itemStatus] -= interval;
-                if (StatusCounts[itemStatus] < 0)
-                    StatusCounts[itemStatus] = 0;
-            }
         }
 
         #endregion
@@ -925,7 +567,7 @@ namespace SabreTools.DatFiles
             ConcurrentList<DatItem> output = [];
 
             // Check for an empty rom list first
-            if (TotalCount == 0)
+            if (DatStatistics.TotalCount == 0)
                 return output;
 
             // We want to get the proper key for the DatItem
@@ -975,7 +617,7 @@ namespace SabreTools.DatFiles
         public bool HasDuplicates(DatItem datItem, bool sorted = false)
         {
             // Check for an empty rom list first
-            if (TotalCount == 0)
+            if (DatStatistics.TotalCount == 0)
                 return false;
 
             // We want to get the proper key for the DatItem
@@ -996,7 +638,7 @@ namespace SabreTools.DatFiles
         public void RecalculateStats()
         {
             // Wipe out any stats already there
-            ResetStatistics();
+            DatStatistics.ResetStatistics();
 
             // If we have a blank Dat in any way, return
             if (items == null)
@@ -1011,23 +653,9 @@ namespace SabreTools.DatFiles
 
                 foreach (DatItem item in datItems)
                 {
-                    AddItemStatistics(item);
+                    DatStatistics.AddItemStatistics(item);
                 }
             }
-        }
-
-        /// <summary>
-        /// Reset all statistics
-        /// </summary>
-        public void ResetStatistics()
-        {
-            TotalCount = 0;
-            ItemCounts = [];
-            GameCount = 0;
-            TotalSize = 0;
-            HashCounts = [];
-            StatusCounts = [];
-            RemovedCount = 0;
         }
 
         /// <summary>
@@ -1036,29 +664,29 @@ namespace SabreTools.DatFiles
         private ItemKey GetBestAvailable()
         {
             // Get the required counts
-            long diskCount = GetItemCount(ItemType.Disk);
-            long mediaCount = GetItemCount(ItemType.Media);
-            long romCount = GetItemCount(ItemType.Rom);
-            long nodumpCount = GetStatusCount(ItemStatus.Nodump);
+            long diskCount = DatStatistics.GetItemCount(ItemType.Disk);
+            long mediaCount = DatStatistics.GetItemCount(ItemType.Media);
+            long romCount = DatStatistics.GetItemCount(ItemType.Rom);
+            long nodumpCount = DatStatistics.GetStatusCount(ItemStatus.Nodump);
 
             // If all items are supposed to have a SHA-512, we bucket by that
-            if (diskCount + mediaCount + romCount - nodumpCount == GetHashCount(HashType.SHA512))
+            if (diskCount + mediaCount + romCount - nodumpCount == DatStatistics.GetHashCount(HashType.SHA512))
                 return ItemKey.SHA512;
 
             // If all items are supposed to have a SHA-384, we bucket by that
-            else if (diskCount + mediaCount + romCount - nodumpCount == GetHashCount(HashType.SHA384))
+            else if (diskCount + mediaCount + romCount - nodumpCount == DatStatistics.GetHashCount(HashType.SHA384))
                 return ItemKey.SHA384;
 
             // If all items are supposed to have a SHA-256, we bucket by that
-            else if (diskCount + mediaCount + romCount - nodumpCount == GetHashCount(HashType.SHA256))
+            else if (diskCount + mediaCount + romCount - nodumpCount == DatStatistics.GetHashCount(HashType.SHA256))
                 return ItemKey.SHA256;
 
             // If all items are supposed to have a SHA-1, we bucket by that
-            else if (diskCount + mediaCount + romCount - nodumpCount == GetHashCount(HashType.SHA1))
+            else if (diskCount + mediaCount + romCount - nodumpCount == DatStatistics.GetHashCount(HashType.SHA1))
                 return ItemKey.SHA1;
 
             // If all items are supposed to have a MD5, we bucket by that
-            else if (diskCount + mediaCount + romCount - nodumpCount == GetHashCount(HashType.MD5))
+            else if (diskCount + mediaCount + romCount - nodumpCount == DatStatistics.GetHashCount(HashType.MD5))
                 return ItemKey.MD5;
 
             // Otherwise, we bucket by CRC
