@@ -7,7 +7,6 @@ using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles.Formats;
 using SabreTools.Filter;
-using SabreTools.Serialization;
 
 namespace SabreTools.DatFiles
 {
@@ -15,7 +14,7 @@ namespace SabreTools.DatFiles
     /// Represents all possible DAT header information
     /// </summary>
     [JsonObject("header"), XmlRoot("header")]
-    public class DatHeader : ICloneable
+    public class DatHeader : ModelBackedItem<Models.Metadata.Header>, ICloneable
     {
         #region Constants
 
@@ -132,15 +131,7 @@ namespace SabreTools.DatFiles
             }
         }
 
-        /// <summary>
-        /// Internal Header model
-        /// </summary>
-        [JsonIgnore]
-        private readonly Models.Metadata.Header _header = [];
-
         #endregion
-
-        #region Instance Methods
 
         #region Constructors
 
@@ -154,11 +145,11 @@ namespace SabreTools.DatFiles
                 return;
 
             // Populate the internal machine from non-filter fields
-            _header = [];
+            _internal = new Models.Metadata.Header();
             foreach (string fieldName in nonItemFields)
             {
                 if (header.ContainsKey(fieldName))
-                    _header[fieldName] = header[fieldName];
+                    _internal[fieldName] = header[fieldName];
             }
         }
 
@@ -167,130 +158,9 @@ namespace SabreTools.DatFiles
         #region Accessors
 
         /// <summary>
-        /// Get the value from a field based on the type provided
-        /// </summary>
-        /// <typeparam name="T">Type of the value to get from the internal model</typeparam>
-        /// <param name="fieldName">Field to retrieve</param>
-        /// <returns>Value from the field, if possible</returns>
-        public T? GetFieldValue<T>(string? fieldName)
-        {
-            // Invalid field cannot be processed
-            if (string.IsNullOrEmpty(fieldName) || !_header.ContainsKey(fieldName!))
-                return default;
-
-            // Get the value based on the type
-            return _header.Read<T>(fieldName!);
-        }
-
-        /// <summary>
-        /// Get the value from a field based on the type provided
-        /// </summary>
-        /// <param name="fieldName">Field to retrieve</param>
-        /// <returns>Value from the field, if possible</returns>
-        public bool? GetBoolFieldValue(string? fieldName)
-        {
-            // Invalid field cannot be processed
-            if (string.IsNullOrEmpty(fieldName) || !_header.ContainsKey(fieldName!))
-                return default;
-
-            // Get the value based on the type
-            return _header.ReadBool(fieldName!);
-        }
-
-        /// <summary>
-        /// Get the value from a field based on the type provided
-        /// </summary>
-        /// <param name="fieldName">Field to retrieve</param>
-        /// <returns>Value from the field, if possible</returns>
-        public double? GetDoubleFieldValue(string? fieldName)
-        {
-            // Invalid field cannot be processed
-            if (string.IsNullOrEmpty(fieldName) || !_header.ContainsKey(fieldName!))
-                return default;
-
-            // Try to parse directly
-            double? doubleValue = _header.ReadDouble(fieldName!);
-            if (doubleValue != null)
-                return doubleValue;
-
-            // Try to parse from the string
-            string? stringValue = _header.ReadString(fieldName!);
-            return NumberHelper.ConvertToDouble(stringValue);
-        }
-
-        /// <summary>
-        /// Get the value from a field based on the type provided
-        /// </summary>
-        /// <param name="fieldName">Field to retrieve</param>
-        /// <returns>Value from the field, if possible</returns>
-        public long? GetInt64FieldValue(string? fieldName)
-        {
-            // Invalid field cannot be processed
-            if (string.IsNullOrEmpty(fieldName) || !_header.ContainsKey(fieldName!))
-                return default;
-
-            // Try to parse directly
-            long? longValue = _header.ReadLong(fieldName!);
-            if (longValue != null)
-                return longValue;
-
-            // Try to parse from the string
-            string? stringValue = _header.ReadString(fieldName!);
-            return NumberHelper.ConvertToInt64(stringValue);
-        }
-
-        /// <summary>
-        /// Get the value from a field based on the type provided
-        /// </summary>
-        /// <param name="fieldName">Field to retrieve</param>
-        /// <returns>Value from the field, if possible</returns>
-        public string? GetStringFieldValue(string? fieldName)
-        {
-            // Invalid field cannot be processed
-            if (string.IsNullOrEmpty(fieldName) || !_header.ContainsKey(fieldName!))
-                return default;
-
-            // Get the value based on the type
-            return _header.ReadString(fieldName!);
-        }
-
-        /// <summary>
-        /// Get the value from a field based on the type provided
-        /// </summary>
-        /// <param name="fieldName">Field to retrieve</param>
-        /// <returns>Value from the field, if possible</returns>
-        public string[]? GetStringArrayFieldValue(string? fieldName)
-        {
-            // Invalid field cannot be processed
-            if (string.IsNullOrEmpty(fieldName) || !_header.ContainsKey(fieldName!))
-                return default;
-
-            // Get the value based on the type
-            return _header.ReadStringArray(fieldName!);
-        }
-
-        /// <summary>
-        /// Set the value from a field based on the type provided
-        /// </summary>
-        /// <typeparam name="T">Type of the value to set in the internal model</typeparam>
-        /// <param name="fieldName">Field to set</param>
-        /// <param name="value">Value to set</param>
-        /// <returns>True if the value was set, false otherwise</returns>
-        public bool SetFieldValue<T>(string? fieldName, T? value)
-        {
-            // Invalid field cannot be processed
-            if (string.IsNullOrEmpty(fieldName))
-                return false;
-
-            // Set the value based on the type
-            _header[fieldName!] = value;
-            return true;
-        }
-
-        /// <summary>
         /// Get a clone of the current internal model
         /// </summary>
-        public Models.Metadata.Header GetInternalClone() => (_header.Clone() as Models.Metadata.Header)!;
+        public Models.Metadata.Header GetInternalClone() => (_internal.Clone() as Models.Metadata.Header)!;
 
         #endregion
 
@@ -442,7 +312,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="filterRunner">Filter runner to use for checking</param>
         /// <returns>True if the Machine passes the filter, false otherwise</returns>
-        public bool PassesFilter(FilterRunner filterRunner) => filterRunner.Run(_header);
+        public bool PassesFilter(FilterRunner filterRunner) => filterRunner.Run(_internal);
 
         /// <summary>
         /// Remove a field from the header
@@ -450,7 +320,7 @@ namespace SabreTools.DatFiles
         /// <param name="fieldName">Field to remove</param>
         /// <returns>True if the removal was successful, false otherwise</returns>
         public bool RemoveField(string fieldName)
-            => FieldManipulator.RemoveField(_header, fieldName);
+            => FieldManipulator.RemoveField(_internal, fieldName);
 
         /// <summary>
         /// Replace a field from another DatHeader
@@ -459,7 +329,7 @@ namespace SabreTools.DatFiles
         /// <param name="fieldName">Field to replace</param>
         /// <returns>True if the replacement was successful, false otherwise</returns>
         public bool ReplaceField(DatHeader? other, string? fieldName)
-            => FieldManipulator.ReplaceField(other?._header, _header, fieldName);
+            => FieldManipulator.ReplaceField(other?._internal, _internal, fieldName);
 
         /// <summary>
         /// Set a field in the header from a mapping string
@@ -469,7 +339,7 @@ namespace SabreTools.DatFiles
         /// <returns>True if the setting was successful, false otherwise</returns>
         /// <remarks>This only performs minimal validation before setting</remarks>
         public bool SetField(string? fieldName, string value)
-            => FieldManipulator.SetField(_header, fieldName, value);
+            => FieldManipulator.SetField(_internal, fieldName, value);
 
         #endregion
 
@@ -961,7 +831,5 @@ namespace SabreTools.DatFiles
         }
 
         #endregion
-
-        #endregion // Instance Methods
     }
 }
