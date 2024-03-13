@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using SabreTools.DatItems;
 using SabreTools.Hashing;
 using SabreTools.IO.Writers;
 using SabreTools.Logging;
@@ -131,16 +132,16 @@ namespace SabreTools.Reports.Formats
                 stat.DisplayName!,
                 stat.Statistics!.TotalSize.ToString(),
                 stat.MachineCount.ToString(),
-                stat.Statistics.GetItemCount(Core.ItemType.Rom).ToString(),
-                stat.Statistics.GetItemCount(Core.ItemType.Disk).ToString(),
+                stat.Statistics.GetItemCount(ItemType.Rom).ToString(),
+                stat.Statistics.GetItemCount(ItemType.Disk).ToString(),
                 stat.Statistics.GetHashCount(HashType.CRC32).ToString(),
                 stat.Statistics.GetHashCount(HashType.MD5).ToString(),
                 stat.Statistics.GetHashCount(HashType.SHA1).ToString(),
                 stat.Statistics.GetHashCount(HashType.SHA256).ToString(),
                 stat.Statistics.GetHashCount(HashType.SHA384).ToString(),
                 stat.Statistics.GetHashCount(HashType.SHA512).ToString(),
-                baddumpCol ? stat.Statistics.GetStatusCount(Core.ItemStatus.BadDump).ToString() : string.Empty,
-                nodumpCol ? stat.Statistics.GetStatusCount(Core.ItemStatus.Nodump).ToString() : string.Empty,
+                baddumpCol ? stat.Statistics.GetStatusCount(ItemStatus.BadDump).ToString() : string.Empty,
+                nodumpCol ? stat.Statistics.GetStatusCount(ItemStatus.Nodump).ToString() : string.Empty,
             ];
             svw.WriteValues(values);
             svw.Flush();

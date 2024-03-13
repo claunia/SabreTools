@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using SabreTools.Core;
 using SabreTools.Core.Tools;
+using SabreTools.DatItems;
 
 namespace SabreTools.DatFiles
 {

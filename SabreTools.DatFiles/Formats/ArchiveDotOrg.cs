@@ -1,4 +1,4 @@
-﻿using SabreTools.Core;
+﻿using SabreTools.DatItems;
 
 namespace SabreTools.DatFiles.Formats
 {

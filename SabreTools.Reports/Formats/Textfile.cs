@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using SabreTools.DatItems;
 using SabreTools.Hashing;
 using SabreTools.Logging;
 
@@ -93,8 +94,8 @@ namespace SabreTools.Reports.Formats
 --------------------------------------------------
     Uncompressed size:       " + GetBytesReadable(stat.Statistics!.TotalSize) + @"
     Games found:             " + stat.MachineCount + @"
-    Roms found:              " + stat.Statistics.GetItemCount(Core.ItemType.Rom) + @"
-    Disks found:             " + stat.Statistics.GetItemCount(Core.ItemType.Disk) + @"
+    Roms found:              " + stat.Statistics.GetItemCount(ItemType.Rom) + @"
+    Disks found:             " + stat.Statistics.GetItemCount(ItemType.Disk) + @"
     Roms with CRC:           " + stat.Statistics.GetHashCount(HashType.CRC32) + @"
     Roms with MD5:           " + stat.Statistics.GetHashCount(HashType.MD5) + @"
     Roms with SHA-1:         " + stat.Statistics.GetHashCount(HashType.SHA1) + @"
@@ -103,10 +104,10 @@ namespace SabreTools.Reports.Formats
     Roms with SHA-512:       " + stat.Statistics.GetHashCount(HashType.SHA512) + "\n";
 
             if (baddumpCol)
-                line += "	Roms with BadDump status: " + stat.Statistics.GetStatusCount(Core.ItemStatus.BadDump) + "\n";
+                line += "	Roms with BadDump status: " + stat.Statistics.GetStatusCount(ItemStatus.BadDump) + "\n";
 
             if (nodumpCol)
-                line += "	Roms with Nodump status: " + stat.Statistics.GetStatusCount(Core.ItemStatus.Nodump) + "\n";
+                line += "	Roms with Nodump status: " + stat.Statistics.GetStatusCount(ItemStatus.Nodump) + "\n";
 
             // For spacing between DATs
             line += "\n\n";

@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Xml;
+using SabreTools.DatItems;
 using SabreTools.Hashing;
 using SabreTools.Logging;
 
@@ -237,12 +238,12 @@ body {
 
             xtw.WriteStartElement("td");
             xtw.WriteAttributeString("align", "right");
-            xtw.WriteString(stat.Statistics.GetItemCount(Core.ItemType.Rom).ToString());
+            xtw.WriteString(stat.Statistics.GetItemCount(ItemType.Rom).ToString());
             xtw.WriteEndElement(); // td
 
             xtw.WriteStartElement("td");
             xtw.WriteAttributeString("align", "right");
-            xtw.WriteString(stat.Statistics.GetItemCount(Core.ItemType.Disk).ToString());
+            xtw.WriteString(stat.Statistics.GetItemCount(ItemType.Disk).ToString());
             xtw.WriteEndElement(); // td
 
             xtw.WriteStartElement("td");
@@ -269,7 +270,7 @@ body {
             {
                 xtw.WriteStartElement("td");
                 xtw.WriteAttributeString("align", "right");
-                xtw.WriteString(stat.Statistics.GetStatusCount(Core.ItemStatus.BadDump).ToString());
+                xtw.WriteString(stat.Statistics.GetStatusCount(ItemStatus.BadDump).ToString());
                 xtw.WriteEndElement(); // td
             }
 
@@ -277,7 +278,7 @@ body {
             {
                 xtw.WriteStartElement("td");
                 xtw.WriteAttributeString("align", "right");
-                xtw.WriteString(stat.Statistics.GetStatusCount(Core.ItemStatus.Nodump).ToString());
+                xtw.WriteString(stat.Statistics.GetStatusCount(ItemStatus.Nodump).ToString());
                 xtw.WriteEndElement(); // td
             }
 
