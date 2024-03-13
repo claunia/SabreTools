@@ -100,9 +100,10 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Add an item, returning the insert index
         /// </summary>
-        public long AddItem(DatItem item)
+        public long AddItem(DatItem item, long machineIndex)
         {
             _items[_itemIndex++] = item;
+            _itemToMachineMapping[_itemIndex - 1] = machineIndex;
             DatStatistics.AddItemStatistics(item);
             return _itemIndex - 1;
         }
