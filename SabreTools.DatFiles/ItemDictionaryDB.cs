@@ -133,6 +133,11 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Get all bucket keys
+        /// </summary>
+        public string[] GetBucketKeys() => [.. _buckets.Keys];
+
+        /// <summary>
         /// Get an item based on the index
         /// </summary>
         public DatItem? GetItem(long index)
