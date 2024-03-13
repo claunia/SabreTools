@@ -286,59 +286,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Clone the current header
         /// </summary>
-        public object Clone()
-        {
-            var header = new DatHeader();
-            header.SetFieldValue<string?>(DatHeader.AddExtensionKey, GetStringFieldValue(DatHeader.AddExtensionKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, GetStringFieldValue(Models.Metadata.Header.AuthorKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.BiosModeKey, GetStringFieldValue(Models.Metadata.Header.BiosModeKey).AsEnumValue<MergingFlag>().AsStringValue());
-            header.SetFieldValue<string?>(Models.Metadata.Header.BuildKey, GetStringFieldValue(Models.Metadata.Header.BuildKey));
-            header.SetFieldValue<string[]?>(Models.Metadata.Header.CanOpenKey, GetStringArrayFieldValue(Models.Metadata.Header.CanOpenKey)); // TODO: Perform a deep clone
-            header.SetFieldValue<string?>(Models.Metadata.Header.CategoryKey, GetStringFieldValue(Models.Metadata.Header.CategoryKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.CommentKey, GetStringFieldValue(Models.Metadata.Header.CommentKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.DateKey, GetStringFieldValue(Models.Metadata.Header.DateKey));
-            header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, GetFieldValue<DatFormat>(DatHeader.DatFormatKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.DatVersionKey, GetStringFieldValue(Models.Metadata.Header.DatVersionKey));
-            header.SetFieldValue<bool?>(Models.Metadata.Header.DebugKey, GetBoolFieldValue(Models.Metadata.Header.DebugKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, GetStringFieldValue(Models.Metadata.Header.DescriptionKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.EmailKey, GetStringFieldValue(Models.Metadata.Header.EmailKey));
-            header.SetFieldValue<string?>(DatHeader.FileNameKey, GetStringFieldValue(DatHeader.FileNameKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.ForceMergingKey, GetStringFieldValue(Models.Metadata.Header.ForceMergingKey).AsEnumValue<MergingFlag>().AsStringValue());
-            header.SetFieldValue<string?>(Models.Metadata.Header.ForceNodumpKey, GetStringFieldValue(Models.Metadata.Header.ForceNodumpKey).AsEnumValue<NodumpFlag>().AsStringValue());
-            header.SetFieldValue<string?>(Models.Metadata.Header.ForcePackingKey, GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>().AsStringValue());
-            header.SetFieldValue<bool?>(DatHeader.GameNameKey, GetBoolFieldValue(DatHeader.GameNameKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, GetStringFieldValue(Models.Metadata.Header.HeaderKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, GetStringFieldValue(Models.Metadata.Header.HomepageKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.IdKey, GetStringFieldValue(Models.Metadata.Header.IdKey));
-            header.SetFieldValue<OfflineListInfo[]?>(Models.Metadata.Header.InfosKey, GetFieldValue<OfflineListInfo[]?>(Models.Metadata.Header.InfosKey)); // TODO: Perform a deep clone
-            header.SetFieldValue<Models.OfflineList.Images?>(Models.Metadata.Header.ImagesKey, GetFieldValue<Models.OfflineList.Images?>(Models.Metadata.Header.ImagesKey)); // TODO: Perform a deep clone
-            header.SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey, GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.Clone() as DepotInformation);
-            header.SetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey, GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.Clone() as DepotInformation);
-            header.SetFieldValue<bool?>(Models.Metadata.Header.LockBiosModeKey, GetBoolFieldValue(Models.Metadata.Header.LockBiosModeKey));
-            header.SetFieldValue<bool?>(Models.Metadata.Header.LockRomModeKey, GetBoolFieldValue(Models.Metadata.Header.LockRomModeKey));
-            header.SetFieldValue<bool?>(Models.Metadata.Header.LockSampleModeKey, GetBoolFieldValue(Models.Metadata.Header.LockSampleModeKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.MameConfigKey, GetStringFieldValue(Models.Metadata.Header.MameConfigKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, GetStringFieldValue(Models.Metadata.Header.NameKey));
-            header.SetFieldValue<string?>(DatHeader.PostfixKey, GetStringFieldValue(DatHeader.PostfixKey));
-            header.SetFieldValue<string?>(DatHeader.PrefixKey, GetStringFieldValue(DatHeader.PrefixKey));
-            header.SetFieldValue<bool?>(DatHeader.QuotesKey, GetBoolFieldValue(DatHeader.QuotesKey));
-            header.SetFieldValue<bool?>(DatHeader.RemoveExtensionKey, GetBoolFieldValue(DatHeader.RemoveExtensionKey));
-            header.SetFieldValue<string?>(DatHeader.ReplaceExtensionKey, GetStringFieldValue(DatHeader.ReplaceExtensionKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.RomTitleKey, GetStringFieldValue(Models.Metadata.Header.RomTitleKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.RomModeKey, GetStringFieldValue(Models.Metadata.Header.RomModeKey).AsEnumValue<MergingFlag>().AsStringValue());
-            header.SetFieldValue<string?>(Models.Metadata.Header.RootDirKey, GetStringFieldValue(Models.Metadata.Header.RootDirKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.SampleModeKey, GetStringFieldValue(Models.Metadata.Header.SampleModeKey).AsEnumValue<MergingFlag>().AsStringValue());
-            header.SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsHeightKey, GetStringFieldValue(Models.Metadata.Header.ScreenshotsHeightKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsWidthKey, GetStringFieldValue(Models.Metadata.Header.ScreenshotsWidthKey));
-            header.SetFieldValue<Models.OfflineList.Search?>(Models.Metadata.Header.SearchKey, GetFieldValue<Models.OfflineList.Search?>(Models.Metadata.Header.SearchKey)); // TODO: Perform a deep clone
-            header.SetFieldValue<string?>(Models.Metadata.Header.SystemKey, GetStringFieldValue(Models.Metadata.Header.SystemKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, GetStringFieldValue(Models.Metadata.Header.TypeKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.UrlKey, GetStringFieldValue(Models.Metadata.Header.UrlKey));
-            header.SetFieldValue<bool?>(DatHeader.UseRomNameKey, GetBoolFieldValue(DatHeader.UseRomNameKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.VersionKey, GetStringFieldValue(Models.Metadata.Header.VersionKey));
-
-            return header;
-        }
+        public object Clone() => new DatHeader(GetInternalClone());
 
         /// <summary>
         /// Clone the standard parts of the current header
