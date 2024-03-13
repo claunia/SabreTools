@@ -40,18 +40,27 @@ namespace SabreTools.DatFiles
         /// Internal dictionary for all items
         /// </summary>
 #if NET40_OR_GREATER || NETCOREAPP
-        private readonly ConcurrentDictionary<string, ConcurrentList<DatItem>?> items;
+        private readonly ConcurrentDictionary<long, DatItem> items;
 #else
-        private readonly Dictionary<string, ConcurrentList<DatItem>?> items;
+        private readonly Dictionary<long, DatItem> items;
 #endif
 
         /// <summary>
         /// Internal dictionary for all machines
         /// </summary>
 #if NET40_OR_GREATER || NETCOREAPP
-        private readonly ConcurrentDictionary<string, Machine> machines;
+        private readonly ConcurrentDictionary<long, Machine> machines;
 #else
-        private readonly Dictionary<string, Machine> machines;
+        private readonly Dictionary<long, Machine> machines;
+#endif
+
+        /// <summary>
+        /// Internal dictionary for item to machine mappings
+        /// </summary>
+#if NET40_OR_GREATER || NETCOREAPP
+        private readonly ConcurrentDictionary<long, long> itemToMachineMapping;
+#else
+        private readonly Dictionary<long, long> machines;
 #endif
 
         /// <summary>
