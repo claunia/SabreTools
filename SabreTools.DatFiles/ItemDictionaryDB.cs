@@ -239,8 +239,8 @@ namespace SabreTools.DatFiles
         /// <returns></returns>
         public void UpdateBucketBy(ItemKey bucketBy, bool lower = true, bool norename = true)
         {
-            // If the bucketing value is the same
-            if (bucketBy == _bucketedBy)
+            // If the bucketing value is the same or null
+            if (bucketBy == _bucketedBy || bucketBy == ItemKey.NULL)
                 return;
 
             // Reset the bucketing values
