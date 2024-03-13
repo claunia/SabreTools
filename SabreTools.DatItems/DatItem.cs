@@ -620,26 +620,33 @@ namespace SabreTools.DatItems
             {
                 try
                 {
-                    NaturalComparer nc = new();
+                    var nc = new NaturalComparer();
+
+                    // Get all required values
+                    string? xDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty));
+                    string? xMachineName = x.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    string? xName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty));
+                    int? xSourceIndex = x.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
+                    string? xType = x.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
+
+                    string? yDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty));
+                    string? yMachineName = y.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    string? yName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty));
+                    int? ySourceIndex = y.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
+                    string? yType = y.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
 
                     // If machine names match, more refinement is needed
-                    if (x.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) == y.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey))
+                    if (xMachineName == yMachineName)
                     {
                         // If item types match, more refinement is needed
-                        if (x.GetStringFieldValue(Models.Metadata.DatItem.TypeKey) == y.GetStringFieldValue(Models.Metadata.DatItem.TypeKey))
+                        if (xType == yType)
                         {
-                            string? xDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty));
-                            string? yDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty));
-
                             // If item directory names match, more refinement is needed
                             if (xDirectoryName == yDirectoryName)
                             {
-                                string? xName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty));
-                                string? yName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty));
-
                                 // If item names match, then compare on machine or source, depending on the flag
                                 if (xName == yName)
-                                    return (norename ? nc.Compare(x.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey), y.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)) : (x.GetFieldValue<Source?>(DatItem.SourceKey)?.Index - y.GetFieldValue<Source?>(DatItem.SourceKey)?.Index) ?? 0);
+                                    return (norename ? nc.Compare(xMachineName, yMachineName) : (xSourceIndex - ySourceIndex) ?? 0);
 
                                 // Otherwise, just sort based on item names
                                 return nc.Compare(xName, yName);
@@ -650,11 +657,11 @@ namespace SabreTools.DatItems
                         }
 
                         // Otherwise, just sort based on item type
-                        return x.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>() - y.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>();
+                        return xType.AsEnumValue<ItemType>() - yType.AsEnumValue<ItemType>();
                     }
 
                     // Otherwise, just sort based on machine name
-                    return nc.Compare(x.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey), y.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+                    return nc.Compare(xMachineName, yMachineName);
                 }
                 catch
                 {
