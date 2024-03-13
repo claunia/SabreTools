@@ -468,5 +468,31 @@ namespace SabreTools.DatFiles
         // TODO: Write a method that deduplicates items based on any of the fields selected
 
         #endregion
+
+        #region Statistics
+
+        /// <summary>
+        /// Recalculate the statistics for the Dat
+        /// </summary>
+        public void RecalculateStats()
+        {
+            // Wipe out any stats already there
+            DatStatistics.ResetStatistics();
+
+            // If there are no items
+            if (_items == null || !_items.Any())
+                return;
+
+            // Loop through and add
+            foreach (var item in _items.Values)
+            {
+                if (item == null)
+                    continue;
+
+                DatStatistics.AddItemStatistics(item);
+            }
+        }
+
+        #endregion
     }
 }
