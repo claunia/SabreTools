@@ -9,20 +9,18 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents a value-separated DAT
     /// </summary>
-    internal sealed class SeparatedValue : SerializableDatFile<Models.SeparatedValue.MetadataFile, Serialization.Files.SeparatedValue, Serialization.CrossModel.SeparatedValue>
+    internal abstract class SeparatedValue : SerializableDatFile<Models.SeparatedValue.MetadataFile, Serialization.Files.SeparatedValue, Serialization.CrossModel.SeparatedValue>
     {
-        // Private instance variables specific to Separated Value DATs
-        private readonly char _delim;
+        // Private instance variables specific to Hashfile DATs
+        protected char _delim;
 
         /// <summary>
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
-        /// <param name="delim">Delimiter for parsing individual lines</param>
-        public SeparatedValue(DatFile? datFile, char delim)
+        public SeparatedValue(DatFile? datFile)
             : base(datFile)
         {
-            _delim = delim;
         }
 
         /// <inheritdoc/>
@@ -117,6 +115,54 @@ namespace SabreTools.DatFiles.Formats
 
             logger.User($"'{outfile}' written!{Environment.NewLine}");
             return true;
+        }
+    }
+
+    /// <summary>
+    /// Represents a comma-separated value file
+    /// </summary>
+    internal sealed class CommaSeparatedValue : SeparatedValue
+    {
+        /// <summary>
+        /// Constructor designed for casting a base DatFile
+        /// </summary>
+        /// <param name="datFile">Parent DatFile to copy from</param>
+        public CommaSeparatedValue(DatFile? datFile)
+            : base(datFile)
+        {
+            _delim = ',';
+        }
+    }
+
+    /// <summary>
+    /// Represents a semicolon-separated value file
+    /// </summary>
+    internal sealed class SemicolonSeparatedValue : SeparatedValue
+    {
+        /// <summary>
+        /// Constructor designed for casting a base DatFile
+        /// </summary>
+        /// <param name="datFile">Parent DatFile to copy from</param>
+        public SemicolonSeparatedValue(DatFile? datFile)
+            : base(datFile)
+        {
+            _delim = ';';
+        }
+    }
+
+    /// <summary>
+    /// Represents a tab-separated value file
+    /// </summary>
+    internal sealed class TabSeparatedValue : SeparatedValue
+    {
+        /// <summary>
+        /// Constructor designed for casting a base DatFile
+        /// </summary>
+        /// <param name="datFile">Parent DatFile to copy from</param>
+        public TabSeparatedValue(DatFile? datFile)
+            : base(datFile)
+        {
+            _delim = '\t';
         }
     }
 }

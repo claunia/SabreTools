@@ -3,45 +3,24 @@ using System.Collections.Generic;
 using SabreTools.Core;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
-using SabreTools.Hashing;
 
 namespace SabreTools.DatFiles.Formats
 {
     /// <summary>
     /// Represents a hashfile such as an SFV, MD5, or SHA-1 file
     /// </summary>
-    internal sealed class Hashfile : SerializableDatFile<Models.Hashfile.Hashfile, Serialization.Files.Hashfile, Serialization.CrossModel.Hashfile>
+    internal abstract class Hashfile : SerializableDatFile<Models.Hashfile.Hashfile, Serialization.Files.Hashfile, Serialization.CrossModel.Hashfile>
     {
         // Private instance variables specific to Hashfile DATs
-        private readonly Serialization.Hash _hash;
+        protected Serialization.Hash _hash;
 
         /// <summary>
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
-        /// <param name="hash">Type of hash that is associated with this DAT</param> 
-        public Hashfile(DatFile? datFile, HashType hash)
+        public Hashfile(DatFile? datFile)
             : base(datFile)
         {
-            _hash = ConvertHash(hash);
-        }
-
-        /// <summary>
-        /// Convert hash types between internal and Serialization
-        /// </summary>
-        private static Serialization.Hash ConvertHash(HashType hash)
-        {
-            return hash switch
-            {
-                HashType.CRC32 => Serialization.Hash.CRC,
-                HashType.MD5 => Serialization.Hash.MD5,
-                HashType.SHA1 => Serialization.Hash.SHA1,
-                HashType.SHA256 => Serialization.Hash.SHA256,
-                HashType.SHA384 => Serialization.Hash.SHA384,
-                HashType.SHA512 => Serialization.Hash.SHA512,
-                HashType.SpamSum => Serialization.Hash.SpamSum,
-                _ => throw new System.ArgumentOutOfRangeException(nameof(hash)),
-            };
         }
 
         /// <inheritdoc/>
@@ -223,6 +202,118 @@ namespace SabreTools.DatFiles.Formats
 
             logger.User($"'{outfile}' written!{Environment.NewLine}");
             return true;
+        }
+    }
+
+    /// <summary>
+    /// Represents an SFV (CRC-32) hashfile
+    /// </summary>
+    internal sealed class SfvFile : Hashfile
+    {
+        /// <summary>
+        /// Constructor designed for casting a base DatFile
+        /// </summary>
+        /// <param name="datFile">Parent DatFile to copy from</param>
+        public SfvFile(DatFile? datFile)
+            : base(datFile)
+        {
+            _hash = Serialization.Hash.CRC;
+        }
+    }
+
+    /// <summary>
+    /// Represents an MD5 hashfile
+    /// </summary>
+    internal sealed class Md5File : Hashfile
+    {
+        /// <summary>
+        /// Constructor designed for casting a base DatFile
+        /// </summary>
+        /// <param name="datFile">Parent DatFile to copy from</param>
+        public Md5File(DatFile? datFile)
+            : base(datFile)
+        {
+            _hash = Serialization.Hash.MD5;
+        }
+    }
+
+    /// <summary>
+    /// Represents an SHA-1 hashfile
+    /// </summary>
+    internal sealed class Sha1File : Hashfile
+    {
+        /// <summary>
+        /// Constructor designed for casting a base DatFile
+        /// </summary>
+        /// <param name="datFile">Parent DatFile to copy from</param>
+        public Sha1File(DatFile? datFile)
+            : base(datFile)
+        {
+            _hash = Serialization.Hash.SHA1;
+        }
+    }
+
+    /// <summary>
+    /// Represents an SHA-256 hashfile
+    /// </summary>
+    internal sealed class Sha256File : Hashfile
+    {
+        /// <summary>
+        /// Constructor designed for casting a base DatFile
+        /// </summary>
+        /// <param name="datFile">Parent DatFile to copy from</param>
+        public Sha256File(DatFile? datFile)
+            : base(datFile)
+        {
+            _hash = Serialization.Hash.SHA256;
+        }
+    }
+
+    /// <summary>
+    /// Represents an SHA-384 hashfile
+    /// </summary>
+    internal sealed class Sha384File : Hashfile
+    {
+        /// <summary>
+        /// Constructor designed for casting a base DatFile
+        /// </summary>
+        /// <param name="datFile">Parent DatFile to copy from</param>
+        public Sha384File(DatFile? datFile)
+            : base(datFile)
+        {
+            _hash = Serialization.Hash.SHA384;
+        }
+    }
+
+    /// <summary>
+    /// Represents an SHA-512 hashfile
+    /// </summary>
+    internal sealed class Sha512File : Hashfile
+    {
+        /// <summary>
+        /// Constructor designed for casting a base DatFile
+        /// </summary>
+        /// <param name="datFile">Parent DatFile to copy from</param>
+        public Sha512File(DatFile? datFile)
+            : base(datFile)
+        {
+            _hash = Serialization.Hash.SHA512;
+        }
+    }
+
+    /// <summary>
+    /// Represents an SpamSum hashfile
+    /// </summary>
+    internal sealed class SpamSumFile : Hashfile
+    {
+        /// <summary>
+        /// Constructor designed for casting a base DatFile
+        /// </summary>
+        /// <param name="datFile">Parent DatFile to copy from</param>
+        public SpamSumFile(DatFile? datFile)
+            : base(datFile)
+        {
+            _hash = Serialization.Hash.SpamSum;
         }
     }
 }
