@@ -268,7 +268,7 @@ namespace SabreTools.DatFiles
 #endif
 
             // Sort the buckets that have been created for consistency
-            SortBuckets(norename);
+            PerformSorting(norename);
         }
 
         /// <summary>
@@ -372,7 +372,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Sort existing buckets for consistency
         /// </summary>
-        private void SortBuckets(bool norename)
+        private void PerformSorting(bool norename)
         {
             // Get the current list of bucket keys
             string[] bucketKeys = [.. _buckets.Keys];
