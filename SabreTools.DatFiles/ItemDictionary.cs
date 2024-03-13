@@ -368,7 +368,7 @@ namespace SabreTools.DatFiles
 
         #endregion
 
-        #region Custom Functionality
+        #region Bucketing
 
         /// <summary>
         /// Take the arbitrarily bucketed Files Dictionary and convert to one bucketed by a user-defined method
@@ -407,53 +407,7 @@ namespace SabreTools.DatFiles
                 PerformSorting();
             }
         }
-
-        /// <summary>
-        /// Remove any keys that have null or empty values
-        /// </summary>
-        public void ClearEmpty()
-        {
-            var keys = items.Keys.Where(k => k != null).ToList();
-            foreach (string key in keys)
-            {
-                // If the key doesn't exist, skip
-                if (!items.ContainsKey(key))
-                    continue;
-
-                // If the value is null, remove
-                else if (items[key] == null)
-#if NET40_OR_GREATER || NETCOREAPP
-                    items.TryRemove(key, out _);
-#else
-                    items.Remove(key);
-#endif
-
-                // If there are no non-blank items, remove
-                else if (!items[key]!.Any(i => i != null && i is not Blank))
-#if NET40_OR_GREATER || NETCOREAPP
-                    items.TryRemove(key, out _);
-#else
-                    items.Remove(key);
-#endif
-            }
-        }
-
-        /// <summary>
-        /// Remove all items marked for removal
-        /// </summary>
-        public void ClearMarked()
-        {
-            var keys = items.Keys.ToList();
-            foreach (string key in keys)
-            {
-                ConcurrentList<DatItem>? oldItemList = items[key];
-                ConcurrentList<DatItem>? newItemList = oldItemList?.Where(i => i.GetBoolFieldValue(DatItem.RemoveKey) != true)?.ToConcurrentList();
-
-                Remove(key);
-                AddRange(key, newItemList);
-            }
-        }
-
+        
         /// <summary>
         /// List all duplicates found in a DAT based on a DatItem
         /// </summary>
@@ -528,32 +482,6 @@ namespace SabreTools.DatFiles
             // Try to find duplicates
             ConcurrentList<DatItem>? roms = this[key];
             return roms?.Any(r => datItem.Equals(r)) == true;
-        }
-
-        /// <summary>
-        /// Recalculate the statistics for the Dat
-        /// </summary>
-        public void RecalculateStats()
-        {
-            // Wipe out any stats already there
-            DatStatistics.ResetStatistics();
-
-            // If we have a blank Dat in any way, return
-            if (items == null)
-                return;
-
-            // Loop through and add
-            foreach (string key in items.Keys)
-            {
-                ConcurrentList<DatItem>? datItems = items[key];
-                if (datItems == null)
-                    continue;
-
-                foreach (DatItem item in datItems)
-                {
-                    DatStatistics.AddItemStatistics(item);
-                }
-            }
         }
 
         /// <summary>
@@ -736,6 +664,86 @@ namespace SabreTools.DatFiles
 
             // Now that we have the sorted type, we get the proper key
             return datItem.GetKey(bucketedBy);
+        }
+
+        #endregion
+
+        #region Custom Functionality
+
+        /// <summary>
+        /// Remove any keys that have null or empty values
+        /// </summary>
+        public void ClearEmpty()
+        {
+            var keys = items.Keys.Where(k => k != null).ToList();
+            foreach (string key in keys)
+            {
+                // If the key doesn't exist, skip
+                if (!items.ContainsKey(key))
+                    continue;
+
+                // If the value is null, remove
+                else if (items[key] == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                    items.TryRemove(key, out _);
+#else
+                    items.Remove(key);
+#endif
+
+                // If there are no non-blank items, remove
+                else if (!items[key]!.Any(i => i != null && i is not Blank))
+#if NET40_OR_GREATER || NETCOREAPP
+                    items.TryRemove(key, out _);
+#else
+                    items.Remove(key);
+#endif
+            }
+        }
+
+        /// <summary>
+        /// Remove all items marked for removal
+        /// </summary>
+        public void ClearMarked()
+        {
+            var keys = items.Keys.ToList();
+            foreach (string key in keys)
+            {
+                ConcurrentList<DatItem>? oldItemList = items[key];
+                ConcurrentList<DatItem>? newItemList = oldItemList?.Where(i => i.GetBoolFieldValue(DatItem.RemoveKey) != true)?.ToConcurrentList();
+
+                Remove(key);
+                AddRange(key, newItemList);
+            }
+        }
+
+        #endregion
+
+        #region Statistics
+
+        /// <summary>
+        /// Recalculate the statistics for the Dat
+        /// </summary>
+        public void RecalculateStats()
+        {
+            // Wipe out any stats already there
+            DatStatistics.ResetStatistics();
+
+            // If we have a blank Dat in any way, return
+            if (items == null)
+                return;
+
+            // Loop through and add
+            foreach (string key in items.Keys)
+            {
+                ConcurrentList<DatItem>? datItems = items[key];
+                if (datItems == null)
+                    continue;
+
+                foreach (DatItem item in datItems)
+                {
+                    DatStatistics.AddItemStatistics(item);
+                }
+            }
         }
 
         #endregion
