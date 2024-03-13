@@ -27,7 +27,7 @@ namespace RombaSharp.Features
             if (!base.ProcessFeatures(features))
                 return false;
 
-            logger.User($"RombaSharp version: {Prepare.Version}");
+            logger.User($"RombaSharp version: {Globals.Version}");
             return true;
         }
     }

@@ -104,7 +104,7 @@ namespace SabreTools
             if (!Console.IsOutputRedirected && feature.ScriptMode)
             {
                 Console.Clear();
-                Prepare.SetConsoleHeader("SabreTools");
+                Globals.SetConsoleHeader("SabreTools");
             }
 
             // Now process the current feature
