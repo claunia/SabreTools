@@ -439,33 +439,24 @@ namespace SabreTools.DatFiles
                     int? ySourceIndex = y.Item2.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
                     string? yType = y.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
 
-                    // If machine names match, more refinement is needed
-                    if (xMachineName == yMachineName)
-                    {
-                        // If item types match, more refinement is needed
-                        if (xType == yType)
-                        {
-                            // If item directory names match, more refinement is needed
-                            if (xDirectoryName == yDirectoryName)
-                            {
-                                // If item names match, then compare on machine or source, depending on the flag
-                                if (xName == yName)
-                                    return (norename ? nc.Compare(xMachineName, yMachineName) : (xSourceIndex - ySourceIndex) ?? 0);
+                    // If machine names don't match
+                    if (xMachineName != yMachineName)
+                        return nc.Compare(xMachineName, yMachineName);
 
-                                // Otherwise, just sort based on item names
-                                return nc.Compare(xName, yName);
-                            }
-
-                            // Otherwise, just sort based on directory name
-                            return nc.Compare(xDirectoryName, yDirectoryName);
-                        }
-
-                        // Otherwise, just sort based on item type
+                    // If types don't match
+                    if (xType != yType)
                         return xType.AsEnumValue<ItemType>() - yType.AsEnumValue<ItemType>();
-                    }
 
-                    // Otherwise, just sort based on machine name
-                    return nc.Compare(xMachineName, yMachineName);
+                    // If directory names don't match
+                    if (xDirectoryName != yDirectoryName)
+                        return nc.Compare(xDirectoryName, yDirectoryName);
+
+                    // If item names don't match
+                    if (xName != yName)
+                        return nc.Compare(xName, yName);
+
+                    // Otherwise, compare on machine or source, depending on the flag
+                    return (norename ? nc.Compare(xMachineName, yMachineName) : (xSourceIndex - ySourceIndex) ?? 0);                    
                 }
                 catch
                 {
