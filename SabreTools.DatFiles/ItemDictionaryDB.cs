@@ -250,47 +250,156 @@ namespace SabreTools.DatFiles
         /// Update the bucketing dictionary
         /// </summary>
         /// <param name="bucketBy">ItemKey enum representing how to bucket the individual items</param>
+        /// <param name="dedupeType">Dedupe type that should be used</param>
         /// <param name="lower">True if the key should be lowercased (default), false otherwise</param>
         /// <param name="norename">True if games should only be compared on game and file name, false if system and source are counted</param>
         /// <returns></returns>
-        public void UpdateBucketBy(ItemKey bucketBy, bool lower = true, bool norename = true)
+        public void BucketBy(ItemKey bucketBy, DedupeType dedupeType, bool lower = true, bool norename = true)
         {
-            // If the bucketing value is the same or null
-            if (bucketBy == _bucketedBy || bucketBy == ItemKey.NULL)
-                return;
+            // If the sorted type isn't the same, we want to sort the dictionary accordingly
+            if (_bucketedBy != bucketBy && bucketBy != ItemKey.NULL)
+                PerformBucketing(bucketBy, lower, norename);
 
-            // Reset the bucketing values
-            _bucketedBy = bucketBy;
-            _buckets.Clear();
-
-            // Get the current list of item indicies
-            long[] itemIndicies = [.. _items.Keys];
-
-#if NET452_OR_GREATER || NETCOREAPP
-            Parallel.For(0, itemIndicies.Length, Globals.ParallelOptions, i =>
-#elif NET40_OR_GREATER
-            Parallel.For(0, itemIndicies.Length, i =>
-#else
-            for (int i = 0; i < itemIndicies.Length; i++)
-#endif
+            // If the merge type isn't the same, we want to merge the dictionary accordingly
+            if (dedupeType != DedupeType.None)
             {
-                string? bucketKey = GetBucketKey(i, bucketBy);
-                EnsureBucketingKey(bucketKey);
-                _buckets[bucketKey].Add(i);
-#if NET40_OR_GREATER || NETCOREAPP
-            });
-#else
+                PerformDeduplication(bucketBy, dedupeType);
             }
-#endif
+            // If the merge type is the same, we want to sort the dictionary to be consistent
+            else
+            {
+                PerformSorting(norename);
+            }
+        }
 
-            // Sort the buckets that have been created for consistency
-            PerformSorting(norename);
+        /// <summary>
+        /// Merge an arbitrary set of item pairs based on the supplied information
+        /// </summary>
+        /// <param name="itemMappings">List of pairs representing the items to be merged</param>
+        private List<(long, DatItem)> Deduplicate(List<(long, DatItem)> itemMappings)
+        {
+            // Check for null or blank roms first
+            if (itemMappings == null || !itemMappings.Any())
+                return [];
+
+            // Create output list
+            List<(long, DatItem)> output = [];
+
+            // Then deduplicate them by checking to see if data matches previous saved roms
+            int nodumpCount = 0;
+            for (int f = 0; f < itemMappings.Count; f++)
+            {
+                long itemIndex = itemMappings[f].Item1;
+                DatItem datItem = itemMappings[f].Item2;
+
+                // If we somehow have a null item, skip
+                if (datItem == null)
+                    continue;
+
+                // If we don't have a Disk, File, Media, or Rom, we skip checking for duplicates
+                if (datItem is not Disk && datItem is not DatItems.Formats.File && datItem is not Media && datItem is not Rom)
+                    continue;
+
+                // If it's a nodump, add and skip
+                if (datItem is Rom rom && rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump)
+                {
+                    output.Add((itemIndex, datItem));
+                    nodumpCount++;
+                    continue;
+                }
+                else if (datItem is Disk disk && disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump)
+                {
+                    output.Add((itemIndex, datItem));
+                    nodumpCount++;
+                    continue;
+                }
+                // If it's the first non-nodump rom in the list, don't touch it
+                else if (output.Count == 0 || output.Count == nodumpCount)
+                {
+                    output.Add((itemIndex, datItem));
+                    continue;
+                }
+
+                // Check if the rom is a duplicate
+                DupeType dupetype = 0x00;
+                long savedIndex = -1;
+                DatItem saveditem = new Blank();
+                int pos = -1;
+                for (int i = 0; i < output.Count; i++)
+                {
+                    long lastIndex = output[i].Item1;
+                    DatItem lastrom = output[i].Item2;
+
+                    // Get the duplicate status
+                    dupetype = datItem.GetDuplicateStatus(lastrom);
+
+                    // If it's a duplicate, skip adding it to the output but add any missing information
+                    if (dupetype != 0x00)
+                    {
+                        savedIndex = lastIndex;
+                        saveditem = lastrom;
+                        pos = i;
+
+                        // Disks, Media, and Roms have more information to fill
+                        if (datItem is Disk disk && saveditem is Disk savedDisk)
+                            savedDisk.FillMissingInformation(disk);
+                        else if (datItem is DatItems.Formats.File fileItem && saveditem is DatItems.Formats.File savedFile)
+                            savedFile.FillMissingInformation(fileItem);
+                        else if (datItem is Media media && saveditem is Media savedMedia)
+                            savedMedia.FillMissingInformation(media);
+                        else if (datItem is Rom romItem && saveditem is Rom savedRom)
+                            savedRom.FillMissingInformation(romItem);
+
+                        saveditem.SetFieldValue<DupeType>(DatItem.DupeTypeKey, dupetype);
+
+                        // Get the machines associated with the items
+                        var savedMachine = _machines[_itemToMachineMapping[savedIndex]];
+                        var itemMachine = _machines[_itemToMachineMapping[itemIndex]];
+
+                        // If the current system has a lower ID than the previous, set the system accordingly
+                        if (datItem.GetFieldValue<Source?>(DatItem.SourceKey)?.Index < saveditem.GetFieldValue<Source?>(DatItem.SourceKey)?.Index)
+                        {
+                            datItem.SetFieldValue<Source?>(DatItem.SourceKey, datItem.GetFieldValue<Source?>(DatItem.SourceKey)!.Clone() as Source);
+                            _machines[_itemToMachineMapping[savedIndex]] = (itemMachine.Clone() as Machine)!;
+                            saveditem.SetName(datItem.GetName());
+                        }
+
+                        // If the current machine is a child of the new machine, use the new machine instead
+                        if (savedMachine.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey) == itemMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey)
+                            || savedMachine.GetStringFieldValue(Models.Metadata.Machine.RomOfKey) == itemMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey))
+                        {
+                            _machines[_itemToMachineMapping[savedIndex]] = (itemMachine.Clone() as Machine)!;
+                            saveditem.SetName(datItem.GetName());
+                        }
+
+                        break;
+                    }
+                }
+
+                // If no duplicate is found, add it to the list
+                if (dupetype == 0x00)
+                {
+                    output.Add((itemIndex, datItem));
+                }
+                // Otherwise, if a new rom information is found, add that
+                else
+                {
+                    output.RemoveAt(pos);
+                    output.Insert(pos, (savedIndex, saveditem));
+                }
+            }
+
+            return output;
         }
 
         /// <summary>
         /// Get the bucketing key for a given item index
+        /// <param name="itemIndex">Index of the current item</param>
+        /// <param name="bucketBy">ItemKey value representing what key to get</param>
+        /// <param name="lower">True if the key should be lowercased, false otherwise</param>
+        /// <param name="norename">True if games should only be compared on game and file name, false if system and source are counted</param>
         /// </summary>
-        private string GetBucketKey(long itemIndex, ItemKey bucketBy)
+        private string GetBucketKey(long itemIndex, ItemKey bucketBy, bool lower, bool norename)
         {
             if (!_items.ContainsKey(itemIndex))
                 return string.Empty;
@@ -310,11 +419,19 @@ namespace SabreTools.DatFiles
             if (machine == null)
                 return string.Empty;
 
-            return bucketBy switch
+            string sourceKeyPadded = datItem.GetFieldValue<Source?>(DatItem.SourceKey)?.Index.ToString().PadLeft(10, '0') + '-';
+            string machineName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? "Default";
+
+            string bucketKey = bucketBy switch
             {
-                ItemKey.Machine => machine.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty,
+                ItemKey.Machine => (norename ? string.Empty : sourceKeyPadded) + machineName,
                 _ => GetBucketHashValue(datItem, bucketBy),
             };
+
+            if (lower)
+                bucketKey = bucketKey.ToLowerInvariant();
+
+            return bucketKey;
         }
 
         /// <summary>
@@ -386,6 +503,84 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Perform bucketing based on the item key provided
+        /// </summary>
+        /// <param name="bucketBy">ItemKey enum representing how to bucket the individual items</param>
+        /// <param name="lower">True if the key should be lowercased, false otherwise</param>
+        /// <param name="norename">True if games should only be compared on game and file name, false if system and source are counted</param>
+        private void PerformBucketing(ItemKey bucketBy, bool lower, bool norename)
+        {
+            // Reset the bucketing values
+            _bucketedBy = bucketBy;
+            _buckets.Clear();
+
+            // Get the current list of item indicies
+            long[] itemIndicies = [.. _items.Keys];
+
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.For(0, itemIndicies.Length, Globals.ParallelOptions, i =>
+#elif NET40_OR_GREATER
+            Parallel.For(0, itemIndicies.Length, i =>
+#else
+            for (int i = 0; i < itemIndicies.Length; i++)
+#endif
+            {
+                string? bucketKey = GetBucketKey(i, bucketBy, lower, norename);
+                EnsureBucketingKey(bucketKey);
+                _buckets[bucketKey].Add(i);
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
+        }
+
+        /// <summary>
+        /// Perform deduplication based on the deduplication type provided
+        /// </summary>
+        /// <param name="bucketBy">ItemKey enum representing how to bucket the individual items</param>
+        /// <param name="dedupeType">Dedupe type that should be used</param>
+        private void PerformDeduplication(ItemKey bucketBy, DedupeType dedupeType)
+        {
+            // Get the current list of bucket keys
+            string[] bucketKeys = [.. _buckets.Keys];
+
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.For(0, bucketKeys.Length, Globals.ParallelOptions, i =>
+#elif NET40_OR_GREATER
+            Parallel.For(0, bucketKeys.Length, i =>
+#else
+            for (int i = 0; i < bucketKeys.Length; i++)
+#endif
+            {
+                var itemIndices = _buckets[bucketKeys[i]];
+                if (itemIndices == null || !itemIndices.Any())
+#if NET40_OR_GREATER || NETCOREAPP
+                    return;
+#else
+                    continue;
+#endif
+
+                var datItems = itemIndices
+                    .Where(i => _items.ContainsKey(i))
+                    .Select(i => (i, _items[i]))
+                    .ToList();
+
+                Sort(ref datItems, false);
+
+                // If we're merging the roms, do so
+                if (dedupeType == DedupeType.Full || (dedupeType == DedupeType.Game && bucketBy == ItemKey.Machine))
+                    datItems = Deduplicate(datItems);
+
+                _buckets[bucketKeys[i]] = datItems.Select(m => m.Item1).ToConcurrentList();
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
+        }
+
+        /// <summary>
         /// Sort existing buckets for consistency
         /// </summary>
         private void PerformSorting(bool norename)
@@ -429,9 +624,9 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Sort a list of File objects by SourceID, Game, and Name (in order)
+        /// Sort a list of item pairs by SourceID, Game, and Name (in order)
         /// </summary>
-        /// <param name="itemMappings">List of File objects representing the roms to be sorted</param>
+        /// <param name="itemMappings">List of pairs representing the items to be sorted</param>
         /// <param name="norename">True if files are not renamed, false otherwise</param>
         /// <returns>True if it sorted correctly, false otherwise</returns>
         private bool Sort(ref List<(long, DatItem)> itemMappings, bool norename)
@@ -480,8 +675,6 @@ namespace SabreTools.DatFiles
 
             return true;
         }
-
-        // TODO: Write a method that deduplicates items based on any of the fields selected
 
         #endregion
 
