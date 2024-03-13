@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 #endif
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
@@ -9,9 +10,11 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using SabreTools.Hashing;
+using SabreTools.Matching;
 
 namespace SabreTools.DatFiles
 {
@@ -245,7 +248,7 @@ namespace SabreTools.DatFiles
             _buckets.Clear();
 
             // Get the current list of item indicies
-            long[] itemIndicies = _items.Keys.ToArray();
+            long[] itemIndicies = [.. _items.Keys];
 
 #if NET452_OR_GREATER || NETCOREAPP
             Parallel.For(0, itemIndicies.Length, Globals.ParallelOptions, i =>
@@ -263,6 +266,9 @@ namespace SabreTools.DatFiles
 #else
             }
 #endif
+
+            // Sort the buckets that have been created for consistency
+            SortBuckets(norename);
         }
 
         /// <summary>
@@ -361,6 +367,116 @@ namespace SabreTools.DatFiles
 #else
                 _buckets[key] = [];
 #endif
+        }
+
+        /// <summary>
+        /// Sort existing buckets for consistency
+        /// </summary>
+        private void SortBuckets(bool norename)
+        {
+            // Get the current list of bucket keys
+            string[] bucketKeys = [.. _buckets.Keys];
+
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.For(0, bucketKeys.Length, Globals.ParallelOptions, i =>
+#elif NET40_OR_GREATER
+            Parallel.For(0, bucketKeys.Length, i =>
+#else
+            for (int i = 0; i < bucketKeys.Length; i++)
+#endif
+            {
+                var itemIndices = _buckets[bucketKeys[i]];
+                if (itemIndices == null || !itemIndices.Any())
+                {
+#if NET40_OR_GREATER || NETCOREAPP
+                    _buckets.TryRemove(bucketKeys[i], out _);
+                    return;
+#else
+                    _buckets.Remove(bucketKeys[i]);
+                    continue;
+#endif
+                }
+
+                var datItems = itemIndices
+                    .Where(i => _items.ContainsKey(i))
+                    .Select(i => (i, _items[i]))
+                    .ToList();
+
+                Sort(ref datItems, norename);
+
+                _buckets[bucketKeys[i]] = datItems.Select(m => m.Item1).ToConcurrentList();
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
+        }
+
+        // TODO: Rewrite this to get the machine name from the mapping dictionary and not from the item itself
+
+        /// <summary>
+        /// Sort a list of File objects by SourceID, Game, and Name (in order)
+        /// </summary>
+        /// <param name="itemMappings">List of File objects representing the roms to be sorted</param>
+        /// <param name="norename">True if files are not renamed, false otherwise</param>
+        /// <returns>True if it sorted correctly, false otherwise</returns>
+        private static bool Sort(ref List<(long, DatItem)> itemMappings, bool norename)
+        {
+            itemMappings.Sort(delegate ((long, DatItem) x, (long, DatItem) y)
+            {
+                try
+                {
+                    NaturalComparer nc = new();
+
+                    // Get all required values
+                    string? xDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(x.Item2.GetName() ?? string.Empty));
+                    string? xMachineName = x.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    string? xName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(x.Item2.GetName() ?? string.Empty));
+                    int? xSourceIndex = x.Item2.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
+                    string? xType = x.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
+
+                    string? yDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(y.Item2.GetName() ?? string.Empty));
+                    string? yMachineName = y.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    string? yName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(y.Item2.GetName() ?? string.Empty));
+                    int? ySourceIndex = y.Item2.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
+                    string? yType = y.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
+
+                    // If machine names match, more refinement is needed
+                    if (xMachineName == yMachineName)
+                    {
+                        // If item types match, more refinement is needed
+                        if (xType == yType)
+                        {
+                            // If item directory names match, more refinement is needed
+                            if (xDirectoryName == yDirectoryName)
+                            {
+                                // If item names match, then compare on machine or source, depending on the flag
+                                if (xName == yName)
+                                    return (norename ? nc.Compare(xMachineName, yMachineName) : (xSourceIndex - ySourceIndex) ?? 0);
+
+                                // Otherwise, just sort based on item names
+                                return nc.Compare(xName, yName);
+                            }
+
+                            // Otherwise, just sort based on directory name
+                            return nc.Compare(xDirectoryName, yDirectoryName);
+                        }
+
+                        // Otherwise, just sort based on item type
+                        return xType.AsEnumValue<ItemType>() - yType.AsEnumValue<ItemType>();
+                    }
+
+                    // Otherwise, just sort based on machine name
+                    return nc.Compare(xMachineName, yMachineName);
+                }
+                catch
+                {
+                    // Absorb the error
+                    return 0;
+                }
+            });
+
+            return true;
         }
 
         #endregion
