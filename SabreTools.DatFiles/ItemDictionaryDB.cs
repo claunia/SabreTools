@@ -426,37 +426,34 @@ namespace SabreTools.DatFiles
                 {
                     var nc = new NaturalComparer();
 
-                    // Get all required values
-                    string? xDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(x.Item2.GetName() ?? string.Empty));
-                    string? xMachineName = _machines[_itemToMachineMapping[x.Item1]].GetStringFieldValue(Models.Metadata.Machine.NameKey);
-                    string? xName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(x.Item2.GetName() ?? string.Empty));
-                    int? xSourceIndex = x.Item2.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
-                    string? xType = x.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
-
-                    string? yDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(y.Item2.GetName() ?? string.Empty));
-                    string? yMachineName = _machines[_itemToMachineMapping[y.Item1]].GetStringFieldValue(Models.Metadata.Machine.NameKey);
-                    string? yName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(y.Item2.GetName() ?? string.Empty));
-                    int? ySourceIndex = y.Item2.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
-                    string? yType = y.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
-
                     // If machine names don't match
+                    string? xMachineName = _machines[_itemToMachineMapping[x.Item1]].GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    string? yMachineName = _machines[_itemToMachineMapping[y.Item1]].GetStringFieldValue(Models.Metadata.Machine.NameKey);
                     if (xMachineName != yMachineName)
                         return nc.Compare(xMachineName, yMachineName);
 
                     // If types don't match
+                    string? xType = x.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
+                    string? yType = y.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
                     if (xType != yType)
                         return xType.AsEnumValue<ItemType>() - yType.AsEnumValue<ItemType>();
 
                     // If directory names don't match
+                    string? xDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(x.Item2.GetName() ?? string.Empty));
+                    string? yDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(y.Item2.GetName() ?? string.Empty));
                     if (xDirectoryName != yDirectoryName)
                         return nc.Compare(xDirectoryName, yDirectoryName);
 
                     // If item names don't match
+                    string? xName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(x.Item2.GetName() ?? string.Empty));
+                    string? yName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(y.Item2.GetName() ?? string.Empty));
                     if (xName != yName)
                         return nc.Compare(xName, yName);
 
                     // Otherwise, compare on machine or source, depending on the flag
-                    return (norename ? nc.Compare(xMachineName, yMachineName) : (xSourceIndex - ySourceIndex) ?? 0);                    
+                    int? xSourceIndex = x.Item2.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
+                    int? ySourceIndex = y.Item2.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
+                    return (norename ? nc.Compare(xMachineName, yMachineName) : (xSourceIndex - ySourceIndex) ?? 0);
                 }
                 catch
                 {

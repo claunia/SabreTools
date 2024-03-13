@@ -622,36 +622,33 @@ namespace SabreTools.DatItems
                 {
                     var nc = new NaturalComparer();
 
-                    // Get all required values
-                    string? xDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty));
-                    string? xMachineName = x.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
-                    string? xName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty));
-                    int? xSourceIndex = x.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
-                    string? xType = x.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
-
-                    string? yDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty));
-                    string? yMachineName = y.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
-                    string? yName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty));
-                    int? ySourceIndex = y.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
-                    string? yType = y.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
-
                     // If machine names don't match
+                    string? xMachineName = x.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    string? yMachineName = y.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
                     if (xMachineName != yMachineName)
                         return nc.Compare(xMachineName, yMachineName);
 
                     // If types don't match
+                    string? xType = x.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
+                    string? yType = y.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
                     if (xType != yType)
                         return xType.AsEnumValue<ItemType>() - yType.AsEnumValue<ItemType>();
 
                     // If directory names don't match
+                    string? xDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty));
+                    string? yDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty));
                     if (xDirectoryName != yDirectoryName)
                         return nc.Compare(xDirectoryName, yDirectoryName);
 
                     // If item names don't match
+                    string? xName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty));
+                    string? yName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty));
                     if (xName != yName)
                         return nc.Compare(xName, yName);
 
                     // Otherwise, compare on machine or source, depending on the flag
+                    int? xSourceIndex = x.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
+                    int? ySourceIndex = y.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
                     return (norename ? nc.Compare(xMachineName, yMachineName) : (xSourceIndex - ySourceIndex) ?? 0);
                 }
                 catch
