@@ -1,5 +1,6 @@
 using SabreTools.Core;
 using SabreTools.Core.Tools;
+using SabreTools.DatFiles;
 using Xunit;
 
 namespace SabreTools.Test.Core

@@ -47,11 +47,11 @@ namespace SabreTools.DatFiles
             var header = Header.GetInternalClone();
 
             // Remove fields with default values
-            if (header.Read<Core.MergingFlag>(Models.Metadata.Header.ForceMergingKey) == Core.MergingFlag.None)
+            if (header.Read<MergingFlag>(Models.Metadata.Header.ForceMergingKey) == MergingFlag.None)
                 header.Remove(Models.Metadata.Header.ForceMergingKey);
-            if (header.Read<Core.NodumpFlag>(Models.Metadata.Header.ForceNodumpKey) == Core.NodumpFlag.None)
+            if (header.Read<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey) == NodumpFlag.None)
                 header.Remove(Models.Metadata.Header.ForceNodumpKey);
-            if (header.Read<Core.PackingFlag>(Models.Metadata.Header.ForcePackingKey) == Core.PackingFlag.None)
+            if (header.Read<PackingFlag>(Models.Metadata.Header.ForcePackingKey) == PackingFlag.None)
                 header.Remove(Models.Metadata.Header.ForcePackingKey);
 
             // Convert subheader values
