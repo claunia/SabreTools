@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
+using SabreTools.Core.Tools;
 using SabreTools.Models.Metadata;
 
 namespace SabreTools.Core.Filter

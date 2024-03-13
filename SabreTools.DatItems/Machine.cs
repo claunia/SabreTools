@@ -3,6 +3,7 @@ using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
 using SabreTools.Core.Filter;
+using SabreTools.Core.Tools;
 
 namespace SabreTools.DatItems
 {

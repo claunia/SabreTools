@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 using SabreTools.Models;
 using SabreTools.Models.Metadata;
 
-namespace SabreTools.Core.Filter
+namespace SabreTools.Core.Tools
 {
     public static class TypeHelper
     {
