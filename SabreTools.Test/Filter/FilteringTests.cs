@@ -1,6 +1,6 @@
+using SabreTools.Core.Filter;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
-using SabreTools.Filter;
 using Xunit;
 
 namespace SabreTools.Test.Filter

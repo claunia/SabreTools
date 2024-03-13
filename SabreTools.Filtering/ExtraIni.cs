@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SabreTools.Core.Filter;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.Logging;
@@ -68,7 +69,7 @@ namespace SabreTools.Filtering
                 string fieldString = inputTrimmed.Split(':')[0].ToLowerInvariant().Trim('"', ' ', '\t');
                 string fileString = inputTrimmed.Substring(fieldString.Length + 1).Trim('"', ' ', '\t');
 
-                item.FieldName = SabreTools.Filter.FilterParser.ParseFilterId(fieldString);
+                item.FieldName = FilterParser.ParseFilterId(fieldString);
                 if (item.PopulateFromFile(fileString))
                     Items.Add(item);
             }

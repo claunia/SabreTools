@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using SabreTools.Core.Tools;
 using SabreTools.Models.Metadata;
 
-namespace SabreTools.Filter
+namespace SabreTools.Core.Filter
 {
     /// <summary>
     /// Represents a single filtering object

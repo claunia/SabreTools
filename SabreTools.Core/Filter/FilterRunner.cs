@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SabreTools.Models.Metadata;
 
-namespace SabreTools.Filter
+namespace SabreTools.Core.Filter
 {
     /// <summary>
     /// Represents a set of filters that can be run against an object

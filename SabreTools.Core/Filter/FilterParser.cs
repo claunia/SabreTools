@@ -2,7 +2,7 @@
 using System.Linq;
 using SabreTools.Models.Metadata;
 
-namespace SabreTools.Filter
+namespace SabreTools.Core.Filter
 {
     public static class FilterParser
     {

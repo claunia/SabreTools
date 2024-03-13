@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Data.Sqlite;
 using SabreTools.Core;
+using SabreTools.Core.Filter;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatTools;
@@ -1783,7 +1784,7 @@ Some special strings that can be used:
         /// <summary>
         /// Preonfigured FilterRunner
         /// </summary>
-        protected Filter.FilterRunner? FilterRunner { get; set; }
+        protected FilterRunner? FilterRunner { get; set; }
 
         /// <summary>
         /// Pre-configured DatHeader
@@ -2046,7 +2047,7 @@ Some special strings that can be used:
             List<string> updateFields = [];
             foreach (string fieldName in GetList(features, UpdateFieldListValue))
             {
-                (string? itemType, string? key) = SabreTools.Filter.FilterParser.ParseFilterId(fieldName);
+                (string? itemType, string? key) = FilterParser.ParseFilterId(fieldName);
                 if (itemType == Models.Metadata.MetadataFile.MachineKey && key != null)
                     updateFields.Add(key);
             }
@@ -2062,7 +2063,7 @@ Some special strings that can be used:
             Dictionary<string, List<string>> updateFields = [];
             foreach (string fieldName in GetList(features, UpdateFieldListValue))
             {
-                (string? itemType, string? key) = SabreTools.Filter.FilterParser.ParseFilterId(fieldName);
+                (string? itemType, string? key) = FilterParser.ParseFilterId(fieldName);
                 if (itemType != null && itemType != Models.Metadata.MetadataFile.HeaderKey && itemType != Models.Metadata.MetadataFile.MachineKey && key != null)
                 {
                     if (!updateFields.ContainsKey(itemType))
@@ -2233,7 +2234,7 @@ Some special strings that can be used:
         /// <summary>
         /// Get FilterRunner from feature list
         /// </summary>
-        private static Filter.FilterRunner GetFilterRunner(Dictionary<string, Feature?> features)
+        private static FilterRunner GetFilterRunner(Dictionary<string, Feature?> features)
         {
             // Populate filters
             List<string> filterPairs = GetList(features, FilterListValue);
@@ -2245,7 +2246,7 @@ Some special strings that can be used:
                 // TODO: Support this use case somehow
             }
 
-            var filterRunner = new Filter.FilterRunner(filterPairs.ToArray());
+            var filterRunner = new FilterRunner(filterPairs.ToArray());
 
             return filterRunner;
         }

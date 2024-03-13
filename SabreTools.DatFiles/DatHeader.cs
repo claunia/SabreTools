@@ -4,9 +4,9 @@ using System.IO;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
+using SabreTools.Core.Filter;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles.Formats;
-using SabreTools.Filter;
 
 namespace SabreTools.DatFiles
 {

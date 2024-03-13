@@ -1,5 +1,5 @@
 using System;
-using SabreTools.Filter;
+using SabreTools.Core.Filter;
 using Xunit;
 
 namespace SabreTools.Test.Filter

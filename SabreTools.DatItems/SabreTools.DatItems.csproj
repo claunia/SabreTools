@@ -23,7 +23,6 @@
   <ItemGroup>
     <ProjectReference Include="..\SabreTools.Core\SabreTools.Core.csproj" />
     <ProjectReference Include="..\SabreTools.FileTypes\SabreTools.FileTypes.csproj" />
-    <ProjectReference Include="..\SabreTools.Filter\SabreTools.Filter.csproj" />
     <ProjectReference Include="..\SabreTools.Logging\SabreTools.Logging.csproj" />
   </ItemGroup>
 

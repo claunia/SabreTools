@@ -1,4 +1,4 @@
-namespace SabreTools.Filter
+namespace SabreTools.Core.Filter
 {
     /// <summary>
     /// Determines what operation is being done

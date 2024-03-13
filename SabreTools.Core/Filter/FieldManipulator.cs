@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using SabreTools.Models.Metadata;
 
-namespace SabreTools.Filter
+namespace SabreTools.Core.Filter
 {
     public static class FieldManipulator
     {

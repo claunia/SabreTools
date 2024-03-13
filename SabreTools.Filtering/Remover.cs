@@ -4,11 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 #endif
 using SabreTools.Core;
+using SabreTools.Core.Filter;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
-using SabreTools.Filter;
 using SabreTools.Logging;
 
 namespace SabreTools.Filtering

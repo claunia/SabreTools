@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using SabreTools.Core;
+using SabreTools.Core.Filter;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatTools;
-using SabreTools.Filter;
 using SabreTools.Filtering;
 using SabreTools.Hashing;
 using SabreTools.Help;
@@ -423,7 +423,7 @@ Reset the internal state:           reset();";
                 string filterString = $"{filterField}{(filterRemove == true ? "!" : string.Empty)}:{filterValue}";
 
                 // Create filter to run filters from
-                var filter = new Filter.FilterRunner([filterString]);
+                var filter = new FilterRunner([filterString]);
 
                 // Apply the filters blindly
                 batchState.DatFile.ExecuteFilters(filter);
