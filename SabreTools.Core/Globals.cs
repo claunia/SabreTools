@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 #if NET452_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
 #endif
@@ -10,7 +11,10 @@ namespace SabreTools.Core
     /// </summary>
     public class Globals
     {
-        #region Public accessors
+        /// <summary>
+        /// The current toolset version to be used by all child applications
+        /// </summary>
+        public readonly static string? Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
 
         /// <summary>
         /// Maximum threads to use during parallel operations
@@ -26,7 +30,5 @@ namespace SabreTools.Core
             MaxDegreeOfParallelism = MaxThreads
         };
 #endif
-
-        #endregion
     }
 }
