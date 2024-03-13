@@ -4,7 +4,6 @@ using System.Collections.Concurrent;
 #endif
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
 #endif
