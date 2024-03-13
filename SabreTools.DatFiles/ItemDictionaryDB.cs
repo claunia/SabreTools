@@ -102,6 +102,8 @@ namespace SabreTools.DatFiles
         /// </summary>
         public long AddItem(DatItem item, long machineIndex)
         {
+            // TODO: Add to buckets based on current sorting
+
             _items[_itemIndex++] = item;
             _itemToMachineMapping[_itemIndex - 1] = machineIndex;
             DatStatistics.AddItemStatistics(item);
