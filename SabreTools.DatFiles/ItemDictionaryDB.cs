@@ -180,7 +180,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Get the items associated with a bucket name
         /// </summary>
-        public DatItem[]? GetDatItemsForBucket(string bucketName)
+        public DatItem[]? GetDatItemsForBucket(string bucketName, bool filter = false)
         {
             if (!_buckets.ContainsKey(bucketName))
                 return null;
@@ -190,7 +190,7 @@ namespace SabreTools.DatFiles
             var datItems = new List<DatItem>();
             foreach (long itemId in itemIds)
             {
-                if (_items.ContainsKey(itemId))
+                if (_items.ContainsKey(itemId) && (!filter || _items[itemId].GetBoolFieldValue(DatItem.RemoveKey) != true))
                     datItems.Add(_items[itemId]);
             }
 
@@ -200,7 +200,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Get the items associated with a machine index
         /// </summary>
-        public DatItem[]? GetDatItemsForMachine(long machineIndex)
+        public DatItem[]? GetDatItemsForMachine(long machineIndex, bool filter = false)
         {
             var itemIds = _itemToMachineMapping
                 .Where(mapping => mapping.Value == machineIndex)
@@ -209,7 +209,7 @@ namespace SabreTools.DatFiles
             var datItems = new List<DatItem>();
             foreach (long itemId in itemIds)
             {
-                if (_items.ContainsKey(itemId))
+                if (_items.ContainsKey(itemId) && (!filter || _items[itemId].GetBoolFieldValue(DatItem.RemoveKey) != true))
                     datItems.Add(_items[itemId]);
             }
 
