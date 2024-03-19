@@ -1,4 +1,5 @@
 ﻿using System;
+using SabreTools.Models.Metadata;
 using SabreTools.Serialization.Interfaces;
 
 namespace SabreTools.DatFiles
@@ -11,7 +12,7 @@ namespace SabreTools.DatFiles
     /// <typeparam name="V">IModelSerializer for cross-model serialization</typeparam>
     public abstract class SerializableDatFile<T, U, V> : DatFile
         where U : IFileSerializer<T>
-        where V : IModelSerializer<T, Models.Metadata.MetadataFile>
+        where V : IModelSerializer<T, MetadataFile>
     {
         /// <inheritdoc/>
         protected SerializableDatFile(DatFile? datFile) : base(datFile) { }
