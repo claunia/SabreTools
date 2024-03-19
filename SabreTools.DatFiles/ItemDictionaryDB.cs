@@ -115,6 +115,98 @@ namespace SabreTools.DatFiles
         #region Accessors
 
         /// <summary>
+        /// Add a DatItem to the dictionary after validation
+        /// </summary>
+        /// <param name="item">Item data to validate</param>
+        /// <param name="machineIndex">Index of the machine related to the item</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        /// <returns>The index for the added item, -1 on error</returns>
+        public long AddItemAndValidate(DatItem item, long machineIndex, bool statsOnly)
+        {
+            // If we have a Disk, Media, or Rom, clean the hash data
+            if (item is Disk disk)
+            {
+                // If the file has aboslutely no hashes, skip and log
+                if (disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() != ItemStatus.Nodump
+                    && string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key))
+                    && string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)))
+                {
+                    disk.SetFieldValue<string?>(Models.Metadata.Disk.StatusKey, ItemStatus.Nodump.AsStringValue());
+                }
+
+                item = disk;
+            }
+            else if (item is Media media)
+            {
+                // If the file has aboslutely no hashes, skip and log
+                if (string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.MD5Key))
+                    && string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA1Key))
+                    && string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA256Key))
+                    && string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SpamSumKey)))
+                {
+                    // No-op as there is no status key for Media
+                }
+
+                item = media;
+            }
+            else if (item is Rom rom)
+            {
+                long? size = rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey);
+
+                // If we have the case where there is SHA-1 and nothing else, we don't fill in any other part of the data
+                if (size == null && !rom.HasHashes())
+                {
+                    // No-op, just catch it so it doesn't go further
+                }
+
+                // If we have a rom and it's missing size AND the hashes match a 0-byte file, fill in the rest of the info
+                else if ((size == 0 || size == null)
+                    && (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey)) || rom.HasZeroHash()))
+                {
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, Constants.SizeZero.ToString());
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, Constants.CRCZero);
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, Constants.MD5Zero);
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, Constants.SHA1Zero);
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA256Key, null); // Constants.SHA256Zero;
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA384Key, null); // Constants.SHA384Zero;
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key, null); // Constants.SHA512Zero;
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey, null); // Constants.SpamSumZero;
+                }
+
+                // If the file has no size and it's not the above case, skip and log
+                else if (rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() != ItemStatus.Nodump && (size == 0 || size == null))
+                {
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.StatusKey, ItemStatus.Nodump.AsStringValue());
+                }
+
+                // If the file has a size but aboslutely no hashes, skip and log
+                else if (rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() != ItemStatus.Nodump
+                    && size != null && size > 0
+                    && !rom.HasHashes())
+                {
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.StatusKey, ItemStatus.Nodump.AsStringValue());
+                }
+
+                item = rom;
+            }
+
+            // Get the key and add the file
+            string key = item.GetKey(ItemKey.Machine);
+
+            // If only adding statistics, we add an empty key for games and then just item stats
+            if (statsOnly)
+            {
+                EnsureBucketingKey(key);
+                DatStatistics.AddItemStatistics(item);
+                return -1;
+            }
+            else
+            {
+                return AddItem(item, machineIndex);
+            }
+        }
+
+        /// <summary>
         /// Add an item, returning the insert index
         /// </summary>
         public long AddItem(DatItem item, long machineIndex)
