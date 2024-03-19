@@ -320,7 +320,7 @@ namespace SabreTools.DatFiles
         private void ConvertMachines(Models.Metadata.Machine[]? items, string filename, int indexId, bool statsOnly)
         {
             // If the array is invalid, we can't do anything
-            if (items == null || !items.Any())
+            if (items == null || items.Length == 0)
                 return;
 
             // Loop through the machines and add

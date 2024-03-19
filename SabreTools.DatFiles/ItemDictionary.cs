@@ -191,7 +191,7 @@ namespace SabreTools.DatFiles
             lock (key)
             {
                 // If the value is null or empty, just return
-                if (value == null || !value.Any())
+                if (value == null || value.Count == 0)
                     return;
 
                 // Ensure the key exists

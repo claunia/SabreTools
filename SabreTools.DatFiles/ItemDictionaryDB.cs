@@ -430,7 +430,7 @@ namespace SabreTools.DatFiles
         private List<(long, DatItem)> Deduplicate(List<(long, DatItem)> itemMappings)
         {
             // Check for null or blank roms first
-            if (itemMappings == null || !itemMappings.Any())
+            if (itemMappings == null || itemMappings.Count == 0)
                 return [];
 
             // Create output list
@@ -717,7 +717,7 @@ namespace SabreTools.DatFiles
 #endif
             {
                 var itemIndices = _buckets[bucketKeys[i]];
-                if (itemIndices == null || !itemIndices.Any())
+                if (itemIndices == null || itemIndices.Count == 0)
 #if NET40_OR_GREATER || NETCOREAPP
                     return;
 #else
@@ -760,7 +760,7 @@ namespace SabreTools.DatFiles
 #endif
             {
                 var itemIndices = _buckets[bucketKeys[i]];
-                if (itemIndices == null || !itemIndices.Any())
+                if (itemIndices == null || itemIndices.Count == 0)
                 {
 #if NET40_OR_GREATER || NETCOREAPP
                     _buckets.TryRemove(bucketKeys[i], out _);
@@ -902,7 +902,7 @@ namespace SabreTools.DatFiles
             DatStatistics.ResetStatistics();
 
             // If there are no items
-            if (_items == null || !_items.Any())
+            if (_items == null || _items.Count == 0)
                 return;
 
             // Loop through and add

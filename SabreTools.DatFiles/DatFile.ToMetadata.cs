@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using SabreTools.Core.Tools;
@@ -15,7 +16,7 @@ namespace SabreTools.DatFiles
         public Models.Metadata.MetadataFile? ConvertMetadata(bool ignoreblanks = false)
         {
             // If we don't have items, we can't do anything
-            if (this.Items == null || !this.Items.Any())
+            if (Items == null || Items.Count == 0)
                 return null;
 
             // Create an object to hold the data
@@ -212,7 +213,7 @@ namespace SabreTools.DatFiles
             foreach (string key in Items.SortedKeys)
             {
                 var items = Items.FilteredItems(key);
-                if (items == null || !items.Any())
+                if (items == null || items.Count == 0)
                     continue;
 
                 // Create a machine to hold everything
@@ -436,7 +437,7 @@ namespace SabreTools.DatFiles
                 }
 
                 // Handle Part, DiskItem, and DatItem mappings, if they exist
-                if (partMappings.Any())
+                if (partMappings.Count != 0)
                 {
                     // Create a collection to hold the inverted Parts
                     Dictionary<string, Models.Metadata.Part> partItems = [];
@@ -948,7 +949,11 @@ namespace SabreTools.DatFiles
         private static void EnsureMachineKey<T>(Models.Metadata.Machine machine, string key)
         {
             if (machine.Read<T[]?>(key) == null)
+#if NET20 || NET35 || NET40 || NET452
                 machine[key] = new T[0];
+#else
+                machine[key] = Array.Empty<T>();
+#endif
         }
 
         /// <summary>
@@ -983,6 +988,6 @@ namespace SabreTools.DatFiles
             }
         }
 
-        #endregion
+#endregion
     }
 }

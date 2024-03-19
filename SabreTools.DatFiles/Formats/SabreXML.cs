@@ -227,11 +227,11 @@ namespace SabreTools.DatFiles.Formats
                         DatItem datItem = datItems[index];
 
                         // If we have a different game and we're not at the start of the list, output the end of last item
-                        if (lastgame != null && lastgame.ToLowerInvariant() != datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)?.ToLowerInvariant())
+                        if (lastgame != null && !string.Equals(lastgame, datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey), StringComparison.OrdinalIgnoreCase))
                             WriteEndGame(xtw);
 
                         // If we have a new game, output the beginning of the new item
-                        if (lastgame == null || lastgame.ToLowerInvariant() != datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)?.ToLowerInvariant())
+                        if (lastgame == null || !string.Equals(lastgame, datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey), StringComparison.OrdinalIgnoreCase))
                             WriteStartGame(xtw, datItem);
 
                         // Check for a "null" item
