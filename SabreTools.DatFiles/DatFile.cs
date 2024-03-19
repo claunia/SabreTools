@@ -306,45 +306,6 @@ namespace SabreTools.DatFiles
             return key;
         }
 
-        /// <summary>
-        /// Get a sanitized Date from an input string
-        /// </summary>
-        /// <param name="input">String to get value from</param>
-        /// <returns>Date as a string, if possible</returns>
-        protected static string? CleanDate(string? input)
-        {
-            // Null in, null out
-            if (string.IsNullOrEmpty(input))
-                return null;
-
-            string date = string.Empty;
-            if (input != null)
-            {
-                if (DateTime.TryParse(input, out DateTime dateTime))
-                    date = dateTime.ToString();
-                else
-                    date = input;
-            }
-
-            return date;
-        }
-
-        /// <summary>
-        /// Clean a hash string from a Listrom DAT
-        /// </summary>
-        /// <param name="hash">Hash string to sanitize</param>
-        /// <returns>Cleaned string</returns>
-        protected static string CleanListromHashData(string hash)
-        {
-            if (hash.StartsWith("CRC"))
-                return hash.Substring(4, 8).ToLowerInvariant();
-
-            else if (hash.StartsWith("SHA1"))
-                return hash.Substring(5, 40).ToLowerInvariant();
-
-            return hash;
-        }
-
         #endregion
 
         #region Writing
