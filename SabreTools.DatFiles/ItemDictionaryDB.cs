@@ -233,7 +233,12 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Get all bucket keys
         /// </summary>
-        public string[] GetBucketKeys() => [.. _buckets.Keys];
+        public string[] GetBucketKeys()
+        {
+            List<string> keys = [.. _buckets.Keys];
+            keys.Sort(new NaturalComparer());
+            return keys.ToArray();
+        }
 
         /// <summary>
         /// Get an item based on the index
@@ -258,54 +263,54 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Get the machine associated with an item index
+        /// Get the index and machine associated with an item index
         /// </summary>
-        public Machine? GetMachineForItem(long itemIndex)
+        public (long, Machine?) GetMachineForItem(long itemIndex)
         {
             if (!_itemToMachineMapping.ContainsKey(itemIndex))
-                return null;
+                return (-1, null);
 
             long machineIndex = _itemToMachineMapping[itemIndex];
             if (!_machines.ContainsKey(machineIndex))
-                return null;
+                return (-1, null);
 
-            return _machines[machineIndex];
+            return (machineIndex, _machines[machineIndex]);
         }
 
         /// <summary>
-        /// Get the items associated with a bucket name
+        /// Get the indices and items associated with a bucket name
         /// </summary>
-        public DatItem[]? GetDatItemsForBucket(string bucketName, bool filter = false)
+        public (long, DatItem)[]? GetDatItemsForBucket(string bucketName, bool filter = false)
         {
             if (!_buckets.ContainsKey(bucketName))
                 return null;
 
             var itemIds = _buckets[bucketName];
 
-            var datItems = new List<DatItem>();
+            var datItems = new List<(long, DatItem)>();
             foreach (long itemId in itemIds)
             {
                 if (_items.ContainsKey(itemId) && (!filter || _items[itemId].GetBoolFieldValue(DatItem.RemoveKey) != true))
-                    datItems.Add(_items[itemId]);
+                    datItems.Add((itemId, _items[itemId]));
             }
 
             return [.. datItems];
         }
 
         /// <summary>
-        /// Get the items associated with a machine index
+        /// Get the indices and items associated with a machine index
         /// </summary>
-        public DatItem[]? GetDatItemsForMachine(long machineIndex, bool filter = false)
+        public (long, DatItem)[]? GetDatItemsForMachine(long machineIndex, bool filter = false)
         {
             var itemIds = _itemToMachineMapping
                 .Where(mapping => mapping.Value == machineIndex)
                 .Select(mapping => mapping.Key);
 
-            var datItems = new List<DatItem>();
+            var datItems = new List<(long, DatItem)>();
             foreach (long itemId in itemIds)
             {
                 if (_items.ContainsKey(itemId) && (!filter || _items[itemId].GetBoolFieldValue(DatItem.RemoveKey) != true))
-                    datItems.Add(_items[itemId]);
+                    datItems.Add((itemId, _items[itemId]));
             }
 
             return [.. datItems];
