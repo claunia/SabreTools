@@ -34,7 +34,10 @@ namespace SabreTools.DatItems
 
         #region Constructors
 
-        public Machine() { }
+        public Machine()
+        {
+            _internal = new Models.Metadata.Machine();
+        }
 
         public Machine(Models.Metadata.Machine machine)
         {
