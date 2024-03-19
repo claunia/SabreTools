@@ -323,32 +323,8 @@ namespace SabreTools.Filtering
             // Because this introduces subfolders, we need to set the SuperDAT type
             datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, "SuperDAT");
 
-            // For each rom, we want to update the game to be "<game name>/<rom name>"
-#if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
-#elif NET40_OR_GREATER
-            Parallel.ForEach(datFile.Items.Keys, key =>
-#else
-            foreach (var key in datFile.Items.Keys)
-#endif
-            {
-                var items = datFile.Items[key];
-                if (items == null)
-#if NET40_OR_GREATER || NETCOREAPP
-                    return;
-#else
-                    continue;
-#endif
-
-                for (int i = 0; i < items.Count; i++)
-                {
-                    SetOneRomPerGame(items[i]);
-                }
-#if NET40_OR_GREATER || NETCOREAPP
-            });
-#else
-            }
-#endif
+            datFile.Items.SetOneRomPerGame();
+            datFile.ItemsDB.SetOneRomPerGame();
         }
 
         /// <summary>

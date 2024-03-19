@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 #endif
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
@@ -952,6 +953,57 @@ namespace SabreTools.DatFiles
             {
                 logger.Warning(ex.ToString());
             }
+        }
+
+        /// <summary>
+        /// Ensure that all roms are in their own game (or at least try to ensure)
+        /// </summary>
+        public void SetOneRomPerGame()
+        {
+            // For each rom, we want to update the game to be "<game name>/<rom name>"
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(Keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(Keys, key =>
+#else
+            foreach (var key in Keys)
+#endif
+            {
+                var items = this[key];
+                if (items == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                    return;
+#else
+                    continue;
+#endif
+
+                for (int i = 0; i < items.Count; i++)
+                {
+                    SetOneRomPerGame(items[i]);
+                }
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
+        }
+
+        /// <summary>
+        /// Set internal names to match One Rom Per Game (ORPG) logic
+        /// </summary>
+        /// <param name="datItem">DatItem to run logic on</param>
+        internal static void SetOneRomPerGame(DatItem datItem)
+        {
+            if (datItem.GetName() == null)
+                return;
+
+            string[] splitname = datItem.GetName()!.Split('.');
+#if NET20 || NET35
+            datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1).ToArray())}");
+#else
+            datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1))}");
+#endif
+            datItem.SetName(Path.GetFileName(datItem.GetName()));
         }
 
         #endregion
