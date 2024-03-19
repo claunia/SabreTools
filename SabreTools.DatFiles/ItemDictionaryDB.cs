@@ -122,7 +122,7 @@ namespace SabreTools.DatFiles
         /// <param name="machineIndex">Index of the machine related to the item</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise (default)</param>
         /// <returns>The index for the added item, -1 on error</returns>
-        public long AddItem(DatItem item, long machineIndex, bool statsOnly = false)
+        public long AddItem(DatItem item, long machineIndex, bool statsOnly)
         {
             // If we have a Disk, Media, or Rom, clean the hash data
             if (item is Disk disk)
