@@ -23,7 +23,6 @@ using SabreTools.Matching;
  * - Feature parity with all existing item dictionary operations
  * - A way to transition between the two item dictionaries (a flag?)
  * - Helper methods that target the "database" version instead of assuming the standard dictionary
- * - Automatically add to default buckets based on... [Machine name? Item type?]
  * 
  * Notable changes include:
  * - Separation of Machine from DatItem, leading to a mapping instead
@@ -119,9 +118,9 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="item">Item data to validate</param>
         /// <param name="machineIndex">Index of the machine related to the item</param>
-        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise (default)</param>
         /// <returns>The index for the added item, -1 on error</returns>
-        public long AddItemAndValidate(DatItem item, long machineIndex, bool statsOnly)
+        public long AddItemAndValidate(DatItem item, long machineIndex, bool statsOnly = false)
         {
             // If we have a Disk, Media, or Rom, clean the hash data
             if (item is Disk disk)
@@ -204,19 +203,6 @@ namespace SabreTools.DatFiles
             {
                 return AddItem(item, machineIndex);
             }
-        }
-
-        /// <summary>
-        /// Add an item, returning the insert index
-        /// </summary>
-        public long AddItem(DatItem item, long machineIndex)
-        {
-            // TODO: Add to buckets based on current sorting
-
-            _items[_itemIndex++] = item;
-            _itemToMachineMapping[_itemIndex - 1] = machineIndex;
-            DatStatistics.AddItemStatistics(item);
-            return _itemIndex - 1;
         }
 
         /// <summary>
@@ -377,6 +363,27 @@ namespace SabreTools.DatFiles
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Add an item, returning the insert index
+        /// </summary>
+        private long AddItem(DatItem item, long machineIndex)
+        {
+            // Add the item with a new index
+            _items[_itemIndex++] = item;
+
+            // Add the machine mapping
+            _itemToMachineMapping[_itemIndex - 1] = machineIndex;
+
+            // Add the item statistics
+            DatStatistics.AddItemStatistics(item);
+
+            // Add the item to the default bucket
+            PerformItemBucketing(_itemIndex - 1, _bucketedBy, lower: true, norename: true);
+
+            // Return the used index
+            return _itemIndex - 1;
         }
 
         #endregion
@@ -662,14 +669,26 @@ namespace SabreTools.DatFiles
             for (int i = 0; i < itemIndicies.Length; i++)
 #endif
             {
-                string? bucketKey = GetBucketKey(i, bucketBy, lower, norename);
-                EnsureBucketingKey(bucketKey);
-                _buckets[bucketKey].Add(i);
+                PerformItemBucketing(i, bucketBy, lower, norename);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
             }
 #endif
+        }
+
+        /// <summary>
+        /// Bucket a single DatItem
+        /// </summary>
+        /// <param name="itemIndex">Index of the item to bucket</param>
+        /// <param name="bucketBy">ItemKey enum representing how to bucket the individual items</param>
+        /// <param name="lower">True if the key should be lowercased, false otherwise</param>
+        /// <param name="norename">True if games should only be compared on game and file name, false if system and source are counted</param>
+        private void PerformItemBucketing(long itemIndex, ItemKey bucketBy, bool lower, bool norename)
+        {
+            string? bucketKey = GetBucketKey(itemIndex, bucketBy, lower, norename);
+            EnsureBucketingKey(bucketKey);
+            _buckets[bucketKey].Add(itemIndex);
         }
 
         /// <summary>
