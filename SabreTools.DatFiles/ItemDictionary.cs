@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
+using SabreTools.Core.Filter;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using SabreTools.Hashing;
@@ -706,6 +707,51 @@ namespace SabreTools.DatFiles
 
             // Now that we have the sorted type, we get the proper key
             return datItem.GetKey(bucketedBy);
+        }
+
+        #endregion
+
+        #region Filtering
+
+        /// <summary>
+        /// Execute all filters in a filter runner on the items in the dictionary
+        /// </summary>
+        /// <param name="filterRunner">Preconfigured filter runner to use</param>
+        public void ExecuteFilters(FilterRunner filterRunner)
+        {
+            List<string> keys = [.. Keys];
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(keys, key =>
+#else
+            foreach (var key in keys)
+#endif
+            {
+                ConcurrentList<DatItem>? items = this[key];
+                if (items == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                    return;
+#else
+                    continue;
+#endif
+
+                // Filter all items in the current key
+                var newItems = new ConcurrentList<DatItem>();
+                foreach (var item in items)
+                {
+                    if (item.PassesFilter(filterRunner))
+                        newItems.Add(item);
+                }
+
+                // Set the value in the key to the new set
+                this[key] = newItems;
+
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
         }
 
         #endregion
