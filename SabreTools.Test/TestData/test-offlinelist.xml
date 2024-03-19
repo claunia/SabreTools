@@ -62,7 +62,7 @@
 			<im1CRC>deadbeef</im1CRC>
 			<im2CRC>beefdead</im2CRC>
 			<comment>Not a real release, sorry</comment>
-			<duplicateId>0</duplicateId>
+			<duplicateID>0</duplicateID>
 		</game>
 	</games>
 </dat>
