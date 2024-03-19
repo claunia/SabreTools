@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
+using SabreTools.Core.Filter;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -23,6 +24,7 @@ using SabreTools.Matching;
  * - Feature parity with all existing item dictionary operations
  * - A way to transition between the two item dictionaries (a flag?)
  * - Helper methods that target the "database" version instead of assuming the standard dictionary
+ * - Should sources be separated out the same as machines are?
  * 
  * Notable changes include:
  * - Separation of Machine from DatItem, leading to a mapping instead
@@ -835,6 +837,51 @@ namespace SabreTools.DatFiles
             });
 
             return true;
+        }
+
+        #endregion
+
+        #region Filtering
+
+        /// <summary>
+        /// Execute all filters in a filter runner on the items in the dictionary
+        /// </summary>
+        /// <param name="filterRunner">Preconfigured filter runner to use</param>
+        public void ExecuteFilters(FilterRunner filterRunner)
+        {
+            List<string> keys = [.. GetBucketKeys()];
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(keys, key =>
+#else
+            foreach (var key in keys)
+#endif
+            {
+                (long, DatItem)[]? items = GetDatItemsForBucket(key);
+                if (items == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                    return;
+#else
+                    continue;
+#endif
+
+                // Filter all items in the current key
+                var newItems = new ConcurrentList<(long, DatItem)>();
+                foreach (var item in items)
+                {
+                    if (item.Item2.PassesFilter(filterRunner))
+                        newItems.Add(item);
+                }
+
+                // Set the value in the key to the new set
+                _buckets[key] = newItems.Select(i => i.Item1).ToConcurrentList();
+
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
         }
 
         #endregion
