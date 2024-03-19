@@ -36,6 +36,12 @@ namespace SabreTools.DatFiles
         [JsonProperty("items"), XmlElement("items")]
         public ItemDictionary Items { get; set; } = [];
 
+        /// <summary>
+        /// DatItems and related statistics
+        /// </summary>
+        [JsonProperty("items"), XmlElement("items")]
+        public ItemDictionaryDB ItemsDB { get; set; } = new ItemDictionaryDB();
+
         #endregion
 
         #region Logging
@@ -172,13 +178,23 @@ namespace SabreTools.DatFiles
         public abstract void ParseFile(string filename, int indexId, bool keep, bool statsOnly = false, bool throwOnError = false);
 
         /// <summary>
-        /// Add a rom to the Dat after checking
+        /// Add a DatItem to the dictionary after checking
         /// </summary>
         /// <param name="item">Item data to check against</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <returns>The key for the item</returns>
         protected string ParseAddHelper(DatItem item, bool statsOnly)
             => Items.AddItem(item, statsOnly);
+
+        /// <summary>
+        /// Add a DatItem to the dictionary after checking
+        /// </summary>
+        /// <param name="item">Item data to check against</param>
+        /// <param name="machineIndex">Index of the machine to map the DatItem to</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        /// <returns>The key for the item</returns>
+        protected long ParseAddHelper(DatItem item, long machineIndex, bool statsOnly)
+            => ItemsDB.AddItem(item, machineIndex, statsOnly);
 
         #endregion
 
@@ -392,6 +408,36 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Process any DatItems that are "null", usually created from directory population
+        /// </summary>
+        /// <param name="datItem">DatItem to check for "null" status</param>
+        /// <returns>Cleaned DatItem</returns>
+        protected (long, DatItem) ProcessNullifiedItem((long, DatItem) datItem)
+        {
+            // If we don't have a Rom, we can ignore it
+            if (datItem.Item2 is not Rom rom)
+                return datItem;
+
+            // If the Rom has "null" characteristics, ensure all fields
+            if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) == null && rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey) == "null")
+            {
+                logger.Verbose($"Empty folder found: {datItem.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)}");
+
+                rom.SetName(rom.GetName() == "null" ? "-" : rom.GetName());
+                rom.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, Constants.SizeZero.ToString());
+                rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey) == "null" ? Constants.CRCZero : null);
+                rom.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key) == "null" ? Constants.MD5Zero : null);
+                rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key) == "null" ? Constants.SHA1Zero : null);
+                rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA256Key, rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key) == "null" ? Constants.SHA256Zero : null);
+                rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA384Key, rom.GetStringFieldValue(Models.Metadata.Rom.SHA384Key) == "null" ? Constants.SHA384Zero : null);
+                rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key, rom.GetStringFieldValue(Models.Metadata.Rom.SHA512Key) == "null" ? Constants.SHA512Zero : null);
+                rom.SetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey, rom.GetStringFieldValue(Models.Metadata.Rom.SpamSumKey) == "null" ? Constants.SpamSumZero : null);
+            }
+
+            return (datItem.Item1, rom);
+        }
+
+        /// <summary>
         /// Get supported types for write
         /// </summary>
         /// <returns>List of supported types for writing</returns>
@@ -421,6 +467,27 @@ namespace SabreTools.DatFiles
             foreach (DatItem datItem in datItems)
             {
                 if (GetSupportedTypes().Contains(datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>()))
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Get if a machine contains any writable items
+        /// </summary>
+        /// <param name="datItems">DatItems to check</param>
+        /// <returns>True if the machine contains at least one writable item, false otherwise</returns>
+        /// <remarks>Empty machines are kept with this</remarks>
+        protected bool ContainsWritable((long, DatItem)[]? datItems)
+        {
+            // Empty machines are considered writable
+            if (datItems == null || datItems.Length == 0)
+                return true;
+
+            foreach ((long, DatItem) datItem in datItems)
+            {
+                if (GetSupportedTypes().Contains(datItem.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>()))
                     return true;
             }
 
@@ -481,6 +548,74 @@ namespace SabreTools.DatFiles
 
             // If we have an item with missing required fields
             List<string>? missingFields = GetMissingRequiredFields(datItem);
+            if (missingFields != null && missingFields.Count != 0)
+            {
+                string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
+#if NET20 || NET35
+                logger?.Verbose($"Item '{itemString}' was skipped because it was missing required fields for {Header?.GetFieldValue<DatFormat>(DatHeader.DatFormatKey)}: {string.Join(", ", [.. missingFields])}");
+#else
+                logger?.Verbose($"Item '{itemString}' was skipped because it was missing required fields for {Header?.GetFieldValue<DatFormat>(DatHeader.DatFormatKey)}: {string.Join(", ", missingFields)}");
+#endif
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Get if an item should be ignored on write
+        /// </summary>
+        /// <param name="datItem">DatItem to check</param>
+        /// <param name="ignoreBlanks">True if blank roms should be skipped on output, false otherwise</param>
+        /// <returns>True if the item should be skipped on write, false otherwise</returns>
+        protected bool ShouldIgnore((long, DatItem?) datItem, bool ignoreBlanks)
+        {
+            // If this is invoked with a null DatItem, we ignore
+            if (datItem.Item1 < 0 || datItem.Item2 == null)
+            {
+                logger?.Verbose($"Item was skipped because it was null");
+                return true;
+            }
+
+            // If the item is supposed to be removed, we ignore
+            if (datItem.Item2.GetBoolFieldValue(DatItem.RemoveKey) == true)
+            {
+                string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
+                logger?.Verbose($"Item '{itemString}' was skipped because it was marked for removal");
+                return true;
+            }
+
+            // If we have the Blank dat item, we ignore
+            if (datItem.Item2 is Blank)
+            {
+                string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
+                logger?.Verbose($"Item '{itemString}' was skipped because it was of type 'Blank'");
+                return true;
+            }
+
+            // If we're ignoring blanks and we have a Rom
+            if (ignoreBlanks && datItem.Item2 is Rom rom)
+            {
+                // If we have a 0-size or blank rom, then we ignore
+                long? size = rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey);
+                if (size == 0 || size == null)
+                {
+                    string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
+                    logger?.Verbose($"Item '{itemString}' was skipped because it had an invalid size");
+                    return true;
+                }
+            }
+
+            // If we have an item type not in the list of supported values
+            if (!GetSupportedTypes().Contains(datItem.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>()))
+            {
+                string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
+                logger?.Verbose($"Item '{itemString}' was skipped because it was not supported in {Header?.GetFieldValue<DatFormat>(DatHeader.DatFormatKey)}");
+                return true;
+            }
+
+            // If we have an item with missing required fields
+            List<string>? missingFields = GetMissingRequiredFields(datItem.Item2);
             if (missingFields != null && missingFields.Count != 0)
             {
                 string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
