@@ -34,13 +34,13 @@ namespace SabreTools.DatFiles
         /// DatItems and related statistics
         /// </summary>
         [JsonProperty("items"), XmlElement("items")]
-        public ItemDictionary Items { get; set; } = [];
+        public ItemDictionary Items { get; private set; } = [];
 
         /// <summary>
         /// DatItems and related statistics
         /// </summary>
         [JsonProperty("items"), XmlElement("items")]
-        public ItemDictionaryDB ItemsDB { get; set; } = new ItemDictionaryDB();
+        public ItemDictionaryDB ItemsDB { get; private set; } = new ItemDictionaryDB();
 
         #endregion
 
@@ -151,6 +151,19 @@ namespace SabreTools.DatFiles
                 Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, splitpath.Last());
                 Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + (bare ? string.Empty : $" ({Header.GetStringFieldValue(Models.Metadata.Header.DateKey)})"));
             }
+        }
+
+        #endregion
+
+        #region
+
+        /// <summary>
+        /// Reset the internal item dictionary
+        /// </summary>
+        public void ResetDictionary()
+        {
+            Items = [];
+            ItemsDB = new ItemDictionaryDB();
         }
 
         #endregion

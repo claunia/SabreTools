@@ -342,8 +342,7 @@ namespace SabreTools.DatTools
 #endif
             {
                 DatFile diffData = DatFile.Create(datHeaders[j]);
-                diffData.Items = [];
-                diffData.ItemsDB = new ItemDictionaryDB();
+                diffData.ResetDictionary();
                 FillWithSourceIndex(datFile, diffData, j);
                 outDatsArray[j] = diffData;
 #if NET40_OR_GREATER || NETCOREAPP
@@ -393,8 +392,7 @@ namespace SabreTools.DatTools
             dupeData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, dupeData.Header.GetStringFieldValue(DatHeader.FileNameKey) + post);
             dupeData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, dupeData.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + post);
             dupeData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, dupeData.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + post);
-            dupeData.Items = [];
-            dupeData.ItemsDB = new ItemDictionaryDB();
+            dupeData.ResetDictionary();
 
             watch.Stop();
 
@@ -494,8 +492,7 @@ namespace SabreTools.DatTools
                 diffData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, diffData.Header.GetStringFieldValue(DatHeader.FileNameKey) + innerpost);
                 diffData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, diffData.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + innerpost);
                 diffData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, diffData.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + innerpost);
-                diffData.Items = [];
-                diffData.ItemsDB = new ItemDictionaryDB();
+                diffData.ResetDictionary();
                 outDatsArray[j] = diffData;
 #if NET40_OR_GREATER || NETCOREAPP
             });
@@ -588,8 +585,7 @@ namespace SabreTools.DatTools
             outerDiffData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, outerDiffData.Header.GetStringFieldValue(DatHeader.FileNameKey) + post);
             outerDiffData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, outerDiffData.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + post);
             outerDiffData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, outerDiffData.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + post);
-            outerDiffData.Items = [];
-            outerDiffData.ItemsDB = new ItemDictionaryDB();
+            outerDiffData.ResetDictionary();
 
             watch.Stop();
 
@@ -718,10 +714,7 @@ namespace SabreTools.DatTools
 
             // Now remove the file dictionary from the source DAT
             if (delete)
-            {
-                addFrom.Items = [];
-                addFrom.ItemsDB = new ItemDictionaryDB();
-            }
+                addFrom.ResetDictionary();
         }
 
         /// <summary>
