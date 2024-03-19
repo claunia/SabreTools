@@ -5,6 +5,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
+
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
 #endif
@@ -1051,6 +1053,51 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Strip the dates from the beginning of scene-style set names
+        /// </summary>
+        public void StripSceneDatesFromItems()
+        {
+            // Set the regex pattern to use
+            string pattern = @"([0-9]{2}\.[0-9]{2}\.[0-9]{2}-)(.*?-.*?)";
+
+            // Now process all of the roms
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(SortedKeys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(SortedKeys, key =>
+#else
+            foreach (var key in SortedKeys)
+#endif
+            {
+                var items = GetDatItemsForBucket(key);
+                if (items == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                    return;
+#else
+                    continue;
+#endif
+
+                for (int j = 0; j < items.Length; j++)
+                {
+                    (long, DatItem) item = items[j];
+                    if (Regex.IsMatch(item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!, pattern))
+                        item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Regex.Replace(item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!, pattern, "$2"));
+
+                    if (Regex.IsMatch(item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)!, pattern))
+                        item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, Regex.Replace(item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)!, pattern, "$2"));
+
+                    items[j] = item;
+                }
+
+                _buckets[key] = items.Select(i => i.Item1).ToConcurrentList();
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
+        }
+
+        /// <summary>
         /// Execute all filters in a filter runner on a single bucket
         /// </summary>
         /// <param name="filterRunner">Preconfigured filter runner to use</param>
@@ -1077,7 +1124,7 @@ namespace SabreTools.DatFiles
         /// Set internal names to match One Rom Per Game (ORPG) logic
         /// </summary>
         /// <param name="datItem">DatItem to run logic on</param>
-        internal static void SetOneRomPerGame((long, DatItem) datItem)
+        private void SetOneRomPerGame((long, DatItem) datItem)
         {
             if (datItem.Item1 < 0 || datItem.Item2.GetName() == null)
                 return;
