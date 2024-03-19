@@ -858,30 +858,35 @@ namespace SabreTools.DatFiles
             foreach (var key in keys)
 #endif
             {
-                (long, DatItem)[]? items = GetDatItemsForBucket(key);
-                if (items == null)
-#if NET40_OR_GREATER || NETCOREAPP
-                    return;
-#else
-                    continue;
-#endif
-
-                // Filter all items in the current key
-                var newItems = new ConcurrentList<(long, DatItem)>();
-                foreach (var item in items)
-                {
-                    if (item.Item2.PassesFilter(filterRunner))
-                        newItems.Add(item);
-                }
-
-                // Set the value in the key to the new set
-                _buckets[key] = newItems.Select(i => i.Item1).ToConcurrentList();
-
+                ExecuteFilterOnBucket(filterRunner, key);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
             }
 #endif
+        }
+
+        /// <summary>
+        /// Execute all filters in a filter runner on a single bucket
+        /// </summary>
+        /// <param name="filterRunner">Preconfigured filter runner to use</param>
+        /// <param name="bucketName">Name of the bucket to filter on</param>
+        private void ExecuteFilterOnBucket(FilterRunner filterRunner, string bucketName)
+        {
+            (long, DatItem)[]? items = GetDatItemsForBucket(bucketName);
+            if (items == null)
+                return;
+
+            // Filter all items in the current key
+            var newItems = new ConcurrentList<(long, DatItem)>();
+            foreach (var item in items)
+            {
+                if (item.Item2.PassesFilter(filterRunner))
+                    newItems.Add(item);
+            }
+
+            // Set the value in the key to the new set
+            _buckets[bucketName] = newItems.Select(i => i.Item1).ToConcurrentList();
         }
 
         #endregion
