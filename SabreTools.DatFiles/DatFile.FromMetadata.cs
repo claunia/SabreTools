@@ -416,7 +416,8 @@ namespace SabreTools.DatFiles
             }
             if (item.ContainsKey(Models.Metadata.Machine.DiskKey))
             {
-                var items = ReadItemArray<Models.Metadata.Disk>(item, Models.Metadata.Machine.DiskKey);
+                var items = ReadItemArray<Models.Metadata.Disk>(item, Models.Metadata.Machine.DiskKey)
+                    ?? ReadItemArray<Models.Metadata.DatItem>(item, Models.Metadata.Machine.DiskKey)?.Select(d => (d as Models.Metadata.Disk)!)?.ToArray(); // TODO: Remove case when Serialization fixed
                 ProcessItems(items, machine, machineIndex, filename, indexId, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.DisplayKey))
@@ -477,7 +478,8 @@ namespace SabreTools.DatFiles
             }
             if (item.ContainsKey(Models.Metadata.Machine.RomKey))
             {
-                var items = ReadItemArray<Models.Metadata.Rom>(item, Models.Metadata.Machine.RomKey);
+                var items = ReadItemArray<Models.Metadata.Rom>(item, Models.Metadata.Machine.RomKey)
+                    ?? ReadItemArray<Models.Metadata.DatItem>(item, Models.Metadata.Machine.RomKey)?.Select(d => (d as Models.Metadata.Rom)!)?.ToArray(); // TODO: Remove case when Serialization fixed
                 ProcessItems(items, machine, machineIndex, filename, indexId, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.SampleKey))
