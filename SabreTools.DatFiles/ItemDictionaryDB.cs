@@ -16,6 +16,23 @@ using SabreTools.DatItems.Formats;
 using SabreTools.Hashing;
 using SabreTools.Matching;
 
+/*
+ * Planning Notes:
+ * 
+ * In order for this in-memory "database" design to work, there need to be a few things:
+ * - Feature parity with all existing item dictionary operations
+ * - A way to transition between the two item dictionaries (a flag?)
+ * - Helper methods that target the "database" version instead of assuming the standard dictionary
+ * - Automatically add to default buckets based on... [Machine name? Item type?]
+ * 
+ * Notable changes include:
+ * - Separation of Machine from DatItem, leading to a mapping instead
+ *      + Should DatItem include an index reference to the machine? Or should that be all external?
+ * - Adding machines to the dictionary distinctly from the items
+ * - Having a separate "bucketing" system that only reorders indicies and not full items; quicker?
+ * - Non-key-based add/remove of values; use explicit methods instead of dictionary-style accessors
+*/
+
 namespace SabreTools.DatFiles
 {
     /// <summary>
