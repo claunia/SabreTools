@@ -67,6 +67,7 @@ namespace SabreTools.DatFiles
             {
                 Header = datFile.Header;
                 Items = datFile.Items;
+                ItemsDB = datFile.ItemsDB;
             }
         }
 
@@ -161,7 +162,10 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="filterRunner">Preconfigured filter runner to use</param>
         public void ExecuteFilters(FilterRunner filterRunner)
-            => Items.ExecuteFilters(filterRunner);
+        {
+            Items.ExecuteFilters(filterRunner);
+            ItemsDB.ExecuteFilters(filterRunner);
+        }
 
         #endregion
 

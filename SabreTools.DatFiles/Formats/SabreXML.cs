@@ -105,6 +105,7 @@ namespace SabreTools.DatFiles.Formats
 
             // Prepare internal variables
             Machine? machine = null;
+            long machineIndex = -1;
 
             // Otherwise, read the directory
             xtr.MoveToContent();
@@ -122,11 +123,14 @@ namespace SabreTools.DatFiles.Formats
                     case "machine":
                         XmlSerializer xs = new(typeof(Machine));
                         machine = xs?.Deserialize(xtr.ReadSubtree()) as Machine;
+                        if (machine != null)
+                            machineIndex = ItemsDB.AddMachine(machine);
+
                         xtr.Skip();
                         break;
 
                     case "files":
-                        ReadFiles(xtr.ReadSubtree(), machine, statsOnly, filename, indexId);
+                        ReadFiles(xtr.ReadSubtree(), machine, machineIndex, statsOnly, filename, indexId);
 
                         // Skip the directory node now that we've processed it
                         xtr.Read();
@@ -143,10 +147,11 @@ namespace SabreTools.DatFiles.Formats
         /// </summary>
         /// <param name="xtr">XmlReader to use to parse the header</param>
         /// <param name="machine">Machine to copy information from</param>
+        /// <param name="machineIndex">Index of the Machine to add to the parsed items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
-        private void ReadFiles(XmlReader xtr, Machine? machine, bool statsOnly, string filename, int indexId)
+        private void ReadFiles(XmlReader xtr, Machine? machine, long machineIndex, bool statsOnly, string filename, int indexId)
         {
             // If the reader is invalid, skip
             if (xtr == null)
@@ -172,6 +177,7 @@ namespace SabreTools.DatFiles.Formats
                             item.CopyMachineInformation(machine);
                             item.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
                             ParseAddHelper(item, statsOnly);
+                            ParseAddHelper(item, machineIndex, statsOnly);
                         }
                         xtr.Skip();
                         break;

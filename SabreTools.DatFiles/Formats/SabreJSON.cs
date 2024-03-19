@@ -141,9 +141,14 @@ namespace SabreTools.DatFiles.Formats
             if (machineObj.ContainsKey("machine"))
                 machine = machineObj["machine"]?.ToObject<Machine>();
 
+            // Add the machine to the dictionary
+            long machineIndex = -1;
+            if (machine != null)
+                machineIndex = ItemsDB.AddMachine(machine);
+
             // Read items, if possible
             if (machineObj.ContainsKey("items"))
-                ReadItems(machineObj["items"] as JArray, statsOnly, filename, indexId, machine);
+                ReadItems(machineObj["items"] as JArray, statsOnly, filename, indexId, machine, machineIndex);
         }
 
         /// <summary>
@@ -154,6 +159,7 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="machine">Machine information to add to the parsed items</param>
+        /// <param name="machineIndex">Index of the Machine to add to the parsed items</param>
         private void ReadItems(
             JArray? itemsArr,
             bool statsOnly,
@@ -163,7 +169,8 @@ namespace SabreTools.DatFiles.Formats
             int indexId,
 
             // Miscellaneous
-            Machine? machine)
+            Machine? machine,
+            long machineIndex)
         {
             // If the array is invalid, skip
             if (itemsArr == null)
@@ -172,18 +179,19 @@ namespace SabreTools.DatFiles.Formats
             // Loop through each datitem object and process
             foreach (JObject itemObj in itemsArr.Cast<JObject>())
             {
-                ReadItem(itemObj, statsOnly, filename, indexId, machine);
+                ReadItem(itemObj, statsOnly, filename, indexId, machine, machineIndex);
             }
         }
 
         /// <summary>
         /// Read item information
         /// </summary>
-        /// <param name="machineObj">JObject representing a single datitem</param>
+        /// <param name="itemObj">JObject representing a single datitem</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="machine">Machine information to add to the parsed items</param>
+        /// <param name="machineIndex">Index of the Machine to add to the parsed items</param>
         private void ReadItem(
             JObject itemObj,
             bool statsOnly,
@@ -193,7 +201,8 @@ namespace SabreTools.DatFiles.Formats
             int indexId,
 
             // Miscellaneous
-            Machine? machine)
+            Machine? machine,
+            long machineIndex)
         {
             // If we have an empty item, skip it
             if (itemObj == null)
@@ -346,6 +355,7 @@ namespace SabreTools.DatFiles.Formats
                 datItem.CopyMachineInformation(machine);
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
                 ParseAddHelper(datItem, statsOnly);
+                ParseAddHelper(datItem, machineIndex, statsOnly);
             }
         }
 

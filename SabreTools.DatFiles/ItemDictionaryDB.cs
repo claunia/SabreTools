@@ -106,6 +106,21 @@ namespace SabreTools.DatFiles
         #region Fields
 
         /// <summary>
+        /// Get the keys in sorted order from the file dictionary
+        /// </summary>
+        /// <returns>List of the keys in sorted order</returns>
+        [JsonIgnore, XmlIgnore]
+        public string[] SortedKeys
+        {
+            get
+            {
+                List<string> keys = [.. _buckets.Keys];
+                keys.Sort(new NaturalComparer());
+                return keys.ToArray();
+            }
+        }
+
+        /// <summary>
         /// DAT statistics
         /// </summary>
         [JsonIgnore, XmlIgnore]
@@ -230,16 +245,6 @@ namespace SabreTools.DatFiles
 
                 RemoveItem(itemIndex);
             }
-        }
-
-        /// <summary>
-        /// Get all bucket keys
-        /// </summary>
-        public string[] GetBucketKeys()
-        {
-            List<string> keys = [.. _buckets.Keys];
-            keys.Sort(new NaturalComparer());
-            return keys.ToArray();
         }
 
         /// <summary>
@@ -849,7 +854,7 @@ namespace SabreTools.DatFiles
         /// <param name="filterRunner">Preconfigured filter runner to use</param>
         public void ExecuteFilters(FilterRunner filterRunner)
         {
-            List<string> keys = [.. GetBucketKeys()];
+            List<string> keys = [.. SortedKeys];
 #if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(keys, Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
