@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Collections.Concurrent;
 #endif
@@ -851,6 +852,106 @@ namespace SabreTools.DatFiles
 #else
             }
 #endif
+        }
+
+        /// <summary>
+        /// Use game descriptions as names, updating cloneof/romof/sampleof
+        /// </summary>
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        public void MachineDescriptionToName(bool throwOnError = false)
+        {
+            try
+            {
+                // First we want to get a mapping for all games to description
+#if NET40_OR_GREATER || NETCOREAPP
+                ConcurrentDictionary<string, string> mapping = new();
+#else
+                Dictionary<string, string> mapping = [];
+#endif
+#if NET452_OR_GREATER || NETCOREAPP
+                Parallel.ForEach(Keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+                Parallel.ForEach(Keys, key =>
+#else
+                foreach (var key in Keys)
+#endif
+                {
+                    var items = this[key];
+                    if (items == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                        return;
+#else
+                        continue;
+#endif
+
+                    foreach (DatItem item in items)
+                    {
+                        // If the key mapping doesn't exist, add it
+#if NET40_OR_GREATER || NETCOREAPP
+                        mapping.TryAdd(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!, item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)!.Replace('/', '_').Replace("\"", "''").Replace(":", " -"));
+#else
+                        mapping[item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!] = item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)!.Replace('/', '_').Replace("\"", "''").Replace(":", " -");
+#endif
+                    }
+#if NET40_OR_GREATER || NETCOREAPP
+                });
+#else
+                }
+#endif
+
+                // Now we loop through every item and update accordingly
+#if NET452_OR_GREATER || NETCOREAPP
+                Parallel.ForEach(Keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+                Parallel.ForEach(Keys, key =>
+#else
+                foreach (var key in Keys)
+#endif
+                {
+                    var items = this[key];
+                    if (items == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                        return;
+#else
+                        continue;
+#endif
+
+                    ConcurrentList<DatItem> newItems = [];
+                    foreach (DatItem item in items)
+                    {
+                        // Update machine name
+                        if (!string.IsNullOrEmpty(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)) && mapping.ContainsKey(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!))
+                            item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, mapping[item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!]);
+
+                        // Update cloneof
+                        if (!string.IsNullOrEmpty(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey)) && mapping.ContainsKey(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey)!))
+                            item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, mapping[item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey)!]);
+
+                        // Update romof
+                        if (!string.IsNullOrEmpty(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey)) && mapping.ContainsKey(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey)!))
+                            item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, mapping[item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey)!]);
+
+                        // Update sampleof
+                        if (!string.IsNullOrEmpty(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.SampleOfKey)) && mapping.ContainsKey(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.SampleOfKey)!))
+                            item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.SampleOfKey, mapping[item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.SampleOfKey)!]);
+
+                        // Add the new item to the output list
+                        newItems.Add(item);
+                    }
+
+                    // Replace the old list of roms with the new one
+                    Remove(key);
+                    AddRange(key, newItems);
+#if NET40_OR_GREATER || NETCOREAPP
+                });
+#else
+                }
+#endif
+            }
+            catch (Exception ex) when (!throwOnError)
+            {
+                logger.Warning(ex.ToString());
+            }
         }
 
         #endregion

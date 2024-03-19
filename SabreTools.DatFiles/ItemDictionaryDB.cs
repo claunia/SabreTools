@@ -1,4 +1,5 @@
-﻿#if NET40_OR_GREATER || NETCOREAPP
+﻿using System;
+#if NET40_OR_GREATER || NETCOREAPP
 using System.Collections.Concurrent;
 #endif
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using SabreTools.Hashing;
+using SabreTools.Logging;
 using SabreTools.Matching;
 
 /*
@@ -101,6 +103,11 @@ namespace SabreTools.DatFiles
         /// </summary>
         private ItemKey _bucketedBy = ItemKey.NULL;
 
+        /// <summary>
+        /// Logging object
+        /// </summary>
+        private readonly Logger logger;
+
         #endregion
 
         #region Fields
@@ -127,6 +134,14 @@ namespace SabreTools.DatFiles
         public DatStatistics DatStatistics { get; } = new DatStatistics();
 
         #endregion
+
+        /// <summary>
+        /// Generic constructor
+        /// </summary>
+        public ItemDictionaryDB()
+        {
+            logger = new Logger(this);
+        }
 
         #region Accessors
 
@@ -899,6 +914,107 @@ namespace SabreTools.DatFiles
 #else
             }
 #endif
+        }
+
+        /// <summary>
+        /// Use game descriptions as names, updating cloneof/romof/sampleof
+        /// </summary>
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        public void MachineDescriptionToName(bool throwOnError = false)
+        {
+            try
+            {
+                // First we want to get a mapping for all games to description
+#if NET40_OR_GREATER || NETCOREAPP
+                ConcurrentDictionary<string, string> mapping = new();
+#else
+                Dictionary<string, string> mapping = [];
+#endif
+#if NET452_OR_GREATER || NETCOREAPP
+                Parallel.ForEach(SortedKeys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+                Parallel.ForEach(SortedKeys, key =>
+#else
+                foreach (var key in SortedKeys)
+#endif
+                {
+                    var items = GetDatItemsForBucket(key);
+                    if (items == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                        return;
+#else
+                        continue;
+#endif
+
+                    foreach ((long, DatItem) item in items)
+                    {
+                        // If the key mapping doesn't exist, add it
+#if NET40_OR_GREATER || NETCOREAPP
+                        mapping.TryAdd(item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!,
+                            item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)!.Replace('/', '_').Replace("\"", "''").Replace(":", " -"));
+#else
+                        mapping[item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!]
+                            = item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)!.Replace('/', '_').Replace("\"", "''").Replace(":", " -");
+#endif
+                    }
+#if NET40_OR_GREATER || NETCOREAPP
+                });
+#else
+                }
+#endif
+
+                // Now we loop through every item and update accordingly
+#if NET452_OR_GREATER || NETCOREAPP
+                Parallel.ForEach(SortedKeys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+                Parallel.ForEach(SortedKeys, key =>
+#else
+                foreach (var key in SortedKeys)
+#endif
+                {
+                    var items = GetDatItemsForBucket(key);
+                    if (items == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                        return;
+#else
+                        continue;
+#endif
+
+                    ConcurrentList<(long, DatItem)> newItems = [];
+                    foreach ((long, DatItem) item in items)
+                    {
+                        // Update machine name
+                        if (!string.IsNullOrEmpty(item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)) && mapping.ContainsKey(item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!))
+                            item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, mapping[item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!]);
+
+                        // Update cloneof
+                        if (!string.IsNullOrEmpty(item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey)) && mapping.ContainsKey(item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey)!))
+                            item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, mapping[item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey)!]);
+
+                        // Update romof
+                        if (!string.IsNullOrEmpty(item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey)) && mapping.ContainsKey(item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey)!))
+                            item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, mapping[item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey)!]);
+
+                        // Update sampleof
+                        if (!string.IsNullOrEmpty(item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.SampleOfKey)) && mapping.ContainsKey(item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.SampleOfKey)!))
+                            item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.SampleOfKey, mapping[item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.SampleOfKey)!]);
+
+                        // Add the new item to the output list
+                        newItems.Add(item);
+                    }
+
+                    // Replace the old list of roms with the new one
+                    _buckets[key] = newItems.Select(i => i.Item1).ToConcurrentList();
+#if NET40_OR_GREATER || NETCOREAPP
+                });
+#else
+                }
+#endif
+            }
+            catch (Exception ex) when (!throwOnError)
+            {
+                logger.Warning(ex.ToString());
+            }
         }
 
         /// <summary>
