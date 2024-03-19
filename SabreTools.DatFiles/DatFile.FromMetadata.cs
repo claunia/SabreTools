@@ -430,7 +430,8 @@ namespace SabreTools.DatFiles
             if (item.ContainsKey(Models.Metadata.Machine.DumpKey))
             {
                 var items = ReadItemArray<Models.Metadata.Dump>(item, Models.Metadata.Machine.DumpKey);
-                ProcessItems(items, machine, filename, indexId, statsOnly);
+                string? machineName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                ProcessItems(items, machine, filename, indexId, statsOnly, machineName);
             }
             if (item.ContainsKey(Models.Metadata.Machine.FeatureKey))
             {
@@ -746,7 +747,7 @@ namespace SabreTools.DatFiles
                 if (datItem.GetBoolFieldValue(Models.Metadata.Device.MandatoryKey) != null)
                     datItem.SetFieldValue<string?>(Models.Metadata.Device.MandatoryKey, datItem.GetBoolFieldValue(Models.Metadata.Device.MandatoryKey).FromYesNo());
                 if (datItem.GetStringFieldValue(Models.Metadata.Device.DeviceTypeKey) != null)
-                    datItem.SetFieldValue<string?>(Models.Metadata.Device.DeviceTypeKey, machine.GetStringFieldValue(Models.Metadata.Device.DeviceTypeKey).AsEnumValue<DeviceType>().AsStringValue());
+                    datItem.SetFieldValue<string?>(Models.Metadata.Device.DeviceTypeKey, datItem.GetStringFieldValue(Models.Metadata.Device.DeviceTypeKey).AsEnumValue<DeviceType>().AsStringValue());
 
                 // Handle subitems
                 var instance = item.Read<Models.Metadata.Instance>(Models.Metadata.Device.InstanceKey);
@@ -820,7 +821,7 @@ namespace SabreTools.DatFiles
 
                 // Process flag values
                 if (datItem.GetBoolFieldValue(Models.Metadata.DipSwitch.DefaultKey) != null)
-                    datItem.SetFieldValue<string?>(Models.Metadata.DipSwitch.DefaultKey, machine.GetBoolFieldValue(Models.Metadata.DipSwitch.DefaultKey).FromYesNo());
+                    datItem.SetFieldValue<string?>(Models.Metadata.DipSwitch.DefaultKey, datItem.GetBoolFieldValue(Models.Metadata.DipSwitch.DefaultKey).FromYesNo());
 
                 // Handle subitems
                 var condition = item.Read<Models.Metadata.Condition>(Models.Metadata.DipSwitch.ConditionKey);
@@ -1036,7 +1037,8 @@ namespace SabreTools.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.Dump[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly)
+        /// <param name="machineName">Machine name to use when constructing item names</param>
+        private void ProcessItems(Models.Metadata.Dump[]? items, DatItems.Machine machine, string filename, int indexId, bool statsOnly, string? machineName)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -1069,7 +1071,7 @@ namespace SabreTools.DatFiles
                     continue;
                 }
 
-                string name = $"{machine.GetStringFieldValue(Models.Metadata.Machine.NameKey)}_{index++}{(!string.IsNullOrEmpty(rom!.ReadString(Models.Metadata.Rom.RemarkKey)) ? $" {rom.ReadString(Models.Metadata.Rom.RemarkKey)}" : string.Empty)}";
+                string name = $"{machineName}_{index++}{(!string.IsNullOrEmpty(rom!.ReadString(Models.Metadata.Rom.RemarkKey)) ? $" {rom.ReadString(Models.Metadata.Rom.RemarkKey)}" : string.Empty)}";
 
                 var item = new DatItems.Formats.Rom();
                 item.SetName(name);
