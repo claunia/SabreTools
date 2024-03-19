@@ -232,6 +232,36 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Remove any keys that have null or empty values
+        /// </summary>
+        public void ClearEmpty()
+        {
+            var keys = SortedKeys.Where(k => k != null).ToList();
+            foreach (string key in keys)
+            {
+                // If the key doesn't exist, skip
+                if (!_buckets.ContainsKey(key))
+                    continue;
+
+                // If the value is null, remove
+                else if (_buckets[key] == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                    _buckets.TryRemove(key, out _);
+#else
+                    _buckets.Remove(key);
+#endif
+
+                // If there are no non-blank items, remove
+                else if (!_buckets[key]!.Any(i => GetItem(i) != null && GetItem(i) is not Blank))
+#if NET40_OR_GREATER || NETCOREAPP
+                    _buckets.TryRemove(key, out _);
+#else
+                    _buckets.Remove(key);
+#endif
+            }
+        }
+
+        /// <summary>
         /// Remove all items marked for removal
         /// </summary>
         public void ClearMarked()

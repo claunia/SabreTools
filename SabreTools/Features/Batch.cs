@@ -431,7 +431,9 @@ Reset the internal state:           reset();";
                 // Cleanup after the filter
                 // TODO: We might not want to remove immediately
                 batchState.DatFile.Items.ClearMarked();
+                batchState.DatFile.ItemsDB.ClearMarked();
                 batchState.DatFile.Items.ClearEmpty();
+                batchState.DatFile.ItemsDB.ClearEmpty();
             }
         }
 

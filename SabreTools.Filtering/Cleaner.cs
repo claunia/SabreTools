@@ -139,10 +139,14 @@ namespace SabreTools.Filtering
 
                 // Remove all marked items
                 datFile.Items.ClearMarked();
+                datFile.ItemsDB.ClearMarked();
 
                 // We remove any blanks, if we aren't supposed to have any
                 if (KeepEmptyGames == false)
+                {
                     datFile.Items.ClearEmpty();
+                    datFile.ItemsDB.ClearEmpty();
+                }
             }
             catch (Exception ex) when (!throwOnError)
             {

@@ -119,6 +119,7 @@ namespace SabreTools.Features
                         datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, $"fixDAT_{Header.GetStringFieldValue(Models.Metadata.Header.NameKey)}");
                         datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, $"fixDAT_{Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)}");
                         datdata.Items.ClearMarked();
+                        datdata.ItemsDB.ClearMarked();
                         Writer.Write(datdata, OutputDir);
                     }
                 }
@@ -160,6 +161,7 @@ namespace SabreTools.Features
                     datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, $"fixDAT_{Header.GetStringFieldValue(Models.Metadata.Header.NameKey)}");
                     datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, $"fixDAT_{Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)}");
                     datdata.Items.ClearMarked();
+                    datdata.ItemsDB.ClearMarked();
                     Writer.Write(datdata, OutputDir);
                 }
             }

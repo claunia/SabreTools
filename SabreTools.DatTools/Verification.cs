@@ -108,6 +108,7 @@ namespace SabreTools.DatTools
             datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, $"fixDAT_{datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)}");
             datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, $"fixDAT_{datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)}");
             datFile.Items.ClearMarked();
+            datFile.ItemsDB.ClearMarked();
 
             return success;
         }
@@ -157,6 +158,7 @@ namespace SabreTools.DatTools
             datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, $"fixDAT_{datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)}");
             datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, $"fixDAT_{datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)}");
             datFile.Items.ClearMarked();
+            datFile.ItemsDB.ClearMarked();
 
             return success;
         }
