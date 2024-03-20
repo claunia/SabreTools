@@ -22,7 +22,6 @@ namespace SabreTools.Filtering
     /// <summary>
     /// Represents the cleaning operations that need to be performed on a set of items, usually a DAT
     /// </summary>
-
     public class Cleaner
     {
         #region Fields
@@ -133,8 +132,11 @@ namespace SabreTools.Filtering
                     StripSceneDatesFromItems(datFile);
 
                 // Run the one rom per game logic, if required
-                if (OneGamePerRegion == true)
+                if (OneGamePerRegion == true && RegionList != null)
+                {
                     SetOneGamePerRegion(datFile);
+                    datFile.ItemsDB.SetOneGamePerRegion(RegionList);
+                }
 
                 // Run the one rom per game logic, if required
                 if (OneRomPerGame == true)

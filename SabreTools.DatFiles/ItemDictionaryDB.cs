@@ -438,6 +438,18 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Remove a machine, returning if it could be removed
+        /// </summary>
+        public bool RemoveMachine(string machineName)
+        {
+            if (string.IsNullOrEmpty(machineName))
+                return false;
+
+            var machine = _machines.FirstOrDefault(m => m.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey) == machineName);
+            return RemoveMachine(machine.Key);
+        }
+
+        /// <summary>
         /// Add an item, returning the insert index
         /// </summary>
         private long AddItem(DatItem item, long machineIndex)
@@ -953,6 +965,96 @@ namespace SabreTools.DatFiles
             {
                 logger.Warning(ex.ToString());
             }
+        }
+
+        /// <summary>
+        /// Filter a DAT using 1G1R logic given an ordered set of regions
+        /// </summary>
+        /// <param name="regionList">List of regions in order of priority</param>
+        /// <remarks>
+        /// In the most technical sense, the way that the region list is being used does not
+        /// confine its values to be just regions. Since it's essentially acting like a
+        /// specialized version of the machine name filter, anything that is usually encapsulated
+        /// in parenthesis would be matched on, including disc numbers, languages, editions,
+        /// and anything else commonly used. Please note that, unlike other existing 1G1R 
+        /// solutions, this does not have the ability to contain custom mappings of parent
+        /// to clone sets based on name, nor does it have the ability to match on the 
+        /// Release DatItem type.
+        /// </remarks>
+        public void SetOneGamePerRegion(List<string> regionList)
+        {
+            // If we have null region list, make it empty
+            regionList ??= [];
+
+            // For sake of ease, the first thing we want to do is bucket by game
+            BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
+
+            // Then we want to get a mapping of all machines to parents
+            Dictionary<string, List<string>> parents = [];
+            foreach (string key in SortedKeys)
+            {
+                var items = GetDatItemsForBucket(key);
+                if (items == null || items.Length == 0)
+                    continue;
+
+                var item = items[0];
+                var machine = GetMachineForItem(item.Item1);
+                if (machine.Item2 == null)
+                    continue;
+
+                // Match on CloneOf first
+                if (!string.IsNullOrEmpty(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey)))
+                {
+                    if (!parents.ContainsKey(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey)!.ToLowerInvariant()))
+                        parents.Add(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey)!.ToLowerInvariant(), []);
+
+                    parents[machine.Item2.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey)!.ToLowerInvariant()].Add(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey)!.ToLowerInvariant());
+                }
+
+                // Then by RomOf
+                else if (!string.IsNullOrEmpty(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.RomOfKey)))
+                {
+                    if (!parents.ContainsKey(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.RomOfKey)!.ToLowerInvariant()))
+                        parents.Add(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.RomOfKey)!.ToLowerInvariant(), []);
+
+                    parents[machine.Item2.GetStringFieldValue(Models.Metadata.Machine.RomOfKey)!.ToLowerInvariant()].Add(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey)!.ToLowerInvariant());
+                }
+
+                // Otherwise, treat it as a parent
+                else
+                {
+                    if (!parents.ContainsKey(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey)!.ToLowerInvariant()))
+                        parents.Add(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey)!.ToLowerInvariant(), []);
+
+                    parents[machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey)!.ToLowerInvariant()].Add(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey)!.ToLowerInvariant());
+                }
+            }
+
+            // Once we have the full list of mappings, filter out games to keep
+            foreach (string key in parents.Keys)
+            {
+                // Find the first machine that matches the regions in order, if possible
+                string? machine = default;
+                foreach (string region in regionList)
+                {
+                    machine = parents[key].FirstOrDefault(m => Regex.IsMatch(m, @"\(.*" + region + @".*\)", RegexOptions.IgnoreCase));
+                    if (machine != default)
+                        break;
+                }
+
+                // If we didn't get a match, use the parent
+                if (machine == default)
+                    machine = key;
+
+                // Remove the key from the list
+                parents[key].Remove(machine);
+
+                // Remove the rest of the items from this key
+                parents[key].ForEach(k => RemoveMachine(k));
+            }
+
+            // Finally, strip out the parent tags
+            RemoveTagsFromChild();
         }
 
         /// <summary>
