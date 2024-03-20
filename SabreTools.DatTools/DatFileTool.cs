@@ -118,15 +118,16 @@ namespace SabreTools.DatTools
 
                 foreach ((long, DatItem) item in items)
                 {
-                    if (item.Item2.GetFieldValue<Source?>(DatItem.SourceKey) == null)
+                    var source = datFile.ItemsDB.GetSourceForItem(item.Item1);
+                    if (source.Item2 == null)
                         continue;
 
                     var machine = datFile.ItemsDB.GetMachineForItem(item.Item1);
                     if (machine.Item2 == null)
                         continue;
 
-                    string filename = inputs[item.Item2.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].CurrentPath;
-                    string? rootpath = inputs[item.Item2.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].ParentPath;
+                    string filename = inputs[source.Item2.Index].CurrentPath;
+                    string? rootpath = inputs[source.Item2.Index].ParentPath;
 
                     if (!string.IsNullOrEmpty(rootpath)
 #if NETFRAMEWORK
@@ -913,7 +914,9 @@ namespace SabreTools.DatTools
                 long machineIndex = itemMachineMappings[item.Key];
                 long sourceIndex = itemSourceMappings[item.Key];
 
-                if (item.Value.GetFieldValue<Source?>(DatItem.SourceKey) == null)
+                // Get the source associated with the item
+                var source = datFile.ItemsDB.GetSource(sourceIndex);
+                if (source == null)
 #if NET40_OR_GREATER || NETCOREAPP
                     return;
 #else
@@ -925,7 +928,7 @@ namespace SabreTools.DatTools
 #else
                 if (item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey).HasFlag(DupeType.Internal) || item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey) == 0x00)
 #endif
-                    outDats[item.Value.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], sourceRemapping[sourceIndex], statsOnly: false);
+                    outDats[source.Index].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], sourceRemapping[sourceIndex], statsOnly: false);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
@@ -1105,14 +1108,13 @@ namespace SabreTools.DatTools
                 if (item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey).HasFlag(DupeType.Internal) || item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey) == 0x00)
 #endif
                 {
-                    if (item.Value.Clone() is not DatItem newrom || newrom.GetFieldValue<Source?>(DatItem.SourceKey) == null)
+                    if (item.Value.Clone() is not DatItem newrom || sourceIndex == -1)
 #if NET40_OR_GREATER || NETCOREAPP
                         return;
 #else
                         continue;
 #endif
 
-                    newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $" ({Path.GetFileNameWithoutExtension(inputs[newrom.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].CurrentPath)})");
                     outerDiffData.ItemsDB.AddItem(newrom, machineRemapping[machineIndex], sourceRemapping[sourceIndex], statsOnly: false);
                 }
 #if NET40_OR_GREATER || NETCOREAPP
@@ -1357,7 +1359,10 @@ namespace SabreTools.DatTools
                 long machineIndex = itemMachineMappings[item.Key];
                 long sourceIndex = itemSourceMappings[item.Key];
 
-                if (item.Value.GetFieldValue<Source?>(DatItem.SourceKey) != null && item.Value.GetFieldValue<Source?>(DatItem.SourceKey)!.Index == index)
+                // Get the source associated with the item
+                var source = datFile.ItemsDB.GetSource(sourceIndex);
+
+                if (source != null && source.Index == index)
                     indexDat.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], sourceRemapping[sourceIndex], statsOnly: false);
 #if NET40_OR_GREATER || NETCOREAPP
             });

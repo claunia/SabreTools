@@ -274,8 +274,11 @@ namespace SabreTools.DatTools
 
                 for (int i = 0; i < items.Length; i++)
                 {
+                    // Get the source associated with the item
+                    var source = datFile.ItemsDB.GetSourceForItem(items[i].Item1);
+
                     // Unmatched items will have a source ID of int.MaxValue, remove all others
-                    if (items[i].Item2.GetFieldValue<Source?>(DatItem.SourceKey)?.Index != int.MaxValue)
+                    if (source.Item2?.Index != int.MaxValue)
                         items[i].Item2.SetFieldValue<bool?>(DatItem.RemoveKey, true);
                 }
             }

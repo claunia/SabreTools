@@ -850,19 +850,14 @@ namespace SabreTools.DatFiles
             if (datItem == null)
                 return string.Empty;
 
-            if (!_itemToMachineMapping.ContainsKey(itemIndex))
+            var machine = GetMachineForItem(itemIndex);
+            if (machine.Item2 == null)
                 return string.Empty;
 
-            long machineIndex = _itemToMachineMapping[itemIndex];
-            if (!_machines.ContainsKey(machineIndex))
-                return string.Empty;
+            var source = GetSourceForItem(itemIndex);
 
-            var machine = _machines[machineIndex];
-            if (machine == null)
-                return string.Empty;
-
-            string sourceKeyPadded = datItem.GetFieldValue<Source?>(DatItem.SourceKey)?.Index.ToString().PadLeft(10, '0') + '-';
-            string machineName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? "Default";
+            string sourceKeyPadded = source.Item2?.Index.ToString().PadLeft(10, '0') + '-';
+            string machineName = machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? "Default";
 
             string bucketKey = bucketBy switch
             {
@@ -1116,8 +1111,8 @@ namespace SabreTools.DatFiles
                         return nc.Compare(xName, yName);
 
                     // Otherwise, compare on machine or source, depending on the flag
-                    int? xSourceIndex = x.Item2.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
-                    int? ySourceIndex = y.Item2.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
+                    int? xSourceIndex = GetSourceForItem(x.Item1).Item2?.Index;
+                    int? ySourceIndex = GetSourceForItem(y.Item1).Item2?.Index;
                     return (norename ? nc.Compare(xMachineName, yMachineName) : (xSourceIndex - ySourceIndex) ?? 0);
                 }
                 catch
