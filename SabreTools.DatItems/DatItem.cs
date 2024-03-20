@@ -264,6 +264,52 @@ namespace SabreTools.DatItems
             return output;
         }
 
+        /// <summary>
+        /// Return the duplicate status of two items
+        /// </summary>
+        /// <param name="source">Source associated with this item</param>
+        /// <param name="lastItem">DatItem to check against</param>
+        /// <param name="lastSource">Source associated with the last item</param>
+        /// <returns>The DupeType corresponding to the relationship between the two</returns>
+        public DupeType GetDuplicateStatus(Source? source, DatItem? lastItem, Source? lastSource)
+        {
+            DupeType output = 0x00;
+
+            // If we don't have a duplicate at all, return none
+            if (!Equals(lastItem))
+                return output;
+
+            // If the duplicate is external already or should be, set it
+#if NETFRAMEWORK
+            if ((lastItem.GetFieldValue<DupeType>(DatItem.DupeTypeKey) & DupeType.External) != 0
+                || lastSource?.Index != source?.Index)
+#else
+            if (lastItem.GetFieldValue<DupeType>(DatItem.DupeTypeKey).HasFlag(DupeType.External)
+                || lastSource?.Index != source?.Index)
+#endif
+            {
+                var currentMachine = GetFieldValue<Machine>(DatItem.MachineKey);
+                var lastMachine = lastItem?.GetFieldValue<Machine>(DatItem.MachineKey);
+                if (lastMachine?.GetStringFieldValue(Models.Metadata.Machine.NameKey) == currentMachine?.GetStringFieldValue(Models.Metadata.Machine.NameKey) && lastItem?.GetName() == GetName())
+                    output = DupeType.External | DupeType.All;
+                else
+                    output = DupeType.External | DupeType.Hash;
+            }
+
+            // Otherwise, it's considered an internal dupe
+            else
+            {
+                var currentMachine = GetFieldValue<Machine>(DatItem.MachineKey);
+                var lastMachine = lastItem?.GetFieldValue<Machine>(DatItem.MachineKey);
+                if (lastMachine?.GetStringFieldValue(Models.Metadata.Machine.NameKey) == currentMachine?.GetStringFieldValue(Models.Metadata.Machine.NameKey) && lastItem?.GetName() == GetName())
+                    output = DupeType.Internal | DupeType.All;
+                else
+                    output = DupeType.Internal | DupeType.Hash;
+            }
+
+            return output;
+        }
+
         #endregion
 
         #region Manipulation
@@ -334,6 +380,71 @@ namespace SabreTools.DatItems
                 case ItemKey.Machine:
                     key = (norename ? string.Empty
                         : GetFieldValue<Source?>(DatItem.SourceKey)?.Index.ToString().PadLeft(10, '0')
+                            + "-")
+                    + (string.IsNullOrEmpty(GetFieldValue<Machine>(DatItem.MachineKey)?.GetStringFieldValue(Models.Metadata.Machine.NameKey))
+                            ? "Default"
+                            : GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!);
+                    if (lower)
+                        key = key.ToLowerInvariant();
+
+                    key ??= "null";
+
+                    break;
+
+                case ItemKey.MD5:
+                    key = Constants.MD5Zero;
+                    break;
+
+                case ItemKey.SHA1:
+                    key = Constants.SHA1Zero;
+                    break;
+
+                case ItemKey.SHA256:
+                    key = Constants.SHA256Zero;
+                    break;
+
+                case ItemKey.SHA384:
+                    key = Constants.SHA384Zero;
+                    break;
+
+                case ItemKey.SHA512:
+                    key = Constants.SHA512Zero;
+                    break;
+
+                case ItemKey.SpamSum:
+                    key = Constants.SpamSumZero;
+                    break;
+            }
+
+            // Double and triple check the key for corner cases
+            key ??= string.Empty;
+
+            return key;
+        }
+
+        /// <summary>
+        /// Get the dictionary key that should be used for a given item and bucketing type
+        /// </summary>
+        /// <param name="bucketedBy">ItemKey value representing what key to get</param>
+        /// <param name="source">Source associated with the item for renaming</param>
+        /// <param name="lower">True if the key should be lowercased (default), false otherwise</param>
+        /// <param name="norename">True if games should only be compared on game and file name, false if system and source are counted</param>
+        /// <returns>String representing the key to be used for the DatItem</returns>
+        public virtual string GetKey(ItemKey bucketedBy, Source? source, bool lower = true, bool norename = true)
+        {
+            // Set the output key as the default blank string
+            string key = string.Empty;
+
+            // Now determine what the key should be based on the bucketedBy value
+            switch (bucketedBy)
+            {
+                case ItemKey.CRC:
+                    key = Constants.CRCZero;
+                    break;
+
+                case ItemKey.Machine:
+                    key = (norename ? string.Empty
+                        : source?.Index.ToString().PadLeft(10, '0')
                             + "-")
                     + (string.IsNullOrEmpty(GetFieldValue<Machine>(DatItem.MachineKey)?.GetStringFieldValue(Models.Metadata.Machine.NameKey))
                             ? "Default"

@@ -313,7 +313,7 @@ namespace SabreTools.DatTools
 
                     foreach ((long, DatItem) datItem in datItems)
                     {
-                        var dupes = datFile.ItemsDB.GetDuplicates(datItem.Item2, sorted: true);
+                        var dupes = datFile.ItemsDB.GetDuplicates(datItem, sorted: true);
                         if (datItem.Item2.Clone() is not DatItem newDatItem)
                             continue;
 

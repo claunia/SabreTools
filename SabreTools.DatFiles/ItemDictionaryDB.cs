@@ -614,7 +614,7 @@ namespace SabreTools.DatFiles
         /// <param name="datItem">Item to try to match</param>
         /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
         /// <returns>List of matched DatItem objects</returns>
-        public ConcurrentList<(long, DatItem)> GetDuplicates(DatItem datItem, bool sorted = false)
+        public ConcurrentList<(long, DatItem)> GetDuplicates((long, DatItem) datItem, bool sorted = false)
         {
             ConcurrentList<(long, DatItem)> output = [];
 
@@ -638,7 +638,7 @@ namespace SabreTools.DatFiles
                 if (other.GetBoolFieldValue(DatItem.RemoveKey) == true)
                     continue;
 
-                if (datItem.Equals(other))
+                if (datItem.Item2.Equals(other))
                 {
                     other.SetFieldValue<bool?>(DatItem.RemoveKey, true);
                     output.Add(other);
@@ -660,7 +660,7 @@ namespace SabreTools.DatFiles
         /// <param name="datItem">Item to try to match</param>
         /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
         /// <returns>True if it contains the rom, false otherwise</returns>
-        public bool HasDuplicates(DatItem datItem, bool sorted = false)
+        public bool HasDuplicates((long, DatItem) datItem, bool sorted = false)
         {
             // Check for an empty rom list first
             if (DatStatistics.TotalCount == 0)
@@ -736,8 +736,12 @@ namespace SabreTools.DatFiles
                     long lastIndex = output[i].Item1;
                     DatItem lastrom = output[i].Item2;
 
+                    // Get the sources associated with the items
+                    var savedSource = _sources[_itemToSourceMapping[savedIndex]];
+                    var itemSource = _sources[_itemToSourceMapping[itemIndex]];
+
                     // Get the duplicate status
-                    dupetype = datItem.GetDuplicateStatus(lastrom);
+                    dupetype = datItem.GetDuplicateStatus(itemSource, lastrom, savedSource);
 
                     // If it's a duplicate, skip adding it to the output but add any missing information
                     if (dupetype != 0x00)
@@ -763,9 +767,9 @@ namespace SabreTools.DatFiles
                         var itemMachine = _machines[_itemToMachineMapping[itemIndex]];
 
                         // If the current system has a lower ID than the previous, set the system accordingly
-                        if (datItem.GetFieldValue<Source?>(DatItem.SourceKey)?.Index < saveditem.GetFieldValue<Source?>(DatItem.SourceKey)?.Index)
+                        if (itemSource?.Index < savedSource?.Index)
                         {
-                            datItem.SetFieldValue<Source?>(DatItem.SourceKey, datItem.GetFieldValue<Source?>(DatItem.SourceKey)!.Clone() as Source);
+                            _itemToSourceMapping[itemIndex] = _itemToSourceMapping[savedIndex];
                             _machines[_itemToMachineMapping[savedIndex]] = (itemMachine.Clone() as Machine)!;
                             saveditem.SetName(datItem.GetName());
                         }
@@ -1131,14 +1135,15 @@ namespace SabreTools.DatFiles
         /// <param name="datItem">Item to try to match</param>
         /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
         /// <returns>Key to try to use</returns>
-        private string SortAndGetKey(DatItem datItem, bool sorted = false)
+        private string SortAndGetKey((long, DatItem) datItem, bool sorted = false)
         {
             // If we're not already sorted, take care of it
             if (!sorted)
                 BucketBy(GetBestAvailable(), DedupeType.None);
 
             // Now that we have the sorted type, we get the proper key
-            return datItem.GetKey(_bucketedBy);
+            var source = GetSourceForItem(datItem.Item1);
+            return datItem.Item2.GetKey(_bucketedBy, source.Item2);
         }
 
         #endregion
