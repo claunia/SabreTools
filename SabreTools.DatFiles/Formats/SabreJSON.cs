@@ -31,8 +31,10 @@ namespace SabreTools.DatFiles.Formats
         public override void ParseFile(string filename, int indexId, bool keep, bool statsOnly = false, bool throwOnError = false)
         {
             // Prepare all internal variables
-            StreamReader sr = new(System.IO.File.OpenRead(filename), new UTF8Encoding(false));
-            JsonTextReader jtr = new(sr);
+            var sr = new StreamReader(System.IO.File.OpenRead(filename), new UTF8Encoding(false));
+            var jtr = new JsonTextReader(sr);
+            var source = new Source { Index = indexId, Name = filename };
+            long sourceIndex = ItemsDB.AddSource(source);
 
             // If we got a null reader, just return
             if (jtr == null)
@@ -61,7 +63,7 @@ namespace SabreTools.DatFiles.Formats
 
                         // Machine array
                         case "machines":
-                            ReadMachines(jtr, statsOnly, filename, indexId);
+                            ReadMachines(jtr, statsOnly, source, sourceIndex);
                             jtr.Read();
                             break;
 
@@ -99,11 +101,11 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         /// Read machine array information
         /// </summary>
-        /// <param name="itr">JsonTextReader to use to parse the machine</param>
+        /// <param name="jtr">JsonTextReader to use to parse the machine</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
-        private void ReadMachines(JsonTextReader jtr, bool statsOnly, string filename, int indexId)
+        /// <param name="source">Source representing the DAT</param>
+        /// <param name="sourceIndex">Index of the Source representing the DAT</param>
+        private void ReadMachines(JsonTextReader jtr, bool statsOnly, Source source, long sourceIndex)
         {
             // If the reader is invalid, skip
             if (jtr == null)
@@ -117,7 +119,7 @@ namespace SabreTools.DatFiles.Formats
             // Loop through each machine object and process
             foreach (JObject machineObj in (machineArray ?? []).Cast<JObject>())
             {
-                ReadMachine(machineObj, statsOnly, filename, indexId);
+                ReadMachine(machineObj, statsOnly, source, sourceIndex);
             }
         }
 
@@ -126,9 +128,9 @@ namespace SabreTools.DatFiles.Formats
         /// </summary>
         /// <param name="machineObj">JObject representing a single machine</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
-        private void ReadMachine(JObject machineObj, bool statsOnly, string filename, int indexId)
+        /// <param name="source">Source representing the DAT</param>
+        /// <param name="sourceIndex">Index of the Source representing the DAT</param>
+        private void ReadMachine(JObject machineObj, bool statsOnly, Source source, long sourceIndex)
         {
             // If object is invalid, skip it
             if (machineObj == null)
@@ -148,7 +150,7 @@ namespace SabreTools.DatFiles.Formats
 
             // Read items, if possible
             if (machineObj.ContainsKey("items"))
-                ReadItems(machineObj["items"] as JArray, statsOnly, filename, indexId, machine, machineIndex);
+                ReadItems(machineObj["items"] as JArray, statsOnly, source, sourceIndex, machine, machineIndex);
         }
 
         /// <summary>
@@ -156,8 +158,8 @@ namespace SabreTools.DatFiles.Formats
         /// </summary>
         /// <param name="itemsArr">JArray representing the items list</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source representing the DAT</param>
+        /// <param name="sourceIndex">Index of the Source representing the DAT</param>
         /// <param name="machine">Machine information to add to the parsed items</param>
         /// <param name="machineIndex">Index of the Machine to add to the parsed items</param>
         private void ReadItems(
@@ -165,8 +167,8 @@ namespace SabreTools.DatFiles.Formats
             bool statsOnly,
 
             // Standard Dat parsing
-            string filename,
-            int indexId,
+            Source source,
+            long sourceIndex,
 
             // Miscellaneous
             Machine? machine,
@@ -179,7 +181,7 @@ namespace SabreTools.DatFiles.Formats
             // Loop through each datitem object and process
             foreach (JObject itemObj in itemsArr.Cast<JObject>())
             {
-                ReadItem(itemObj, statsOnly, filename, indexId, machine, machineIndex);
+                ReadItem(itemObj, statsOnly, source, sourceIndex, machine, machineIndex);
             }
         }
 
@@ -188,8 +190,8 @@ namespace SabreTools.DatFiles.Formats
         /// </summary>
         /// <param name="itemObj">JObject representing a single datitem</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source representing the DAT</param>
+        /// <param name="sourceIndex">Index of the Source representing the DAT</param>
         /// <param name="machine">Machine information to add to the parsed items</param>
         /// <param name="machineIndex">Index of the Machine to add to the parsed items</param>
         private void ReadItem(
@@ -197,8 +199,8 @@ namespace SabreTools.DatFiles.Formats
             bool statsOnly,
 
             // Standard Dat parsing
-            string filename,
-            int indexId,
+            Source source,
+            long sourceIndex,
 
             // Miscellaneous
             Machine? machine,
@@ -353,9 +355,9 @@ namespace SabreTools.DatFiles.Formats
             if (datItem != null)
             {
                 datItem.CopyMachineInformation(machine);
-                datItem.SetFieldValue<Source?>(DatItem.SourceKey, new Source { Index = indexId, Name = filename });
+                datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, statsOnly);
+                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 

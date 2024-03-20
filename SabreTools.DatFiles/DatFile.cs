@@ -207,10 +207,11 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="item">Item data to check against</param>
         /// <param name="machineIndex">Index of the machine to map the DatItem to</param>
+        /// <param name="sourceIndex">Index of the source to map the DatItem to</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <returns>The key for the item</returns>
-        protected long ParseAddHelper(DatItem item, long machineIndex, bool statsOnly)
-            => ItemsDB.AddItem(item, machineIndex, statsOnly: statsOnly);
+        protected long ParseAddHelper(DatItem item, long machineIndex, long sourceIndex, bool statsOnly)
+            => ItemsDB.AddItem(item, machineIndex, sourceIndex, statsOnly);
 
         #endregion
 

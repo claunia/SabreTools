@@ -23,6 +23,10 @@ namespace SabreTools.DatFiles
             if (item == null || !item.Any())
                 return;
 
+            // Create an internal source and add to the dictionary
+            var source = new DatItems.Source { Index = indexId, Name = filename };
+            long sourceIndex = ItemsDB.AddSource(source);
+
             // Get the header from the metadata
             var header = item.Read<Models.Metadata.Header>(Models.Metadata.MetadataFile.HeaderKey);
             if (header != null)
@@ -31,7 +35,7 @@ namespace SabreTools.DatFiles
             // Get the machines from the metadata
             var machines = ReadItemArray<Models.Metadata.Machine>(item, Models.Metadata.MetadataFile.MachineKey);
             if (machines != null)
-                ConvertMachines(machines, filename, indexId, statsOnly);
+                ConvertMachines(machines, source, sourceIndex, statsOnly);
         }
 
         /// <summary>
@@ -46,7 +50,7 @@ namespace SabreTools.DatFiles
                 return;
 
             // Create an internal header
-            var header = new DatFiles.DatHeader(item);
+            var header = new DatHeader(item);
 
             // Convert subheader values
             if (item.ContainsKey(Models.Metadata.Header.CanOpenKey))
@@ -313,10 +317,10 @@ namespace SabreTools.DatFiles
         /// Convert machines information
         /// </summary>
         /// <param name="items">Machine array to convert</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source to use with the converted items</param>
+        /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ConvertMachines(Models.Metadata.Machine[]? items, string filename, int indexId, bool statsOnly)
+        private void ConvertMachines(Models.Metadata.Machine[]? items, Source source, long sourceIndex, bool statsOnly)
         {
             // If the array is invalid, we can't do anything
             if (items == null || items.Length == 0)
@@ -325,7 +329,7 @@ namespace SabreTools.DatFiles
             // Loop through the machines and add
             foreach (var machine in items)
             {
-                ConvertMachine(machine, filename, indexId, statsOnly);
+                ConvertMachine(machine, source, sourceIndex, statsOnly);
             }
         }
 
@@ -333,10 +337,10 @@ namespace SabreTools.DatFiles
         /// Convert machine information
         /// </summary>
         /// <param name="item">Machine to convert</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source to use with the converted items</param>
+        /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ConvertMachine(Models.Metadata.Machine? item, string filename, int indexId, bool statsOnly)
+        private void ConvertMachine(Models.Metadata.Machine? item, Source source, long sourceIndex, bool statsOnly)
         {
             // If the machine is invalid, we can't do anything
             if (item == null || !item.Any())
@@ -377,140 +381,140 @@ namespace SabreTools.DatFiles
             if (item.ContainsKey(Models.Metadata.Machine.AdjusterKey))
             {
                 var items = ReadItemArray<Models.Metadata.Adjuster>(item, Models.Metadata.Machine.AdjusterKey);
-                ProcessItems(items, machine, machineIndex, filename, indexId, statsOnly);
+                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.ArchiveKey))
             {
                 var items = ReadItemArray<Models.Metadata.Archive>(item, Models.Metadata.Machine.ArchiveKey);
-                ProcessItems(items, machine, machineIndex, filename, indexId, statsOnly);
+                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.BiosSetKey))
             {
                 var items = ReadItemArray<Models.Metadata.BiosSet>(item, Models.Metadata.Machine.BiosSetKey);
-                ProcessItems(items, machine, machineIndex, filename, indexId, statsOnly);
+                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.ChipKey))
             {
                 var items = ReadItemArray<Models.Metadata.Chip>(item, Models.Metadata.Machine.ChipKey);
-                ProcessItems(items, machine, machineIndex, filename, indexId, statsOnly);
+                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.ConfigurationKey))
             {
                 var items = ReadItemArray<Models.Metadata.Configuration>(item, Models.Metadata.Machine.ConfigurationKey);
-                ProcessItems(items, machine, machineIndex, filename, indexId, statsOnly);
+                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.DeviceKey))
             {
                 var items = ReadItemArray<Models.Metadata.Device>(item, Models.Metadata.Machine.DeviceKey);
-                ProcessItems(items, machine, machineIndex, filename, indexId, statsOnly);
+                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.DeviceRefKey))
             {
                 var items = ReadItemArray<Models.Metadata.DeviceRef>(item, Models.Metadata.Machine.DeviceRefKey);
-                ProcessItems(items, machine, machineIndex, filename, indexId, statsOnly);
+                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.DipSwitchKey))
             {
                 var items = ReadItemArray<Models.Metadata.DipSwitch>(item, Models.Metadata.Machine.DipSwitchKey);
-                ProcessItems(items, machine, machineIndex, filename, indexId, statsOnly);
+                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.DiskKey))
             {
                 var items = ReadItemArray<Models.Metadata.Disk>(item, Models.Metadata.Machine.DiskKey)
                     ?? ReadItemArray<Models.Metadata.DatItem>(item, Models.Metadata.Machine.DiskKey)?.Select(d => (d as Models.Metadata.Disk)!)?.ToArray(); // TODO: Remove case when Serialization fixed
-                ProcessItems(items, machine, machineIndex, filename, indexId, statsOnly);
+                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.DisplayKey))
             {
                 var items = ReadItemArray<Models.Metadata.Display>(item, Models.Metadata.Machine.DisplayKey);
-                ProcessItems(items, machine, machineIndex, filename, indexId, statsOnly);
+                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.DriverKey))
             {
                 var items = ReadItemArray<Models.Metadata.Driver>(item, Models.Metadata.Machine.DriverKey);
-                ProcessItems(items, machine, machineIndex, filename, indexId, statsOnly);
+                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.DumpKey))
             {
                 var items = ReadItemArray<Models.Metadata.Dump>(item, Models.Metadata.Machine.DumpKey);
                 string? machineName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey);
-                ProcessItems(items, machine, machineIndex, filename, indexId, statsOnly, machineName);
+                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly, machineName);
             }
             if (item.ContainsKey(Models.Metadata.Machine.FeatureKey))
             {
                 var items = ReadItemArray<Models.Metadata.Feature>(item, Models.Metadata.Machine.FeatureKey);
-                ProcessItems(items, machine, machineIndex, filename, indexId, statsOnly);
+                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.InfoKey))
             {
                 var items = ReadItemArray<Models.Metadata.Info>(item, Models.Metadata.Machine.InfoKey);
-                ProcessItems(items, machine, machineIndex, filename, indexId, statsOnly);
+                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.InputKey))
             {
                 var items = ReadItemArray<Models.Metadata.Input>(item, Models.Metadata.Machine.InputKey);
-                ProcessItems(items, machine, machineIndex, filename, indexId, statsOnly);
+                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.MediaKey))
             {
                 var items = ReadItemArray<Models.Metadata.Media>(item, Models.Metadata.Machine.MediaKey);
-                ProcessItems(items, machine, machineIndex, filename, indexId, statsOnly);
+                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.PartKey))
             {
                 var items = ReadItemArray<Models.Metadata.Part>(item, Models.Metadata.Machine.PartKey);
-                ProcessItems(items, machine, machineIndex, filename, indexId, statsOnly);
+                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.PortKey))
             {
                 var items = ReadItemArray<Models.Metadata.Port>(item, Models.Metadata.Machine.PortKey);
-                ProcessItems(items, machine, machineIndex, filename, indexId, statsOnly);
+                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.RamOptionKey))
             {
                 var items = ReadItemArray<Models.Metadata.RamOption>(item, Models.Metadata.Machine.RamOptionKey);
-                ProcessItems(items, machine, machineIndex, filename, indexId, statsOnly);
+                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.ReleaseKey))
             {
                 var items = ReadItemArray<Models.Metadata.Release>(item, Models.Metadata.Machine.ReleaseKey);
-                ProcessItems(items, machine, machineIndex, filename, indexId, statsOnly);
+                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.RomKey))
             {
                 var items = ReadItemArray<Models.Metadata.Rom>(item, Models.Metadata.Machine.RomKey)
                     ?? ReadItemArray<Models.Metadata.DatItem>(item, Models.Metadata.Machine.RomKey)?.Select(d => (d as Models.Metadata.Rom)!)?.ToArray(); // TODO: Remove case when Serialization fixed
-                ProcessItems(items, machine, machineIndex, filename, indexId, statsOnly);
+                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.SampleKey))
             {
                 var items = ReadItemArray<Models.Metadata.Sample>(item, Models.Metadata.Machine.SampleKey);
-                ProcessItems(items, machine, machineIndex, filename, indexId, statsOnly);
+                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.SharedFeatKey))
             {
                 var items = ReadItemArray<Models.Metadata.SharedFeat>(item, Models.Metadata.Machine.SharedFeatKey);
-                ProcessItems(items, machine, machineIndex, filename, indexId, statsOnly);
+                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.SlotKey))
             {
                 var items = ReadItemArray<Models.Metadata.Slot>(item, Models.Metadata.Machine.SlotKey);
-                ProcessItems(items, machine, machineIndex, filename, indexId, statsOnly);
+                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.SoftwareListKey))
             {
                 var items = ReadItemArray<Models.Metadata.SoftwareList>(item, Models.Metadata.Machine.SoftwareListKey);
-                ProcessItems(items, machine, machineIndex, filename, indexId, statsOnly);
+                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.SoundKey))
             {
                 var items = ReadItemArray<Models.Metadata.Sound>(item, Models.Metadata.Machine.SoundKey);
-                ProcessItems(items, machine, machineIndex, filename, indexId, statsOnly);
+                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.VideoKey))
             {
                 var items = ReadItemArray<Models.Metadata.Video>(item, Models.Metadata.Machine.VideoKey);
-                ProcessItems(items, machine, machineIndex, filename, indexId, statsOnly);
+                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
             }
         }
 
@@ -520,10 +524,10 @@ namespace SabreTools.DatFiles
         /// <param name="items">Array of internal items to convert</param>
         /// <param name="machine">Machine to use with the converted items</param>
         /// <param name="machineIndex">Index of the Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source to use with the converted items</param>
+        /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.Adjuster[]? items, DatItems.Machine machine, long machineIndex, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Adjuster[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -533,7 +537,7 @@ namespace SabreTools.DatFiles
             foreach (var item in items)
             {
                 var datItem = new DatItems.Formats.Adjuster(item);
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
                 // Process flag values
@@ -554,7 +558,7 @@ namespace SabreTools.DatFiles
                 }
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, statsOnly);
+                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -564,10 +568,10 @@ namespace SabreTools.DatFiles
         /// <param name="items">Array of internal items to convert</param>
         /// <param name="machine">Machine to use with the converted items</param>
         /// <param name="machineIndex">Index of the Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source to use with the converted items</param>
+        /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.Archive[]? items, DatItems.Machine machine, long machineIndex, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Archive[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -577,10 +581,10 @@ namespace SabreTools.DatFiles
             foreach (var item in items)
             {
                 var datItem = new DatItems.Formats.Archive(item);
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, statsOnly);
+                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -590,10 +594,10 @@ namespace SabreTools.DatFiles
         /// <param name="items">Array of internal items to convert</param>
         /// <param name="machine">Machine to use with the converted items</param>
         /// <param name="machineIndex">Index of the Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source to use with the converted items</param>
+        /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.BiosSet[]? items, DatItems.Machine machine, long machineIndex, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.BiosSet[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -603,7 +607,7 @@ namespace SabreTools.DatFiles
             foreach (var item in items)
             {
                 var datItem = new DatItems.Formats.BiosSet(item);
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
                 // Process flag values
@@ -611,7 +615,7 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.BiosSet.DefaultKey, datItem.GetBoolFieldValue(Models.Metadata.BiosSet.DefaultKey).FromYesNo());
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, statsOnly);
+                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -621,10 +625,10 @@ namespace SabreTools.DatFiles
         /// <param name="items">Array of internal items to convert</param>
         /// <param name="machine">Machine to use with the converted items</param>
         /// <param name="machineIndex">Index of the Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source to use with the converted items</param>
+        /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.Chip[]? items, DatItems.Machine machine, long machineIndex, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Chip[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -634,7 +638,7 @@ namespace SabreTools.DatFiles
             foreach (var item in items)
             {
                 var datItem = new DatItems.Formats.Chip(item);
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
                 // Process flag values
@@ -644,7 +648,7 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.Chip.ChipTypeKey, datItem.GetStringFieldValue(Models.Metadata.Chip.ChipTypeKey).AsEnumValue<ChipType>().AsStringValue());
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, statsOnly);
+                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -654,10 +658,10 @@ namespace SabreTools.DatFiles
         /// <param name="items">Array of internal items to convert</param>
         /// <param name="machine">Machine to use with the converted items</param>
         /// <param name="machineIndex">Index of the Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source to use with the converted items</param>
+        /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.Configuration[]? items, DatItems.Machine machine, long machineIndex, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Configuration[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -667,7 +671,7 @@ namespace SabreTools.DatFiles
             foreach (var item in items)
             {
                 var datItem = new DatItems.Formats.Configuration(item);
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
                 // Handle subitems
@@ -732,7 +736,7 @@ namespace SabreTools.DatFiles
                 }
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, statsOnly);
+                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -742,10 +746,10 @@ namespace SabreTools.DatFiles
         /// <param name="items">Array of internal items to convert</param>
         /// <param name="machine">Machine to use with the converted items</param>
         /// <param name="machineIndex">Index of the Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source to use with the converted items</param>
+        /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.Device[]? items, DatItems.Machine machine, long machineIndex, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Device[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -755,7 +759,7 @@ namespace SabreTools.DatFiles
             foreach (var item in items)
             {
                 var datItem = new DatItems.Formats.Device(item);
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
                 // Process flag values
@@ -786,7 +790,7 @@ namespace SabreTools.DatFiles
                 }
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, statsOnly);
+                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -796,10 +800,10 @@ namespace SabreTools.DatFiles
         /// <param name="items">Array of internal items to convert</param>
         /// <param name="machine">Machine to use with the converted items</param>
         /// <param name="machineIndex">Index of the Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source to use with the converted items</param>
+        /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.DeviceRef[]? items, DatItems.Machine machine, long machineIndex, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.DeviceRef[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -809,10 +813,10 @@ namespace SabreTools.DatFiles
             foreach (var item in items)
             {
                 var datItem = new DatItems.Formats.DeviceRef(item);
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, statsOnly);
+                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -822,10 +826,10 @@ namespace SabreTools.DatFiles
         /// <param name="items">Array of internal items to convert</param>
         /// <param name="machine">Machine to use with the converted items</param>
         /// <param name="machineIndex">Index of the Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source to use with the converted items</param>
+        /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.DipSwitch[]? items, DatItems.Machine machine, long machineIndex, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.DipSwitch[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -835,7 +839,7 @@ namespace SabreTools.DatFiles
             foreach (var item in items)
             {
                 var datItem = new DatItems.Formats.DipSwitch(item);
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
                 // Process flag values
@@ -904,7 +908,7 @@ namespace SabreTools.DatFiles
                 }
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, statsOnly);
+                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -914,10 +918,10 @@ namespace SabreTools.DatFiles
         /// <param name="items">Array of internal items to convert</param>
         /// <param name="machine">Machine to use with the converted items</param>
         /// <param name="machineIndex">Index of the Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source to use with the converted items</param>
+        /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.Disk[]? items, DatItems.Machine machine, long machineIndex, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Disk[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -927,7 +931,7 @@ namespace SabreTools.DatFiles
             foreach (var item in items)
             {
                 var datItem = new DatItems.Formats.Disk(item);
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
                 // Process flag values
@@ -945,7 +949,7 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, TextHelper.NormalizeSHA1(datItem.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)));
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, statsOnly);
+                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -955,10 +959,10 @@ namespace SabreTools.DatFiles
         /// <param name="items">Array of internal items to convert</param>
         /// <param name="machine">Machine to use with the converted items</param>
         /// <param name="machineIndex">Index of the Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source to use with the converted items</param>
+        /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.Display[]? items, DatItems.Machine machine, long machineIndex, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Display[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -968,7 +972,7 @@ namespace SabreTools.DatFiles
             foreach (var item in items)
             {
                 var datItem = new DatItems.Formats.Display(item);
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
                 // Process flag values
@@ -1000,7 +1004,7 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.Display.WidthKey, datItem.GetInt64FieldValue(Models.Metadata.Display.WidthKey).ToString());
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, statsOnly);
+                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1010,10 +1014,10 @@ namespace SabreTools.DatFiles
         /// <param name="items">Array of internal items to convert</param>
         /// <param name="machine">Machine to use with the converted items</param>
         /// <param name="machineIndex">Index of the Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source to use with the converted items</param>
+        /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.Driver[]? items, DatItems.Machine machine, long machineIndex, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Driver[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -1023,7 +1027,7 @@ namespace SabreTools.DatFiles
             foreach (var item in items)
             {
                 var datItem = new DatItems.Formats.Driver(item);
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
                 // Process flag values
@@ -1051,7 +1055,7 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.Driver.UnofficialKey, datItem.GetBoolFieldValue(Models.Metadata.Driver.UnofficialKey).FromYesNo());
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, statsOnly);
+                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1061,11 +1065,11 @@ namespace SabreTools.DatFiles
         /// <param name="items">Array of internal items to convert</param>
         /// <param name="machine">Machine to use with the converted items</param>
         /// <param name="machineIndex">Index of the Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source to use with the converted items</param>
+        /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <param name="machineName">Machine name to use when constructing item names</param>
-        private void ProcessItems(Models.Metadata.Dump[]? items, DatItems.Machine machine, long machineIndex, string filename, int indexId, bool statsOnly, string? machineName)
+        private void ProcessItems(Models.Metadata.Dump[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly, string? machineName)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -1108,7 +1112,7 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<string?>(Models.Metadata.Rom.RemarkKey, rom.ReadString(Models.Metadata.Rom.RemarkKey));
                 datItem.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, rom.ReadString(Models.Metadata.Rom.SHA1Key));
                 datItem.SetFieldValue<string?>(Models.Metadata.Rom.StartKey, rom.ReadString(Models.Metadata.Rom.StartKey));
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
 
                 if (dump.Read<Models.Metadata.Original>(Models.Metadata.Dump.OriginalKey) != null)
                 {
@@ -1139,7 +1143,7 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key, TextHelper.NormalizeSHA512(datItem.GetStringFieldValue(Models.Metadata.Rom.SHA512Key)));
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, statsOnly);
+                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1149,10 +1153,10 @@ namespace SabreTools.DatFiles
         /// <param name="items">Array of internal items to convert</param>
         /// <param name="machine">Machine to use with the converted items</param>
         /// <param name="machineIndex">Index of the Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source to use with the converted items</param>
+        /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.Feature[]? items, DatItems.Machine machine, long machineIndex, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Feature[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -1162,7 +1166,7 @@ namespace SabreTools.DatFiles
             foreach (var item in items)
             {
                 var datItem = new DatItems.Formats.Feature(item);
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
                 // Process flag values
@@ -1174,7 +1178,7 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.Feature.FeatureTypeKey, datItem.GetStringFieldValue(Models.Metadata.Feature.FeatureTypeKey).AsEnumValue<FeatureType>().AsStringValue());
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, statsOnly);
+                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1184,10 +1188,10 @@ namespace SabreTools.DatFiles
         /// <param name="items">Array of internal items to convert</param>
         /// <param name="machine">Machine to use with the converted items</param>
         /// <param name="machineIndex">Index of the Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source to use with the converted items</param>
+        /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.Info[]? items, DatItems.Machine machine, long machineIndex, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Info[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -1197,10 +1201,10 @@ namespace SabreTools.DatFiles
             foreach (var item in items)
             {
                 var datItem = new DatItems.Formats.Info(item);
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, statsOnly);
+                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1210,10 +1214,10 @@ namespace SabreTools.DatFiles
         /// <param name="items">Array of internal items to convert</param>
         /// <param name="machine">Machine to use with the converted items</param>
         /// <param name="machineIndex">Index of the Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source to use with the converted items</param>
+        /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.Input[]? items, DatItems.Machine machine, long machineIndex, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Input[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -1223,7 +1227,7 @@ namespace SabreTools.DatFiles
             foreach (var item in items)
             {
                 var datItem = new DatItems.Formats.Input(item);
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
                 // Process flag values
@@ -1274,7 +1278,7 @@ namespace SabreTools.DatFiles
                 }
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, statsOnly);
+                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1284,10 +1288,10 @@ namespace SabreTools.DatFiles
         /// <param name="items">Array of internal items to convert</param>
         /// <param name="machine">Machine to use with the converted items</param>
         /// <param name="machineIndex">Index of the Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source to use with the converted items</param>
+        /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.Media[]? items, DatItems.Machine machine, long machineIndex, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Media[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -1297,7 +1301,7 @@ namespace SabreTools.DatFiles
             foreach (var item in items)
             {
                 var datItem = new DatItems.Formats.Media(item);
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
                 // Process hash values
@@ -1309,7 +1313,7 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.Media.SHA256Key, TextHelper.NormalizeSHA256(datItem.GetStringFieldValue(Models.Metadata.Media.SHA256Key)));
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, statsOnly);
+                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1319,10 +1323,10 @@ namespace SabreTools.DatFiles
         /// <param name="items">Array of internal items to convert</param>
         /// <param name="machine">Machine to use with the converted items</param>
         /// <param name="machineIndex">Index of the Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source to use with the converted items</param>
+        /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.Part[]? items, DatItems.Machine machine, long machineIndex, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Part[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -1357,7 +1361,7 @@ namespace SabreTools.DatFiles
                             var romItem = new DatItems.Formats.Rom(rom);
                             romItem.SetFieldValue<DatItems.Formats.DataArea?>(DatItems.Formats.Rom.DataAreaKey, dataAreaItem);
                             romItem.SetFieldValue<DatItems.Formats.Part?>(DatItems.Formats.Rom.PartKey, partItem);
-                            romItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                            romItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                             romItem.CopyMachineInformation(machine);
 
                             // Process flag values
@@ -1395,7 +1399,7 @@ namespace SabreTools.DatFiles
                                 romItem.SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key, TextHelper.NormalizeSHA512(romItem.GetStringFieldValue(Models.Metadata.Rom.SHA512Key)));
 
                             ParseAddHelper(romItem, statsOnly);
-                            ParseAddHelper(romItem, machineIndex, statsOnly);
+                            ParseAddHelper(romItem, machineIndex, sourceIndex, statsOnly);
                         }
                     }
                 }
@@ -1415,7 +1419,7 @@ namespace SabreTools.DatFiles
                             var diskItem = new DatItems.Formats.Disk(disk);
                             diskItem.SetFieldValue<DatItems.Formats.DiskArea?>(DatItems.Formats.Disk.DiskAreaKey, diskAreaitem);
                             diskItem.SetFieldValue<DatItems.Formats.Part?>(DatItems.Formats.Disk.PartKey, partItem);
-                            diskItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                            diskItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                             diskItem.CopyMachineInformation(machine);
 
                             // Process flag values
@@ -1433,7 +1437,7 @@ namespace SabreTools.DatFiles
                                 diskItem.SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, TextHelper.NormalizeSHA1(diskItem.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)));
 
                             ParseAddHelper(diskItem, statsOnly);
-                            ParseAddHelper(diskItem, machineIndex, statsOnly);
+                            ParseAddHelper(diskItem, machineIndex, sourceIndex, statsOnly);
                         }
                     }
                 }
@@ -1445,7 +1449,7 @@ namespace SabreTools.DatFiles
                     {
                         var dipSwitchItem = new DatItems.Formats.DipSwitch(dipSwitch);
                         dipSwitchItem.SetFieldValue<DatItems.Formats.Part?>(DatItems.Formats.DipSwitch.PartKey, partItem);
-                        dipSwitchItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                        dipSwitchItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                         dipSwitchItem.CopyMachineInformation(machine);
 
                         // Process flag values
@@ -1514,7 +1518,7 @@ namespace SabreTools.DatFiles
                         }
 
                         ParseAddHelper(dipSwitchItem, statsOnly);
-                        ParseAddHelper(dipSwitchItem, machineIndex, statsOnly);
+                        ParseAddHelper(dipSwitchItem, machineIndex, sourceIndex, statsOnly);
                     }
                 }
 
@@ -1525,7 +1529,7 @@ namespace SabreTools.DatFiles
                     {
                         var partFeatureItem = new DatItems.Formats.PartFeature(partFeature);
                         partFeatureItem.SetFieldValue<DatItems.Formats.Part?>(DatItems.Formats.DipSwitch.PartKey, partItem);
-                        partFeatureItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                        partFeatureItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                         partFeatureItem.CopyMachineInformation(machine);
 
                         // Process flag values
@@ -1537,7 +1541,7 @@ namespace SabreTools.DatFiles
                             partFeatureItem.SetFieldValue<string?>(Models.Metadata.Feature.FeatureTypeKey, partFeatureItem.GetStringFieldValue(Models.Metadata.Feature.FeatureTypeKey).AsEnumValue<FeatureType>().AsStringValue());
 
                         ParseAddHelper(partFeatureItem, statsOnly);
-                        ParseAddHelper(partFeatureItem, machineIndex, statsOnly);
+                        ParseAddHelper(partFeatureItem, machineIndex, sourceIndex, statsOnly);
                     }
                 }
             }
@@ -1549,10 +1553,10 @@ namespace SabreTools.DatFiles
         /// <param name="items">Array of internal items to convert</param>
         /// <param name="machine">Machine to use with the converted items</param>
         /// <param name="machineIndex">Index of the Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source to use with the converted items</param>
+        /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.Port[]? items, DatItems.Machine machine, long machineIndex, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Port[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -1562,7 +1566,7 @@ namespace SabreTools.DatFiles
             foreach (var item in items)
             {
                 var datItem = new DatItems.Formats.Port(item);
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
                 // Handle subitems
@@ -1580,7 +1584,7 @@ namespace SabreTools.DatFiles
                 }
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, statsOnly);
+                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1590,10 +1594,10 @@ namespace SabreTools.DatFiles
         /// <param name="items">Array of internal items to convert</param>
         /// <param name="machine">Machine to use with the converted items</param>
         /// <param name="machineIndex">Index of the Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source to use with the converted items</param>
+        /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.RamOption[]? items, DatItems.Machine machine, long machineIndex, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.RamOption[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -1603,7 +1607,7 @@ namespace SabreTools.DatFiles
             foreach (var item in items)
             {
                 var datItem = new DatItems.Formats.RamOption(item);
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
                 // Process flag values
@@ -1611,7 +1615,7 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.RamOption.DefaultKey, datItem.GetBoolFieldValue(Models.Metadata.RamOption.DefaultKey).FromYesNo());
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, statsOnly);
+                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1621,10 +1625,10 @@ namespace SabreTools.DatFiles
         /// <param name="items">Array of internal items to convert</param>
         /// <param name="machine">Machine to use with the converted items</param>
         /// <param name="machineIndex">Index of the Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source to use with the converted items</param>
+        /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.Release[]? items, DatItems.Machine machine, long machineIndex, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Release[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -1634,7 +1638,7 @@ namespace SabreTools.DatFiles
             foreach (var item in items)
             {
                 var datItem = new DatItems.Formats.Release(item);
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
                 // Process flag values
@@ -1642,7 +1646,7 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.Release.DefaultKey, datItem.GetBoolFieldValue(Models.Metadata.Release.DefaultKey).FromYesNo());
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, statsOnly);
+                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1652,10 +1656,10 @@ namespace SabreTools.DatFiles
         /// <param name="items">Array of internal items to convert</param>
         /// <param name="machine">Machine to use with the converted items</param>
         /// <param name="machineIndex">Index of the Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source to use with the converted items</param>
+        /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.Rom[]? items, DatItems.Machine machine, long machineIndex, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Rom[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -1665,7 +1669,7 @@ namespace SabreTools.DatFiles
             foreach (var item in items)
             {
                 var datItem = new DatItems.Formats.Rom(item);
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
                 // Process flag values
@@ -1703,7 +1707,7 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key, TextHelper.NormalizeSHA512(datItem.GetStringFieldValue(Models.Metadata.Rom.SHA512Key)));
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, statsOnly);
+                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1713,10 +1717,10 @@ namespace SabreTools.DatFiles
         /// <param name="items">Array of internal items to convert</param>
         /// <param name="machine">Machine to use with the converted items</param>
         /// <param name="machineIndex">Index of the Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source to use with the converted items</param>
+        /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.Sample[]? items, DatItems.Machine machine, long machineIndex, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Sample[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -1726,10 +1730,10 @@ namespace SabreTools.DatFiles
             foreach (var item in items)
             {
                 var datItem = new DatItems.Formats.Sample(item);
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, statsOnly);
+                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1739,10 +1743,10 @@ namespace SabreTools.DatFiles
         /// <param name="items">Array of internal items to convert</param>
         /// <param name="machine">Machine to use with the converted items</param>
         /// <param name="machineIndex">Index of the Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source to use with the converted items</param>
+        /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.SharedFeat[]? items, DatItems.Machine machine, long machineIndex, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.SharedFeat[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -1752,10 +1756,10 @@ namespace SabreTools.DatFiles
             foreach (var item in items)
             {
                 var datItem = new DatItems.Formats.SharedFeat(item);
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, statsOnly);
+                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1765,10 +1769,10 @@ namespace SabreTools.DatFiles
         /// <param name="items">Array of internal items to convert</param>
         /// <param name="machine">Machine to use with the converted items</param>
         /// <param name="machineIndex">Index of the Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source to use with the converted items</param>
+        /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.Slot[]? items, DatItems.Machine machine, long machineIndex, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Slot[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -1778,7 +1782,7 @@ namespace SabreTools.DatFiles
             foreach (var item in items)
             {
                 var datItem = new DatItems.Formats.Slot(item);
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
                 // Handle subitems
@@ -1801,7 +1805,7 @@ namespace SabreTools.DatFiles
                 }
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, statsOnly);
+                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1811,10 +1815,10 @@ namespace SabreTools.DatFiles
         /// <param name="items">Array of internal items to convert</param>
         /// <param name="machine">Machine to use with the converted items</param>
         /// <param name="machineIndex">Index of the Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source to use with the converted items</param>
+        /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.SoftwareList[]? items, DatItems.Machine machine, long machineIndex, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.SoftwareList[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -1824,7 +1828,7 @@ namespace SabreTools.DatFiles
             foreach (var item in items)
             {
                 var datItem = new DatItems.Formats.SoftwareList(item);
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
                 // Process flag values
@@ -1832,7 +1836,7 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.SoftwareList.StatusKey, datItem.GetStringFieldValue(Models.Metadata.SoftwareList.StatusKey).AsEnumValue<SoftwareListStatus>().AsStringValue());
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, statsOnly);
+                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1842,10 +1846,10 @@ namespace SabreTools.DatFiles
         /// <param name="items">Array of internal items to convert</param>
         /// <param name="machine">Machine to use with the converted items</param>
         /// <param name="machineIndex">Index of the Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source to use with the converted items</param>
+        /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.Sound[]? items, DatItems.Machine machine, long machineIndex, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Sound[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -1855,7 +1859,7 @@ namespace SabreTools.DatFiles
             foreach (var item in items)
             {
                 var datItem = new DatItems.Formats.Sound(item);
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
                 // Process flag values
@@ -1863,7 +1867,7 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.Sound.ChannelsKey, datItem.GetInt64FieldValue(Models.Metadata.Sound.ChannelsKey).ToString());
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, statsOnly);
+                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1873,10 +1877,10 @@ namespace SabreTools.DatFiles
         /// <param name="items">Array of internal items to convert</param>
         /// <param name="machine">Machine to use with the converted items</param>
         /// <param name="machineIndex">Index of the Machine to use with the converted items</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="source">Source to use with the converted items</param>
+        /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        private void ProcessItems(Models.Metadata.Video[]? items, DatItems.Machine machine, long machineIndex, string filename, int indexId, bool statsOnly)
+        private void ProcessItems(Models.Metadata.Video[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -1886,7 +1890,7 @@ namespace SabreTools.DatFiles
             foreach (var item in items)
             {
                 var datItem = new DatItems.Formats.Display(item);
-                datItem.SetFieldValue<DatItems.Source?>(DatItems.DatItem.SourceKey, new DatItems.Source { Index = indexId, Name = filename });
+                datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
                 // Process flag values
@@ -1904,7 +1908,7 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.Display.WidthKey, datItem.GetInt64FieldValue(Models.Metadata.Video.WidthKey).ToString());
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, statsOnly);
+                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
