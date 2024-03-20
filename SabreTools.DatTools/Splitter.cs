@@ -142,39 +142,46 @@ namespace SabreTools.DatTools
             extBDat.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, extBDat.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $" ({newExtBString})");
             extBDat.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, extBDat.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" ({newExtBString})");
 
-            // Now separate the roms accordingly
+            // Get all current items, machines, and mappings
+            var datItems = datFile.ItemsDB.GetItems().ToDictionary(m => m.Item1, m => m.Item2);
+            var machines = datFile.ItemsDB.GetMachines().ToDictionary(m => m.Item1, m => m.Item2);
+            var mappings = datFile.ItemsDB.GetItemMappings().ToDictionary(m => m.Item1, m => m.Item2);
+
+            // Create a mapping from old machine index to new machine index
+            var machineRemapping = new Dictionary<long, long>();
+
+            // Loop through and add all machines
+            foreach (var machine in machines)
+            {
+                long newMachineIndex = extADat.ItemsDB.AddMachine(machine.Value);
+                _ = extBDat.ItemsDB.AddMachine(machine.Value);
+                machineRemapping[machine.Key] = newMachineIndex;
+            }
+
+            // Loop through and add the items
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(datFile.ItemsDB.SortedKeys, Globals.ParallelOptions, key =>
+            Parallel.ForEach(datItems, Globals.ParallelOptions, item =>
 #elif NET40_OR_GREATER
-            Parallel.ForEach(datFile.ItemsDB.SortedKeys, key =>
+            Parallel.ForEach(datItems, item =>
 #else
-            foreach (var key in datFile.ItemsDB.SortedKeys)
+            foreach (var item in datItems)
 #endif
             {
-                var items = datFile.ItemsDB.GetItemsForBucket(key);
-                if (items == null)
-#if NET40_OR_GREATER || NETCOREAPP
-                    return;
-#else
-                    continue;
-#endif
+                // Get the machine index for this item
+                long machineIndex = mappings[item.Key];
 
-                // TODO: Determine how we figure out the machine index
-                foreach ((long, DatItem) item in items)
+                if (newExtA.Contains((item.Value.GetName() ?? string.Empty).GetNormalizedExtension()))
                 {
-                    if (newExtA.Contains((item.Item2.GetName() ?? string.Empty).GetNormalizedExtension()))
-                    {
-                        extADat.ItemsDB.AddItem(item.Item2, -1, false);
-                    }
-                    else if (newExtB.Contains((item.Item2.GetName() ?? string.Empty).GetNormalizedExtension()))
-                    {
-                        extBDat.ItemsDB.AddItem(item.Item2, -1, false);
-                    }
-                    else
-                    {
-                        extADat.ItemsDB.AddItem(item.Item2, -1, false);
-                        extBDat.ItemsDB.AddItem(item.Item2, -1, false);
-                    }
+                    extADat.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                }
+                else if (newExtB.Contains((item.Value.GetName() ?? string.Empty).GetNormalizedExtension()))
+                {
+                    extBDat.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                }
+                else
+                {
+                    extADat.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                    extBDat.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
                 }
 #if NET40_OR_GREATER || NETCOREAPP
             });
@@ -373,75 +380,92 @@ namespace SabreTools.DatTools
             fieldDats["null"].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats["null"].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (Other)");
             fieldDats["null"].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats["null"].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (Other)");
 
-            // Now populate each of the DAT objects in turn
+            // Get all current items, machines, and mappings
+            var datItems = datFile.ItemsDB.GetItems().ToDictionary(m => m.Item1, m => m.Item2);
+            var machines = datFile.ItemsDB.GetMachines().ToDictionary(m => m.Item1, m => m.Item2);
+            var mappings = datFile.ItemsDB.GetItemMappings().ToDictionary(m => m.Item1, m => m.Item2);
+
+            // Create a mapping from old machine index to new machine index
+            var machineRemapping = new Dictionary<long, long>();
+
+            // Loop through and add all machines
+            foreach (var machine in machines)
+            {
+                long newMachineIndex = fieldDats[Models.Metadata.Rom.StatusKey].ItemsDB.AddMachine(machine.Value);
+                _ = fieldDats[Models.Metadata.Rom.SHA512Key].ItemsDB.AddMachine(machine.Value);
+                _ = fieldDats[Models.Metadata.Rom.SHA384Key].ItemsDB.AddMachine(machine.Value);
+                _ = fieldDats[Models.Metadata.Rom.SHA256Key].ItemsDB.AddMachine(machine.Value);
+                _ = fieldDats[Models.Metadata.Rom.SHA1Key].ItemsDB.AddMachine(machine.Value);
+                _ = fieldDats[Models.Metadata.Rom.MD5Key].ItemsDB.AddMachine(machine.Value);
+                _ = fieldDats[Models.Metadata.Rom.CRCKey].ItemsDB.AddMachine(machine.Value);
+                _ = fieldDats["null"].ItemsDB.AddMachine(machine.Value);
+                machineRemapping[machine.Key] = newMachineIndex;
+            }
+
+            // Loop through and add the items
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(datFile.ItemsDB.SortedKeys, Globals.ParallelOptions, key =>
+            Parallel.ForEach(datItems, Globals.ParallelOptions, item =>
 #elif NET40_OR_GREATER
-            Parallel.ForEach(datFile.ItemsDB.SortedKeys, key =>
+            Parallel.ForEach(datItems, item =>
 #else
-            foreach (var key in datFile.ItemsDB.SortedKeys)
+            foreach (var item in datItems)
 #endif
             {
-                var items = datFile.ItemsDB.GetItemsForBucket(key);
-                if (items == null)
-#if NET40_OR_GREATER || NETCOREAPP
-                    return;
-#else
-                    continue;
-#endif
+                // Get the machine index for this item
+                long machineIndex = mappings[item.Key];
 
-                // TODO: Determine how we figure out the machine index
-                foreach ((long, DatItem) item in items)
+                // Only process Disk, Media, and Rom
+                switch (item.Value)
                 {
-                    // If the file is not a Disk, Media, or Rom, continue
-                    switch (item.Item2)
-                    {
-                        case Disk disk:
-                            if (disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump)
-                                fieldDats[Models.Metadata.Disk.StatusKey].ItemsDB.AddItem(item.Item2, -1, false);
-                            else if (!string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)))
-                                fieldDats[Models.Metadata.Disk.SHA1Key].ItemsDB.AddItem(item.Item2, -1, false);
-                            else if (!string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key)))
-                                fieldDats[Models.Metadata.Disk.MD5Key].ItemsDB.AddItem(item.Item2, -1, false);
-                            else if (!string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key)))
-                                fieldDats[Models.Metadata.Disk.MD5Key].ItemsDB.AddItem(item.Item2, -1, false);
-                            else
-                                fieldDats["null"].ItemsDB.AddItem(item.Item2, -1, false);
-                            break;
+                    case Disk disk:
+                        if (disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump)
+                            fieldDats[Models.Metadata.Disk.StatusKey].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                        else if (!string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)))
+                            fieldDats[Models.Metadata.Disk.SHA1Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                        else if (!string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key)))
+                            fieldDats[Models.Metadata.Disk.MD5Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                        else if (!string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key)))
+                            fieldDats[Models.Metadata.Disk.MD5Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                        else
+                            fieldDats["null"].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                        break;
 
-                        case Media media:
-                            if (!string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA256Key)))
-                                fieldDats[Models.Metadata.Media.SHA256Key].ItemsDB.AddItem(item.Item2, -1, false);
-                            else if (!string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA1Key)))
-                                fieldDats[Models.Metadata.Media.SHA1Key].ItemsDB.AddItem(item.Item2, -1, false);
-                            else if (!string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.MD5Key)))
-                                fieldDats[Models.Metadata.Media.MD5Key].ItemsDB.AddItem(item.Item2, -1, false);
-                            else
-                                fieldDats["null"].ItemsDB.AddItem(item.Item2, -1, false);
-                            break;
+                    case Media media:
+                        if (!string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA256Key)))
+                            fieldDats[Models.Metadata.Media.SHA256Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                        else if (!string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA1Key)))
+                            fieldDats[Models.Metadata.Media.SHA1Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                        else if (!string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.MD5Key)))
+                            fieldDats[Models.Metadata.Media.MD5Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                        else
+                            fieldDats["null"].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                        break;
 
-                        case Rom rom:
-                            if (rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump)
-                                fieldDats[Models.Metadata.Rom.StatusKey].ItemsDB.AddItem(item.Item2, -1, false);
-                            else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA512Key)))
-                                fieldDats[Models.Metadata.Rom.SHA512Key].ItemsDB.AddItem(item.Item2, -1, false);
-                            else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA384Key)))
-                                fieldDats[Models.Metadata.Rom.SHA384Key].ItemsDB.AddItem(item.Item2, -1, false);
-                            else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key)))
-                                fieldDats[Models.Metadata.Rom.SHA256Key].ItemsDB.AddItem(item.Item2, -1, false);
-                            else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key)))
-                                fieldDats[Models.Metadata.Rom.SHA1Key].ItemsDB.AddItem(item.Item2, -1, false);
-                            else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key)))
-                                fieldDats[Models.Metadata.Rom.MD5Key].ItemsDB.AddItem(item.Item2, -1, false);
-                            else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey)))
-                                fieldDats[Models.Metadata.Rom.CRCKey].ItemsDB.AddItem(item.Item2, -1, false);
-                            else
-                                fieldDats["null"].ItemsDB.AddItem(item.Item2, -1, false);
-                            break;
+                    case Rom rom:
+                        if (rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump)
+                            fieldDats[Models.Metadata.Rom.StatusKey].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                        else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA512Key)))
+                            fieldDats[Models.Metadata.Rom.SHA512Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                        else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA384Key)))
+                            fieldDats[Models.Metadata.Rom.SHA384Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                        else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key)))
+                            fieldDats[Models.Metadata.Rom.SHA256Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                        else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key)))
+                            fieldDats[Models.Metadata.Rom.SHA1Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                        else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key)))
+                            fieldDats[Models.Metadata.Rom.MD5Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                        else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey)))
+                            fieldDats[Models.Metadata.Rom.CRCKey].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                        else
+                            fieldDats["null"].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                        break;
 
-                        default:
-                            continue;
-                    }
+                    default:
+#if NET40_OR_GREATER || NETCOREAPP
+                        return;
+#else
+                        continue;
+#endif
                 }
 #if NET40_OR_GREATER || NETCOREAPP
             });
@@ -668,42 +692,49 @@ namespace SabreTools.DatTools
             greaterThan.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, greaterThan.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $" (equal-greater than {radix})");
             greaterThan.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, greaterThan.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" (equal-greater than {radix})");
 
-            // Now populate each of the DAT objects in turn
+            // Get all current items, machines, and mappings
+            var datItems = datFile.ItemsDB.GetItems().ToDictionary(m => m.Item1, m => m.Item2);
+            var machines = datFile.ItemsDB.GetMachines().ToDictionary(m => m.Item1, m => m.Item2);
+            var mappings = datFile.ItemsDB.GetItemMappings().ToDictionary(m => m.Item1, m => m.Item2);
+
+            // Create a mapping from old machine index to new machine index
+            var machineRemapping = new Dictionary<long, long>();
+
+            // Loop through and add all machines
+            foreach (var machine in machines)
+            {
+                long newMachineIndex = lessThan.ItemsDB.AddMachine(machine.Value);
+                _ = greaterThan.ItemsDB.AddMachine(machine.Value);
+                machineRemapping[machine.Key] = newMachineIndex;
+            }
+
+            // Loop through and add the items
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(datFile.ItemsDB.SortedKeys, Globals.ParallelOptions, key =>
+            Parallel.ForEach(datItems, Globals.ParallelOptions, item =>
 #elif NET40_OR_GREATER
-            Parallel.ForEach(datFile.ItemsDB.SortedKeys, key =>
+            Parallel.ForEach(datItems, item =>
 #else
-            foreach (var key in datFile.ItemsDB.SortedKeys)
+            foreach (var item in datItems)
 #endif
             {
-                var items = datFile.ItemsDB.GetItemsForBucket(key);
-                if (items == null)
-#if NET40_OR_GREATER || NETCOREAPP
-                    return;
-#else
-                    continue;
-#endif
+                // Get the machine index for this item
+                long machineIndex = mappings[item.Key];
 
-                // TODO: Determine how we figure out the machine index
-                foreach ((long, DatItem) item in items)
-                {
-                    // If the file is not a Rom, it automatically goes in the "lesser" dat
-                    if (item.Item2 is not Rom rom)
-                        lessThan.ItemsDB.AddItem(item.Item2, -1, false);
+                // If the file is not a Rom, it automatically goes in the "lesser" dat
+                if (item.Value is not Rom rom)
+                    lessThan.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
 
-                    // If the file is a Rom and has no size, put it in the "lesser" dat
-                    else if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) == null)
-                        lessThan.ItemsDB.AddItem(item.Item2, -1, false);
+                // If the file is a Rom and has no size, put it in the "lesser" dat
+                else if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) == null)
+                    lessThan.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
 
-                    // If the file is a Rom and less than the radix, put it in the "lesser" dat
-                    else if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) < radix)
-                        lessThan.ItemsDB.AddItem(item.Item2, -1, false);
+                // If the file is a Rom and less than the radix, put it in the "lesser" dat
+                else if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) < radix)
+                    lessThan.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
 
-                    // If the file is a Rom and greater than or equal to the radix, put it in the "greater" dat
-                    else if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) >= radix)
-                        greaterThan.ItemsDB.AddItem(item.Item2, -1, false);
-                }
+                // If the file is a Rom and greater than or equal to the radix, put it in the "greater" dat
+                else if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) >= radix)
+                    greaterThan.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
@@ -905,40 +936,35 @@ namespace SabreTools.DatTools
         /// <returns>DatFile containing all items with the ItemType/returns>
         private static void FillWithItemTypeDB(DatFile datFile, DatFile indexDat, ItemType itemType)
         {
-            // Loop through and add the items for this index to the output
+            // Get all current items, machines, and mappings
+            var datItems = datFile.ItemsDB.GetItems().ToDictionary(m => m.Item1, m => m.Item2);
+            var machines = datFile.ItemsDB.GetMachines().ToDictionary(m => m.Item1, m => m.Item2);
+            var mappings = datFile.ItemsDB.GetItemMappings().ToDictionary(m => m.Item1, m => m.Item2);
+
+            // Create a mapping from old machine index to new machine index
+            var machineRemapping = new Dictionary<long, long>();
+
+            // Loop through and add all machines
+            foreach (var machine in machines)
+            {
+                long newMachineIndex = indexDat.ItemsDB.AddMachine(machine.Value);
+                machineRemapping[machine.Key] = newMachineIndex;
+            }
+
+            // Loop through and add the items
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(datFile.ItemsDB.SortedKeys, Globals.ParallelOptions, key =>
+            Parallel.ForEach(datItems, Globals.ParallelOptions, item =>
 #elif NET40_OR_GREATER
-            Parallel.ForEach(datFile.ItemsDB.SortedKeys, key =>
+            Parallel.ForEach(datItems, item =>
 #else
-            foreach (var key in datFile.ItemsDB.SortedKeys)
+            foreach (var item in datItems)
 #endif
             {
-                // Get the current items
-                var datItems = datFile.ItemsDB.GetItemsForBucket(key);
-                if (datItems == null)
-#if NET40_OR_GREATER || NETCOREAPP
-                    return;
-#else
-                    continue;
-#endif
+                // Get the machine index for this item
+                long machineIndex = mappings[item.Key];
 
-                ConcurrentList<DatItem> items = DatItem.Merge(datItems.Select(i => i.Item2).ToConcurrentList());
-
-                // If the rom list is empty or null, just skip it
-                if (items == null || items.Count == 0)
-#if NET40_OR_GREATER || NETCOREAPP
-                    return;
-#else
-                    continue;
-#endif
-
-                foreach (DatItem item in items)
-                {
-                    // TODO: Determine how we figure out the machine index
-                    if (item.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>() == itemType)
-                        indexDat.ItemsDB.AddItem(item, -1, false);
-                }
+                if (item.Value.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>() == itemType)
+                    indexDat.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
