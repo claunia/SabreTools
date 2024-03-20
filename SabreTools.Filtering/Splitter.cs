@@ -103,6 +103,7 @@ namespace SabreTools.Filtering
 
             // For sake of ease, the first thing we want to do is bucket by game
             datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
+            datFile.ItemsDB.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
             while (datFile.Items.AddRomsFromDevices(false, false)) ;
@@ -125,6 +126,7 @@ namespace SabreTools.Filtering
 
             // For sake of ease, the first thing we want to do is bucket by game
             datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
+            datFile.ItemsDB.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
             datFile.Items.AddRomsFromChildren(true, false);
@@ -151,6 +153,7 @@ namespace SabreTools.Filtering
 
             // For sake of ease, the first thing we want to do is bucket by game
             datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
+            datFile.ItemsDB.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
             while (datFile.Items.AddRomsFromDevices(true, true)) ;
@@ -179,6 +182,7 @@ namespace SabreTools.Filtering
 
             // For sake of ease, the first thing we want to do is bucket by game
             datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
+            datFile.ItemsDB.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
             datFile.Items.AddRomsFromChildren(true, true);
@@ -205,6 +209,7 @@ namespace SabreTools.Filtering
 
             // For sake of ease, the first thing we want to do is bucket by game
             datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
+            datFile.ItemsDB.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
             datFile.Items.AddRomsFromParent();
@@ -231,6 +236,7 @@ namespace SabreTools.Filtering
 
             // For sake of ease, the first thing we want to do is bucket by game
             datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
+            datFile.ItemsDB.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
             datFile.Items.RemoveRomsFromChild();
