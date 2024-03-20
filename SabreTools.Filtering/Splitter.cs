@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
@@ -114,6 +113,7 @@ namespace SabreTools.Filtering
 
             // Then, remove the romof and cloneof tags so it's not picked up by the manager
             RemoveTagsFromChild(datFile);
+            RemoveTagsFromChildDB(datFile);
         }
 
         /// <summary>
@@ -132,10 +132,13 @@ namespace SabreTools.Filtering
 
             // Now that we have looped through the cloneof tags, we loop through the romof tags
             RemoveBiosRomsFromChild(datFile, false);
+            RemoveBiosRomsFromChildDB(datFile, false);
             RemoveBiosRomsFromChild(datFile, true);
+            RemoveBiosRomsFromChildDB(datFile, true);
 
             // Finally, remove the romof and cloneof tags so it's not picked up by the manager
             RemoveTagsFromChild(datFile);
+            RemoveTagsFromChildDB(datFile);
         }
 
         /// <summary>
@@ -159,6 +162,7 @@ namespace SabreTools.Filtering
 
             // Then, remove the romof and cloneof tags so it's not picked up by the manager
             RemoveTagsFromChild(datFile);
+            RemoveTagsFromChildDB(datFile);
         }
 
         /// <summary>
@@ -177,10 +181,13 @@ namespace SabreTools.Filtering
 
             // Now that we have looped through the cloneof tags, we loop through the romof tags
             RemoveBiosRomsFromChild(datFile, false);
+            RemoveBiosRomsFromChildDB(datFile, false);
             RemoveBiosRomsFromChild(datFile, true);
+            RemoveBiosRomsFromChildDB(datFile, true);
 
             // Finally, remove the romof and cloneof tags so it's not picked up by the manager
             RemoveTagsFromChild(datFile);
+            RemoveTagsFromChildDB(datFile);
         }
 
         /// <summary>
@@ -199,10 +206,13 @@ namespace SabreTools.Filtering
 
             // Now that we have looped through the cloneof tags, we loop through the romof tags
             RemoveBiosRomsFromChild(datFile, false);
+            RemoveBiosRomsFromChildDB(datFile, false);
             RemoveBiosRomsFromChild(datFile, true);
+            RemoveBiosRomsFromChildDB(datFile, true);
 
             // Finally, remove the romof and cloneof tags so it's not picked up by the manager
             RemoveTagsFromChild(datFile);
+            RemoveTagsFromChildDB(datFile);
         }
 
         /// <summary>
@@ -218,13 +228,17 @@ namespace SabreTools.Filtering
 
             // Now we want to loop through all of the games and set the correct information
             RemoveRomsFromChild(datFile);
+            RemoveRomsFromChildDB(datFile);
 
             // Now that we have looped through the cloneof tags, we loop through the romof tags
             RemoveBiosRomsFromChild(datFile, false);
+            RemoveBiosRomsFromChildDB(datFile, false);
             RemoveBiosRomsFromChild(datFile, true);
+            RemoveBiosRomsFromChildDB(datFile, true);
 
             // Finally, remove the romof and cloneof tags so it's not picked up by the manager
             RemoveTagsFromChild(datFile);
+            RemoveTagsFromChildDB(datFile);
         }
 
         /// <summary>
@@ -272,6 +286,8 @@ namespace SabreTools.Filtering
                 }
             }
         }
+
+        // TODO: Add AddRomsFromBiosDB
 
         /// <summary>
         /// Use device_ref and optionally slotoption tags to add roms to the children
@@ -421,6 +437,8 @@ namespace SabreTools.Filtering
             return foundnew;
         }
 
+        // TODO: Add AddRomsFromDevicesDB
+
         /// <summary>
         /// Use cloneof tags to add roms to the children, setting the new romof tag in the process
         /// </summary>
@@ -471,6 +489,8 @@ namespace SabreTools.Filtering
                 }
             }
         }
+
+        // TODO: Add AddRomsFromParentDB
 
         /// <summary>
         /// Use cloneof tags to add roms to the parents, removing the child sets in the process
@@ -593,6 +613,8 @@ namespace SabreTools.Filtering
             }
         }
 
+        // TODO: Add AddRomsFromChildrenDB
+
         /// <summary>
         /// Remove all BIOS and device sets
         /// </summary>
@@ -611,6 +633,31 @@ namespace SabreTools.Filtering
                         || (items[0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetBoolFieldValue(Models.Metadata.Machine.IsDeviceKey) == true)))
                 {
                     datFile.Items.Remove(game);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Remove all BIOS and device sets
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to run operations on</param>
+        internal static void RemoveBiosAndDeviceSetsDB(DatFile datFile)
+        {
+            List<string> games = [.. datFile.ItemsDB.SortedKeys];
+            foreach (string game in games)
+            {
+                var items = datFile.ItemsDB.GetDatItemsForBucket(game);
+                if (items == null)
+                    continue;
+
+                if (items.Length > 0
+                    && ((items[0].Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetBoolFieldValue(Models.Metadata.Machine.IsBiosKey) == true)
+                        || (items[0].Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetBoolFieldValue(Models.Metadata.Machine.IsDeviceKey) == true)))
+                {
+                    foreach (var item in items)
+                    {
+                        datFile.ItemsDB.RemoveItem(item.Item1);
+                    }
                 }
             }
         }
@@ -659,6 +706,52 @@ namespace SabreTools.Filtering
                     while (items.Contains(datItem))
                     {
                         datFile.Items.Remove(game, datItem);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Use romof tags to remove bios roms from children
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to run operations on</param>
+        /// <param name="bios">True if only child Bios sets are touched, false for non-bios sets (default)</param>
+        internal static void RemoveBiosRomsFromChildDB(DatFile datFile, bool bios = false)
+        {
+            // Loop through the romof tags
+            List<string> games = [.. datFile.ItemsDB.SortedKeys];
+            foreach (string game in games)
+            {
+                // If the game has no items in it, we want to continue
+                var items = datFile.ItemsDB.GetDatItemsForBucket(game);
+                if (items == null || items.Length == 0)
+                    continue;
+
+                // If the game (is/is not) a bios, we want to continue
+                if (bios ^ (items[0].Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetBoolFieldValue(Models.Metadata.Machine.IsBiosKey) == true))
+                    continue;
+
+                // Determine if the game has a parent or not
+                string? parent = null;
+                if (!string.IsNullOrEmpty(items[0].Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey)))
+                    parent = items[0].Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
+
+                // If the parent doesnt exist, we want to continue
+                if (string.IsNullOrEmpty(parent))
+                    continue;
+
+                // If the parent doesn't have any items, we want to continue
+                var parentItems = datFile.ItemsDB.GetDatItemsForBucket(parent!);
+                if (parentItems == null || parentItems.Length == 0)
+                    continue;
+
+                // If the parent exists and has items, we remove the items that are in the parent from the current game
+                foreach ((long, DatItem) item in parentItems)
+                {
+                    var matchedIndices = items.Where(i => i.Item2 == item.Item2).Select(i => i.Item1);
+                    foreach (long index in matchedIndices)
+                    {
+                        datFile.ItemsDB.RemoveItem(index);
                     }
                 }
             }
@@ -716,12 +809,63 @@ namespace SabreTools.Filtering
         }
 
         /// <summary>
+        /// Use cloneof tags to remove roms from the children
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to run operations on</param>
+        internal static void RemoveRomsFromChildDB(DatFile datFile)
+        {
+            List<string> games = [.. datFile.ItemsDB.SortedKeys];
+            foreach (string game in games)
+            {
+                var items = datFile.ItemsDB.GetDatItemsForBucket(game);
+                if (items == null)
+                    continue;
+
+                // If the game has no items in it, we want to continue
+                if (items.Length == 0)
+                    continue;
+
+                // Determine if the game has a parent or not
+                string? parent = null;
+                if (!string.IsNullOrEmpty(items[0].Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey)))
+                    parent = items[0].Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey);
+
+                // If the parent doesnt exist, we want to continue
+                if (string.IsNullOrEmpty(parent))
+                    continue;
+
+                // If the parent doesn't have any items, we want to continue
+                var parentItems = datFile.ItemsDB.GetDatItemsForBucket(parent!);
+                if (parentItems == null || parentItems.Length == 0)
+                    continue;
+
+                // If the parent exists and has items, we remove the parent items from the current game
+                foreach ((long, DatItem) item in parentItems)
+                {
+                    var matchedIndices = items.Where(i => i.Item2 == item.Item2).Select(i => i.Item1);
+                    foreach (long index in matchedIndices)
+                    {
+                        datFile.ItemsDB.RemoveItem(index);
+                    }
+                }
+
+                // Now we want to get the parent romof tag and put it in each of the remaining items
+                items = datFile.ItemsDB.GetDatItemsForBucket(game);
+                string? romof = datFile.ItemsDB.GetDatItemsForBucket(parent)![0].Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
+                foreach ((long, DatItem) item in items!)
+                {
+                    item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, romof);
+                }
+            }
+        }
+
+        /// <summary>
         /// Remove all romof and cloneof tags from all games
         /// </summary>
         /// <param name="datFile">Current DatFile object to run operations on</param>
         internal static void RemoveTagsFromChild(DatFile datFile)
         {
-            List<string> games = datFile.Items.Keys.OrderBy(g => g).ToList();
+            List<string> games = [.. datFile.Items.Keys.OrderBy(g => g)];
             foreach (string game in games)
             {
                 var items = datFile.Items[game];
@@ -733,6 +877,28 @@ namespace SabreTools.Filtering
                     item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, null);
                     item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, null);
                     item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.SampleOfKey, null);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Remove all romof and cloneof tags from all games
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to run operations on</param>
+        internal static void RemoveTagsFromChildDB(DatFile datFile)
+        {
+            List<string> games = [.. datFile.ItemsDB.SortedKeys];
+            foreach (string game in games)
+            {
+                var items = datFile.ItemsDB.GetDatItemsForBucket(game);
+                if (items == null)
+                    continue;
+
+                foreach ((long, DatItem) item in items)
+                {
+                    item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, null);
+                    item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, null);
+                    item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.SampleOfKey, null);
                 }
             }
         }
