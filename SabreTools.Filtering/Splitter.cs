@@ -131,6 +131,7 @@ namespace SabreTools.Filtering
 
             // Now we want to loop through all of the games and set the correct information
             AddRomsFromChildren(datFile, skipDedup: false);
+            datFile.ItemsDB.AddRomsFromChildren(true, false);
 
             // Now that we have looped through the cloneof tags, we loop through the romof tags
             RemoveBiosRomsFromChild(datFile, false);
@@ -164,6 +165,7 @@ namespace SabreTools.Filtering
 
             // Now that we have looped through the cloneof tags, we loop through the romof tags
             AddRomsFromBios(datFile);
+            datFile.ItemsDB.AddRomsFromBios();
 
             // Then, remove the romof and cloneof tags so it's not picked up by the manager
             RemoveTagsFromChild(datFile);
@@ -183,6 +185,7 @@ namespace SabreTools.Filtering
 
             // Now we want to loop through all of the games and set the correct information
             AddRomsFromChildren(datFile, skipDedup: true);
+            datFile.ItemsDB.AddRomsFromChildren(true, true);
 
             // Now that we have looped through the cloneof tags, we loop through the romof tags
             RemoveBiosRomsFromChild(datFile, false);
@@ -292,8 +295,6 @@ namespace SabreTools.Filtering
                 }
             }
         }
-
-        // TODO: Add AddRomsFromBiosDB
 
         /// <summary>
         /// Use device_ref and optionally slotoption tags to add roms to the children

@@ -1207,6 +1207,53 @@ namespace SabreTools.DatFiles
         #region Splitting
 
         /// <summary>
+        /// Use romof tags to add roms to the children
+        /// </summary>
+        public void AddRomsFromBios()
+        {
+            List<string> games = [.. SortedKeys];
+            foreach (string game in games)
+            {
+                var items = GetDatItemsForBucket(game);
+
+                // If the game has no items in it, we want to continue
+                if (items == null || items.Length == 0)
+                    continue;
+
+                // Get the machine for the first item
+                var machine = GetMachineForItem(items[0].Item1);
+                if (machine.Item2 == null)
+                    continue;
+
+                // Determine if the game has a parent or not
+                (long, string?) parent = (-1, null);
+                if (!string.IsNullOrEmpty(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.RomOfKey)))
+                {
+                    string? romOf = machine.Item2.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
+                    var romOfMachine = GetMachine(romOf);
+                    parent = (romOfMachine.Item1, romOf);
+                }
+
+                // If the parent doesnt exist, we want to continue
+                if (string.IsNullOrEmpty(parent.Item2))
+                    continue;
+
+                // If the parent doesn't have any items, we want to continue
+                var parentItems = GetDatItemsForBucket(parent.Item2!);
+                if (parentItems == null || parentItems.Length == 0)
+                    continue;
+
+                // If the parent exists and has items, we copy the items from the parent to the current game
+                foreach ((long, DatItem) item in parentItems)
+                {
+                    DatItem datItem = (item.Item2.Clone() as DatItem)!;
+                    if (!items.Where(i => i.Item2.GetName() == datItem.GetName()).Any() && !items.Any(i => i.Item2 == datItem))
+                        AddItem(datItem, machine.Item1);
+                }
+            }
+        }
+
+        /// <summary>
         /// Use device_ref and optionally slotoption tags to add roms to the children
         /// </summary>
         /// <param name="dev">True if only child device sets are touched, false for non-device sets</param>
