@@ -145,7 +145,7 @@ namespace SabreTools.DatTools
             // Get all current items, machines, and mappings
             var datItems = datFile.ItemsDB.GetItems().ToDictionary(m => m.Item1, m => m.Item2);
             var machines = datFile.ItemsDB.GetMachines().ToDictionary(m => m.Item1, m => m.Item2);
-            var mappings = datFile.ItemsDB.GetItemMappings().ToDictionary(m => m.Item1, m => m.Item2);
+            var mappings = datFile.ItemsDB.GetItemMachineMappings().ToDictionary(m => m.Item1, m => m.Item2);
 
             // Create a mapping from old machine index to new machine index
             var machineRemapping = new Dictionary<long, long>();
@@ -172,16 +172,16 @@ namespace SabreTools.DatTools
 
                 if (newExtA.Contains((item.Value.GetName() ?? string.Empty).GetNormalizedExtension()))
                 {
-                    extADat.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                    extADat.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], statsOnly: false);
                 }
                 else if (newExtB.Contains((item.Value.GetName() ?? string.Empty).GetNormalizedExtension()))
                 {
-                    extBDat.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                    extBDat.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], statsOnly: false);
                 }
                 else
                 {
-                    extADat.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
-                    extBDat.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                    extADat.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], statsOnly: false);
+                    extBDat.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], statsOnly: false);
                 }
 #if NET40_OR_GREATER || NETCOREAPP
             });
@@ -383,7 +383,7 @@ namespace SabreTools.DatTools
             // Get all current items, machines, and mappings
             var datItems = datFile.ItemsDB.GetItems().ToDictionary(m => m.Item1, m => m.Item2);
             var machines = datFile.ItemsDB.GetMachines().ToDictionary(m => m.Item1, m => m.Item2);
-            var mappings = datFile.ItemsDB.GetItemMappings().ToDictionary(m => m.Item1, m => m.Item2);
+            var mappings = datFile.ItemsDB.GetItemMachineMappings().ToDictionary(m => m.Item1, m => m.Item2);
 
             // Create a mapping from old machine index to new machine index
             var machineRemapping = new Dictionary<long, long>();
@@ -419,45 +419,45 @@ namespace SabreTools.DatTools
                 {
                     case Disk disk:
                         if (disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump)
-                            fieldDats[Models.Metadata.Disk.StatusKey].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                            fieldDats[Models.Metadata.Disk.StatusKey].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], statsOnly: false);
                         else if (!string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)))
-                            fieldDats[Models.Metadata.Disk.SHA1Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                            fieldDats[Models.Metadata.Disk.SHA1Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], statsOnly: false);
                         else if (!string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key)))
-                            fieldDats[Models.Metadata.Disk.MD5Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                            fieldDats[Models.Metadata.Disk.MD5Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], statsOnly: false);
                         else if (!string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key)))
-                            fieldDats[Models.Metadata.Disk.MD5Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                            fieldDats[Models.Metadata.Disk.MD5Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], statsOnly: false);
                         else
-                            fieldDats["null"].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                            fieldDats["null"].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], statsOnly: false);
                         break;
 
                     case Media media:
                         if (!string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA256Key)))
-                            fieldDats[Models.Metadata.Media.SHA256Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                            fieldDats[Models.Metadata.Media.SHA256Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], statsOnly: false);
                         else if (!string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA1Key)))
-                            fieldDats[Models.Metadata.Media.SHA1Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                            fieldDats[Models.Metadata.Media.SHA1Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], statsOnly: false);
                         else if (!string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.MD5Key)))
-                            fieldDats[Models.Metadata.Media.MD5Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                            fieldDats[Models.Metadata.Media.MD5Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], statsOnly: false);
                         else
-                            fieldDats["null"].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                            fieldDats["null"].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], statsOnly: false);
                         break;
 
                     case Rom rom:
                         if (rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump)
-                            fieldDats[Models.Metadata.Rom.StatusKey].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                            fieldDats[Models.Metadata.Rom.StatusKey].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], statsOnly: false);
                         else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA512Key)))
-                            fieldDats[Models.Metadata.Rom.SHA512Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                            fieldDats[Models.Metadata.Rom.SHA512Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], statsOnly: false);
                         else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA384Key)))
-                            fieldDats[Models.Metadata.Rom.SHA384Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                            fieldDats[Models.Metadata.Rom.SHA384Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], statsOnly: false);
                         else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key)))
-                            fieldDats[Models.Metadata.Rom.SHA256Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                            fieldDats[Models.Metadata.Rom.SHA256Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], statsOnly: false);
                         else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key)))
-                            fieldDats[Models.Metadata.Rom.SHA1Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                            fieldDats[Models.Metadata.Rom.SHA1Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], statsOnly: false);
                         else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key)))
-                            fieldDats[Models.Metadata.Rom.MD5Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                            fieldDats[Models.Metadata.Rom.MD5Key].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], statsOnly: false);
                         else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey)))
-                            fieldDats[Models.Metadata.Rom.CRCKey].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                            fieldDats[Models.Metadata.Rom.CRCKey].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], statsOnly: false);
                         else
-                            fieldDats["null"].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                            fieldDats["null"].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], statsOnly: false);
                         break;
 
                     default:
@@ -695,7 +695,7 @@ namespace SabreTools.DatTools
             // Get all current items, machines, and mappings
             var datItems = datFile.ItemsDB.GetItems().ToDictionary(m => m.Item1, m => m.Item2);
             var machines = datFile.ItemsDB.GetMachines().ToDictionary(m => m.Item1, m => m.Item2);
-            var mappings = datFile.ItemsDB.GetItemMappings().ToDictionary(m => m.Item1, m => m.Item2);
+            var mappings = datFile.ItemsDB.GetItemMachineMappings().ToDictionary(m => m.Item1, m => m.Item2);
 
             // Create a mapping from old machine index to new machine index
             var machineRemapping = new Dictionary<long, long>();
@@ -722,19 +722,19 @@ namespace SabreTools.DatTools
 
                 // If the file is not a Rom, it automatically goes in the "lesser" dat
                 if (item.Value is not Rom rom)
-                    lessThan.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                    lessThan.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], statsOnly: false);
 
                 // If the file is a Rom and has no size, put it in the "lesser" dat
                 else if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) == null)
-                    lessThan.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                    lessThan.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], statsOnly: false);
 
                 // If the file is a Rom and less than the radix, put it in the "lesser" dat
                 else if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) < radix)
-                    lessThan.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                    lessThan.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], statsOnly: false);
 
                 // If the file is a Rom and greater than or equal to the radix, put it in the "greater" dat
                 else if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) >= radix)
-                    greaterThan.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                    greaterThan.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], statsOnly: false);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
@@ -939,7 +939,7 @@ namespace SabreTools.DatTools
             // Get all current items, machines, and mappings
             var datItems = datFile.ItemsDB.GetItems().ToDictionary(m => m.Item1, m => m.Item2);
             var machines = datFile.ItemsDB.GetMachines().ToDictionary(m => m.Item1, m => m.Item2);
-            var mappings = datFile.ItemsDB.GetItemMappings().ToDictionary(m => m.Item1, m => m.Item2);
+            var mappings = datFile.ItemsDB.GetItemMachineMappings().ToDictionary(m => m.Item1, m => m.Item2);
 
             // Create a mapping from old machine index to new machine index
             var machineRemapping = new Dictionary<long, long>();
@@ -964,7 +964,7 @@ namespace SabreTools.DatTools
                 long machineIndex = mappings[item.Key];
 
                 if (item.Value.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>() == itemType)
-                    indexDat.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                    indexDat.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], statsOnly: false);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else

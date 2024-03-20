@@ -28,7 +28,6 @@ using SabreTools.Matching;
  * - Feature parity with all existing item dictionary operations
  * - A way to transition between the two item dictionaries (a flag?)
  * - Helper methods that target the "database" version instead of assuming the standard dictionary
- * - Should sources be separated out the same as machines are?
  * 
  * Notable changes include:
  * - Separation of Machine from DatItem, leading to a mapping instead
@@ -81,6 +80,22 @@ namespace SabreTools.DatFiles
         private long _machineIndex = 0;
 
         /// <summary>
+        /// Internal dictionary for all sources
+        /// </summary>
+        [JsonIgnore, XmlIgnore]
+#if NET40_OR_GREATER || NETCOREAPP
+        private readonly ConcurrentDictionary<long, Source> _sources = new ConcurrentDictionary<long, Source>();
+#else
+        private readonly Dictionary<long, Source> _sources = [];
+#endif
+
+        /// <summary>
+        /// Current highest available source index
+        /// </summary>
+        [JsonIgnore, XmlIgnore]
+        private long _sourceIndex = 0;
+
+        /// <summary>
         /// Internal dictionary for item to machine mappings
         /// </summary>
         [JsonIgnore, XmlIgnore]
@@ -88,6 +103,16 @@ namespace SabreTools.DatFiles
         private readonly ConcurrentDictionary<long, long> _itemToMachineMapping = new ConcurrentDictionary<long, long>();
 #else
         private readonly Dictionary<long, long> _itemToMachineMapping = [];
+#endif
+
+        /// <summary>
+        /// Internal dictionary for item to source mappings
+        /// </summary>
+        [JsonIgnore, XmlIgnore]
+#if NET40_OR_GREATER || NETCOREAPP
+        private readonly ConcurrentDictionary<long, long> _itemToSourceMapping = new ConcurrentDictionary<long, long>();
+#else
+        private readonly Dictionary<long, long> _itemToSourceMapping = [];
 #endif
 
         /// <summary>
@@ -154,7 +179,7 @@ namespace SabreTools.DatFiles
         /// <param name="machineIndex">Index of the machine related to the item</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise (default)</param>
         /// <returns>The index for the added item, -1 on error</returns>
-        public long AddItem(DatItem item, long machineIndex, bool statsOnly)
+        public long AddItem(DatItem item, long machineIndex, long sourceIndex = -1, bool statsOnly = false)
         {
             // If we have a Disk, Media, or Rom, clean the hash data
             if (item is Disk disk)
@@ -235,7 +260,7 @@ namespace SabreTools.DatFiles
             }
             else
             {
-                return AddItem(item, machineIndex);
+                return AddItem(item, machineIndex, sourceIndex);
             }
         }
 
@@ -246,6 +271,15 @@ namespace SabreTools.DatFiles
         {
             _machines[_machineIndex++] = machine;
             return _machineIndex - 1;
+        }
+
+        /// <summary>
+        /// Add a source, returning the insert index
+        /// </summary>
+        public long AddSource(Source source)
+        {
+            _sources[_sourceIndex++] = source;
+            return _sourceIndex - 1;
         }
 
         /// <summary>
@@ -306,9 +340,14 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Get all item mappings
+        /// Get all item to machine mappings
         /// </summary>
-        public (long, long)[] GetItemMappings() => _itemToMachineMapping.Select(kvp => (kvp.Key, kvp.Value)).ToArray();
+        public (long, long)[] GetItemMachineMappings() => _itemToMachineMapping.Select(kvp => (kvp.Key, kvp.Value)).ToArray();
+
+        /// <summary>
+        /// Get all item to source mappings
+        /// </summary>
+        public (long, long)[] GetItemSourceMappings() => _itemToSourceMapping.Select(kvp => (kvp.Key, kvp.Value)).ToArray();
 
         /// <summary>
         /// Get all items and their indicies
@@ -342,6 +381,25 @@ namespace SabreTools.DatFiles
         {
             var itemIds = _itemToMachineMapping
                 .Where(mapping => mapping.Value == machineIndex)
+                .Select(mapping => mapping.Key);
+
+            var datItems = new List<(long, DatItem)>();
+            foreach (long itemId in itemIds)
+            {
+                if (_items.ContainsKey(itemId) && (!filter || _items[itemId].GetBoolFieldValue(DatItem.RemoveKey) != true))
+                    datItems.Add((itemId, _items[itemId]));
+            }
+
+            return [.. datItems];
+        }
+
+        /// <summary>
+        /// Get the indices and items associated with a source index
+        /// </summary>
+        public (long, DatItem)[]? GetItemsForSource(long sourceIndex, bool filter = false)
+        {
+            var itemIds = _itemToSourceMapping
+                .Where(mapping => mapping.Value == sourceIndex)
                 .Select(mapping => mapping.Key);
 
             var datItems = new List<(long, DatItem)>();
@@ -397,6 +455,37 @@ namespace SabreTools.DatFiles
         /// Get all machines and their indicies
         /// </summary>
         public (long, Machine)[] GetMachines() => _machines.Select(kvp => (kvp.Key, kvp.Value)).ToArray();
+
+        /// <summary>
+        /// Get a source based on the index
+        /// </summary>
+        public Source? GetSource(long index)
+        {
+            if (!_sources.ContainsKey(index))
+                return null;
+
+            return _sources[index];
+        }
+
+        /// <summary>
+        /// Get the index and source associated with an item index
+        /// </summary>
+        public (long, Source?) GetSourceForItem(long itemIndex)
+        {
+            if (!_itemToSourceMapping.ContainsKey(itemIndex))
+                return (-1, null);
+
+            long sourceIndex = _itemToSourceMapping[itemIndex];
+            if (!_sources.ContainsKey(sourceIndex))
+                return (-1, null);
+
+            return (sourceIndex, _sources[sourceIndex]);
+        }
+
+        /// <summary>
+        /// Get all sources and their indicies
+        /// </summary>
+        public (long, Source)[] GetSources() => _sources.Select(kvp => (kvp.Key, kvp.Value)).ToArray();
 
         /// <summary>
         /// Remove an item, returning if it could be removed
@@ -467,13 +556,16 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Add an item, returning the insert index
         /// </summary>
-        private long AddItem(DatItem item, long machineIndex)
+        private long AddItem(DatItem item, long machineIndex, long sourceIndex)
         {
             // Add the item with a new index
             _items[_itemIndex++] = item;
 
             // Add the machine mapping
             _itemToMachineMapping[_itemIndex - 1] = machineIndex;
+
+            // Add the source mapping
+            _itemToSourceMapping[_itemIndex - 1] = sourceIndex;
 
             // Add the item statistics
             DatStatistics.AddItemStatistics(item);

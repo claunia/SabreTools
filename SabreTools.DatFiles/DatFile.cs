@@ -210,7 +210,7 @@ namespace SabreTools.DatFiles
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <returns>The key for the item</returns>
         protected long ParseAddHelper(DatItem item, long machineIndex, bool statsOnly)
-            => ItemsDB.AddItem(item, machineIndex, statsOnly);
+            => ItemsDB.AddItem(item, machineIndex, statsOnly: statsOnly);
 
         #endregion
 
