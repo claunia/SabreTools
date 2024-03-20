@@ -1393,7 +1393,7 @@ namespace SabreTools.DatFiles
 #if NET20 || NET35 || NET40 || NET452
                 machine[key] = new T[0];
 #else
-                machine[key] = Array.Empty<T>();
+                machine[key] = System.Array.Empty<T>();
 #endif
         }
 
