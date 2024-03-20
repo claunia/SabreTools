@@ -306,10 +306,14 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Get all items from the current dictionary
+        /// Get all item mappings
         /// </summary>
-        public DatItem[] GetItems()
-            => _items.Select(kvp => kvp.Value).ToArray();
+        public (long, long)[] GetItemMappings() => _itemToMachineMapping.Select(kvp => (kvp.Key, kvp.Value)).ToArray();
+
+        /// <summary>
+        /// Get all items and their indicies
+        /// </summary>
+        public (long, DatItem)[] GetItems() => _items.Select(kvp => (kvp.Key, kvp.Value)).ToArray();
 
         /// <summary>
         /// Get the indices and items associated with a bucket name
@@ -390,10 +394,9 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Get all machines from the current dictionary
+        /// Get all machines and their indicies
         /// </summary>
-        public Machine[] GetMachines()
-            => _machines.Select(kvp => kvp.Value).ToArray();
+        public (long, Machine)[] GetMachines() => _machines.Select(kvp => (kvp.Key, kvp.Value)).ToArray();
 
         /// <summary>
         /// Remove an item, returning if it could be removed
