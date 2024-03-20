@@ -1015,12 +1015,16 @@ namespace SabreTools.DatFiles
 
                 for (int j = 0; j < items.Length; j++)
                 {
-                    (long, DatItem) item = items[j];
-                    if (Regex.IsMatch(item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!, pattern))
-                        item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Regex.Replace(item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!, pattern, "$2"));
+                    var item = items[j];
+                    var machine = GetMachineForItem(item.Item1);
+                    if (machine.Item2 == null)
+                        continue;
 
-                    if (Regex.IsMatch(item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)!, pattern))
-                        item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, Regex.Replace(item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)!, pattern, "$2"));
+                    if (Regex.IsMatch(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey)!, pattern))
+                        machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Regex.Replace(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey)!, pattern, "$2"));
+
+                    if (Regex.IsMatch(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)!, pattern))
+                        machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, Regex.Replace(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)!, pattern, "$2"));
 
                     items[j] = item;
                 }
@@ -1065,13 +1069,18 @@ namespace SabreTools.DatFiles
 
                 foreach ((long, DatItem) item in items)
                 {
+                    // Get the current machine
+                    var machine = GetMachineForItem(item.Item1);
+                    if (machine.Item2 == null)
+                        continue;
+
                     // If the key mapping doesn't exist, add it
 #if NET40_OR_GREATER || NETCOREAPP
-                    mapping.TryAdd(item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!,
-                        item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)!.Replace('/', '_').Replace("\"", "''").Replace(":", " -"));
+                    mapping.TryAdd(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey)!,
+                        machine.Item2.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)!.Replace('/', '_').Replace("\"", "''").Replace(":", " -"));
 #else
-                    mapping[item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!]
-                        = item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)!.Replace('/', '_').Replace("\"", "''").Replace(":", " -");
+                    mapping[machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey)!]
+                        = machine.Item2.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)!.Replace('/', '_').Replace("\"", "''").Replace(":", " -");
 #endif
                 }
 #if NET40_OR_GREATER || NETCOREAPP
@@ -1115,11 +1124,18 @@ namespace SabreTools.DatFiles
             if (datItem.Item1 < 0 || datItem.Item2.GetName() == null)
                 return;
 
+            // Get the current machine
+            var machine = GetMachineForItem(datItem.Item1);
+            if (machine.Item2 == null)
+                return;
+
             string[] splitname = datItem.Item2.GetName()!.Split('.');
 #if NET20 || NET35
-            datItem.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, datItem.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1).ToArray())}");
+            machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.NameKey,
+                machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1).ToArray())}");
 #else
-            datItem.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, datItem.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1))}");
+            machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.NameKey,
+                machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1))}");
 #endif
             datItem.Item2.SetName(Path.GetFileName(datItem.Item2.GetName()));
         }
@@ -1152,21 +1168,26 @@ namespace SabreTools.DatFiles
                 ConcurrentList<(long, DatItem)> newItems = [];
                 foreach ((long, DatItem) item in items)
                 {
+                    // Get the current machine
+                    var machine = GetMachineForItem(item.Item1);
+                    if (machine.Item2 == null)
+                        continue;
+
                     // Update machine name
-                    if (!string.IsNullOrEmpty(item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)) && mapping.ContainsKey(item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!))
-                        item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, mapping[item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!]);
+                    if (!string.IsNullOrEmpty(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey)) && mapping.ContainsKey(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey)!))
+                        machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, mapping[machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey)!]);
 
                     // Update cloneof
-                    if (!string.IsNullOrEmpty(item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey)) && mapping.ContainsKey(item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey)!))
-                        item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, mapping[item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey)!]);
+                    if (!string.IsNullOrEmpty(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey)) && mapping.ContainsKey(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey)!))
+                        machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, mapping[machine.Item2.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey)!]);
 
                     // Update romof
-                    if (!string.IsNullOrEmpty(item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey)) && mapping.ContainsKey(item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey)!))
-                        item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, mapping[item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey)!]);
+                    if (!string.IsNullOrEmpty(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.RomOfKey)) && mapping.ContainsKey(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.RomOfKey)!))
+                        machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, mapping[machine.Item2.GetStringFieldValue(Models.Metadata.Machine.RomOfKey)!]);
 
                     // Update sampleof
-                    if (!string.IsNullOrEmpty(item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.SampleOfKey)) && mapping.ContainsKey(item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.SampleOfKey)!))
-                        item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.SampleOfKey, mapping[item.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.SampleOfKey)!]);
+                    if (!string.IsNullOrEmpty(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.SampleOfKey)) && mapping.ContainsKey(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.SampleOfKey)!))
+                        machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.SampleOfKey, mapping[machine.Item2.GetStringFieldValue(Models.Metadata.Machine.SampleOfKey)!]);
 
                     // Add the new item to the output list
                     newItems.Add(item);

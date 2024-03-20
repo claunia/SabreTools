@@ -312,7 +312,7 @@ namespace SabreTools.Filtering
 
             // Finally, strip out the parent tags
             Splitter.RemoveTagsFromChild(datFile);
-            Splitter.RemoveTagsFromChildDB(datFile);
+            datFile.ItemsDB.RemoveTagsFromChild();
         }
 
         /// <summary>
