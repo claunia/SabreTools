@@ -306,6 +306,51 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Get all items from the current dictionary
+        /// </summary>
+        public DatItem[] GetItems()
+            => _items.Select(kvp => kvp.Value).ToArray();
+
+        /// <summary>
+        /// Get the indices and items associated with a bucket name
+        /// </summary>
+        public (long, DatItem)[]? GetItemsForBucket(string bucketName, bool filter = false)
+        {
+            if (!_buckets.ContainsKey(bucketName))
+                return null;
+
+            var itemIds = _buckets[bucketName];
+
+            var datItems = new List<(long, DatItem)>();
+            foreach (long itemId in itemIds)
+            {
+                if (_items.ContainsKey(itemId) && (!filter || _items[itemId].GetBoolFieldValue(DatItem.RemoveKey) != true))
+                    datItems.Add((itemId, _items[itemId]));
+            }
+
+            return [.. datItems];
+        }
+
+        /// <summary>
+        /// Get the indices and items associated with a machine index
+        /// </summary>
+        public (long, DatItem)[]? GetItemsForMachine(long machineIndex, bool filter = false)
+        {
+            var itemIds = _itemToMachineMapping
+                .Where(mapping => mapping.Value == machineIndex)
+                .Select(mapping => mapping.Key);
+
+            var datItems = new List<(long, DatItem)>();
+            foreach (long itemId in itemIds)
+            {
+                if (_items.ContainsKey(itemId) && (!filter || _items[itemId].GetBoolFieldValue(DatItem.RemoveKey) != true))
+                    datItems.Add((itemId, _items[itemId]));
+            }
+
+            return [.. datItems];
+        }
+
+        /// <summary>
         /// Get a machine based on the index
         /// </summary>
         public Machine? GetMachine(long index)
@@ -345,43 +390,10 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Get the indices and items associated with a bucket name
+        /// Get all machines from the current dictionary
         /// </summary>
-        public (long, DatItem)[]? GetDatItemsForBucket(string bucketName, bool filter = false)
-        {
-            if (!_buckets.ContainsKey(bucketName))
-                return null;
-
-            var itemIds = _buckets[bucketName];
-
-            var datItems = new List<(long, DatItem)>();
-            foreach (long itemId in itemIds)
-            {
-                if (_items.ContainsKey(itemId) && (!filter || _items[itemId].GetBoolFieldValue(DatItem.RemoveKey) != true))
-                    datItems.Add((itemId, _items[itemId]));
-            }
-
-            return [.. datItems];
-        }
-
-        /// <summary>
-        /// Get the indices and items associated with a machine index
-        /// </summary>
-        public (long, DatItem)[]? GetDatItemsForMachine(long machineIndex, bool filter = false)
-        {
-            var itemIds = _itemToMachineMapping
-                .Where(mapping => mapping.Value == machineIndex)
-                .Select(mapping => mapping.Key);
-
-            var datItems = new List<(long, DatItem)>();
-            foreach (long itemId in itemIds)
-            {
-                if (_items.ContainsKey(itemId) && (!filter || _items[itemId].GetBoolFieldValue(DatItem.RemoveKey) != true))
-                    datItems.Add((itemId, _items[itemId]));
-            }
-
-            return [.. datItems];
-        }
+        public Machine[] GetMachines()
+            => _machines.Select(kvp => kvp.Value).ToArray();
 
         /// <summary>
         /// Remove an item, returning if it could be removed
@@ -518,7 +530,7 @@ namespace SabreTools.DatFiles
             string key = SortAndGetKey(datItem, sorted);
 
             // If the key doesn't exist, return the empty list
-            var roms = GetDatItemsForBucket(key);
+            var roms = GetItemsForBucket(key);
             if (roms == null || roms.Length == 0)
                 return output;
 
@@ -562,7 +574,7 @@ namespace SabreTools.DatFiles
             string key = SortAndGetKey(datItem, sorted);
 
             // If the key doesn't exist
-            var roms = GetDatItemsForBucket(key);
+            var roms = GetItemsForBucket(key);
             if (roms == null || roms.Length == 0)
                 return false;
 
@@ -1115,7 +1127,7 @@ namespace SabreTools.DatFiles
             Dictionary<string, List<string>> parents = [];
             foreach (string key in SortedKeys)
             {
-                var items = GetDatItemsForBucket(key);
+                var items = GetItemsForBucket(key);
                 if (items == null || items.Length == 0)
                     continue;
 
@@ -1193,7 +1205,7 @@ namespace SabreTools.DatFiles
             foreach (var key in SortedKeys)
 #endif
             {
-                var items = GetDatItemsForBucket(key);
+                var items = GetItemsForBucket(key);
                 if (items == null)
 #if NET40_OR_GREATER || NETCOREAPP
                     return;
@@ -1229,7 +1241,7 @@ namespace SabreTools.DatFiles
             foreach (var key in SortedKeys)
 #endif
             {
-                var items = GetDatItemsForBucket(key);
+                var items = GetItemsForBucket(key);
                 if (items == null)
 #if NET40_OR_GREATER || NETCOREAPP
                     return;
@@ -1283,7 +1295,7 @@ namespace SabreTools.DatFiles
             foreach (var key in SortedKeys)
 #endif
             {
-                var items = GetDatItemsForBucket(key);
+                var items = GetItemsForBucket(key);
                 if (items == null)
 #if NET40_OR_GREATER || NETCOREAPP
                     return;
@@ -1323,7 +1335,7 @@ namespace SabreTools.DatFiles
         /// <param name="bucketName">Name of the bucket to filter on</param>
         private void ExecuteFilterOnBucket(FilterRunner filterRunner, string bucketName)
         {
-            (long, DatItem)[]? items = GetDatItemsForBucket(bucketName);
+            (long, DatItem)[]? items = GetItemsForBucket(bucketName);
             if (items == null)
                 return;
 
@@ -1381,7 +1393,7 @@ namespace SabreTools.DatFiles
             foreach (var key in SortedKeys)
 #endif
             {
-                var items = GetDatItemsForBucket(key);
+                var items = GetItemsForBucket(key);
                 if (items == null)
 #if NET40_OR_GREATER || NETCOREAPP
                     return;
@@ -1438,7 +1450,7 @@ namespace SabreTools.DatFiles
             List<string> games = [.. SortedKeys];
             foreach (string game in games)
             {
-                var items = GetDatItemsForBucket(game);
+                var items = GetItemsForBucket(game);
 
                 // If the game has no items in it, we want to continue
                 if (items == null || items.Length == 0)
@@ -1463,7 +1475,7 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // If the parent doesn't have any items, we want to continue
-                var parentItems = GetDatItemsForBucket(parent.Item2!);
+                var parentItems = GetItemsForBucket(parent.Item2!);
                 if (parentItems == null || parentItems.Length == 0)
                     continue;
 
@@ -1489,7 +1501,7 @@ namespace SabreTools.DatFiles
             foreach (string game in games)
             {
                 // Get the items for this game
-                var items = GetDatItemsForBucket(game);
+                var items = GetItemsForBucket(game);
 
                 // If the machine doesn't have items, we continue
                 if (items == null || items.Length == 0)
@@ -1534,7 +1546,7 @@ namespace SabreTools.DatFiles
                             continue;
 
                         // If the machine doesn't exist then we continue
-                        var devItems = GetDatItemsForBucket(deviceReference);
+                        var devItems = GetItemsForBucket(deviceReference);
                         if (devItems == null || devItems.Length == 0)
                             continue;
 
@@ -1544,14 +1556,14 @@ namespace SabreTools.DatFiles
                             .Select(i => (i.Item2 as DeviceRef)!.GetName()!));
 
                         // Set new machine information and add to the current machine
-                        var copyFrom = GetMachineForItem(GetDatItemsForBucket(game)![0].Item1);
+                        var copyFrom = GetMachineForItem(GetItemsForBucket(game)![0].Item1);
                         if (copyFrom.Item2 == null)
                             continue;
 
                         foreach ((long, DatItem) item in devItems)
                         {
                             // If the parent machine doesn't already contain this item, add it
-                            if (!GetDatItemsForBucket(game)!
+                            if (!GetItemsForBucket(game)!
                                 .Any(i => i.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey) == item.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey)
                                     && i.Item2.GetName() == item.Item2.GetName()))
                             {
@@ -1589,7 +1601,7 @@ namespace SabreTools.DatFiles
                             continue;
 
                         // If the machine doesn't exist then we continue
-                        var slotItems = GetDatItemsForBucket(slotOption);
+                        var slotItems = GetItemsForBucket(slotOption);
                         if (slotItems == null || slotItems.Length == 0)
                             continue;
 
@@ -1601,14 +1613,14 @@ namespace SabreTools.DatFiles
                             .Select(o => o.GetStringFieldValue(Models.Metadata.SlotOption.DevNameKey)!));
 
                         // Set new machine information and add to the current machine
-                        var copyFrom = GetMachineForItem(GetDatItemsForBucket(game)![0].Item1);
+                        var copyFrom = GetMachineForItem(GetItemsForBucket(game)![0].Item1);
                         if (copyFrom.Item2 == null)
                             continue;
 
                         foreach ((long, DatItem) item in slotItems)
                         {
                             // If the parent machine doesn't already contain this item, add it
-                            if (!GetDatItemsForBucket(game)!
+                            if (!GetItemsForBucket(game)!
                                 .Any(i => i.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey) == item.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey)
                                     && i.Item2.GetName() == item.Item2.GetName()))
                             {
@@ -1651,7 +1663,7 @@ namespace SabreTools.DatFiles
             foreach (string game in games)
             {
                 // If the game has no items in it, we want to continue
-                var items = GetDatItemsForBucket(game);
+                var items = GetItemsForBucket(game);
                 if (items == null || items.Length == 0)
                     continue;
 
@@ -1674,7 +1686,7 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // If the parent doesn't have any items, we want to continue
-                var parentItems = GetDatItemsForBucket(parent.Item2!);
+                var parentItems = GetItemsForBucket(parent.Item2!);
                 if (parentItems == null || parentItems.Length == 0)
                     continue;
 
@@ -1690,12 +1702,12 @@ namespace SabreTools.DatFiles
                 }
 
                 // Get the parent machine
-                var parentMachine = GetMachineForItem(GetDatItemsForBucket(parent.Item2!)![0].Item1);
+                var parentMachine = GetMachineForItem(GetItemsForBucket(parent.Item2!)![0].Item1);
                 if (parentMachine.Item2 == null)
                     continue;
 
                 // Now we want to get the parent romof tag and put it in each of the items
-                items = GetDatItemsForBucket(game);
+                items = GetItemsForBucket(game);
                 string? romof = parentMachine.Item2.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
                 foreach ((long, DatItem) item in items!)
                 {
@@ -1719,7 +1731,7 @@ namespace SabreTools.DatFiles
             foreach (string game in games)
             {
                 // If the game has no items in it, we want to continue
-                var items = GetDatItemsForBucket(game);
+                var items = GetItemsForBucket(game);
                 if (items == null || items.Length == 0)
                     continue;
 
@@ -1741,11 +1753,11 @@ namespace SabreTools.DatFiles
                 if (string.IsNullOrEmpty(parent.Item2))
                     continue;
 
-                items = GetDatItemsForBucket(game);
+                items = GetItemsForBucket(game);
                 foreach ((long, DatItem) item in items!)
                 {
                     // Get the parent items and current machine name
-                    var parentItems = GetDatItemsForBucket(parent.Item2!);
+                    var parentItems = GetItemsForBucket(parent.Item2!);
                     string? machineName = GetMachineForItem(item.Item1).Item2?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
 
                     // Special disk handling
@@ -1844,7 +1856,7 @@ namespace SabreTools.DatFiles
             List<string> games = [.. SortedKeys];
             foreach (string game in games)
             {
-                var items = GetDatItemsForBucket(game);
+                var items = GetItemsForBucket(game);
                 if (items == null || items.Length == 0)
                     continue;
 
@@ -1874,7 +1886,7 @@ namespace SabreTools.DatFiles
             foreach (string game in games)
             {
                 // If the game has no items in it, we want to continue
-                var items = GetDatItemsForBucket(game);
+                var items = GetItemsForBucket(game);
                 if (items == null || items.Length == 0)
                     continue;
 
@@ -1897,7 +1909,7 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // If the parent doesn't have any items, we want to continue
-                var parentItems = GetDatItemsForBucket(parent!);
+                var parentItems = GetItemsForBucket(parent!);
                 if (parentItems == null || parentItems.Length == 0)
                     continue;
 
@@ -1921,7 +1933,7 @@ namespace SabreTools.DatFiles
             List<string> games = [.. SortedKeys];
             foreach (string game in games)
             {
-                var items = GetDatItemsForBucket(game);
+                var items = GetItemsForBucket(game);
                 if (items == null)
                     continue;
 
@@ -1944,7 +1956,7 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // If the parent doesn't have any items, we want to continue
-                var parentItems = GetDatItemsForBucket(parent!);
+                var parentItems = GetItemsForBucket(parent!);
                 if (parentItems == null || parentItems.Length == 0)
                     continue;
 
@@ -1959,8 +1971,8 @@ namespace SabreTools.DatFiles
                 }
 
                 // Now we want to get the parent romof tag and put it in each of the remaining items
-                items = GetDatItemsForBucket(game);
-                machine = GetMachineForItem(GetDatItemsForBucket(parent!)![0].Item1);
+                items = GetItemsForBucket(game);
+                machine = GetMachineForItem(GetItemsForBucket(parent!)![0].Item1);
                 if (machine.Item2 == null)
                     continue;
 
@@ -1984,7 +1996,7 @@ namespace SabreTools.DatFiles
             List<string> games = [.. SortedKeys];
             foreach (string game in games)
             {
-                var items = GetDatItemsForBucket(game);
+                var items = GetItemsForBucket(game);
                 if (items == null)
                     continue;
 

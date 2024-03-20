@@ -171,7 +171,7 @@ namespace SabreTools.Filtering
                 foreach (string game in games)
                 {
                     // Get the list of DatItems for the machine
-                    var datItems = datFile.ItemsDB.GetDatItemsForBucket(game);
+                    var datItems = datFile.ItemsDB.GetItemsForBucket(game);
                     if (datItems == null)
                         continue;
 

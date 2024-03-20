@@ -209,7 +209,7 @@ namespace SabreTools.Filtering
             foreach (string key in keys)
             {
                 // For every item in the current key
-                var items = datFile.ItemsDB.GetDatItemsForBucket(key);
+                var items = datFile.ItemsDB.GetItemsForBucket(key);
                 if (items == null)
                     continue;
 

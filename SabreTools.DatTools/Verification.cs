@@ -268,7 +268,7 @@ namespace SabreTools.DatTools
             var keys = datFile.ItemsDB.SortedKeys.ToList();
             foreach (string key in keys)
             {
-                var items = datFile.ItemsDB.GetDatItemsForBucket(key);
+                var items = datFile.ItemsDB.GetItemsForBucket(key);
                 if (items == null)
                     continue;
 

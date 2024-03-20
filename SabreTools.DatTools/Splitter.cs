@@ -110,6 +110,84 @@ namespace SabreTools.DatTools
         }
 
         /// <summary>
+        /// Split a DAT by input extensions
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to split</param>
+        /// <param name="extA">List of extensions to split on (first DAT)</param>
+        /// <param name="extB">List of extensions to split on (second DAT)</param>
+        /// <returns>Extension Set A and Extension Set B DatFiles</returns>
+        public static (DatFile? extADat, DatFile? extBDat) SplitByExtensionDB(DatFile datFile, List<string> extA, List<string> extB)
+        {
+            // If roms is empty, return false
+            if (datFile.ItemsDB.DatStatistics.TotalCount == 0)
+                return (null, null);
+
+            InternalStopwatch watch = new($"Splitting DAT by extension");
+
+            // Make sure all of the extensions don't have a dot at the beginning
+            var newExtA = extA.Select(s => s.TrimStart('.').ToLowerInvariant()).ToArray();
+            string newExtAString = string.Join(",", newExtA);
+
+            var newExtB = extB.Select(s => s.TrimStart('.').ToLowerInvariant()).ToArray();
+            string newExtBString = string.Join(",", newExtB);
+
+            // Set all of the appropriate outputs for each of the subsets
+            DatFile extADat = DatFile.Create(datFile.Header.CloneStandard());
+            extADat.Header.SetFieldValue<string?>(DatHeader.FileNameKey, extADat.Header.GetStringFieldValue(DatHeader.FileNameKey) + $" ({newExtAString})");
+            extADat.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, extADat.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $" ({newExtAString})");
+            extADat.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, extADat.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" ({newExtAString})");
+
+            DatFile extBDat = DatFile.Create(datFile.Header.CloneStandard());
+            extBDat.Header.SetFieldValue<string?>(DatHeader.FileNameKey, extBDat.Header.GetStringFieldValue(DatHeader.FileNameKey) + $" ({newExtBString})");
+            extBDat.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, extBDat.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $" ({newExtBString})");
+            extBDat.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, extBDat.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" ({newExtBString})");
+
+            // Now separate the roms accordingly
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(datFile.ItemsDB.SortedKeys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(datFile.ItemsDB.SortedKeys, key =>
+#else
+            foreach (var key in datFile.ItemsDB.SortedKeys)
+#endif
+            {
+                var items = datFile.ItemsDB.GetItemsForBucket(key);
+                if (items == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                    return;
+#else
+                    continue;
+#endif
+
+                // TODO: Determine how we figure out the machine index
+                foreach ((long, DatItem) item in items)
+                {
+                    if (newExtA.Contains((item.Item2.GetName() ?? string.Empty).GetNormalizedExtension()))
+                    {
+                        extADat.ItemsDB.AddItem(item.Item2, -1, false);
+                    }
+                    else if (newExtB.Contains((item.Item2.GetName() ?? string.Empty).GetNormalizedExtension()))
+                    {
+                        extBDat.ItemsDB.AddItem(item.Item2, -1, false);
+                    }
+                    else
+                    {
+                        extADat.ItemsDB.AddItem(item.Item2, -1, false);
+                        extBDat.ItemsDB.AddItem(item.Item2, -1, false);
+                    }
+                }
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
+
+            // Then return both DatFiles
+            watch.Stop();
+            return (extADat, extBDat);
+        }
+
+        /// <summary>
         /// Split a DAT by best available hashes
         /// </summary>
         /// <param name="datFile">Current DatFile object to split</param>
@@ -225,6 +303,140 @@ namespace SabreTools.DatTools
                                 fieldDats[Models.Metadata.Rom.CRCKey].Items.Add(key, item);
                             else
                                 fieldDats["null"].Items.Add(key, item);
+                            break;
+
+                        default:
+                            continue;
+                    }
+                }
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
+
+            watch.Stop();
+            return fieldDats;
+        }
+
+        /// <summary>
+        /// Split a DAT by best available hashes
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to split</param>
+        /// <returns>Dictionary of Field to DatFile mappings</returns>
+        public static Dictionary<string, DatFile> SplitByHashDB(DatFile datFile)
+        {
+            // Create each of the respective output DATs
+            var watch = new InternalStopwatch($"Splitting DAT by best available hashes");
+
+            // Create the set of field-to-dat mappings
+            Dictionary<string, DatFile> fieldDats = [];
+
+            // TODO: Can this be made into a loop?
+            fieldDats[Models.Metadata.Rom.StatusKey] = DatFile.Create(datFile.Header.CloneStandard());
+            fieldDats[Models.Metadata.Rom.StatusKey].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.StatusKey].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (Nodump)");
+            fieldDats[Models.Metadata.Rom.StatusKey].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.StatusKey].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (Nodump)");
+            fieldDats[Models.Metadata.Rom.StatusKey].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.StatusKey].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (Nodump)");
+
+            fieldDats[Models.Metadata.Rom.SHA512Key] = DatFile.Create(datFile.Header.CloneStandard());
+            fieldDats[Models.Metadata.Rom.SHA512Key].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.SHA512Key].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (SHA-512)");
+            fieldDats[Models.Metadata.Rom.SHA512Key].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.SHA512Key].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (SHA-512)");
+            fieldDats[Models.Metadata.Rom.SHA512Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.SHA512Key].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (SHA-512)");
+
+            fieldDats[Models.Metadata.Rom.SHA384Key] = DatFile.Create(datFile.Header.CloneStandard());
+            fieldDats[Models.Metadata.Rom.SHA384Key].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.SHA384Key].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (SHA-384)");
+            fieldDats[Models.Metadata.Rom.SHA384Key].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.SHA384Key].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (SHA-384)");
+            fieldDats[Models.Metadata.Rom.SHA384Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.SHA384Key].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (SHA-384)");
+
+            fieldDats[Models.Metadata.Rom.SHA256Key] = DatFile.Create(datFile.Header.CloneStandard());
+            fieldDats[Models.Metadata.Rom.SHA256Key].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.SHA256Key].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (SHA-256)");
+            fieldDats[Models.Metadata.Rom.SHA256Key].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.SHA256Key].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (SHA-256)");
+            fieldDats[Models.Metadata.Rom.SHA256Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.SHA256Key].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (SHA-256)");
+
+            fieldDats[Models.Metadata.Rom.SHA1Key] = DatFile.Create(datFile.Header.CloneStandard());
+            fieldDats[Models.Metadata.Rom.SHA1Key].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.SHA1Key].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (SHA-1)");
+            fieldDats[Models.Metadata.Rom.SHA1Key].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.SHA1Key].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (SHA-1)");
+            fieldDats[Models.Metadata.Rom.SHA1Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.SHA1Key].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (SHA-1)");
+
+            fieldDats[Models.Metadata.Rom.MD5Key] = DatFile.Create(datFile.Header.CloneStandard());
+            fieldDats[Models.Metadata.Rom.MD5Key].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.MD5Key].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (MD5)");
+            fieldDats[Models.Metadata.Rom.MD5Key].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.MD5Key].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (MD5)");
+            fieldDats[Models.Metadata.Rom.MD5Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.MD5Key].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (MD5)");
+
+            fieldDats[Models.Metadata.Rom.CRCKey] = DatFile.Create(datFile.Header.CloneStandard());
+            fieldDats[Models.Metadata.Rom.CRCKey].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.CRCKey].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (CRC)");
+            fieldDats[Models.Metadata.Rom.CRCKey].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.CRCKey].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (CRC)");
+            fieldDats[Models.Metadata.Rom.CRCKey].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.CRCKey].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (CRC)");
+
+            fieldDats["null"] = DatFile.Create(datFile.Header.CloneStandard());
+            fieldDats["null"].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats["null"].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (Other)");
+            fieldDats["null"].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats["null"].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (Other)");
+            fieldDats["null"].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats["null"].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (Other)");
+
+            // Now populate each of the DAT objects in turn
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(datFile.ItemsDB.SortedKeys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(datFile.ItemsDB.SortedKeys, key =>
+#else
+            foreach (var key in datFile.ItemsDB.SortedKeys)
+#endif
+            {
+                var items = datFile.ItemsDB.GetItemsForBucket(key);
+                if (items == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                    return;
+#else
+                    continue;
+#endif
+
+                // TODO: Determine how we figure out the machine index
+                foreach ((long, DatItem) item in items)
+                {
+                    // If the file is not a Disk, Media, or Rom, continue
+                    switch (item.Item2)
+                    {
+                        case Disk disk:
+                            if (disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump)
+                                fieldDats[Models.Metadata.Disk.StatusKey].ItemsDB.AddItem(item.Item2, -1, false);
+                            else if (!string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)))
+                                fieldDats[Models.Metadata.Disk.SHA1Key].ItemsDB.AddItem(item.Item2, -1, false);
+                            else if (!string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key)))
+                                fieldDats[Models.Metadata.Disk.MD5Key].ItemsDB.AddItem(item.Item2, -1, false);
+                            else if (!string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key)))
+                                fieldDats[Models.Metadata.Disk.MD5Key].ItemsDB.AddItem(item.Item2, -1, false);
+                            else
+                                fieldDats["null"].ItemsDB.AddItem(item.Item2, -1, false);
+                            break;
+
+                        case Media media:
+                            if (!string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA256Key)))
+                                fieldDats[Models.Metadata.Media.SHA256Key].ItemsDB.AddItem(item.Item2, -1, false);
+                            else if (!string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA1Key)))
+                                fieldDats[Models.Metadata.Media.SHA1Key].ItemsDB.AddItem(item.Item2, -1, false);
+                            else if (!string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.MD5Key)))
+                                fieldDats[Models.Metadata.Media.MD5Key].ItemsDB.AddItem(item.Item2, -1, false);
+                            else
+                                fieldDats["null"].ItemsDB.AddItem(item.Item2, -1, false);
+                            break;
+
+                        case Rom rom:
+                            if (rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump)
+                                fieldDats[Models.Metadata.Rom.StatusKey].ItemsDB.AddItem(item.Item2, -1, false);
+                            else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA512Key)))
+                                fieldDats[Models.Metadata.Rom.SHA512Key].ItemsDB.AddItem(item.Item2, -1, false);
+                            else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA384Key)))
+                                fieldDats[Models.Metadata.Rom.SHA384Key].ItemsDB.AddItem(item.Item2, -1, false);
+                            else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key)))
+                                fieldDats[Models.Metadata.Rom.SHA256Key].ItemsDB.AddItem(item.Item2, -1, false);
+                            else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key)))
+                                fieldDats[Models.Metadata.Rom.SHA1Key].ItemsDB.AddItem(item.Item2, -1, false);
+                            else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key)))
+                                fieldDats[Models.Metadata.Rom.MD5Key].ItemsDB.AddItem(item.Item2, -1, false);
+                            else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey)))
+                                fieldDats[Models.Metadata.Rom.CRCKey].ItemsDB.AddItem(item.Item2, -1, false);
+                            else
+                                fieldDats["null"].ItemsDB.AddItem(item.Item2, -1, false);
                             break;
 
                         default:
@@ -439,6 +651,74 @@ namespace SabreTools.DatTools
         /// Split a DAT by size of Rom
         /// </summary>
         /// <param name="datFile">Current DatFile object to split</param>
+        /// <param name="radix">Long value representing the split point</param>
+        /// <returns>Less Than and Greater Than DatFiles</returns>
+        public static (DatFile lessThan, DatFile greaterThan) SplitBySizeDB(DatFile datFile, long radix)
+        {
+            // Create each of the respective output DATs
+            var watch = new InternalStopwatch($"Splitting DAT by size");
+
+            DatFile lessThan = DatFile.Create(datFile.Header.CloneStandard());
+            lessThan.Header.SetFieldValue<string?>(DatHeader.FileNameKey, lessThan.Header.GetStringFieldValue(DatHeader.FileNameKey) + $" (less than {radix})");
+            lessThan.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, lessThan.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $" (less than {radix})");
+            lessThan.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, lessThan.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" (less than {radix})");
+
+            DatFile greaterThan = DatFile.Create(datFile.Header.CloneStandard());
+            greaterThan.Header.SetFieldValue<string?>(DatHeader.FileNameKey, greaterThan.Header.GetStringFieldValue(DatHeader.FileNameKey) + $" (equal-greater than {radix})");
+            greaterThan.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, greaterThan.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $" (equal-greater than {radix})");
+            greaterThan.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, greaterThan.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" (equal-greater than {radix})");
+
+            // Now populate each of the DAT objects in turn
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(datFile.ItemsDB.SortedKeys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(datFile.ItemsDB.SortedKeys, key =>
+#else
+            foreach (var key in datFile.ItemsDB.SortedKeys)
+#endif
+            {
+                var items = datFile.ItemsDB.GetItemsForBucket(key);
+                if (items == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                    return;
+#else
+                    continue;
+#endif
+
+                // TODO: Determine how we figure out the machine index
+                foreach ((long, DatItem) item in items)
+                {
+                    // If the file is not a Rom, it automatically goes in the "lesser" dat
+                    if (item.Item2 is not Rom rom)
+                        lessThan.ItemsDB.AddItem(item.Item2, -1, false);
+
+                    // If the file is a Rom and has no size, put it in the "lesser" dat
+                    else if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) == null)
+                        lessThan.ItemsDB.AddItem(item.Item2, -1, false);
+
+                    // If the file is a Rom and less than the radix, put it in the "lesser" dat
+                    else if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) < radix)
+                        lessThan.ItemsDB.AddItem(item.Item2, -1, false);
+
+                    // If the file is a Rom and greater than or equal to the radix, put it in the "greater" dat
+                    else if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) >= radix)
+                        greaterThan.ItemsDB.AddItem(item.Item2, -1, false);
+                }
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
+
+            // Then return both DatFiles
+            watch.Stop();
+            return (lessThan, greaterThan);
+        }
+
+        /// <summary>
+        /// Split a DAT by size of Rom
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to split</param>
         /// <param name="chunkSize">Long value representing the total size to split at</param>
         /// <returns>Less Than and Greater Than DatFiles</returns>
         public static List<DatFile> SplitByTotalSize(DatFile datFile, long chunkSize)
@@ -565,6 +845,7 @@ namespace SabreTools.DatTools
 #endif
             {
                 FillWithItemType(datFile, typeDats[itemType], itemType);
+                FillWithItemTypeDB(datFile, typeDats[itemType], itemType);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
@@ -607,6 +888,56 @@ namespace SabreTools.DatTools
                 {
                     if (item.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>() == itemType)
                         indexDat.Items.Add(key, item);
+                }
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
+        }
+
+        /// <summary>
+        /// Fill a DatFile with all items with a particular ItemType
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to split</param>
+        /// <param name="indexDat">DatFile to add found items to</param>
+        /// <param name="itemType">ItemType to retrieve items for</param>
+        /// <returns>DatFile containing all items with the ItemType/returns>
+        private static void FillWithItemTypeDB(DatFile datFile, DatFile indexDat, ItemType itemType)
+        {
+            // Loop through and add the items for this index to the output
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(datFile.ItemsDB.SortedKeys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(datFile.ItemsDB.SortedKeys, key =>
+#else
+            foreach (var key in datFile.ItemsDB.SortedKeys)
+#endif
+            {
+                // Get the current items
+                var datItems = datFile.ItemsDB.GetItemsForBucket(key);
+                if (datItems == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                    return;
+#else
+                    continue;
+#endif
+
+                ConcurrentList<DatItem> items = DatItem.Merge(datItems.Select(i => i.Item2).ToConcurrentList());
+
+                // If the rom list is empty or null, just skip it
+                if (items == null || items.Count == 0)
+#if NET40_OR_GREATER || NETCOREAPP
+                    return;
+#else
+                    continue;
+#endif
+
+                foreach (DatItem item in items)
+                {
+                    // TODO: Determine how we figure out the machine index
+                    if (item.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>() == itemType)
+                        indexDat.ItemsDB.AddItem(item, -1, false);
                 }
 #if NET40_OR_GREATER || NETCOREAPP
             });

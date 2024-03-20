@@ -74,7 +74,7 @@ namespace SabreTools.DatFiles
             foreach (var key in ItemsDB.SortedKeys)
 #endif
             {
-                var items = ItemsDB.GetDatItemsForBucket(key);
+                var items = ItemsDB.GetItemsForBucket(key);
                 if (items == null)
 #if NET40_OR_GREATER || NETCOREAPP
                     return;

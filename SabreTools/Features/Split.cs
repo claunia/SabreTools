@@ -76,6 +76,7 @@ namespace SabreTools.Features
                 if (splittingMode.HasFlag(SplittingMode.Extension))
                 {
                     (DatFile? extADat, DatFile? extBDat) = DatTools.Splitter.SplitByExtension(internalDat, GetList(features, ExtAListValue), GetList(features, ExtBListValue));
+                    //(DatFile? extADat, DatFile? extBDat) = DatTools.Splitter.SplitByExtensionDB(internalDat, GetList(features, ExtAListValue), GetList(features, ExtBListValue));
                     if (extADat != null && extBDat != null)
                     {
                         var watch = new InternalStopwatch("Outputting extension-split DATs");
@@ -92,6 +93,7 @@ namespace SabreTools.Features
                 if (splittingMode.HasFlag(SplittingMode.Hash))
                 {
                     Dictionary<string, DatFile> typeDats = DatTools.Splitter.SplitByHash(internalDat);
+                    //Dictionary<string, DatFile> typeDats = DatTools.Splitter.SplitByHashDB(internalDat);
 
                     var watch = new InternalStopwatch("Outputting hash-split DATs");
 
@@ -129,6 +131,7 @@ namespace SabreTools.Features
                 if (splittingMode.HasFlag(SplittingMode.Size))
                 {
                     (DatFile lessThan, DatFile greaterThan) = DatTools.Splitter.SplitBySize(internalDat, GetInt64(features, RadixInt64Value));
+                    //(DatFile lessThan, DatFile greaterThan) = DatTools.Splitter.SplitBySizeDB(internalDat, GetInt64(features, RadixInt64Value));
 
                     var watch = new InternalStopwatch("Outputting size-split DATs");
 
