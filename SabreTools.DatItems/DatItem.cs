@@ -168,7 +168,7 @@ namespace SabreTools.DatItems
             if (item?.GetFieldValue<Machine>(DatItem.MachineKey) == null)
                 return;
 
-            if (item.GetFieldValue<Machine>(DatItem.MachineKey)!.Clone() is Machine cloned)
+            if (item!.GetFieldValue<Machine>(DatItem.MachineKey)!.Clone() is Machine cloned)
                 SetFieldValue<Machine>(DatItem.MachineKey, cloned);
         }
 
@@ -705,6 +705,103 @@ namespace SabreTools.DatItems
         }
 
         /// <summary>
+        /// Resolve name duplicates in an arbitrary set of ROMs based on the supplied information
+        /// </summary>
+        /// <param name="infiles">List of File objects representing the roms to be merged</param>
+        /// <returns>A List of DatItem objects representing the renamed roms</returns>
+        public static ConcurrentList<(long, DatItem)> ResolveNamesDB(ConcurrentList<(long, DatItem)> infiles)
+        {
+            // Create the output list
+            ConcurrentList<(long, DatItem)> output = [];
+
+            // First we want to make sure the list is in alphabetical order
+            Sort(ref infiles, true);
+
+            // Now we want to loop through and check names
+            (long, DatItem?) lastItem = (-1, null);
+            string? lastrenamed = null;
+            int lastid = 0;
+            for (int i = 0; i < infiles.Count; i++)
+            {
+                var datItem = infiles[i];
+
+                // If we have the first item, we automatically add it
+                if (lastItem.Item2 == null)
+                {
+                    output.Add(datItem);
+                    lastItem = datItem;
+                    continue;
+                }
+
+                // Get the last item name, if applicable
+                string lastItemName = lastItem.Item2.GetName()
+                    ?? lastItem.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue()
+                    ?? string.Empty;
+
+                // Get the current item name, if applicable
+                string datItemName = datItem.Item2.GetName()
+                    ?? datItem.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue()
+                    ?? string.Empty;
+
+                // If the current item exactly matches the last item, then we don't add it
+#if NETFRAMEWORK
+                if ((datItem.Item2.GetDuplicateStatus(lastItem.Item2) & DupeType.All) != 0)
+#else
+                if (datItem.Item2.GetDuplicateStatus(lastItem.Item2).HasFlag(DupeType.All))
+#endif
+                {
+                    staticLogger.Verbose($"Exact duplicate found for '{datItemName}'");
+                    continue;
+                }
+
+                // If the current name matches the previous name, rename the current item
+                else if (datItemName == lastItemName)
+                {
+                    staticLogger.Verbose($"Name duplicate found for '{datItemName}'");
+
+                    if (datItem.Item2 is Disk || datItem.Item2 is Formats.File || datItem.Item2 is Media || datItem.Item2 is Rom)
+                    {
+                        datItemName += GetDuplicateSuffix(datItem.Item2);
+                        lastrenamed ??= datItemName;
+                    }
+
+                    // If we have a conflict with the last renamed item, do the right thing
+                    if (datItemName == lastrenamed)
+                    {
+                        lastrenamed = datItemName;
+                        datItemName += (lastid == 0 ? string.Empty : "_" + lastid);
+                        lastid++;
+                    }
+                    // If we have no conflict, then we want to reset the lastrenamed and id
+                    else
+                    {
+                        lastrenamed = null;
+                        lastid = 0;
+                    }
+
+                    // Set the item name back to the datItem
+                    datItem.Item2.SetName(datItemName);
+
+                    output.Add(datItem);
+                }
+
+                // Otherwise, we say that we have a valid named file
+                else
+                {
+                    output.Add(datItem);
+                    lastItem = datItem;
+                    lastrenamed = null;
+                    lastid = 0;
+                }
+            }
+
+            // One last sort to make sure this is ordered
+            Sort(ref output, true);
+
+            return output;
+        }
+
+        /// <summary>
         /// Get duplicate suffix based on the item type
         /// </summary>
         private static string GetDuplicateSuffix(DatItem datItem)
@@ -760,6 +857,59 @@ namespace SabreTools.DatItems
                     // Otherwise, compare on machine or source, depending on the flag
                     int? xSourceIndex = x.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
                     int? ySourceIndex = y.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
+                    return (norename ? nc.Compare(xMachineName, yMachineName) : (xSourceIndex - ySourceIndex) ?? 0);
+                }
+                catch
+                {
+                    // Absorb the error
+                    return 0;
+                }
+            });
+
+            return true;
+        }
+
+        /// <summary>
+        /// Sort a list of File objects by SourceID, Game, and Name (in order)
+        /// </summary>
+        /// <param name="roms">List of File objects representing the roms to be sorted</param>
+        /// <param name="norename">True if files are not renamed, false otherwise</param>
+        /// <returns>True if it sorted correctly, false otherwise</returns>
+        public static bool Sort(ref ConcurrentList<(long, DatItem)> roms, bool norename)
+        {
+            roms.Sort(delegate ((long, DatItem) x, (long, DatItem) y)
+            {
+                try
+                {
+                    var nc = new NaturalComparer();
+
+                    // If machine names don't match
+                    string? xMachineName = x.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    string? yMachineName = y.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    if (xMachineName != yMachineName)
+                        return nc.Compare(xMachineName, yMachineName);
+
+                    // If types don't match
+                    string? xType = x.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
+                    string? yType = y.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
+                    if (xType != yType)
+                        return xType.AsEnumValue<ItemType>() - yType.AsEnumValue<ItemType>();
+
+                    // If directory names don't match
+                    string? xDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(x.Item2.GetName() ?? string.Empty));
+                    string? yDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(y.Item2.GetName() ?? string.Empty));
+                    if (xDirectoryName != yDirectoryName)
+                        return nc.Compare(xDirectoryName, yDirectoryName);
+
+                    // If item names don't match
+                    string? xName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(x.Item2.GetName() ?? string.Empty));
+                    string? yName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(y.Item2.GetName() ?? string.Empty));
+                    if (xName != yName)
+                        return nc.Compare(xName, yName);
+
+                    // Otherwise, compare on machine or source, depending on the flag
+                    int? xSourceIndex = x.Item2.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
+                    int? ySourceIndex = y.Item2.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
                     return (norename ? nc.Compare(xMachineName, yMachineName) : (xSourceIndex - ySourceIndex) ?? 0);
                 }
                 catch

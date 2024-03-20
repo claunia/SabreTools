@@ -442,6 +442,89 @@ namespace SabreTools.DatFiles.Formats
             return true;
         }
 
+        /// <inheritdoc/>
+        public override bool WriteToFileDB(string outfile, bool ignoreblanks = false, bool throwOnError = false)
+        {
+            try
+            {
+                logger.User($"Writing to '{outfile}'...");
+                FileStream fs = System.IO.File.Create(outfile);
+
+                // If we get back null for some reason, just log and return
+                if (fs == null)
+                {
+                    logger.Warning($"File '{outfile}' could not be created for writing! Please check to see if the file is writable");
+                    return false;
+                }
+
+                StreamWriter sw = new(fs, new UTF8Encoding(false));
+                JsonTextWriter jtw = new(sw)
+                {
+                    Formatting = Formatting.Indented,
+                    IndentChar = '\t',
+                    Indentation = 1
+                };
+
+                // Write out the header
+                WriteHeader(jtw);
+
+                // Write out each of the machines and roms
+                string? lastgame = null;
+
+                // Use a sorted list of games to output
+                foreach (string key in ItemsDB.SortedKeys)
+                {
+                    // If this machine doesn't contain any writable items, skip
+                    var items = ItemsDB.GetItemsForBucket(key, filter: true);
+                    if (items == null || !ContainsWritable(items))
+                        continue;
+
+                    // Resolve the names in the block
+                    items = DatItem.ResolveNamesDB(items.ToConcurrentList()).ToArray();
+
+                    for (int index = 0; index < items.Length; index++)
+                    {
+                        var datItem = items[index];
+
+                        // Get the machine for the item
+                        var machine = ItemsDB.GetMachineForItem(datItem.Item1);
+
+                        // If we have a different game and we're not at the start of the list, output the end of last item
+                        if (lastgame != null && !string.Equals(lastgame, machine.Item2!.GetStringFieldValue(Models.Metadata.Machine.NameKey), StringComparison.OrdinalIgnoreCase))
+                            SabreJSON.WriteEndGame(jtw);
+
+                        // If we have a new game, output the beginning of the new item
+                        if (lastgame == null || !string.Equals(lastgame, machine.Item2!.GetStringFieldValue(Models.Metadata.Machine.NameKey), StringComparison.OrdinalIgnoreCase))
+                            WriteStartGameDB(jtw, datItem);
+
+                        // Check for a "null" item
+                        datItem = ProcessNullifiedItem(datItem);
+
+                        // Write out the item if we're not ignoring
+                        if (!ShouldIgnore(datItem, ignoreblanks))
+                            WriteDatItemDB(jtw, datItem);
+
+                        // Set the new data to compare against
+                        lastgame = machine.Item2!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    }
+                }
+
+                // Write the file footer out
+                SabreJSON.WriteFooter(jtw);
+
+                logger.User($"'{outfile}' written!{Environment.NewLine}");
+                jtw.Close();
+                fs.Dispose();
+            }
+            catch (Exception ex) when (!throwOnError)
+            {
+                logger.Error(ex);
+                return false;
+            }
+
+            return true;
+        }
+
         /// <summary>
         /// Write out DAT header using the supplied JsonTextWriter
         /// </summary>
@@ -487,6 +570,34 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <summary>
+        /// Write out Game start using the supplied JsonTextWriter
+        /// </summary>
+        /// <param name="jtw">JsonTextWriter to output to</param>
+        /// <param name="datItem">DatItem object to be output</param>
+        private void WriteStartGameDB(JsonTextWriter jtw, (long, DatItem) datItem)
+        {
+            // Get the machine for the item
+            var machine = ItemsDB.GetMachineForItem(datItem.Item1);
+
+            // No game should start with a path separator
+            if (!string.IsNullOrEmpty(machine.Item2!.GetStringFieldValue(Models.Metadata.Machine.NameKey)))
+                machine.Item2!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machine.Item2!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!.TrimStart(Path.DirectorySeparatorChar));
+
+            // Build the state
+            jtw.WriteStartObject();
+
+            // Write the Machine
+            jtw.WritePropertyName("machine");
+            JsonSerializer js = new() { Formatting = Formatting.Indented };
+            js.Serialize(jtw, machine.Item2!);
+
+            jtw.WritePropertyName("items");
+            jtw.WriteStartArray();
+
+            jtw.Flush();
+        }
+
+        /// <summary>
         /// Write out Game end using the supplied JsonTextWriter
         /// </summary>
         /// <param name="jtw">JsonTextWriter to output to</param>
@@ -518,6 +629,30 @@ namespace SabreTools.DatFiles.Formats
             jtw.WritePropertyName("datitem");
             JsonSerializer js = new() { ContractResolver = new BaseFirstContractResolver(), Formatting = Formatting.Indented };
             js.Serialize(jtw, datItem);
+
+            // End item
+            jtw.WriteEndObject();
+
+            jtw.Flush();
+        }
+
+        /// <summary>
+        /// Write out DatItem using the supplied JsonTextWriter
+        /// </summary>
+        /// <param name="jtw">JsonTextWriter to output to</param>
+        /// <param name="datItem">DatItem object to be output</param>
+        private void WriteDatItemDB(JsonTextWriter jtw, (long, DatItem) datItem)
+        {
+            // Pre-process the item name
+            ProcessItemNameDB(datItem, true);
+
+            // Build the state
+            jtw.WriteStartObject();
+
+            // Write the DatItem
+            jtw.WritePropertyName("datitem");
+            JsonSerializer js = new() { ContractResolver = new BaseFirstContractResolver(), Formatting = Formatting.Indented };
+            js.Serialize(jtw, datItem.Item2);
 
             // End item
             jtw.WriteEndObject();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
@@ -272,6 +273,90 @@ namespace SabreTools.DatFiles.Formats
             return true;
         }
 
+        /// <inheritdoc/>
+        public override bool WriteToFileDB(string outfile, bool ignoreblanks = false, bool throwOnError = false)
+        {
+            try
+            {
+                logger.User($"Writing to '{outfile}'...");
+                FileStream fs = File.Create(outfile);
+
+                // If we get back null for some reason, just log and return
+                if (fs == null)
+                {
+                    logger.Warning($"File '{outfile}' could not be created for writing! Please check to see if the file is writable");
+                    return false;
+                }
+
+                XmlTextWriter xtw = new(fs, new UTF8Encoding(false))
+                {
+                    Formatting = Formatting.Indented,
+                    IndentChar = '\t',
+                    Indentation = 1,
+                };
+
+                // Write out the header
+                WriteHeader(xtw);
+
+                // Write out each of the machines and roms
+                string? lastgame = null;
+
+                // Use a sorted list of games to output
+                foreach (string key in ItemsDB.SortedKeys)
+                {
+                    // If this machine doesn't contain any writable items, skip
+                    var items = ItemsDB.GetItemsForBucket(key, filter: true);
+                    if (items == null || !ContainsWritable(items))
+                        continue;
+
+                    // Resolve the names in the block
+                    items = DatItem.ResolveNamesDB(items.ToConcurrentList()).ToArray();
+
+                    for (int index = 0; index < items.Length; index++)
+                    {
+                        var datItem = items[index];
+
+                        // Get the machine for the item
+                        var machine = ItemsDB.GetMachineForItem(datItem.Item1);
+
+                        // If we have a different game and we're not at the start of the list, output the end of last item
+                        if (lastgame != null && !string.Equals(lastgame, machine.Item2!.GetStringFieldValue(Models.Metadata.Machine.NameKey), StringComparison.OrdinalIgnoreCase))
+                            WriteEndGame(xtw);
+
+                        // If we have a new game, output the beginning of the new item
+                        if (lastgame == null || !string.Equals(lastgame, machine.Item2!.GetStringFieldValue(Models.Metadata.Machine.NameKey), StringComparison.OrdinalIgnoreCase))
+                            WriteStartGameDB(xtw, datItem);
+
+                        // Check for a "null" item
+                        datItem = ProcessNullifiedItem(datItem);
+
+                        // Write out the item if we're not ignoring
+                        if (!ShouldIgnore(datItem, ignoreblanks))
+                            WriteDatItemDB(xtw, datItem);
+
+                        // Set the new data to compare against
+                        lastgame = machine.Item2!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    }
+                }
+
+                // Write the file footer out
+                WriteFooter(xtw);
+
+                logger.User($"'{outfile}' written!{Environment.NewLine}");
+#if NET452_OR_GREATER
+                xtw.Dispose();
+#endif
+                fs.Dispose();
+            }
+            catch (Exception ex) when (!throwOnError)
+            {
+                logger.Error(ex);
+                return false;
+            }
+
+            return true;
+        }
+
         /// <summary>
         /// Write out DAT header using the supplied StreamWriter
         /// </summary>
@@ -318,6 +403,31 @@ namespace SabreTools.DatFiles.Formats
         /// Write out Game start using the supplied StreamWriter
         /// </summary>
         /// <param name="xtw">XmlTextWriter to output to</param>
+        /// <param name="datItem">DatItem object to be output</param>
+        private void WriteStartGameDB(XmlTextWriter xtw, (long, DatItem) datItem)
+        {
+            // Get the machine for the item
+            var machine = ItemsDB.GetMachineForItem(datItem.Item1);
+
+            // No game should start with a path separator
+            machine.Item2!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machine.Item2!.GetStringFieldValue(Models.Metadata.Machine.NameKey)?.TrimStart(Path.DirectorySeparatorChar) ?? string.Empty);
+
+            // Write the machine
+            xtw.WriteStartElement("directory");
+            XmlSerializer xs = new(typeof(Machine));
+            XmlSerializerNamespaces ns = new();
+            ns.Add("", "");
+            xs.Serialize(xtw, machine.Item2, ns);
+
+            xtw.WriteStartElement("files");
+
+            xtw.Flush();
+        }
+
+        /// <summary>
+        /// Write out Game start using the supplied StreamWriter
+        /// </summary>
+        /// <param name="xtw">XmlTextWriter to output to</param>
         private static void WriteEndGame(XmlTextWriter xtw)
         {
             // End files
@@ -344,6 +454,25 @@ namespace SabreTools.DatFiles.Formats
             XmlSerializerNamespaces ns = new();
             ns.Add("", "");
             xs.Serialize(xtw, datItem, ns);
+
+            xtw.Flush();
+        }
+
+        /// <summary>
+        /// Write out DatItem using the supplied StreamWriter
+        /// </summary>
+        /// <param name="xtw">XmlTextWriter to output to</param>
+        /// <param name="datItem">DatItem object to be output</param>
+        private void WriteDatItemDB(XmlTextWriter xtw, (long, DatItem) datItem)
+        {
+            // Pre-process the item name
+            ProcessItemNameDB(datItem, true);
+
+            // Write the DatItem
+            XmlSerializer xs = new(typeof(DatItem));
+            XmlSerializerNamespaces ns = new();
+            ns.Add("", "");
+            xs.Serialize(xtw, datItem.Item2, ns);
 
             xtw.Flush();
         }

@@ -61,5 +61,31 @@ namespace SabreTools.DatFiles
             logger.User($"'{outfile}' written!{Environment.NewLine}");
             return true;
         }
+
+        /// <inheritdoc/>
+        public override bool WriteToFileDB(string outfile, bool ignoreblanks = false, bool throwOnError = false)
+        {
+            try
+            {
+                logger.User($"Writing to '{outfile}'...");
+
+                // Serialize the input file in two steps
+                var internalFormat = ConvertMetadata(ignoreblanks);
+                var specificFormat = Activator.CreateInstance<V>().Deserialize(internalFormat);
+                if (!Activator.CreateInstance<U>().Serialize(specificFormat, outfile))
+                {
+                    logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
+                    return false;
+                }
+            }
+            catch (Exception ex) when (!throwOnError)
+            {
+                logger.Error(ex);
+                return false;
+            }
+
+            logger.User($"'{outfile}' written!{Environment.NewLine}");
+            return true;
+        }
     }
 }
