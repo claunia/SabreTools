@@ -1,16 +1,8 @@
 ﻿using System;
-#if NET40_OR_GREATER || NETCOREAPP
-using System.Collections.Concurrent;
-#endif
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
-#if NET40_OR_GREATER || NETCOREAPP
-using System.Threading.Tasks;
-#endif
-using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
@@ -113,12 +105,19 @@ namespace SabreTools.Filtering
             {
                 // Perform item-level cleaning
                 CleanDatItems(datFile);
+                CleanDatItemsDB(datFile);
 
                 // Bucket and dedupe according to the flag
                 if (DedupeRoms == DedupeType.Full)
+                {
                     datFile.Items.BucketBy(ItemKey.CRC, DedupeRoms);
+                    datFile.ItemsDB.BucketBy(ItemKey.CRC, DedupeRoms);
+                }
                 else if (DedupeRoms == DedupeType.Game)
+                {
                     datFile.Items.BucketBy(ItemKey.Machine, DedupeRoms);
+                    datFile.ItemsDB.BucketBy(ItemKey.Machine, DedupeRoms);
+                }
 
                 // Process description to machine name
                 if (DescriptionAsName == true)
@@ -172,7 +171,7 @@ namespace SabreTools.Filtering
         /// <param name="datFile">Current DatFile object to run operations on</param>
         internal void CleanDatItems(DatFile datFile)
         {
-            List<string> keys = datFile.Items.Keys.ToList();
+            List<string> keys = [.. datFile.Items.Keys];
             foreach (string key in keys)
             {
                 // For every item in the current key
@@ -192,6 +191,32 @@ namespace SabreTools.Filtering
 
                 // Assign back for caution
                 datFile.Items[key] = items;
+            }
+        }
+
+        /// <summary>
+        /// Clean individual items based on the current filter
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to run operations on</param>
+        internal void CleanDatItemsDB(DatFile datFile)
+        {
+            List<string> keys = [.. datFile.ItemsDB.SortedKeys];
+            foreach (string key in keys)
+            {
+                // For every item in the current key
+                var items = datFile.ItemsDB.GetDatItemsForBucket(key);
+                if (items == null)
+                    continue;
+
+                foreach ((long, DatItem) item in items)
+                {
+                    // If we have a null item, we can't clean it it
+                    if (item.Item2 == null)
+                        continue;
+
+                    // Run cleaning per item
+                    CleanDatItemDB(datFile.ItemsDB, item);
+                }
             }
         }
 
@@ -229,6 +254,50 @@ namespace SabreTools.Filtering
                 {
                     string ext = Path.GetExtension(datItem.GetName()!);
                     datItem.SetName(datItem.GetName()!.Substring(0, usableLength - ext.Length) + ext);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Clean a DatItem according to the cleaner
+        /// </summary>
+        /// <param name="db">ItemDictionaryDB to get machine information from</param>
+        /// <param name="datItem">DatItem to clean</param>
+        internal void CleanDatItemDB(ItemDictionaryDB db, (long, DatItem) datItem)
+        {
+            // Get the machine associated with the item, if possible
+            var machine = db.GetMachineForItem(datItem.Item1);
+            if (machine.Item2 == null)
+                return;
+
+            // If we're stripping unicode characters, strip machine name and description
+            if (RemoveUnicode)
+            {
+                machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, TextHelper.RemoveUnicodeCharacters(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey)));
+                machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, TextHelper.RemoveUnicodeCharacters(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)));
+                datItem.Item2.SetName(TextHelper.RemoveUnicodeCharacters(datItem.Item2.GetName()));
+            }
+
+            // If we're in cleaning mode, sanitize machine name and description
+            if (Clean)
+            {
+                machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, TextHelper.NormalizeCharacters(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey)));
+                machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, TextHelper.NormalizeCharacters(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)));
+            }
+
+            // If we are in single game mode, rename the machine
+            if (Single)
+                machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "!");
+
+            // If we are in NTFS trim mode, trim the item name
+            if (Trim && datItem.Item2.GetName() != null)
+            {
+                // Windows max name length is 260
+                int usableLength = 260 - machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey)!.Length - (Root?.Length ?? 0);
+                if (datItem.Item2.GetName()!.Length > usableLength)
+                {
+                    string ext = Path.GetExtension(datItem.Item2.GetName()!);
+                    datItem.Item2.SetName(datItem.Item2.GetName()!.Substring(0, usableLength - ext.Length) + ext);
                 }
             }
         }
