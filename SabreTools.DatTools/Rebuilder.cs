@@ -413,6 +413,7 @@ namespace SabreTools.DatTools
 
             // If either we have duplicates or we're filtering
             if (ShouldRebuild(datFile, datItem, fileStream, inverse, out ConcurrentList<DatItem> dupes))
+            //if (ShouldRebuildDB(datFile, datItem, fileStream, inverse, out ConcurrentList<DatItem> dupes))
             {
                 // If we have a very specific TGZ->TGZ case, just copy it accordingly
                 if (RebuildTorrentGzip(datFile, datItem, file, outDir, outputFormat, isZip))
@@ -477,6 +478,7 @@ namespace SabreTools.DatTools
 
                         // If we have duplicates and we're not filtering
                         if (ShouldRebuild(datFile, headerless, transformStream, false, out dupes))
+                        //if (ShouldRebuildDB(datFile, headerless, transformStream, false, out dupes))
                         {
                             logger.User($"Headerless matches found for '{Path.GetFileName(datItem.GetName() ?? datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue())}', rebuilding accordingly...");
                             rebuilt = true;
@@ -555,6 +557,67 @@ namespace SabreTools.DatTools
                 {
                     item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, machinename);
                     item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machinename);
+                }
+
+                dupes.Add(item);
+                return true;
+            }
+
+            // If we have no duplicates and we're not filtering
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Get the rebuild state for a given item
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to rebuild from</param>
+        /// <param name="datItem">Information for the current file to rebuild from</param>
+        /// <param name="stream">Stream representing the input file</param>
+        /// <param name="inverse">True if the DAT should be used as a filter instead of a template, false otherwise</param>
+        /// <param name="dupes">Output list of duplicate items to rebuild to</param>
+        /// <returns>True if the item should be rebuilt, false otherwise</returns>
+        private static bool ShouldRebuildDB(DatFile datFile, DatItem datItem, Stream? stream, bool inverse, out ConcurrentList<(long, DatItem)> dupes)
+        {
+            // Find if the file has duplicates in the DAT
+            dupes = datFile.ItemsDB.GetDuplicates(datItem);
+            bool hasDuplicates = dupes.Count > 0;
+
+            // If we have duplicates but we're filtering
+            if (hasDuplicates && inverse)
+            {
+                return false;
+            }
+
+            // If we have duplicates without filtering
+            else if (hasDuplicates && !inverse)
+            {
+                return true;
+            }
+
+            // TODO: Figure out how getting a set of duplicates works with IDDB
+
+            // If we have no duplicates and we're filtering
+            else if (!hasDuplicates && inverse)
+            {
+                string? machinename = null;
+
+                // Get the item from the current file
+                var item = new Rom(BaseFile.GetInfo(stream, keepReadOpen: true));
+
+                // Create a machine for the current item
+                var machine = new Machine();
+                machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, Path.GetFileNameWithoutExtension(item.GetName()));
+                machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Path.GetFileNameWithoutExtension(item.GetName()));
+                long machineIndex = datFile.ItemsDB.AddMachine(machine);
+
+                // If we are coming from an archive, set the correct machine name
+                if (machinename != null)
+                {
+                    machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, machinename);
+                    machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machinename);
                 }
 
                 dupes.Add(item);

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Runtime.InteropServices.ComTypes;
-
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
 #endif
@@ -97,6 +95,7 @@ namespace SabreTools.DatTools
                 if (single)
                 {
                     DatStatistics individualStats = datdata.Items.DatStatistics;
+                    //DatStatistics individualStats = datdata.ItemsDB.DatStatistics;
                     individualStats.DisplayName = datdata.Header.GetStringFieldValue(DatHeader.FileNameKey);
                     individualStats.MachineCount = datdata.Items.Keys.Count;
                     individualStats.IsDirectory = false;
@@ -105,10 +104,12 @@ namespace SabreTools.DatTools
 
                 // Add single DAT stats to dir
                 dirStats.AddStatistics(datdata.Items.DatStatistics);
+                //dirStats.AddStatistics(datdata.ItemsDB.DatStatistics);
                 dirStats.GameCount += datdata.Items.Keys.Count;
 
                 // Add single DAT stats to totals
                 totalStats.AddStatistics(datdata.Items.DatStatistics);
+                //totalStats.AddStatistics(datdata.ItemsDB.DatStatistics);
                 totalStats.GameCount += datdata.Items.Keys.Count;
 
                 // Make sure to assign the new directory
