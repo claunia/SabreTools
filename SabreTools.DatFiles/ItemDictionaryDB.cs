@@ -317,6 +317,19 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Get a machine based on the name
+        /// </summary>
+        /// <remarks>This assume that all machines have unique names</remarks>
+        public (long, Machine?) GetMachine(string? name)
+        {
+            if (string.IsNullOrEmpty(name))
+                return (-1, null);
+
+            var machine = _machines.FirstOrDefault(m => m.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey) == name);
+            return (machine.Key, machine.Value);
+        }
+
+        /// <summary>
         /// Get the index and machine associated with an item index
         /// </summary>
         public (long, Machine?) GetMachineForItem(long itemIndex)
@@ -1171,6 +1184,134 @@ namespace SabreTools.DatFiles
         #endregion
 
         #region Splitting
+
+        /// <summary>
+        /// Use cloneof tags to add roms to the parents, removing the child sets in the process
+        /// </summary>
+        /// <param name="subfolder">True to add DatItems to subfolder of parent (not including Disk), false otherwise</param>
+        /// <param name="skipDedup">True to skip checking for duplicate ROMs in parent, false otherwise</param>
+        public void AddRomsFromChildren(bool subfolder, bool skipDedup)
+        {
+            List<string> games = [.. SortedKeys];
+            foreach (string game in games)
+            {
+                // If the game has no items in it, we want to continue
+                var items = GetDatItemsForBucket(game);
+                if (items == null || items.Length == 0)
+                    continue;
+
+                // Get the machine for the first item
+                var machine = GetMachineForItem(items[0].Item1);
+                if (machine.Item2 == null)
+                    continue;
+
+                // Determine if the game has a parent or not
+                (long, string?) parent = (-1, null);
+                if (!string.IsNullOrEmpty(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey)))
+                {
+                    string? cloneOf = machine.Item2.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey);
+                    var cloneOfMachine = GetMachine(cloneOf);
+                    parent = (cloneOfMachine.Item1, cloneOf);
+                }
+
+                // If there is no parent, then we continue
+                if (string.IsNullOrEmpty(parent.Item2))
+                    continue;
+
+                items = GetDatItemsForBucket(game);
+                foreach ((long, DatItem) item in items!)
+                {
+                    // Get the parent items and current machine name
+                    var parentItems = GetDatItemsForBucket(parent.Item2!);
+                    string? machineName = GetMachineForItem(item.Item1).Item2?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+
+                    // Special disk handling
+                    if (item.Item2 is Disk disk)
+                    {
+                        string? mergeTag = disk.GetStringFieldValue(Models.Metadata.Disk.MergeKey);
+
+                        // If the merge tag exists and the parent already contains it, skip
+                        if (mergeTag != null && parentItems!
+                            .Where(i => i.Item2 is Disk)
+                            .Select(i => (i.Item2 as Disk)!.GetName())
+                            .Contains(mergeTag))
+                        {
+                            continue;
+                        }
+
+                        // If the merge tag exists but the parent doesn't contain it, add to parent
+                        else if (mergeTag != null && !parentItems!
+                            .Where(i => i.Item2 is Disk)
+                            .Select(i => (i.Item2 as Disk)!.GetName())
+                            .Contains(mergeTag))
+                        {
+                            _itemToMachineMapping[item.Item1] = parent.Item1;
+                            _buckets[parent.Item2!].Add(disk);
+                        }
+
+                        // If there is no merge tag, add to parent
+                        else if (mergeTag == null)
+                        {
+                            _itemToMachineMapping[item.Item1] = parent.Item1;
+                            _buckets[parent.Item2!].Add(disk);
+                        }
+                    }
+
+                    // Special rom handling
+                    else if (item.Item2 is Rom rom)
+                    {
+                        // If the merge tag exists and the parent already contains it, skip
+                        if (rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey) != null && parentItems!
+                            .Where(i => i.Item2 is Rom)
+                            .Select(i => (i.Item2 as Rom)!.GetName())
+                            .Contains(rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey)))
+                        {
+                            continue;
+                        }
+
+                        // If the merge tag exists but the parent doesn't contain it, add to subfolder of parent
+                        else if (rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey) != null && !parentItems!
+                            .Where(i => i.Item2 is Rom)
+                            .Select(i => (i.Item2 as Rom)!.GetName())
+                            .Contains(rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey)))
+                        {
+                            if (subfolder)
+                                rom.SetName($"{machineName}\\{rom.GetName()}");
+
+                            _itemToMachineMapping[item.Item1] = parent.Item1;
+                            _buckets[parent.Item2!].Add(rom);
+                        }
+
+                        // If the parent doesn't already contain this item, add to subfolder of parent
+                        else if (!parentItems!.Contains(item) || skipDedup)
+                        {
+                            if (subfolder)
+                                rom.SetName($"{machineName}\\{rom.GetName()}");
+
+                            _itemToMachineMapping[item.Item1] = parent.Item1;
+                            _buckets[parent.Item2!].Add(rom);
+                        }
+                    }
+
+                    // All other that would be missing to subfolder of parent
+                    else if (!parentItems!.Contains(item))
+                    {
+                        if (subfolder)
+                            item.Item2.SetName($"{machineName}\\{item.Item2.GetName()}");
+
+                        _itemToMachineMapping[item.Item1] = parent.Item1;
+                        _buckets[parent.Item2!].Add(item);
+                    }
+                }
+
+                // Then, remove the old game so it's not picked up by the writer
+#if NET40_OR_GREATER || NETCOREAPP
+                _buckets.TryRemove(game, out _);
+#else
+                _buckets.Remove(game);
+#endif
+            }
+        }
 
         /// <summary>
         /// Remove all BIOS and device sets
