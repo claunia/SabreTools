@@ -128,7 +128,10 @@ namespace SabreTools.Filtering
 
                 // If we are removing scene dates, do that now
                 if (SceneDateStrip == true)
-                    StripSceneDatesFromItems(datFile);
+                {
+                    datFile.Items.StripSceneDatesFromItems();
+                    datFile.ItemsDB.StripSceneDatesFromItems();
+                }
 
                 // Run the one rom per game logic, if required
                 if (OneGamePerRegion == true && RegionList != null)
@@ -139,7 +142,10 @@ namespace SabreTools.Filtering
 
                 // Run the one rom per game logic, if required
                 if (OneRomPerGame == true)
-                    SetOneRomPerGame(datFile);
+                {
+                    datFile.Items.SetOneRomPerGame();
+                    datFile.ItemsDB.SetOneRomPerGame();
+                }
 
                 // Remove all marked items
                 datFile.Items.ClearMarked();
@@ -300,50 +306,6 @@ namespace SabreTools.Filtering
                     datItem.Item2.SetName(datItem.Item2.GetName()!.Substring(0, usableLength - ext.Length) + ext);
                 }
             }
-        }
-
-        /// <summary>
-        /// Ensure that all roms are in their own game (or at least try to ensure)
-        /// </summary>
-        /// <param name="datFile">Current DatFile object to run operations on</param>
-        internal static void SetOneRomPerGame(DatFile datFile)
-        {
-            // Because this introduces subfolders, we need to set the SuperDAT type
-            datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, "SuperDAT");
-
-            datFile.Items.SetOneRomPerGame();
-            datFile.ItemsDB.SetOneRomPerGame();
-        }
-
-        /// <summary>
-        /// Set internal names to match One Rom Per Game (ORPG) logic
-        /// </summary>
-        /// <param name="datItem">DatItem to run logic on</param>
-        internal static void SetOneRomPerGame(DatItem datItem)
-        {
-            if (datItem.GetName() == null)
-                return;
-
-            string[] splitname = datItem.GetName()!.Split('.');
-#if NET20 || NET35
-            datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1).ToArray())}");
-#else
-            datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1))}");
-#endif
-            datItem.SetName(Path.GetFileName(datItem.GetName()));
-        }
-
-        /// <summary>
-        /// Strip the dates from the beginning of scene-style set names
-        /// </summary>
-        /// <param name="datFile">Current DatFile object to run operations on</param>
-        internal void StripSceneDatesFromItems(DatFile datFile)
-        {
-            // Output the logging statement
-            logger.User("Stripping scene-style dates");
-
-            datFile.Items.StripSceneDatesFromItems();
-            datFile.ItemsDB.StripSceneDatesFromItems();
         }
 
         #endregion
