@@ -617,7 +617,7 @@ namespace SabreTools.DatTools
         /// <param name="inputs">List of inputs to write out from</param>
         public static DatFile DiffDuplicatesDB(DatFile datFile, List<ParentablePath> inputs)
         {
-            InternalStopwatch watch = new("Initializing duplicate DAT");
+            var watch = new InternalStopwatch("Initializing duplicate DAT");
 
             // Fill in any information not in the base DAT
             if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)))
@@ -662,12 +662,7 @@ namespace SabreTools.DatTools
             // Loop through and add all machines
             foreach (var machine in machines)
             {
-                // TODO: Figure out how we can reintroduce the source to this name
-                var machineValue = machine.Value;
-                //machineValue.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineValue.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $" ({Path.GetFileNameWithoutExtension(inputs[newrom.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].CurrentPath)})");
-                machineValue.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineValue.GetStringFieldValue(Models.Metadata.Machine.NameKey));
-
-                long newMachineIndex = dupeData.ItemsDB.AddMachine(machineValue);
+                long newMachineIndex = dupeData.ItemsDB.AddMachine(machine.Value);
                 machineRemapping[machine.Key] = newMachineIndex;
             }
 
@@ -684,21 +679,41 @@ namespace SabreTools.DatTools
                 long machineIndex = itemMachineMappings[item.Key];
                 long sourceIndex = itemSourceMappings[item.Key];
 
+                // If the current item isn't an external duplicate
 #if NETFRAMEWORK
-                if ((item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey) & DupeType.External) != 0)
+                if ((item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey) & DupeType.External) == 0)
 #else
-                if (item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey).HasFlag(DupeType.External))
+                if (!item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey).HasFlag(DupeType.External))
 #endif
-                {
-                    if (item.Value.Clone() is not DatItem newrom)
 #if NET40_OR_GREATER || NETCOREAPP
-                        return;
+                    return;
 #else
-                        continue;
+                    continue;
 #endif
 
-                    dupeData.ItemsDB.AddItem(newrom, machineRemapping[machineIndex], sourceRemapping[sourceIndex], statsOnly: false);
+                // Get the current source and machine
+                var currentSource = sources[sourceIndex];
+                string? currentMachineName = machines[machineIndex].GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                var currentMachine = datFile.ItemsDB.GetMachine(currentMachineName);
+                if (currentMachine.Item2 == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                    return;
+#else
+                    continue;
+#endif
+
+                // Get the source-specific machine
+                string? renamedMachineName = $"{currentMachineName} ({Path.GetFileNameWithoutExtension(inputs[currentSource!.Index].CurrentPath)})";
+                var renamedMachine = datFile.ItemsDB.GetMachine(renamedMachineName);
+                if (renamedMachine.Item2 == null)
+                {
+                    var newMachine = currentMachine.Item2.Clone() as Machine;
+                    newMachine!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, renamedMachineName);
+                    long newMachineIndex = dupeData.ItemsDB.AddMachine(newMachine!);
+                    renamedMachine = (newMachineIndex, newMachine);
                 }
+
+                dupeData.ItemsDB.AddItem(item.Value, renamedMachine.Item1, sourceRemapping[sourceIndex], statsOnly: false);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
@@ -1035,7 +1050,7 @@ namespace SabreTools.DatTools
         /// <param name="inputs">List of inputs to write out from</param>
         public static DatFile DiffNoDuplicatesDB(DatFile datFile, List<ParentablePath> inputs)
         {
-            InternalStopwatch watch = new("Initializing no duplicate DAT");
+            var watch = new InternalStopwatch("Initializing no duplicate DAT");
 
             // Fill in any information not in the base DAT
             if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)))
@@ -1080,12 +1095,7 @@ namespace SabreTools.DatTools
             // Loop through and add all machines
             foreach (var machine in machines)
             {
-                // TODO: Figure out how we can reintroduce the source to this name
-                var machineValue = machine.Value;
-                //machineValue.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineValue.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $" ({Path.GetFileNameWithoutExtension(inputs[newrom.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].CurrentPath)})");
-                machineValue.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineValue.GetStringFieldValue(Models.Metadata.Machine.NameKey));
-
-                long newMachineIndex = outerDiffData.ItemsDB.AddMachine(machineValue);
+                long newMachineIndex = outerDiffData.ItemsDB.AddMachine(machine.Value);
                 machineRemapping[machine.Key] = newMachineIndex;
             }
 
@@ -1102,21 +1112,41 @@ namespace SabreTools.DatTools
                 long machineIndex = itemMachineMappings[item.Key];
                 long sourceIndex = itemSourceMappings[item.Key];
 
+                // If the current item isn't a duplicate
 #if NETFRAMEWORK
-                if ((item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey) & DupeType.Internal) != 0 || item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey) == 0x00)
+                if ((item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey) & DupeType.Internal) == 0 && item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey) != 0x00)
 #else
-                if (item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey).HasFlag(DupeType.Internal) || item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey) == 0x00)
+                if (!item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey).HasFlag(DupeType.Internal) && item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey) != 0x00)
 #endif
-                {
-                    if (item.Value.Clone() is not DatItem newrom || sourceIndex == -1)
 #if NET40_OR_GREATER || NETCOREAPP
-                        return;
+                    return;
 #else
-                        continue;
+                    continue;
 #endif
 
-                    outerDiffData.ItemsDB.AddItem(newrom, machineRemapping[machineIndex], sourceRemapping[sourceIndex], statsOnly: false);
+                // Get the current source and machine
+                var currentSource = sources[sourceIndex];
+                string? currentMachineName = machines[machineIndex].GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                var currentMachine = datFile.ItemsDB.GetMachine(currentMachineName);
+                if (currentMachine.Item2 == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                    return;
+#else
+                    continue;
+#endif
+
+                // Get the source-specific machine
+                string? renamedMachineName = $"{currentMachineName} ({Path.GetFileNameWithoutExtension(inputs[currentSource!.Index].CurrentPath)})";
+                var renamedMachine = datFile.ItemsDB.GetMachine(renamedMachineName);
+                if (renamedMachine.Item2 == null)
+                {
+                    var newMachine = currentMachine.Item2.Clone() as Machine;
+                    newMachine!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, renamedMachineName);
+                    long newMachineIndex = outerDiffData.ItemsDB.AddMachine(newMachine);
+                    renamedMachine = (newMachineIndex, newMachine);
                 }
+
+                outerDiffData.ItemsDB.AddItem(item.Value, renamedMachine.Item1, sourceRemapping[sourceIndex], statsOnly: false);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
@@ -1256,7 +1286,7 @@ namespace SabreTools.DatTools
                 long sourceIndex = itemSourceMappings[item.Key];
 
                 addTo.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], sourceRemapping[sourceIndex], statsOnly: false);
-                
+
                 // Now remove the key from the source DAT
                 if (delete)
                     addFrom.ItemsDB.RemoveItem(item.Key);
