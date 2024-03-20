@@ -350,6 +350,7 @@ Reset the internal state:           reset();";
 
                 // Apply the extra INI blindly
                 extraIni.ApplyExtras(batchState.DatFile);
+                extraIni.ApplyExtrasDB(batchState.DatFile);
             }
         }
 

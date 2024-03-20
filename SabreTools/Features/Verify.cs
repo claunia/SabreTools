@@ -66,6 +66,7 @@ namespace SabreTools.Features
 
                     // Perform additional processing steps
                     Extras!.ApplyExtras(datdata);
+                    Extras!.ApplyExtrasDB(datdata);
                     Splitter!.ApplySplitting(datdata, useTags: true);
                     datdata.ExecuteFilters(FilterRunner!);
                     Cleaner!.ApplyCleaning(datdata);
@@ -114,6 +115,7 @@ namespace SabreTools.Features
 
                 // Perform additional processing steps
                 Extras!.ApplyExtras(datdata);
+                Extras!.ApplyExtrasDB(datdata);
                 Splitter!.ApplySplitting(datdata, useTags: true);
                 datdata.ExecuteFilters(FilterRunner!);
                 Cleaner!.ApplyCleaning(datdata);

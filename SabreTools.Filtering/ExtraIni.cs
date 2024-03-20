@@ -145,6 +145,68 @@ namespace SabreTools.Filtering
         }
 
         /// <summary>
+        /// Apply a set of Extra INIs on the DatFile
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to run operations on</param>
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        /// <returns>True if the extras were applied, false on error</returns>
+        public bool ApplyExtrasDB(DatFile datFile, bool throwOnError = false)
+        {
+            // If we have no extras, don't attempt to apply and just return true
+            if (Items == null || !Items.Any())
+                return true;
+
+            var watch = new InternalStopwatch("Applying extra mappings to DAT");
+
+            try
+            {
+                // Bucket by game first
+                datFile.ItemsDB.BucketBy(ItemKey.Machine, DedupeType.None);
+
+                // Create mappings based on the extra items
+                var combinedMaps = CombineExtras();
+                var games = combinedMaps.Keys;
+
+                // Apply the mappings
+                foreach (string game in games)
+                {
+                    // Get the list of DatItems for the machine
+                    var datItems = datFile.ItemsDB.GetDatItemsForBucket(game);
+                    if (datItems == null)
+                        continue;
+
+                    // Try to get the map values, if possible
+                    combinedMaps.TryGetValue(game, out var mappings);
+
+                    // Create a setter with the new mappings
+                    var setter = new Setter();
+                    setter.PopulateSettersFromDictionary(mappings);
+
+                    // Loop through and set the fields accordingly
+                    foreach (var datItem in datItems)
+                    {
+                        var machine = datFile.ItemsDB.GetMachineForItem(datItem.Item1);
+                        if (machine.Item2 != null)
+                            setter.SetFields(machine.Item2);
+
+                        setter.SetFields(datItem.Item2);
+                    }
+                }
+            }
+            catch (Exception ex) when (!throwOnError)
+            {
+                logger.Error(ex);
+                return false;
+            }
+            finally
+            {
+                watch.Stop();
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Combine ExtraIni fields
         /// </summary>
         /// <returns>Mapping dictionary from machine name to field mapping</returns>

@@ -99,6 +99,7 @@ namespace SabreTools.Features
                     {
                         // Perform additional processing steps
                         Extras!.ApplyExtras(datdata);
+                        Extras!.ApplyExtrasDB(datdata);
                         Splitter!.ApplySplitting(datdata, useTags: false);
                         datdata.ExecuteFilters(FilterRunner!);
                         Cleaner!.ApplyCleaning(datdata);
