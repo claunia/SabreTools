@@ -1207,6 +1207,72 @@ namespace SabreTools.DatFiles
         #region Splitting
 
         /// <summary>
+        /// Use cloneof tags to add roms to the children, setting the new romof tag in the process
+        /// </summary>
+        public void AddRomsFromParent()
+        {
+            List<string> games = [.. SortedKeys];
+            foreach (string game in games)
+            {
+                // If the game has no items in it, we want to continue
+                var items = GetDatItemsForBucket(game);
+                if (items == null || items.Length == 0)
+                    continue;
+
+                // Get the machine for the first item in the list
+                var machine = GetMachineForItem(items[0].Item1);
+                if (machine.Item2 == null)
+                    continue;
+
+                // Determine if the game has a parent or not
+                (long, string?) parent = (-1, null);
+                if (!string.IsNullOrEmpty(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey)))
+                {
+                    string? cloneOf = machine.Item2.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey);
+                    var cloneOfMachine = GetMachine(cloneOf);
+                    parent = (cloneOfMachine.Item1, cloneOf);
+                }
+
+                // If there is no parent, then we continue
+                if (string.IsNullOrEmpty(parent.Item2))
+                    continue;
+
+                // If the parent doesn't have any items, we want to continue
+                var parentItems = GetDatItemsForBucket(parent.Item2!);
+                if (parentItems == null || parentItems.Length == 0)
+                    continue;
+
+                // If the parent exists and has items, we copy the items from the parent to the current game
+                foreach (var item in parentItems)
+                {
+                    DatItem datItem = (DatItem)item.Item2.Clone();
+                    if (!items.Where(i => i.Item2.GetName()?.ToLowerInvariant() == datItem.GetName()?.ToLowerInvariant()).Any()
+                        && !items.Any(i => i.Item2 == datItem))
+                    {
+                        AddItem(datItem, machine.Item1);
+                    }
+                }
+
+                // Get the parent machine
+                var parentMachine = GetMachineForItem(GetDatItemsForBucket(parent.Item2!)![0].Item1);
+                if (parentMachine.Item2 == null)
+                    continue;
+
+                // Now we want to get the parent romof tag and put it in each of the items
+                items = GetDatItemsForBucket(game);
+                string? romof = parentMachine.Item2.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
+                foreach ((long, DatItem) item in items!)
+                {
+                    var itemMachine = GetMachineForItem(item.Item1);
+                    if (itemMachine.Item2 == null)
+                        continue;
+
+                    itemMachine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, romof);
+                }
+            }
+        }
+
+        /// <summary>
         /// Use cloneof tags to add roms to the parents, removing the child sets in the process
         /// </summary>
         /// <param name="subfolder">True to add DatItems to subfolder of parent (not including Disk), false otherwise</param>
