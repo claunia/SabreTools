@@ -179,7 +179,7 @@ namespace SabreTools.DatFiles
         /// <param name="machineIndex">Index of the machine related to the item</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise (default)</param>
         /// <returns>The index for the added item, -1 on error</returns>
-        public long AddItem(DatItem item, long machineIndex, long sourceIndex = -1, bool statsOnly = false)
+        public long AddItem(DatItem item, long machineIndex, long sourceIndex, bool statsOnly = false)
         {
             // If we have a Disk, Media, or Rom, clean the hash data
             if (item is Disk disk)
@@ -1551,6 +1551,9 @@ namespace SabreTools.DatFiles
                 if (items == null || items.Length == 0)
                     continue;
 
+                // Get the source for the first item
+                var source = GetSourceForItem(items[0].Item1);
+
                 // Get the machine for the first item
                 var machine = GetMachineForItem(items[0].Item1);
                 if (machine.Item2 == null)
@@ -1579,7 +1582,7 @@ namespace SabreTools.DatFiles
                 {
                     DatItem datItem = (item.Item2.Clone() as DatItem)!;
                     if (!items.Where(i => i.Item2.GetName() == datItem.GetName()).Any() && !items.Any(i => i.Item2 == datItem))
-                        AddItem(datItem, machine.Item1);
+                        AddItem(datItem, machine.Item1, source.Item1);
                 }
             }
         }
@@ -1601,6 +1604,9 @@ namespace SabreTools.DatFiles
                 // If the machine doesn't have items, we continue
                 if (items == null || items.Length == 0)
                     continue;
+
+                // Get the source for the first item
+                var source = GetSourceForItem(items[0].Item1);
 
                 // Get the machine for the first item
                 var machine = GetMachineForItem(items[0].Item1);
@@ -1667,7 +1673,7 @@ namespace SabreTools.DatFiles
 
                                 // Clone the item and then add it
                                 DatItem datItem = (item.Item2.Clone() as DatItem)!;
-                                AddItem(datItem, machine.Item1);
+                                AddItem(datItem, machine.Item1, source.Item1);
                             }
                         }
                     }
@@ -1679,7 +1685,7 @@ namespace SabreTools.DatFiles
                         {
                             var deviceRef = new DeviceRef();
                             deviceRef.SetName(deviceReference);
-                            AddItem(deviceRef, machine.Item1);
+                            AddItem(deviceRef, machine.Item1, source.Item1);
                         }
                     }
                 }
@@ -1724,7 +1730,7 @@ namespace SabreTools.DatFiles
 
                                 // Clone the item and then add it
                                 DatItem datItem = (item.Item2.Clone() as DatItem)!;
-                                AddItem(datItem, machine.Item1);
+                                AddItem(datItem, machine.Item1, source.Item1);
                             }
                         }
                     }
@@ -1740,7 +1746,7 @@ namespace SabreTools.DatFiles
                             var slotItem = new Slot();
                             slotItem.SetFieldValue<SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey, [slotOptionItem]);
 
-                            AddItem(slotItem, machine.Item1);
+                            AddItem(slotItem, machine.Item1, source.Item1);
                         }
                     }
                 }
@@ -1761,6 +1767,9 @@ namespace SabreTools.DatFiles
                 var items = GetItemsForBucket(game);
                 if (items == null || items.Length == 0)
                     continue;
+
+                // Get the source for the first item
+                var source = GetSourceForItem(items[0].Item1);
 
                 // Get the machine for the first item in the list
                 var machine = GetMachineForItem(items[0].Item1);
@@ -1792,7 +1801,7 @@ namespace SabreTools.DatFiles
                     if (!items.Where(i => i.Item2.GetName()?.ToLowerInvariant() == datItem.GetName()?.ToLowerInvariant()).Any()
                         && !items.Any(i => i.Item2 == datItem))
                     {
-                        AddItem(datItem, machine.Item1);
+                        AddItem(datItem, machine.Item1, source.Item1);
                     }
                 }
 
