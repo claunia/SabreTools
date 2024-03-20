@@ -91,6 +91,66 @@ namespace SabreTools.DatTools
         }
 
         /// <summary>
+        /// Apply SuperDAT naming logic to a merged DatFile
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to run operations on</param>
+        /// <param name="inputs">List of inputs to use for renaming</param>
+        public static void ApplySuperDATDB(DatFile datFile, List<ParentablePath> inputs)
+        {
+            List<string> keys = [.. datFile.ItemsDB.SortedKeys];
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(keys, key =>
+#else
+            foreach (var key in keys)
+#endif
+            {
+                var items = datFile.ItemsDB.GetItemsForBucket(key);
+                if (items == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                    return;
+#else
+                    continue;
+#endif
+
+                foreach ((long, DatItem) item in items)
+                {
+                    if (item.Item2.GetFieldValue<Source?>(DatItem.SourceKey) == null)
+                        continue;
+
+                    var machine = datFile.ItemsDB.GetMachineForItem(item.Item1);
+                    if (machine.Item2 == null)
+                        continue;
+
+                    string filename = inputs[item.Item2.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].CurrentPath;
+                    string? rootpath = inputs[item.Item2.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].ParentPath;
+
+                    if (!string.IsNullOrEmpty(rootpath)
+#if NETFRAMEWORK
+                        && !rootpath!.EndsWith(Path.DirectorySeparatorChar.ToString())
+                        && !rootpath!.EndsWith(Path.AltDirectorySeparatorChar.ToString()))
+#else
+                        && !rootpath.EndsWith(Path.DirectorySeparatorChar)
+                        && !rootpath.EndsWith(Path.AltDirectorySeparatorChar))
+#endif
+                    {
+                        rootpath += Path.DirectorySeparatorChar.ToString();
+                    }
+
+                    filename = filename.Remove(0, rootpath?.Length ?? 0);
+                    machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Path.GetDirectoryName(filename) + Path.DirectorySeparatorChar
+                        + Path.GetFileNameWithoutExtension(filename) + Path.DirectorySeparatorChar
+                        + machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+                }
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
+        }
+
+        /// <summary>
         /// Replace item values from the base set represented by the current DAT
         /// </summary>
         /// <param name="datFile">Current DatFile object to use for updating</param>
@@ -197,6 +257,105 @@ namespace SabreTools.DatTools
                     // Now add the new list to the key
                     intDat.Items.Remove(key);
                     intDat.Items.AddRange(key, newDatItems);
+#if NET40_OR_GREATER || NETCOREAPP
+                });
+#else
+                }
+#endif
+            }
+
+            watch.Stop();
+        }
+
+        /// <summary>
+        /// Replace item values from the base set represented by the current DAT
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to use for updating</param>
+        /// <param name="intDat">DatFile to replace the values in</param>
+        /// <param name="machineFieldNames">List of machine field names representing what should be updated</param>
+        /// <param name="itemFieldNames">List of item field names representing what should be updated</param>
+        /// <param name="onlySame">True if descriptions should only be replaced if the game name is the same, false otherwise</param>
+        public static void BaseReplaceDB(
+            DatFile datFile,
+            DatFile intDat,
+            List<string> machineFieldNames,
+            Dictionary<string, List<string>> itemFieldNames,
+            bool onlySame)
+        {
+            InternalStopwatch watch = new($"Replacing items in '{intDat.Header.GetStringFieldValue(DatHeader.FileNameKey)}' from the base DAT");
+
+            // If we are matching based on DatItem fields of any sort
+            if (itemFieldNames.Any())
+            {
+                // For comparison's sake, we want to use CRC as the base bucketing
+                datFile.ItemsDB.BucketBy(ItemKey.CRC, DedupeType.Full);
+                intDat.ItemsDB.BucketBy(ItemKey.CRC, DedupeType.None);
+
+                // Then we do a hashwise comparison against the base DAT
+#if NET452_OR_GREATER || NETCOREAPP
+                Parallel.ForEach(intDat.ItemsDB.SortedKeys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+                Parallel.ForEach(intDat.ItemsDB.SortedKeys, key =>
+#else
+                foreach (var key in intDat.ItemsDB.SortedKeys)
+#endif
+                {
+                    var datItems = intDat.ItemsDB.GetItemsForBucket(key);
+                    if (datItems == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                        return;
+#else
+                        continue;
+#endif
+
+                    foreach ((long, DatItem) datItem in datItems)
+                    {
+                        var dupes = datFile.ItemsDB.GetDuplicates(datItem.Item2, sorted: true);
+                        if (datItem.Item2.Clone() is not DatItem newDatItem)
+                            continue;
+
+                        // Replace fields from the first duplicate, if we have one
+                        if (dupes.Count > 0)
+                            Replacer.ReplaceFields(datItem.Item2, dupes.First().Item2, itemFieldNames);
+                    }
+#if NET40_OR_GREATER || NETCOREAPP
+                });
+#else
+                }
+#endif
+            }
+
+            // If we are matching based on Machine fields of any sort
+            if (machineFieldNames.Any())
+            {
+                // For comparison's sake, we want to use Machine Name as the base bucketing
+                datFile.ItemsDB.BucketBy(ItemKey.Machine, DedupeType.Full);
+                intDat.ItemsDB.BucketBy(ItemKey.Machine, DedupeType.None);
+
+                // Then we do a namewise comparison against the base DAT
+#if NET452_OR_GREATER || NETCOREAPP
+                Parallel.ForEach(intDat.ItemsDB.SortedKeys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+                Parallel.ForEach(intDat.ItemsDB.SortedKeys, key =>
+#else
+                foreach (var key in intDat.ItemsDB.SortedKeys)
+#endif
+                {
+                    var datItems = intDat.ItemsDB.GetItemsForBucket(key);
+                    if (datItems == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                        return;
+#else
+                        continue;
+#endif
+
+                    foreach ((long, DatItem) datItem in datItems)
+                    {
+                        var datMachine = datFile.ItemsDB.GetMachineForItem(datFile.ItemsDB.GetItemsForBucket(key)![0].Item1);
+                        var intMachine = intDat.ItemsDB.GetMachineForItem(datItem.Item1);
+                        if (datMachine.Item2 != null && intMachine.Item2 != null)
+                            Replacer.ReplaceFields(intMachine.Item2, datMachine.Item2, machineFieldNames, onlySame);
+                    }
 #if NET40_OR_GREATER || NETCOREAPP
                 });
 #else
@@ -344,6 +503,7 @@ namespace SabreTools.DatTools
                 DatFile diffData = DatFile.Create(datHeaders[j]);
                 diffData.ResetDictionary();
                 FillWithSourceIndex(datFile, diffData, j);
+                //FillWithSourceIndexDB(datFile, diffData, j);
                 outDatsArray[j] = diffData;
 #if NET40_OR_GREATER || NETCOREAPP
             });
@@ -366,6 +526,7 @@ namespace SabreTools.DatTools
         {
             List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
             return DiffDuplicates(datFile, paths);
+            //return DiffDuplicatesDB(datFile, paths);
         }
 
         /// <summary>
@@ -447,6 +608,95 @@ namespace SabreTools.DatTools
         }
 
         /// <summary>
+        /// Output duplicate item diff
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to use for updating</param>
+        /// <param name="inputs">List of inputs to write out from</param>
+        public static DatFile DiffDuplicatesDB(DatFile datFile, List<ParentablePath> inputs)
+        {
+            InternalStopwatch watch = new("Initializing duplicate DAT");
+
+            // Fill in any information not in the base DAT
+            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)))
+                datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey, "All DATs");
+
+            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)))
+                datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, "datFile.All DATs");
+
+            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)))
+                datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, "datFile.All DATs");
+
+            string post = " (Duplicates)";
+            DatFile dupeData = DatFile.Create(datFile.Header);
+            dupeData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, dupeData.Header.GetStringFieldValue(DatHeader.FileNameKey) + post);
+            dupeData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, dupeData.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + post);
+            dupeData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, dupeData.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + post);
+            dupeData.ResetDictionary();
+
+            watch.Stop();
+
+            // Now, loop through the dictionary and populate the correct DATs
+            watch.Start("Populating duplicate DAT");
+
+            // Get all current items, machines, and mappings
+            var datItems = datFile.ItemsDB.GetItems().ToDictionary(m => m.Item1, m => m.Item2);
+            var machines = datFile.ItemsDB.GetMachines().ToDictionary(m => m.Item1, m => m.Item2);
+            var mappings = datFile.ItemsDB.GetItemMappings().ToDictionary(m => m.Item1, m => m.Item2);
+
+            // Create a mapping from old machine index to new machine index
+            var machineRemapping = new Dictionary<long, long>();
+
+            // Loop through and add all machines
+            foreach (var machine in machines)
+            {
+                // TODO: Figure out how we can reintroduce the source to this name
+                var machineValue = machine.Value;
+                //machineValue.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineValue.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $" ({Path.GetFileNameWithoutExtension(inputs[newrom.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].CurrentPath)})");
+                machineValue.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineValue.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+
+                long newMachineIndex = dupeData.ItemsDB.AddMachine(machineValue);
+                machineRemapping[machine.Key] = newMachineIndex;
+            }
+
+            // Loop through and add the items
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(datItems, Globals.ParallelOptions, item =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(datItems, item =>
+#else
+            foreach (var item in datItems)
+#endif
+            {
+                // Get the machine index for this item
+                long machineIndex = mappings[item.Key];
+
+#if NETFRAMEWORK
+                if ((item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey) & DupeType.External) != 0)
+#else
+                if (item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey).HasFlag(DupeType.External))
+#endif
+                {
+                    if (item.Value.Clone() is not DatItem newrom)
+#if NET40_OR_GREATER || NETCOREAPP
+                        return;
+#else
+                        continue;
+#endif
+
+                    dupeData.ItemsDB.AddItem(newrom, machineRemapping[machineIndex], false);
+                }
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
+
+            watch.Stop();
+
+            return dupeData;
+        }
+
+        /// <summary>
         /// Output non-cascading diffs
         /// </summary>
         /// <param name="datFile">Current DatFile object to use for updating</param>
@@ -455,6 +705,7 @@ namespace SabreTools.DatTools
         {
             List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
             return DiffIndividuals(datFile, paths);
+            //return DiffIndividualsDB(datFile, paths);
         }
 
         /// <summary>
@@ -551,6 +802,113 @@ namespace SabreTools.DatTools
         }
 
         /// <summary>
+        /// Output non-cascading diffs
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to use for updating</param>
+        /// <param name="inputs">List of inputs to write out from</param>
+        public static List<DatFile> DiffIndividualsDB(DatFile datFile, List<ParentablePath> inputs)
+        {
+            InternalStopwatch watch = new("Initializing all individual DATs");
+
+            // Fill in any information not in the base DAT
+            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)))
+                datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey, "All DATs");
+
+            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)))
+                datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, "All DATs");
+
+            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)))
+                datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, "All DATs");
+
+            // Loop through each of the inputs and get or create a new DatData object
+            DatFile[] outDatsArray = new DatFile[inputs.Count];
+
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.For(0, inputs.Count, Globals.ParallelOptions, j =>
+#elif NET40_OR_GREATER
+            Parallel.For(0, inputs.Count, j =>
+#else
+            for (int j = 0; j < inputs.Count; j++)
+#endif
+            {
+                string innerpost = $" ({j} - {inputs[j].GetNormalizedFileName(true)} Only)";
+                DatFile diffData = DatFile.Create(datFile.Header);
+                diffData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, diffData.Header.GetStringFieldValue(DatHeader.FileNameKey) + innerpost);
+                diffData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, diffData.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + innerpost);
+                diffData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, diffData.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + innerpost);
+                diffData.ResetDictionary();
+                outDatsArray[j] = diffData;
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
+
+            // Create a list of DatData objects representing individual output files
+            List<DatFile> outDats = [.. outDatsArray];
+
+            watch.Stop();
+
+            // Now, loop through the dictionary and populate the correct DATs
+            watch.Start("Populating all individual DATs");
+
+            // Get all current items, machines, and mappings
+            var datItems = datFile.ItemsDB.GetItems().ToDictionary(m => m.Item1, m => m.Item2);
+            var machines = datFile.ItemsDB.GetMachines().ToDictionary(m => m.Item1, m => m.Item2);
+            var mappings = datFile.ItemsDB.GetItemMappings().ToDictionary(m => m.Item1, m => m.Item2);
+
+            // Create a mapping from old machine index to new machine index
+            var machineRemapping = new Dictionary<long, long>();
+
+            // Loop through and add all machines
+            foreach (var machine in machines)
+            {
+                long newMachineIndex = outDats[0].ItemsDB.AddMachine(machine.Value);
+                machineRemapping[machine.Key] = newMachineIndex;
+
+                for (int i = 1; i < outDats.Count; i++)
+                {
+                    _ = outDats[i].ItemsDB.AddMachine(machine.Value);
+                }
+            }
+
+            // Loop through and add the items
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(datItems, Globals.ParallelOptions, item =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(datItems, item =>
+#else
+            foreach (var item in datItems)
+#endif
+            {
+                // Get the machine index for this item
+                long machineIndex = mappings[item.Key];
+
+                if (item.Value.GetFieldValue<Source?>(DatItem.SourceKey) == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                    return;
+#else
+                    continue;
+#endif
+
+#if NETFRAMEWORK
+                if ((item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey) & DupeType.Internal) != 0 || item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey) == 0x00)
+#else
+                if (item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey).HasFlag(DupeType.Internal) || item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey) == 0x00)
+#endif
+                    outDats[item.Value.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
+
+            watch.Stop();
+
+            return [.. outDats];
+        }
+
+        /// <summary>
         /// Output non-duplicate item diff
         /// </summary>
         /// <param name="datFile">Current DatFile object to use for updating</param>
@@ -559,6 +917,7 @@ namespace SabreTools.DatTools
         {
             List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
             return DiffNoDuplicates(datFile, paths);
+            //return DiffNoDuplicatesDB(datFile, paths);
         }
 
         /// <summary>
@@ -638,6 +997,96 @@ namespace SabreTools.DatTools
         }
 
         /// <summary>
+        /// Output non-duplicate item diff
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to use for updating</param>
+        /// <param name="inputs">List of inputs to write out from</param>
+        public static DatFile DiffNoDuplicatesDB(DatFile datFile, List<ParentablePath> inputs)
+        {
+            InternalStopwatch watch = new("Initializing no duplicate DAT");
+
+            // Fill in any information not in the base DAT
+            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)))
+                datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey, "All DATs");
+
+            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)))
+                datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, "All DATs");
+
+            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)))
+                datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, "All DATs");
+
+            string post = " (No Duplicates)";
+            DatFile outerDiffData = DatFile.Create(datFile.Header);
+            outerDiffData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, outerDiffData.Header.GetStringFieldValue(DatHeader.FileNameKey) + post);
+            outerDiffData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, outerDiffData.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + post);
+            outerDiffData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, outerDiffData.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + post);
+            outerDiffData.ResetDictionary();
+
+            watch.Stop();
+
+            // Now, loop through the dictionary and populate the correct DATs
+            watch.Start("Populating no duplicate DAT");
+
+            // Get all current items, machines, and mappings
+            var datItems = datFile.ItemsDB.GetItems().ToDictionary(m => m.Item1, m => m.Item2);
+            var machines = datFile.ItemsDB.GetMachines().ToDictionary(m => m.Item1, m => m.Item2);
+            var mappings = datFile.ItemsDB.GetItemMappings().ToDictionary(m => m.Item1, m => m.Item2);
+
+            // Create a mapping from old machine index to new machine index
+            var machineRemapping = new Dictionary<long, long>();
+
+            // Loop through and add all machines
+            foreach (var machine in machines)
+            {
+                // TODO: Figure out how we can reintroduce the source to this name
+                var machineValue = machine.Value;
+                //machineValue.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineValue.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $" ({Path.GetFileNameWithoutExtension(inputs[newrom.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].CurrentPath)})");
+                machineValue.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineValue.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+
+                long newMachineIndex = outerDiffData.ItemsDB.AddMachine(machineValue);
+                machineRemapping[machine.Key] = newMachineIndex;
+            }
+
+            // Loop through and add the items
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(datItems, Globals.ParallelOptions, item =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(datItems, item =>
+#else
+            foreach (var item in datItems)
+#endif
+            {
+                // Get the machine index for this item
+                long machineIndex = mappings[item.Key];
+
+#if NETFRAMEWORK
+                if ((item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey) & DupeType.Internal) != 0 || item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey) == 0x00)
+#else
+                if (item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey).HasFlag(DupeType.Internal) || item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey) == 0x00)
+#endif
+                {
+                    if (item.Value.Clone() is not DatItem newrom || newrom.GetFieldValue<Source?>(DatItem.SourceKey) == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                        return;
+#else
+                        continue;
+#endif
+
+                    newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $" ({Path.GetFileNameWithoutExtension(inputs[newrom.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].CurrentPath)})");
+                    outerDiffData.ItemsDB.AddItem(newrom, machineRemapping[machineIndex], false);
+                }
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
+
+            watch.Stop();
+
+            return outerDiffData;
+        }
+
+        /// <summary>
         /// Populate from multiple paths while returning the invividual headers
         /// </summary>
         /// <param name="datFile">Current DatFile object to use for updating</param>
@@ -685,6 +1134,7 @@ namespace SabreTools.DatTools
             for (int i = 0; i < inputs.Count; i++)
             {
                 AddFromExisting(datFile, datFiles[i], true);
+                //AddFromExistingDB(datFile, datFiles[i], true);
             }
 
             watch.Stop();
@@ -711,6 +1161,57 @@ namespace SabreTools.DatTools
                 if (delete)
                     addFrom.Items.Remove(key);
             }
+
+            // Now remove the file dictionary from the source DAT
+            if (delete)
+                addFrom.ResetDictionary();
+        }
+
+        /// <summary>
+        /// Add items from another DatFile to the existing DatFile
+        /// </summary>
+        /// <param name="addTo">DatFile to add to</param>
+        /// <param name="addFrom">DatFile to add from</param>
+        /// <param name="delete">If items should be deleted from the source DatFile</param>
+        private static void AddFromExistingDB(DatFile addTo, DatFile addFrom, bool delete = false)
+        {
+            // Get all current items, machines, and mappings
+            var datItems = addFrom.ItemsDB.GetItems().ToDictionary(m => m.Item1, m => m.Item2);
+            var machines = addFrom.ItemsDB.GetMachines().ToDictionary(m => m.Item1, m => m.Item2);
+            var mappings = addFrom.ItemsDB.GetItemMappings().ToDictionary(m => m.Item1, m => m.Item2);
+
+            // Create a mapping from old machine index to new machine index
+            var machineRemapping = new Dictionary<long, long>();
+
+            // Loop through and add all machines
+            foreach (var machine in machines)
+            {
+                long newMachineIndex = addTo.ItemsDB.AddMachine(machine.Value);
+                machineRemapping[machine.Key] = newMachineIndex;
+            }
+
+            // Loop through and add the items
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(datItems, Globals.ParallelOptions, item =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(datItems, item =>
+#else
+            foreach (var item in datItems)
+#endif
+            {
+                // Get the machine index for this item
+                long machineIndex = mappings[item.Key];
+                addTo.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
+                
+                // Now remove the key from the source DAT
+                if (delete)
+                    addFrom.ItemsDB.RemoveItem(item.Key);
+
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
 
             // Now remove the file dictionary from the source DAT
             if (delete)
@@ -750,6 +1251,51 @@ namespace SabreTools.DatTools
                     if (item.GetFieldValue<Source?>(DatItem.SourceKey) != null && item.GetFieldValue<Source?>(DatItem.SourceKey)!.Index == index)
                         indexDat.Items.Add(key, item);
                 }
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
+        }
+
+        /// <summary>
+        /// Fill a DatFile with all items with a particular source index ID
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to use for updating</param>
+        /// <param name="indexDat">DatFile to add found items to</param>
+        /// <param name="index">Source index ID to retrieve items for</param>
+        /// <returns>DatFile containing all items with the source index ID/returns>
+        private static void FillWithSourceIndexDB(DatFile datFile, DatFile indexDat, int index)
+        {
+            // Get all current items, machines, and mappings
+            var datItems = datFile.ItemsDB.GetItems().ToDictionary(m => m.Item1, m => m.Item2);
+            var machines = datFile.ItemsDB.GetMachines().ToDictionary(m => m.Item1, m => m.Item2);
+            var mappings = datFile.ItemsDB.GetItemMappings().ToDictionary(m => m.Item1, m => m.Item2);
+
+            // Create a mapping from old machine index to new machine index
+            var machineRemapping = new Dictionary<long, long>();
+
+            // Loop through and add all machines
+            foreach (var machine in machines)
+            {
+                long newMachineIndex = indexDat.ItemsDB.AddMachine(machine.Value);
+                machineRemapping[machine.Key] = newMachineIndex;
+            }
+
+            // Loop through and add the items
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(datItems, Globals.ParallelOptions, item =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(datItems, item =>
+#else
+            foreach (var item in datItems)
+#endif
+            {
+                // Get the machine index for this item
+                long machineIndex = mappings[item.Key];
+
+                if (item.Value.GetFieldValue<Source?>(DatItem.SourceKey) != null && item.Value.GetFieldValue<Source?>(DatItem.SourceKey)!.Index == index)
+                    indexDat.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], false);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else

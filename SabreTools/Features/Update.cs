@@ -227,6 +227,7 @@ namespace SabreTools.Features
             if (updateMode.HasFlag(UpdateMode.DiffDupesOnly))
             {
                 DatFile dupeData = DatFileTool.DiffDuplicates(userInputDat, inputPaths);
+                //DatFile dupeData = DatFileTool.DiffDuplicatesDB(userInputDat, inputPaths);
 
                 InternalStopwatch watch = new("Outputting duplicate DAT");
                 Writer.Write(dupeData, OutputDir, overwrite: false);
@@ -237,6 +238,7 @@ namespace SabreTools.Features
             if (updateMode.HasFlag(UpdateMode.DiffNoDupesOnly))
             {
                 DatFile outerDiffData = DatFileTool.DiffNoDuplicates(userInputDat, inputPaths);
+                //DatFile outerDiffData = DatFileTool.DiffNoDuplicatesDB(userInputDat, inputPaths);
 
                 InternalStopwatch watch = new("Outputting no duplicate DAT");
                 Writer.Write(outerDiffData, OutputDir, overwrite: false);
@@ -248,6 +250,7 @@ namespace SabreTools.Features
             {
                 // Get all of the output DatFiles
                 List<DatFile> datFiles = DatFileTool.DiffIndividuals(userInputDat, inputPaths);
+                //List<DatFile> datFiles = DatFileTool.DiffIndividualsDB(userInputDat, inputPaths);
 
                 // Loop through and output the new DatFiles
                 InternalStopwatch watch = new("Outputting all individual DATs");
@@ -392,6 +395,7 @@ namespace SabreTools.Features
 
                     // Now replace the fields from the base DatFile
                     DatFileTool.BaseReplace(
+                    //DatFileTool.BaseReplaceDB(
                         userInputDat,
                         repDat,
                         updateMachineFieldNames,
@@ -415,6 +419,7 @@ namespace SabreTools.Features
                 // If we're in SuperDAT mode, prefix all games with their respective DATs
                 if (string.Equals(userInputDat.Header.GetStringFieldValue(Models.Metadata.Header.TypeKey), "SuperDAT", StringComparison.OrdinalIgnoreCase))
                     DatFileTool.ApplySuperDAT(userInputDat, inputPaths);
+                    //DatFileTool.ApplySuperDATDB(userInputDat, inputPaths);
 
                 Writer.Write(userInputDat, OutputDir);
             }
