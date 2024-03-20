@@ -94,6 +94,7 @@ namespace SabreTools.Features
                         }
 
                         Verification.VerifyGeneric(datdata, hashOnly);
+                        //Verification.VerifyGenericDB(datdata, hashOnly);
                     }
 
                     // Now write out if there are any items left
@@ -145,6 +146,7 @@ namespace SabreTools.Features
                     }
 
                     Verification.VerifyGeneric(datdata, hashOnly);
+                    //Verification.VerifyGenericDB(datdata, hashOnly);
                 }
 
                 // Now write out if there are any items left

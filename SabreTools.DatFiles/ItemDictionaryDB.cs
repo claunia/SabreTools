@@ -501,6 +501,76 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// List all duplicates found in a DAT based on a DatItem
+        /// </summary>
+        /// <param name="datItem">Item to try to match</param>
+        /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
+        /// <returns>List of matched DatItem objects</returns>
+        public ConcurrentList<(long, DatItem)> GetDuplicates(DatItem datItem, bool sorted = false)
+        {
+            ConcurrentList<(long, DatItem)> output = [];
+
+            // Check for an empty rom list first
+            if (DatStatistics.TotalCount == 0)
+                return output;
+
+            // We want to get the proper key for the DatItem
+            string key = SortAndGetKey(datItem, sorted);
+
+            // If the key doesn't exist, return the empty list
+            var roms = GetDatItemsForBucket(key);
+            if (roms == null || roms.Length == 0)
+                return output;
+
+            // Try to find duplicates
+            ConcurrentList<(long, DatItem)> left = [];
+            for (int i = 0; i < roms.Length; i++)
+            {
+                DatItem other = roms[i].Item2;
+                if (other.GetBoolFieldValue(DatItem.RemoveKey) == true)
+                    continue;
+
+                if (datItem.Equals(other))
+                {
+                    other.SetFieldValue<bool?>(DatItem.RemoveKey, true);
+                    output.Add(other);
+                }
+                else
+                {
+                    left.Add(other);
+                }
+            }
+
+            // Add back all roms with the proper flags
+            _buckets[key] = output.Concat(left).Select(i => i.Item1).ToConcurrentList();
+            return output;
+        }
+
+        /// <summary>
+        /// Check if a DAT contains the given DatItem
+        /// </summary>
+        /// <param name="datItem">Item to try to match</param>
+        /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
+        /// <returns>True if it contains the rom, false otherwise</returns>
+        public bool HasDuplicates(DatItem datItem, bool sorted = false)
+        {
+            // Check for an empty rom list first
+            if (DatStatistics.TotalCount == 0)
+                return false;
+
+            // We want to get the proper key for the DatItem
+            string key = SortAndGetKey(datItem, sorted);
+
+            // If the key doesn't exist
+            var roms = GetDatItemsForBucket(key);
+            if (roms == null || roms.Length == 0)
+                return false;
+
+            // Try to find duplicates
+            return roms.Any(r => datItem.Equals(r.Item2)) == true;
+        }
+
+        /// <summary>
         /// Merge an arbitrary set of item pairs based on the supplied information
         /// </summary>
         /// <param name="itemMappings">List of pairs representing the items to be merged</param>
@@ -618,6 +688,42 @@ namespace SabreTools.DatFiles
             }
 
             return output;
+        }
+
+        /// <summary>
+        /// Get the highest-order Field value that represents the statistics
+        /// </summary>
+        private ItemKey GetBestAvailable()
+        {
+            // Get the required counts
+            long diskCount = DatStatistics.GetItemCount(ItemType.Disk);
+            long mediaCount = DatStatistics.GetItemCount(ItemType.Media);
+            long romCount = DatStatistics.GetItemCount(ItemType.Rom);
+            long nodumpCount = DatStatistics.GetStatusCount(ItemStatus.Nodump);
+
+            // If all items are supposed to have a SHA-512, we bucket by that
+            if (diskCount + mediaCount + romCount - nodumpCount == DatStatistics.GetHashCount(HashType.SHA512))
+                return ItemKey.SHA512;
+
+            // If all items are supposed to have a SHA-384, we bucket by that
+            else if (diskCount + mediaCount + romCount - nodumpCount == DatStatistics.GetHashCount(HashType.SHA384))
+                return ItemKey.SHA384;
+
+            // If all items are supposed to have a SHA-256, we bucket by that
+            else if (diskCount + mediaCount + romCount - nodumpCount == DatStatistics.GetHashCount(HashType.SHA256))
+                return ItemKey.SHA256;
+
+            // If all items are supposed to have a SHA-1, we bucket by that
+            else if (diskCount + mediaCount + romCount - nodumpCount == DatStatistics.GetHashCount(HashType.SHA1))
+                return ItemKey.SHA1;
+
+            // If all items are supposed to have a MD5, we bucket by that
+            else if (diskCount + mediaCount + romCount - nodumpCount == DatStatistics.GetHashCount(HashType.MD5))
+                return ItemKey.MD5;
+
+            // Otherwise, we bucket by CRC
+            else
+                return ItemKey.CRC;
         }
 
         /// <summary>
@@ -914,6 +1020,22 @@ namespace SabreTools.DatFiles
             });
 
             return true;
+        }
+
+        /// <summary>
+        /// Sort the input DAT and get the key to be used by the item
+        /// </summary>
+        /// <param name="datItem">Item to try to match</param>
+        /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
+        /// <returns>Key to try to use</returns>
+        private string SortAndGetKey(DatItem datItem, bool sorted = false)
+        {
+            // If we're not already sorted, take care of it
+            if (!sorted)
+                BucketBy(GetBestAvailable(), DedupeType.None);
+
+            // Now that we have the sorted type, we get the proper key
+            return datItem.GetKey(_bucketedBy);
         }
 
         #endregion

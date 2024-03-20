@@ -108,6 +108,90 @@ namespace SabreTools.DatTools
             datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, $"fixDAT_{datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)}");
             datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, $"fixDAT_{datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)}");
             datFile.Items.ClearMarked();
+
+            return success;
+        }
+
+        /// <summary>
+        /// Verify a DatFile against a set of depots, leaving only missing files
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to verify against</param>
+        /// <param name="inputs">List of input directories to compare against</param>
+        /// <returns>True if verification was a success, false otherwise</returns>
+        public static bool VerifyDepotDB(DatFile datFile, List<string> inputs)
+        {
+            bool success = true;
+
+            var watch = new InternalStopwatch("Verifying all from supplied depots");
+
+            // Now loop through and get only directories from the input paths
+            List<string> directories = [];
+            foreach (string input in inputs)
+            {
+                // Add to the list if the input is a directory
+                if (Directory.Exists(input))
+                {
+                    logger.Verbose($"Adding depot: {input}");
+                    directories.Add(input);
+                }
+            }
+
+            // If we don't have any directories, we want to exit
+            if (directories.Count == 0)
+                return success;
+
+            // Now that we have a list of depots, we want to bucket the input DAT by SHA-1
+            datFile.ItemsDB.BucketBy(ItemKey.SHA1, DedupeType.None);
+
+            // Then we want to loop through each of the hashes and see if we can rebuild
+            var keys = datFile.ItemsDB.SortedKeys.ToList();
+            foreach (string hash in keys)
+            {
+                // Pre-empt any issues that could arise from string length
+                if (hash.Length != Constants.SHA1Length)
+                    continue;
+
+                logger.User($"Checking hash '{hash}'");
+
+                // Get the extension path for the hash
+                string? subpath = Utilities.GetDepotPath(hash, datFile.Header.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.Depth ?? 0);
+                if (subpath == null)
+                    continue;
+
+                // Find the first depot that includes the hash
+                string? foundpath = null;
+                foreach (string directory in directories)
+                {
+                    if (System.IO.File.Exists(Path.Combine(directory, subpath)))
+                    {
+                        foundpath = Path.Combine(directory, subpath);
+                        break;
+                    }
+                }
+
+                // If we didn't find a path, then we continue
+                if (foundpath == null)
+                    continue;
+
+                // If we have a path, we want to try to get the rom information
+                GZipArchive tgz = new(foundpath);
+                BaseFile? fileinfo = tgz.GetTorrentGZFileInfo();
+
+                // If the file information is null, then we continue
+                if (fileinfo == null)
+                    continue;
+
+                // Now we want to remove all duplicates from the DAT
+                datFile.ItemsDB.GetDuplicates(new Rom(fileinfo))
+                    .AddRange(datFile.ItemsDB.GetDuplicates(new Disk(fileinfo)));
+            }
+
+            watch.Stop();
+
+            // Set fixdat headers in case of writing out
+            datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey, $"fixDAT_{datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)}");
+            datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, $"fixDAT_{datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)}");
+            datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, $"fixDAT_{datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)}");
             datFile.ItemsDB.ClearMarked();
 
             return success;
@@ -158,6 +242,50 @@ namespace SabreTools.DatTools
             datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, $"fixDAT_{datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)}");
             datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, $"fixDAT_{datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)}");
             datFile.Items.ClearMarked();
+
+            return success;
+        }
+
+        /// <summary>
+        /// Verify a DatFile against a set of inputs, leaving only missing files
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to verify against</param>
+        /// <param name="hashOnly">True if only hashes should be checked, false for full file information</param>
+        /// <returns>True if verification was a success, false otherwise</returns>
+        public static bool VerifyGenericDB(DatFile datFile, bool hashOnly)
+        {
+            bool success = true;
+
+            var watch = new InternalStopwatch("Verifying all from supplied paths");
+
+            // Force bucketing according to the flags
+            if (hashOnly)
+                datFile.ItemsDB.BucketBy(ItemKey.CRC, DedupeType.Full);
+            else
+                datFile.ItemsDB.BucketBy(ItemKey.Machine, DedupeType.Full);
+
+            // Then mark items for removal
+            var keys = datFile.ItemsDB.SortedKeys.ToList();
+            foreach (string key in keys)
+            {
+                var items = datFile.ItemsDB.GetDatItemsForBucket(key);
+                if (items == null)
+                    continue;
+
+                for (int i = 0; i < items.Length; i++)
+                {
+                    // Unmatched items will have a source ID of int.MaxValue, remove all others
+                    if (items[i].Item2.GetFieldValue<Source?>(DatItem.SourceKey)?.Index != int.MaxValue)
+                        items[i].Item2.SetFieldValue<bool?>(DatItem.RemoveKey, true);
+                }
+            }
+
+            watch.Stop();
+
+            // Set fixdat headers in case of writing out
+            datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey, $"fixDAT_{datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)}");
+            datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, $"fixDAT_{datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)}");
+            datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, $"fixDAT_{datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)}");
             datFile.ItemsDB.ClearMarked();
 
             return success;
