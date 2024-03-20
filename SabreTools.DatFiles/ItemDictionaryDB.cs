@@ -614,6 +614,52 @@ namespace SabreTools.DatFiles
         /// <param name="datItem">Item to try to match</param>
         /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
         /// <returns>List of matched DatItem objects</returns>
+        public ConcurrentList<(long, DatItem)> GetDuplicates(DatItem datItem, bool sorted = false)
+        {
+            ConcurrentList<(long, DatItem)> output = [];
+
+            // Check for an empty rom list first
+            if (DatStatistics.TotalCount == 0)
+                return output;
+
+            // We want to get the proper key for the DatItem
+            string key = SortAndGetKey(datItem, sorted);
+
+            // If the key doesn't exist, return the empty list
+            var roms = GetItemsForBucket(key);
+            if (roms == null || roms.Length == 0)
+                return output;
+
+            // Try to find duplicates
+            ConcurrentList<(long, DatItem)> left = [];
+            for (int i = 0; i < roms.Length; i++)
+            {
+                DatItem other = roms[i].Item2;
+                if (other.GetBoolFieldValue(DatItem.RemoveKey) == true)
+                    continue;
+
+                if (datItem.Equals(other))
+                {
+                    other.SetFieldValue<bool?>(DatItem.RemoveKey, true);
+                    output.Add(other);
+                }
+                else
+                {
+                    left.Add(other);
+                }
+            }
+
+            // Add back all roms with the proper flags
+            _buckets[key] = output.Concat(left).Select(i => i.Item1).ToConcurrentList();
+            return output;
+        }
+
+        /// <summary>
+        /// List all duplicates found in a DAT based on a DatItem
+        /// </summary>
+        /// <param name="datItem">Item to try to match</param>
+        /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
+        /// <returns>List of matched DatItem objects</returns>
         public ConcurrentList<(long, DatItem)> GetDuplicates((long, DatItem) datItem, bool sorted = false)
         {
             ConcurrentList<(long, DatItem)> output = [];
@@ -1127,6 +1173,22 @@ namespace SabreTools.DatFiles
             });
 
             return true;
+        }
+
+        /// <summary>
+        /// Sort the input DAT and get the key to be used by the item
+        /// </summary>
+        /// <param name="datItem">Item to try to match</param>
+        /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
+        /// <returns>Key to try to use</returns>
+        private string SortAndGetKey(DatItem datItem, bool sorted = false)
+        {
+            // If we're not already sorted, take care of it
+            if (!sorted)
+                BucketBy(GetBestAvailable(), DedupeType.None);
+
+            // Now that we have the sorted type, we get the proper key
+            return datItem.GetKey(_bucketedBy, null);
         }
 
         /// <summary>
