@@ -70,7 +70,7 @@ namespace SabreTools.DatFiles
                 logger.User($"Writing to '{outfile}'...");
 
                 // Serialize the input file in two steps
-                var internalFormat = ConvertMetadata(ignoreblanks);
+                var internalFormat = ConvertMetadataDB(ignoreblanks);
                 var specificFormat = Activator.CreateInstance<V>().Deserialize(internalFormat);
                 if (!Activator.CreateInstance<U>().Serialize(specificFormat, outfile))
                 {
