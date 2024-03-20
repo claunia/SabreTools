@@ -109,7 +109,9 @@ namespace SabreTools.Filtering
 
             // Now we want to loop through all of the games and set the correct information
             while (AddRomsFromDevices(datFile, false, false)) ;
+            while (datFile.ItemsDB.AddRomsFromDevices(false, false)) ;
             while (AddRomsFromDevices(datFile, true, false)) ;
+            while (datFile.ItemsDB.AddRomsFromDevices(true, false)) ;
 
             // Then, remove the romof and cloneof tags so it's not picked up by the manager
             RemoveTagsFromChild(datFile);
@@ -154,7 +156,9 @@ namespace SabreTools.Filtering
 
             // Now we want to loop through all of the games and set the correct information
             while (AddRomsFromDevices(datFile, true, true)) ;
+            while (datFile.ItemsDB.AddRomsFromDevices(true, true)) ;
             AddRomsFromDevices(datFile, false, true);
+            datFile.ItemsDB.AddRomsFromDevices(false, true);
             AddRomsFromParent(datFile);
             datFile.ItemsDB.AddRomsFromParent();
 
@@ -438,8 +442,6 @@ namespace SabreTools.Filtering
 
             return foundnew;
         }
-
-        // TODO: Add AddRomsFromDevicesDB
 
         /// <summary>
         /// Use cloneof tags to add roms to the children, setting the new romof tag in the process

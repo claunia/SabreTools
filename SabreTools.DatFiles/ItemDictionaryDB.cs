@@ -1207,6 +1207,171 @@ namespace SabreTools.DatFiles
         #region Splitting
 
         /// <summary>
+        /// Use device_ref and optionally slotoption tags to add roms to the children
+        /// </summary>
+        /// <param name="dev">True if only child device sets are touched, false for non-device sets</param>
+        /// <param name="useSlotOptions">True if slotoptions tags are used as well, false otherwise</param>
+        public bool AddRomsFromDevices(bool dev, bool useSlotOptions)
+        {
+            bool foundnew = false;
+            List<string> games = [.. SortedKeys];
+            foreach (string game in games)
+            {
+                // Get the items for this game
+                var items = GetDatItemsForBucket(game);
+
+                // If the machine doesn't have items, we continue
+                if (items == null || items.Length == 0)
+                    continue;
+
+                // Get the machine for the first item
+                var machine = GetMachineForItem(items[0].Item1);
+                if (machine.Item2 == null)
+                    continue;
+
+                // If the machine (is/is not) a device, we want to continue
+                if (dev ^ (machine.Item2.GetBoolFieldValue(Models.Metadata.Machine.IsDeviceKey) == true))
+                    continue;
+
+                // Get all device reference names from the current machine
+                List<string?> deviceReferences = items
+                    .Where(i => i.Item2 is DeviceRef)
+                    .Select(i => i.Item2 as DeviceRef)
+                    .Select(dr => dr!.GetName())
+                    .Distinct()
+                    .ToList();
+
+                // Get all slot option names from the current machine
+                List<string?> slotOptions = items
+                    .Where(i => i.Item2 is Slot)
+                    .Select(i => i.Item2 as Slot)
+                    .Where(s => s!.SlotOptionsSpecified)
+                    .SelectMany(s => s!.GetFieldValue<SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey)!)
+                    .Select(so => so.GetStringFieldValue(Models.Metadata.SlotOption.DevNameKey))
+                    .Distinct()
+                    .ToList();
+
+                // If we're checking device references
+                if (deviceReferences.Any())
+                {
+                    // Loop through all names and check the corresponding machines
+                    List<string> newDeviceReferences = [];
+                    foreach (string? deviceReference in deviceReferences)
+                    {
+                        // If the device reference is invalid
+                        if (deviceReference == null)
+                            continue;
+
+                        // If the machine doesn't exist then we continue
+                        var devItems = GetDatItemsForBucket(deviceReference);
+                        if (devItems == null || devItems.Length == 0)
+                            continue;
+
+                        // Add to the list of new device reference names
+                        newDeviceReferences.AddRange(devItems
+                            .Where(i => i.Item2 is DeviceRef)
+                            .Select(i => (i.Item2 as DeviceRef)!.GetName()!));
+
+                        // Set new machine information and add to the current machine
+                        var copyFrom = GetMachineForItem(GetDatItemsForBucket(game)![0].Item1);
+                        if (copyFrom.Item2 == null)
+                            continue;
+
+                        foreach ((long, DatItem) item in devItems)
+                        {
+                            // If the parent machine doesn't already contain this item, add it
+                            if (!GetDatItemsForBucket(game)!
+                                .Any(i => i.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey) == item.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey)
+                                    && i.Item2.GetName() == item.Item2.GetName()))
+                            {
+                                // Set that we found new items
+                                foundnew = true;
+
+                                // Clone the item and then add it
+                                DatItem datItem = (item.Item2.Clone() as DatItem)!;
+                                AddItem(datItem, machine.Item1);
+                            }
+                        }
+                    }
+
+                    // Now that every device reference is accounted for, add the new list of device references, if they don't already exist
+                    foreach (string deviceReference in newDeviceReferences.Distinct())
+                    {
+                        if (!deviceReferences.Contains(deviceReference))
+                        {
+                            var deviceRef = new DeviceRef();
+                            deviceRef.SetName(deviceReference);
+                            AddItem(deviceRef, machine.Item1);
+                        }
+                    }
+                }
+
+                // If we're checking slotoptions
+                if (useSlotOptions && slotOptions.Any())
+                {
+                    // Loop through all names and check the corresponding machines
+                    List<string> newSlotOptions = [];
+                    foreach (string? slotOption in slotOptions)
+                    {
+                        // If the slot option is invalid
+                        if (slotOption == null)
+                            continue;
+
+                        // If the machine doesn't exist then we continue
+                        var slotItems = GetDatItemsForBucket(slotOption);
+                        if (slotItems == null || slotItems.Length == 0)
+                            continue;
+
+                        // Add to the list of new slot option names
+                        newSlotOptions.AddRange(slotItems
+                            .Where(i => i.Item2 is Slot)
+                            .Where(s => (s.Item2 as Slot)!.SlotOptionsSpecified)
+                            .SelectMany(s => (s.Item2 as Slot)!.GetFieldValue<SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey)!)
+                            .Select(o => o.GetStringFieldValue(Models.Metadata.SlotOption.DevNameKey)!));
+
+                        // Set new machine information and add to the current machine
+                        var copyFrom = GetMachineForItem(GetDatItemsForBucket(game)![0].Item1);
+                        if (copyFrom.Item2 == null)
+                            continue;
+
+                        foreach ((long, DatItem) item in slotItems)
+                        {
+                            // If the parent machine doesn't already contain this item, add it
+                            if (!GetDatItemsForBucket(game)!
+                                .Any(i => i.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey) == item.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey)
+                                    && i.Item2.GetName() == item.Item2.GetName()))
+                            {
+                                // Set that we found new items
+                                foundnew = true;
+
+                                // Clone the item and then add it
+                                DatItem datItem = (item.Item2.Clone() as DatItem)!;
+                                AddItem(datItem, machine.Item1);
+                            }
+                        }
+                    }
+
+                    // Now that every device is accounted for, add the new list of slot options, if they don't already exist
+                    foreach (string slotOption in newSlotOptions.Distinct())
+                    {
+                        if (!slotOptions.Contains(slotOption))
+                        {
+                            var slotOptionItem = new SlotOption();
+                            slotOptionItem.SetFieldValue<string?>(Models.Metadata.SlotOption.DevNameKey, slotOption);
+
+                            var slotItem = new Slot();
+                            slotItem.SetFieldValue<SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey, [slotOptionItem]);
+
+                            AddItem(slotItem, machine.Item1);
+                        }
+                    }
+                }
+            }
+
+            return foundnew;
+        }
+
+        /// <summary>
         /// Use cloneof tags to add roms to the children, setting the new romof tag in the process
         /// </summary>
         public void AddRomsFromParent()
