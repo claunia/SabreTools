@@ -214,51 +214,30 @@ namespace SabreTools.DatTools
         public static Dictionary<string, DatFile> SplitByHash(DatFile datFile)
         {
             // Create each of the respective output DATs
-            InternalStopwatch watch = new($"Splitting DAT by best available hashes");
+            var watch = new InternalStopwatch($"Splitting DAT by best available hashes");
+
+            // Create mapping of keys to suffixes
+            var mappings = new Dictionary<string, string>
+            {
+                [Models.Metadata.Rom.StatusKey] = " (Nodump)",
+                [Models.Metadata.Rom.SHA512Key] = " (SHA-512)",
+                [Models.Metadata.Rom.SHA384Key] = " (SHA-384)",
+                [Models.Metadata.Rom.SHA256Key] = " (SHA-256)",
+                [Models.Metadata.Rom.SHA1Key] = " (SHA-1)",
+                [Models.Metadata.Rom.MD5Key] = " (MD5)",
+                [Models.Metadata.Rom.CRCKey] = " (CRC)",
+                ["null"] = " (Other)",
+            };
 
             // Create the set of field-to-dat mappings
             Dictionary<string, DatFile> fieldDats = [];
-
-            // TODO: Can this be made into a loop?
-            fieldDats[Models.Metadata.Rom.StatusKey] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats[Models.Metadata.Rom.StatusKey].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.StatusKey].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (Nodump)");
-            fieldDats[Models.Metadata.Rom.StatusKey].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.StatusKey].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (Nodump)");
-            fieldDats[Models.Metadata.Rom.StatusKey].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.StatusKey].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (Nodump)");
-
-            fieldDats[Models.Metadata.Rom.SHA512Key] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats[Models.Metadata.Rom.SHA512Key].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.SHA512Key].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (SHA-512)");
-            fieldDats[Models.Metadata.Rom.SHA512Key].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.SHA512Key].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (SHA-512)");
-            fieldDats[Models.Metadata.Rom.SHA512Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.SHA512Key].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (SHA-512)");
-
-            fieldDats[Models.Metadata.Rom.SHA384Key] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats[Models.Metadata.Rom.SHA384Key].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.SHA384Key].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (SHA-384)");
-            fieldDats[Models.Metadata.Rom.SHA384Key].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.SHA384Key].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (SHA-384)");
-            fieldDats[Models.Metadata.Rom.SHA384Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.SHA384Key].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (SHA-384)");
-
-            fieldDats[Models.Metadata.Rom.SHA256Key] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats[Models.Metadata.Rom.SHA256Key].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.SHA256Key].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (SHA-256)");
-            fieldDats[Models.Metadata.Rom.SHA256Key].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.SHA256Key].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (SHA-256)");
-            fieldDats[Models.Metadata.Rom.SHA256Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.SHA256Key].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (SHA-256)");
-
-            fieldDats[Models.Metadata.Rom.SHA1Key] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats[Models.Metadata.Rom.SHA1Key].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.SHA1Key].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (SHA-1)");
-            fieldDats[Models.Metadata.Rom.SHA1Key].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.SHA1Key].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (SHA-1)");
-            fieldDats[Models.Metadata.Rom.SHA1Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.SHA1Key].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (SHA-1)");
-
-            fieldDats[Models.Metadata.Rom.MD5Key] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats[Models.Metadata.Rom.MD5Key].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.MD5Key].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (MD5)");
-            fieldDats[Models.Metadata.Rom.MD5Key].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.MD5Key].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (MD5)");
-            fieldDats[Models.Metadata.Rom.MD5Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.MD5Key].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (MD5)");
-
-            fieldDats[Models.Metadata.Rom.CRCKey] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats[Models.Metadata.Rom.CRCKey].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.CRCKey].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (CRC)");
-            fieldDats[Models.Metadata.Rom.CRCKey].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.CRCKey].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (CRC)");
-            fieldDats[Models.Metadata.Rom.CRCKey].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.CRCKey].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (CRC)");
-
-            fieldDats["null"] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats["null"].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats["null"].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (Other)");
-            fieldDats["null"].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats["null"].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (Other)");
-            fieldDats["null"].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats["null"].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (Other)");
+            foreach (var kvp in mappings)
+            {
+                fieldDats[kvp.Key] = DatFile.Create(datFile.Header.CloneStandard());
+                fieldDats[kvp.Key].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[kvp.Key].Header.GetStringFieldValue(DatHeader.FileNameKey) + kvp.Value);
+                fieldDats[kvp.Key].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[kvp.Key].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + kvp.Value);
+                fieldDats[kvp.Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[kvp.Key].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + kvp.Value);
+            }
 
             // Now populate each of the DAT objects in turn
 #if NET452_OR_GREATER || NETCOREAPP
@@ -348,49 +327,28 @@ namespace SabreTools.DatTools
             // Create each of the respective output DATs
             var watch = new InternalStopwatch($"Splitting DAT by best available hashes");
 
+            // Create mapping of keys to suffixes
+            var mappings = new Dictionary<string, string>
+            {
+                [Models.Metadata.Rom.StatusKey] = " (Nodump)",
+                [Models.Metadata.Rom.SHA512Key] = " (SHA-512)",
+                [Models.Metadata.Rom.SHA384Key] = " (SHA-384)",
+                [Models.Metadata.Rom.SHA256Key] = " (SHA-256)",
+                [Models.Metadata.Rom.SHA1Key] = " (SHA-1)",
+                [Models.Metadata.Rom.MD5Key] = " (MD5)",
+                [Models.Metadata.Rom.CRCKey] = " (CRC)",
+                ["null"] = " (Other)",
+            };
+
             // Create the set of field-to-dat mappings
             Dictionary<string, DatFile> fieldDats = [];
-
-            // TODO: Can this be made into a loop?
-            fieldDats[Models.Metadata.Rom.StatusKey] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats[Models.Metadata.Rom.StatusKey].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.StatusKey].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (Nodump)");
-            fieldDats[Models.Metadata.Rom.StatusKey].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.StatusKey].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (Nodump)");
-            fieldDats[Models.Metadata.Rom.StatusKey].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.StatusKey].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (Nodump)");
-
-            fieldDats[Models.Metadata.Rom.SHA512Key] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats[Models.Metadata.Rom.SHA512Key].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.SHA512Key].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (SHA-512)");
-            fieldDats[Models.Metadata.Rom.SHA512Key].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.SHA512Key].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (SHA-512)");
-            fieldDats[Models.Metadata.Rom.SHA512Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.SHA512Key].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (SHA-512)");
-
-            fieldDats[Models.Metadata.Rom.SHA384Key] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats[Models.Metadata.Rom.SHA384Key].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.SHA384Key].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (SHA-384)");
-            fieldDats[Models.Metadata.Rom.SHA384Key].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.SHA384Key].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (SHA-384)");
-            fieldDats[Models.Metadata.Rom.SHA384Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.SHA384Key].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (SHA-384)");
-
-            fieldDats[Models.Metadata.Rom.SHA256Key] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats[Models.Metadata.Rom.SHA256Key].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.SHA256Key].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (SHA-256)");
-            fieldDats[Models.Metadata.Rom.SHA256Key].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.SHA256Key].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (SHA-256)");
-            fieldDats[Models.Metadata.Rom.SHA256Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.SHA256Key].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (SHA-256)");
-
-            fieldDats[Models.Metadata.Rom.SHA1Key] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats[Models.Metadata.Rom.SHA1Key].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.SHA1Key].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (SHA-1)");
-            fieldDats[Models.Metadata.Rom.SHA1Key].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.SHA1Key].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (SHA-1)");
-            fieldDats[Models.Metadata.Rom.SHA1Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.SHA1Key].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (SHA-1)");
-
-            fieldDats[Models.Metadata.Rom.MD5Key] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats[Models.Metadata.Rom.MD5Key].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.MD5Key].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (MD5)");
-            fieldDats[Models.Metadata.Rom.MD5Key].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.MD5Key].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (MD5)");
-            fieldDats[Models.Metadata.Rom.MD5Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.MD5Key].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (MD5)");
-
-            fieldDats[Models.Metadata.Rom.CRCKey] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats[Models.Metadata.Rom.CRCKey].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[Models.Metadata.Rom.CRCKey].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (CRC)");
-            fieldDats[Models.Metadata.Rom.CRCKey].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[Models.Metadata.Rom.CRCKey].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (CRC)");
-            fieldDats[Models.Metadata.Rom.CRCKey].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[Models.Metadata.Rom.CRCKey].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (CRC)");
-
-            fieldDats["null"] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats["null"].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats["null"].Header.GetStringFieldValue(DatHeader.FileNameKey) + " (Other)");
-            fieldDats["null"].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats["null"].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + " (Other)");
-            fieldDats["null"].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats["null"].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + " (Other)");
+            foreach (var kvp in mappings)
+            {
+                fieldDats[kvp.Key] = DatFile.Create(datFile.Header.CloneStandard());
+                fieldDats[kvp.Key].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[kvp.Key].Header.GetStringFieldValue(DatHeader.FileNameKey) + kvp.Value);
+                fieldDats[kvp.Key].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[kvp.Key].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + kvp.Value);
+                fieldDats[kvp.Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[kvp.Key].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + kvp.Value);
+            }
 
             // Get all current items, machines, and mappings
             var datItems = datFile.ItemsDB.GetItems().ToDictionary(m => m.Item1, m => m.Item2);
@@ -407,6 +365,7 @@ namespace SabreTools.DatTools
             foreach (var source in sources)
             {
                 long newSourceIndex = fieldDats[Models.Metadata.Rom.StatusKey].ItemsDB.AddSource(source.Value);
+                sourceRemapping[source.Key] = newSourceIndex;
                 _ = fieldDats[Models.Metadata.Rom.SHA512Key].ItemsDB.AddSource(source.Value);
                 _ = fieldDats[Models.Metadata.Rom.SHA384Key].ItemsDB.AddSource(source.Value);
                 _ = fieldDats[Models.Metadata.Rom.SHA256Key].ItemsDB.AddSource(source.Value);
@@ -414,7 +373,6 @@ namespace SabreTools.DatTools
                 _ = fieldDats[Models.Metadata.Rom.MD5Key].ItemsDB.AddSource(source.Value);
                 _ = fieldDats[Models.Metadata.Rom.CRCKey].ItemsDB.AddSource(source.Value);
                 _ = fieldDats["null"].ItemsDB.AddSource(source.Value);
-                sourceRemapping[source.Key] = newSourceIndex;
             }
 
             // Loop through and add all machines
