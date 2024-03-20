@@ -1170,6 +1170,175 @@ namespace SabreTools.DatFiles
 
         #endregion
 
+        #region Splitting
+
+        /// <summary>
+        /// Remove all BIOS and device sets
+        /// </summary>
+        public void RemoveBiosAndDeviceSets()
+        {
+            List<string> games = [.. SortedKeys];
+            foreach (string game in games)
+            {
+                var items = GetDatItemsForBucket(game);
+                if (items == null || items.Length == 0)
+                    continue;
+
+                var machine = GetMachineForItem(items[0].Item1);
+                if (machine.Item2 == null)
+                    continue;
+
+                if ((machine.Item2.GetBoolFieldValue(Models.Metadata.Machine.IsBiosKey) == true)
+                    || (machine.Item2.GetBoolFieldValue(Models.Metadata.Machine.IsDeviceKey) == true))
+                {
+                    foreach (var item in items)
+                    {
+                        RemoveItem(item.Item1);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Use romof tags to remove bios roms from children
+        /// </summary>
+        /// <param name="bios">True if only child Bios sets are touched, false for non-bios sets</param>
+        public void RemoveBiosRomsFromChild(bool bios)
+        {
+            // Loop through the romof tags
+            List<string> games = [.. SortedKeys];
+            foreach (string game in games)
+            {
+                // If the game has no items in it, we want to continue
+                var items = GetDatItemsForBucket(game);
+                if (items == null || items.Length == 0)
+                    continue;
+
+                // Get the machine for the item
+                var machine = GetMachineForItem(items[0].Item1);
+                if (machine.Item2 == null)
+                    continue;
+
+                // If the game (is/is not) a bios, we want to continue
+                if (bios ^ (machine.Item2.GetBoolFieldValue(Models.Metadata.Machine.IsBiosKey) == true))
+                    continue;
+
+                // Determine if the game has a parent or not
+                string? parent = null;
+                if (!string.IsNullOrEmpty(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.RomOfKey)))
+                    parent = machine.Item2.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
+
+                // If the parent doesnt exist, we want to continue
+                if (string.IsNullOrEmpty(parent))
+                    continue;
+
+                // If the parent doesn't have any items, we want to continue
+                var parentItems = GetDatItemsForBucket(parent!);
+                if (parentItems == null || parentItems.Length == 0)
+                    continue;
+
+                // If the parent exists and has items, we remove the items that are in the parent from the current game
+                foreach ((long, DatItem) item in parentItems)
+                {
+                    var matchedIndices = items.Where(i => i.Item2 == item.Item2).Select(i => i.Item1);
+                    foreach (long index in matchedIndices)
+                    {
+                        RemoveItem(index);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Use cloneof tags to remove roms from the children
+        /// </summary>
+        public void RemoveRomsFromChild()
+        {
+            List<string> games = [.. SortedKeys];
+            foreach (string game in games)
+            {
+                var items = GetDatItemsForBucket(game);
+                if (items == null)
+                    continue;
+
+                // If the game has no items in it, we want to continue
+                if (items.Length == 0)
+                    continue;
+
+                // Get the machine for the first item
+                var machine = GetMachineForItem(items[0].Item1);
+                if (machine.Item2 == null)
+                    continue;
+
+                // Determine if the game has a parent or not
+                string? parent = null;
+                if (!string.IsNullOrEmpty(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey)))
+                    parent = machine.Item2.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey);
+
+                // If the parent doesnt exist, we want to continue
+                if (string.IsNullOrEmpty(parent))
+                    continue;
+
+                // If the parent doesn't have any items, we want to continue
+                var parentItems = GetDatItemsForBucket(parent!);
+                if (parentItems == null || parentItems.Length == 0)
+                    continue;
+
+                // If the parent exists and has items, we remove the parent items from the current game
+                foreach ((long, DatItem) item in parentItems)
+                {
+                    var matchedIndices = items.Where(i => i.Item2 == item.Item2).Select(i => i.Item1);
+                    foreach (long index in matchedIndices)
+                    {
+                        RemoveItem(index);
+                    }
+                }
+
+                // Now we want to get the parent romof tag and put it in each of the remaining items
+                items = GetDatItemsForBucket(game);
+                machine = GetMachineForItem(GetDatItemsForBucket(parent!)![0].Item1);
+                if (machine.Item2 == null)
+                    continue;
+
+                string? romof = machine.Item2.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
+                foreach ((long, DatItem) item in items!)
+                {
+                    machine = GetMachineForItem(item.Item1);
+                    if (machine.Item2 == null)
+                        continue;
+
+                    machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, romof);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Remove all romof and cloneof tags from all games
+        /// </summary>
+        public void RemoveTagsFromChild()
+        {
+            List<string> games = [.. SortedKeys];
+            foreach (string game in games)
+            {
+                var items = GetDatItemsForBucket(game);
+                if (items == null)
+                    continue;
+
+                foreach ((long, DatItem) item in items)
+                {
+                    var machine = GetMachineForItem(item.Item1);
+                    if (machine.Item2 == null)
+                        continue;
+
+                    machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, null);
+                    machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, null);
+                    machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.SampleOfKey, null);
+                }
+            }
+        }
+
+        #endregion
+
         #region Statistics
 
         /// <summary>
