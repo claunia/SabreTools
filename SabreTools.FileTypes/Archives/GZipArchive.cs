@@ -6,10 +6,9 @@ using System.Text.RegularExpressions;
 using Compress;
 using Compress.gZip;
 using Compress.Support.Compression.Deflate;
-using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.Hashing;
-using SabreTools.IO;
+using SabreTools.IO.Extensions;
 
 namespace SabreTools.FileTypes.Archives
 {
@@ -295,7 +294,7 @@ namespace SabreTools.FileTypes.Archives
         public override bool IsTorrent()
         {
             // Check for the file existing first
-            if (!File.Exists(this.Filename))
+            if (this.Filename == null || !File.Exists(this.Filename))
                 return false;
 
             string datum = Path.GetFileName(this.Filename).ToLowerInvariant();
@@ -356,7 +355,7 @@ namespace SabreTools.FileTypes.Archives
         public BaseFile? GetTorrentGZFileInfo()
         {
             // Check for the file existing first
-            if (!File.Exists(this.Filename))
+            if (this.Filename == null || !File.Exists(this.Filename))
                 return null;
 
             string datum = Path.GetFileName(this.Filename).ToLowerInvariant();

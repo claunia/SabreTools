@@ -5,7 +5,9 @@ using System.Threading;
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
 #endif
+#if NET452_OR_GREATER || NETCOREAPP
 using SabreTools.Core;
+#endif
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
@@ -13,7 +15,7 @@ using SabreTools.DatItems.Formats;
 using SabreTools.FileTypes;
 using SabreTools.FileTypes.Archives;
 using SabreTools.Hashing;
-using SabreTools.IO;
+using SabreTools.IO.Extensions;
 using SabreTools.Logging;
 
 namespace SabreTools.DatTools

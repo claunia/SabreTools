@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -10,7 +9,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents a ClrMamePro DAT
     /// </summary>
-    internal sealed class ClrMamePro : SerializableDatFile<Models.ClrMamePro.MetadataFile, Serialization.Files.ClrMamePro, Serialization.CrossModel.ClrMamePro>
+    internal sealed class ClrMamePro : SerializableDatFile<Models.ClrMamePro.MetadataFile, Serialization.Deserializers.ClrMamePro, Serialization.Serializers.ClrMamePro, Serialization.CrossModel.ClrMamePro>
     {
         #region Fields
 
@@ -38,7 +37,7 @@ namespace SabreTools.DatFiles.Formats
             try
             {
                 // Deserialize the input file
-                var metadataFile = new Serialization.Files.ClrMamePro().Deserialize(filename, this.Quotes);
+                var metadataFile = Serialization.Deserializers.ClrMamePro.DeserializeFile(filename, this.Quotes);
                 var metadata = new Serialization.CrossModel.ClrMamePro().Serialize(metadataFile);
 
                 // Convert to the internal format
@@ -181,7 +180,7 @@ namespace SabreTools.DatFiles.Formats
                 // Serialize the input file
                 var metadata = ConvertMetadata(ignoreblanks);
                 var metadataFile = new Serialization.CrossModel.ClrMamePro().Deserialize(metadata);
-                if (!(new Serialization.Files.ClrMamePro().Serialize(metadataFile, outfile, Quotes)))
+                if (!(Serialization.Serializers.ClrMamePro.SerializeFile(metadataFile, outfile, Quotes)))
                 {
                     logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
                     return false;

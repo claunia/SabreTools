@@ -146,7 +146,7 @@ namespace SabreTools.FileTypes.Archives
                 TarArchive ta = TarArchive.Open(this.Filename!, new ReaderOptions { LeaveStreamOpen = false, });
                 foreach (TarArchiveEntry entry in ta.Entries)
                 {
-                    if (entry != null && !entry.IsDirectory && entry.Key.Contains(entryName))
+                    if (entry?.Key != null && !entry.IsDirectory && entry.Key.Contains(entryName))
                     {
                         // Write the file out
                         realEntry = entry.Key;
@@ -237,19 +237,19 @@ namespace SabreTools.FileTypes.Archives
                 string? lastTarEntry = null;
                 foreach (TarArchiveEntry entry in tarEntries)
                 {
-                    if (entry != null)
+                    if (entry?.Key == null)
+                        continue;
+
+                    // If the current is a superset of last, we skip it
+                    if (lastTarEntry != null && lastTarEntry.StartsWith(entry.Key))
                     {
-                        // If the current is a superset of last, we skip it
-                        if (lastTarEntry != null && lastTarEntry.StartsWith(entry.Key))
-                        {
-                            // No-op
-                        }
-                        // If the entry is a directory, we add it
-                        else if (entry.IsDirectory)
-                        {
-                            empties.Add(entry.Key);
-                            lastTarEntry = entry.Key;
-                        }
+                        // No-op
+                    }
+                    // If the entry is a directory, we add it
+                    else if (entry.IsDirectory)
+                    {
+                        empties.Add(entry.Key);
+                        lastTarEntry = entry.Key;
                     }
                 }
             }
@@ -315,7 +315,7 @@ namespace SabreTools.FileTypes.Archives
                 {
                     // Get temporary date-time if possible
                     DateTime? usableDate = null;
-                    if (UseDates && !string.IsNullOrEmpty(baseFile.Date) && DateTime.TryParse(baseFile.Date.Replace('\\', '/'), out DateTime dt))
+                    if (UseDates && !string.IsNullOrEmpty(baseFile.Date) && DateTime.TryParse(baseFile.Date!.Replace('\\', '/'), out DateTime dt))
                         usableDate = dt;
 
                     // Copy the input stream to the output

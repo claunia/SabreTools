@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using SabreTools.Core;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 
@@ -8,7 +7,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents parsing and writing of an Everdrive SMDB file
     /// </summary>
-    internal sealed class EverdriveSMDB : SerializableDatFile<Models.EverdriveSMDB.MetadataFile, Serialization.Files.EverdriveSMDB, Serialization.CrossModel.EverdriveSMDB>
+    internal sealed class EverdriveSMDB : SerializableDatFile<Models.EverdriveSMDB.MetadataFile, Serialization.Deserializers.EverdriveSMDB, Serialization.Serializers.EverdriveSMDB, Serialization.CrossModel.EverdriveSMDB>
     {
         /// <summary>
         /// Constructor designed for casting a base DatFile

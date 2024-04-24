@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -10,7 +9,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents a Logiqx-derived DAT
     /// </summary>
-    internal sealed class Logiqx : SerializableDatFile<Models.Logiqx.Datafile, Serialization.Files.Logiqx, Serialization.CrossModel.Logiqx>
+    internal sealed class Logiqx : SerializableDatFile<Models.Logiqx.Datafile, Serialization.Deserializers.Logiqx, Serialization.Serializers.Logiqx, Serialization.CrossModel.Logiqx>
     {
         // Private instance variables specific to Logiqx DATs
         private readonly bool _deprecated;
@@ -356,12 +355,13 @@ namespace SabreTools.DatFiles.Formats
                 var metadata = ConvertMetadata(ignoreblanks);
                 var datafile = new Serialization.CrossModel.Logiqx().Deserialize(metadata);
 
+                // TODO: Reenable doctype writing
                 // Only write the doctype if we don't have No-Intro data
                 bool success;
                 if (string.IsNullOrEmpty(Header.GetStringFieldValue(Models.Metadata.Header.IdKey)))
-                    success = new Serialization.Files.Logiqx().SerializeToFileWithDocType(datafile!, outfile);
+                    success = Serialization.Serializers.Logiqx.SerializeFile(datafile!, outfile);
                 else
-                    success = new Serialization.Files.Logiqx().Serialize(datafile, outfile);
+                    success = Serialization.Serializers.Logiqx.SerializeFile(datafile, outfile);
 
                 if (!success)
                 {

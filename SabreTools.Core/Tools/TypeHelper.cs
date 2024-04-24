@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Serialization;
@@ -43,11 +44,37 @@ namespace SabreTools.Core.Tools
         /// </summary>
         public static string?[] GetDatItemTypeNames()
         {
-            return AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(a => a.GetTypes())
-                .Where(t => typeof(DatItem).IsAssignableFrom(t) && t.IsClass)
-                .Select(GetXmlRootAttributeElementName)
-                .ToArray();
+            List<string> typeNames = [];
+
+            // Loop through all loaded assemblies
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                // If not all types can be loaded, use the ones that could be
+                List<Type> assemblyTypes = [];
+                try
+                {
+                    assemblyTypes = assembly.GetTypes().ToList<Type>();
+                }
+                catch (ReflectionTypeLoadException rtle)
+                {
+                    assemblyTypes = rtle.Types.Where(t => t != null)!.ToList<Type>();
+                }
+
+                // Loop through all types 
+                foreach (Type type in assemblyTypes)
+                {
+                    // If the type isn't a class or doesn't implement the interface
+                    if (!type.IsClass || !typeof(DatItem).IsAssignableFrom(type))
+                        continue;
+
+                    // Get the XML type name
+                    string? elementName = GetXmlRootAttributeElementName(type);
+                    if (elementName != null)
+                        typeNames.Add(elementName);
+                }
+            }
+
+            return [.. typeNames];
         }
 
         /// <summary>
@@ -58,10 +85,39 @@ namespace SabreTools.Core.Tools
             if (string.IsNullOrEmpty(itemType))
                 return null;
 
-            return AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(a => a.GetTypes())
-                .Where(t => typeof(DatItem).IsAssignableFrom(t) && t.IsClass)
-                .FirstOrDefault(t => string.Equals(GetXmlRootAttributeElementName(t), itemType, StringComparison.OrdinalIgnoreCase));
+            // Loop through all loaded assemblies
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                // If not all types can be loaded, use the ones that could be
+                List<Type> assemblyTypes = [];
+                try
+                {
+                    assemblyTypes = assembly.GetTypes().ToList<Type>();
+                }
+                catch (ReflectionTypeLoadException rtle)
+                {
+                    assemblyTypes = rtle.Types.Where(t => t != null)!.ToList<Type>();
+                }
+
+                // Loop through all types 
+                foreach (Type type in assemblyTypes)
+                {
+                    // If the type isn't a class or doesn't implement the interface
+                    if (!type.IsClass || !typeof(DatItem).IsAssignableFrom(type))
+                        continue;
+
+                    // Get the XML type name
+                    string? elementName = GetXmlRootAttributeElementName(type);
+                    if (elementName == null)
+                        continue;
+
+                    // If the name matches
+                    if (string.Equals(elementName, itemType, StringComparison.OrdinalIgnoreCase))
+                        return type;
+                }
+            }
+
+            return null;
         }
 
         /// <summary>

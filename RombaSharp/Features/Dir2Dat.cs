@@ -5,7 +5,7 @@ using SabreTools.DatTools;
 using SabreTools.FileTypes;
 using SabreTools.Hashing;
 using SabreTools.Help;
-using SabreTools.IO;
+using SabreTools.IO.Extensions;
 
 namespace RombaSharp.Features
 {

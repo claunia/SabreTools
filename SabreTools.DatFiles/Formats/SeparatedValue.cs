@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using SabreTools.Core;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 
@@ -9,7 +8,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents a value-separated DAT
     /// </summary>
-    internal abstract class SeparatedValue : SerializableDatFile<Models.SeparatedValue.MetadataFile, Serialization.Files.SeparatedValue, Serialization.CrossModel.SeparatedValue>
+    internal abstract class SeparatedValue : SerializableDatFile<Models.SeparatedValue.MetadataFile, Serialization.Deserializers.SeparatedValue, Serialization.Serializers.SeparatedValue, Serialization.CrossModel.SeparatedValue>
     {
         // Private instance variables specific to Hashfile DATs
         protected char _delim;
@@ -29,7 +28,7 @@ namespace SabreTools.DatFiles.Formats
             try
             {
                 // Deserialize the input file
-                var metadataFile = new Serialization.Files.SeparatedValue().Deserialize(filename, _delim);
+                var metadataFile = Serialization.Deserializers.SeparatedValue.DeserializeFile(filename, _delim);
                 var metadata = new Serialization.CrossModel.SeparatedValue().Serialize(metadataFile);
 
                 // Convert to the internal format
@@ -101,7 +100,7 @@ namespace SabreTools.DatFiles.Formats
                 // Serialize the input file
                 var metadata = ConvertMetadata(ignoreblanks);
                 var metadataFile = new Serialization.CrossModel.SeparatedValue().Deserialize(metadata);
-                if (!(new Serialization.Files.SeparatedValue().Serialize(metadataFile, outfile, _delim)))
+                if (!(Serialization.Serializers.SeparatedValue.SerializeFile(metadataFile, outfile, _delim)))
                 {
                     logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
                     return false;

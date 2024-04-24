@@ -7,12 +7,14 @@ namespace SabreTools.DatFiles
     /// <summary>
     /// Represents a DAT that can be serialized
     /// </summary>
-    /// <typeparam name="T">Base internal model for the DAT type</typeparam>
-    /// <typeparam name="U">IFileSerializer type to use for conversion</typeparam>
-    /// <typeparam name="V">IModelSerializer for cross-model serialization</typeparam>
-    public abstract class SerializableDatFile<T, U, V> : DatFile
-        where U : IFileSerializer<T>
-        where V : IModelSerializer<T, MetadataFile>
+    /// <typeparam name="TModel">Base internal model for the DAT type</typeparam>
+    /// <typeparam name="TFileDeserializer">IFileDeserializer type to use for conversion</typeparam>
+    /// <typeparam name="TFileSerializer">IFileSerializer type to use for conversion</typeparam>
+    /// <typeparam name="TModelSerializer">IModelSerializer for cross-model serialization</typeparam>
+    public abstract class SerializableDatFile<TModel, TFileDeserializer, TFileSerializer, TModelSerializer> : DatFile
+        where TFileDeserializer : IFileDeserializer<TModel>
+        where TFileSerializer : IFileSerializer<TModel>
+        where TModelSerializer : IModelSerializer<TModel, MetadataFile>
     {
         /// <inheritdoc/>
         protected SerializableDatFile(DatFile? datFile) : base(datFile) { }
@@ -23,8 +25,8 @@ namespace SabreTools.DatFiles
             try
             {
                 // Deserialize the input file in two steps
-                var specificFormat = Activator.CreateInstance<U>().Deserialize(filename);
-                var internalFormat = Activator.CreateInstance<V>().Serialize(specificFormat);
+                var specificFormat = Activator.CreateInstance<TFileDeserializer>().Deserialize(filename);
+                var internalFormat = Activator.CreateInstance<TModelSerializer>().Serialize(specificFormat);
 
                 // Convert to the internal format
                 ConvertMetadata(internalFormat, filename, indexId, keep, statsOnly);
@@ -45,8 +47,8 @@ namespace SabreTools.DatFiles
 
                 // Serialize the input file in two steps
                 var internalFormat = ConvertMetadata(ignoreblanks);
-                var specificFormat = Activator.CreateInstance<V>().Deserialize(internalFormat);
-                if (!Activator.CreateInstance<U>().Serialize(specificFormat, outfile))
+                var specificFormat = Activator.CreateInstance<TModelSerializer>().Deserialize(internalFormat);
+                if (!Activator.CreateInstance<TFileSerializer>().Serialize(specificFormat, outfile))
                 {
                     logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
                     return false;
@@ -71,8 +73,8 @@ namespace SabreTools.DatFiles
 
                 // Serialize the input file in two steps
                 var internalFormat = ConvertMetadataDB(ignoreblanks);
-                var specificFormat = Activator.CreateInstance<V>().Deserialize(internalFormat);
-                if (!Activator.CreateInstance<U>().Serialize(specificFormat, outfile))
+                var specificFormat = Activator.CreateInstance<TModelSerializer>().Deserialize(internalFormat);
+                if (!Activator.CreateInstance<TFileSerializer>().Serialize(specificFormat, outfile))
                 {
                     logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
                     return false;

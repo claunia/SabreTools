@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using SabreTools.Core;
 using SabreTools.DatItems;
 
 namespace SabreTools.DatFiles.Formats
@@ -7,7 +6,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents an AttractMode DAT
     /// </summary>
-    internal sealed class AttractMode : SerializableDatFile<Models.AttractMode.MetadataFile, Serialization.Files.AttractMode, Serialization.CrossModel.AttractMode>
+    internal sealed class AttractMode : SerializableDatFile<Models.AttractMode.MetadataFile, Serialization.Deserializers.AttractMode, Serialization.Serializers.AttractMode, Serialization.CrossModel.AttractMode>
     {
         /// <summary>
         /// Constructor designed for casting a base DatFile

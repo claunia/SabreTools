@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using SabreTools.Core;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 
@@ -9,7 +8,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents parsing and writing of a SoftwareList
     /// </summary>
-    internal sealed class SoftwareList : SerializableDatFile<Models.SoftwareList.SoftwareList, Serialization.Files.SoftwareList, Serialization.CrossModel.SoftwareList>
+    internal sealed class SoftwareList : SerializableDatFile<Models.SoftwareList.SoftwareList, Serialization.Deserializers.SoftwareList, Serialization.Serializers.SoftwareList, Serialization.CrossModel.SoftwareList>
     {
         /// <summary>
         /// DTD for original MAME Software List DATs

@@ -1,17 +1,10 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-#if NET40_OR_GREATER || NETCOREAPP
-using System.Threading.Tasks;
-#endif
-using Compress.Support.Compression.LZMA;
-using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.FileTypes.Aaru;
 using SabreTools.FileTypes.CHD;
 using SabreTools.Hashing;
-using SabreTools.IO;
-using SabreTools.Logging;
+using SabreTools.IO.Extensions;
 using SabreTools.Matching;
 using SabreTools.Skippers;
 

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
 using SabreTools.Core.Tools;
 using SabreTools.FileTypes.Archives;
 using SabreTools.IO;
+using SabreTools.IO.Extensions;
 using SabreTools.Logging;
 
 namespace SabreTools.FileTypes

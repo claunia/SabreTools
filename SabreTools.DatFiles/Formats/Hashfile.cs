@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using SabreTools.Core;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
+using SabreTools.Hashing;
 
 namespace SabreTools.DatFiles.Formats
 {
     /// <summary>
     /// Represents a hashfile such as an SFV, MD5, or SHA-1 file
     /// </summary>
-    internal abstract class Hashfile : SerializableDatFile<Models.Hashfile.Hashfile, Serialization.Files.Hashfile, Serialization.CrossModel.Hashfile>
+    internal abstract class Hashfile : SerializableDatFile<Models.Hashfile.Hashfile, Serialization.Deserializers.Hashfile, Serialization.Serializers.Hashfile, Serialization.CrossModel.Hashfile>
     {
         // Private instance variables specific to Hashfile DATs
-        protected Serialization.Hash _hash;
+        protected HashType _hash;
 
         /// <summary>
         /// Constructor designed for casting a base DatFile
@@ -29,7 +29,7 @@ namespace SabreTools.DatFiles.Formats
             try
             {
                 // Deserialize the input file
-                var hashfile = new Serialization.Files.Hashfile().Deserialize(filename, _hash);
+                var hashfile = Serialization.Deserializers.Hashfile.DeserializeFile(filename, _hash);
                 var metadata = new Serialization.CrossModel.Hashfile().Serialize(hashfile);
 
                 // Convert to the internal format
@@ -65,7 +65,11 @@ namespace SabreTools.DatFiles.Formats
             // Check hash linked to specific Hashfile type
             switch (_hash)
             {
-                case Serialization.Hash.CRC:
+                case HashType.CRC32:
+                case HashType.CRC32_ISO:
+                case HashType.CRC32_Naive:
+                case HashType.CRC32_Optimized:
+                case HashType.CRC32_Parallel:
                     switch (datItem)
                     {
                         case Rom rom:
@@ -77,7 +81,7 @@ namespace SabreTools.DatFiles.Formats
                             break;
                     }
                     break;
-                case Serialization.Hash.MD5:
+                case HashType.MD5:
                     switch (datItem)
                     {
                         case Disk disk:
@@ -97,7 +101,7 @@ namespace SabreTools.DatFiles.Formats
                             break;
                     }
                     break;
-                case Serialization.Hash.SHA1:
+                case HashType.SHA1:
                     switch (datItem)
                     {
                         case Disk disk:
@@ -117,7 +121,7 @@ namespace SabreTools.DatFiles.Formats
                             break;
                     }
                     break;
-                case Serialization.Hash.SHA256:
+                case HashType.SHA256:
                     switch (datItem)
                     {
                         case Media medium:
@@ -133,7 +137,7 @@ namespace SabreTools.DatFiles.Formats
                             break;
                     }
                     break;
-                case Serialization.Hash.SHA384:
+                case HashType.SHA384:
                     switch (datItem)
                     {
                         case Rom rom:
@@ -145,7 +149,7 @@ namespace SabreTools.DatFiles.Formats
                             break;
                     }
                     break;
-                case Serialization.Hash.SHA512:
+                case HashType.SHA512:
                     switch (datItem)
                     {
                         case Rom rom:
@@ -157,7 +161,7 @@ namespace SabreTools.DatFiles.Formats
                             break;
                     }
                     break;
-                case Serialization.Hash.SpamSum:
+                case HashType.SpamSum:
                     switch (datItem)
                     {
                         case Media medium:
@@ -188,7 +192,7 @@ namespace SabreTools.DatFiles.Formats
                 // Serialize the input file
                 var metadata = ConvertMetadata(ignoreblanks);
                 var hashfile = new Serialization.CrossModel.Hashfile().Deserialize(metadata, _hash);
-                if (!(new Serialization.Files.Hashfile().Serialize(hashfile, outfile, _hash)))
+                if (!(Serialization.Serializers.Hashfile.SerializeFile(hashfile, outfile, _hash)))
                 {
                     logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
                     return false;
@@ -217,7 +221,7 @@ namespace SabreTools.DatFiles.Formats
         public SfvFile(DatFile? datFile)
             : base(datFile)
         {
-            _hash = Serialization.Hash.CRC;
+            _hash = HashType.CRC32;
         }
     }
 
@@ -233,7 +237,7 @@ namespace SabreTools.DatFiles.Formats
         public Md5File(DatFile? datFile)
             : base(datFile)
         {
-            _hash = Serialization.Hash.MD5;
+            _hash = HashType.MD5;
         }
     }
 
@@ -249,7 +253,7 @@ namespace SabreTools.DatFiles.Formats
         public Sha1File(DatFile? datFile)
             : base(datFile)
         {
-            _hash = Serialization.Hash.SHA1;
+            _hash = HashType.SHA1;
         }
     }
 
@@ -265,7 +269,7 @@ namespace SabreTools.DatFiles.Formats
         public Sha256File(DatFile? datFile)
             : base(datFile)
         {
-            _hash = Serialization.Hash.SHA256;
+            _hash = HashType.SHA256;
         }
     }
 
@@ -281,7 +285,7 @@ namespace SabreTools.DatFiles.Formats
         public Sha384File(DatFile? datFile)
             : base(datFile)
         {
-            _hash = Serialization.Hash.SHA384;
+            _hash = HashType.SHA384;
         }
     }
 
@@ -297,7 +301,7 @@ namespace SabreTools.DatFiles.Formats
         public Sha512File(DatFile? datFile)
             : base(datFile)
         {
-            _hash = Serialization.Hash.SHA512;
+            _hash = HashType.SHA512;
         }
     }
 
@@ -313,7 +317,7 @@ namespace SabreTools.DatFiles.Formats
         public SpamSumFile(DatFile? datFile)
             : base(datFile)
         {
-            _hash = Serialization.Hash.SpamSum;
+            _hash = HashType.SpamSum;
         }
     }
 }

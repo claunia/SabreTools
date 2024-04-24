@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using SabreTools.Core;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 
@@ -8,7 +7,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents a MAME Listrom file
     /// </summary>
-    internal sealed class Listrom : SerializableDatFile<Models.Listrom.MetadataFile, Serialization.Files.Listrom, Serialization.CrossModel.Listrom>
+    internal sealed class Listrom : SerializableDatFile<Models.Listrom.MetadataFile, Serialization.Deserializers.Listrom, Serialization.Serializers.Listrom, Serialization.CrossModel.Listrom>
     {
         /// <summary>
         /// Constructor designed for casting a base DatFile

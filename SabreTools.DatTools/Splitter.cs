@@ -11,7 +11,7 @@ using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
-using SabreTools.IO;
+using SabreTools.IO.Extensions;
 using SabreTools.Logging;
 using SabreTools.Matching;
 

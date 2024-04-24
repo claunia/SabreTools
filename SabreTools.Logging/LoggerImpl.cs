@@ -1,9 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-
-using SabreTools.Core;
-using SabreTools.IO;
+using SabreTools.IO.Extensions;
 
 namespace SabreTools.Logging
 {

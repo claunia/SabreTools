@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
 #endif
 using SabreTools.Core;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
-using SabreTools.IO;
+using SabreTools.IO.Extensions;
 using SabreTools.Logging;
 using SabreTools.Reports;
 

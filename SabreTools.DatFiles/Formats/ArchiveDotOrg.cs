@@ -5,7 +5,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents a Archive.org file list
     /// </summary>
-    internal sealed class ArchiveDotOrg : SerializableDatFile<Models.ArchiveDotOrg.Files, Serialization.Files.ArchiveDotOrg, Serialization.CrossModel.ArchiveDotOrg>
+    internal sealed class ArchiveDotOrg : SerializableDatFile<Models.ArchiveDotOrg.Files, Serialization.Deserializers.ArchiveDotOrg, Serialization.Serializers.ArchiveDotOrg, Serialization.CrossModel.ArchiveDotOrg>
     {
         /// <summary>
         /// Constructor designed for casting a base DatFile

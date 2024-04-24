@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -10,7 +9,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents a MAME/M1 XML DAT
     /// </summary>
-    internal sealed class Listxml : SerializableDatFile<Models.Listxml.Mame, Serialization.Files.Listxml, Serialization.CrossModel.Listxml>
+    internal sealed class Listxml : SerializableDatFile<Models.Listxml.Mame, Serialization.Deserializers.Listxml, Serialization.Serializers.Listxml, Serialization.CrossModel.Listxml>
     {
         /// <summary>
         /// DTD for original MAME XML DATs
@@ -193,11 +192,11 @@ namespace SabreTools.DatFiles.Formats
             try
             {
                 // Deserialize the input file
-                var mame = new Serialization.Files.Listxml().Deserialize(filename);
+                var mame = Serialization.Deserializers.Listxml.DeserializeFile(filename);
                 Models.Metadata.MetadataFile? metadata;
                 if (mame == null)
                 {
-                    var m1 = new Serialization.Files.M1().Deserialize(filename);
+                    var m1 = Serialization.Deserializers.M1.DeserializeFile(filename);
                     metadata = new Serialization.CrossModel.M1().Serialize(m1);
                 }
                 else

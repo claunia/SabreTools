@@ -12,7 +12,7 @@ using SabreTools.DatItems.Formats;
 using SabreTools.FileTypes;
 using SabreTools.FileTypes.Archives;
 using SabreTools.Hashing;
-using SabreTools.IO;
+using SabreTools.IO.Extensions;
 using SabreTools.Logging;
 using SabreTools.Skippers;
 

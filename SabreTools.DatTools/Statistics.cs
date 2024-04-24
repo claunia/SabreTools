@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using SabreTools.Core;
 using SabreTools.DatFiles;
 using SabreTools.IO;
+using SabreTools.IO.Extensions;
 using SabreTools.Logging;
 using SabreTools.Reports;
 

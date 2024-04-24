@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using SabreTools.Core;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 
@@ -8,7 +7,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents an openMSX softawre list XML DAT
     /// </summary>
-    internal sealed class OpenMSX : SerializableDatFile<Models.OpenMSX.SoftwareDb, Serialization.Files.OpenMSX, Serialization.CrossModel.OpenMSX>
+    internal sealed class OpenMSX : SerializableDatFile<Models.OpenMSX.SoftwareDb, Serialization.Deserializers.OpenMSX, Serialization.Serializers.OpenMSX, Serialization.CrossModel.OpenMSX>
     {
         /// <summary>
         /// DTD for original openMSX DATs

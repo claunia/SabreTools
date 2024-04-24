@@ -149,7 +149,7 @@ namespace SabreTools.FileTypes.Archives
                 SharpCompress.Archives.Rar.RarArchive ra = SharpCompress.Archives.Rar.RarArchive.Open(this.Filename, new ReaderOptions { LeaveStreamOpen = false, });
                 foreach (RarArchiveEntry entry in ra.Entries)
                 {
-                    if (entry != null && !entry.IsDirectory && entry.Key.Contains(entryName))
+                    if (entry?.Key != null && !entry.IsDirectory && entry.Key.Contains(entryName))
                     {
                         // Write the file out
                         realEntry = entry.Key;
@@ -248,19 +248,19 @@ namespace SabreTools.FileTypes.Archives
                 string? lastRarEntry = null;
                 foreach (RarArchiveEntry entry in rarEntries)
                 {
-                    if (entry != null)
+                    if (entry?.Key == null)
+                        continue;
+
+                    // If the current is a superset of last, we skip it
+                    if (lastRarEntry != null && lastRarEntry.StartsWith(entry.Key))
                     {
-                        // If the current is a superset of last, we skip it
-                        if (lastRarEntry != null && lastRarEntry.StartsWith(entry.Key))
-                        {
-                            // No-op
-                        }
-                        // If the entry is a directory, we add it
-                        else if (entry.IsDirectory)
-                        {
-                            empties.Add(entry.Key);
-                            lastRarEntry = entry.Key;
-                        }
+                        // No-op
+                    }
+                    // If the entry is a directory, we add it
+                    else if (entry.IsDirectory)
+                    {
+                        empties.Add(entry.Key);
+                        lastRarEntry = entry.Key;
                     }
                 }
             }

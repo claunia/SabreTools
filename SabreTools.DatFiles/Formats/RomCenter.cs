@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using SabreTools.Core;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 
@@ -8,7 +7,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents a RomCenter INI file
     /// </summary>
-    internal sealed class RomCenter : SerializableDatFile<Models.RomCenter.MetadataFile, Serialization.Files.RomCenter, Serialization.CrossModel.RomCenter>
+    internal sealed class RomCenter : SerializableDatFile<Models.RomCenter.MetadataFile, Serialization.Deserializers.RomCenter, Serialization.Serializers.RomCenter, Serialization.CrossModel.RomCenter>
     {
         /// <summary>
         /// Constructor designed for casting a base DatFile

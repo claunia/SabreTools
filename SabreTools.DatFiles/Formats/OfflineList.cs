@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using SabreTools.Core;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 
@@ -8,7 +7,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents an OfflineList XML DAT
     /// </summary>
-    internal sealed class OfflineList : SerializableDatFile<Models.OfflineList.Dat, Serialization.Files.OfflineList, Serialization.CrossModel.OfflineList>
+    internal sealed class OfflineList : SerializableDatFile<Models.OfflineList.Dat, Serialization.Deserializers.OfflineList, Serialization.Serializers.OfflineList, Serialization.CrossModel.OfflineList>
     {
         /// <summary>
         /// Constructor designed for casting a base DatFile

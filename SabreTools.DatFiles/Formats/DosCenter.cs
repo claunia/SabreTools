@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using SabreTools.Core;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 
@@ -8,7 +7,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents parsing and writing of a DosCenter DAT
     /// </summary>
-    internal sealed class DosCenter : SerializableDatFile<Models.DosCenter.MetadataFile, Serialization.Files.DosCenter, Serialization.CrossModel.DosCenter>
+    internal sealed class DosCenter : SerializableDatFile<Models.DosCenter.MetadataFile, Serialization.Deserializers.DosCenter, Serialization.Serializers.DosCenter, Serialization.CrossModel.DosCenter>
     {
         /// <summary>
         /// Constructor designed for casting a base DatFile
