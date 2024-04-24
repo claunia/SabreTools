@@ -23,14 +23,14 @@ namespace Compress.Support.Compression.PPmd.I1
     internal struct Pointer
     {
         public uint Address;
-        public byte[] Memory;
+        public byte[]? Memory;
         public static readonly Pointer Zero = new Pointer(0, null);
         public const int Size = 1;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Pointer"/> structure.
         /// </summary>
-        public Pointer(uint address, byte[] memory)
+        public Pointer(uint address, byte[]? memory)
         {
             Address = address;
             Memory = memory;
@@ -49,7 +49,7 @@ namespace Compress.Support.Compression.PPmd.I1
                 if (Address == 0)
                     throw new InvalidOperationException("The pointer being indexed is a null pointer.");
                 #endif
-                return Memory[Address + offset];
+                return Memory![Address + offset];
             }
             set
             {
@@ -57,7 +57,7 @@ namespace Compress.Support.Compression.PPmd.I1
                 if (Address == 0)
                     throw new InvalidOperationException("The pointer being indexed is a null pointer.");
                 #endif
-                Memory[Address + offset] = value;
+                Memory![Address + offset] = value;
             }
         }
 
@@ -297,7 +297,7 @@ namespace Compress.Support.Compression.PPmd.I1
         /// </summary>
         /// <returns>true if obj and this instance are the same type and represent the same value; otherwise, false.</returns>
         /// <param name="obj">Another object to compare to.</param>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is Pointer)
             {

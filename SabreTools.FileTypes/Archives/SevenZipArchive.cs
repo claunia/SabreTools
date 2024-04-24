@@ -115,28 +115,28 @@ namespace SabreTools.FileTypes.Archives
                 for (int i = 0; i < zf.LocalFilesCount() && zr == ZipReturn.ZipGood; i++)
                 {
                     // Open the read stream
-                    zr = zf.ZipFileOpenReadStream(i, out Stream readStream, out ulong streamsize);
+                    zr = zf.ZipFileOpenReadStream(i, out Stream? readStream, out ulong streamsize);
 
                     // Create the rest of the path, if needed
                     if (!string.IsNullOrEmpty(Path.GetDirectoryName(zf.GetLocalFile(i).Filename)))
                         Directory.CreateDirectory(Path.Combine(outDir, Path.GetDirectoryName(zf.GetLocalFile(i).Filename)!));
 
                     // If the entry ends with a directory separator, continue to the next item, if any
-                    if (zf.GetLocalFile(i).Filename.EndsWith(Path.DirectorySeparatorChar.ToString())
-                        || zf.GetLocalFile(i).Filename.EndsWith(Path.AltDirectorySeparatorChar.ToString())
-                        || zf.GetLocalFile(i).Filename.EndsWith(Path.PathSeparator.ToString()))
+                    if (zf.GetLocalFile(i).Filename!.EndsWith(Path.DirectorySeparatorChar.ToString())
+                        || zf.GetLocalFile(i).Filename!.EndsWith(Path.AltDirectorySeparatorChar.ToString())
+                        || zf.GetLocalFile(i).Filename!.EndsWith(Path.PathSeparator.ToString()))
                     {
                         zf.ZipFileCloseReadStream();
                         continue;
                     }
 
-                    FileStream writeStream = File.Create(Path.Combine(outDir, zf.GetLocalFile(i).Filename));
+                    FileStream writeStream = File.Create(Path.Combine(outDir, zf.GetLocalFile(i).Filename!));
 
                     // If the stream is smaller than the buffer, just run one loop through to avoid issues
                     if (streamsize < _bufferSize)
                     {
                         byte[] ibuffer = new byte[streamsize];
-                        int ilen = readStream.Read(ibuffer, 0, (int)streamsize);
+                        int ilen = readStream!.Read(ibuffer, 0, (int)streamsize);
                         writeStream.Write(ibuffer, 0, ilen);
                         writeStream.Flush();
                     }
@@ -146,7 +146,7 @@ namespace SabreTools.FileTypes.Archives
                         int realBufferSize = (streamsize < _bufferSize ? (int)streamsize : _bufferSize);
                         byte[] ibuffer = new byte[realBufferSize];
                         int ilen;
-                        while ((ilen = readStream.Read(ibuffer, 0, realBufferSize)) > 0)
+                        while ((ilen = readStream!.Read(ibuffer, 0, realBufferSize)) > 0)
                         {
                             writeStream.Write(ibuffer, 0, ilen);
                             writeStream.Flush();
@@ -241,17 +241,17 @@ namespace SabreTools.FileTypes.Archives
 
                 for (int i = 0; i < zf.LocalFilesCount() && zr == ZipReturn.ZipGood; i++)
                 {
-                    if (zf.GetLocalFile(i).Filename.Contains(entryName))
+                    if (zf.GetLocalFile(i).Filename!.Contains(entryName))
                     {
                         // Open the read stream
                         realEntry = zf.GetLocalFile(i).Filename;
-                        zr = zf.ZipFileOpenReadStream(i, out Stream readStream, out ulong streamsize);
+                        zr = zf.ZipFileOpenReadStream(i, out Stream? readStream, out ulong streamsize);
 
                         // If the stream is smaller than the buffer, just run one loop through to avoid issues
                         if (streamsize < _bufferSize)
                         {
                             byte[] ibuffer = new byte[streamsize];
-                            int ilen = readStream.Read(ibuffer, 0, (int)streamsize);
+                            int ilen = readStream!.Read(ibuffer, 0, (int)streamsize);
                             ms.Write(ibuffer, 0, ilen);
                             ms.Flush();
                         }
@@ -262,13 +262,13 @@ namespace SabreTools.FileTypes.Archives
                             int ilen;
                             while (streamsize > _bufferSize)
                             {
-                                ilen = readStream.Read(ibuffer, 0, _bufferSize);
+                                ilen = readStream!.Read(ibuffer, 0, _bufferSize);
                                 ms.Write(ibuffer, 0, ilen);
                                 ms.Flush();
                                 streamsize -= _bufferSize;
                             }
 
-                            ilen = readStream.Read(ibuffer, 0, (int)streamsize);
+                            ilen = readStream!.Read(ibuffer, 0, (int)streamsize);
                             ms.Write(ibuffer, 0, ilen);
                             ms.Flush();
                         }
@@ -317,15 +317,15 @@ namespace SabreTools.FileTypes.Archives
                 {
                     // If the entry is a directory (or looks like a directory), we don't want to open it
                     if (zf.GetLocalFile(i).IsDirectory
-                        || zf.GetLocalFile(i).Filename.EndsWith(Path.DirectorySeparatorChar.ToString())
-                        || zf.GetLocalFile(i).Filename.EndsWith(Path.AltDirectorySeparatorChar.ToString())
-                        || zf.GetLocalFile(i).Filename.EndsWith(Path.PathSeparator.ToString()))
+                        || zf.GetLocalFile(i).Filename!.EndsWith(Path.DirectorySeparatorChar.ToString())
+                        || zf.GetLocalFile(i).Filename!.EndsWith(Path.AltDirectorySeparatorChar.ToString())
+                        || zf.GetLocalFile(i).Filename!.EndsWith(Path.PathSeparator.ToString()))
                     {
                         continue;
                     }
 
                     // Open the read stream
-                    zr = zf.ZipFileOpenReadStream(i, out Stream readStream, out ulong streamsize);
+                    zr = zf.ZipFileOpenReadStream(i, out Stream? readStream, out ulong streamsize);
 
                     // If we get a read error, log it and continue
                     if (zr != ZipReturn.ZipGood)
@@ -390,7 +390,7 @@ namespace SabreTools.FileTypes.Archives
                 List<(string, bool)> zipEntries = [];
                 for (int i = 0; i < zf.LocalFilesCount(); i++)
                 {
-                    zipEntries.Add((zf.GetLocalFile(i).Filename, zf.GetLocalFile(i).IsDirectory));
+                    zipEntries.Add((zf.GetLocalFile(i).Filename!, zf.GetLocalFile(i).IsDirectory));
                 }
 
                 zipEntries = zipEntries.OrderBy(p => p.Item1, new NaturalReversedComparer()).ToList();
@@ -528,7 +528,7 @@ namespace SabreTools.FileTypes.Archives
                     var oldZipFileContents = new List<string>();
                     for (int i = 0; i < oldZipFile.LocalFilesCount(); i++)
                     {
-                        oldZipFileContents.Add(oldZipFile.GetLocalFile(i).Filename);
+                        oldZipFileContents.Add(oldZipFile.GetLocalFile(i).Filename!);
                     }
 
                     // If the old one doesn't contain the new file, then add it
@@ -540,7 +540,7 @@ namespace SabreTools.FileTypes.Archives
                     // Then add all of the old entries to it too
                     for (int i = 0; i < oldZipFile.LocalFilesCount(); i++)
                     {
-                        inputIndexMap.Add(oldZipFile.GetLocalFile(i).Filename, i);
+                        inputIndexMap.Add(oldZipFile.GetLocalFile(i).Filename!, i);
                     }
 
                     // If the number of entries is the same as the old archive, skip out
@@ -600,15 +600,15 @@ namespace SabreTools.FileTypes.Archives
                         else
                         {
                             // Instantiate the streams
-                            oldZipFile.ZipFileOpenReadStream(index, out Stream zreadStream, out ulong istreamSize);
-                            zipFile.ZipFileOpenWriteStream(false, true, oldZipFile.GetLocalFile(index).Filename, istreamSize, 0, out writeStream, null);
+                            oldZipFile.ZipFileOpenReadStream(index, out Stream? zreadStream, out ulong istreamSize);
+                            zipFile.ZipFileOpenWriteStream(false, true, oldZipFile.GetLocalFile(index).Filename!, istreamSize, 0, out writeStream, null);
 
                             // Copy the input stream to the output
                             if (writeStream != null)
                             {
                                 byte[] ibuffer = new byte[_bufferSize];
                                 int ilen;
-                                while ((ilen = zreadStream.Read(ibuffer, 0, _bufferSize)) > 0)
+                                while ((ilen = zreadStream!.Read(ibuffer, 0, _bufferSize)) > 0)
                                 {
                                     writeStream.Write(ibuffer, 0, ilen);
                                     writeStream.Flush();
@@ -616,7 +616,7 @@ namespace SabreTools.FileTypes.Archives
                             }
 
                             oldZipFile.ZipFileCloseReadStream();
-                            zipFile.ZipFileCloseWriteStream(oldZipFile.GetLocalFile(index).CRC);
+                            zipFile.ZipFileCloseWriteStream(oldZipFile.GetLocalFile(index).CRC!);
                         }
                     }
                 }
@@ -752,7 +752,7 @@ namespace SabreTools.FileTypes.Archives
                         var oldZipFileContents = new List<string>();
                         for (int j = 0; j < oldZipFile.LocalFilesCount(); j++)
                         {
-                            oldZipFileContents.Add(oldZipFile.GetLocalFile(j).Filename);
+                            oldZipFileContents.Add(oldZipFile.GetLocalFile(j).Filename!);
                         }
 
                         // If the old one contains the new file, then just skip out
@@ -767,7 +767,7 @@ namespace SabreTools.FileTypes.Archives
                     // Then add all of the old entries to it too
                     for (int i = 0; i < oldZipFile.LocalFilesCount(); i++)
                     {
-                        inputIndexMap.Add(oldZipFile.GetLocalFile(i).Filename, i);
+                        inputIndexMap.Add(oldZipFile.GetLocalFile(i).Filename!, i);
                     }
 
                     // If the number of entries is the same as the old archive, skip out
@@ -825,19 +825,19 @@ namespace SabreTools.FileTypes.Archives
                         else
                         {
                             // Instantiate the streams
-                            oldZipFile.ZipFileOpenReadStream(index, out Stream zreadStream, out ulong istreamSize);
-                            zipFile.ZipFileOpenWriteStream(false, true, oldZipFile.GetLocalFile(index).Filename, istreamSize, 0, out writeStream, null);
+                            oldZipFile.ZipFileOpenReadStream(index, out Stream? zreadStream, out ulong istreamSize);
+                            zipFile.ZipFileOpenWriteStream(false, true, oldZipFile.GetLocalFile(index).Filename!, istreamSize, 0, out writeStream, null);
 
                             // Copy the input stream to the output
                             byte[] ibuffer = new byte[_bufferSize];
                             int ilen;
-                            while ((ilen = zreadStream.Read(ibuffer, 0, _bufferSize)) > 0)
+                            while ((ilen = zreadStream!.Read(ibuffer, 0, _bufferSize)) > 0)
                             {
                                 writeStream!.Write(ibuffer, 0, ilen);
                                 writeStream.Flush();
                             }
 
-                            zipFile.ZipFileCloseWriteStream(oldZipFile.GetLocalFile(index).CRC);
+                            zipFile.ZipFileCloseWriteStream(oldZipFile.GetLocalFile(index).CRC!);
                         }
                     }
                 }

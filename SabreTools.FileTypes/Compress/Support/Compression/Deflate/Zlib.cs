@@ -371,13 +371,13 @@ namespace Compress.Support.Compression.Deflate
         internal static readonly StaticTree Distances;
         internal static readonly StaticTree BitLengths;
 
-        internal short[] treeCodes; // static tree or null
-        internal int[] extraBits;   // extra bits for each code or null
+        internal short[]? treeCodes; // static tree or null
+        internal int[]? extraBits;   // extra bits for each code or null
         internal int extraBase;     // base index for extra_bits
         internal int elems;         // max number of elements in the tree
         internal int maxLength;     // max bit length for the codes
 
-        private StaticTree(short[] treeCodes, int[] extraBits, int extraBase, int elems, int maxLength)
+        private StaticTree(short[]? treeCodes, int[] extraBits, int extraBase, int elems, int maxLength)
         {
             this.treeCodes = treeCodes;
             this.extraBits = extraBits;
@@ -428,7 +428,7 @@ namespace Compress.Support.Compression.Deflate
         ///    adler = Adler.Adler32(adler, buffer, index, length);
         ///  </code>
         /// </example>
-        public static uint Adler32(uint adler, byte[] buf, int index, int len)
+        public static uint Adler32(uint adler, byte[]? buf, int index, int len)
         {
             if (buf == null)
                 return 1;

@@ -38,7 +38,7 @@ namespace Compress.ZipFile
             if (localFilesCount > 0)
             {
                 // check that filenames are in trrntzip order
-                string lastFilename = _localFiles[localFilesCount - 1].Filename;
+                string lastFilename = _localFiles[localFilesCount - 1].Filename!;
                 if (CompressUtils.TrrntZipStringCompare(lastFilename, filename) > 0)
                     validTrrntzip = ZipReturn.ZipTrrntzipIncorrectFileOrder;
 

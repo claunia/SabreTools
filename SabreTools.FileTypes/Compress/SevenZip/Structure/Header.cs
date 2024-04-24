@@ -7,8 +7,8 @@ namespace Compress.SevenZip.Structure
 {
     public class Header
     {
-        public StreamsInfo StreamsInfo;
-        public FileInfo FileInfo;
+        public StreamsInfo? StreamsInfo;
+        public FileInfo? FileInfo;
 
         public void Read(BinaryReader br)
         {
@@ -40,12 +40,12 @@ namespace Compress.SevenZip.Structure
         public void WriteHeader(BinaryWriter bw)
         {
             bw.Write((byte)HeaderProperty.kHeader);
-            StreamsInfo.Write(bw);
-            FileInfo.Write(bw);
+            StreamsInfo!.Write(bw);
+            FileInfo!.Write(bw);
             bw.Write((byte)HeaderProperty.kEnd);
         }
 
-        public static ZipReturn ReadHeaderOrPackedHeader(Stream stream, long baseOffset, out Header header)
+        public static ZipReturn ReadHeaderOrPackedHeader(Stream stream, long baseOffset, out Header? header)
         {
             header = null;
 
@@ -62,25 +62,25 @@ namespace Compress.SevenZip.Structure
                         StreamsInfo streamsInfo = new();
                         streamsInfo.Read(br);
 
-                        if (streamsInfo.Folders.Length > 1)
+                        if (streamsInfo.Folders!.Length > 1)
                         {
                             return ZipReturn.ZipUnsupportedCompression;
                         }
 
                         Folder firstFolder = streamsInfo.Folders[0];
-                        if (firstFolder.Coders.Length > 1)
+                        if (firstFolder.Coders!.Length > 1)
                         {
                             return ZipReturn.ZipUnsupportedCompression;
                         }
 
-                        byte[] method = firstFolder.Coders[0].Method;
+                        byte[] method = firstFolder.Coders[0].Method!;
                         if (!((method.Length == 3) && (method[0] == 3) && (method[1] == 1) && (method[2] == 1))) // LZMA
                         {
                             return ZipReturn.ZipUnsupportedCompression;
                         }
 
                         stream.Seek(baseOffset + (long)streamsInfo.PackPosition, SeekOrigin.Begin);
-                        using (LzmaStream decoder = new(firstFolder.Coders[0].Properties, stream))
+                        using (LzmaStream decoder = new(firstFolder.Coders[0].Properties!, stream))
                         {
                             ZipReturn zr = ReadHeaderOrPackedHeader(decoder, baseOffset, out header);
                             if (zr != ZipReturn.ZipGood)

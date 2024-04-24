@@ -12,11 +12,11 @@ namespace Compress.gZip
 {
     public class gZip : ICompress
     {
-        private FileInfo _zipFileInfo;
-        private Stream _zipFs;
-        private Stream _compressionStream;
+        private FileInfo? _zipFileInfo;
+        private Stream? _zipFs;
+        private Stream? _compressionStream;
 
-        private byte[] CRC;
+        private byte[]? CRC;
         private ulong UnCompressedSize;
         public ulong CompressedSize { get; private set; }
         private uint MTime;
@@ -35,7 +35,7 @@ namespace Compress.gZip
             {
                 Filename = Path.GetFileName(ZipFilename),
                 UncompressedSize = UnCompressedSize,
-                CRC = this.CRC,
+                CRC = this.CRC!,
                 IsDirectory = false,
                 ModifiedTime = MTime == 0 ? null : (long?)CompressUtils.UtcTicksFromUnixDateTime((int)MTime)
             };
@@ -98,7 +98,7 @@ namespace Compress.gZip
 
         }
 
-        public ZipReturn ZipFileOpen(Stream inStream)
+        public ZipReturn ZipFileOpen(Stream? inStream)
         {
             ZipFileClose();
             ZipStatus = ZipStatus.None;
@@ -112,9 +112,9 @@ namespace Compress.gZip
         private ZipReturn ZipFileReadHeaders()
         {
 #if NET20 || NET35 || NET40
-            using BinaryReader zipBr = new(_zipFs, Encoding.UTF8);
+            using BinaryReader zipBr = new(_zipFs!, Encoding.UTF8);
 #else
-            using BinaryReader zipBr = new(_zipFs, Encoding.UTF8, true);
+            using BinaryReader zipBr = new(_zipFs!, Encoding.UTF8, true);
 #endif
 
             byte ID1 = zipBr.ReadByte();
@@ -122,14 +122,14 @@ namespace Compress.gZip
 
             if ((ID1 != 0x1f) || (ID2 != 0x8b))
             {
-                _zipFs.Close();
+                _zipFs!.Close();
                 return ZipReturn.ZipSignatureError;
             }
 
             byte CM = zipBr.ReadByte();
             if (CM != 8)
             {
-                _zipFs.Close();
+                _zipFs!.Close();
                 return ZipReturn.ZipUnsupportedCompression;
             }
 
@@ -214,7 +214,7 @@ namespace Compress.gZip
                 uint crc16 = zipBr.ReadUInt16();
             }
 
-            CompressedSize = (ulong)(_zipFs.Length - _zipFs.Position) - 8;
+            CompressedSize = (ulong)(_zipFs!.Length - _zipFs.Position) - 8;
 
             dataStartPos = _zipFs.Position;
 
@@ -283,12 +283,12 @@ namespace Compress.gZip
             }
         }
 
-        public ZipReturn ZipFileOpenReadStream(int index, out Stream stream, out ulong streamSize)
+        public ZipReturn ZipFileOpenReadStream(int index, out Stream? stream, out ulong streamSize)
         {
             return ZipFileOpenReadStream(index, false, out stream, out streamSize);
         }
 
-        public ZipReturn ZipFileOpenReadStream(int index, bool raw, out Stream stream, out ulong streamSize)
+        public ZipReturn ZipFileOpenReadStream(int index, bool raw, out Stream? stream, out ulong streamSize)
         {
             ZipFileCloseReadStream();
             stream = null;
@@ -299,7 +299,7 @@ namespace Compress.gZip
                 return ZipReturn.ZipReadingFromOutputFile;
             }
 
-            _zipFs.Position = dataStartPos;
+            _zipFs!.Position = dataStartPos;
             if (raw)
             {
                 stream = _zipFs;
@@ -316,14 +316,14 @@ namespace Compress.gZip
             return ZipReturn.ZipGood;
         }
 
-        public byte[] ExtraData;
+        public byte[]? ExtraData;
 
-        public ZipReturn ZipFileOpenWriteStream(bool raw, bool trrntzip, string filename, ulong unCompressedSize, ushort compressionMethod, out Stream stream, TimeStamps dateTime)
+        public ZipReturn ZipFileOpenWriteStream(bool raw, bool trrntzip, string filename, ulong unCompressedSize, ushort compressionMethod, out Stream? stream, TimeStamps? dateTime)
         {
 #if NET20 || NET35 || NET40
-            using (BinaryWriter zipBw = new(_zipFs, Encoding.UTF8))
+            using (BinaryWriter zipBw = new(_zipFs!, Encoding.UTF8))
 #else
-            using (BinaryWriter zipBw = new(_zipFs, Encoding.UTF8, true))
+            using (BinaryWriter zipBw = new(_zipFs!, Encoding.UTF8, true))
 #endif
             {
                 UnCompressedSize = unCompressedSize;
@@ -355,7 +355,7 @@ namespace Compress.gZip
 
                 _compressionStream = raw
                            ? _zipFs
-                           : new ZlibBaseStream(_zipFs, CompressionMode.Compress, CompressionLevel.BestCompression, ZlibStreamFlavor.DEFLATE, true);
+                           : new ZlibBaseStream(_zipFs!, CompressionMode.Compress, CompressionLevel.BestCompression, ZlibStreamFlavor.DEFLATE, true);
 
                 zipBw.Flush();
                 zipBw.Close();
@@ -428,7 +428,7 @@ namespace Compress.gZip
 
             _compressionStream = null;
 
-            CompressedSize = (ulong)(_zipFs.Position - dataStartPos);
+            CompressedSize = (ulong)(_zipFs!.Position - dataStartPos);
 
 #if NET20 || NET35 || NET40
             using (BinaryWriter zipBw = new(_zipFs, Encoding.UTF8))
@@ -449,7 +449,7 @@ namespace Compress.gZip
 
                 if (ExtraData == null)
                 {
-                    zipBw.Write(CRC); // 4 bytes
+                    zipBw.Write(CRC!); // 4 bytes
                     zipBw.Write(UnCompressedSize); // 8 bytes
                 }
                 else
@@ -468,7 +468,7 @@ namespace Compress.gZip
 
         public ZipReturn ZipFileRollBack()
         {
-            _zipFs.Position = dataStartPos;
+            _zipFs!.Position = dataStartPos;
             return ZipReturn.ZipGood;
         }
 
@@ -490,17 +490,17 @@ namespace Compress.gZip
                 return;
             }
 
-            _zipFs.Flush();
+            _zipFs!.Flush();
             _zipFs.Close();
             _zipFs.Dispose();
-            RVIO.File.Delete(_zipFileInfo.FullName);
+            RVIO.File.Delete(_zipFileInfo!.FullName);
             _zipFileInfo = null;
             ZipOpen = ZipOpenType.Closed;
         }
-        public ZipReturn GetRawStream(out Stream st)
+        public ZipReturn GetRawStream(out Stream? st)
         {
             st = null;
-            if (!RVIO.File.Exists(_zipFileInfo.FullName))
+            if (!RVIO.File.Exists(_zipFileInfo!.FullName))
             {
                 return ZipReturn.ZipErrorFileNotFound;
             }
@@ -515,7 +515,7 @@ namespace Compress.gZip
                 return ZipReturn.ZipErrorOpeningFile;
             }
 
-            st.Position = dataStartPos;
+            st!.Position = dataStartPos;
 
             return ZipReturn.ZipGood;
         }

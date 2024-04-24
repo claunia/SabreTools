@@ -90,7 +90,7 @@ namespace Compress.Support.Compression.Deflate
         /// <summary>
         /// The buffer from which data is taken.
         /// </summary>
-        public byte[] InputBuffer;
+        public byte[]? InputBuffer;
 
         /// <summary>
         /// An index into the InputBuffer array, indicating where to start reading. 
@@ -114,7 +114,7 @@ namespace Compress.Support.Compression.Deflate
         /// <summary>
         /// Buffer to store output data.
         /// </summary>
-        public byte[] OutputBuffer;
+        public byte[]? OutputBuffer;
 
         /// <summary>
         /// An index into the OutputBuffer array, indicating where to start writing. 
@@ -138,10 +138,10 @@ namespace Compress.Support.Compression.Deflate
         /// <summary>
         /// used for diagnostics, when something goes wrong!
         /// </summary>
-        public System.String Message;
+        public System.String? Message;
 
-        internal DeflateManager dstate;
-        internal InflateManager istate;
+        internal DeflateManager? dstate;
+        internal InflateManager? istate;
 
         internal uint _Adler32;
 
@@ -659,15 +659,15 @@ namespace Compress.Support.Compression.Deflate
         // (See also read_buf()).
         internal void flush_pending()
         {
-            int len = dstate.pendingCount;
+            int len = dstate!.pendingCount;
 
             if (len > AvailableBytesOut)
                 len = AvailableBytesOut;
             if (len == 0)
                 return;
 
-            if (dstate.pending.Length <= dstate.nextPending ||
-                OutputBuffer.Length <= NextOut ||
+            if (dstate!.pending!.Length <= dstate.nextPending ||
+                OutputBuffer!.Length <= NextOut ||
                 dstate.pending.Length < (dstate.nextPending + len) ||
                 OutputBuffer.Length < (NextOut + len))
             {
@@ -704,11 +704,11 @@ namespace Compress.Support.Compression.Deflate
 
             AvailableBytesIn -= len;
 
-            if (dstate.WantRfc1950HeaderBytes)
+            if (dstate!.WantRfc1950HeaderBytes)
             {
                 _Adler32 = Adler.Adler32(_Adler32, InputBuffer, NextIn, len);
             }
-            Array.Copy(InputBuffer, NextIn, buf, start, len);
+            Array.Copy(InputBuffer!, NextIn, buf, start, len);
             NextIn += len;
             TotalBytesIn += len;
             return len;

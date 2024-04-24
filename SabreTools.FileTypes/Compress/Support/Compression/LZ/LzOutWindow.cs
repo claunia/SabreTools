@@ -4,13 +4,13 @@ namespace Compress.Support.Compression.LZ
 {
     internal class OutWindow
     {
-        byte[] _buffer = null;
+        byte[]? _buffer = null;
         int _windowSize = 0;
         int _pos;
         int _streamPos;
         int _pendingLen;
         int _pendingDist;
-        System.IO.Stream _stream;
+        System.IO.Stream? _stream;
 
         public long Total;
         public long Limit;
@@ -20,7 +20,7 @@ namespace Compress.Support.Compression.LZ
             if (_windowSize != windowSize)
                 _buffer = new byte[windowSize];
             else
-                _buffer[windowSize - 1] = 0;
+                _buffer![windowSize - 1] = 0;
             _windowSize = windowSize;
             _pos = 0;
             _streamPos = 0;
@@ -67,7 +67,7 @@ namespace Compress.Support.Compression.LZ
             int size = _pos - _streamPos;
             if (size == 0)
                 return;
-            _stream.Write(_buffer, _streamPos, size);
+            _stream.Write(_buffer!, _streamPos, size);
             if (_pos >= _windowSize)
                 _pos = 0;
             _streamPos = _pos;
@@ -83,7 +83,7 @@ namespace Compress.Support.Compression.LZ
             {
                 if (pos >= _windowSize)
                     pos = 0;
-                _buffer[_pos++] = _buffer[pos++];
+                _buffer![_pos++] = _buffer[pos++];
                 Total++;
                 if (_pos >= _windowSize)
                     Flush();
@@ -94,7 +94,7 @@ namespace Compress.Support.Compression.LZ
 
         public void PutByte(byte b)
         {
-            _buffer[_pos++] = b;
+            _buffer![_pos++] = b;
             Total++;
             if (_pos >= _windowSize)
                 Flush();
@@ -105,7 +105,7 @@ namespace Compress.Support.Compression.LZ
             int pos = _pos - distance - 1;
             if (pos < 0)
                 pos += _windowSize;
-            return _buffer[pos];
+            return _buffer![pos];
         }
 
         public int CopyStream(System.IO.Stream stream, int len)
@@ -118,7 +118,7 @@ namespace Compress.Support.Compression.LZ
                     curSize = (int)(Limit - Total);
                 if (curSize > size)
                     curSize = size;
-                int numReadBytes = stream.Read(_buffer, _pos, curSize);
+                int numReadBytes = stream.Read(_buffer!, _pos, curSize);
                 if (numReadBytes == 0)
                     throw new DataErrorException();
                 size -= numReadBytes;
@@ -159,7 +159,7 @@ namespace Compress.Support.Compression.LZ
             int size = _pos - _streamPos;
             if (size > count)
                 size = count;
-            System.Buffer.BlockCopy(_buffer, _streamPos, buffer, offset, size);
+            System.Buffer.BlockCopy(_buffer!, _streamPos, buffer, offset, size);
             _streamPos += size;
             if (_streamPos >= _windowSize)
             {

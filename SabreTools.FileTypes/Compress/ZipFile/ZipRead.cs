@@ -101,7 +101,7 @@ namespace Compress.ZipFile
                     return zRet;
                 }
 
-                ulong endOfCentralDir = (ulong)_zipFs.Position;
+                ulong endOfCentralDir = (ulong)_zipFs!.Position;
                 zRet = EndOfCentralDirRead();
                 if (zRet != ZipReturn.ZipGood)
                 {
@@ -198,7 +198,7 @@ namespace Compress.ZipFile
                 {
                     for (int i = 0; i < _localFilesCount - 1; i++)
                     {
-                        if (CompressUtils.TrrntZipStringCompare(_localFiles[i].Filename, _localFiles[i + 1].Filename) < 0)
+                        if (CompressUtils.TrrntZipStringCompare(_localFiles[i].Filename!, _localFiles[i + 1].Filename!) < 0)
                         {
                             continue;
                         }
@@ -213,14 +213,14 @@ namespace Compress.ZipFile
                     for (int i = 0; i < _localFilesCount - 1; i++)
                     {
                         // see if we found a directory
-                        string filename0 = _localFiles[i].Filename;
+                        string filename0 = _localFiles[i].Filename!;
                         if (filename0.Substring(filename0.Length - 1, 1) != "/")
                         {
                             continue;
                         }
 
                         // see if the next file is in that directory
-                        string filename1 = _localFiles[i + 1].Filename;
+                        string filename1 = _localFiles[i + 1].Filename!;
                         if (filename1.Length <= filename0.Length)
                         {
                             continue;

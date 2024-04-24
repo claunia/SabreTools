@@ -151,7 +151,7 @@ namespace Compress.Support.Compression.Deflate
         }
 
 
-        private CompressFunc DeflateFunction;
+        private CompressFunc? DeflateFunction;
 
         private static readonly System.String[] _ErrorMessage = new System.String[]
         {
@@ -197,9 +197,9 @@ namespace Compress.Support.Compression.Deflate
 
         private static readonly int END_BLOCK = 256;
 
-        internal ZlibCodec _codec; // the zlib encoder/decoder
+        internal ZlibCodec? _codec; // the zlib encoder/decoder
         internal int status;       // as the name implies
-        internal byte[] pending;   // output still pending - waiting to be compressed
+        internal byte[]? pending;   // output still pending - waiting to be compressed
         internal int nextPending;  // index of next pending byte to output to the stream
         internal int pendingCount; // number of bytes in the pending buffer
 
@@ -211,7 +211,7 @@ namespace Compress.Support.Compression.Deflate
         internal int w_mask;       // w_size - 1
 
         //internal byte[] dictionary;
-        internal byte[] window;
+        internal byte[]? window;
 
         // Sliding window. Input bytes are read into the second half of the window,
         // and move to the first half later to keep a dictionary of at least wSize
@@ -225,12 +225,12 @@ namespace Compress.Support.Compression.Deflate
         // Actual size of window: 2*wSize, except when the user input buffer
         // is directly used as sliding window.
 
-        internal short[] prev;
+        internal short[]? prev;
         // Link to older string with same hash index. To limit the size of this
         // array to 64K, this link is maintained only for the last 32K strings.
         // An index in this array is thus a window InStreamIndex modulo 32K.
 
-        internal short[] head;  // Heads of the hash chains or NIL.
+        internal short[]? head;  // Heads of the hash chains or NIL.
 
         internal int ins_h;     // hash index of string to be inserted
         internal int hash_size; // number of elements in hash table
@@ -248,7 +248,7 @@ namespace Compress.Support.Compression.Deflate
 
         internal int block_start;
 
-        Config config;
+        Config? config;
         internal int match_length;    // length of best match
         internal int prev_match;      // previous match
         internal int match_available; // set if previous match exists
@@ -268,9 +268,9 @@ namespace Compress.Support.Compression.Deflate
         internal CompressionStrategy compressionStrategy; // favor or force Huffman coding
 
 
-        internal short[] dyn_ltree;         // literal and length tree
-        internal short[] dyn_dtree;         // distance tree
-        internal short[] bl_tree;           // Huffman tree for bit lengths
+        internal short[]? dyn_ltree;         // literal and length tree
+        internal short[]? dyn_dtree;         // distance tree
+        internal short[]? bl_tree;           // Huffman tree for bit lengths
 
         internal Tree treeLiterals = new Tree();  // desc for literal tree
         internal Tree treeDistances = new Tree();  // desc for distance tree
@@ -349,7 +349,7 @@ namespace Compress.Support.Compression.Deflate
             window_size = 2 * w_size;
 
             // clear the hash - workitem 9063
-            Array.Clear(head, 0, hash_size);
+            Array.Clear(head!, 0, hash_size);
             //for (int i = 0; i < hash_size; i++) head[i] = 0;
 
             config = Config.Lookup(compressionLevel);
@@ -366,13 +366,13 @@ namespace Compress.Support.Compression.Deflate
         // Initialize the tree data structures for a new zlib stream.
         private void _InitializeTreeData()
         {
-            treeLiterals.dyn_tree = dyn_ltree;
+            treeLiterals.dyn_tree = dyn_ltree!;
             treeLiterals.staticTree = StaticTree.Literals;
 
-            treeDistances.dyn_tree = dyn_dtree;
+            treeDistances.dyn_tree = dyn_dtree!;
             treeDistances.staticTree = StaticTree.Distances;
 
-            treeBitLengths.dyn_tree = bl_tree;
+            treeBitLengths.dyn_tree = bl_tree!;
             treeBitLengths.staticTree = StaticTree.BitLengths;
 
             bi_buf = 0;
@@ -387,13 +387,13 @@ namespace Compress.Support.Compression.Deflate
         {
             // Initialize the trees.
             for (int i = 0; i < InternalConstants.L_CODES; i++)
-                dyn_ltree[i * 2] = 0;
+                dyn_ltree![i * 2] = 0;
             for (int i = 0; i < InternalConstants.D_CODES; i++)
-                dyn_dtree[i * 2] = 0;
+                dyn_dtree![i * 2] = 0;
             for (int i = 0; i < InternalConstants.BL_CODES; i++)
-                bl_tree[i * 2] = 0;
+                bl_tree![i * 2] = 0;
 
-            dyn_ltree[END_BLOCK * 2] = 1;
+            dyn_ltree![END_BLOCK * 2] = 1;
             opt_len = static_len = 0;
             last_lit = matches = 0;
         }
@@ -460,21 +460,21 @@ namespace Compress.Support.Compression.Deflate
                 }
                 else if (count < min_count)
                 {
-                    bl_tree[curlen * 2] = (short)(bl_tree[curlen * 2] + count);
+                    bl_tree![curlen * 2] = (short)(bl_tree[curlen * 2] + count);
                 }
                 else if (curlen != 0)
                 {
                     if (curlen != prevlen)
-                        bl_tree[curlen * 2]++;
-                    bl_tree[InternalConstants.REP_3_6 * 2]++;
+                        bl_tree![curlen * 2]++;
+                    bl_tree![InternalConstants.REP_3_6 * 2]++;
                 }
                 else if (count <= 10)
                 {
-                    bl_tree[InternalConstants.REPZ_3_10 * 2]++;
+                    bl_tree![InternalConstants.REPZ_3_10 * 2]++;
                 }
                 else
                 {
-                    bl_tree[InternalConstants.REPZ_11_138 * 2]++;
+                    bl_tree![InternalConstants.REPZ_11_138 * 2]++;
                 }
                 count = 0; prevlen = curlen;
                 if (nextlen == 0)
@@ -499,8 +499,8 @@ namespace Compress.Support.Compression.Deflate
             int max_blindex; // index of last bit length code of non zero freq
 
             // Determine the bit length frequencies for literal and distance trees
-            scan_tree(dyn_ltree, treeLiterals.max_code);
-            scan_tree(dyn_dtree, treeDistances.max_code);
+            scan_tree(dyn_ltree!, treeLiterals.max_code);
+            scan_tree(dyn_dtree!, treeDistances.max_code);
 
             // Build the bit length tree:
             treeBitLengths.build_tree(this);
@@ -512,7 +512,7 @@ namespace Compress.Support.Compression.Deflate
             // 3 but the actual value used is 4.)
             for (max_blindex = InternalConstants.BL_CODES - 1; max_blindex >= 3; max_blindex--)
             {
-                if (bl_tree[Tree.bl_order[max_blindex] * 2 + 1] != 0)
+                if (bl_tree![Tree.bl_order[max_blindex] * 2 + 1] != 0)
                     break;
             }
             // Update opt_len to include the bit length tree and counts
@@ -534,10 +534,10 @@ namespace Compress.Support.Compression.Deflate
             send_bits(blcodes - 4, 4); // not -3 as stated in appnote.txt
             for (rank = 0; rank < blcodes; rank++)
             {
-                send_bits(bl_tree[Tree.bl_order[rank] * 2 + 1], 3);
+                send_bits(bl_tree![Tree.bl_order[rank] * 2 + 1], 3);
             }
-            send_tree(dyn_ltree, lcodes - 1); // literal tree
-            send_tree(dyn_dtree, dcodes - 1); // distance tree
+            send_tree(dyn_ltree!, lcodes - 1); // literal tree
+            send_tree(dyn_dtree!, dcodes - 1); // distance tree
         }
 
         // Send a literal or distance tree in compressed form, using the codes in
@@ -568,7 +568,7 @@ namespace Compress.Support.Compression.Deflate
                 {
                     do
                     {
-                        send_code(curlen, bl_tree);
+                        send_code(curlen, bl_tree!);
                     }
                     while (--count != 0);
                 }
@@ -576,19 +576,19 @@ namespace Compress.Support.Compression.Deflate
                 {
                     if (curlen != prevlen)
                     {
-                        send_code(curlen, bl_tree); count--;
+                        send_code(curlen, bl_tree!); count--;
                     }
-                    send_code(InternalConstants.REP_3_6, bl_tree);
+                    send_code(InternalConstants.REP_3_6, bl_tree!);
                     send_bits(count - 3, 2);
                 }
                 else if (count <= 10)
                 {
-                    send_code(InternalConstants.REPZ_3_10, bl_tree);
+                    send_code(InternalConstants.REPZ_3_10, bl_tree!);
                     send_bits(count - 3, 3);
                 }
                 else
                 {
-                    send_code(InternalConstants.REPZ_11_138, bl_tree);
+                    send_code(InternalConstants.REPZ_11_138, bl_tree!);
                     send_bits(count - 11, 7);
                 }
                 count = 0; prevlen = curlen;
@@ -611,7 +611,7 @@ namespace Compress.Support.Compression.Deflate
         // IN assertion: there is enough room in pending_buf.
         private void put_bytes(byte[] p, int start, int len)
         {
-            Array.Copy(p, start, pending, pendingCount, len);
+            Array.Copy(p, start, pending!, pendingCount, len);
             pendingCount += len;
         }
 
@@ -656,7 +656,7 @@ namespace Compress.Support.Compression.Deflate
 
                     bi_buf |= (short)((value << bi_valid) & 0xffff);
                     //put_short(bi_buf);
-                    pending[pendingCount++] = (byte)bi_buf;
+                    pending![pendingCount++] = (byte)bi_buf;
                     pending[pendingCount++] = (byte)(bi_buf >> 8);
 
 
@@ -706,7 +706,7 @@ namespace Compress.Support.Compression.Deflate
         // the current block must be flushed.
         internal bool _tr_tally(int dist, int lc)
         {
-            pending[_distanceOffset + last_lit * 2] = unchecked((byte)((uint)dist >> 8));
+            pending![_distanceOffset + last_lit * 2] = unchecked((byte)((uint)dist >> 8));
             pending[_distanceOffset + last_lit * 2 + 1] = unchecked((byte)dist);
             pending[_lengthOffset + last_lit] = unchecked((byte)lc);
             last_lit++;
@@ -714,15 +714,15 @@ namespace Compress.Support.Compression.Deflate
             if (dist == 0)
             {
                 // lc is the unmatched char
-                dyn_ltree[lc * 2]++;
+                dyn_ltree![lc * 2]++;
             }
             else
             {
                 matches++;
                 // Here, lc is the match length - MIN_MATCH
                 dist--; // dist = match distance - 1
-                dyn_ltree[(Tree.LengthCode[lc] + InternalConstants.LITERALS + 1) * 2]++;
-                dyn_dtree[Tree.DistanceCode(dist) * 2]++;
+                dyn_ltree![(Tree.LengthCode[lc] + InternalConstants.LITERALS + 1) * 2]++;
+                dyn_dtree![Tree.DistanceCode(dist) * 2]++;
             }
 
             /* ************************************************************
@@ -772,7 +772,7 @@ namespace Compress.Support.Compression.Deflate
                 do
                 {
                     int ix = _distanceOffset + lx * 2;
-                    distance = ((pending[ix] << 8) & 0xff00) |
+                    distance = ((pending![ix] << 8) & 0xff00) |
                         (pending[ix + 1] & 0xff);
                     lc = (pending[_lengthOffset + lx]) & 0xff;
                     lx++;
@@ -833,15 +833,15 @@ namespace Compress.Support.Compression.Deflate
             int bin_freq = 0;
             while (n < 7)
             {
-                bin_freq += dyn_ltree[n * 2]; n++;
+                bin_freq += dyn_ltree![n * 2]; n++;
             }
             while (n < 128)
             {
-                ascii_freq += dyn_ltree[n * 2]; n++;
+                ascii_freq += dyn_ltree![n * 2]; n++;
             }
             while (n < InternalConstants.LITERALS)
             {
-                bin_freq += dyn_ltree[n * 2]; n++;
+                bin_freq += dyn_ltree![n * 2]; n++;
             }
             data_type = (sbyte)(bin_freq > (ascii_freq >> 2) ? Z_BINARY : Z_ASCII);
         }
@@ -853,7 +853,7 @@ namespace Compress.Support.Compression.Deflate
         {
             if (bi_valid == 16)
             {
-                pending[pendingCount++] = (byte)bi_buf;
+                pending![pendingCount++] = (byte)bi_buf;
                 pending[pendingCount++] = (byte)(bi_buf >> 8);
                 bi_buf = 0;
                 bi_valid = 0;
@@ -861,7 +861,7 @@ namespace Compress.Support.Compression.Deflate
             else if (bi_valid >= 8)
             {
                 //put_byte((byte)bi_buf);
-                pending[pendingCount++] = (byte)bi_buf;
+                pending![pendingCount++] = (byte)bi_buf;
                 bi_buf >>= 8;
                 bi_valid -= 8;
             }
@@ -872,13 +872,13 @@ namespace Compress.Support.Compression.Deflate
         {
             if (bi_valid > 8)
             {
-                pending[pendingCount++] = (byte)bi_buf;
+                pending![pendingCount++] = (byte)bi_buf;
                 pending[pendingCount++] = (byte)(bi_buf >> 8);
             }
             else if (bi_valid > 0)
             {
                 //put_byte((byte)bi_buf);
-                pending[pendingCount++] = (byte)bi_buf;
+                pending![pendingCount++] = (byte)bi_buf;
             }
             bi_buf = 0;
             bi_valid = 0;
@@ -895,21 +895,21 @@ namespace Compress.Support.Compression.Deflate
                 unchecked
                 {
                     //put_short((short)len);
-                    pending[pendingCount++] = (byte)len;
+                    pending![pendingCount++] = (byte)len;
                     pending[pendingCount++] = (byte)(len >> 8);
                     //put_short((short)~len);
                     pending[pendingCount++] = (byte)~len;
                     pending[pendingCount++] = (byte)(~len >> 8);
                 }
 
-            put_bytes(window, buf, len);
+            put_bytes(window!, buf, len);
         }
 
         internal void flush_block_only(bool eof)
         {
             _tr_flush_block(block_start >= 0 ? block_start : -1, strstart - block_start, eof);
             block_start = strstart;
-            _codec.flush_pending();
+            _codec!.flush_pending();
         }
 
         // Copy without compression as much as possible from the input stream, return
@@ -927,7 +927,7 @@ namespace Compress.Support.Compression.Deflate
             int max_block_size = 0xffff;
             int max_start;
 
-            if (max_block_size > pending.Length - 5)
+            if (max_block_size > pending!.Length - 5)
             {
                 max_block_size = pending.Length - 5;
             }
@@ -957,7 +957,7 @@ namespace Compress.Support.Compression.Deflate
                     strstart = (int)max_start;
 
                     flush_block_only(false);
-                    if (_codec.AvailableBytesOut == 0)
+                    if (_codec!.AvailableBytesOut == 0)
                         return BlockState.NeedMore;
                 }
 
@@ -966,13 +966,13 @@ namespace Compress.Support.Compression.Deflate
                 if (strstart - block_start >= w_size - MIN_LOOKAHEAD)
                 {
                     flush_block_only(false);
-                    if (_codec.AvailableBytesOut == 0)
+                    if (_codec!.AvailableBytesOut == 0)
                         return BlockState.NeedMore;
                 }
             }
 
             flush_block_only(flush == FlushType.Finish);
-            if (_codec.AvailableBytesOut == 0)
+            if (_codec!.AvailableBytesOut == 0)
                 return (flush == FlushType.Finish) ? BlockState.FinishStarted : BlockState.NeedMore;
 
             return flush == FlushType.Finish ? BlockState.FinishDone : BlockState.BlockDone;
@@ -1043,7 +1043,7 @@ namespace Compress.Support.Compression.Deflate
             {
                 send_bits((DYN_TREES << 1) + (eof ? 1 : 0), 3);
                 send_all_trees(treeLiterals.max_code + 1, treeDistances.max_code + 1, max_blindex + 1);
-                send_compressed_block(dyn_ltree, dyn_dtree);
+                send_compressed_block(dyn_ltree!, dyn_dtree!);
             }
 
             // The above check is made mod 2^32, for files larger than 512 MB
@@ -1091,7 +1091,7 @@ namespace Compress.Support.Compression.Deflate
                 }
                 else if (strstart >= w_size + w_size - MIN_LOOKAHEAD)
                 {
-                    Array.Copy(window, w_size, window, 0, w_size);
+                    Array.Copy(window!, w_size, window!, 0, w_size);
                     match_start -= w_size;
                     strstart -= w_size; // we now have strstart >= MAX_DIST
                     block_start -= w_size;
@@ -1106,7 +1106,7 @@ namespace Compress.Support.Compression.Deflate
                     p = n;
                     do
                     {
-                        m = (head[--p] & 0xffff);
+                        m = (head![--p] & 0xffff);
                         head[p] = (short)((m >= w_size) ? (m - w_size) : 0);
                     }
                     while (--n != 0);
@@ -1115,7 +1115,7 @@ namespace Compress.Support.Compression.Deflate
                     p = n;
                     do
                     {
-                        m = (prev[--p] & 0xffff);
+                        m = (prev![--p] & 0xffff);
                         prev[p] = (short)((m >= w_size) ? (m - w_size) : 0);
                         // If n is not on any hash chain, prev[n] is garbage but
                         // its value will never be used.
@@ -1124,7 +1124,7 @@ namespace Compress.Support.Compression.Deflate
                     more += w_size;
                 }
 
-                if (_codec.AvailableBytesIn == 0)
+                if (_codec!.AvailableBytesIn == 0)
                     return;
 
                 // If there was no sliding:
@@ -1138,13 +1138,13 @@ namespace Compress.Support.Compression.Deflate
                 // Otherwise, window_size == 2*WSIZE so more >= 2.
                 // If there was sliding, more >= WSIZE. So in all cases, more >= 2.
 
-                n = _codec.read_buf(window, strstart + lookahead, more);
+                n = _codec.read_buf(window!, strstart + lookahead, more);
                 lookahead += n;
 
                 // Initialize the hash value now that we have some input:
                 if (lookahead >= MIN_MATCH)
                 {
-                    ins_h = window[strstart] & 0xff;
+                    ins_h = window![strstart] & 0xff;
                     ins_h = (((ins_h) << hash_shift) ^ (window[strstart + 1] & 0xff)) & hash_mask;
                 }
                 // If the whole input has less than MIN_MATCH bytes, ins_h is garbage,
@@ -1185,11 +1185,11 @@ namespace Compress.Support.Compression.Deflate
                 // dictionary, and set hash_head to the head of the hash chain:
                 if (lookahead >= MIN_MATCH)
                 {
-                    ins_h = (((ins_h) << hash_shift) ^ (window[(strstart) + (MIN_MATCH - 1)] & 0xff)) & hash_mask;
+                    ins_h = (((ins_h) << hash_shift) ^ (window![(strstart) + (MIN_MATCH - 1)] & 0xff)) & hash_mask;
 
                     //  prev[strstart&w_mask]=hash_head=head[ins_h];
-                    hash_head = (head[ins_h] & 0xffff);
-                    prev[strstart & w_mask] = head[ins_h];
+                    hash_head = (head![ins_h] & 0xffff);
+                    prev![strstart & w_mask] = head[ins_h];
                     head[ins_h] = unchecked((short)strstart);
                 }
 
@@ -1217,17 +1217,17 @@ namespace Compress.Support.Compression.Deflate
 
                     // Insert new strings in the hash table only if the match length
                     // is not too large. This saves time but degrades compression.
-                    if (match_length <= config.MaxLazy && lookahead >= MIN_MATCH)
+                    if (match_length <= config!.MaxLazy && lookahead >= MIN_MATCH)
                     {
                         match_length--; // string at strstart already in hash table
                         do
                         {
                             strstart++;
 
-                            ins_h = ((ins_h << hash_shift) ^ (window[(strstart) + (MIN_MATCH - 1)] & 0xff)) & hash_mask;
+                            ins_h = ((ins_h << hash_shift) ^ (window![(strstart) + (MIN_MATCH - 1)] & 0xff)) & hash_mask;
                             //      prev[strstart&w_mask]=hash_head=head[ins_h];
-                            hash_head = (head[ins_h] & 0xffff);
-                            prev[strstart & w_mask] = head[ins_h];
+                            hash_head = (head![ins_h] & 0xffff);
+                            prev![strstart & w_mask] = head[ins_h];
                             head[ins_h] = unchecked((short)strstart);
 
                             // strstart never exceeds WSIZE-MAX_MATCH, so there are
@@ -1240,7 +1240,7 @@ namespace Compress.Support.Compression.Deflate
                     {
                         strstart += match_length;
                         match_length = 0;
-                        ins_h = window[strstart] & 0xff;
+                        ins_h = window![strstart] & 0xff;
 
                         ins_h = (((ins_h) << hash_shift) ^ (window[strstart + 1] & 0xff)) & hash_mask;
                         // If lookahead < MIN_MATCH, ins_h is garbage, but it does not
@@ -1251,20 +1251,20 @@ namespace Compress.Support.Compression.Deflate
                 {
                     // No match, output a literal byte
 
-                    bflush = _tr_tally(0, window[strstart] & 0xff);
+                    bflush = _tr_tally(0, window![strstart] & 0xff);
                     lookahead--;
                     strstart++;
                 }
                 if (bflush)
                 {
                     flush_block_only(false);
-                    if (_codec.AvailableBytesOut == 0)
+                    if (_codec!.AvailableBytesOut == 0)
                         return BlockState.NeedMore;
                 }
             }
 
             flush_block_only(flush == FlushType.Finish);
-            if (_codec.AvailableBytesOut == 0)
+            if (_codec!.AvailableBytesOut == 0)
             {
                 if (flush == FlushType.Finish)
                     return BlockState.FinishStarted;
@@ -1306,10 +1306,10 @@ namespace Compress.Support.Compression.Deflate
 
                 if (lookahead >= MIN_MATCH)
                 {
-                    ins_h = (((ins_h) << hash_shift) ^ (window[(strstart) + (MIN_MATCH - 1)] & 0xff)) & hash_mask;
+                    ins_h = (((ins_h) << hash_shift) ^ (window![(strstart) + (MIN_MATCH - 1)] & 0xff)) & hash_mask;
                     //  prev[strstart&w_mask]=hash_head=head[ins_h];
-                    hash_head = (head[ins_h] & 0xffff);
-                    prev[strstart & w_mask] = head[ins_h];
+                    hash_head = (head![ins_h] & 0xffff);
+                    prev![strstart & w_mask] = head[ins_h];
                     head[ins_h] = unchecked((short)strstart);
                 }
 
@@ -1318,7 +1318,7 @@ namespace Compress.Support.Compression.Deflate
                 prev_match = match_start;
                 match_length = MIN_MATCH - 1;
 
-                if (hash_head != 0 && prev_length < config.MaxLazy &&
+                if (hash_head != 0 && prev_length < config!.MaxLazy &&
                     ((strstart - hash_head) & 0xffff) <= w_size - MIN_LOOKAHEAD)
                 {
                     // To simplify the code, we prevent matches with the string
@@ -1362,10 +1362,10 @@ namespace Compress.Support.Compression.Deflate
                     {
                         if (++strstart <= max_insert)
                         {
-                            ins_h = (((ins_h) << hash_shift) ^ (window[(strstart) + (MIN_MATCH - 1)] & 0xff)) & hash_mask;
+                            ins_h = (((ins_h) << hash_shift) ^ (window![(strstart) + (MIN_MATCH - 1)] & 0xff)) & hash_mask;
                             //prev[strstart&w_mask]=hash_head=head[ins_h];
-                            hash_head = (head[ins_h] & 0xffff);
-                            prev[strstart & w_mask] = head[ins_h];
+                            hash_head = (head![ins_h] & 0xffff);
+                            prev![strstart & w_mask] = head[ins_h];
                             head[ins_h] = unchecked((short)strstart);
                         }
                     }
@@ -1377,7 +1377,7 @@ namespace Compress.Support.Compression.Deflate
                     if (bflush)
                     {
                         flush_block_only(false);
-                        if (_codec.AvailableBytesOut == 0)
+                        if (_codec!.AvailableBytesOut == 0)
                             return BlockState.NeedMore;
                     }
                 }
@@ -1388,7 +1388,7 @@ namespace Compress.Support.Compression.Deflate
                     // single literal. If there was a match but the current match
                     // is longer, truncate the previous match to a single literal.
 
-                    bflush = _tr_tally(0, window[strstart - 1] & 0xff);
+                    bflush = _tr_tally(0, window![strstart - 1] & 0xff);
 
                     if (bflush)
                     {
@@ -1396,7 +1396,7 @@ namespace Compress.Support.Compression.Deflate
                     }
                     strstart++;
                     lookahead--;
-                    if (_codec.AvailableBytesOut == 0)
+                    if (_codec!.AvailableBytesOut == 0)
                         return BlockState.NeedMore;
                 }
                 else
@@ -1412,12 +1412,12 @@ namespace Compress.Support.Compression.Deflate
 
             if (match_available != 0)
             {
-                bflush = _tr_tally(0, window[strstart - 1] & 0xff);
+                bflush = _tr_tally(0, window![strstart - 1] & 0xff);
                 match_available = 0;
             }
             flush_block_only(flush == FlushType.Finish);
 
-            if (_codec.AvailableBytesOut == 0)
+            if (_codec!.AvailableBytesOut == 0)
             {
                 if (flush == FlushType.Finish)
                     return BlockState.FinishStarted;
@@ -1431,7 +1431,7 @@ namespace Compress.Support.Compression.Deflate
 
         internal int longest_match(int cur_match)
         {
-            int chain_length = config.MaxChainLength; // max hash chain length
+            int chain_length = config!.MaxChainLength; // max hash chain length
             int scan = strstart;              // current string
             int match;                                // matched string
             int len;                                  // length of current match
@@ -1446,7 +1446,7 @@ namespace Compress.Support.Compression.Deflate
             int wmask = w_mask;
 
             int strend = strstart + MAX_MATCH;
-            byte scan_end1 = window[scan + best_len - 1];
+            byte scan_end1 = window![scan + best_len - 1];
             byte scan_end = window[scan + best_len];
 
             // The code is optimized for HASH_BITS >= 8 and MAX_MATCH-2 multiple of 16.
@@ -1509,7 +1509,7 @@ namespace Compress.Support.Compression.Deflate
                     scan_end = window[scan + best_len];
                 }
             }
-            while ((cur_match = (prev[cur_match & wmask] & 0xffff)) > limit && --chain_length != 0);
+            while ((cur_match = (prev![cur_match & wmask] & 0xffff)) > limit && --chain_length != 0);
 
             if (best_len <= lookahead)
                 return best_len;
@@ -1594,7 +1594,7 @@ namespace Compress.Support.Compression.Deflate
 
         internal void Reset()
         {
-            _codec.TotalBytesIn = _codec.TotalBytesOut = 0;
+            _codec!.TotalBytesIn = _codec.TotalBytesOut = 0;
             _codec.Message = null;
             //strm.data_type = Z_UNKNOWN;
 
@@ -1632,7 +1632,7 @@ namespace Compress.Support.Compression.Deflate
 
         private void SetDeflater()
         {
-            switch (config.Flavor)
+            switch (config!.Flavor)
             {
                 case DeflateFlavor.Store:
                     DeflateFunction = DeflateNone;
@@ -1656,7 +1656,7 @@ namespace Compress.Support.Compression.Deflate
                 Config newConfig = Config.Lookup(level);
 
                 // change in the deflate flavor (Fast vs slow vs none)?
-                if (newConfig.Flavor != config.Flavor && _codec.TotalBytesIn != 0)
+                if (newConfig.Flavor != config!.Flavor && _codec!.TotalBytesIn != 0)
                 {
                     // Flush the last buffer:
                     result = _codec.Deflate(FlushType.Partial);
@@ -1682,7 +1682,7 @@ namespace Compress.Support.Compression.Deflate
             if (dictionary == null || status != INIT_STATE)
                 throw new ZlibException("Stream error.");
 
-            _codec._Adler32 = Adler.Adler32(_codec._Adler32, dictionary, 0, dictionary.Length);
+            _codec!._Adler32 = Adler.Adler32(_codec._Adler32, dictionary, 0, dictionary.Length);
 
             if (length < MIN_MATCH)
                 return ZlibConstants.Z_OK;
@@ -1691,7 +1691,7 @@ namespace Compress.Support.Compression.Deflate
                 length = w_size - MIN_LOOKAHEAD;
                 index = dictionary.Length - length; // use the tail of the dictionary
             }
-            Array.Copy(dictionary, index, window, 0, length);
+            Array.Copy(dictionary, index, window!, 0, length);
             strstart = length;
             block_start = length;
 
@@ -1699,13 +1699,13 @@ namespace Compress.Support.Compression.Deflate
             // s->lookahead stays null, so s->ins_h will be recomputed at the next
             // call of fill_window.
 
-            ins_h = window[0] & 0xff;
+            ins_h = window![0] & 0xff;
             ins_h = (((ins_h) << hash_shift) ^ (window[1] & 0xff)) & hash_mask;
 
             for (int n = 0; n <= length - MIN_MATCH; n++)
             {
                 ins_h = (((ins_h) << hash_shift) ^ (window[(n) + (MIN_MATCH - 1)] & 0xff)) & hash_mask;
-                prev[n & w_mask] = head[ins_h];
+                prev![n & w_mask] = head![ins_h];
                 head[ins_h] = (short)n;
             }
             return ZlibConstants.Z_OK;
@@ -1717,7 +1717,7 @@ namespace Compress.Support.Compression.Deflate
         {
             int old_flush;
 
-            if (_codec.OutputBuffer == null ||
+            if (_codec!.OutputBuffer == null ||
                 (_codec.InputBuffer == null && _codec.AvailableBytesIn != 0) ||
                 (status == FINISH_STATE && flush != FlushType.Finish))
             {
@@ -1750,7 +1750,7 @@ namespace Compress.Support.Compression.Deflate
                 //putShortMSB(header);
                 unchecked
                 {
-                    pending[pendingCount++] = (byte)(header >> 8);
+                    pending![pendingCount++] = (byte)(header >> 8);
                     pending[pendingCount++] = (byte)header;
                 }
                 // Save the adler32 of the preset dictionary:
@@ -1811,7 +1811,7 @@ namespace Compress.Support.Compression.Deflate
             // Start a new block or continue the current one.
             if (_codec.AvailableBytesIn != 0 || lookahead != 0 || (flush != FlushType.None && status != FINISH_STATE))
             {
-                BlockState bstate = DeflateFunction(flush);
+                BlockState bstate = DeflateFunction!(flush);
 
                 if (bstate == BlockState.FinishStarted || bstate == BlockState.FinishDone)
                 {
@@ -1848,7 +1848,7 @@ namespace Compress.Support.Compression.Deflate
                         {
                             // clear hash (forget the history)
                             for (int i = 0; i < hash_size; i++)
-                                head[i] = 0;
+                                head![i] = 0;
                         }
                     }
                     _codec.flush_pending();
@@ -1867,7 +1867,7 @@ namespace Compress.Support.Compression.Deflate
                 return ZlibConstants.Z_STREAM_END;
 
             // Write the zlib trailer (adler32)
-            pending[pendingCount++] = (byte)((_codec._Adler32 & 0xFF000000) >> 24);
+            pending![pendingCount++] = (byte)((_codec._Adler32 & 0xFF000000) >> 24);
             pending[pendingCount++] = (byte)((_codec._Adler32 & 0x00FF0000) >> 16);
             pending[pendingCount++] = (byte)((_codec._Adler32 & 0x0000FF00) >> 8);
             pending[pendingCount++] = (byte)(_codec._Adler32 & 0x000000FF);

@@ -101,14 +101,14 @@ namespace Compress.Support.Compression.Deflate
                 // If BMAX needs to be larger than 16, then h and x[] should be uLong.
                 internal const int BMAX = 15; // maximum bit length of any code
                 
-                internal int[] hn = null; // hufts used in space
-                internal int[] v = null; // work area for huft_build 
-                internal int[] c = null; // bit length count table
-                internal int[] r = null; // table entry for structure assignment
-                internal int[] u = null; // table stack
-                internal int[] x = null; // bit offsets, then code stack
+                internal int[]? hn = null; // hufts used in space
+                internal int[]? v = null; // work area for huft_build 
+                internal int[]? c = null; // bit length count table
+                internal int[]? r = null; // table entry for structure assignment
+                internal int[]? u = null; // table stack
+                internal int[]? x = null; // bit offsets, then code stack
                 
-                private int huft_build(int[] b, int bindex, int n, int s, int[] d, int[] e, int[] t, int[] m, int[] hp, int[] hn, int[] v)
+                private int huft_build(int[] b, int bindex, int n, int s, int[]? d, int[]? e, int[] t, int[] m, int[] hp, int[] hn, int[] v)
                 {
                         // Given a list of code lengths and a maximum table size, make a set of
                         // tables to decode that set of codes.  Return Z_OK on success, Z_BUF_ERROR
@@ -137,7 +137,7 @@ namespace Compress.Support.Compression.Deflate
                         p = 0; i = n;
                         do 
                         {
-                                c[b[bindex + p]]++; p++; i--; // assume all entries <= BMAX
+                                c![b[bindex + p]]++; p++; i--; // assume all entries <= BMAX
                         }
                         while (i != 0);
                         
@@ -186,7 +186,7 @@ namespace Compress.Support.Compression.Deflate
                         c[i] += y;
                         
                         // Generate starting offsets into the value table for each length
-                        x[1] = j = 0;
+                        x![1] = j = 0;
                         p = 1; xp = 2;
                         while (--i != 0)
                         {
@@ -214,7 +214,7 @@ namespace Compress.Support.Compression.Deflate
                         p = 0; // grab values in bit order
                         h = - 1; // no tables yet--level -1
                         w = - l; // bits decoded == (l * h)
-                        u[0] = 0; // just to keep compilers happy
+                        u![0] = 0; // just to keep compilers happy
                         q = 0; // ditto
                         z = 0; // ditto
                         
@@ -265,7 +265,7 @@ namespace Compress.Support.Compression.Deflate
                                                 if (h != 0)
                                                 {
                                                         x[h] = i; // save pattern for backing up
-                                                        r[0] = (sbyte) j; // bits in this table
+                                                        r![0] = (sbyte) j; // bits in this table
                                                         r[1] = (sbyte) l; // bits to dump before this table
                                                         j = SharedUtils.URShift(i, (w - l));
                                                         r[2] = (int) (q - u[h - 1] - j); // offset to this table
@@ -278,7 +278,7 @@ namespace Compress.Support.Compression.Deflate
                                         }
                                         
                                         // set up table entry in r
-                                        r[1] = (sbyte) (k - w);
+                                        r![1] = (sbyte) (k - w);
                                         if (p >= n)
                                         {
                                                 r[0] = 128 + 64; // out of values--invalid code
@@ -290,8 +290,8 @@ namespace Compress.Support.Compression.Deflate
                                         }
                                         else
                                         {
-                                                r[0] = (sbyte) (e[v[p] - s] + 16 + 64); // non-simple--look up in lists
-                                                r[2] = d[v[p++] - s];
+                                                r[0] = (sbyte) (e![v[p] - s] + 16 + 64); // non-simple--look up in lists
+                                                r[2] = d![v[p++] - s];
                                         }
                                         
                                         // fill code-like entries with r
@@ -326,8 +326,8 @@ namespace Compress.Support.Compression.Deflate
                 {
                         int result;
                         initWorkArea(19);
-                        hn[0] = 0;
-                        result = huft_build(c, 0, 19, 19, null, null, tb, bb, hp, hn, v);
+                        hn![0] = 0;
+                        result = huft_build(c, 0, 19, 19, null, null, tb, bb, hp, hn, v!);
                         
                         if (result == Z_DATA_ERROR)
                         {
@@ -347,8 +347,8 @@ namespace Compress.Support.Compression.Deflate
                         
                         // build literal/length tree
                         initWorkArea(288);
-                        hn[0] = 0;
-                        result = huft_build(c, 0, nl, 257, cplens, cplext, tl, bl, hp, hn, v);
+                        hn![0] = 0;
+                        result = huft_build(c, 0, nl, 257, cplens, cplext, tl, bl, hp, hn, v!);
                         if (result != Z_OK || bl[0] == 0)
                         {
                                 if (result == Z_DATA_ERROR)
@@ -365,7 +365,7 @@ namespace Compress.Support.Compression.Deflate
                         
                         // build distance tree
                         initWorkArea(288);
-                        result = huft_build(c, nl, nd, 0, cpdist, cpdext, td, bd, hp, hn, v);
+                        result = huft_build(c, nl, nd, 0, cpdist, cpdext, td, bd, hp, hn, v!);
                         
                         if (result != Z_OK || (bd[0] == 0 && nl > 257))
                         {
@@ -411,19 +411,19 @@ namespace Compress.Support.Compression.Deflate
                         }
                         else
                         {
-                            if (v.Length < vsize)
+                            if (v!.Length < vsize)
                             {
                                 v = new int[vsize];
                             }
                             Array.Clear(v,0,vsize);
-                            Array.Clear(c,0,BMAX+1);
-                            r[0]=0; r[1]=0; r[2]=0;
+                            Array.Clear(c!,0,BMAX+1);
+                            r![0]=0; r[1]=0; r[2]=0;
                             //  for(int i=0; i<BMAX; i++){u[i]=0;}
                             //Array.Copy(c, 0, u, 0, BMAX);
-                            Array.Clear(u,0,BMAX);
+                            Array.Clear(u!,0,BMAX);
                             //  for(int i=0; i<BMAX+1; i++){x[i]=0;}
                             //Array.Copy(c, 0, x, 0, BMAX + 1);
-                            Array.Clear(x,0,BMAX+1);
+                            Array.Clear(x!,0,BMAX+1);
                         }
                 }
         }

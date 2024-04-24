@@ -7,8 +7,8 @@ namespace Compress.SevenZip.Structure
     public class StreamsInfo
     {
         public ulong PackPosition;
-        public PackedStreamInfo[] PackedStreams;
-        public Folder[] Folders;
+        public PackedStreamInfo[]? PackedStreams;
+        public Folder[]? Folders;
 
         public void Read(BinaryReader br)
         {
@@ -41,16 +41,16 @@ namespace Compress.SevenZip.Structure
         public void Write(BinaryWriter bw)
         {
             bw.Write((byte)HeaderProperty.kMainStreamsInfo);
-            PackedStreamInfo.Write(bw, PackPosition, PackedStreams);
-            Folder.WriteUnPackInfo(bw, Folders);
-            Folder.WriteSubStreamsInfo(bw, Folders);
+            PackedStreamInfo.Write(bw, PackPosition, PackedStreams!);
+            Folder.WriteUnPackInfo(bw, Folders!);
+            Folder.WriteSubStreamsInfo(bw, Folders!);
             bw.Write((byte)HeaderProperty.kEnd);
         }
 
         public void WriteHeader(BinaryWriter bw)
         {
-            PackedStreamInfo.Write(bw, PackPosition, PackedStreams);
-            Folder.WriteUnPackInfo(bw, Folders);
+            PackedStreamInfo.Write(bw, PackPosition, PackedStreams!);
+            Folder.WriteUnPackInfo(bw, Folders!);
             bw.Write((byte)HeaderProperty.kEnd);
         }
 

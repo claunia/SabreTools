@@ -268,7 +268,7 @@ namespace SabreTools.FileTypes.Archives
         public override bool IsTorrent()
         {
             // Check for the file existing first
-            if (!File.Exists(this.Filename))
+            if (this.Filename == null || !File.Exists(this.Filename))
                 return false;
 
             string datum = Path.GetFileName(this.Filename).ToLowerInvariant();
@@ -290,7 +290,7 @@ namespace SabreTools.FileTypes.Archives
         public BaseFile? GetTorrentXZFileInfo()
         {
             // Check for the file existing first
-            if (!File.Exists(this.Filename))
+            if (this.Filename == null || !File.Exists(this.Filename))
                 return null;
 
             string datum = Path.GetFileName(this.Filename).ToLowerInvariant();

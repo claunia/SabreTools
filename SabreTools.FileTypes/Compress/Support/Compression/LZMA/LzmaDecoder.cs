@@ -93,7 +93,7 @@ namespace Compress.Support.Compression.LZMA
                 }
             }
 
-            Decoder2[] m_Coders;
+            Decoder2[]? m_Coders;
             int m_NumPrevBits;
             int m_NumPosBits;
             uint m_PosMask;
@@ -116,20 +116,20 @@ namespace Compress.Support.Compression.LZMA
             {
                 uint numStates = (uint)1 << (m_NumPrevBits + m_NumPosBits);
                 for (uint i = 0; i < numStates; i++)
-                    m_Coders[i].Init();
+                    m_Coders![i].Init();
             }
 
             uint GetState(uint pos, byte prevByte)
             { return ((pos & m_PosMask) << m_NumPrevBits) + (uint)(prevByte >> (8 - m_NumPrevBits)); }
 
             public byte DecodeNormal(RangeCoder.Decoder rangeDecoder, uint pos, byte prevByte)
-            { return m_Coders[GetState(pos, prevByte)].DecodeNormal(rangeDecoder); }
+            { return m_Coders![GetState(pos, prevByte)].DecodeNormal(rangeDecoder); }
 
             public byte DecodeWithMatchByte(RangeCoder.Decoder rangeDecoder, uint pos, byte prevByte, byte matchByte)
-            { return m_Coders[GetState(pos, prevByte)].DecodeWithMatchByte(rangeDecoder, matchByte); }
+            { return m_Coders![GetState(pos, prevByte)].DecodeWithMatchByte(rangeDecoder, matchByte); }
         };
 
-        LZ.OutWindow m_OutWindow;
+        LZ.OutWindow? m_OutWindow;
 
         BitDecoder[] m_IsMatchDecoders = new BitDecoder[Base.kNumStates << Base.kNumPosStatesBitsMax];
         BitDecoder[] m_IsRepDecoders = new BitDecoder[Base.kNumStates];
@@ -230,7 +230,7 @@ namespace Compress.Support.Compression.LZMA
         {
             if (m_OutWindow == null)
                 CreateDictionary();
-            m_OutWindow.Init(outStream);
+            m_OutWindow!.Init(outStream);
             if (outSize > 0)
                 m_OutWindow.SetLimit(outSize);
             else
@@ -372,7 +372,7 @@ namespace Compress.Support.Compression.LZMA
         {
             if (m_OutWindow == null)
                 CreateDictionary();
-            m_OutWindow.Train(stream);
+            m_OutWindow!.Train(stream);
         }
 
         /*

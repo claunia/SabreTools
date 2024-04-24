@@ -9,9 +9,9 @@ namespace Compress.File
 {
     public class File : ICompress
     {
-        private FileInfo _fileInfo;
-        private Stream _inStream;
-        private byte[] _crc;
+        private FileInfo? _fileInfo;
+        private Stream? _inStream;
+        private byte[]? _crc;
 
         public string ZipFilename => _fileInfo?.FullName ?? "";
 
@@ -32,8 +32,8 @@ namespace Compress.File
             LocalFile lf = new()
             {
                 Filename = Path.GetFileName(ZipFilename),
-                UncompressedSize = _fileInfo != null ? (ulong)_fileInfo.Length : (ulong)_inStream.Length,
-                CRC = _crc,
+                UncompressedSize = _fileInfo != null ? (ulong)_fileInfo.Length : (ulong)_inStream!.Length,
+                CRC = _crc!,
                 IsDirectory = RVIO.Directory.Exists(ZipFilename),
                 ModifiedTime = _fileInfo?.LastWriteTime,
                 AccessedTime = _fileInfo?.LastAccessTime,
@@ -87,11 +87,11 @@ namespace Compress.File
 
             if (ZipOpen == ZipOpenType.OpenWrite)
             {
-                _inStream.Flush();
+                _inStream!.Flush();
                 _inStream.Close();
                 _inStream.Dispose();
                 _inStream = null;
-                _fileInfo = new FileInfo(_fileInfo.FullName);
+                _fileInfo = new FileInfo(_fileInfo!.FullName);
                 ZipOpen = ZipOpenType.Closed;
             }
         }
@@ -143,7 +143,7 @@ namespace Compress.File
         }
 
 
-        public ZipReturn ZipFileOpen(Stream inStream)
+        public ZipReturn ZipFileOpen(Stream? inStream)
         {
             ZipFileClose();
             ZipStatus = ZipStatus.None;
@@ -173,17 +173,17 @@ namespace Compress.File
             //throw new NotImplementedException();
         }
 
-        public ZipReturn ZipFileOpenReadStream(int index, out Stream stream, out ulong streamSize)
+        public ZipReturn ZipFileOpenReadStream(int index, out Stream? stream, out ulong streamSize)
         {
-            _inStream.Position = 0;
+            _inStream!.Position = 0;
             stream = _inStream;
             streamSize = (ulong)_inStream.Length;
             return ZipReturn.ZipGood;
         }
 
-        public ZipReturn ZipFileOpenWriteStream(bool raw, bool trrntzip, string filename, ulong uncompressedSize, ushort compressionMethod, out Stream stream, TimeStamps dateTime)
+        public ZipReturn ZipFileOpenWriteStream(bool raw, bool trrntzip, string filename, ulong uncompressedSize, ushort compressionMethod, out Stream? stream, TimeStamps? dateTime)
         {
-            _inStream.Position = 0;
+            _inStream!.Position = 0;
             stream = _inStream;
             return ZipReturn.ZipGood;
         }

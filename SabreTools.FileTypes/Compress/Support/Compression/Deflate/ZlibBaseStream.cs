@@ -34,7 +34,7 @@ namespace Compress.Support.Compression.Deflate
 
     public class ZlibBaseStream : System.IO.Stream
     {
-        protected internal ZlibCodec _z = null; // deferred init... new ZlibCodec();
+        protected internal ZlibCodec? _z = null; // deferred init... new ZlibCodec();
 
         protected internal StreamMode _streamMode = StreamMode.Undefined;
         protected internal FlushType _flushMode;
@@ -42,17 +42,17 @@ namespace Compress.Support.Compression.Deflate
         protected internal CompressionMode _compressionMode;
         protected internal CompressionLevel _level;
         protected internal bool _leaveOpen;
-        protected internal byte[] _workingBuffer;
+        protected internal byte[]? _workingBuffer;
         protected internal int _bufferSize = ZlibConstants.WorkingBufferSizeDefault;
         protected internal byte[] _buf1 = new byte[1];
 
-        protected internal System.IO.Stream _stream;
+        protected internal System.IO.Stream? _stream;
         protected internal CompressionStrategy Strategy = CompressionStrategy.Default;
 
         // workitem 7159
-        CRC crc;
-        protected internal string _GzipFileName;
-        protected internal string _GzipComment;
+        CRC? crc;
+        protected internal string? _GzipFileName;
+        protected internal string? _GzipComment;
         protected internal DateTime _GzipMtime;
         protected internal int _gzipHeaderByteCount;
 
@@ -141,14 +141,14 @@ namespace Compress.Support.Compression.Deflate
 
             // first reference of z property will initialize the private var _z
             z.InputBuffer = buffer;
-            _z.NextIn = offset;
+            _z!.NextIn = offset;
             _z.AvailableBytesIn = count;
             bool done = false;
             do
             {
                 _z.OutputBuffer = workingBuffer;
                 _z.NextOut = 0;
-                _z.AvailableBytesOut = _workingBuffer.Length;
+                _z.AvailableBytesOut = _workingBuffer!.Length;
                 int rc = (_wantCompress)
                     ? _z.Deflate(_flushMode)
                     : _z.Inflate(_flushMode);
@@ -156,7 +156,7 @@ namespace Compress.Support.Compression.Deflate
                     throw new ZlibException((_wantCompress ? "de" : "in") + "flating: " + _z.Message);
 
                 //if (_workingBuffer.Length - _z.AvailableBytesOut > 0)
-                _stream.Write(_workingBuffer, 0, _workingBuffer.Length - _z.AvailableBytesOut);
+                _stream!.Write(_workingBuffer, 0, _workingBuffer.Length - _z.AvailableBytesOut);
 
                 done = _z.AvailableBytesIn == 0 && _z.AvailableBytesOut != 0;
 
@@ -181,7 +181,7 @@ namespace Compress.Support.Compression.Deflate
                 {
                     _z.OutputBuffer = workingBuffer;
                     _z.NextOut = 0;
-                    _z.AvailableBytesOut = _workingBuffer.Length;
+                    _z.AvailableBytesOut = _workingBuffer!.Length;
                     int rc = (_wantCompress)
                         ? _z.Deflate(FlushType.Finish)
                         : _z.Inflate(FlushType.Finish);
@@ -197,7 +197,7 @@ namespace Compress.Support.Compression.Deflate
 
                     if (_workingBuffer.Length - _z.AvailableBytesOut > 0)
                     {
-                        _stream.Write(_workingBuffer, 0, _workingBuffer.Length - _z.AvailableBytesOut);
+                        _stream!.Write(_workingBuffer, 0, _workingBuffer.Length - _z.AvailableBytesOut);
                     }
 
                     done = _z.AvailableBytesIn == 0 && _z.AvailableBytesOut != 0;
@@ -216,8 +216,8 @@ namespace Compress.Support.Compression.Deflate
                     if (_wantCompress)
                     {
                         // Emit the GZIP trailer: CRC32 and  size mod 2^32
-                        int c1 = crc.Crc32Result;
-                        _stream.Write(BitConverter.GetBytes(c1), 0, 4);
+                        int c1 = crc!.Crc32Result;
+                        _stream!.Write(BitConverter.GetBytes(c1), 0, 4);
                         int c2 = (Int32)(crc.TotalBytesRead & 0x00000000FFFFFFFF);
                         _stream.Write(BitConverter.GetBytes(c2), 0, 4);
                     }
@@ -248,7 +248,7 @@ namespace Compress.Support.Compression.Deflate
                             // Make sure we have read to the end of the stream
                             Array.Copy(_z.InputBuffer, _z.NextIn, trailer, 0, _z.AvailableBytesIn);
                             int bytesNeeded = 8 - _z.AvailableBytesIn;
-                            int bytesRead = _stream.Read(trailer,
+                            int bytesRead = _stream!.Read(trailer,
                                                          _z.AvailableBytesIn,
                                                          bytesNeeded);
                             if (bytesNeeded != bytesRead)
@@ -263,7 +263,7 @@ namespace Compress.Support.Compression.Deflate
                         }
 
                         Int32 crc32_expected = BitConverter.ToInt32(trailer, 0);
-                        Int32 crc32_actual = crc.Crc32Result;
+                        Int32 crc32_actual = crc!.Crc32Result;
                         Int32 isize_expected = BitConverter.ToInt32(trailer, 4);
                         Int32 isize_actual = (Int32)(_z.TotalBytesOut & 0x00000000FFFFFFFF);
 
@@ -289,11 +289,11 @@ namespace Compress.Support.Compression.Deflate
                 return;
             if (_wantCompress)
             {
-                _z.EndDeflate();
+                _z!.EndDeflate();
             }
             else
             {
-                _z.EndInflate();
+                _z!.EndInflate();
             }
             _z = null;
         }
@@ -316,7 +316,7 @@ namespace Compress.Support.Compression.Deflate
 
         public override void Flush()
         {
-            _stream.Flush();
+            _stream!.Flush();
         }
 
         public override System.Int64 Seek(System.Int64 offset, System.IO.SeekOrigin origin)
@@ -326,7 +326,7 @@ namespace Compress.Support.Compression.Deflate
         }
         public override void SetLength(System.Int64 value)
         {
-            _stream.SetLength(value);
+            _stream!.SetLength(value);
         }
 
         private bool nomoreinput = false;
@@ -340,7 +340,7 @@ namespace Compress.Support.Compression.Deflate
             do
             {
                 // workitem 7740
-                int n = _stream.Read(_buf1, 0, 1);
+                int n = _stream!.Read(_buf1, 0, 1);
                 if (n != 1)
                     throw new ZlibException("Unexpected EOF reading GZIP header.");
                 else
@@ -363,7 +363,7 @@ namespace Compress.Support.Compression.Deflate
             int totalBytesRead = 0;
             // read the header on the first read
             byte[] header = new byte[10];
-            int n = _stream.Read(header, 0, header.Length);
+            int n = _stream!.Read(header, 0, header.Length);
 
             // workitem 8501: handle edge case (decompress empty stream)
             if (n == 0)
@@ -413,7 +413,7 @@ namespace Compress.Support.Compression.Deflate
 
             if (_streamMode == StreamMode.Undefined)
             {
-                if (!this._stream.CanRead) throw new ZlibException("The stream is not readable.");
+                if (!this._stream!.CanRead) throw new ZlibException("The stream is not readable.");
                 // for the first read, set up some controls.
                 _streamMode = StreamMode.Reader;
                 // (The first reference to _z goes through the private accessor which
@@ -441,7 +441,7 @@ namespace Compress.Support.Compression.Deflate
             int rc = 0;
 
             // set up the output of the deflate/inflate codec:
-            _z.OutputBuffer = buffer;
+            _z!.OutputBuffer = buffer;
             _z.NextOut = offset;
             _z.AvailableBytesOut = count;
 
@@ -457,7 +457,7 @@ namespace Compress.Support.Compression.Deflate
                 {
                     // No data available, so try to Read data from the captive stream.
                     _z.NextIn = 0;
-                    _z.AvailableBytesIn = _stream.Read(_workingBuffer, 0, _workingBuffer.Length);
+                    _z.AvailableBytesIn = _stream!.Read(_workingBuffer!, 0, _workingBuffer!.Length);
                     if (_z.AvailableBytesIn == 0)
                         nomoreinput = true;
 
@@ -519,22 +519,22 @@ namespace Compress.Support.Compression.Deflate
 
         public override System.Boolean CanRead
         {
-            get { return this._stream.CanRead; }
+            get { return this._stream!.CanRead; }
         }
 
         public override System.Boolean CanSeek
         {
-            get { return this._stream.CanSeek; }
+            get { return this._stream!.CanSeek; }
         }
 
         public override System.Boolean CanWrite
         {
-            get { return this._stream.CanWrite; }
+            get { return this._stream!.CanWrite; }
         }
 
         public override System.Int64 Length
         {
-            get { return _stream.Length; }
+            get { return _stream!.Length; }
         }
 
         public override long Position

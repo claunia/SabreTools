@@ -62,8 +62,8 @@ namespace Compress.Support.Compression.Deflate64
 
         private readonly OutputWindow _output;
         private readonly InputBuffer _input;
-        private HuffmanTree _literalLengthTree;
-        private HuffmanTree _distanceTree;
+        private HuffmanTree? _literalLengthTree;
+        private HuffmanTree? _distanceTree;
 
         private InflaterState _state;
         //private bool _hasFormatReader;
@@ -89,7 +89,7 @@ namespace Compress.Support.Compression.Deflate64
         private readonly byte[] _codeList; // temporary array to store the code length for literal/Length and distance
         private readonly byte[] _codeLengthTreeCodeLength;
         private readonly bool _deflate64;
-        private HuffmanTree _codeLengthTree;
+        private HuffmanTree? _codeLengthTree;
 
         //private IFileFormatReader _formatReader; // class to decode header and footer (e.g. gzip)
 
@@ -397,7 +397,7 @@ namespace Compress.Support.Compression.Deflate64
                         // decode an element from the literal tree
 
                         // TODO: optimize this!!!
-                        symbol = _literalLengthTree.GetNextSymbol(_input);
+                        symbol = _literalLengthTree!.GetNextSymbol(_input);
                         if (symbol < 0)
                         {
                             // running out of input
@@ -469,7 +469,7 @@ namespace Compress.Support.Compression.Deflate64
                     case InflaterState.HaveFullLength:
                         if (_blockType == BlockType.Dynamic)
                         {
-                            _distanceCode = _distanceTree.GetNextSymbol(_input);
+                            _distanceCode = _distanceTree!.GetNextSymbol(_input);
                         }
                         else
                         {
@@ -613,7 +613,7 @@ namespace Compress.Support.Compression.Deflate64
                     {
                         if (_state == InflaterState.ReadingTreeCodesBefore)
                         {
-                            if ((_lengthCode = _codeLengthTree.GetNextSymbol(_input)) < 0)
+                            if ((_lengthCode = _codeLengthTree!.GetNextSymbol(_input)) < 0)
                             {
                                 return false;
                             }

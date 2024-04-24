@@ -7,9 +7,9 @@ namespace Compress
         internal LocalFile()
         { }
 
-        public string Filename { get; internal set; }
+        public string? Filename { get; internal set; }
         public ulong UncompressedSize { get; internal set; }
-        public byte[] CRC { get; internal set; }
+        public byte[]? CRC { get; internal set; }
 
         public bool IsDirectory { get; internal set; }
 

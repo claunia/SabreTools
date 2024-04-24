@@ -330,10 +330,10 @@ namespace SabreTools.FileTypes.Archives
                     oldTarFile = TarArchive.Open(archiveFileName);
 
                     // Get a list of all current entries
-                    List<string> entries = oldTarFile.Entries.Select(i => i.Key).ToList();
+                    var entries = oldTarFile.Entries.Select(i => i.Key).ToList();
 
                     // Map all inputs to index
-                    Dictionary<string, int> inputIndexMap = new();
+                    var inputIndexMap = new Dictionary<string, int>();
 
                     // If the old one doesn't contain the new file, then add it
                     if (!entries.Contains(baseFile.Filename.Replace('\\', '/')))
@@ -342,7 +342,11 @@ namespace SabreTools.FileTypes.Archives
                     // Then add all of the old entries to it too
                     for (int i = 0; i < entries.Count; i++)
                     {
-                        inputIndexMap.Add(entries[i], i);
+                        var entry = entries[i];
+                        if (entry == null)
+                            continue;
+
+                        inputIndexMap.Add(entry, i);
                     }
 
                     // If the number of entries is the same as the old archive, skip out
@@ -364,7 +368,7 @@ namespace SabreTools.FileTypes.Archives
 
                         // Get temporary date-time if possible
                         DateTime? usableDate = null;
-                        if (UseDates && !string.IsNullOrEmpty(baseFile.Date) && DateTime.TryParse(baseFile.Date.Replace('\\', '/'), out DateTime dt))
+                        if (UseDates && !string.IsNullOrEmpty(baseFile.Date) && DateTime.TryParse(baseFile.Date!.Replace('\\', '/'), out DateTime dt))
                             usableDate = dt;
 
                         // If we have the input file, add it now
@@ -498,10 +502,10 @@ namespace SabreTools.FileTypes.Archives
                     oldTarFile = TarArchive.Open(archiveFileName);
 
                     // Get a list of all current entries
-                    List<string> entries = oldTarFile.Entries.Select(i => i.Key).ToList();
+                    var entries = oldTarFile.Entries.Select(i => i.Key).ToList();
 
                     // Map all inputs to index
-                    Dictionary<string, int> inputIndexMap = new();
+                    var inputIndexMap = new Dictionary<string, int>();
                     for (int i = 0; i < inputFiles.Count; i++)
                     {
                         // If the old one contains the new file, then just skip out
@@ -516,7 +520,11 @@ namespace SabreTools.FileTypes.Archives
                     // Then add all of the old entries to it too
                     for (int i = 0; i < entries.Count; i++)
                     {
-                        inputIndexMap.Add(entries[i], i);
+                        var entry = entries[i];
+                        if (entry == null)
+                            continue;
+
+                        inputIndexMap.Add(entry, i);
                     }
 
                     // If the number of entries is the same as the old archive, skip out

@@ -94,7 +94,7 @@ namespace Compress.Support.Compression.Deflate
 
         internal int table;                               // table lengths (14 bits)
         internal int index;                               // index into blens (or border)
-        internal int[] blens;                             // bit lengths of codes
+        internal int[]? blens;                             // bit lengths of codes
         internal int[] bb = new int[1];                   // bit length tree depth
         internal int[] tb = new int[1];                   // bit length decoding tree
 
@@ -107,17 +107,17 @@ namespace Compress.Support.Compression.Deflate
                                                           // mode independent information
         internal int bitk;                                // bits in bit buffer
         internal int bitb;                                // bit buffer
-        internal int[] hufts;                             // single malloc for tree space
-        internal byte[] window;                           // sliding window
+        internal int[]? hufts;                             // single malloc for tree space
+        internal byte[]? window;                           // sliding window
         internal int end;                                 // one byte after sliding window
         internal int readAt;                              // window read pointer
         internal int writeAt;                             // window write pointer
-        internal System.Object checkfn;                   // check function
+        internal System.Object? checkfn;                   // check function
         internal uint check;                              // check on output
 
         internal InfTree inftree = new InfTree();
 
-        internal InflateBlocks(ZlibCodec codec, System.Object checkfn, int w)
+        internal InflateBlocks(ZlibCodec codec, System.Object? checkfn, int w)
         {
             _codec = codec;
             hufts = new int[MANY * 3];
@@ -317,7 +317,7 @@ namespace Compress.Support.Compression.Deflate
                             t = n;
                         if (t > m)
                             t = m;
-                        Array.Copy(_codec.InputBuffer, p, window, q, t);
+                        Array.Copy(_codec.InputBuffer, p, window!, q, t);
                         p += t; n -= t;
                         q += t; m -= t;
                         if ((left -= t) != 0)
@@ -408,18 +408,18 @@ namespace Compress.Support.Compression.Deflate
                                 k += 8;
                             }
 
-                            blens[border[index++]] = b & 7;
+                            blens![border[index++]] = b & 7;
 
                             b >>= 3; k -= 3;
                         }
 
                         while (index < 19)
                         {
-                            blens[border[index++]] = 0;
+                            blens![border[index++]] = 0;
                         }
 
                         bb[0] = 7;
-                        t = inftree.inflate_trees_bits(blens, bb, tb, hufts, _codec);
+                        t = inftree.inflate_trees_bits(blens!, bb, tb, hufts!, _codec);
                         if (t != ZlibConstants.Z_OK)
                         {
                             r = t;
@@ -475,13 +475,13 @@ namespace Compress.Support.Compression.Deflate
                                 k += 8;
                             }
 
-                            t = hufts[(tb[0] + (b & InternalInflateConstants.InflateMask[t])) * 3 + 1];
+                            t = hufts![(tb[0] + (b & InternalInflateConstants.InflateMask[t])) * 3 + 1];
                             c = hufts[(tb[0] + (b & InternalInflateConstants.InflateMask[t])) * 3 + 2];
 
                             if (c < 16)
                             {
                                 b >>= t; k -= t;
-                                blens[index++] = c;
+                                blens![index++] = c;
                             }
                             else
                             {
@@ -533,10 +533,10 @@ namespace Compress.Support.Compression.Deflate
                                     return Flush(r);
                                 }
 
-                                c = (c == 16) ? blens[i-1] : 0;
+                                c = (c == 16) ? blens![i-1] : 0;
                                 do
                                 {
-                                    blens[i++] = c;
+                                    blens![i++] = c;
                                 }
                                 while (--j != 0);
                                 index = i;
@@ -551,7 +551,7 @@ namespace Compress.Support.Compression.Deflate
                             int[] td = new int[1];
 
                             t = table;
-                            t = inftree.inflate_trees_dynamic(257 + (t & 0x1f), 1 + ((t >> 5) & 0x1f), blens, bl, bd, tl, td, hufts, _codec);
+                            t = inftree.inflate_trees_dynamic(257 + (t & 0x1f), 1 + ((t >> 5) & 0x1f), blens!, bl, bd, tl, td, hufts!, _codec);
 
                             if (t != ZlibConstants.Z_OK)
                             {
@@ -569,7 +569,7 @@ namespace Compress.Support.Compression.Deflate
                                 writeAt = q;
                                 return Flush(r);
                             }
-                            codes.Init(bl[0], bd[0], hufts, tl[0], hufts, td[0]);
+                            codes.Init(bl[0], bd[0], hufts!, tl[0], hufts!, td[0]);
                         }
                         mode = InflateBlockMode.CODES;
                         goto case InflateBlockMode.CODES;
@@ -663,7 +663,7 @@ namespace Compress.Support.Compression.Deflate
 
         internal void SetDictionary(byte[] d, int start, int n)
         {
-            Array.Copy(d, start, window, 0, n);
+            Array.Copy(d, start, window!, 0, n);
             readAt = writeAt = n;
         }
 
@@ -715,7 +715,7 @@ namespace Compress.Support.Compression.Deflate
                     _codec._Adler32 = check = Adler.Adler32(check, window, readAt, nBytes);
 
                 // copy as far as end of window
-                Array.Copy(window, readAt, _codec.OutputBuffer, _codec.NextOut, nBytes);
+                Array.Copy(window!, readAt, _codec.OutputBuffer, _codec.NextOut, nBytes);
                 _codec.NextOut += nBytes;
                 readAt += nBytes;
 
@@ -768,7 +768,7 @@ namespace Compress.Support.Compression.Deflate
         // mode dependent information
         internal int len;
 
-        internal int[] tree;      // pointer into tree
+        internal int[]? tree;      // pointer into tree
         internal int tree_index = 0;
         internal int need;        // bits needed
 
@@ -780,9 +780,9 @@ namespace Compress.Support.Compression.Deflate
 
         internal byte lbits;      // ltree bits decoded per branch
         internal byte dbits;      // dtree bits decoder per branch
-        internal int[] ltree;     // literal/length/eob tree
+        internal int[]? ltree;     // literal/length/eob tree
         internal int ltree_index; // literal/length/eob tree
-        internal int[] dtree;     // distance tree
+        internal int[]? dtree;     // distance tree
         internal int dtree_index; // distance tree
 
         internal InflateCodes()
@@ -837,7 +837,7 @@ namespace Compress.Support.Compression.Deflate
                             z.TotalBytesIn += p - z.NextIn;
                             z.NextIn = p;
                             blocks.writeAt = q;
-                            r = InflateFast(lbits, dbits, ltree, ltree_index, dtree, dtree_index, blocks, z);
+                            r = InflateFast(lbits, dbits, ltree!, ltree_index, dtree!, dtree_index, blocks, z);
 
                             p = z.NextIn;
                             n = z.AvailableBytesIn;
@@ -881,7 +881,7 @@ namespace Compress.Support.Compression.Deflate
 
                         tindex = (tree_index + (b & InternalInflateConstants.InflateMask[j])) * 3;
 
-                        b >>= (tree[tindex + 1]);
+                        b >>= (tree![tindex + 1]);
                         k -= (tree[tindex + 1]);
 
                         e = tree[tindex];
@@ -975,7 +975,7 @@ namespace Compress.Support.Compression.Deflate
 
                         tindex = (tree_index + (b & InternalInflateConstants.InflateMask[j])) * 3;
 
-                        b >>= tree[tindex + 1];
+                        b >>= tree![tindex + 1];
                         k -= tree[tindex + 1];
 
                         e = (tree[tindex]);
@@ -1067,7 +1067,7 @@ namespace Compress.Support.Compression.Deflate
                                 }
                             }
 
-                            blocks.window[q++] = blocks.window[f++]; m--;
+                            blocks.window![q++] = blocks.window[f++]; m--;
 
                             if (f == blocks.end)
                                 f = 0;
@@ -1103,7 +1103,7 @@ namespace Compress.Support.Compression.Deflate
                         }
                         r = ZlibConstants.Z_OK;
 
-                        blocks.window[q++] = (byte)lit; m--;
+                        blocks.window![q++] = (byte)lit; m--;
 
                         mode = START;
                         break;
@@ -1211,7 +1211,7 @@ namespace Compress.Support.Compression.Deflate
                 {
                     b >>= (tp[tp_index_t_3 + 1]); k -= (tp[tp_index_t_3 + 1]);
 
-                    s.window[q++] = (byte)tp[tp_index_t_3 + 2];
+                    s.window![q++] = (byte)tp[tp_index_t_3 + 2];
                     m--;
                     continue;
                 }
@@ -1270,13 +1270,13 @@ namespace Compress.Support.Compression.Deflate
                                     r = q - d;
                                     if (q - r > 0 && 2 > (q - r))
                                     {
-                                        s.window[q++] = s.window[r++]; // minimum count is three,
+                                        s.window![q++] = s.window[r++]; // minimum count is three,
                                         s.window[q++] = s.window[r++]; // so unroll loop a little
                                         c -= 2;
                                     }
                                     else
                                     {
-                                        Array.Copy(s.window, r, s.window, q, 2);
+                                        Array.Copy(s.window!, r, s.window!, q, 2);
                                         q += 2; r += 2; c -= 2;
                                     }
                                 }
@@ -1298,13 +1298,13 @@ namespace Compress.Support.Compression.Deflate
                                         {
                                             do
                                             {
-                                                s.window[q++] = s.window[r++];
+                                                s.window![q++] = s.window[r++];
                                             }
                                             while (--e != 0);
                                         }
                                         else
                                         {
-                                            Array.Copy(s.window, r, s.window, q, e);
+                                            Array.Copy(s.window!, r, s.window!, q, e);
                                             q += e; r += e; e = 0;
                                         }
                                         r = 0; // copy rest from start of window
@@ -1316,13 +1316,13 @@ namespace Compress.Support.Compression.Deflate
                                 {
                                     do
                                     {
-                                        s.window[q++] = s.window[r++];
+                                        s.window![q++] = s.window[r++];
                                     }
                                     while (--c != 0);
                                 }
                                 else
                                 {
-                                    Array.Copy(s.window, r, s.window, q, c);
+                                    Array.Copy(s.window!, r, s.window!, q, c);
                                     q += c; r += c; c = 0;
                                 }
                                 break;
@@ -1359,7 +1359,7 @@ namespace Compress.Support.Compression.Deflate
                         if ((e = tp[tp_index_t_3]) == 0)
                         {
                             b >>= (tp[tp_index_t_3 + 1]); k -= (tp[tp_index_t_3 + 1]);
-                            s.window[q++] = (byte)tp[tp_index_t_3 + 2];
+                            s.window![q++] = (byte)tp[tp_index_t_3 + 2];
                             m--;
                             break;
                         }
@@ -1429,7 +1429,7 @@ namespace Compress.Support.Compression.Deflate
         }
 
         private InflateManagerMode mode; // current inflate mode
-        internal ZlibCodec _codec; // pointer back to this zlib stream
+        internal ZlibCodec? _codec; // pointer back to this zlib stream
 
         // mode dependent information
         internal int method; // if FLAGS, method byte
@@ -1451,7 +1451,7 @@ namespace Compress.Support.Compression.Deflate
         }
         internal int wbits; // log2(window size)  (8..15, defaults to 15)
 
-        internal InflateBlocks blocks; // current inflate_blocks state
+        internal InflateBlocks? blocks; // current inflate_blocks state
 
         public InflateManager() { }
 
@@ -1462,10 +1462,10 @@ namespace Compress.Support.Compression.Deflate
 
         internal int Reset()
         {
-            _codec.TotalBytesIn = _codec.TotalBytesOut = 0;
+            _codec!.TotalBytesIn = _codec.TotalBytesOut = 0;
             _codec.Message = null;
             mode = HandleRfc1950HeaderBytes ? InflateManagerMode.METHOD : InflateManagerMode.BLOCKS;
-            blocks.Reset();
+            blocks!.Reset();
             return ZlibConstants.Z_OK;
         }
 
@@ -1515,7 +1515,7 @@ namespace Compress.Support.Compression.Deflate
         {
             int b;
 
-            if (_codec.InputBuffer == null)
+            if (_codec!.InputBuffer == null)
                 throw new ZlibException("InputBuffer is null. ");
 
 //             int f = (flush == FlushType.Finish)
@@ -1620,7 +1620,7 @@ namespace Compress.Support.Compression.Deflate
 
 
                     case InflateManagerMode.BLOCKS:
-                        r = blocks.Process(r);
+                        r = blocks!.Process(r);
                         if (r == ZlibConstants.Z_DATA_ERROR)
                         {
                             mode = InflateManagerMode.BAD;
@@ -1706,7 +1706,7 @@ namespace Compress.Support.Compression.Deflate
             if (mode != InflateManagerMode.DICT0)
                 throw new ZlibException("Stream error.");
 
-            if (Adler.Adler32(1, dictionary, 0, dictionary.Length) != _codec._Adler32)
+            if (Adler.Adler32(1, dictionary, 0, dictionary.Length) != _codec!._Adler32)
             {
                 return ZlibConstants.Z_DATA_ERROR;
             }
@@ -1718,7 +1718,7 @@ namespace Compress.Support.Compression.Deflate
                 length = (1 << wbits) - 1;
                 index = dictionary.Length - length;
             }
-            blocks.SetDictionary(dictionary, index, length);
+            blocks!.SetDictionary(dictionary, index, length);
             mode = InflateManagerMode.BLOCKS;
             return ZlibConstants.Z_OK;
         }
@@ -1739,7 +1739,7 @@ namespace Compress.Support.Compression.Deflate
                 mode = InflateManagerMode.BAD;
                 marker = 0;
             }
-            if ((n = _codec.AvailableBytesIn) == 0)
+            if ((n = _codec!.AvailableBytesIn) == 0)
                 return ZlibConstants.Z_BUF_ERROR;
             p = _codec.NextIn;
             m = marker;
@@ -1791,7 +1791,7 @@ namespace Compress.Support.Compression.Deflate
         // waiting for these length bytes.
         internal int SyncPoint(ZlibCodec z)
         {
-            return blocks.SyncPoint();
+            return blocks!.SyncPoint();
         }
     }
 }

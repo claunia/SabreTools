@@ -23,13 +23,13 @@ namespace Compress.SevenZip
         }
 
 
-        private List<SevenZipLocalFile> _localFiles = new();
+        private List<SevenZipLocalFile> _localFiles = [];
 
-        private FileInfo _zipFileInfo;
+        private FileInfo? _zipFileInfo;
 
-        private Stream _zipFs;
+        private Stream? _zipFs;
 
-        private SignatureHeader _signatureHeader;
+        private SignatureHeader? _signatureHeader;
 
 
 
@@ -67,7 +67,7 @@ namespace Compress.SevenZip
                     }
                     break;
                 case ZipOpenType.OpenWrite:
-                    _zipFs.Flush();
+                    _zipFs!.Flush();
                     _zipFs.Close();
                     _zipFs.Dispose();
                     if (_zipFileInfo != null)
@@ -106,7 +106,7 @@ namespace Compress.SevenZip
         }
 
 
-        private Header _header;
+        private Header? _header;
 
         public StringBuilder HeaderReport()
         {

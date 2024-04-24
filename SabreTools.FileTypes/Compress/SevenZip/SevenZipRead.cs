@@ -57,7 +57,7 @@ namespace Compress.SevenZip
         }
 
 
-        public ZipReturn ZipFileOpen(Stream inStream)
+        public ZipReturn ZipFileOpen(Stream? inStream)
         {
             ZipFileClose();
             _zipFileInfo = null;
@@ -74,12 +74,12 @@ namespace Compress.SevenZip
             try
             {
                 SignatureHeader signatureHeader = new();
-                if (!signatureHeader.Read(_zipFs))
+                if (!signatureHeader.Read(_zipFs!))
                 {
                     return ZipReturn.ZipSignatureError;
                 }
 
-                _baseOffset = _zipFs.Position;
+                _baseOffset = _zipFs!.Position;
 
                 _zipFs.Seek(_baseOffset + (long)signatureHeader.NextHeaderOffset, SeekOrigin.Begin);
                 byte[] mainHeader = new byte[signatureHeader.NextHeaderSize];
@@ -126,7 +126,7 @@ namespace Compress.SevenZip
             if (_header == null)
                 return;
 
-            for (int i = 0; i < _header.FileInfo.Names.Length; i++)
+            for (int i = 0; i < _header.FileInfo!.Names!.Length; i++)
             {
                 SevenZipLocalFile lf = new() { Filename = _header.FileInfo.Names[i] };
 
@@ -134,13 +134,13 @@ namespace Compress.SevenZip
                 {
                     lf.StreamIndex = folderIndex;
                     lf.StreamOffset = streamOffset;
-                    lf.UncompressedSize = _header.StreamsInfo.Folders[folderIndex].UnpackedStreamInfo[unpackedStreamsIndex].UnpackedSize;
-                    lf.CRC = Util.UIntToBytes(_header.StreamsInfo.Folders[folderIndex].UnpackedStreamInfo[unpackedStreamsIndex].Crc);
+                    lf.UncompressedSize = _header.StreamsInfo!.Folders![folderIndex].UnpackedStreamInfo![unpackedStreamsIndex].UnpackedSize;
+                    lf.CRC = Util.UIntToBytes(_header.StreamsInfo.Folders[folderIndex].UnpackedStreamInfo![unpackedStreamsIndex].Crc);
 
                     streamOffset += lf.UncompressedSize;
                     unpackedStreamsIndex++;
 
-                    if (unpackedStreamsIndex >= _header.StreamsInfo.Folders[folderIndex].UnpackedStreamInfo.Length)
+                    if (unpackedStreamsIndex >= _header.StreamsInfo.Folders[folderIndex].UnpackedStreamInfo!.Length)
                     {
                         folderIndex++;
                         unpackedStreamsIndex = 0;

@@ -10,7 +10,7 @@ namespace Compress.SevenZip.Structure
         public ulong PackedSize;
         public ulong? Crc;
         public ulong StreamPosition;
-        public Stream PackedStream;
+        public Stream? PackedStream;
 
         public static void Read(BinaryReader br, out ulong packPosition, out PackedStreamInfo[] packedStreams)
         {

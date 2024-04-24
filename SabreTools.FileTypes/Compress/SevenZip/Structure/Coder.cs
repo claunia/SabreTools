@@ -36,16 +36,16 @@ namespace Compress.SevenZip.Structure
 
     public class Coder
     {
-        public byte[] Method;
+        public byte[]? Method;
         public ulong NumInStreams;
         public ulong NumOutStreams;
-        public byte[] Properties;
+        public byte[]? Properties;
 
         /************Local Variables***********/
         public DecompressType DecoderType;
         public bool OutputUsedInternally = false;
-        public InStreamSourceInfo[] InputStreamsSourceInfo;
-        public Stream DecoderStream;
+        public InStreamSourceInfo[]? InputStreamsSourceInfo;
+        public Stream? DecoderStream;
 
         public void Read(BinaryReader br)
         {
@@ -120,7 +120,7 @@ namespace Compress.SevenZip.Structure
 
         public void Write(BinaryWriter bw)
         {
-            byte flags = (byte)Method.Length;
+            byte flags = (byte)Method!.Length;
             if ((NumInStreams != 1) || (NumOutStreams != 1))
             {
                 flags = (byte)(flags | 0x10);
@@ -152,10 +152,10 @@ namespace Compress.SevenZip.Structure
 
         public void Report(ref StringBuilder sb)
         {
-            sb.AppendLine($"        Method[] = {Method.ToArrayString()}   : {DecoderType}");
+            sb.AppendLine($"        Method[] = {Method!.ToArrayString()}   : {DecoderType}");
             sb.AppendLine($"        NumInStreams = {NumInStreams}");
             sb.AppendLine($"        NumOutStreams = {NumOutStreams}");
-            sb.AppendLine($"        Properties[] = {Properties.ToArrayString()}");
+            sb.AppendLine($"        Properties[] = {Properties!.ToArrayString()}");
         }
 
     }

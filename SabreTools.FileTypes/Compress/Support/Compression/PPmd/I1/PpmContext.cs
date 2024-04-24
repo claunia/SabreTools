@@ -24,14 +24,14 @@ namespace Compress.Support.Compression.PPmd.I1
         internal struct PpmContext
         {
             public uint Address;
-            public byte[] Memory;
+            public byte[]? Memory;
             public static readonly PpmContext Zero = new PpmContext(0, null);
             public const int Size = 12;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="PpmContext"/> structure.
             /// </summary>
-            public PpmContext(uint address, byte[] memory)
+            public PpmContext(uint address, byte[]? memory)
             {
                 Address = address;
                 Memory = memory;
@@ -42,8 +42,8 @@ namespace Compress.Support.Compression.PPmd.I1
             /// </summary>
             public byte NumberStatistics
             {
-                get { return Memory[Address]; }
-                set { Memory[Address] = value; }
+                get { return Memory![Address]; }
+                set { Memory![Address] = value; }
             }
 
             /// <summary>
@@ -51,8 +51,8 @@ namespace Compress.Support.Compression.PPmd.I1
             /// </summary>
             public byte Flags
             {
-                get { return Memory[Address + 1]; }
-                set { Memory[Address + 1] = value; }
+                get { return Memory![Address + 1]; }
+                set { Memory![Address + 1] = value; }
             }
 
             /// <summary>
@@ -60,10 +60,10 @@ namespace Compress.Support.Compression.PPmd.I1
             /// </summary>
             public ushort SummaryFrequency
             {
-                get { return (ushort)(((ushort)Memory[Address + 2]) | ((ushort)Memory[Address + 3]) << 8); }
+                get { return (ushort)(((ushort)Memory![Address + 2]) | ((ushort)Memory[Address + 3]) << 8); }
                 set
                 {
-                    Memory[Address + 2] = (byte)value;
+                    Memory![Address + 2] = (byte)value;
                     Memory[Address + 3] = (byte)(value >> 8);
                 }
             }
@@ -73,10 +73,10 @@ namespace Compress.Support.Compression.PPmd.I1
             /// </summary>
             public PpmState Statistics
             {
-                get { return new PpmState(((uint)Memory[Address + 4]) | ((uint)Memory[Address + 5]) << 8 | ((uint)Memory[Address + 6]) << 16 | ((uint)Memory[Address + 7]) << 24, Memory); }
+                get { return new PpmState(((uint)Memory![Address + 4]) | ((uint)Memory[Address + 5]) << 8 | ((uint)Memory[Address + 6]) << 16 | ((uint)Memory[Address + 7]) << 24, Memory); }
                 set
                 {
-                    Memory[Address + 4] = (byte)value.Address;
+                    Memory![Address + 4] = (byte)value.Address;
                     Memory[Address + 5] = (byte)(value.Address >> 8);
                     Memory[Address + 6] = (byte)(value.Address >> 16);
                     Memory[Address + 7] = (byte)(value.Address >> 24);
@@ -88,10 +88,10 @@ namespace Compress.Support.Compression.PPmd.I1
             /// </summary>
             public PpmContext Suffix
             {
-                get { return new PpmContext(((uint)Memory[Address + 8]) | ((uint)Memory[Address + 9]) << 8 | ((uint)Memory[Address + 10]) << 16 | ((uint)Memory[Address + 11]) << 24, Memory); }
+                get { return new PpmContext(((uint)Memory![Address + 8]) | ((uint)Memory[Address + 9]) << 8 | ((uint)Memory[Address + 10]) << 16 | ((uint)Memory[Address + 11]) << 24, Memory); }
                 set
                 {
-                    Memory[Address + 8] = (byte)value.Address;
+                    Memory![Address + 8] = (byte)value.Address;
                     Memory[Address + 9] = (byte)(value.Address >> 8);
                     Memory[Address + 10] = (byte)(value.Address >> 16);
                     Memory[Address + 11] = (byte)(value.Address >> 24);
@@ -136,8 +136,8 @@ namespace Compress.Support.Compression.PPmd.I1
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "The property getter is provided for completeness.")]
             public byte FirstStateSymbol
             {
-                get { return Memory[Address + 2]; }
-                set { Memory[Address + 2] = value; }
+                get { return Memory![Address + 2]; }
+                set { Memory![Address + 2] = value; }
             }
 
             /// <summary>
@@ -147,8 +147,8 @@ namespace Compress.Support.Compression.PPmd.I1
             /// </summary>
             public byte FirstStateFrequency
             {
-                get { return Memory[Address + 3]; }
-                set { Memory[Address + 3] = value; }
+                get { return Memory![Address + 3]; }
+                set { Memory![Address + 3] = value; }
             }
 
             /// <summary>
@@ -158,10 +158,10 @@ namespace Compress.Support.Compression.PPmd.I1
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "The property getter is provided for completeness.")]
             public PpmContext FirstStateSuccessor
             {
-                get { return new PpmContext(((uint)Memory[Address + 4]) | ((uint)Memory[Address + 5]) << 8 | ((uint)Memory[Address + 6]) << 16 | ((uint)Memory[Address + 7]) << 24, Memory); }
+                get { return new PpmContext(((uint)Memory![Address + 4]) | ((uint)Memory[Address + 5]) << 8 | ((uint)Memory[Address + 6]) << 16 | ((uint)Memory[Address + 7]) << 24, Memory); }
                 set
                 {
-                    Memory[Address + 4] = (byte)value.Address;
+                    Memory![Address + 4] = (byte)value.Address;
                     Memory[Address + 5] = (byte)(value.Address >> 8);
                     Memory[Address + 6] = (byte)(value.Address >> 16);
                     Memory[Address + 7] = (byte)(value.Address >> 24);
@@ -251,7 +251,7 @@ namespace Compress.Support.Compression.PPmd.I1
             /// </summary>
             /// <returns>true if obj and this instance are the same type and represent the same value; otherwise, false.</returns>
             /// <param name="obj">Another object to compare to.</param>
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (obj is PpmContext)
                 {

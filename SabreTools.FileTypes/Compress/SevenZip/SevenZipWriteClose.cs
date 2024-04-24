@@ -13,7 +13,7 @@ namespace Compress.SevenZip
             int fileCount = _localFiles.Count;
 
             //FileInfo
-            _header.FileInfo = new Structure.FileInfo
+            _header!.FileInfo = new Structure.FileInfo
             {
                 Names = new string[fileCount]
             };
@@ -22,7 +22,7 @@ namespace Compress.SevenZip
             ulong emptyFileCount = 0;
             for (int i = 0; i < fileCount; i++)
             {
-                _header.FileInfo.Names[i] = _localFiles[i].Filename;
+                _header.FileInfo.Names[i] = _localFiles[i].Filename!;
 
                 if (_localFiles[i].UncompressedSize != 0)
                 {
@@ -83,7 +83,7 @@ namespace Compress.SevenZip
 
             _header.StreamsInfo = new StreamsInfo { PackPosition = 0 };
 
-            _header.StreamsInfo.PackedStreams = new PackedStreamInfo[_packedOutStreams.Count];
+            _header.StreamsInfo.PackedStreams = new PackedStreamInfo[_packedOutStreams!.Count];
             for (int i = 0; i < _packedOutStreams.Count; i++)
             {
                 _header.StreamsInfo.PackedStreams[i] = new PackedStreamInfo { PackedSize = _packedOutStreams[i].packedSize };
@@ -93,7 +93,7 @@ namespace Compress.SevenZip
             for (int i = 0; i < _packedOutStreams.Count; i++)
             {
                 ulong unpackedStreamSize = 0;
-                foreach (UnpackedStreamInfo v in _packedOutStreams[i].unpackedStreams)
+                foreach (UnpackedStreamInfo v in _packedOutStreams[i].unpackedStreams!)
                     unpackedStreamSize += v.UnpackedSize;
 
                 _header.StreamsInfo.Folders[i] = new Folder()
@@ -109,7 +109,7 @@ namespace Compress.SevenZip
                     },
                     PackedStreamIndices = new ulong[] { (ulong)i },
                     UnpackedStreamSizes = new ulong[] { unpackedStreamSize },
-                    UnpackedStreamInfo = _packedOutStreams[i].unpackedStreams.ToArray(),
+                    UnpackedStreamInfo = _packedOutStreams[i].unpackedStreams!.ToArray(),
                     UnpackCRC = null
                 };
             }
@@ -135,7 +135,7 @@ namespace Compress.SevenZip
 #else
                 using BinaryWriter headerBw = new(headerMem, Encoding.UTF8, true);
 #endif
-                _header.WriteHeader(headerBw);
+                _header!.WriteHeader(headerBw);
 
                 newHeaderByte = new byte[headerMem.Length];
                 headerMem.Position = 0;
@@ -145,7 +145,7 @@ namespace Compress.SevenZip
             uint mainHeaderCRC = CRC.CalculateDigest(newHeaderByte, 0, (uint)newHeaderByte.Length);
 
             #region Header Compression
-            long packedHeaderPos = _zipFs.Position;
+            long packedHeaderPos = _zipFs!.Position;
             LzmaEncoderProperties ep = new(true, GetDictionarySizeFromUncompressedSize((ulong)newHeaderByte.Length), 64);
             LzmaStream lzs = new(ep, false, _zipFs);
             byte[] lzmaStreamProperties = lzs.Properties;
@@ -206,7 +206,7 @@ namespace Compress.SevenZip
                 WriteRomVault7Zip(bw, headerPosition, (ulong)newHeaderByte.Length, mainHeaderCRC);
 
                 _zipFs.Write(newHeaderByte, 0, newHeaderByte.Length);
-                _signatureHeader.WriteFinal(bw, headerPosition, (ulong)newHeaderByte.Length, mainHeaderCRC);
+                _signatureHeader!.WriteFinal(bw, headerPosition, (ulong)newHeaderByte.Length, mainHeaderCRC);
             }
             _zipFs.Flush();
             _zipFs.Close();

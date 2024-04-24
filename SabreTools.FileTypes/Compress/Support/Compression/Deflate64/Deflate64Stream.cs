@@ -20,10 +20,10 @@ namespace Compress.Support.Compression.Deflate64
     {
         private const int DEFAULT_BUFFER_SIZE = 8192;
 
-        private Stream _stream;
+        private Stream? _stream;
         private CompressionMode _mode;
-        private InflaterManaged _inflater;
-        private byte[] _buffer;
+        private InflaterManaged? _inflater;
+        private byte[]? _buffer;
 
         public Deflate64Stream(Stream stream, CompressionMode mode)
         {
@@ -52,7 +52,7 @@ namespace Compress.Support.Compression.Deflate64
         {
             Debug.Assert(stream != null);
             Debug.Assert(method == ZipCompressionMethod.Deflate || method == ZipCompressionMethod.Deflate64);
-            if (!stream.CanRead)
+            if (!stream!.CanRead)
             {
                 throw new ArgumentException("Deflate64: input stream is not readable", nameof(stream));
             }
@@ -130,7 +130,7 @@ namespace Compress.Support.Compression.Deflate64
 
             while (true)
             {
-                bytesRead = _inflater.Inflate(array, currentOffset, remainingCount);
+                bytesRead = _inflater!.Inflate(array, currentOffset, remainingCount);
                 currentOffset += bytesRead;
                 remainingCount -= bytesRead;
 
@@ -146,7 +146,7 @@ namespace Compress.Support.Compression.Deflate64
                     break;
                 }
 
-                int bytes = _stream.Read(_buffer, 0, _buffer.Length);
+                int bytes = _stream!.Read(_buffer!, 0, _buffer!.Length);
                 if (bytes <= 0)
                 {
                     break;

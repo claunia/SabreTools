@@ -92,16 +92,16 @@ namespace SabreTools.FileTypes.Archives
                 FileStream outstream = File.Create(Path.Combine(outDir, Path.GetFileNameWithoutExtension(this.Filename)));
                 var gz = new gZip();
                 ZipReturn ret = gz.ZipFileOpen(this.Filename);
-                ret = gz.ZipFileOpenReadStream(0, out Stream gzstream, out ulong streamSize);
+                ret = gz.ZipFileOpenReadStream(0, out Stream? gzstream, out ulong streamSize);
 #if NET20 || NET35
                 byte[] buffer = new byte[32768];
                 int read;
-                while ((read = gzstream.Read(buffer, 0, buffer.Length)) > 0)
+                while ((read = gzstream!.Read(buffer, 0, buffer.Length)) > 0)
                 {
                     outstream.Write(buffer, 0, read);
                 }
 #else
-                gzstream.CopyTo(outstream);
+                gzstream!.CopyTo(outstream);
 #endif
 
                 // Dispose of the streams
@@ -189,12 +189,12 @@ namespace SabreTools.FileTypes.Archives
                 realEntry = Path.GetFileNameWithoutExtension(this.Filename);
                 var gz = new gZip();
                 ZipReturn ret = gz.ZipFileOpen(this.Filename);
-                ret = gz.ZipFileOpenReadStream(0, out Stream gzstream, out ulong streamSize);
+                ret = gz.ZipFileOpenReadStream(0, out Stream? gzstream, out ulong streamSize);
 
                 // Write the file out
                 byte[] gbuffer = new byte[_bufferSize];
                 int glen;
-                while ((glen = gzstream.Read(gbuffer, 0, _bufferSize)) > 0)
+                while ((glen = gzstream!.Read(gbuffer, 0, _bufferSize)) > 0)
                 {
 
                     ms.Write(gbuffer, 0, glen);
@@ -260,12 +260,12 @@ namespace SabreTools.FileTypes.Archives
                         {
                             var gz = new gZip();
                             ZipReturn ret = gz.ZipFileOpen(this.Filename);
-                            ret = gz.ZipFileOpenReadStream(0, out Stream gzstream, out ulong streamSize);
+                            ret = gz.ZipFileOpenReadStream(0, out Stream? gzstream, out ulong streamSize);
                             gzipEntryRom = GetInfo(gzstream, hashes: this.AvailableHashTypes);
                             gzipEntryRom.Filename = gz.GetLocalFile(0).Filename;
                             gzipEntryRom.Parent = gamename;
                             gzipEntryRom.Date = (gz.TimeStamp > 0 ? gz.TimeStamp.ToString() : null);
-                            gzstream.Dispose();
+                            gzstream!.Dispose();
                         }
 
                         // Fill in comon details and add to the list

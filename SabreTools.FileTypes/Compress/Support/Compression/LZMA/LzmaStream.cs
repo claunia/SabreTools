@@ -6,14 +6,14 @@ namespace Compress.Support.Compression.LZMA
 {
     public class LzmaStream : Stream
     {
-        private Stream inputStream;
+        private Stream? inputStream;
         private long inputSize;
         private long outputSize;
 
         private int dictionarySize;
         private OutWindow outWindow = new OutWindow();
         private RangeCoder.Decoder rangeDecoder = new RangeCoder.Decoder();
-        private Decoder decoder;
+        private Decoder? decoder;
 
         private long position = 0;
         private bool endReached = false;
@@ -28,7 +28,7 @@ namespace Compress.Support.Compression.LZMA
         private bool needProps = true;
         private byte[] props = new byte[5];
 
-        private Encoder encoder;
+        private Encoder? encoder;
 
         public LzmaStream(byte[] properties, Stream inputStream)
             : this(properties, inputStream, -1, -1, null, properties.Length < 5)
@@ -46,7 +46,7 @@ namespace Compress.Support.Compression.LZMA
         }
 
         public LzmaStream(byte[] properties, Stream inputStream, long inputSize, long outputSize,
-            Stream presetDictionary, bool isLZMA2)
+            Stream? presetDictionary, bool isLZMA2)
         {
             this.inputStream = inputStream;
             this.inputSize = inputSize;
@@ -91,7 +91,7 @@ namespace Compress.Support.Compression.LZMA
         {
         }
 
-        public LzmaStream(LzmaEncoderProperties properties, bool isLZMA2, Stream presetDictionary, Stream outputStream)
+        public LzmaStream(LzmaEncoderProperties properties, bool isLZMA2, Stream? presetDictionary, Stream outputStream)
         {
             this.isLZMA2 = isLZMA2;
             availableBytes = 0;
@@ -182,9 +182,9 @@ namespace Compress.Support.Compression.LZMA
                 outWindow.SetLimit(toProcess);
                 if(uncompressedChunk)
                 {
-                    inputPosition += outWindow.CopyStream(inputStream, toProcess);
+                    inputPosition += outWindow.CopyStream(inputStream!, toProcess);
                 }
-                else if(decoder.Code(dictionarySize, outWindow, rangeDecoder)
+                else if(decoder!.Code(dictionarySize, outWindow, rangeDecoder)
                         && outputSize < 0)
                 {
                     availableBytes = outWindow.AvailableBytes;
@@ -220,7 +220,7 @@ namespace Compress.Support.Compression.LZMA
 
         private void decodeChunkHeader()
         {
-            int control = inputStream.ReadByte();
+            int control = inputStream!.ReadByte();
             inputPosition++;
 
             if (control == 0x00)

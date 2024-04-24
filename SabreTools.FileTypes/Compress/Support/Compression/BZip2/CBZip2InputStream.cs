@@ -104,8 +104,8 @@ namespace Compress.Support.Compression.BZip2
         private char[] selector = new char[BZip2Constants.MAX_SELECTORS];
         private char[] selectorMtf = new char[BZip2Constants.MAX_SELECTORS];
 
-        private int[] tt;
-        private char[] ll8;
+        private int[]? tt;
+        private char[]? ll8;
 
         /*
         freq table collected to save a pass over the data
@@ -118,7 +118,7 @@ namespace Compress.Support.Compression.BZip2
         private int[][] perm = InitIntArray(BZip2Constants.N_GROUPS, BZip2Constants.MAX_ALPHA_SIZE);
         private int[] minLens = new int[BZip2Constants.N_GROUPS];
 
-        private Stream bsStream;
+        private Stream? bsStream;
 
         private bool streamEnd = false;
 
@@ -216,7 +216,7 @@ namespace Compress.Support.Compression.BZip2
 
         private bool Initialize(bool isFirstStream)
         {
-            int magic0 = bsStream.ReadByte();
+            int magic0 = bsStream!.ReadByte();
             int magic1 = bsStream.ReadByte();
             int magic2 = bsStream.ReadByte();
             if (magic0 == -1 && !isFirstStream)
@@ -360,7 +360,7 @@ namespace Compress.Support.Compression.BZip2
                 int thech = '\0';
                 try
                 {
-                    thech = (char)bsStream.ReadByte();
+                    thech = (char)bsStream!.ReadByte();
                 }
                 catch (IOException)
                 {
@@ -631,7 +631,7 @@ namespace Compress.Support.Compression.BZip2
                                 char thech = '\0';
                                 try
                                 {
-                                    thech = (char)bsStream.ReadByte();
+                                    thech = (char)bsStream!.ReadByte();
                                 }
                                 catch (IOException)
                                 {
@@ -700,7 +700,7 @@ namespace Compress.Support.Compression.BZip2
                                             char thech = '\0';
                                             try
                                             {
-                                                thech = (char)bsStream.ReadByte();
+                                                thech = (char)bsStream!.ReadByte();
                                             }
                                             catch (IOException)
                                             {
@@ -731,7 +731,7 @@ namespace Compress.Support.Compression.BZip2
                     while (s > 0)
                     {
                         last++;
-                        ll8[last] = ch;
+                        ll8![last] = ch;
                         s--;
                     }
 
@@ -752,7 +752,7 @@ namespace Compress.Support.Compression.BZip2
 
                     tmp = yy[nextSym - 1];
                     unzftab[seqToUnseq[tmp]]++;
-                    ll8[last] = seqToUnseq[tmp];
+                    ll8![last] = seqToUnseq[tmp];
 
                     /*
                     This loop is hammered during decompression,
@@ -797,7 +797,7 @@ namespace Compress.Support.Compression.BZip2
                                         char thech = '\0';
                                         try
                                         {
-                                            thech = (char)bsStream.ReadByte();
+                                            thech = (char)bsStream!.ReadByte();
                                         }
                                         catch (IOException)
                                         {
@@ -822,7 +822,7 @@ namespace Compress.Support.Compression.BZip2
 
         private void SetupBlock()
         {
-            int[] cftab = new int[257];
+            int[]? cftab = new int[257];
             char ch;
 
             cftab[0] = 0;
@@ -837,13 +837,13 @@ namespace Compress.Support.Compression.BZip2
 
             for (i = 0; i <= last; i++)
             {
-                ch = (char)ll8[i];
-                tt[cftab[ch]] = i;
+                ch = (char)ll8![i];
+                tt![cftab[ch]] = i;
                 cftab[ch]++;
             }
             cftab = null;
 
-            tPos = tt[origPtr];
+            tPos = tt![origPtr];
 
             count = 0;
             i2 = 0;
@@ -866,8 +866,8 @@ namespace Compress.Support.Compression.BZip2
             if (i2 <= last)
             {
                 chPrev = ch2;
-                ch2 = ll8[tPos];
-                tPos = tt[tPos];
+                ch2 = ll8![tPos];
+                tPos = tt![tPos];
                 if (rNToGo == 0)
                 {
                     rNToGo = BZip2Constants.rNums[rTPos];
@@ -898,8 +898,8 @@ namespace Compress.Support.Compression.BZip2
             if (i2 <= last)
             {
                 chPrev = ch2;
-                ch2 = ll8[tPos];
-                tPos = tt[tPos];
+                ch2 = ll8![tPos];
+                tPos = tt![tPos];
                 i2++;
 
                 currentChar = ch2;
@@ -927,8 +927,8 @@ namespace Compress.Support.Compression.BZip2
                 count++;
                 if (count >= 4)
                 {
-                    z = ll8[tPos];
-                    tPos = tt[tPos];
+                    z = ll8![tPos];
+                    tPos = tt![tPos];
                     if (rNToGo == 0)
                     {
                         rNToGo = BZip2Constants.rNums[rTPos];
@@ -982,8 +982,8 @@ namespace Compress.Support.Compression.BZip2
                 count++;
                 if (count >= 4)
                 {
-                    z = ll8[tPos];
-                    tPos = tt[tPos];
+                    z = ll8![tPos];
+                    tPos = tt![tPos];
                     currentState = NO_RAND_PART_C_STATE;
                     j2 = 0;
                     SetupNoRandPartC();

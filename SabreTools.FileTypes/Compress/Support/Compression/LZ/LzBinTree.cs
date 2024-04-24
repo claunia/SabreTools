@@ -8,8 +8,8 @@ namespace Compress.Support.Compression.LZ
         UInt32 _cyclicBufferSize = 0;
         UInt32 _matchMaxLen;
 
-        UInt32[] _son;
-        UInt32[] _hash;
+        UInt32[]? _son;
+        UInt32[]? _hash;
 
         UInt32 _cutValue = 0xFF;
         UInt32 _hashMask;
@@ -46,14 +46,14 @@ namespace Compress.Support.Compression.LZ
             }
         }
 
-        public new void SetStream(System.IO.Stream stream) { base.SetStream(stream); }
+        public new void SetStream(System.IO.Stream? stream) { base.SetStream(stream); }
         public new void ReleaseStream() { base.ReleaseStream(); }
 
         public new void Init()
         {
             base.Init();
             for (UInt32 i = 0; i < _hashSizeSum; i++)
-                _hash[i] = kEmptyHashValue;
+                _hash![i] = kEmptyHashValue;
             _cyclicBufferPos = 0;
             ReduceOffsets(-1);
         }
@@ -136,16 +136,16 @@ namespace Compress.Support.Compression.LZ
 
             if (HASH_ARRAY)
             {
-                UInt32 temp = Utils.CRC.CRC32Lookup[_bufferBase[cur]] ^ _bufferBase[cur + 1];
+                UInt32 temp = Utils.CRC.CRC32Lookup[_bufferBase![cur]] ^ _bufferBase[cur + 1];
                 hash2Value = temp & (kHash2Size - 1);
                 temp ^= ((UInt32)(_bufferBase[cur + 2]) << 8);
                 hash3Value = temp & (kHash3Size - 1);
                 hashValue = (temp ^ (Utils.CRC.CRC32Lookup[_bufferBase[cur + 3]] << 5)) & _hashMask;
             }
             else
-                hashValue = _bufferBase[cur] ^ ((UInt32)(_bufferBase[cur + 1]) << 8);
+                hashValue = _bufferBase![cur] ^ ((UInt32)(_bufferBase[cur + 1]) << 8);
 
-            UInt32 curMatch = _hash[kFixHashSize + hashValue];
+            UInt32 curMatch = _hash![kFixHashSize + hashValue];
             if (HASH_ARRAY)
             {
                 UInt32 curMatch2 = _hash[hash2Value];
@@ -201,7 +201,7 @@ namespace Compress.Support.Compression.LZ
             {
                 if (curMatch <= matchMinPos || count-- == 0)
                 {
-                    _son[ptr0] = _son[ptr1] = kEmptyHashValue;
+                    _son![ptr0] = _son[ptr1] = kEmptyHashValue;
                     break;
                 }
                 UInt32 delta = _pos - curMatch;
@@ -222,7 +222,7 @@ namespace Compress.Support.Compression.LZ
                         distances[offset++] = delta - 1;
                         if (len == lenLimit)
                         {
-                            _son[ptr1] = _son[cyclicPos];
+                            _son![ptr1] = _son[cyclicPos];
                             _son[ptr0] = _son[cyclicPos + 1];
                             break;
                         }
@@ -230,14 +230,14 @@ namespace Compress.Support.Compression.LZ
                 }
                 if (_bufferBase[pby1 + len] < _bufferBase[cur + len])
                 {
-                    _son[ptr1] = curMatch;
+                    _son![ptr1] = curMatch;
                     ptr1 = cyclicPos + 1;
                     curMatch = _son[ptr1];
                     len1 = len;
                 }
                 else
                 {
-                    _son[ptr0] = curMatch;
+                    _son![ptr0] = curMatch;
                     ptr0 = cyclicPos;
                     curMatch = _son[ptr0];
                     len0 = len;
@@ -271,18 +271,18 @@ namespace Compress.Support.Compression.LZ
 
                 if (HASH_ARRAY)
                 {
-                    UInt32 temp = Utils.CRC.CRC32Lookup[_bufferBase[cur]] ^ _bufferBase[cur + 1];
+                    UInt32 temp = Utils.CRC.CRC32Lookup[_bufferBase![cur]] ^ _bufferBase[cur + 1];
                     UInt32 hash2Value = temp & (kHash2Size - 1);
-                    _hash[hash2Value] = _pos;
+                    _hash![hash2Value] = _pos;
                     temp ^= ((UInt32)(_bufferBase[cur + 2]) << 8);
                     UInt32 hash3Value = temp & (kHash3Size - 1);
                     _hash[kHash3Offset + hash3Value] = _pos;
                     hashValue = (temp ^ (Utils.CRC.CRC32Lookup[_bufferBase[cur + 3]] << 5)) & _hashMask;
                 }
                 else
-                    hashValue = _bufferBase[cur] ^ ((UInt32)(_bufferBase[cur + 1]) << 8);
+                    hashValue = _bufferBase![cur] ^ ((UInt32)(_bufferBase[cur + 1]) << 8);
 
-                UInt32 curMatch = _hash[kFixHashSize + hashValue];
+                UInt32 curMatch = _hash![kFixHashSize + hashValue];
                 _hash[kFixHashSize + hashValue] = _pos;
 
                 UInt32 ptr0 = (_cyclicBufferPos << 1) + 1;
@@ -296,7 +296,7 @@ namespace Compress.Support.Compression.LZ
                 {
                     if (curMatch <= matchMinPos || count-- == 0)
                     {
-                        _son[ptr0] = _son[ptr1] = kEmptyHashValue;
+                        _son![ptr0] = _son[ptr1] = kEmptyHashValue;
                         break;
                     }
 
@@ -314,21 +314,21 @@ namespace Compress.Support.Compression.LZ
                                 break;
                         if (len == lenLimit)
                         {
-                            _son[ptr1] = _son[cyclicPos];
+                            _son![ptr1] = _son[cyclicPos];
                             _son[ptr0] = _son[cyclicPos + 1];
                             break;
                         }
                     }
                     if (_bufferBase[pby1 + len] < _bufferBase[cur + len])
                     {
-                        _son[ptr1] = curMatch;
+                        _son![ptr1] = curMatch;
                         ptr1 = cyclicPos + 1;
                         curMatch = _son[ptr1];
                         len1 = len;
                     }
                     else
                     {
-                        _son[ptr0] = curMatch;
+                        _son![ptr0] = curMatch;
                         ptr0 = cyclicPos;
                         curMatch = _son[ptr0];
                         len0 = len;
@@ -355,8 +355,8 @@ namespace Compress.Support.Compression.LZ
         void Normalize()
         {
             UInt32 subValue = _pos - _cyclicBufferSize;
-            NormalizeLinks(_son, _cyclicBufferSize * 2, subValue);
-            NormalizeLinks(_hash, _hashSizeSum, subValue);
+            NormalizeLinks(_son!, _cyclicBufferSize * 2, subValue);
+            NormalizeLinks(_hash!, _hashSizeSum, subValue);
             ReduceOffsets((Int32)subValue);
         }
 

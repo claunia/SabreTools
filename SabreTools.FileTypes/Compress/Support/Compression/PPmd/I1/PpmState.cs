@@ -22,14 +22,14 @@ namespace Compress.Support.Compression.PPmd.I1
     internal struct PpmState
     {
         public uint Address;
-        public byte[] Memory;
+        public byte[]? Memory;
         public static readonly PpmState Zero = new PpmState(0, null);
         public const int Size = 6;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PpmState"/> structure.
         /// </summary>
-        public PpmState(uint address, byte[] memory)
+        public PpmState(uint address, byte[]? memory)
         {
             Address = address;
             Memory = memory;
@@ -40,8 +40,8 @@ namespace Compress.Support.Compression.PPmd.I1
         /// </summary>
         public byte Symbol
         {
-            get { return Memory[Address]; }
-            set { Memory[Address] = value; }
+            get { return Memory![Address]; }
+            set { Memory![Address] = value; }
         }
 
         /// <summary>
@@ -49,8 +49,8 @@ namespace Compress.Support.Compression.PPmd.I1
         /// </summary>
         public byte Frequency
         {
-            get { return Memory[Address + 1]; }
-            set { Memory[Address + 1] = value; }
+            get { return Memory![Address + 1]; }
+            set { Memory![Address + 1] = value; }
         }
 
         /// <summary>
@@ -58,10 +58,10 @@ namespace Compress.Support.Compression.PPmd.I1
         /// </summary>
         public Model.PpmContext Successor
         {
-            get { return new Model.PpmContext(((uint) Memory[Address + 2]) | ((uint) Memory[Address + 3]) << 8 | ((uint) Memory[Address + 4]) << 16 | ((uint) Memory[Address + 5]) << 24, Memory); }
+            get { return new Model.PpmContext(((uint) Memory![Address + 2]) | ((uint) Memory[Address + 3]) << 8 | ((uint) Memory[Address + 4]) << 16 | ((uint) Memory[Address + 5]) << 24, Memory); }
             set
             {
-                Memory[Address + 2] = (byte) value.Address;
+                Memory![Address + 2] = (byte) value.Address;
                 Memory[Address + 3] = (byte) (value.Address >> 8);
                 Memory[Address + 4] = (byte) (value.Address >> 16);
                 Memory[Address + 5] = (byte) (value.Address >> 24);
@@ -184,7 +184,7 @@ namespace Compress.Support.Compression.PPmd.I1
         /// </summary>
         /// <returns>true if obj and this instance are the same type and represent the same value; otherwise, false.</returns>
         /// <param name="obj">Another object to compare to.</param>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is PpmState)
             {

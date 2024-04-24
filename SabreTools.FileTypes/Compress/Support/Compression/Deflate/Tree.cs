@@ -180,9 +180,9 @@ namespace Compress.Support.Compression.Deflate
                 : _dist_code[256 + SharedUtils.URShift(dist, 7)];
         }
 
-        internal short[] dyn_tree; // the dynamic tree
+        internal short[]? dyn_tree; // the dynamic tree
         internal int max_code; // largest code with non zero frequency
-        internal StaticTree staticTree; // the corresponding static tree
+        internal StaticTree? staticTree; // the corresponding static tree
                 
         // Compute the optimal bit lengths for a tree and update the total bit length
         // for the current block.
@@ -194,9 +194,9 @@ namespace Compress.Support.Compression.Deflate
         //     not null.
         internal void  gen_bitlen(DeflateManager s)
         {
-            short[] tree = dyn_tree;
-            short[] stree = staticTree.treeCodes;
-            int[] extra = staticTree.extraBits;
+            short[] tree = dyn_tree!;
+            short[]? stree = staticTree!.treeCodes;
+            int[]? extra = staticTree.extraBits;
             int base_Renamed = staticTree.extraBase;
             int max_length = staticTree.maxLength;
             int h; // heap index
@@ -230,7 +230,7 @@ namespace Compress.Support.Compression.Deflate
                 s.bl_count[bits]++;
                 xbits = 0;
                 if (n >= base_Renamed)
-                    xbits = extra[n - base_Renamed];
+                    xbits = extra![n - base_Renamed];
                 f = tree[n * 2];
                 s.opt_len += f * (bits + xbits);
                 if (stree != null)
@@ -281,8 +281,8 @@ namespace Compress.Support.Compression.Deflate
         //     also updated if stree is not null. The field max_code is set.
         internal void  build_tree(DeflateManager s)
         {
-            short[] tree  = dyn_tree;
-            short[] stree = staticTree.treeCodes;
+            short[] tree  = dyn_tree!;
+            short[]? stree = staticTree!.treeCodes;
             int elems     = staticTree.elems;
             int n, m;            // iterate over heap elements
             int max_code  = -1;  // largest code with non zero frequency

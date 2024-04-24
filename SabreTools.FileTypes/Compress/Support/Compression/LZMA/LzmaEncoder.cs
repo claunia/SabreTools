@@ -133,7 +133,7 @@ namespace Compress.Support.Compression.LZMA
                 }
             }
 
-            Encoder2[] m_Coders;
+            Encoder2[]? m_Coders;
             int m_NumPrevBits;
             int m_NumPosBits;
             uint m_PosMask;
@@ -155,11 +155,11 @@ namespace Compress.Support.Compression.LZMA
             {
                 uint numStates = (uint)1 << (m_NumPrevBits + m_NumPosBits);
                 for (uint i = 0; i < numStates; i++)
-                    m_Coders[i].Init();
+                    m_Coders![i].Init();
             }
 
             public Encoder2 GetSubCoder(UInt32 pos, Byte prevByte)
-            { return m_Coders[((pos & m_PosMask) << m_NumPrevBits) + (uint)(prevByte >> (8 - m_NumPrevBits))]; }
+            { return m_Coders![((pos & m_PosMask) << m_NumPrevBits) + (uint)(prevByte >> (8 - m_NumPrevBits))]; }
         }
 
         class LenEncoder
@@ -299,7 +299,7 @@ namespace Compress.Support.Compression.LZMA
             public bool IsShortRep() { return (BackPrev == 0); }
         };
         Optimal[] _optimum = new Optimal[kNumOpts];
-        LZ.BinTree _matchFinder = null;
+        LZ.BinTree? _matchFinder = null;
         RangeCoder.Encoder _rangeEncoder = new RangeCoder.Encoder();
 
         RangeCoder.BitEncoder[] _isMatch = new RangeCoder.BitEncoder[Base.kNumStates << Base.kNumPosStatesBitsMax];
@@ -350,7 +350,7 @@ namespace Compress.Support.Compression.LZMA
 
         Int64 nowPos64;
         bool _finished;
-        System.IO.Stream _inStream;
+        System.IO.Stream? _inStream;
 
         EMatchFinderType _matchFinderType = EMatchFinderType.BT4;
         bool _writeEndMark = false;
@@ -430,7 +430,7 @@ namespace Compress.Support.Compression.LZMA
         void ReadMatchDistances(out UInt32 lenRes, out UInt32 numDistancePairs)
         {
             lenRes = 0;
-            numDistancePairs = _matchFinder.GetMatches(_matchDistances);
+            numDistancePairs = _matchFinder!.GetMatches(_matchDistances);
             if (numDistancePairs > 0)
             {
                 lenRes = _matchDistances[numDistancePairs - 2];
@@ -446,7 +446,7 @@ namespace Compress.Support.Compression.LZMA
         {
             if (num > 0)
             {
-                _matchFinder.Skip(num);
+                _matchFinder!.Skip(num);
                 _additionalOffset += num;
             }
         }
@@ -558,7 +558,7 @@ namespace Compress.Support.Compression.LZMA
                 _longestMatchWasFound = false;
             }
 
-            UInt32 numAvailableBytes = _matchFinder.GetNumAvailableBytes() + 1;
+            UInt32 numAvailableBytes = _matchFinder!.GetNumAvailableBytes() + 1;
             if (numAvailableBytes < 2)
             {
                 backRes = 0xFFFFFFFF;
@@ -1067,7 +1067,7 @@ namespace Compress.Support.Compression.LZMA
 
             if (_inStream != null)
             {
-                _matchFinder.SetStream(_inStream);
+                _matchFinder!.SetStream(_inStream);
                 _needReleaseMFStream = true;
                 _inStream = null;
             }
@@ -1082,17 +1082,17 @@ namespace Compress.Support.Compression.LZMA
             {
                 if (_trainSize > 0)
                 {
-                    for (; _trainSize > 0 && (!_processingMode || !_matchFinder.IsDataStarved); _trainSize--)
-                        _matchFinder.Skip(1);
+                    for (; _trainSize > 0 && (!_processingMode || !_matchFinder!.IsDataStarved); _trainSize--)
+                        _matchFinder!.Skip(1);
                     if (_trainSize == 0)
-                        _previousByte = _matchFinder.GetIndexByte(-1);
+                        _previousByte = _matchFinder!.GetIndexByte(-1);
                 }
-                if (_processingMode && _matchFinder.IsDataStarved)
+                if (_processingMode && _matchFinder!.IsDataStarved)
                 {
                     _finished = false;
                     return;
                 }
-                if (_matchFinder.GetNumAvailableBytes() == 0)
+                if (_matchFinder!.GetNumAvailableBytes() == 0)
                 {
                     Flush((UInt32)nowPos64);
                     return;
@@ -1108,12 +1108,12 @@ namespace Compress.Support.Compression.LZMA
                 _additionalOffset--;
                 nowPos64++;
             }
-            if (_processingMode && _matchFinder.IsDataStarved)
+            if (_processingMode && _matchFinder!.IsDataStarved)
             {
                 _finished = false;
                 return;
             }
-            if (_matchFinder.GetNumAvailableBytes() == 0)
+            if (_matchFinder!.GetNumAvailableBytes() == 0)
             {
                 Flush((UInt32)nowPos64);
                 return;
@@ -1270,7 +1270,7 @@ namespace Compress.Support.Compression.LZMA
             ReleaseOutStream();
         }
 
-        public void SetStreams(System.IO.Stream inStream, System.IO.Stream outStream,
+        public void SetStreams(System.IO.Stream? inStream, System.IO.Stream outStream,
                 Int64 inSize, Int64 outSize)
         {
             _inStream = inStream;
@@ -1278,7 +1278,7 @@ namespace Compress.Support.Compression.LZMA
             Create();
             SetOutStream(outStream);
             Init();
-            _matchFinder.Init();
+            _matchFinder!.Init();
 
             // if (!_fastMode)
             {
@@ -1323,9 +1323,9 @@ namespace Compress.Support.Compression.LZMA
             }
         }
 
-        public long Code(System.IO.Stream inStream, bool final)
+        public long Code(System.IO.Stream? inStream, bool final)
         {
-            _matchFinder.SetStream(inStream);
+            _matchFinder!.SetStream(inStream);
             _processingMode = !final;
             try
             {
@@ -1354,7 +1354,7 @@ namespace Compress.Support.Compression.LZMA
             _trainSize = (uint)trainStream.Length;
             if (_trainSize > 0)
             {
-                _matchFinder.SetStream(trainStream);
+                _matchFinder!.SetStream(trainStream);
                 for (; _trainSize > 0 && !_matchFinder.IsDataStarved; _trainSize--)
                     _matchFinder.Skip(1);
                 if (_trainSize == 0)

@@ -4,8 +4,8 @@ namespace Compress.Support.Compression.LZ
 {
     internal class InWindow
     {
-        public Byte[] _bufferBase = null; // pointer to buffer with data
-        System.IO.Stream _stream;
+        public Byte[]? _bufferBase = null; // pointer to buffer with data
+        System.IO.Stream? _stream;
         UInt32 _posLimit; // offset (from _buffer) of first byte when new block reading must be done
         bool _streamEndWasReached; // if (true) then _streamPos shows real end of stream
 
@@ -30,7 +30,7 @@ namespace Compress.Support.Compression.LZ
 
             // check negative offset ????
             for (UInt32 i = 0; i < numBytes; i++)
-                _bufferBase[i] = _bufferBase[offset + i];
+                _bufferBase![i] = _bufferBase[offset + i];
             _bufferOffset -= offset;
         }
 
@@ -43,7 +43,7 @@ namespace Compress.Support.Compression.LZ
                 int size = (int)((0 - _bufferOffset) + _blockSize - _streamPos);
                 if (size == 0)
                     return;
-                int numReadBytes = _stream != null ? _stream.Read(_bufferBase, (int)(_bufferOffset + _streamPos), size) : 0;
+                int numReadBytes = _stream != null ? _stream.Read(_bufferBase!, (int)(_bufferOffset + _streamPos), size) : 0;
                 if (numReadBytes == 0)
                 {
                     _posLimit = _streamPos;
@@ -77,7 +77,7 @@ namespace Compress.Support.Compression.LZ
             _streamEndWasReached = false;
         }
 
-        public void SetStream(System.IO.Stream stream)
+        public void SetStream(System.IO.Stream? stream)
         {
             _stream = stream;
             if (_streamEndWasReached)
@@ -110,7 +110,7 @@ namespace Compress.Support.Compression.LZ
             }
         }
 
-        public Byte GetIndexByte(Int32 index) { return _bufferBase[_bufferOffset + _pos + index]; }
+        public Byte GetIndexByte(Int32 index) { return _bufferBase![_bufferOffset + _pos + index]; }
 
         // index + limit have not to exceed _keepSizeAfter;
         public UInt32 GetMatchLen(Int32 index, UInt32 distance, UInt32 limit)
@@ -123,7 +123,7 @@ namespace Compress.Support.Compression.LZ
             UInt32 pby = _bufferOffset + _pos + (UInt32)index;
 
             UInt32 i;
-            for (i = 0; i < limit && _bufferBase[pby + i] == _bufferBase[pby + i - distance]; i++) ;
+            for (i = 0; i < limit && _bufferBase![pby + i] == _bufferBase[pby + i - distance]; i++) ;
             return i;
         }
 

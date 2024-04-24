@@ -58,14 +58,14 @@ namespace Compress.SevenZip
             _header = new Header();
 
 #if NET20 || NET35 || NET40
-            using (BinaryWriter bw = new(_zipFs, Encoding.UTF8))
+            using (BinaryWriter bw = new(_zipFs!, Encoding.UTF8))
 #else
-            using (BinaryWriter bw = new(_zipFs, Encoding.UTF8, true))
+            using (BinaryWriter bw = new(_zipFs!, Encoding.UTF8, true))
 #endif
             {
                 _signatureHeader.Write(bw);
             }
-            _baseOffset = _zipFs.Position;
+            _baseOffset = _zipFs!.Position;
 
 
             _packedOutStreams = new List<outStreams>();
@@ -167,7 +167,7 @@ namespace Compress.SevenZip
 
             outStreams newStream = new()
             {
-                packedStart = (ulong)_zipFs.Position,
+                packedStart = (ulong)_zipFs!.Position,
                 compType = _compType,
                 packedSize = 0,
                 unpackedStreams = new List<UnpackedStreamInfo>()
@@ -200,11 +200,11 @@ namespace Compress.SevenZip
                     break;
             }
 
-            _packedOutStreams.Add(newStream);
+            _packedOutStreams!.Add(newStream);
 #endif
 
             unpackedStreamInfo = new UnpackedStreamInfo { UnpackedSize = uncompressedSize };
-            _packedOutStreams[_packedOutStreams.Count - 1].unpackedStreams.Add(unpackedStreamInfo);
+            _packedOutStreams[_packedOutStreams.Count - 1].unpackedStreams!.Add(unpackedStreamInfo);
 
             stream = _compressStream;
             return ZipReturn.ZipGood;
@@ -222,12 +222,12 @@ namespace Compress.SevenZip
 #if !solid
             if (unpackedStreamInfo != null)
             {
-                if (_packedOutStreams[_packedOutStreams.Count - 1].compType != SevenZipCompressType.uncompressed)
+                if (_packedOutStreams![_packedOutStreams.Count - 1].compType != SevenZipCompressType.uncompressed)
                 {
-                    _compressStream.Flush();
+                    _compressStream!.Flush();
                     _compressStream.Close();
                 }
-                _packedOutStreams[_packedOutStreams.Count - 1].packedSize = (ulong)_zipFs.Position - _packedOutStreams[_packedOutStreams.Count - 1].packedStart;
+                _packedOutStreams[_packedOutStreams.Count - 1].packedSize = (ulong)_zipFs!.Position - _packedOutStreams[_packedOutStreams.Count - 1].packedStart;
             }
 #endif
 

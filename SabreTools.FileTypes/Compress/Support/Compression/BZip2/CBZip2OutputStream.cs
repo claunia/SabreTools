@@ -277,11 +277,11 @@ namespace Compress.Support.Compression.BZip2
         private char[] selector = new char[BZip2Constants.MAX_SELECTORS];
         private char[] selectorMtf = new char[BZip2Constants.MAX_SELECTORS];
 
-        private char[] block;
-        private int[] quadrant;
-        private int[] zptr;
-        private short[] szptr;
-        private int[] ftab;
+        private char[]? block;
+        private int[]? quadrant;
+        private int[]? zptr;
+        private short[]? szptr;
+        private int[]? ftab;
 
         private int nMTF;
 
@@ -385,17 +385,17 @@ namespace Compress.Support.Compression.BZip2
                 {
                     case 1:
                         last++;
-                        block[last + 1] = (char)currentChar;
+                        block![last + 1] = (char)currentChar;
                         break;
                     case 2:
                         last++;
-                        block[last + 1] = (char)currentChar;
+                        block![last + 1] = (char)currentChar;
                         last++;
                         block[last + 1] = (char)currentChar;
                         break;
                     case 3:
                         last++;
-                        block[last + 1] = (char)currentChar;
+                        block![last + 1] = (char)currentChar;
                         last++;
                         block[last + 1] = (char)currentChar;
                         last++;
@@ -404,7 +404,7 @@ namespace Compress.Support.Compression.BZip2
                     default:
                         inUse[runLength - 4] = true;
                         last++;
-                        block[last + 1] = (char)currentChar;
+                        block![last + 1] = (char)currentChar;
                         last++;
                         block[last + 1] = (char)currentChar;
                         last++;
@@ -440,7 +440,7 @@ namespace Compress.Support.Compression.BZip2
                 disposed = true;
                 base.Dispose();
                 if (!leaveOpen)
-                    bsStream.Dispose();
+                    bsStream!.Dispose();
                 bsStream = null;
             }
         }
@@ -465,7 +465,7 @@ namespace Compress.Support.Compression.BZip2
 
         public override void Flush()
         {
-            bsStream.Flush();
+            bsStream!.Flush();
         }
 
         private int blockCRC, combinedCRC;
@@ -606,7 +606,7 @@ namespace Compress.Support.Compression.BZip2
                 int ch = (bsBuff >> 24);
                 try
                 {
-                    bsStream.WriteByte((byte)ch); // write 8-bit
+                    bsStream!.WriteByte((byte)ch); // write 8-bit
                 }
                 catch (IOException e)
                 {
@@ -625,7 +625,7 @@ namespace Compress.Support.Compression.BZip2
                 int ch = (bsBuff >> 24);
                 try
                 {
-                    bsStream.WriteByte((byte)ch); // write 8-bit
+                    bsStream!.WriteByte((byte)ch); // write 8-bit
                 }
                 catch (IOException e)
                 {
@@ -744,9 +744,9 @@ namespace Compress.Support.Compression.BZip2
                 }
             }
 
-            int[][] rfreq = CBZip2InputStream.InitIntArray(BZip2Constants.N_GROUPS, BZip2Constants.MAX_ALPHA_SIZE);
-            int[] fave = new int[BZip2Constants.N_GROUPS];
-            short[] cost = new short[BZip2Constants.N_GROUPS];
+            int[][]? rfreq = CBZip2InputStream.InitIntArray(BZip2Constants.N_GROUPS, BZip2Constants.MAX_ALPHA_SIZE);
+            int[]? fave = new int[BZip2Constants.N_GROUPS];
+            short[]? cost = new short[BZip2Constants.N_GROUPS];
             /*
             Iterate up to N_ITERS times to improve the tables.
             */
@@ -797,7 +797,7 @@ namespace Compress.Support.Compression.BZip2
                         cost0 = cost1 = cost2 = cost3 = cost4 = cost5 = 0;
                         for (i = gs; i <= ge; i++)
                         {
-                            short icv = szptr[i];
+                            short icv = szptr![i];
                             cost0 += (short)len[0][icv];
                             cost1 += (short)len[1][icv];
                             cost2 += (short)len[2][icv];
@@ -816,7 +816,7 @@ namespace Compress.Support.Compression.BZip2
                     {
                         for (i = gs; i <= ge; i++)
                         {
-                            short icv = szptr[i];
+                            short icv = szptr![i];
                             for (t = 0; t < nGroups; t++)
                             {
                                 cost[t] += (short)len[t][icv];
@@ -848,7 +848,7 @@ namespace Compress.Support.Compression.BZip2
                     */
                     for (i = gs; i <= ge; i++)
                     {
-                        rfreq[bt][szptr[i]]++;
+                        rfreq[bt][szptr![i]]++;
                     }
 
                     gs = ge + 1;
@@ -1032,7 +1032,7 @@ namespace Compress.Support.Compression.BZip2
                 }
                 for (i = gs; i <= ge; i++)
                 {
-                    BsW(len[selector[selCtr]][szptr[i]],
+                    BsW(len[selector[selCtr]][szptr![i]],
                         code[selector[selCtr]][szptr[i]]);
                 }
 
@@ -1052,7 +1052,7 @@ namespace Compress.Support.Compression.BZip2
             SendMTFValues();
         }
 
-        private Stream bsStream;
+        private Stream? bsStream;
         private bool leaveOpen;
 
         private void SimpleSort(int lo, int hi, int d)
@@ -1085,7 +1085,7 @@ namespace Compress.Support.Compression.BZip2
                     {
                         break;
                     }
-                    v = zptr[i];
+                    v = zptr![i];
                     j = i;
                     while (FullGtU(zptr[j - h] + d, v + d))
                     {
@@ -1150,7 +1150,7 @@ namespace Compress.Support.Compression.BZip2
             int temp = 0;
             while (n > 0)
             {
-                temp = zptr[p1];
+                temp = zptr![p1];
                 zptr[p1] = zptr[p2];
                 zptr[p2] = temp;
                 p1++;
@@ -1227,7 +1227,7 @@ namespace Compress.Support.Compression.BZip2
                     continue;
                 }
 
-                med = Med3(block[zptr[lo] + d + 1],
+                med = Med3(block![zptr![lo] + d + 1],
                         block[zptr[hi] + d + 1],
                         block[zptr[(lo + hi) >> 1] + d + 1]);
 
@@ -1345,14 +1345,14 @@ namespace Compress.Support.Compression.BZip2
             //   if (verbosity >= 4) fprintf ( stderr, "   sort initialise ...\n" );
             for (i = 0; i < BZip2Constants.NUM_OVERSHOOT_BYTES; i++)
             {
-                block[last + i + 2] = block[(i % (last + 1)) + 1];
+                block![last + i + 2] = block[(i % (last + 1)) + 1];
             }
             for (i = 0; i <= last + BZip2Constants.NUM_OVERSHOOT_BYTES; i++)
             {
-                quadrant[i] = 0;
+                quadrant![i] = 0;
             }
 
-            block[0] = (char)(block[last + 1]);
+            block![0] = (char)(block[last + 1]);
 
             if (last < 4000)
             {
@@ -1362,7 +1362,7 @@ namespace Compress.Support.Compression.BZip2
                 */
                 for (i = 0; i <= last; i++)
                 {
-                    zptr[i] = i;
+                    zptr![i] = i;
                 }
                 firstAttempt = false;
                 workDone = workLimit = 0;
@@ -1378,20 +1378,20 @@ namespace Compress.Support.Compression.BZip2
 
                 for (i = 0; i <= 65536; i++)
                 {
-                    ftab[i] = 0;
+                    ftab![i] = 0;
                 }
 
                 c1 = block[0];
                 for (i = 0; i <= last; i++)
                 {
                     c2 = block[i + 1];
-                    ftab[(c1 << 8) + c2]++;
+                    ftab![(c1 << 8) + c2]++;
                     c1 = c2;
                 }
 
                 for (i = 1; i <= 65536; i++)
                 {
-                    ftab[i] += ftab[i - 1];
+                    ftab![i] += ftab[i - 1];
                 }
 
                 c1 = block[1];
@@ -1400,13 +1400,13 @@ namespace Compress.Support.Compression.BZip2
                     c2 = block[i + 2];
                     j = (c1 << 8) + c2;
                     c1 = c2;
-                    ftab[j]--;
-                    zptr[ftab[j]] = i;
+                    ftab![j]--;
+                    zptr![ftab[j]] = i;
                 }
 
                 j = ((block[last + 1]) << 8) + (block[1]);
-                ftab[j]--;
-                zptr[ftab[j]] = last;
+                ftab![j]--;
+                zptr![ftab[j]] = last;
 
                 /*
                 Now ftab contains the first loc of every small bucket.
@@ -1513,7 +1513,7 @@ namespace Compress.Support.Compression.BZip2
                         {
                             int a2update = zptr[bbStart + j];
                             int qVal = (j >> shifts);
-                            quadrant[a2update] = qVal;
+                            quadrant![a2update] = qVal;
                             if (a2update < BZip2Constants.NUM_OVERSHOOT_BYTES)
                             {
                                 quadrant[a2update + last + 1] = qVal;
@@ -1576,7 +1576,7 @@ namespace Compress.Support.Compression.BZip2
                     }
                 }
                 rNToGo--;
-                block[i + 1] ^= (char)((rNToGo == 1) ? 1 : 0);
+                block![i + 1] ^= (char)((rNToGo == 1) ? 1 : 0);
                 // handle 16 bit signed numbers
                 block[i + 1] &= (char)0xFF;
 
@@ -1607,7 +1607,7 @@ namespace Compress.Support.Compression.BZip2
             origPtr = -1;
             for (i = 0; i <= last; i++)
             {
-                if (zptr[i] == 0)
+                if (zptr![i] == 0)
                 {
                     origPtr = i;
                     break;
@@ -1626,7 +1626,7 @@ namespace Compress.Support.Compression.BZip2
             char c1, c2;
             int s1, s2;
 
-            c1 = block[i1 + 1];
+            c1 = block![i1 + 1];
             c2 = block[i2 + 1];
             if (c1 != c2)
             {
@@ -1690,7 +1690,7 @@ namespace Compress.Support.Compression.BZip2
                 {
                     return (c1 > c2);
                 }
-                s1 = quadrant[i1];
+                s1 = quadrant![i1];
                 s2 = quadrant[i2];
                 if (s1 != s2)
                 {
@@ -1833,7 +1833,7 @@ namespace Compress.Support.Compression.BZip2
             {
                 char ll_i;
 
-                ll_i = unseqToSeq[block[zptr[i]]];
+                ll_i = unseqToSeq[block![zptr![i]]];
 
                 j = 0;
                 tmp = yy[j];
@@ -1860,12 +1860,12 @@ namespace Compress.Support.Compression.BZip2
                             switch (zPend % 2)
                             {
                                 case 0:
-                                    szptr[wr] = (short)BZip2Constants.RUNA;
+                                    szptr![wr] = (short)BZip2Constants.RUNA;
                                     wr++;
                                     mtfFreq[BZip2Constants.RUNA]++;
                                     break;
                                 case 1:
-                                    szptr[wr] = (short)BZip2Constants.RUNB;
+                                    szptr![wr] = (short)BZip2Constants.RUNB;
                                     wr++;
                                     mtfFreq[BZip2Constants.RUNB]++;
                                     break;
@@ -1878,7 +1878,7 @@ namespace Compress.Support.Compression.BZip2
                         };
                         zPend = 0;
                     }
-                    szptr[wr] = (short)(j + 1);
+                    szptr![wr] = (short)(j + 1);
                     wr++;
                     mtfFreq[j + 1]++;
                 }
@@ -1892,12 +1892,12 @@ namespace Compress.Support.Compression.BZip2
                     switch (zPend % 2)
                     {
                         case 0:
-                            szptr[wr] = (short)BZip2Constants.RUNA;
+                            szptr![wr] = (short)BZip2Constants.RUNA;
                             wr++;
                             mtfFreq[BZip2Constants.RUNA]++;
                             break;
                         case 1:
-                            szptr[wr] = (short)BZip2Constants.RUNB;
+                            szptr![wr] = (short)BZip2Constants.RUNB;
                             wr++;
                             mtfFreq[BZip2Constants.RUNB]++;
                             break;
@@ -1910,7 +1910,7 @@ namespace Compress.Support.Compression.BZip2
                 }
             }
 
-            szptr[wr] = (short)EOB;
+            szptr![wr] = (short)EOB;
             wr++;
             mtfFreq[EOB]++;
 

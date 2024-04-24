@@ -9,24 +9,24 @@ namespace Compress
 
         public static void CreateDirForFile(string sFilename)
         {
-            string strTemp = Path.GetDirectoryName(sFilename);
+            string? strTemp = Path.GetDirectoryName(sFilename);
 
             if (string.IsNullOrEmpty(strTemp))
             {
                 return;
             }
 
-            if (Directory.Exists(strTemp))
+            if (Directory.Exists(strTemp!))
             {
                 return;
             }
 
-            Directory.CreateDirectory(strTemp);
+            Directory.CreateDirectory(strTemp!);
         }
 
         // according to the zip documents, zip filenames are stored as MS-DOS Code Page 437.
         // (Unless the unicode flag is set, in which case they are stored as UTF-8.
-        private static Encoding enc = null;
+        private static Encoding? enc = null;
 
         public static void EncodeSetup()
         {
@@ -41,7 +41,7 @@ namespace Compress
 
         public static string GetString(byte[] byteArr)
         {
-            return enc.GetString(byteArr);
+            return enc!.GetString(byteArr);
         }
 
         // to test if a filename can be stored as codepage 437 we take the filename string
@@ -49,7 +49,7 @@ namespace Compress
         // and we see if we lost characters as a result of the conversion there and back.
         internal static bool IsCodePage437(string s)
         {
-            byte[] bOut = enc.GetBytes(s);
+            byte[] bOut = enc!.GetBytes(s);
             string sOut = enc.GetString(bOut);
 
             return CompareString(s, sOut);
@@ -57,7 +57,7 @@ namespace Compress
 
         internal static byte[] GetBytes(string s)
         {
-            return enc.GetBytes(s);
+            return enc!.GetBytes(s);
         }
 
         internal static bool CompareString(string s1, string s2)

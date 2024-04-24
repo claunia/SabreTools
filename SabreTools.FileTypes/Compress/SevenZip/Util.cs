@@ -195,7 +195,7 @@ namespace Compress.SevenZip
             {
                 if (digestsDefined[i])
                 {
-                    bw.Write((uint)digests[i]);
+                    bw.Write((uint)digests[i]!);
                 }
             }
         }
@@ -334,7 +334,7 @@ namespace Compress.SevenZip
             }
         }
 
-        public static byte[] UIntToBytes(uint? crc)
+        public static byte[]? UIntToBytes(uint? crc)
         {
             if (crc == null)
             {

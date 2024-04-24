@@ -6,13 +6,13 @@ namespace Compress.SevenZip.Structure
 {
     public class FileInfo
     {
-        public string[] Names;
-        public bool[] EmptyStreamFlags;
-        public bool[] EmptyFileFlags;
-        public uint[] Attributes;
-        public ulong[] TimeCreation;
-        public ulong[] TimeLastAccess;
-        public ulong[] TimeLastWrite;
+        public string[]? Names;
+        public bool[]? EmptyStreamFlags;
+        public bool[]? EmptyFileFlags;
+        public uint[]? Attributes;
+        public ulong[]? TimeCreation;
+        public ulong[]? TimeLastAccess;
+        public ulong[]? TimeLastWrite;
 
         public void Read(BinaryReader br)
         {
@@ -92,7 +92,7 @@ namespace Compress.SevenZip.Structure
         public void Write(BinaryWriter bw)
         {
             bw.Write((byte)HeaderProperty.kFilesInfo);
-            bw.WriteEncodedUInt64((ulong)Names.Length);
+            bw.WriteEncodedUInt64((ulong)Names!.Length);
 
 
             byte[] namebyte;

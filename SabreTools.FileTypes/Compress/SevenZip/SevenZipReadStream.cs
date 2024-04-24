@@ -18,9 +18,9 @@ namespace Compress.SevenZip
     public partial class SevenZ
     {
         private int _streamIndex = -1;
-        private Stream _stream;
+        private Stream? _stream;
 
-        public ZipReturn ZipFileOpenReadStream(int index, out Stream stream, out ulong unCompressedSize)
+        public ZipReturn ZipFileOpenReadStream(int index, out Stream? stream, out ulong unCompressedSize)
         {
             Debug.WriteLine("Opening File " + _localFiles[index].Filename);
             stream = null;
@@ -42,7 +42,7 @@ namespace Compress.SevenZip
                 int thisStreamIndex = _localFiles[index].StreamIndex;
                 ulong streamOffset = _localFiles[index].StreamOffset;
 
-                if ((thisStreamIndex == _streamIndex) && (streamOffset >= (ulong)_stream.Position))
+                if ((thisStreamIndex == _streamIndex) && (streamOffset >= (ulong)_stream!.Position))
                 {
                     stream = _stream;
                     stream.Seek((long)_localFiles[index].StreamOffset - _stream.Position, SeekOrigin.Current);
@@ -52,26 +52,26 @@ namespace Compress.SevenZip
                 ZipFileCloseReadStream();
                 _streamIndex = thisStreamIndex;
 
-                if (_header.StreamsInfo == null)
+                if (_header?.StreamsInfo == null)
                 {
                     stream = null;
                     return ZipReturn.ZipGood;
                 }
 
-                Folder folder = _header.StreamsInfo.Folders[_streamIndex];
+                Folder folder = _header.StreamsInfo.Folders![_streamIndex];
 
                 // first make the List of Decompressors streams
-                int codersNeeded = folder.Coders.Length;
+                int codersNeeded = folder.Coders!.Length;
 
-                List<InStreamSourceInfo> allInputStreams = new();
+                List<InStreamSourceInfo> allInputStreams = [];
                 for (int i = 0; i < codersNeeded; i++)
                 {
                     folder.Coders[i].DecoderStream = null;
-                    allInputStreams.AddRange(folder.Coders[i].InputStreamsSourceInfo);
+                    allInputStreams.AddRange(folder.Coders[i].InputStreamsSourceInfo!);
                 }
 
                 // now use the binding pairs to links the outputs to the inputs
-                int bindPairsCount = folder.BindPairs.Length;
+                int bindPairsCount = folder.BindPairs!.Length;
                 for (int i = 0; i < bindPairsCount; i++)
                 {
                     allInputStreams[(int)folder.BindPairs[i].InIndex].InStreamSource = InStreamSource.CompStreamOutput;
@@ -80,17 +80,17 @@ namespace Compress.SevenZip
                 }
 
                 // next use the stream indises to connect the remaining input streams from the sourcefile
-                int packedStreamsCount = folder.PackedStreamIndices.Length;
+                int packedStreamsCount = folder.PackedStreamIndices!.Length;
                 for (int i = 0; i < packedStreamsCount; i++)
                 {
                     ulong packedStreamIndex = (ulong)i + folder.PackedStreamIndexBase;
 
                     // create and open the source file stream if needed
-                    if (_header.StreamsInfo.PackedStreams[packedStreamIndex].PackedStream == null)
+                    if (_header.StreamsInfo.PackedStreams![packedStreamIndex].PackedStream == null)
                     {
-                        _header.StreamsInfo.PackedStreams[packedStreamIndex].PackedStream = CloneStream(_zipFs);
+                        _header.StreamsInfo.PackedStreams[packedStreamIndex].PackedStream = CloneStream(_zipFs!)!;
                     }
-                    _header.StreamsInfo.PackedStreams[packedStreamIndex].PackedStream.Seek(
+                    _header.StreamsInfo.PackedStreams[packedStreamIndex].PackedStream!.Seek(
                         _baseOffset + (long)_header.StreamsInfo.PackedStreams[packedStreamIndex].StreamPosition, SeekOrigin.Begin);
 
 
@@ -117,9 +117,9 @@ namespace Compress.SevenZip
                         inputCoders.Clear();
                         for (int j = 0; j < (int)coder.NumInStreams; j++)
                         {
-                            if (coder.InputStreamsSourceInfo[j].InStreamSource == InStreamSource.FileStream)
+                            if (coder.InputStreamsSourceInfo![j].InStreamSource == InStreamSource.FileStream)
                             {
-                                inputCoders.Add(_header.StreamsInfo.PackedStreams[coder.InputStreamsSourceInfo[j].InStreamIndex].PackedStream);
+                                inputCoders.Add(_header.StreamsInfo.PackedStreams![coder.InputStreamsSourceInfo[j].InStreamIndex].PackedStream!);
                             }
                             else if (coder.InputStreamsSourceInfo[j].InStreamSource == InStreamSource.CompStreamOutput)
                             {
@@ -127,7 +127,7 @@ namespace Compress.SevenZip
                                 {
                                     break;
                                 }
-                                inputCoders.Add(folder.Coders[coder.InputStreamsSourceInfo[j].InStreamIndex].DecoderStream);
+                                inputCoders.Add(folder.Coders[coder.InputStreamsSourceInfo[j].InStreamIndex].DecoderStream!);
                             }
                             else
                             {
@@ -145,16 +145,16 @@ namespace Compress.SevenZip
                                     coder.DecoderStream = inputCoders[0];
                                     break;
                                 case DecompressType.Delta:
-                                    coder.DecoderStream = new Delta(folder.Coders[i].Properties, inputCoders[0]);
+                                    coder.DecoderStream = new Delta(folder.Coders[i].Properties!, inputCoders[0]);
                                     break;
                                 case DecompressType.LZMA:
-                                    coder.DecoderStream = new LzmaStream(folder.Coders[i].Properties, inputCoders[0]);
+                                    coder.DecoderStream = new LzmaStream(folder.Coders[i].Properties!, inputCoders[0]);
                                     break;
                                 case DecompressType.LZMA2:
-                                    coder.DecoderStream = new LzmaStream(folder.Coders[i].Properties, inputCoders[0]);
+                                    coder.DecoderStream = new LzmaStream(folder.Coders[i].Properties!, inputCoders[0]);
                                     break;
                                 case DecompressType.PPMd:
-                                    coder.DecoderStream = new PpmdStream(new PpmdProperties(folder.Coders[i].Properties), inputCoders[0], false);
+                                    coder.DecoderStream = new PpmdStream(new PpmdProperties(folder.Coders[i].Properties!), inputCoders[0], false);
                                     break;
                                 case DecompressType.BZip2:
                                     coder.DecoderStream = new CBZip2InputStream(inputCoders[0], false);
@@ -194,7 +194,7 @@ namespace Compress.SevenZip
                 }
 
                 stream = folder.Coders[outputStream].DecoderStream;
-                stream.Seek((long)_localFiles[index].StreamOffset, SeekOrigin.Current);
+                stream!.Seek((long)_localFiles[index].StreamOffset, SeekOrigin.Current);
 
                 _stream = stream;
 
@@ -208,12 +208,12 @@ namespace Compress.SevenZip
 
         }
 
-        private Stream CloneStream(Stream s)
+        private Stream? CloneStream(Stream s)
         {
             switch (s)
             {
                 case System.IO.FileStream _:
-                    int errorCode = FileStream.OpenFileRead(ZipFilename, out Stream streamOut);
+                    int errorCode = FileStream.OpenFileRead(ZipFilename, out Stream? streamOut);
                     return errorCode != 0 ? null : streamOut;
 
                 case MemoryStream memStream:
@@ -233,20 +233,20 @@ namespace Compress.SevenZip
         {
             if (_streamIndex != -1)
             {
-                if (_header.StreamsInfo != null)
+                if (_header!.StreamsInfo != null)
                 {
-                    Folder folder = _header.StreamsInfo.Folders[_streamIndex];
+                    Folder folder = _header.StreamsInfo.Folders![_streamIndex];
 
-                    foreach (Coder c in folder.Coders)
+                    foreach (Coder c in folder.Coders!)
                     {
-                        Stream ds = c?.DecoderStream;
+                        Stream? ds = c?.DecoderStream;
                         if (ds == null)
                         {
                             continue;
                         }
                         ds.Close();
                         ds.Dispose();
-                        c.DecoderStream = null;
+                        c!.DecoderStream = null;
                     }
                 }
             }
@@ -254,7 +254,7 @@ namespace Compress.SevenZip
 
             if (_header?.StreamsInfo != null)
             {
-                foreach (PackedStreamInfo psi in _header.StreamsInfo.PackedStreams)
+                foreach (PackedStreamInfo psi in _header.StreamsInfo.PackedStreams!)
                 {
                     if (psi?.PackedStream == null)
                     {

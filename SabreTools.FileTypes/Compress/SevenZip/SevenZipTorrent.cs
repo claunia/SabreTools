@@ -28,7 +28,7 @@ namespace Compress.SevenZip
 
         private bool IsRomVault7Z(long testBaseOffset, ulong testHeaderPos, ulong testHeaderLength, uint testHeaderCRC)
         {
-            long length = _zipFs.Length;
+            long length = _zipFs!.Length;
             if (length < 32)
             {
                 return false;
@@ -87,7 +87,7 @@ namespace Compress.SevenZip
 
             // read fist 128 bytes, pad with zeros if less bytes
             int bufferPos = 0;
-            _zipFs.Seek(0, SeekOrigin.Begin);
+            _zipFs!.Seek(0, SeekOrigin.Begin);
             int ar = _zipFs.Read(buffer, bufferPos, crcsz);
             if (ar < crcsz)
             {
