@@ -438,11 +438,12 @@ namespace SabreTools.DatTools
                 foreach (DatItem item in dupes)
                 {
                     // If we don't have a proper machine
-                    if (item.GetFieldValue<Machine>(DatItem.MachineKey)!?.GetStringFieldValue(Models.Metadata.Machine.NameKey) == null || !datFile.Items.ContainsKey(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!))
+                    var machine = item.GetFieldValue<Machine>(DatItem.MachineKey);
+                    if (machine?.GetStringFieldValue(Models.Metadata.Machine.NameKey) == null)
                         continue;
 
                     // If we should check for the items in the machine
-                    var items = datFile.Items[item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!];
+                    var items = datFile.Items[machine.GetStringFieldValue(Models.Metadata.Machine.NameKey)!];
                     if (shouldCheck && items!.Count > 1)
                         outputFormat = OutputFormat.Folder;
                     else if (shouldCheck && items!.Count == 1)
