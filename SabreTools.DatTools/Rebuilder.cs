@@ -148,7 +148,7 @@ namespace SabreTools.DatTools
                     continue;
 
                 // Ensure we are sorted correctly (some other calls can change this)
-                datFile.Items.BucketBy(ItemKey.SHA1, DedupeType.None);
+                //datFile.Items.BucketBy(ItemKey.SHA1, DedupeType.None);
 
                 // If there are no items in the hash, we continue
                 var items = datFile.Items[hash];
