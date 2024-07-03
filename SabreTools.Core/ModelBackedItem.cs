@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core.Tools;
 
@@ -13,13 +14,13 @@ namespace SabreTools.Core
         /// Internal model wrapped by this DatItem
         /// </summary>
         [JsonIgnore, XmlIgnore]
-        protected Models.Metadata.DictionaryBase _internal;
+        protected T _internal;
 
         #region Constructors
 
         public ModelBackedItem()
         {
-            _internal = new DummyItem();
+            _internal = (T)Activator.CreateInstance(typeof(T))!;
         }
 
         #endregion
@@ -146,15 +147,6 @@ namespace SabreTools.Core
             _internal[fieldName!] = value;
             return true;
         }
-
-        #endregion
-
-        #region Dummy Classes
-
-        /// <summary>
-        /// Dummy item for use with the default constructor
-        /// </summary>
-        private class DummyItem : Models.Metadata.DictionaryBase { }
 
         #endregion
     }
