@@ -93,16 +93,12 @@ namespace SabreTools.FileTypes.Archives
                 var gz = new gZip();
                 ZipReturn ret = gz.ZipFileOpen(this.Filename);
                 ret = gz.ZipFileOpenReadStream(0, out Stream? gzstream, out ulong streamSize);
-#if NET20 || NET35
                 byte[] buffer = new byte[32768];
                 int read;
                 while ((read = gzstream!.Read(buffer, 0, buffer.Length)) > 0)
                 {
                     outstream.Write(buffer, 0, read);
                 }
-#else
-                gzstream!.CopyTo(outstream);
-#endif
 
                 // Dispose of the streams
                 outstream.Dispose();
