@@ -225,14 +225,14 @@ namespace SabreTools.DatTools
             // If there's nothing there, abort
             if (datFile.Items.DatStatistics.TotalCount == 0)
                 return false;
-            if (datFile.ItemsDB.DatStatistics.TotalCount == 0)
-                return false;
+            // if (datFile.ItemsDB.DatStatistics.TotalCount == 0)
+            //     return false;
 
             // If every item is removed, abort
             if (datFile.Items.DatStatistics.TotalCount == datFile.Items.DatStatistics.RemovedCount)
                 return false;
-            if (datFile.ItemsDB.DatStatistics.TotalCount == datFile.ItemsDB.DatStatistics.RemovedCount)
-                return false;
+            // if (datFile.ItemsDB.DatStatistics.TotalCount == datFile.ItemsDB.DatStatistics.RemovedCount)
+            //     return false;
 
             return true;
         }
