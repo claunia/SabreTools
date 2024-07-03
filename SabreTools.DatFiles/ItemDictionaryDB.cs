@@ -1525,12 +1525,16 @@ namespace SabreTools.DatFiles
 
             string[] splitname = datItem.Item2.GetName()!.Split('.');
 #if NET20 || NET35
-            machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.NameKey,
-                machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1).ToArray())}");
+            string machineName = machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1).ToArray())}";
 #else
-            machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.NameKey,
-                machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1))}");
+            string machineName = machine.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1))}";
 #endif
+
+            // Strip off "Default" prefix only for ORPG
+            if (machineName.StartsWith("Default"))
+                machineName = machineName.Substring("Default".Length + 1);
+
+            machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineName);
             datItem.Item2.SetName(Path.GetFileName(datItem.Item2.GetName()));
         }
 
