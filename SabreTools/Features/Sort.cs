@@ -100,6 +100,10 @@ namespace SabreTools.Features
                     DatFile datdata = DatFile.Create();
                     Parser.ParseInto(datdata, datfile, int.MaxValue, keep: true);
 
+                    // Skip if nothing was parsed
+                    if (datdata.Items.Count == 0) // datdata.ItemsDB.SortedKeys.Length == 0
+                        continue;
+
                     // Set depot information
                     datdata.Header.SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey, inputDepot?.Clone() as DepotInformation);
                     datdata.Header.SetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey, outputDepot?.Clone() as DepotInformation);
