@@ -123,8 +123,6 @@ namespace SabreTools.Core.Tools
             if (string.IsNullOrEmpty(input))
                 return input;
 
-            input = input!.ToLowerInvariant();
-
             List<char> invalidPath = [.. Path.GetInvalidPathChars()];
             return new string(input.Where(c => !invalidPath.Contains(c)).ToArray());
         }
