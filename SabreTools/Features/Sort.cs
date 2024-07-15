@@ -6,7 +6,6 @@ using SabreTools.FileTypes;
 using SabreTools.Help;
 using SabreTools.IO;
 using SabreTools.Logging;
-using SabreTools.Models.InstallShieldCabinet;
 
 namespace SabreTools.Features
 {
@@ -73,8 +72,12 @@ namespace SabreTools.Features
             bool updateDat = GetBoolean(features, UpdateDatValue);
             var outputFormat = GetOutputFormat(features);
 
+            // Get the depots
+            var inputDepot = Header!.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey);
+            var outputDepot = Header!.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey);
+
             // If we have the romba flag
-            if (Header!.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.IsActive == true)
+            if (outputDepot?.IsActive == true)
             {
                 // Update TorrentGzip output
                 if (outputFormat == OutputFormat.TorrentGzip)
@@ -98,8 +101,8 @@ namespace SabreTools.Features
                     Parser.ParseInto(datdata, datfile, int.MaxValue, keep: true);
 
                     // Set depot information
-                    datdata.Header.SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey,  Header.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.Clone() as DepotInformation);
-                    datdata.Header.SetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey, Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.Clone() as DepotInformation);
+                    datdata.Header.SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey, inputDepot?.Clone() as DepotInformation);
+                    datdata.Header.SetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey, outputDepot?.Clone() as DepotInformation);
 
                     // If we have overridden the header skipper, set it now
                     if (!string.IsNullOrEmpty(Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey)))
@@ -107,7 +110,7 @@ namespace SabreTools.Features
 
                     // If we have the depot flag, respect it
                     bool success;
-                    if (Header.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.IsActive ?? false)
+                    if (inputDepot?.IsActive ?? false)
                         success = Rebuilder.RebuildDepot(datdata, Inputs, Path.Combine(OutputDir!, datdata.Header.GetStringFieldValue(DatHeader.FileNameKey)!), date, delete, inverse, outputFormat);
                     else
                         success = Rebuilder.RebuildGeneric(datdata, Inputs, Path.Combine(OutputDir!, datdata.Header.GetStringFieldValue(DatHeader.FileNameKey)!), quickScan, date, delete, inverse, outputFormat, asFiles);
@@ -138,18 +141,19 @@ namespace SabreTools.Features
                 }
 
                 // Set depot information
-                datdata.Header.SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey, Header.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.Clone() as DepotInformation);
-                datdata.Header.SetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey, Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.Clone() as DepotInformation);
+                datdata.Header.SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey, inputDepot?.Clone() as DepotInformation);
+                datdata.Header.SetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey, outputDepot?.Clone() as DepotInformation);
 
                 // If we have overridden the header skipper, set it now
-                if (!string.IsNullOrEmpty(Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey)))
-                    datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey));
+                string? headerSkpper = Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey);
+                if (!string.IsNullOrEmpty(headerSkpper))
+                    datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, headerSkpper);
 
                 watch.Stop();
 
                 // If we have the depot flag, respect it
                 bool success;
-                if (Header.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.IsActive ?? false)
+                if (inputDepot?.IsActive ?? false)
                     success = Rebuilder.RebuildDepot(datdata, Inputs, OutputDir!, date, delete, inverse, outputFormat);
                 else
                     success = Rebuilder.RebuildGeneric(datdata, Inputs, OutputDir!, quickScan, date, delete, inverse, outputFormat, asFiles);
@@ -157,9 +161,13 @@ namespace SabreTools.Features
                 // If we have a success and we're updating the DAT, write it out
                 if (success && updateDat)
                 {
-                    datdata.Header.SetFieldValue<string?>(DatHeader.FileNameKey, $"fixDAT_{Header.GetStringFieldValue(DatHeader.FileNameKey)}");
-                    datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, $"fixDAT_{Header.GetStringFieldValue(Models.Metadata.Header.NameKey)}");
-                    datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, $"fixDAT_{Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)}");
+                    datdata.Header.SetFieldValue<string?>(DatHeader.FileNameKey,
+                        $"fixDAT_{Header.GetStringFieldValue(DatHeader.FileNameKey)}");
+                    datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey,
+                        $"fixDAT_{Header.GetStringFieldValue(Models.Metadata.Header.NameKey)}");
+                    datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey,
+                        $"fixDAT_{Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)}");
+
                     datdata.Items.ClearMarked();
                     datdata.ItemsDB.ClearMarked();
                     Writer.Write(datdata, OutputDir);

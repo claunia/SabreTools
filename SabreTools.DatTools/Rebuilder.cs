@@ -65,8 +65,9 @@ namespace SabreTools.DatTools
             outDir = outDir.Ensure(create: true);
 
             // Now we want to get forcepack flag if it's not overridden
-            if (outputFormat == OutputFormat.Folder && datFile.Header.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>() != PackingFlag.None)
-                outputFormat = GetOutputFormat(datFile.Header.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>());
+            PackingFlag forcePacking = datFile.Header.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>();
+            if (outputFormat == OutputFormat.Folder && forcePacking != PackingFlag.None)
+                outputFormat = GetOutputFormat(forcePacking);
 
             #endregion
 
@@ -219,8 +220,9 @@ namespace SabreTools.DatTools
             }
 
             // Now we want to get forcepack flag if it's not overridden
-            if (outputFormat == OutputFormat.Folder && datFile.Header.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>() != PackingFlag.None)
-                outputFormat = GetOutputFormat(datFile.Header.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>());
+            PackingFlag forcePacking = datFile.Header.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>();
+            if (outputFormat == OutputFormat.Folder && forcePacking != PackingFlag.None)
+                outputFormat = GetOutputFormat(forcePacking);
 
 
             #endregion

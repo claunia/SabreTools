@@ -909,31 +909,41 @@ namespace SabreTools.DatFiles
             {
                 DatItem item = this[key]![0];
 
-                // Match on CloneOf first
-                if (!string.IsNullOrEmpty(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey)))
-                {
-                    if (!parents.ContainsKey(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey)!.ToLowerInvariant()))
-                        parents.Add(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey)!.ToLowerInvariant(), []);
+                // Get machine information
+                Machine? machine = item.GetFieldValue<Machine>(DatItem.MachineKey);
+                string? machineName = machine?.GetStringFieldValue(Models.Metadata.Machine.NameKey)?.ToLowerInvariant();
+                if (machine == null || machineName == null)
+                    continue;
 
-                    parents[item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey)!.ToLowerInvariant()].Add(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!.ToLowerInvariant());
+                // Get the string values
+                string? cloneOf = machine.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey)?.ToLowerInvariant();
+                string? romOf = machine.GetStringFieldValue(Models.Metadata.Machine.RomOfKey)?.ToLowerInvariant();
+
+                // Match on CloneOf first
+                if (!string.IsNullOrEmpty(cloneOf))
+                {
+                    if (!parents.ContainsKey(cloneOf!))
+                        parents.Add(cloneOf!, []);
+
+                    parents[cloneOf!].Add(machineName);
                 }
 
                 // Then by RomOf
-                else if (!string.IsNullOrEmpty(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey)))
+                else if (!string.IsNullOrEmpty(romOf))
                 {
-                    if (!parents.ContainsKey(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey)!.ToLowerInvariant()))
-                        parents.Add(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey)!.ToLowerInvariant(), []);
+                    if (!parents.ContainsKey(romOf!))
+                        parents.Add(romOf!, []);
 
-                    parents[item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey)!.ToLowerInvariant()].Add(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!.ToLowerInvariant());
+                    parents[romOf!].Add(machineName);
                 }
 
                 // Otherwise, treat it as a parent
                 else
                 {
-                    if (!parents.ContainsKey(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!.ToLowerInvariant()))
-                        parents.Add(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!.ToLowerInvariant(), []);
+                    if (!parents.ContainsKey(machineName))
+                        parents.Add(machineName, []);
 
-                    parents[item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!.ToLowerInvariant()].Add(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!.ToLowerInvariant());
+                    parents[machineName].Add(machineName);
                 }
             }
 

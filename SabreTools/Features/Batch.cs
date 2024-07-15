@@ -486,7 +486,8 @@ Reset the internal state:           reset();";
                 batchState.DatFile.Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, 0x00);
                 foreach (string format in Arguments)
                 {
-                    batchState.DatFile.Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, batchState.DatFile.Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey) | GetDatFormat(format));
+                    DatFormat currentFormat = batchState.DatFile.Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey);
+                    batchState.DatFile.Header.SetFieldValue(DatHeader.DatFormatKey, currentFormat | GetDatFormat(format));
                 }
             }
         }

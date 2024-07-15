@@ -2195,14 +2195,13 @@ Some special strings that can be used:
                     logger.Error($"{ot} is not a recognized DAT format");
                     return null;
                 }
-                else if (dftemp == DatFormat.Logiqx && deprecated)
-                {
-                    datHeader.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, datHeader.GetFieldValue<DatFormat>(DatHeader.DatFormatKey) | DatFormat.LogiqxDeprecated);
-                }
+
+                // Handle deprecated Logiqx
+                DatFormat currentFormat = datHeader.GetFieldValue<DatFormat>(DatHeader.DatFormatKey);
+                if (dftemp == DatFormat.Logiqx && deprecated)
+                    datHeader.SetFieldValue(DatHeader.DatFormatKey, currentFormat | DatFormat.LogiqxDeprecated);
                 else
-                {
-                    datHeader.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, datHeader.GetFieldValue<DatFormat>(DatHeader.DatFormatKey) | dftemp);
-                }
+                    datHeader.SetFieldValue(DatHeader.DatFormatKey, currentFormat | dftemp);
             }
 
             return datHeader;

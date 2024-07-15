@@ -73,14 +73,16 @@ namespace SabreTools.Features
                     Remover!.ApplyRemovals(datdata);
 
                     // Set depot information
-                    datdata.Header.SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey, Header!.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.Clone() as DepotInformation);
+                    var inputDepot = Header!.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey);
+                    datdata.Header.SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey, inputDepot?.Clone() as DepotInformation);
 
                     // If we have overridden the header skipper, set it now
-                    if (!string.IsNullOrEmpty(Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey)))
-                        datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey));
+                    string? headerSkipper = Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey);
+                    if (!string.IsNullOrEmpty(headerSkipper))
+                        datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, headerSkipper);
 
                     // If we have the depot flag, respect it
-                    if (Header.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.IsActive ?? false)
+                    if (inputDepot?.IsActive ?? false)
                     {
                         Verification.VerifyDepot(datdata, Inputs);
                     }
@@ -123,16 +125,18 @@ namespace SabreTools.Features
                 Remover!.ApplyRemovals(datdata);
 
                 // Set depot information
-                datdata.Header.SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey, Header!.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.Clone() as DepotInformation);
+                var inputDepot = Header!.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey);
+                datdata.Header.SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey, inputDepot?.Clone() as DepotInformation);
 
                 // If we have overridden the header skipper, set it now
-                if (!string.IsNullOrEmpty(Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey)))
-                    datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey));
+                string? headerSkipper = Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey);
+                if (!string.IsNullOrEmpty(headerSkipper))
+                    datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, headerSkipper);
 
                 watch.Stop();
 
                 // If we have the depot flag, respect it
-                if (Header.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.IsActive ?? false)
+                if (inputDepot?.IsActive ?? false)
                 {
                     Verification.VerifyDepot(datdata, Inputs);
                 }

@@ -167,10 +167,14 @@ namespace SabreTools.Features
                     // Create a new base DatFile
                     DatFile datFile = DatFile.Create(Header);
                     logger.User($"Processing '{Path.GetFileName(inputPath.CurrentPath)}'");
-                    Parser.ParseInto(datFile, inputPath, keep: true,
-                        keepext: datFile.Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.TSV)
-                            || datFile.Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.CSV)
-                            || datFile.Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.SSV));
+
+                    // Check the current format
+                    DatFormat currentFormat = datFile.Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey);
+                    bool isSeparatedFile = currentFormat.HasFlag(DatFormat.CSV)
+                        || currentFormat.HasFlag(DatFormat.SSV)
+                        || currentFormat.HasFlag(DatFormat.TSV);
+
+                    Parser.ParseInto(datFile, inputPath, keep: true, keepext: isSeparatedFile);
 
                     // Perform additional processing steps
                     Extras!.ApplyExtras(datFile);

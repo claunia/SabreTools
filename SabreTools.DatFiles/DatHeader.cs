@@ -177,24 +177,42 @@ namespace SabreTools.DatFiles
         public DatHeader CloneStandard()
         {
             var header = new DatHeader();
-            header.SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, GetStringFieldValue(Models.Metadata.Header.AuthorKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.CategoryKey, GetStringFieldValue(Models.Metadata.Header.CategoryKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.CommentKey, GetStringFieldValue(Models.Metadata.Header.CommentKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.DateKey, GetStringFieldValue(Models.Metadata.Header.DateKey));
-            header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, GetFieldValue<DatFormat>(DatHeader.DatFormatKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, GetStringFieldValue(Models.Metadata.Header.DescriptionKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.EmailKey, GetStringFieldValue(Models.Metadata.Header.EmailKey));
-            header.SetFieldValue<string?>(DatHeader.FileNameKey, GetStringFieldValue(DatHeader.FileNameKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.ForceMergingKey, GetStringFieldValue(Models.Metadata.Header.ForceMergingKey).AsEnumValue<MergingFlag>().AsStringValue());
-            header.SetFieldValue<string?>(Models.Metadata.Header.ForceNodumpKey, GetStringFieldValue(Models.Metadata.Header.ForceNodumpKey).AsEnumValue<NodumpFlag>().AsStringValue());
-            header.SetFieldValue<string?>(Models.Metadata.Header.ForcePackingKey, GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>().AsStringValue());
-            header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, GetStringFieldValue(Models.Metadata.Header.HeaderKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, GetStringFieldValue(Models.Metadata.Header.HomepageKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, GetStringFieldValue(Models.Metadata.Header.NameKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.RootDirKey, GetStringFieldValue(Models.Metadata.Header.RootDirKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, GetStringFieldValue(Models.Metadata.Header.TypeKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.UrlKey, GetStringFieldValue(Models.Metadata.Header.UrlKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.VersionKey, GetStringFieldValue(Models.Metadata.Header.VersionKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.AuthorKey,
+                GetStringFieldValue(Models.Metadata.Header.AuthorKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.CategoryKey,
+                GetStringFieldValue(Models.Metadata.Header.CategoryKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.CommentKey,
+                GetStringFieldValue(Models.Metadata.Header.CommentKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.DateKey,
+                GetStringFieldValue(Models.Metadata.Header.DateKey));
+            header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey,
+                GetFieldValue<DatFormat>(DatHeader.DatFormatKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey,
+                GetStringFieldValue(Models.Metadata.Header.DescriptionKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.EmailKey,
+                GetStringFieldValue(Models.Metadata.Header.EmailKey));
+            header.SetFieldValue<string?>(DatHeader.FileNameKey,
+                GetStringFieldValue(DatHeader.FileNameKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.ForceMergingKey,
+                GetStringFieldValue(Models.Metadata.Header.ForceMergingKey).AsEnumValue<MergingFlag>().AsStringValue());
+            header.SetFieldValue<string?>(Models.Metadata.Header.ForceNodumpKey,
+                GetStringFieldValue(Models.Metadata.Header.ForceNodumpKey).AsEnumValue<NodumpFlag>().AsStringValue());
+            header.SetFieldValue<string?>(Models.Metadata.Header.ForcePackingKey,
+                GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>().AsStringValue());
+            header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey,
+                GetStringFieldValue(Models.Metadata.Header.HeaderKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.HomepageKey,
+                GetStringFieldValue(Models.Metadata.Header.HomepageKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.NameKey,
+                GetStringFieldValue(Models.Metadata.Header.NameKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.RootDirKey,
+                GetStringFieldValue(Models.Metadata.Header.RootDirKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.TypeKey,
+                GetStringFieldValue(Models.Metadata.Header.TypeKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.UrlKey,
+                GetStringFieldValue(Models.Metadata.Header.UrlKey));
+            header.SetFieldValue<string?>(Models.Metadata.Header.VersionKey,
+                GetStringFieldValue(Models.Metadata.Header.VersionKey));
 
             return header;
         }
@@ -205,17 +223,28 @@ namespace SabreTools.DatFiles
         public DatHeader CloneFiltering()
         {
             var header = new DatHeader();
-            header.SetFieldValue<string?>(DatHeader.AddExtensionKey, GetStringFieldValue(DatHeader.AddExtensionKey));
-            header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, GetFieldValue<DatFormat>(DatHeader.DatFormatKey));
-            header.SetFieldValue<bool?>(DatHeader.GameNameKey, GetBoolFieldValue(DatHeader.GameNameKey));
-            header.SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey, GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.Clone() as DepotInformation);
-            header.SetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey, GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.Clone() as DepotInformation);
-            header.SetFieldValue<string?>(DatHeader.PostfixKey, GetStringFieldValue(DatHeader.PostfixKey));
-            header.SetFieldValue<string?>(DatHeader.PrefixKey, GetStringFieldValue(DatHeader.PrefixKey));
-            header.SetFieldValue<bool?>(DatHeader.RemoveExtensionKey, GetBoolFieldValue(DatHeader.RemoveExtensionKey));
-            header.SetFieldValue<string?>(DatHeader.ReplaceExtensionKey, GetStringFieldValue(DatHeader.ReplaceExtensionKey));
-            header.SetFieldValue<bool?>(DatHeader.QuotesKey, GetBoolFieldValue(DatHeader.QuotesKey));
-            header.SetFieldValue<bool?>(DatHeader.UseRomNameKey, GetBoolFieldValue(DatHeader.UseRomNameKey));
+            header.SetFieldValue<string?>(DatHeader.AddExtensionKey,
+                GetStringFieldValue(DatHeader.AddExtensionKey));
+            header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey,
+                GetFieldValue<DatFormat>(DatHeader.DatFormatKey));
+            header.SetFieldValue<bool?>(DatHeader.GameNameKey,
+                GetBoolFieldValue(DatHeader.GameNameKey));
+            header.SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey,
+                GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.Clone() as DepotInformation);
+            header.SetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey,
+                GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.Clone() as DepotInformation);
+            header.SetFieldValue<string?>(DatHeader.PostfixKey,
+                GetStringFieldValue(DatHeader.PostfixKey));
+            header.SetFieldValue<string?>(DatHeader.PrefixKey,
+                GetStringFieldValue(DatHeader.PrefixKey));
+            header.SetFieldValue<bool?>(DatHeader.RemoveExtensionKey,
+                GetBoolFieldValue(DatHeader.RemoveExtensionKey));
+            header.SetFieldValue<string?>(DatHeader.ReplaceExtensionKey,
+                GetStringFieldValue(DatHeader.ReplaceExtensionKey));
+            header.SetFieldValue<bool?>(DatHeader.QuotesKey,
+                GetBoolFieldValue(DatHeader.QuotesKey));
+            header.SetFieldValue<bool?>(DatHeader.UseRomNameKey,
+                GetBoolFieldValue(DatHeader.UseRomNameKey));
 
             return header;
         }
@@ -230,77 +259,105 @@ namespace SabreTools.DatFiles
                 return;
 
             if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(DatHeader.FileNameKey)))
-                SetFieldValue<string?>(DatHeader.FileNameKey, datHeader.GetStringFieldValue(DatHeader.FileNameKey));
+                SetFieldValue<string?>(DatHeader.FileNameKey,
+                    datHeader.GetStringFieldValue(DatHeader.FileNameKey));
 
             if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(Models.Metadata.Header.NameKey)))
-                SetFieldValue<string?>(Models.Metadata.Header.NameKey, datHeader.GetStringFieldValue(Models.Metadata.Header.NameKey));
+                SetFieldValue<string?>(Models.Metadata.Header.NameKey,
+                    datHeader.GetStringFieldValue(Models.Metadata.Header.NameKey));
 
             if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)))
-                SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, datHeader.GetStringFieldValue(Models.Metadata.Header.DescriptionKey));
+                SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey,
+                    datHeader.GetStringFieldValue(Models.Metadata.Header.DescriptionKey));
 
             if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(Models.Metadata.Header.RootDirKey)))
-                SetFieldValue<string?>(Models.Metadata.Header.RootDirKey, datHeader.GetStringFieldValue(Models.Metadata.Header.RootDirKey));
+                SetFieldValue<string?>(Models.Metadata.Header.RootDirKey,
+                    datHeader.GetStringFieldValue(Models.Metadata.Header.RootDirKey));
 
             if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(Models.Metadata.Header.CategoryKey)))
-                SetFieldValue<string?>(Models.Metadata.Header.CategoryKey, datHeader.GetStringFieldValue(Models.Metadata.Header.CategoryKey));
+                SetFieldValue<string?>(Models.Metadata.Header.CategoryKey,
+                    datHeader.GetStringFieldValue(Models.Metadata.Header.CategoryKey));
 
             if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(Models.Metadata.Header.VersionKey)))
-                SetFieldValue<string?>(Models.Metadata.Header.VersionKey, datHeader.GetStringFieldValue(Models.Metadata.Header.VersionKey));
+                SetFieldValue<string?>(Models.Metadata.Header.VersionKey,
+                    datHeader.GetStringFieldValue(Models.Metadata.Header.VersionKey));
 
             if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(Models.Metadata.Header.DateKey)))
-                SetFieldValue<string?>(Models.Metadata.Header.DateKey, datHeader.GetStringFieldValue(Models.Metadata.Header.DateKey));
+                SetFieldValue<string?>(Models.Metadata.Header.DateKey,
+                    datHeader.GetStringFieldValue(Models.Metadata.Header.DateKey));
 
             if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(Models.Metadata.Header.AuthorKey)))
-                SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, datHeader.GetStringFieldValue(Models.Metadata.Header.AuthorKey));
+                SetFieldValue<string?>(Models.Metadata.Header.AuthorKey,
+                    datHeader.GetStringFieldValue(Models.Metadata.Header.AuthorKey));
 
             if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(Models.Metadata.Header.EmailKey)))
-                SetFieldValue<string?>(Models.Metadata.Header.EmailKey, datHeader.GetStringFieldValue(Models.Metadata.Header.EmailKey));
+                SetFieldValue<string?>(Models.Metadata.Header.EmailKey,
+                    datHeader.GetStringFieldValue(Models.Metadata.Header.EmailKey));
 
             if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(Models.Metadata.Header.HomepageKey)))
-                SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, datHeader.GetStringFieldValue(Models.Metadata.Header.HomepageKey));
+                SetFieldValue<string?>(Models.Metadata.Header.HomepageKey,
+                datHeader.GetStringFieldValue(Models.Metadata.Header.HomepageKey));
 
             if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(Models.Metadata.Header.UrlKey)))
-                SetFieldValue<string?>(Models.Metadata.Header.UrlKey, datHeader.GetStringFieldValue(Models.Metadata.Header.UrlKey));
+                SetFieldValue<string?>(Models.Metadata.Header.UrlKey,
+                    datHeader.GetStringFieldValue(Models.Metadata.Header.UrlKey));
 
             if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(Models.Metadata.Header.CommentKey)))
-                SetFieldValue<string?>(Models.Metadata.Header.CommentKey, datHeader.GetStringFieldValue(Models.Metadata.Header.CommentKey));
+                SetFieldValue<string?>(Models.Metadata.Header.CommentKey,
+                    datHeader.GetStringFieldValue(Models.Metadata.Header.CommentKey));
 
             if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(Models.Metadata.Header.HeaderKey)))
-                SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, datHeader.GetStringFieldValue(Models.Metadata.Header.HeaderKey));
+                SetFieldValue<string?>(Models.Metadata.Header.HeaderKey,
+                    datHeader.GetStringFieldValue(Models.Metadata.Header.HeaderKey));
 
             if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(Models.Metadata.Header.TypeKey)))
-                SetFieldValue<string?>(Models.Metadata.Header.TypeKey, datHeader.GetStringFieldValue(Models.Metadata.Header.TypeKey));
+                SetFieldValue<string?>(Models.Metadata.Header.TypeKey,
+                    datHeader.GetStringFieldValue(Models.Metadata.Header.TypeKey));
 
             if (datHeader.GetStringFieldValue(Models.Metadata.Header.ForceMergingKey).AsEnumValue<MergingFlag>() != MergingFlag.None)
-                SetFieldValue<string?>(Models.Metadata.Header.ForceMergingKey, datHeader.GetStringFieldValue(Models.Metadata.Header.ForceMergingKey).AsEnumValue<MergingFlag>().AsStringValue());
+                SetFieldValue<string?>(Models.Metadata.Header.ForceMergingKey,
+                    datHeader.GetStringFieldValue(Models.Metadata.Header.ForceMergingKey).AsEnumValue<MergingFlag>().AsStringValue());
 
             if (datHeader.GetStringFieldValue(Models.Metadata.Header.ForceNodumpKey).AsEnumValue<NodumpFlag>() != NodumpFlag.None)
-                SetFieldValue<string?>(Models.Metadata.Header.ForceNodumpKey, datHeader.GetStringFieldValue(Models.Metadata.Header.ForceNodumpKey).AsEnumValue<NodumpFlag>().AsStringValue());
+                SetFieldValue<string?>(Models.Metadata.Header.ForceNodumpKey,
+                    datHeader.GetStringFieldValue(Models.Metadata.Header.ForceNodumpKey).AsEnumValue<NodumpFlag>().AsStringValue());
 
             if (datHeader.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>() != PackingFlag.None)
-                SetFieldValue<string?>(Models.Metadata.Header.ForcePackingKey, datHeader.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>().AsStringValue());
+                SetFieldValue<string?>(Models.Metadata.Header.ForcePackingKey,
+                    datHeader.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>().AsStringValue());
 
             if (datHeader.GetFieldValue<DatFormat>(DatHeader.DatFormatKey) != 0x00)
-                SetFieldValue<DatFormat>(DatHeader.DatFormatKey, datHeader.GetFieldValue<DatFormat>(DatHeader.DatFormatKey));
+                SetFieldValue<DatFormat>(DatHeader.DatFormatKey,
+                    datHeader.GetFieldValue<DatFormat>(DatHeader.DatFormatKey));
 
             if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(DatHeader.PrefixKey)))
-                SetFieldValue<string?>(DatHeader.PrefixKey, datHeader.GetStringFieldValue(DatHeader.PrefixKey));
+                SetFieldValue<string?>(DatHeader.PrefixKey,
+                    datHeader.GetStringFieldValue(DatHeader.PrefixKey));
 
             if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(DatHeader.PostfixKey)))
-                SetFieldValue<string?>(DatHeader.PostfixKey, datHeader.GetStringFieldValue(DatHeader.PostfixKey));
+                SetFieldValue<string?>(DatHeader.PostfixKey,
+                    datHeader.GetStringFieldValue(DatHeader.PostfixKey));
 
             if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(DatHeader.AddExtensionKey)))
-                SetFieldValue<string?>(DatHeader.AddExtensionKey, datHeader.GetStringFieldValue(DatHeader.AddExtensionKey));
+                SetFieldValue<string?>(DatHeader.AddExtensionKey,
+                    datHeader.GetStringFieldValue(DatHeader.AddExtensionKey));
 
             if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(DatHeader.ReplaceExtensionKey)))
-                SetFieldValue<string?>(DatHeader.ReplaceExtensionKey, datHeader.GetStringFieldValue(DatHeader.ReplaceExtensionKey));
+                SetFieldValue<string?>(DatHeader.ReplaceExtensionKey,
+                    datHeader.GetStringFieldValue(DatHeader.ReplaceExtensionKey));
 
-            SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey, datHeader.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.Clone() as DepotInformation);
-            SetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey, datHeader.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.Clone() as DepotInformation);
-            SetFieldValue<bool?>(DatHeader.GameNameKey, datHeader.GetBoolFieldValue(DatHeader.GameNameKey));
-            SetFieldValue<bool?>(DatHeader.QuotesKey, datHeader.GetBoolFieldValue(DatHeader.QuotesKey));
-            SetFieldValue<bool?>(DatHeader.RemoveExtensionKey, datHeader.GetBoolFieldValue(DatHeader.RemoveExtensionKey));
-            SetFieldValue<bool?>(DatHeader.UseRomNameKey, datHeader.GetBoolFieldValue(DatHeader.UseRomNameKey));
+            SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey,
+                datHeader.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.Clone() as DepotInformation);
+            SetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey,
+                datHeader.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.Clone() as DepotInformation);
+            SetFieldValue<bool?>(DatHeader.GameNameKey,
+                datHeader.GetBoolFieldValue(DatHeader.GameNameKey));
+            SetFieldValue<bool?>(DatHeader.QuotesKey,
+                datHeader.GetBoolFieldValue(DatHeader.QuotesKey));
+            SetFieldValue<bool?>(DatHeader.RemoveExtensionKey,
+                datHeader.GetBoolFieldValue(DatHeader.RemoveExtensionKey));
+            SetFieldValue<bool?>(DatHeader.UseRomNameKey,
+                datHeader.GetBoolFieldValue(DatHeader.UseRomNameKey));
         }
 
         #endregion
@@ -363,15 +420,18 @@ namespace SabreTools.DatFiles
             // Get all used extensions
             List<string> usedExtensions = [];
 
+            // Get the current format type
+            DatFormat datFormat = GetFieldValue<DatFormat>(DatHeader.DatFormatKey);
+
             // Get the extensions from the output type
 
             #region .csv
 
             // CSV
 #if NETFRAMEWORK
-            if ((GetFieldValue<DatFormat>(DatHeader.DatFormatKey) & DatFormat.CSV) != 0)
+            if ((datFormat & DatFormat.CSV) != 0)
 #else
-            if (GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.CSV))
+            if (datFormat.HasFlag(DatFormat.CSV))
 #endif
             {
                 outfileNames.Add(DatFormat.CSV, CreateOutFileNamesHelper(outDir, ".csv", overwrite));
@@ -384,9 +444,9 @@ namespace SabreTools.DatFiles
 
             // ClrMamePro
 #if NETFRAMEWORK
-            if ((GetFieldValue<DatFormat>(DatHeader.DatFormatKey) & DatFormat.ClrMamePro) != 0)
+            if ((datFormat & DatFormat.ClrMamePro) != 0)
 #else
-            if (GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.ClrMamePro))
+            if (datFormat.HasFlag(DatFormat.ClrMamePro))
 #endif
             {
                 outfileNames.Add(DatFormat.ClrMamePro, CreateOutFileNamesHelper(outDir, ".dat", overwrite));
@@ -395,9 +455,9 @@ namespace SabreTools.DatFiles
 
             // RomCenter
 #if NETFRAMEWORK
-            if ((GetFieldValue<DatFormat>(DatHeader.DatFormatKey) & DatFormat.RomCenter) != 0)
+            if ((datFormat & DatFormat.RomCenter) != 0)
 #else
-            if (GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.RomCenter))
+            if (datFormat.HasFlag(DatFormat.RomCenter))
 #endif
             {
                 if (usedExtensions.Contains(".dat"))
@@ -414,9 +474,9 @@ namespace SabreTools.DatFiles
 
             // DOSCenter
 #if NETFRAMEWORK
-            if ((GetFieldValue<DatFormat>(DatHeader.DatFormatKey) & DatFormat.DOSCenter) != 0)
+            if ((datFormat & DatFormat.DOSCenter) != 0)
 #else
-            if (GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.DOSCenter))
+            if (datFormat.HasFlag(DatFormat.DOSCenter))
 #endif
             {
                 if (usedExtensions.Contains(".dat"))
@@ -437,9 +497,9 @@ namespace SabreTools.DatFiles
 
             // JSON
 #if NETFRAMEWORK
-            if ((GetFieldValue<DatFormat>(DatHeader.DatFormatKey) & DatFormat.SabreJSON) != 0)
+            if ((datFormat & DatFormat.SabreJSON) != 0)
 #else
-            if (GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.SabreJSON))
+            if (datFormat.HasFlag(DatFormat.SabreJSON))
 #endif
             {
                 outfileNames.Add(DatFormat.SabreJSON, CreateOutFileNamesHelper(outDir, ".json", overwrite));
@@ -452,9 +512,9 @@ namespace SabreTools.DatFiles
 
             // Redump MD5
 #if NETFRAMEWORK
-            if ((GetFieldValue<DatFormat>(DatHeader.DatFormatKey) & DatFormat.RedumpMD5) != 0)
+            if ((datFormat & DatFormat.RedumpMD5) != 0)
 #else
-            if (GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.RedumpMD5))
+            if (datFormat.HasFlag(DatFormat.RedumpMD5))
 #endif
             {
                 outfileNames.Add(DatFormat.RedumpMD5, CreateOutFileNamesHelper(outDir, ".md5", overwrite));
@@ -467,9 +527,9 @@ namespace SabreTools.DatFiles
 
             // Redump SFV
 #if NETFRAMEWORK
-            if ((GetFieldValue<DatFormat>(DatHeader.DatFormatKey) & DatFormat.RedumpSFV) != 0)
+            if ((datFormat & DatFormat.RedumpSFV) != 0)
 #else
-            if (GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.RedumpSFV))
+            if (datFormat.HasFlag(DatFormat.RedumpSFV))
 #endif
             {
                 outfileNames.Add(DatFormat.RedumpSFV, CreateOutFileNamesHelper(outDir, ".sfv", overwrite));
@@ -482,9 +542,9 @@ namespace SabreTools.DatFiles
 
             // Redump SHA-1
 #if NETFRAMEWORK
-            if ((GetFieldValue<DatFormat>(DatHeader.DatFormatKey) & DatFormat.RedumpSHA1) != 0)
+            if ((datFormat & DatFormat.RedumpSHA1) != 0)
 #else
-            if (GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.RedumpSHA1))
+            if (datFormat.HasFlag(DatFormat.RedumpSHA1))
 #endif
             {
                 outfileNames.Add(DatFormat.RedumpSHA1, CreateOutFileNamesHelper(outDir, ".sha1", overwrite));
@@ -497,9 +557,9 @@ namespace SabreTools.DatFiles
 
             // Redump SHA-256
 #if NETFRAMEWORK
-            if ((GetFieldValue<DatFormat>(DatHeader.DatFormatKey) & DatFormat.RedumpSHA256) != 0)
+            if ((datFormat & DatFormat.RedumpSHA256) != 0)
 #else
-            if (GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.RedumpSHA256))
+            if (datFormat.HasFlag(DatFormat.RedumpSHA256))
 #endif
             {
                 outfileNames.Add(DatFormat.RedumpSHA256, CreateOutFileNamesHelper(outDir, ".sha256", overwrite));
@@ -512,9 +572,9 @@ namespace SabreTools.DatFiles
 
             // Redump SHA-384
 #if NETFRAMEWORK
-            if ((GetFieldValue<DatFormat>(DatHeader.DatFormatKey) & DatFormat.RedumpSHA384) != 0)
+            if ((datFormat & DatFormat.RedumpSHA384) != 0)
 #else
-            if (GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.RedumpSHA384))
+            if (datFormat.HasFlag(DatFormat.RedumpSHA384))
 #endif
             {
                 outfileNames.Add(DatFormat.RedumpSHA384, CreateOutFileNamesHelper(outDir, ".sha384", overwrite));
@@ -527,9 +587,9 @@ namespace SabreTools.DatFiles
 
             // Redump SHA-512
 #if NETFRAMEWORK
-            if ((GetFieldValue<DatFormat>(DatHeader.DatFormatKey) & DatFormat.RedumpSHA512) != 0)
+            if ((datFormat & DatFormat.RedumpSHA512) != 0)
 #else
-            if (GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.RedumpSHA512))
+            if (datFormat.HasFlag(DatFormat.RedumpSHA512))
 #endif
             {
                 outfileNames.Add(DatFormat.RedumpSHA512, CreateOutFileNamesHelper(outDir, ".sha512", overwrite));
@@ -542,9 +602,9 @@ namespace SabreTools.DatFiles
 
             // Redump SpamSum
 #if NETFRAMEWORK
-            if ((GetFieldValue<DatFormat>(DatHeader.DatFormatKey) & DatFormat.RedumpSpamSum) != 0)
+            if ((datFormat & DatFormat.RedumpSpamSum) != 0)
 #else
-            if (GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.RedumpSpamSum))
+            if (datFormat.HasFlag(DatFormat.RedumpSpamSum))
 #endif
             {
                 outfileNames.Add(DatFormat.RedumpSpamSum, CreateOutFileNamesHelper(outDir, ".spamsum", overwrite));
@@ -557,9 +617,9 @@ namespace SabreTools.DatFiles
 
             // SSV
 #if NETFRAMEWORK
-            if ((GetFieldValue<DatFormat>(DatHeader.DatFormatKey) & DatFormat.SSV) != 0)
+            if ((datFormat & DatFormat.SSV) != 0)
 #else
-            if (GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.SSV))
+            if (datFormat.HasFlag(DatFormat.SSV))
 #endif
             {
                 outfileNames.Add(DatFormat.SSV, CreateOutFileNamesHelper(outDir, ".ssv", overwrite));
@@ -572,9 +632,9 @@ namespace SabreTools.DatFiles
 
             // TSV
 #if NETFRAMEWORK
-            if ((GetFieldValue<DatFormat>(DatHeader.DatFormatKey) & DatFormat.TSV) != 0)
+            if ((datFormat & DatFormat.TSV) != 0)
 #else
-            if (GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.TSV))
+            if (datFormat.HasFlag(DatFormat.TSV))
 #endif
             {
                 outfileNames.Add(DatFormat.TSV, CreateOutFileNamesHelper(outDir, ".tsv", overwrite));
@@ -587,9 +647,9 @@ namespace SabreTools.DatFiles
 
             // AttractMode
 #if NETFRAMEWORK
-            if ((GetFieldValue<DatFormat>(DatHeader.DatFormatKey) & DatFormat.AttractMode) != 0)
+            if ((datFormat & DatFormat.AttractMode) != 0)
 #else
-            if (GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.AttractMode))
+            if (datFormat.HasFlag(DatFormat.AttractMode))
 #endif
             {
                 outfileNames.Add(DatFormat.AttractMode, CreateOutFileNamesHelper(outDir, ".txt", overwrite));
@@ -598,9 +658,9 @@ namespace SabreTools.DatFiles
 
             // MAME Listroms
 #if NETFRAMEWORK
-            if ((GetFieldValue<DatFormat>(DatHeader.DatFormatKey) & DatFormat.Listrom) != 0)
+            if ((datFormat & DatFormat.Listrom) != 0)
 #else
-            if (GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.Listrom))
+            if (datFormat.HasFlag(DatFormat.Listrom))
 #endif
             {
                 if (usedExtensions.Contains(".txt"))
@@ -617,9 +677,9 @@ namespace SabreTools.DatFiles
 
             // Missfile
 #if NETFRAMEWORK
-            if ((GetFieldValue<DatFormat>(DatHeader.DatFormatKey) & DatFormat.MissFile) != 0)
+            if ((datFormat & DatFormat.MissFile) != 0)
 #else
-            if (GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.MissFile))
+            if (datFormat.HasFlag(DatFormat.MissFile))
 #endif
             {
                 if (usedExtensions.Contains(".txt"))
@@ -636,9 +696,9 @@ namespace SabreTools.DatFiles
 
             // Everdrive SMDB
 #if NETFRAMEWORK
-            if ((GetFieldValue<DatFormat>(DatHeader.DatFormatKey) & DatFormat.EverdriveSMDB) != 0)
+            if ((datFormat & DatFormat.EverdriveSMDB) != 0)
 #else
-            if (GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.EverdriveSMDB))
+            if (datFormat.HasFlag(DatFormat.EverdriveSMDB))
 #endif
             {
                 if (usedExtensions.Contains(".txt"))
@@ -659,18 +719,18 @@ namespace SabreTools.DatFiles
 
             // Logiqx XML
 #if NETFRAMEWORK
-            if ((GetFieldValue<DatFormat>(DatHeader.DatFormatKey) & DatFormat.Logiqx) != 0)
+            if ((datFormat & DatFormat.Logiqx) != 0)
 #else
-            if (GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.Logiqx))
+            if (datFormat.HasFlag(DatFormat.Logiqx))
 #endif
             {
                 outfileNames.Add(DatFormat.Logiqx, CreateOutFileNamesHelper(outDir, ".xml", overwrite));
                 usedExtensions.Add(".xml");
             }
 #if NETFRAMEWORK
-            if ((GetFieldValue<DatFormat>(DatHeader.DatFormatKey) & DatFormat.LogiqxDeprecated) != 0)
+            if ((datFormat & DatFormat.LogiqxDeprecated) != 0)
 #else
-            if (GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.LogiqxDeprecated))
+            if (datFormat.HasFlag(DatFormat.LogiqxDeprecated))
 #endif
             {
                 outfileNames.Add(DatFormat.LogiqxDeprecated, CreateOutFileNamesHelper(outDir, ".xml", overwrite));
@@ -679,9 +739,9 @@ namespace SabreTools.DatFiles
 
             // SabreDAT
 #if NETFRAMEWORK
-            if ((GetFieldValue<DatFormat>(DatHeader.DatFormatKey) & DatFormat.SabreXML) != 0)
+            if ((datFormat & DatFormat.SabreXML) != 0)
 #else
-            if (GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.SabreXML))
+            if (datFormat.HasFlag(DatFormat.SabreXML))
 #endif
             {
                 if (usedExtensions.Contains(".xml"))
@@ -698,9 +758,9 @@ namespace SabreTools.DatFiles
 
             // Software List
 #if NETFRAMEWORK
-            if ((GetFieldValue<DatFormat>(DatHeader.DatFormatKey) & DatFormat.SoftwareList) != 0)
+            if ((datFormat & DatFormat.SoftwareList) != 0)
 #else
-            if (GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.SoftwareList))
+            if (datFormat.HasFlag(DatFormat.SoftwareList))
 #endif
             {
                 if (usedExtensions.Contains(".xml"))
@@ -717,9 +777,9 @@ namespace SabreTools.DatFiles
 
             // MAME Listxml
 #if NETFRAMEWORK
-            if ((GetFieldValue<DatFormat>(DatHeader.DatFormatKey) & DatFormat.Listxml) != 0)
+            if ((datFormat & DatFormat.Listxml) != 0)
 #else
-            if (GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.Listxml))
+            if (datFormat.HasFlag(DatFormat.Listxml))
 #endif
             {
                 if (usedExtensions.Contains(".xml"))
@@ -736,9 +796,9 @@ namespace SabreTools.DatFiles
 
             // OfflineList
 #if NETFRAMEWORK
-            if ((GetFieldValue<DatFormat>(DatHeader.DatFormatKey) & DatFormat.OfflineList) != 0)
+            if ((datFormat & DatFormat.OfflineList) != 0)
 #else
-            if (GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.OfflineList))
+            if (datFormat.HasFlag(DatFormat.OfflineList))
 #endif
             {
                 if (usedExtensions.Contains(".xml"))
@@ -755,9 +815,9 @@ namespace SabreTools.DatFiles
 
             // openMSX
 #if NETFRAMEWORK
-            if ((GetFieldValue<DatFormat>(DatHeader.DatFormatKey) & DatFormat.OpenMSX) != 0)
+            if ((datFormat & DatFormat.OpenMSX) != 0)
 #else
-            if (GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.OpenMSX))
+            if (datFormat.HasFlag(DatFormat.OpenMSX))
 #endif
             {
                 if (usedExtensions.Contains(".xml"))
@@ -774,9 +834,9 @@ namespace SabreTools.DatFiles
 
             // Archive.org
 #if NETFRAMEWORK
-            if ((GetFieldValue<DatFormat>(DatHeader.DatFormatKey) & DatFormat.ArchiveDotOrg) != 0)
+            if ((datFormat & DatFormat.ArchiveDotOrg) != 0)
 #else
-            if (GetFieldValue<DatFormat>(DatHeader.DatFormatKey).HasFlag(DatFormat.ArchiveDotOrg))
+            if (datFormat.HasFlag(DatFormat.ArchiveDotOrg))
 #endif
             {
                 if (usedExtensions.Contains(".xml"))

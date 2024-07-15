@@ -784,13 +784,14 @@ CREATE TABLE IF NOT EXISTS dat (
         /// <param name="dbc">Database connection to use</param>
         internal void AddDatToDatabase(Rom dat, SqliteConnection dbc)
         {
-            // Get the dat full path
+            // Get the machine
             var machine = dat.GetFieldValue<Machine>(DatItem.MachineKey);
-            string fullpath = Path.Combine(_dats!,
-                (machine!.GetStringFieldValue(SabreTools.Models.Metadata.Machine.NameKey) == "dats"
-                    ? string.Empty
-                    : machine!.GetStringFieldValue(SabreTools.Models.Metadata.Machine.NameKey))!
-                , dat.GetName()!);
+            string? machineName = machine?.GetStringFieldValue(SabreTools.Models.Metadata.Machine.NameKey);
+            if (machine == null || machineName == null)
+                return;
+
+            // Get the dat full path
+            string fullpath = Path.Combine(_dats!, machineName == "dats" ? string.Empty : machineName, dat.GetName()!);
 
             // Parse the Dat if possible
             logger.User($"Adding from '{dat.GetName()}'");
