@@ -361,6 +361,12 @@ namespace SabreTools.FileTypes
                 fileName = Path.Combine(outDir, TextHelper.RemovePathUnsafeCharacters(baseFile.Parent) ?? string.Empty, TextHelper.RemovePathUnsafeCharacters(baseFile.Filename) ?? string.Empty);
 #endif
 
+            // Replace any incorrect directory characters
+            if (Path.DirectorySeparatorChar == '\\')
+                fileName = fileName.Replace('/', '\\');
+            else if (Path.DirectorySeparatorChar == '/')
+                fileName = fileName.Replace('\\', '/');
+
             try
             {
                 // If the full output path doesn't exist, create it
