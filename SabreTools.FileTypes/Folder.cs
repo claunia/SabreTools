@@ -368,7 +368,9 @@ namespace SabreTools.FileTypes
                 if (outputStream != null)
                 {
                     // Copy the input stream to the output
-                    inputStream.Seek(0, SeekOrigin.Begin);
+                    if (inputStream.CanSeek)
+                        inputStream.Seek(0, SeekOrigin.Begin);
+
                     int bufferSize = 4096 * 128;
                     byte[] ibuffer = new byte[bufferSize];
                     int ilen;

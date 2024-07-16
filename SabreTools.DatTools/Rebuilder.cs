@@ -410,7 +410,7 @@ namespace SabreTools.DatTools
             string crc = (datItem as Rom)!.GetStringFieldValue(Models.Metadata.Rom.CRCKey) ?? string.Empty;
 
             // Try to get the stream for the file
-            if (!GetFileStream(datItem, file, isZip, out Stream? fileStream))
+            if (!GetFileStream(datItem, file, isZip, out Stream? fileStream) || fileStream == null)
                 return false;
 
             // If either we have duplicates or we're filtering
@@ -424,6 +424,25 @@ namespace SabreTools.DatTools
                 // If we have a very specific TXZ->TXZ case, just copy it accordingly
                 if (RebuildTorrentXz(datFile, datItem, file, outDir, outputFormat, isZip))
                     return true;
+
+                // If there is more than one dupe, write to a temporary file and use that stream instead
+                string? tempFile = null;
+                if (dupes.Count > 1)
+                {
+                    tempFile = Path.Combine(outDir, $"tmp{System.Guid.NewGuid()}");
+                    Stream tempStream = System.IO.File.Open(tempFile, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite);
+                    byte[] tempBuffer = new byte[4096 * 128];
+                    int zlen;
+                    while ((zlen = fileStream.Read(tempBuffer, 0, tempBuffer.Length)) > 0)
+                    {
+                        tempStream.Write(tempBuffer, 0, zlen);
+                        tempStream.Flush();
+                    }
+
+                    fileStream.Dispose();
+                    fileStream = tempStream;
+                    fileStream.Seek(0, SeekOrigin.Begin);
+                }
 
                 logger.User($"{(inverse ? "No matches" : "Matches")} found for '{Path.GetFileName(datItem.GetName() ?? datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue())}', rebuilding accordingly...");
                 rebuilt = true;
@@ -459,7 +478,11 @@ namespace SabreTools.DatTools
                 }
 
                 // Close the input stream
-                fileStream?.Dispose();
+                fileStream.Dispose();
+
+                // Delete the file if a temp file was created
+                if (tempFile != null && System.IO.File.Exists(tempFile))
+                    System.IO.File.Delete(tempFile);
             }
 
             // Now we want to take care of headers, if applicable
@@ -748,8 +771,6 @@ namespace SabreTools.DatTools
 
                 try
                 {
-                    // TODO: Write entry to a temporary file to avoid over-large in-memory streams
-                    // TODO: Only write to file if there are multiple dupes
                     ItemType itemType = datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>();
                     (stream, _) = archive.GetEntryStream(datItem.GetName() ?? itemType.AsStringValue() ?? string.Empty);
                 }
