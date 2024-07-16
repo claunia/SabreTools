@@ -137,35 +137,44 @@ namespace SabreTools.FileTypes.Archives
         public override (Stream?, string?) GetEntryStream(string entryName)
         {
 #if NET462_OR_GREATER || NETCOREAPP
-            var ms = new MemoryStream();
-            string? realEntry = null;
-
             // If we have an invalid file
             if (this.Filename == null)
                 return (null, null);
 
             try
             {
-                SharpCompress.Archives.Rar.RarArchive ra = SharpCompress.Archives.Rar.RarArchive.Open(this.Filename, new ReaderOptions { LeaveStreamOpen = false, });
+                Stream? stream = null;
+                string? realEntry = null;
+
+                var ra = SharpCompress.Archives.Rar.RarArchive.Open(this.Filename, new ReaderOptions { LeaveStreamOpen = false, });
                 foreach (RarArchiveEntry entry in ra.Entries)
                 {
-                    if (entry?.Key != null && !entry.IsDirectory && entry.Key.Contains(entryName))
-                    {
-                        // Write the file out
-                        realEntry = entry.Key;
-                        entry.WriteTo(ms);
-                    }
+                    // Skip invalid entries
+                    if (entry?.Key == null || !entry.IsComplete)
+                        continue;
+
+                    // Skip directory entries
+                    if (entry.IsDirectory)
+                        continue;
+
+                    // Skip non-matching keys
+                    if (!entry.Key.Contains(entryName))
+                        continue;
+
+                    // Open the entry stream
+                    realEntry = entry.Key;
+                    stream = entry.OpenEntryStream();
+                    break;
                 }
+
                 ra.Dispose();
+                return (stream, realEntry);
             }
             catch (Exception ex)
             {
                 logger.Error(ex);
-                ms = null;
-                realEntry = null;
+                return (null, null);
             }
-
-            return (ms, realEntry);
 #else
             // TODO: Support RAR archives in old .NET
             return (null, null);

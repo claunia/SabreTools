@@ -172,42 +172,26 @@ namespace SabreTools.FileTypes.Archives
         /// <inheritdoc/>
         public override (Stream?, string?) GetEntryStream(string entryName)
         {
-            var ms = new MemoryStream();
-            string? realEntry;
-
             // If we have an invalid file
             if (this.Filename == null)
                 return (null, null);
 
             try
             {
-                // Decompress the _filename stream
-                realEntry = Path.GetFileNameWithoutExtension(this.Filename);
+                // Open the entry stream
+                string realEntry = Path.GetFileNameWithoutExtension(this.Filename);
                 var gz = new gZip();
                 ZipReturn ret = gz.ZipFileOpen(this.Filename);
-                ret = gz.ZipFileOpenReadStream(0, out Stream? gzstream, out ulong streamSize);
+                ret = gz.ZipFileOpenReadStream(0, out Stream? stream, out ulong streamSize);
 
-                // Write the file out
-                byte[] gbuffer = new byte[_bufferSize];
-                int glen;
-                while ((glen = gzstream!.Read(gbuffer, 0, _bufferSize)) > 0)
-                {
-
-                    ms.Write(gbuffer, 0, glen);
-                    ms.Flush();
-                }
-
-                // Dispose of the streams
-                gzstream.Dispose();
+                // Return the stream
+                return (stream, realEntry);
             }
             catch (Exception ex)
             {
                 logger.Error(ex);
-                ms = null;
-                realEntry = null;
+                return (null, null);
             }
-
-            return (ms, realEntry);
         }
 
         #endregion

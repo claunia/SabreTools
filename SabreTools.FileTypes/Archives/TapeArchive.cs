@@ -138,31 +138,40 @@ namespace SabreTools.FileTypes.Archives
         public override (Stream?, string?) GetEntryStream(string entryName)
         {
 #if NET462_OR_GREATER || NETCOREAPP
-            var ms = new MemoryStream();
-            string? realEntry = null;
-
             try
             {
-                TarArchive ta = TarArchive.Open(this.Filename!, new ReaderOptions { LeaveStreamOpen = false, });
+                Stream? stream = null;
+                string? realEntry = null;
+
+                var ta = TarArchive.Open(this.Filename!, new ReaderOptions { LeaveStreamOpen = false, });
                 foreach (TarArchiveEntry entry in ta.Entries)
                 {
-                    if (entry?.Key != null && !entry.IsDirectory && entry.Key.Contains(entryName))
-                    {
-                        // Write the file out
-                        realEntry = entry.Key;
-                        entry.WriteTo(ms);
-                    }
+                    // Skip invalid entries
+                    if (entry?.Key == null || !entry.IsComplete)
+                        continue;
+
+                    // Skip directory entries
+                    if (entry.IsDirectory)
+                        continue;
+
+                    // Skip non-matching keys
+                    if (!entry.Key.Contains(entryName))
+                        continue;
+
+                    // Open the entry stream
+                    realEntry = entry.Key;
+                    stream = entry.OpenEntryStream();
+                    break;
                 }
+
                 ta.Dispose();
+                return (stream, realEntry);
             }
             catch (Exception ex)
             {
                 logger.Error(ex);
-                ms = null;
-                realEntry = null;
+                return (null, null);
             }
-
-            return (ms, realEntry);
 #else
             // TODO: Support tape archives in old .NET
             return (null, null);

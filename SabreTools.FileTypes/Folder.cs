@@ -212,9 +212,6 @@ namespace SabreTools.FileTypes
         /// <returns>Stream representing the entry, null on error</returns>
         public virtual (Stream?, string?) GetEntryStream(string entryName)
         {
-            var ms = new MemoryStream();
-            string? realentry = null;
-
             // If we have an invalid filename
             if (this.Filename == null)
                 return (null, null);
@@ -231,30 +228,20 @@ namespace SabreTools.FileTypes
                 // Now sort through to find the first file that matches
                 string? match = files.Where(s => s.EndsWith(entryName)).FirstOrDefault();
 
-                // If we had a file, copy that over to the new name
+                // If we had a file, open and return the stream
                 if (!string.IsNullOrEmpty(match))
                 {
-#if NET20 || NET35
-                    var tempStream = File.OpenRead(match);
-                    byte[] buffer = new byte[32768];
-                    int read;
-                    while ((read = tempStream.Read(buffer, 0, buffer.Length)) > 0)
-                    {
-                        ms.Write(buffer, 0, read);
-                    }
-#else
-                    File.OpenRead(match).CopyTo(ms);
-#endif
-                    realentry = match;
+                    var stream = File.OpenRead(match);
+                    return (stream, match);
                 }
+
+                return (null, null);
             }
             catch (Exception ex)
             {
                 logger.Error(ex);
-                return (ms, realentry);
+                return (null, null);
             }
-
-            return (ms, realentry);
         }
 
         #endregion

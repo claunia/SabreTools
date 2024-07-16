@@ -749,7 +749,6 @@ namespace SabreTools.DatTools
                 try
                 {
                     // TODO: Write entry to a temporary file to avoid over-large in-memory streams
-                    // TODO: Once entry is written, replace GetEntryStream implementations
                     // TODO: Only write to file if there are multiple dupes
                     ItemType itemType = datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>();
                     (stream, _) = archive.GetEntryStream(datItem.GetName() ?? itemType.AsStringValue() ?? string.Empty);

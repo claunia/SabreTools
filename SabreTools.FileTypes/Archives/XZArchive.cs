@@ -155,36 +155,24 @@ namespace SabreTools.FileTypes.Archives
         public override (Stream?, string?) GetEntryStream(string entryName)
         {
 #if NET462_OR_GREATER || NETCOREAPP
-            var ms = new MemoryStream();
-            string? realEntry;
+            // If we have an invalid file
+            if (this.Filename == null)
+                return (null, null);
 
             try
             {
-                // Decompress the _filename stream
-                realEntry = Path.GetFileNameWithoutExtension(this.Filename);
-                var xz = new XZStream(File.OpenRead(this.Filename!));
+                // Open the entry stream
+                string realEntry = Path.GetFileNameWithoutExtension(this.Filename);
+                var stream = new XZStream(File.OpenRead(this.Filename));
 
-                // Write the file out
-                byte[] xbuffer = new byte[_bufferSize];
-                int xlen;
-                while ((xlen = xz.Read(xbuffer, 0, _bufferSize)) > 0)
-                {
-
-                    ms.Write(xbuffer, 0, xlen);
-                    ms.Flush();
-                }
-
-                // Dispose of the streams
-                xz.Dispose();
+                // Return the stream
+                return (stream, realEntry);
             }
             catch (Exception ex)
             {
                 logger.Error(ex);
-                ms = null;
-                realEntry = null;
+                return (null, null);
             }
-
-            return (ms, realEntry);
 #else
             // TODO: Support XZ archives in old .NET
             return (null, null);
