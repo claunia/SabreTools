@@ -425,9 +425,9 @@ namespace SabreTools.DatTools
                 if (RebuildTorrentXz(datFile, datItem, file, outDir, outputFormat, isZip))
                     return true;
 
-                // Create a temp file if we're compressing the data after
+                // Create a temp file if we're compressing the data after or if there are multiple dupes
                 string? tempFile = null;
-                if (outputFormat != OutputFormat.Folder)
+                if (outputFormat != OutputFormat.Folder || dupes.Count > 1)
                 {
                     tempFile = Path.Combine(outDir, $"tmp{System.Guid.NewGuid()}");
                     Stream tempStream = System.IO.File.Open(tempFile, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite);
