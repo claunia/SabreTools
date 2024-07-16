@@ -428,7 +428,9 @@ namespace SabreTools.FileTypes.Archives
                 // If the archive doesn't exist, create it and put the single file
                 if (!File.Exists(archiveFileName))
                 {
-                    inputStream.Seek(0, SeekOrigin.Begin);
+                    if (inputStream.CanSeek)
+                        inputStream.Seek(0, SeekOrigin.Begin);
+
                     zipReturn = zipFile.ZipFileCreate(tempFile);
 
                     // Open the input file for reading

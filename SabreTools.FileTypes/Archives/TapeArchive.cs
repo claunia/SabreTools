@@ -328,7 +328,9 @@ namespace SabreTools.FileTypes.Archives
                         usableDate = dt;
 
                     // Copy the input stream to the output
-                    inputStream.Seek(0, SeekOrigin.Begin);
+                    if (inputStream.CanSeek)
+                        inputStream.Seek(0, SeekOrigin.Begin);
+
                     tarFile.AddEntry(baseFile.Filename, inputStream, size: baseFile.Size ?? 0, modified: usableDate);
                 }
 
@@ -384,7 +386,9 @@ namespace SabreTools.FileTypes.Archives
                         if (index < 0)
                         {
                             // Copy the input file to the output
-                            inputStream.Seek(0, SeekOrigin.Begin);
+                            if (inputStream.CanSeek)
+                                inputStream.Seek(0, SeekOrigin.Begin);
+
                             tarFile.AddEntry(baseFile.Filename, inputStream, size: baseFile.Size ?? 0, modified: usableDate);
                         }
 
