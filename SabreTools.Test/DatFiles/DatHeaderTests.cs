@@ -23,7 +23,7 @@ namespace SabreTools.Test.DatFiles
             var actual = datHeader.CreateOutFileNames(outDir, overwrite: true);
 
             // Check the result
-            string expected = $"{outDir}\\test.{extension}";
+            string expected = $"{outDir}{System.IO.Path.DirectorySeparatorChar}test.{extension}";
             Assert.Single(actual);
             Assert.Equal(expected, actual[datFormat]);
         }

@@ -33,8 +33,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="SabreTools.Hashing" Version="1.2.0" />
-    <PackageReference Include="SabreTools.IO" Version="1.4.5" />
+    <PackageReference Include="SabreTools.Hashing" Version="1.2.1" />
+    <PackageReference Include="SabreTools.IO" Version="1.4.11" />
     <PackageReference Include="SabreTools.Matching" Version="1.3.1" />
     <PackageReference Include="SabreTools.Skippers" Version="1.1.2" />
   </ItemGroup>

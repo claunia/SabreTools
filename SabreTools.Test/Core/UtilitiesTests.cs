@@ -31,6 +31,9 @@ namespace SabreTools.Test.Core
         public void GetDepotPathTest(string? hash, int depth, string? expected)
         {
             string? actual = Utilities.GetDepotPath(hash, depth);
+            if (System.IO.Path.DirectorySeparatorChar == '/')
+                expected = expected?.Replace('\\', '/');
+
             Assert.Equal(expected, actual);
         }
 
