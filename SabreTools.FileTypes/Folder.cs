@@ -209,8 +209,8 @@ namespace SabreTools.FileTypes
         /// Attempt to extract a stream from an archive
         /// </summary>
         /// <param name="entryName">Name of the entry to be extracted</param>
-        /// <returns>MemoryStream representing the entry, null on error</returns>
-        public virtual (Stream?, string?) CopyToStream(string entryName)
+        /// <returns>Stream representing the entry, null on error</returns>
+        public virtual (Stream?, string?) GetEntryStream(string entryName)
         {
             var ms = new MemoryStream();
             string? realentry = null;
