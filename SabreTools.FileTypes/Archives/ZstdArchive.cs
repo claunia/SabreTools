@@ -49,7 +49,7 @@ namespace SabreTools.FileTypes.Archives
         }
 
         /// <inheritdoc/>
-        public override (MemoryStream, string) CopyToStream(string entryName)
+        public override (Stream?, string?) CopyToStream(string entryName)
         {
             throw new NotImplementedException();
         }

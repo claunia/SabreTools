@@ -121,7 +121,7 @@ namespace SabreTools.FileTypes
         public override abstract string? CopyToFile(string entryName, string outDir);
 
         /// <inheritdoc/>
-        public override abstract (MemoryStream?, string?) CopyToStream(string entryName);
+        public override abstract (Stream?, string?) CopyToStream(string entryName);
 
         #endregion
 

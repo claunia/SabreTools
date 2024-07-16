@@ -158,9 +158,9 @@ namespace SabreTools.FileTypes.Archives
         public override string? CopyToFile(string entryName, string outDir)
         {
             // Try to extract a stream using the given information
-            (MemoryStream? ms, string? realEntry) = CopyToStream(entryName);
+            (Stream? ms, string? realEntry) = CopyToStream(entryName);
 
-            // If the memory stream and the entry name are both non-null, we write to file
+            // If the stream and the entry name are both non-null, we write to file
             if (ms != null && realEntry != null)
             {
                 realEntry = Path.Combine(outDir, realEntry);
@@ -196,9 +196,9 @@ namespace SabreTools.FileTypes.Archives
         }
 
         /// <inheritdoc/>
-        public override (MemoryStream?, string?) CopyToStream(string entryName)
+        public override (Stream?, string?) CopyToStream(string entryName)
         {
-            MemoryStream? ms = new();
+            var ms = new MemoryStream();
             string? realEntry = null;
 
             try

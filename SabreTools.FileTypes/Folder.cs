@@ -210,9 +210,9 @@ namespace SabreTools.FileTypes
         /// </summary>
         /// <param name="entryName">Name of the entry to be extracted</param>
         /// <returns>MemoryStream representing the entry, null on error</returns>
-        public virtual (MemoryStream?, string?) CopyToStream(string entryName)
+        public virtual (Stream?, string?) CopyToStream(string entryName)
         {
-            MemoryStream ms = new();
+            var ms = new MemoryStream();
             string? realentry = null;
 
             // If we have an invalid filename

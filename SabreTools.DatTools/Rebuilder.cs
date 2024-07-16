@@ -744,7 +744,10 @@ namespace SabreTools.DatTools
             {
                 BaseArchive? archive = BaseArchive.Create(file);
                 if (archive != null)
-                    (stream, _) = archive.CopyToStream(datItem.GetName() ?? datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue() ?? string.Empty);
+                {
+                    ItemType itemType = datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>();
+                    (stream, _) = archive.CopyToStream(datItem.GetName() ?? itemType.AsStringValue() ?? string.Empty);
+                }
             }
             // Otherwise, just open the filestream
             else
