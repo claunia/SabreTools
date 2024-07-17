@@ -59,7 +59,7 @@ namespace SabreTools.Reports
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         /// <returns>True if the report was written correctly, false otherwise</returns>
         public abstract bool WriteToFile(string? outfile, bool baddumpCol, bool nodumpCol, bool throwOnError = false);
-    
+
         /// <summary>
         /// Returns the human-readable file size for an arbitrary, 64-bit file size 
         /// The default format is "0.### XB", e.g. "4.2 KB" or "1.434 GB"

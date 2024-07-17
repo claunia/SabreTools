@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
 #endif

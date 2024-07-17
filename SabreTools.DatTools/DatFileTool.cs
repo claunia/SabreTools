@@ -3,8 +3,6 @@ using System.IO;
 using System.Linq;
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
-using Microsoft.VisualBasic;
-
 #endif
 using SabreTools.Core;
 using SabreTools.DatFiles;

@@ -42,7 +42,7 @@ namespace RombaSharp.Features
                 baddumpCol: true,
                 nodumpCol: true,
                 StatReportFormat.Textfile);
-            
+
             return true;
         }
     }

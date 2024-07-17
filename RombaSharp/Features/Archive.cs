@@ -206,7 +206,7 @@ have a current entry in the DAT index.";
                 outDir: _depots!.Keys.ToList()[0],
                 outputFormat: OutputFormat.TorrentGzipRomba,
                 asFiles: TreatAsFile.NonArchive);
-            
+
             return true;
         }
     }

@@ -53,7 +53,7 @@ namespace SabreTools.Reports.Formats
                     if (stat.IsDirectory)
                     {
                         WriteIndividual(sw, stat, baddumpCol, nodumpCol);
-                        
+
                         // If we have anything but the last value, write the separator
                         if (i < Statistics.Count - 1)
                             WriteFooterSeparator(sw);

@@ -57,7 +57,7 @@ namespace SabreTools.DatFiles
         /// Number of items with the remove flag
         /// </summary>
         public long RemovedCount { get; private set; } = 0;
-        
+
         /// <summary>
         /// Name to display on output
         /// </summary>

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
 #endif
-using SabreTools.Core;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.IO.Extensions;
@@ -167,14 +166,14 @@ namespace SabreTools.DatTools
             {
                 if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)) && string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)))
                 {
-                    datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey,"Default");
+                    datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey, "Default");
                     datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, "Default");
                     datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, "Default");
                 }
 
                 else if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)) && !string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)))
                 {
-                    datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey,datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey));
+                    datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey, datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey));
                     datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey));
                 }
 

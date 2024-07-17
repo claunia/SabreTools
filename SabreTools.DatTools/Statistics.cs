@@ -6,7 +6,6 @@ using System.Net;
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
 #endif
-using SabreTools.Core;
 using SabreTools.DatFiles;
 using SabreTools.IO;
 using SabreTools.IO.Extensions;

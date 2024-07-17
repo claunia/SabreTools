@@ -12,7 +12,7 @@ namespace SabreTools.Logging
         /// </summary>
         /// TODO: Derive class name for this object, if possible
         private readonly object? instance;
-        
+
         /// <summary>
         /// Constructor
         /// </summary>

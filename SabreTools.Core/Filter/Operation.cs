@@ -9,7 +9,7 @@ namespace SabreTools.Core.Filter
         /// Default value, does nothing
         /// </summary>
         NONE,
-        
+
         Equals,
         NotEquals,
         GreaterThan,
