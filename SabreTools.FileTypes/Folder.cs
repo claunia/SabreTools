@@ -324,15 +324,13 @@ namespace SabreTools.FileTypes
         /// <remarks>This works for now, but it can be sped up by using Ionic.Zip or another zlib wrapper that allows for header values built-in. See edc's code.</remarks>
         public virtual bool Write(Stream? inputStream, string outDir, BaseFile? baseFile)
         {
-            bool success = false;
-
             // If either input is null or empty, return
             if (inputStream == null || baseFile == null || baseFile.Filename == null)
-                return success;
+                return false;
 
             // If the stream is not readable, return
             if (!inputStream.CanRead)
-                return success;
+                return false;
 
             // Set internal variables
             FileStream? outputStream = null;
@@ -363,42 +361,38 @@ namespace SabreTools.FileTypes
 
                 // Overwrite output files by default
                 outputStream = File.Create(fileName);
+                if (outputStream == null)
+                    return false;
 
-                // If the output stream isn't null
-                if (outputStream != null)
+                if (inputStream.CanSeek)
+                    inputStream.Seek(0, SeekOrigin.Begin);
+
+                // Copy the input stream to the output
+                int bufferSize = 4096 * 128;
+                byte[] ibuffer = new byte[bufferSize];
+                int ilen;
+                while ((ilen = inputStream.Read(ibuffer, 0, bufferSize)) > 0)
                 {
-                    // Copy the input stream to the output
-                    if (inputStream.CanSeek)
-                        inputStream.Seek(0, SeekOrigin.Begin);
-
-                    int bufferSize = 4096 * 128;
-                    byte[] ibuffer = new byte[bufferSize];
-                    int ilen;
-                    while ((ilen = inputStream.Read(ibuffer, 0, bufferSize)) > 0)
-                    {
-                        outputStream.Write(ibuffer, 0, ilen);
-                        outputStream.Flush();
-                    }
-
-                    outputStream.Dispose();
-
-                    if (!string.IsNullOrEmpty(baseFile.Date))
-                        File.SetCreationTime(fileName, DateTime.Parse(baseFile.Date));
-
-                    success = true;
+                    outputStream.Write(ibuffer, 0, ilen);
+                    outputStream.Flush();
                 }
+
+                outputStream.Dispose();
+
+                if (!string.IsNullOrEmpty(baseFile.Date))
+                    File.SetCreationTime(fileName, DateTime.Parse(baseFile.Date));
+
+                return true;
             }
             catch (Exception ex)
             {
                 logger.Error(ex);
-                success = false;
+                return false;
             }
             finally
             {
                 outputStream?.Dispose();
             }
-
-            return success;
         }
 
         /// <summary>

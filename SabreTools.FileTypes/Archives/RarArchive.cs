@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using SabreTools.Core;
 using SabreTools.Hashing;
 using SabreTools.Matching;
 #if NET462_OR_GREATER || NETCOREAPP
@@ -97,39 +96,38 @@ namespace SabreTools.FileTypes.Archives
         {
             // Try to extract a stream using the given information
             (Stream? stream, string? realEntry) = GetEntryStream(entryName);
+            if (stream == null || realEntry == null)
+                return null;
 
             // If the stream and the entry name are both non-null, we write to file
-            if (stream != null && realEntry != null)
+            realEntry = Path.Combine(outDir, realEntry);
+
+            // Create the output subfolder now
+            Directory.CreateDirectory(Path.GetDirectoryName(realEntry) ?? string.Empty);
+
+            // Now open and write the file if possible
+            FileStream fs = File.Create(realEntry);
+            if (fs != null)
             {
-                realEntry = Path.Combine(outDir, realEntry);
+                if (stream.CanSeek)
+                    stream.Seek(0, SeekOrigin.Begin);
 
-                // Create the output subfolder now
-                Directory.CreateDirectory(Path.GetDirectoryName(realEntry) ?? string.Empty);
-
-                // Now open and write the file if possible
-                FileStream fs = File.Create(realEntry);
-                if (fs != null)
+                byte[] zbuffer = new byte[_bufferSize];
+                int zlen;
+                while ((zlen = stream.Read(zbuffer, 0, _bufferSize)) > 0)
                 {
-                    if (stream.CanSeek)
-                        stream.Seek(0, SeekOrigin.Begin);
-
-                    byte[] zbuffer = new byte[_bufferSize];
-                    int zlen;
-                    while ((zlen = stream.Read(zbuffer, 0, _bufferSize)) > 0)
-                    {
-                        fs.Write(zbuffer, 0, zlen);
-                        fs.Flush();
-                    }
-
-                    stream?.Dispose();
-                    fs?.Dispose();
+                    fs.Write(zbuffer, 0, zlen);
+                    fs.Flush();
                 }
-                else
-                {
-                    stream?.Dispose();
-                    fs?.Dispose();
-                    realEntry = null;
-                }
+
+                stream?.Dispose();
+                fs?.Dispose();
+            }
+            else
+            {
+                stream?.Dispose();
+                fs?.Dispose();
+                realEntry = null;
             }
 
             return realEntry;

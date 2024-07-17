@@ -78,12 +78,10 @@ namespace SabreTools.FileTypes.Archives
                 Directory.CreateDirectory(outDir);
 
                 // Extract all files to the temp directory
-                Zip zf = new();
+                var zf = new Zip();
                 ZipReturn zr = zf.ZipFileOpen(this.Filename!, -1, true);
                 if (zr != ZipReturn.ZipGood)
-                {
                     throw new Exception(CompressUtils.ZipErrorMessageText(zr));
-                }
 
                 for (int i = 0; i < zf.LocalFilesCount() && zr == ZipReturn.ZipGood; i++)
                 {
@@ -92,9 +90,7 @@ namespace SabreTools.FileTypes.Archives
 
                     // Create the rest of the path, if needed
                     if (!string.IsNullOrEmpty(Path.GetDirectoryName(zf.GetLocalFile(i).Filename)))
-                    {
                         Directory.CreateDirectory(Path.Combine(outDir, Path.GetDirectoryName(zf.GetLocalFile(i).Filename)!));
-                    }
 
                     // If the entry ends with a directory separator, continue to the next item, if any
                     if (zf.GetLocalFile(i).Filename!.EndsWith(Path.DirectorySeparatorChar.ToString())
@@ -159,39 +155,38 @@ namespace SabreTools.FileTypes.Archives
         {
             // Try to extract a stream using the given information
             (Stream? stream, string? realEntry) = GetEntryStream(entryName);
+            if (stream == null || realEntry == null)
+                return null;
 
             // If the stream and the entry name are both non-null, we write to file
-            if (stream != null && realEntry != null)
+            realEntry = Path.Combine(outDir, realEntry);
+
+            // Create the output subfolder now
+            Directory.CreateDirectory(Path.GetDirectoryName(realEntry)!);
+
+            // Now open and write the file if possible
+            FileStream fs = File.Create(realEntry);
+            if (fs != null)
             {
-                realEntry = Path.Combine(outDir, realEntry);
+                if (stream.CanSeek)
+                    stream.Seek(0, SeekOrigin.Begin);
 
-                // Create the output subfolder now
-                Directory.CreateDirectory(Path.GetDirectoryName(realEntry)!);
-
-                // Now open and write the file if possible
-                FileStream fs = File.Create(realEntry);
-                if (fs != null)
+                byte[] zbuffer = new byte[_bufferSize];
+                int zlen;
+                while ((zlen = stream.Read(zbuffer, 0, _bufferSize)) > 0)
                 {
-                    if (stream.CanSeek)
-                        stream.Seek(0, SeekOrigin.Begin);
-
-                    byte[] zbuffer = new byte[_bufferSize];
-                    int zlen;
-                    while ((zlen = stream.Read(zbuffer, 0, _bufferSize)) > 0)
-                    {
-                        fs.Write(zbuffer, 0, zlen);
-                        fs.Flush();
-                    }
-
-                    stream?.Dispose();
-                    fs?.Dispose();
+                    fs.Write(zbuffer, 0, zlen);
+                    fs.Flush();
                 }
-                else
-                {
-                    stream?.Dispose();
-                    fs?.Dispose();
-                    realEntry = null;
-                }
+
+                stream?.Dispose();
+                fs?.Dispose();
+            }
+            else
+            {
+                stream?.Dispose();
+                fs?.Dispose();
+                realEntry = null;
             }
 
             return realEntry;
@@ -254,17 +249,15 @@ namespace SabreTools.FileTypes.Archives
         /// <inheritdoc/>
         public override List<BaseFile>? GetChildren()
         {
-            List<BaseFile> found = new();
+            var found = new List<BaseFile>();
             string? gamename = Path.GetFileNameWithoutExtension(this.Filename);
 
             try
             {
-                Zip zf = new();
+                var zf = new Zip();
                 ZipReturn zr = zf.ZipFileOpen(this.Filename!, -1, true);
                 if (zr != ZipReturn.ZipGood)
-                {
                     throw new Exception(CompressUtils.ZipErrorMessageText(zr));
-                }
 
                 for (int i = 0; i < zf.LocalFilesCount(); i++)
                 {
@@ -330,12 +323,10 @@ namespace SabreTools.FileTypes.Archives
 
             try
             {
-                Zip zf = new();
+                var zf = new Zip();
                 ZipReturn zr = zf.ZipFileOpen(this.Filename!, -1, true);
                 if (zr != ZipReturn.ZipGood)
-                {
                     throw new Exception(CompressUtils.ZipErrorMessageText(zr));
-                }
 
                 List<(string, bool)> zipEntries = new();
                 for (int i = 0; i < zf.LocalFilesCount(); i++)
@@ -356,9 +347,8 @@ namespace SabreTools.FileTypes.Archives
                     else
                     {
                         if (entry.Item2)
-                        {
                             empties.Add(entry.Item1);
-                        }
+
                         lastZipEntry = entry.Item1;
                     }
                 }
@@ -377,9 +367,7 @@ namespace SabreTools.FileTypes.Archives
             Zip zf = new();
             ZipReturn zr = zf.ZipFileOpen(this.Filename!, -1, true);
             if (zr != ZipReturn.ZipGood)
-            {
                 throw new Exception(CompressUtils.ZipErrorMessageText(zr));
-            }
 
             return zf.ZipStatus == ZipStatus.TrrntZip;
         }
@@ -593,23 +581,17 @@ namespace SabreTools.FileTypes.Archives
 
             // If either list of roms is null or empty, return
             if (inputFiles == null || baseFiles == null || inputFiles.Count == 0 || baseFiles.Count == 0)
-            {
-                return success;
-            }
+                return false;
 
             // If the number of inputs is less than the number of available roms, return
             if (inputFiles.Count < baseFiles.Count)
-            {
-                return success;
-            }
+                return false;
 
             // If one of the files doesn't exist, return
             foreach (string file in inputFiles)
             {
                 if (!File.Exists(file))
-                {
-                    return success;
-                }
+                    return false;
             }
 
             // Get the output archive name from the first rebuild rom
@@ -617,17 +599,15 @@ namespace SabreTools.FileTypes.Archives
 
             // Set internal variables
             Stream? writeStream = null;
-            Zip oldZipFile = new();
-            Zip zipFile = new();
+            var oldZipFile = new Zip();
+            var zipFile = new Zip();
             ZipReturn zipReturn = ZipReturn.ZipGood;
 
             try
             {
                 // If the full output path doesn't exist, create it
                 if (!Directory.Exists(Path.GetDirectoryName(archiveFileName)))
-                {
                     Directory.CreateDirectory(Path.GetDirectoryName(archiveFileName)!);
-                }
 
                 // If the archive doesn't exist, create it and put the single file
                 if (!File.Exists(archiveFileName))
@@ -699,9 +679,7 @@ namespace SabreTools.FileTypes.Archives
 
                         // If the old one contains the new file, then just skip out
                         if (oldZipFileContents.Contains(baseFiles[i].Filename!.Replace('\\', '/')))
-                        {
                             continue;
-                        }
 
                         inputIndexMap.Add(baseFiles[i].Filename!.Replace('\\', '/'), -(i + 1));
                     }
@@ -800,9 +778,8 @@ namespace SabreTools.FileTypes.Archives
 
             // If the old file exists, delete it and replace
             if (File.Exists(archiveFileName))
-            {
                 File.Delete(archiveFileName);
-            }
+
             File.Move(tempFile, archiveFileName);
 
             return true;

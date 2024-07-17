@@ -115,39 +115,38 @@ namespace SabreTools.FileTypes.Archives
         {
             // Try to extract a stream using the given information
             (Stream? stream, string? realEntry) = GetEntryStream(entryName);
+            if (stream == null || realEntry == null)
+                return null;
 
             // If the stream and the entry name are both non-null, we write to file
-            if (stream != null && realEntry != null)
+            realEntry = Path.Combine(outDir, realEntry);
+
+            // Create the output subfolder now
+            Directory.CreateDirectory(Path.GetDirectoryName(realEntry)!);
+
+            // Now open and write the file if possible
+            FileStream fs = File.Create(realEntry);
+            if (fs != null)
             {
-                realEntry = Path.Combine(outDir, realEntry);
+                if (stream.CanSeek)
+                    stream.Seek(0, SeekOrigin.Begin);
 
-                // Create the output subfolder now
-                Directory.CreateDirectory(Path.GetDirectoryName(realEntry)!);
-
-                // Now open and write the file if possible
-                FileStream fs = File.Create(realEntry);
-                if (fs != null)
+                byte[] zbuffer = new byte[_bufferSize];
+                int zlen;
+                while ((zlen = stream.Read(zbuffer, 0, _bufferSize)) > 0)
                 {
-                    if (stream.CanSeek)
-                        stream.Seek(0, SeekOrigin.Begin);
-
-                    byte[] zbuffer = new byte[_bufferSize];
-                    int zlen;
-                    while ((zlen = stream.Read(zbuffer, 0, _bufferSize)) > 0)
-                    {
-                        fs.Write(zbuffer, 0, zlen);
-                        fs.Flush();
-                    }
-
-                    stream?.Dispose();
-                    fs?.Dispose();
+                    fs.Write(zbuffer, 0, zlen);
+                    fs.Flush();
                 }
-                else
-                {
-                    stream?.Dispose();
-                    fs?.Dispose();
-                    realEntry = null;
-                }
+
+                stream?.Dispose();
+                fs?.Dispose();
+            }
+            else
+            {
+                stream?.Dispose();
+                fs?.Dispose();
+                realEntry = null;
             }
 
             return realEntry;
@@ -188,56 +187,55 @@ namespace SabreTools.FileTypes.Archives
         /// <inheritdoc/>
         public override List<BaseFile>? GetChildren()
         {
+            // If we have children cached already
+            if (_children != null && _children.Count > 0)
+                return _children;
+
 #if NET462_OR_GREATER || NETCOREAPP
-            if (_children == null || _children.Count == 0)
+            _children = [];
+
+            string? gamename = Path.GetFileNameWithoutExtension(this.Filename);
+            BaseFile? possibleTxz = GetTorrentXZFileInfo();
+
+            // If it was, then add it to the outputs and continue
+            if (possibleTxz != null && possibleTxz.Filename != null)
             {
-                _children = [];
+                _children.Add(possibleTxz);
+                return _children;
+            }
 
-                string? gamename = Path.GetFileNameWithoutExtension(this.Filename);
+            try
+            {
+                // Create a blank item for the entry
+                BaseFile xzEntryRom = new();
 
-                BaseFile? possibleTxz = GetTorrentXZFileInfo();
-
-                // If it was, then add it to the outputs and continue
-                if (possibleTxz != null && possibleTxz.Filename != null)
+                // Perform a quickscan, if flagged to
+                if (this.AvailableHashTypes.Length == 1 && this.AvailableHashTypes[0] == HashType.CRC32)
                 {
-                    _children.Add(possibleTxz);
+                    xzEntryRom.Filename = gamename;
+
+                    using BinaryReader br = new(File.OpenRead(this.Filename!));
+                    br.BaseStream.Seek(-8, SeekOrigin.End);
+                    xzEntryRom.CRC = br.ReadBytesBigEndian(4);
+                    xzEntryRom.Size = br.ReadInt32BigEndian();
                 }
+                // Otherwise, use the stream directly
                 else
                 {
-                    try
-                    {
-                        // Create a blank item for the entry
-                        BaseFile xzEntryRom = new();
-
-                        // Perform a quickscan, if flagged to
-                        if (this.AvailableHashTypes.Length == 1 && this.AvailableHashTypes[0] == HashType.CRC32)
-                        {
-                            xzEntryRom.Filename = gamename;
-
-                            using BinaryReader br = new(File.OpenRead(this.Filename!));
-                            br.BaseStream.Seek(-8, SeekOrigin.End);
-                            xzEntryRom.CRC = br.ReadBytesBigEndian(4);
-                            xzEntryRom.Size = br.ReadInt32BigEndian();
-                        }
-                        // Otherwise, use the stream directly
-                        else
-                        {
-                            var xzStream = new XZStream(File.OpenRead(this.Filename!));
-                            xzEntryRom = GetInfo(xzStream, hashes: this.AvailableHashTypes);
-                            xzEntryRom.Filename = gamename;
-                            xzStream.Dispose();
-                        }
-
-                        // Fill in comon details and add to the list
-                        xzEntryRom.Parent = gamename;
-                        _children.Add(xzEntryRom);
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.Error(ex);
-                        return null;
-                    }
+                    var xzStream = new XZStream(File.OpenRead(this.Filename!));
+                    xzEntryRom = GetInfo(xzStream, hashes: this.AvailableHashTypes);
+                    xzEntryRom.Filename = gamename;
+                    xzStream.Dispose();
                 }
+
+                // Fill in comon details and add to the list
+                xzEntryRom.Parent = gamename;
+                _children.Add(xzEntryRom);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                return null;
             }
 
             return _children;
