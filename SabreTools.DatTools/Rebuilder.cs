@@ -444,7 +444,7 @@ namespace SabreTools.DatTools
                     fileStream.Seek(0, SeekOrigin.Begin);
                 }
 
-                logger.User($"{(inverse ? "No matches" : "Matches")} found for '{Path.GetFileName(datItem.GetName() ?? datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue())}', rebuilding accordingly...");
+                logger.User($"{(inverse ? "No matches" : $"{dupes.Count} Matches")} found for '{Path.GetFileName(datItem.GetName() ?? datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue())}', rebuilding accordingly...");
                 rebuilt = true;
 
                 // Special case for partial packing mode
