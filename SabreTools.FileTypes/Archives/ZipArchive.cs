@@ -158,10 +158,10 @@ namespace SabreTools.FileTypes.Archives
         public override string? CopyToFile(string entryName, string outDir)
         {
             // Try to extract a stream using the given information
-            (Stream? ms, string? realEntry) = GetEntryStream(entryName);
+            (Stream? stream, string? realEntry) = GetEntryStream(entryName);
 
             // If the stream and the entry name are both non-null, we write to file
-            if (ms != null && realEntry != null)
+            if (stream != null && realEntry != null)
             {
                 realEntry = Path.Combine(outDir, realEntry);
 
@@ -172,21 +172,23 @@ namespace SabreTools.FileTypes.Archives
                 FileStream fs = File.Create(realEntry);
                 if (fs != null)
                 {
-                    ms.Seek(0, SeekOrigin.Begin);
+                    if (stream.CanSeek)
+                        stream.Seek(0, SeekOrigin.Begin);
+
                     byte[] zbuffer = new byte[_bufferSize];
                     int zlen;
-                    while ((zlen = ms.Read(zbuffer, 0, _bufferSize)) > 0)
+                    while ((zlen = stream.Read(zbuffer, 0, _bufferSize)) > 0)
                     {
                         fs.Write(zbuffer, 0, zlen);
                         fs.Flush();
                     }
 
-                    ms?.Dispose();
+                    stream?.Dispose();
                     fs?.Dispose();
                 }
                 else
                 {
-                    ms?.Dispose();
+                    stream?.Dispose();
                     fs?.Dispose();
                     realEntry = null;
                 }
@@ -408,7 +410,8 @@ namespace SabreTools.FileTypes.Archives
                 return success;
 
             // Seek to the beginning of the stream
-            inputStream.Seek(0, SeekOrigin.Begin);
+            if (inputStream.CanSeek)
+                inputStream.Seek(0, SeekOrigin.Begin);
 
             // Get the output archive name from the first rebuild rom
             string archiveFileName = Path.Combine(outDir, TextHelper.RemovePathUnsafeCharacters(baseFile.Parent) + (baseFile.Parent!.EndsWith(".zip") ? string.Empty : ".zip"));
