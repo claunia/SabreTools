@@ -11,14 +11,14 @@ namespace SabreTools.Logging
         /// Instance associated with this logger
         /// </summary>
         /// TODO: Derive class name for this object, if possible
-        private readonly object? instance;
+        private readonly object? _instance;
 
         /// <summary>
         /// Constructor
         /// </summary>
         public Logger(object? instance = null)
         {
-            this.instance = instance;
+            _instance = instance;
         }
 
         #region Log Event Triggers
@@ -31,7 +31,7 @@ namespace SabreTools.Logging
         /// <returns>True if the output could be written, false otherwise</returns>
         public void Verbose(Exception ex, string? output = null)
         {
-            LoggerImpl.Verbose(this.instance, ex, output);
+            LoggerImpl.Verbose(_instance, ex, output);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace SabreTools.Logging
         /// <returns>True if the output could be written, false otherwise</returns>
         public void Verbose(string output)
         {
-            LoggerImpl.Verbose(this.instance, output);
+            LoggerImpl.Verbose(_instance, output);
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace SabreTools.Logging
         /// <param name="output">String to be written log</param>
         public void Verbose(long total, long current, string? output = null)
         {
-            LoggerImpl.Verbose(instance, total, current, output);
+            LoggerImpl.Verbose(_instance, total, current, output);
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace SabreTools.Logging
         /// <returns>True if the output could be written, false otherwise</returns>
         public void User(Exception ex, string? output = null)
         {
-            LoggerImpl.User(this.instance, ex, output);
+            LoggerImpl.User(_instance, ex, output);
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace SabreTools.Logging
         /// <returns>True if the output could be written, false otherwise</returns>
         public void User(string output)
         {
-            LoggerImpl.User(this.instance, output);
+            LoggerImpl.User(_instance, output);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace SabreTools.Logging
         /// <param name="output">String to be written log</param>
         public void User(long total, long current, string? output = null)
         {
-            LoggerImpl.User(instance, total, current, output);
+            LoggerImpl.User(_instance, total, current, output);
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace SabreTools.Logging
         /// <returns>True if the output could be written, false otherwise</returns>
         public void Warning(Exception ex, string? output = null)
         {
-            LoggerImpl.Warning(this.instance, ex, output);
+            LoggerImpl.Warning(_instance, ex, output);
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace SabreTools.Logging
         /// <returns>True if the output could be written, false otherwise</returns>
         public void Warning(string output)
         {
-            LoggerImpl.Warning(this.instance, output);
+            LoggerImpl.Warning(_instance, output);
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace SabreTools.Logging
         /// <param name="output">String to be written log</param>
         public void Warning(long total, long current, string? output = null)
         {
-            LoggerImpl.Warning(instance, total, current, output);
+            LoggerImpl.Warning(_instance, total, current, output);
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace SabreTools.Logging
         /// <returns>True if the output could be written, false otherwise</returns>
         public void Error(Exception ex, string? output = null)
         {
-            LoggerImpl.Error(this.instance, ex, output);
+            LoggerImpl.Error(_instance, ex, output);
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace SabreTools.Logging
         /// <returns>True if the output could be written, false otherwise</returns>
         public void Error(string output)
         {
-            LoggerImpl.Error(this.instance, output);
+            LoggerImpl.Error(_instance, output);
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace SabreTools.Logging
         /// <param name="output">String to be written log</param>
         public void Error(long total, long current, string? output = null)
         {
-            LoggerImpl.Error(instance, total, current, output);
+            LoggerImpl.Error(_instance, total, current, output);
         }
 
         #endregion

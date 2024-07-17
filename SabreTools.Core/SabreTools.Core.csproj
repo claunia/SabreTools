@@ -24,6 +24,10 @@
     <InternalsVisibleTo Include="SabreTools.Test" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SabreTools.Logging\SabreTools.Logging.csproj" />
+  </ItemGroup>
+
   <!-- Support for old .NET versions -->
   <ItemGroup Condition="$(TargetFramework.StartsWith(`net2`)) OR $(TargetFramework.StartsWith(`net3`))">
     <PackageReference Include="Net30.LinqBridge" Version="1.3.0" />

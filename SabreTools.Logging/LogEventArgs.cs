@@ -42,9 +42,9 @@ namespace SabreTools.Logging
         /// </summary>
         public LogEventArgs(LogLevel logLevel = LogLevel.VERBOSE, string? statement = null, Exception? exception = null)
         {
-            this.LogLevel = logLevel;
-            this.Statement = statement;
-            this.Exception = exception;
+            LogLevel = logLevel;
+            Statement = statement;
+            Exception = exception;
         }
 
         /// <summary>
@@ -52,10 +52,10 @@ namespace SabreTools.Logging
         /// </summary>
         public LogEventArgs(long total, long current, LogLevel logLevel = LogLevel.VERBOSE, string? statement = null)
         {
-            this.LogLevel = logLevel;
-            this.Statement = statement;
-            this.TotalCount = total;
-            this.CurrentCount = current;
+            LogLevel = logLevel;
+            Statement = statement;
+            TotalCount = total;
+            CurrentCount = current;
         }
     }
 }

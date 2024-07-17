@@ -1,12 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SabreTools.Logging;
 
 namespace SabreTools.Core.Tools
 {
     public static class Converters
     {
         #region String to Enum
+
+        /// <summary>
+        /// Get the LogLevel value for an input string, if possible
+        /// </summary>
+        /// <param name="value">String value to parse/param>
+        /// <returns></returns>
+        public static LogLevel AsLogLevel(this string? value)
+        {
+            return value?.ToLowerInvariant() switch
+            {
+                "verbose" => LogLevel.VERBOSE,
+                "user" => LogLevel.USER,
+                "warning" => LogLevel.WARNING,
+                "error" => LogLevel.ERROR,
+                _ => LogLevel.VERBOSE,
+            };
+        }
 
         /// <summary>
         /// Get bool? value from input string
