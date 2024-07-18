@@ -72,7 +72,7 @@ namespace SabreTools.Help
                     else
                     {
                         logger.Error($"Invalid input detected: {args[i]}");
-                        help.OutputIndividualFeature(this.Name);
+                        help.OutputIndividualFeature(Name);
                         LoggerImpl.Close();
                         return false;
                     }

@@ -28,35 +28,35 @@ namespace SabreTools.Help
 
         public Feature()
         {
-            this.Name = null;
-            this.Flags = [];
-            this.Description = null;
-            this.LongDescription = null;
-            this._featureType = ParameterType.Flag;
-            this.Features = [];
+            Name = null;
+            Flags = [];
+            Description = null;
+            LongDescription = null;
+            _featureType = ParameterType.Flag;
+            Features = [];
         }
 
         public Feature(string name, string flag, string description, ParameterType featureType, string? longDescription = null)
         {
-            this.Name = name;
-            this.Flags =
+            Name = name;
+            Flags =
             [
                 flag
             ];
-            this.Description = description;
-            this.LongDescription = longDescription;
-            this._featureType = featureType;
-            this.Features = [];
+            Description = description;
+            LongDescription = longDescription;
+            _featureType = featureType;
+            Features = [];
         }
 
         public Feature(string name, List<string> flags, string description, ParameterType featureType, string? longDescription = null)
         {
-            this.Name = name;
-            this.Flags = flags;
-            this.Description = description;
-            this.LongDescription = longDescription;
-            this._featureType = featureType;
-            this.Features = [];
+            Name = name;
+            Flags = flags;
+            Description = description;
+            LongDescription = longDescription;
+            _featureType = featureType;
+            Features = [];
         }
 
         #endregion
@@ -68,8 +68,8 @@ namespace SabreTools.Help
         /// </summary>
         public Feature? this[string name]
         {
-            get { return this.Features.ContainsKey(name) ? this.Features[name] : null; }
-            set { this.Features[name] = value; }
+            get { return Features.ContainsKey(name) ? Features[name] : null; }
+            set { Features[name] = value; }
         }
 
         /// <summary>
@@ -77,8 +77,8 @@ namespace SabreTools.Help
         /// </summary>
         public Feature? this[Feature? subfeature]
         {
-            get { return this.Features.ContainsKey(subfeature?.Name ?? string.Empty) ? this.Features[subfeature?.Name ?? string.Empty] : null; }
-            set { this.Features[subfeature?.Name ?? string.Empty] = value; }
+            get { return Features.ContainsKey(subfeature?.Name ?? string.Empty) ? Features[subfeature?.Name ?? string.Empty] : null; }
+            set { Features[subfeature?.Name ?? string.Empty] = value; }
         }
 
         /// <summary>
@@ -87,10 +87,10 @@ namespace SabreTools.Help
         /// <param name="feature"></param>
         public void AddFeature(Feature feature)
         {
-            this.Features ??= [];
-            lock (this.Features)
+            Features ??= [];
+            lock (Features)
             {
-                this.Features[feature.Name ?? string.Empty] = feature;
+                Features[feature.Name ?? string.Empty] = feature;
             }
         }
 
@@ -100,10 +100,10 @@ namespace SabreTools.Help
         /// <param name="flag">Flag to add for this feature</param>
         public void AddFlag(string flag)
         {
-            this.Flags ??= [];
-            lock (this.Flags)
+            Flags ??= [];
+            lock (Flags)
             {
-                this.Flags.Add(flag);
+                Flags.Add(flag);
             }
         }
 
@@ -113,10 +113,10 @@ namespace SabreTools.Help
         /// <param name="flags">List of flags to add to this feature</param>
         public void AddFlags(List<string> flags)
         {
-            this.Flags ??= [];
-            lock (this.Flags)
+            Flags ??= [];
+            lock (Flags)
             {
-                this.Flags.AddRange(flags);
+                Flags.AddRange(flags);
             }
         }
 
@@ -127,7 +127,7 @@ namespace SabreTools.Help
         /// <returns>True if the flag was found, false otherwise</returns>
         public bool ContainsFlag(string name)
         {
-            return this.Flags.Any(f => f == name || f.TrimStart('-') == name);
+            return Flags.Any(f => f == name || f.TrimStart('-') == name);
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace SabreTools.Help
         /// <returns>True if the flag was found, false otherwise</returns>
         public bool StartsWith(char c)
         {
-            return this.Flags.Any(f => f.TrimStart('-').ToLowerInvariant()[0] == c);
+            return Flags.Any(f => f.TrimStart('-').ToLowerInvariant()[0] == c);
         }
 
         #endregion
@@ -162,8 +162,8 @@ namespace SabreTools.Help
             output += CreatePadding(pre);
 
             // Preprocess the flags, if necessary
-            string[] newflags = new string[this.Flags.Count];
-            this.Flags.CopyTo(newflags);
+            string[] newflags = new string[Flags.Count];
+            Flags.CopyTo(newflags);
             switch (_featureType)
             {
                 case ParameterType.Int32:
@@ -191,7 +191,7 @@ namespace SabreTools.Help
                 output += " ";
 
             // Append the description
-            output += this.Description;
+            output += Description;
 
             // Now append it to the list
             outputList.Add(output);
@@ -206,7 +206,7 @@ namespace SabreTools.Help
                 output = CreatePadding(pre + 4);
 
                 // Now split the input description and start processing
-                string[]? split = this.LongDescription?.Split(' ');
+                string[]? split = LongDescription?.Split(' ');
                 if (split == null)
                     return outputList;
 
@@ -299,8 +299,8 @@ namespace SabreTools.Help
             output += CreatePadding(preAdjusted);
 
             // Preprocess the flags, if necessary
-            string[] newflags = new string[this.Flags.Count];
-            this.Flags.CopyTo(newflags);
+            string[] newflags = new string[Flags.Count];
+            Flags.CopyTo(newflags);
             switch (_featureType)
             {
                 case ParameterType.Int32:
@@ -328,7 +328,7 @@ namespace SabreTools.Help
                 output += " ";
 
             // Append the description
-            output += this.Description;
+            output += Description;
 
             // Now append it to the list
             outputList.Add(output);
@@ -343,7 +343,7 @@ namespace SabreTools.Help
                 output = CreatePadding(preAdjusted + 4);
 
                 // Now split the input description and start processing
-                string[]? split = this.LongDescription?.Split(' ');
+                string[]? split = LongDescription?.Split(' ');
                 if (split == null)
                     return outputList;
 
@@ -396,9 +396,9 @@ namespace SabreTools.Help
             }
 
             // Now let's append all subfeatures
-            foreach (string feature in this.Features.Keys)
+            foreach (string feature in Features.Keys)
             {
-                outputList.AddRange(this.Features[feature]!.OutputRecursive(tabLevel + 1, pre, midpoint, includeLongDescription));
+                outputList.AddRange(Features[feature]!.OutputRecursive(tabLevel + 1, pre, midpoint, includeLongDescription));
             }
 
             return outputList;
@@ -420,7 +420,7 @@ namespace SabreTools.Help
             {
                 // If we have a flag, make sure it doesn't have an equal sign in it 
                 case ParameterType.Flag:
-                    valid = !input.Contains('=') && this.Flags.Contains(input);
+                    valid = !input.Contains('=') && Flags.Contains(input);
                     if (valid)
                     {
                         _value = true;
@@ -436,7 +436,7 @@ namespace SabreTools.Help
 
                 // If we have an Int32, try to parse it if at all possible
                 case ParameterType.Int32:
-                    valid = input.Contains('=') && this.Flags.Contains(input.Split('=')[0]);
+                    valid = input.Contains('=') && Flags.Contains(input.Split('=')[0]);
                     if (valid)
                     {
                         if (!Int32.TryParse(input.Split('=')[1], out int value))
@@ -455,7 +455,7 @@ namespace SabreTools.Help
 
                 // If we have an Int32, try to parse it if at all possible
                 case ParameterType.Int64:
-                    valid = input.Contains('=') && this.Flags.Contains(input.Split('=')[0]);
+                    valid = input.Contains('=') && Flags.Contains(input.Split('=')[0]);
                     if (valid)
                     {
                         if (!Int64.TryParse(input.Split('=')[1], out long value))
@@ -474,7 +474,7 @@ namespace SabreTools.Help
 
                 // If we have an input, make sure it has an equals sign in it
                 case ParameterType.List:
-                    valid = input.Contains('=') && this.Flags.Contains(input.Split('=')[0]);
+                    valid = input.Contains('=') && Flags.Contains(input.Split('=')[0]);
                     if (valid)
                     {
                         _value ??= new List<string>();
@@ -484,7 +484,7 @@ namespace SabreTools.Help
                     break;
 
                 case ParameterType.String:
-                    valid = input.Contains('=') && this.Flags.Contains(input.Split('=')[0]);
+                    valid = input.Contains('=') && Flags.Contains(input.Split('=')[0]);
                     if (valid)
                     {
                         _value = input.Split('=')[1];
@@ -501,7 +501,7 @@ namespace SabreTools.Help
 
             // If we haven't found a valid flag and we're not looking for just this feature, check to see if any of the subfeatures are valid
             if (!valid && !exact)
-                valid = this.Features.Keys.Any(k => this.Features[k]!.ValidateInput(input));
+                valid = Features.Keys.Any(k => Features[k]!.ValidateInput(input));
 
             return valid;
         }
