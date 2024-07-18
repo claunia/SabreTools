@@ -15,32 +15,50 @@ namespace SabreTools.Logging
         /// <summary>
         /// LogLevel for the event
         /// </summary>
-        public LogLevel LogLevel { get; set; } = LogLevel.VERBOSE;
+        public readonly LogLevel LogLevel;
 
         /// <summary>
         /// Log statement to be printed
         /// </summary>
-        public string? Statement { get; set; } = null;
+        public readonly string? Statement = null;
 
         /// <summary>
         /// Exception to be passed along to the event handler
         /// </summary>
-        public Exception? Exception { get; set; } = null;
+        public readonly Exception? Exception = null;
 
         /// <summary>
         /// Total count for progress log events
         /// </summary>
-        public long? TotalCount { get; set; } = null;
+        public readonly long? TotalCount = null;
 
         /// <summary>
         /// Current count for progress log events
         /// </summary>
-        public long? CurrentCount { get; set; } = null;
+        public readonly long? CurrentCount = null;
+
+        /// <summary>
+        /// Statement constructor
+        /// </summary>
+        public LogEventArgs(LogLevel logLevel, string statement)
+        {
+            LogLevel = logLevel;
+            Statement = statement;
+        }
+
+        /// <summary>
+        /// Statement constructor
+        /// </summary>
+        public LogEventArgs(LogLevel logLevel, Exception exception)
+        {
+            LogLevel = logLevel;
+            Exception = exception;
+        }
 
         /// <summary>
         /// Statement and exception constructor
         /// </summary>
-        public LogEventArgs(LogLevel logLevel = LogLevel.VERBOSE, string? statement = null, Exception? exception = null)
+        public LogEventArgs(LogLevel logLevel, string statement, Exception exception)
         {
             LogLevel = logLevel;
             Statement = statement;
@@ -50,7 +68,7 @@ namespace SabreTools.Logging
         /// <summary>
         /// Progress constructor
         /// </summary>
-        public LogEventArgs(long total, long current, LogLevel logLevel = LogLevel.VERBOSE, string? statement = null)
+        public LogEventArgs(long total, long current, LogLevel logLevel, string? statement = null)
         {
             LogLevel = logLevel;
             Statement = statement;

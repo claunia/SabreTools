@@ -285,17 +285,7 @@ namespace SabreTools.Logging
 
         #region Log Event Triggers
 
-        /// <summary>
-        /// Write the given exception as a verbose message to the log output
-        /// </summary>
-        /// <param name="instance">Instance object that's the source of logging</param>
-        /// <param name="ex">Exception to be written log</param>
-        /// <param name="output">String to be written log</param>
-        /// <returns>True if the output could be written, false otherwise</returns>
-        public static void Verbose(object? instance, Exception ex, string? output = null)
-        {
-            LogEventHandler(instance, new LogEventArgs(LogLevel.VERBOSE, output, ex));
-        }
+        #region Verbose
 
         /// <summary>
         /// Write the given string as a verbose message to the log output
@@ -304,9 +294,26 @@ namespace SabreTools.Logging
         /// <param name="output">String to be written log</param>
         /// <returns>True if the output could be written, false otherwise</returns>
         public static void Verbose(object? instance, string output)
-        {
-            LogEventHandler(instance, new LogEventArgs(LogLevel.VERBOSE, output, null));
-        }
+            => LogEventHandler(instance, new LogEventArgs(LogLevel.VERBOSE, output));
+
+        /// <summary>
+        /// Write the given exception as a verbose message to the log output
+        /// </summary>
+        /// <param name="instance">Instance object that's the source of logging</param>
+        /// <param name="ex">Exception to be written log</param>
+        /// <returns>True if the output could be written, false otherwise</returns>
+        public static void Verbose(object? instance, Exception ex)
+            => LogEventHandler(instance, new LogEventArgs(LogLevel.VERBOSE, ex));
+
+        /// <summary>
+        /// Write the given exception and string as a verbose message to the log output
+        /// </summary>
+        /// <param name="instance">Instance object that's the source of logging</param>
+        /// <param name="ex">Exception to be written log</param>
+        /// <param name="output">String to be written log</param>
+        /// <returns>True if the output could be written, false otherwise</returns>
+        public static void Verbose(object? instance, Exception ex, string output)
+            => LogEventHandler(instance, new LogEventArgs(LogLevel.VERBOSE, output, ex));
 
         /// <summary>
         /// Write the given verbose progress message to the log output
@@ -316,21 +323,11 @@ namespace SabreTools.Logging
         /// <param name="current">Current count for progres</param>
         /// <param name="output">String to be written log</param>
         public static void Verbose(object? instance, long total, long current, string? output = null)
-        {
-            LogEventHandler(instance, new LogEventArgs(total, current, LogLevel.VERBOSE, output));
-        }
+            => LogEventHandler(instance, new LogEventArgs(total, current, LogLevel.VERBOSE, output));
 
-        /// <summary>
-        /// Write the given exception as a user message to the log output
-        /// </summary>
-        /// <param name="instance">Instance object that's the source of logging</param>
-        /// <param name="ex">Exception to be written log</param>
-        /// <param name="output">String to be written log</param>
-        /// <returns>True if the output could be written, false otherwise</returns>
-        public static void User(object? instance, Exception ex, string? output = null)
-        {
-            LogEventHandler(instance, new LogEventArgs(LogLevel.USER, output, ex));
-        }
+        #endregion
+
+        #region User
 
         /// <summary>
         /// Write the given string as a user message to the log output
@@ -339,9 +336,26 @@ namespace SabreTools.Logging
         /// <param name="output">String to be written log</param>
         /// <returns>True if the output could be written, false otherwise</returns>
         public static void User(object? instance, string output)
-        {
-            LogEventHandler(instance, new LogEventArgs(LogLevel.USER, output, null));
-        }
+            => LogEventHandler(instance, new LogEventArgs(LogLevel.USER, output));
+
+        /// <summary>
+        /// Write the given exception as a user message to the log output
+        /// </summary>
+        /// <param name="instance">Instance object that's the source of logging</param>
+        /// <param name="ex">Exception to be written log</param>
+        /// <returns>True if the output could be written, false otherwise</returns>
+        public static void User(object? instance, Exception ex)
+            => LogEventHandler(instance, new LogEventArgs(LogLevel.USER, ex));
+
+        /// <summary>
+        /// Write the given exception and string as a user message to the log output
+        /// </summary>
+        /// <param name="instance">Instance object that's the source of logging</param>
+        /// <param name="ex">Exception to be written log</param>
+        /// <param name="output">String to be written log</param>
+        /// <returns>True if the output could be written, false otherwise</returns>
+        public static void User(object? instance, Exception ex, string output)
+            => LogEventHandler(instance, new LogEventArgs(LogLevel.USER, output, ex));
 
         /// <summary>
         /// Write the given user progress message to the log output
@@ -351,21 +365,11 @@ namespace SabreTools.Logging
         /// <param name="current">Current count for progres</param>
         /// <param name="output">String to be written log</param>
         public static void User(object? instance, long total, long current, string? output = null)
-        {
-            LogEventHandler(instance, new LogEventArgs(total, current, LogLevel.USER, output));
-        }
+            => LogEventHandler(instance, new LogEventArgs(total, current, LogLevel.USER, output));
 
-        /// <summary>
-        /// Write the given exception as a warning to the log output
-        /// </summary>
-        /// <param name="instance">Instance object that's the source of logging</param>
-        /// <param name="ex">Exception to be written log</param>
-        /// <param name="output">String to be written log</param>
-        /// <returns>True if the output could be written, false otherwise</returns>
-        public static void Warning(object? instance, Exception ex, string? output = null)
-        {
-            LogEventHandler(instance, new LogEventArgs(LogLevel.WARNING, output, ex));
-        }
+        #endregion
+
+        #region Warning
 
         /// <summary>
         /// Write the given string as a warning to the log output
@@ -374,9 +378,26 @@ namespace SabreTools.Logging
         /// <param name="output">String to be written log</param>
         /// <returns>True if the output could be written, false otherwise</returns>
         public static void Warning(object? instance, string output)
-        {
-            LogEventHandler(instance, new LogEventArgs(LogLevel.WARNING, output, null));
-        }
+            => LogEventHandler(instance, new LogEventArgs(LogLevel.WARNING, output));
+
+        /// <summary>
+        /// Write the given exception as a warning to the log output
+        /// </summary>
+        /// <param name="instance">Instance object that's the source of logging</param>
+        /// <param name="ex">Exception to be written log</param>
+        /// <returns>True if the output could be written, false otherwise</returns>
+        public static void Warning(object? instance, Exception ex)
+            => LogEventHandler(instance, new LogEventArgs(LogLevel.WARNING, ex));
+
+        //// <summary>
+        /// Write the given exception and string as a warning to the log output
+        /// </summary>
+        /// <param name="instance">Instance object that's the source of logging</param>
+        /// <param name="ex">Exception to be written log</param>
+        /// <param name="output">String to be written log</param>
+        /// <returns>True if the output could be written, false otherwise</returns>
+        public static void Warning(object? instance, Exception ex, string output)
+            => LogEventHandler(instance, new LogEventArgs(LogLevel.WARNING, output, ex));
 
         /// <summary>
         /// Write the given warning progress message to the log output
@@ -386,21 +407,11 @@ namespace SabreTools.Logging
         /// <param name="current">Current count for progres</param>
         /// <param name="output">String to be written log</param>
         public static void Warning(object? instance, long total, long current, string? output = null)
-        {
-            LogEventHandler(instance, new LogEventArgs(total, current, LogLevel.WARNING, output));
-        }
+            => LogEventHandler(instance, new LogEventArgs(total, current, LogLevel.WARNING, output));
 
-        /// <summary>
-        /// Writes the given exception as an error in the log
-        /// </summary>
-        /// <param name="instance">Instance object that's the source of logging</param>
-        /// <param name="ex">Exception to be written log</param>
-        /// <param name="output">String to be written log</param>
-        /// <returns>True if the output could be written, false otherwise</returns>
-        public static void Error(object? instance, Exception ex, string? output = null)
-        {
-            LogEventHandler(instance, new LogEventArgs(LogLevel.ERROR, output, ex));
-        }
+        #endregion
+
+        #region Error
 
         /// <summary>
         /// Writes the given string as an error in the log
@@ -409,9 +420,26 @@ namespace SabreTools.Logging
         /// <param name="output">String to be written log</param>
         /// <returns>True if the output could be written, false otherwise</returns>
         public static void Error(object? instance, string output)
-        {
-            LogEventHandler(instance, new LogEventArgs(LogLevel.ERROR, output, null));
-        }
+            => LogEventHandler(instance, new LogEventArgs(LogLevel.ERROR, output));
+
+        /// <summary>
+        /// Writes the given exception as an error in the log
+        /// </summary>
+        /// <param name="instance">Instance object that's the source of logging</param>
+        /// <param name="ex">Exception to be written log</param>
+        /// <returns>True if the output could be written, false otherwise</returns>
+        public static void Error(object? instance, Exception ex)
+            => LogEventHandler(instance, new LogEventArgs(LogLevel.ERROR, ex));
+
+        /// <summary>
+        /// Writes the given exception and string as an error in the log
+        /// </summary>
+        /// <param name="instance">Instance object that's the source of logging</param>
+        /// <param name="ex">Exception to be written log</param>
+        /// <param name="output">String to be written log</param>
+        /// <returns>True if the output could be written, false otherwise</returns>
+        public static void Error(object? instance, Exception ex, string output)
+            => LogEventHandler(instance, new LogEventArgs(LogLevel.ERROR, output, ex));
 
         /// <summary>
         /// Write the given error progress message to the log output
@@ -421,9 +449,9 @@ namespace SabreTools.Logging
         /// <param name="current">Current count for progres</param>
         /// <param name="output">String to be written log</param>
         public static void Error(object? instance, long total, long current, string? output = null)
-        {
-            LogEventHandler(instance, new LogEventArgs(total, current, LogLevel.ERROR, output));
-        }
+            => LogEventHandler(instance, new LogEventArgs(total, current, LogLevel.ERROR, output));
+
+        #endregion
 
         #endregion
     }
