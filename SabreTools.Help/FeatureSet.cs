@@ -8,8 +8,8 @@ namespace SabreTools.Help
     {
         #region Private variables
 
-        private readonly List<string> _header;
-        private Dictionary<string, Feature?> _features;
+        private readonly List<string> _header = [];
+        private readonly Dictionary<string, Feature?> _features = [];
         private const string _barrier = "-----------------------------------------";
 
         #endregion
@@ -18,14 +18,11 @@ namespace SabreTools.Help
 
         public FeatureSet()
         {
-            _header = [];
-            _features = [];
         }
 
         public FeatureSet(List<string> header)
         {
-            _header = header;
-            _features = [];
+            _header.AddRange(header);
         }
 
         #endregion
@@ -36,7 +33,6 @@ namespace SabreTools.Help
         {
             get
             {
-                _features ??= [];
                 if (!_features.ContainsKey(name))
                     return null;
 
@@ -44,7 +40,6 @@ namespace SabreTools.Help
             }
             set
             {
-                _features ??= [];
                 _features[name] = value;
             }
         }
@@ -56,7 +51,6 @@ namespace SabreTools.Help
                 if (subfeature.Name == null)
                     return null;
 
-                _features ??= [];
                 if (!_features.ContainsKey(subfeature.Name))
                     return null;
 
@@ -64,7 +58,6 @@ namespace SabreTools.Help
             }
             set
             {
-                _features ??= [];
                 if (subfeature.Name != null)
                     _features[subfeature.Name] = value;
             }
@@ -79,7 +72,6 @@ namespace SabreTools.Help
             if (feature.Name == null)
                 return;
 
-            _features ??= [];
             lock (_features)
             {
                 _features.Add(feature.Name, feature);

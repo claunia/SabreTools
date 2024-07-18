@@ -15,7 +15,7 @@ namespace SabreTools.Help
         /// <summary>
         /// List of files, directories, and potential wildcard paths
         /// </summary>
-        public List<string> Inputs = [];
+        public readonly List<string> Inputs = [];
 
         #endregion
 
@@ -50,32 +50,32 @@ namespace SabreTools.Help
             for (int i = 1; i < args.Length; i++)
             {
                 // Verify that the current flag is proper for the feature
-                if (!ValidateInput(args[i]))
+                if (ValidateInput(args[i]))
+                    continue;
+
+                // Special precautions for files and directories
+                if (File.Exists(args[i]) || Directory.Exists(args[i]))
                 {
-                    // Special precautions for files and directories
-                    if (File.Exists(args[i]) || Directory.Exists(args[i]))
-                    {
-                        Inputs.Add(args[i]);
-                    }
+                    Inputs.Add(item: args[i]);
+                }
 
-                    // Special precautions for wildcarded inputs (potential paths)
+                // Special precautions for wildcarded inputs (potential paths)
 #if NETFRAMEWORK
-                    else if (args[i].Contains("*") || args[i].Contains("?"))
+                else if (args[i].Contains("*") || args[i].Contains("?"))
 #else
-                    else if (args[i].Contains('*') || args[i].Contains('?'))
+                else if (args[i].Contains('*') || args[i].Contains('?'))
 #endif
-                    {
-                        Inputs.Add(args[i]);
-                    }
+                {
+                    Inputs.Add(args[i]);
+                }
 
-                    // Everything else isn't a file
-                    else
-                    {
-                        logger.Error($"Invalid input detected: {args[i]}");
-                        help.OutputIndividualFeature(Name);
-                        LoggerImpl.Close();
-                        return false;
-                    }
+                // Everything else isn't a file
+                else
+                {
+                    logger.Error($"Invalid input detected: {args[i]}");
+                    help.OutputIndividualFeature(Name);
+                    LoggerImpl.Close();
+                    return false;
                 }
             }
 

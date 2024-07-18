@@ -17,10 +17,10 @@ namespace SabreTools.Help
         #region Publicly facing variables
 
         public string? Name { get; protected set; }
-        public List<string> Flags { get; protected set; }
+        public readonly List<string> Flags = [];
         public string? Description { get; protected set; }
         public string? LongDescription { get; protected set; }
-        public Dictionary<string, Feature?> Features { get; protected set; }
+        public readonly Dictionary<string, Feature?> Features = [];
 
         #endregion
 
@@ -28,35 +28,28 @@ namespace SabreTools.Help
 
         public Feature()
         {
+            _featureType = ParameterType.Flag;
             Name = null;
-            Flags = [];
             Description = null;
             LongDescription = null;
-            _featureType = ParameterType.Flag;
-            Features = [];
         }
 
         public Feature(string name, string flag, string description, ParameterType featureType, string? longDescription = null)
         {
+            _featureType = featureType;
             Name = name;
-            Flags =
-            [
-                flag
-            ];
+            Flags.Add(flag);
             Description = description;
             LongDescription = longDescription;
-            _featureType = featureType;
-            Features = [];
         }
 
         public Feature(string name, List<string> flags, string description, ParameterType featureType, string? longDescription = null)
         {
+            _featureType = featureType;
             Name = name;
-            Flags = flags;
+            Flags.AddRange(flags);
             Description = description;
             LongDescription = longDescription;
-            _featureType = featureType;
-            Features = [];
         }
 
         #endregion
@@ -87,7 +80,6 @@ namespace SabreTools.Help
         /// <param name="feature"></param>
         public void AddFeature(Feature feature)
         {
-            Features ??= [];
             lock (Features)
             {
                 Features[feature.Name ?? string.Empty] = feature;
@@ -100,7 +92,6 @@ namespace SabreTools.Help
         /// <param name="flag">Flag to add for this feature</param>
         public void AddFlag(string flag)
         {
-            Flags ??= [];
             lock (Flags)
             {
                 Flags.Add(flag);
@@ -113,7 +104,6 @@ namespace SabreTools.Help
         /// <param name="flags">List of flags to add to this feature</param>
         public void AddFlags(List<string> flags)
         {
-            Flags ??= [];
             lock (Flags)
             {
                 Flags.AddRange(flags);
@@ -281,7 +271,7 @@ namespace SabreTools.Help
         public List<string> OutputRecursive(int tabLevel, int pre = 0, int midpoint = 0, bool includeLongDescription = false)
         {
             // Create the output list
-            List<string> outputList = new();
+            List<string> outputList = [];
 
             // Build the output string first
             string output = string.Empty;
