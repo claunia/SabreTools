@@ -26,14 +26,6 @@ namespace SabreTools.Help
 
         #region Constructors
 
-        public Feature()
-        {
-            _featureType = ParameterType.Flag;
-            Name = null;
-            Description = null;
-            LongDescription = null;
-        }
-
         public Feature(string name, string flag, string description, ParameterType featureType, string? longDescription = null)
         {
             _featureType = featureType;
