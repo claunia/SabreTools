@@ -379,8 +379,13 @@ namespace SabreTools.FileTypes
 
                 outputStream.Dispose();
 
-                if (!string.IsNullOrEmpty(baseFile.Date))
-                    File.SetCreationTime(fileName, DateTime.Parse(baseFile.Date));
+                // Try to set the creation time
+                try
+                {
+                    if (!string.IsNullOrEmpty(baseFile.Date))
+                        File.SetCreationTime(fileName, DateTime.Parse(baseFile.Date));
+                }
+                catch { }
 
                 return true;
             }
