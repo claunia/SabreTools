@@ -26,6 +26,13 @@ namespace SabreTools.Help
 
         #region Constructors
 
+        /// <summary>
+        /// Only used by inheriting classes
+        /// </summary>
+        protected Feature()
+        {
+        }
+
         public Feature(string name, string flag, string description, ParameterType featureType, string? longDescription = null)
         {
             _featureType = featureType;
