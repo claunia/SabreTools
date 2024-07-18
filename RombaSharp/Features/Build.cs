@@ -16,13 +16,12 @@ namespace RombaSharp.Features
         public Build()
         {
             Name = Value;
-            Flags = ["build"];
+            Flags.AddRange(["build"]);
             Description = "For each specified DAT file it creates the torrentzip files.";
             _featureType = ParameterType.Flag;
             LongDescription = @"For each specified DAT file it creates the torrentzip files in the specified
 output dir. The files will be placed in the specified location using a folder
 structure according to the original DAT master directory tree structure.";
-            Features = [];
 
             // Common Features
             AddCommonFeatures();

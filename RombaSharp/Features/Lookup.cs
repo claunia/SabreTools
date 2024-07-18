@@ -12,11 +12,10 @@ namespace RombaSharp.Features
         public Lookup()
         {
             Name = Value;
-            Flags = ["lookup"];
+            Flags.AddRange(["lookup"]);
             Description = "For each specified hash it looks up any available information.";
             _featureType = ParameterType.Flag;
             LongDescription = "For each specified hash it looks up any available information (dat or rom).";
-            Features = [];
 
             // Common Features
             AddCommonFeatures();

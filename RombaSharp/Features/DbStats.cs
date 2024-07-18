@@ -11,11 +11,10 @@ namespace RombaSharp.Features
         public DbStats()
         {
             Name = Value;
-            Flags = ["dbstats"];
+            Flags.AddRange(["dbstats"]);
             Description = "Prints db stats.";
             _featureType = ParameterType.Flag;
             LongDescription = "Print db stats.";
-            Features = [];
 
             // Common Features
             AddCommonFeatures();

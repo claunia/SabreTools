@@ -23,7 +23,7 @@ namespace SabreTools.Features
         public Batch()
         {
             Name = Value;
-            Flags = ["bt", "batch"];
+            Flags.AddRange(["bt", "batch"]);
             Description = "Enable batch mode";
             _featureType = ParameterType.Flag;
             LongDescription = @"Run a special mode that takes input files as lists of batch commands to run sequentially. Each command has to be its own line and must be followed by a semicolon (`;`). Commented lines may start with either `REM` or `#`. Multiple batch files are allowed but they will be run independently from each other.
@@ -45,7 +45,6 @@ Add new output format(s):           format(datformat, ...);
 Set the output directory:           output(outdir);
 Write the internal items:           write([overwrite = true]);
 Reset the internal state:           reset();";
-            Features = [];
 
             // Common Features
             AddCommonFeatures();

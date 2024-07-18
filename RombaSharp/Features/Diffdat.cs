@@ -14,12 +14,11 @@ namespace RombaSharp.Features
         public Diffdat()
         {
             Name = Value;
-            Flags = ["diffdat"];
+            Flags.AddRange(["diffdat"]);
             Description = "Creates a DAT file with those entries that are in -new DAT.";
             _featureType = ParameterType.Flag;
             LongDescription = @"Creates a DAT file with those entries that are in -new DAT file and not
 in -old DAT file. Ignores those entries in -old that are not in -new.";
-            this.Features = [];
 
             // Common Features
             AddCommonFeatures();

@@ -9,11 +9,10 @@ namespace SabreTools.Features
         public DisplayHelp()
         {
             Name = Value;
-            Flags = ["?", "h", "help"];
+            Flags.AddRange(["?", "h", "help"]);
             Description = "Show this help";
             _featureType = ParameterType.Flag;
             LongDescription = "Built-in to most of the programs is a basic help text.";
-            Features = [];
         }
 
         public override bool ProcessArgs(string[] args, FeatureSet help)

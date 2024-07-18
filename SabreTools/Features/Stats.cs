@@ -12,7 +12,7 @@ namespace SabreTools.Features
         public Stats()
         {
             Name = Value;
-            Flags = ["st", "stats"];
+            Flags.AddRange(["st", "stats"]);
             Description = "Get statistics on all input DATs";
             _featureType = ParameterType.Flag;
             LongDescription = @"This will output by default the combined statistics for all input DAT files.
@@ -29,7 +29,6 @@ The stats that are outputted are as follows:
 - Items that include a SHA-384
 - Items that include a SHA-512
 - Items with Nodump status";
-            Features = [];
 
             // Common Features
             AddCommonFeatures();

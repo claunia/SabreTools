@@ -10,11 +10,10 @@ namespace RombaSharp.Features
         public Shutdown()
         {
             Name = Value;
-            Flags = ["shutdown"];
+            Flags.AddRange(["shutdown"]);
             Description = "Gracefully shuts down server.";
             _featureType = ParameterType.Flag;
             LongDescription = "Gracefully shuts down server saving all the cached data.";
-            Features = [];
 
             // Common Features
             AddCommonFeatures();

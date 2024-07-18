@@ -20,11 +20,10 @@ namespace RombaSharp.Features
         public RescanDepots()
         {
             Name = Value;
-            Flags = ["depot-rescan"];
+            Flags.AddRange(["depot-rescan"]);
             Description = "Rescan a specific depot to get new information";
             _featureType = ParameterType.Flag;
             LongDescription = "Rescan a specific depot to get new information";
-            Features = [];
 
             // Common Features
             AddCommonFeatures();

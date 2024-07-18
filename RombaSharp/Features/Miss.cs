@@ -16,11 +16,10 @@ namespace RombaSharp.Features
         public Miss()
         {
             Name = Value;
-            Flags = ["miss"];
+            Flags.AddRange(["miss"]);
             Description = "Create miss and have file";
             _featureType = ParameterType.Flag;
             LongDescription = "For each specified DAT file, create miss and have file";
-            Features = [];
 
             // Common Features
             AddCommonFeatures();

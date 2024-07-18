@@ -10,11 +10,10 @@ namespace RombaSharp.Features
         public Cancel()
         {
             Name = Value;
-            Flags = ["cancel"];
+            Flags.AddRange(["cancel"]);
             Description = "Cancels current long-running job";
             _featureType = ParameterType.Flag;
             LongDescription = "Cancels current long-running job.";
-            Features = [];
 
             // Common Features
             AddCommonFeatures();

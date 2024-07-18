@@ -11,11 +11,10 @@ namespace SabreTools.Features
         public Version()
         {
             Name = Value;
-            Flags = ["v", "version"];
+            Flags.AddRange(["v", "version"]);
             Description = "Prints version";
             _featureType = ParameterType.Flag;
             LongDescription = "Prints current program version.";
-            Features = [];
 
             // Common Features
             AddCommonFeatures();

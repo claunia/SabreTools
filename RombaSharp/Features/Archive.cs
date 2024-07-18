@@ -20,7 +20,7 @@ namespace RombaSharp.Features
         public Archive()
         {
             Name = Value;
-            Flags = ["archive"];
+            Flags.AddRange(["archive"]);
             Description = "Adds ROM files from the specified directories to the ROM archive.";
             _featureType = ParameterType.Flag;
             LongDescription = @"Adds ROM files from the specified directories to the ROM archive.
@@ -29,7 +29,6 @@ Unpacked files will be stored as individual entries. Prior to unpacking a zip
 file, the external SHA1 is checked against the DAT index. 
 If -only-needed is set, only those files are put in the ROM archive that
 have a current entry in the DAT index.";
-            Features = [];
 
             // Common Features
             AddCommonFeatures();

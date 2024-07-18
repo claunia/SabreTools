@@ -10,7 +10,7 @@ namespace RombaSharp.Features
         public PurgeBackup()
         {
             Name = Value;
-            Flags = ["purge-backup"];
+            Flags.AddRange(["purge-backup"]);
             Description = "Moves DAT index entries for orphaned DATs.";
             _featureType = ParameterType.Flag;
             LongDescription = @"Deletes DAT index entries for orphaned DATs and moves ROM files that are no
@@ -18,7 +18,6 @@ longer associated with any current DATs to the specified backup folder.
 The files will be placed in the backup location using
 a folder structure according to the original DAT master directory tree
 structure. It also deletes the specified DATs from the DAT index.";
-            Features = [];
 
             // Common Features
             AddCommonFeatures();

@@ -10,11 +10,10 @@ namespace RombaSharp.Features
         public Progress()
         {
             Name = Value;
-            Flags = ["progress"];
+            Flags.AddRange(["progress"]);
             Description = "Shows progress of the currently running command.";
             _featureType = ParameterType.Flag;
             LongDescription = "Shows progress of the currently running command.";
-            Features = [];
 
             // Common Features
             AddCommonFeatures();

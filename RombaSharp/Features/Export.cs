@@ -13,11 +13,10 @@ namespace RombaSharp.Features
         public Export()
         {
             Name = Value;
-            Flags = ["export"];
+            Flags.AddRange(["export"]);
             Description = "Exports db to export.csv";
             _featureType = ParameterType.Flag;
             LongDescription = "Exports db to standardized export.csv";
-            Features = [];
 
             // Common Features
             AddCommonFeatures();

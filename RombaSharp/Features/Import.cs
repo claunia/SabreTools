@@ -15,11 +15,10 @@ namespace RombaSharp.Features
         public Import()
         {
             Name = Value;
-            Flags = ["import"];
+            Flags.AddRange(["import"]);
             Description = "Import a database from a formatted CSV file";
             _featureType = ParameterType.Flag;
             LongDescription = "Import a database from a formatted CSV file";
-            Features = [];
 
             // Common Features
             AddCommonFeatures();
@@ -33,10 +32,14 @@ namespace RombaSharp.Features
 
             logger.Error("This feature is not yet implemented: import");
 
-            // First ensure the inputs and database connection
-            Inputs = PathTool.GetFilesOnly(Inputs).Select(p => p.CurrentPath).ToList();
-            SqliteConnection dbc = new SqliteConnection(_connectionString);
-            SqliteCommand slc = new SqliteCommand();
+            // Ensure the inputs
+            var files = PathTool.GetFilesOnly(Inputs).Select(p => p.CurrentPath);
+            Inputs.Clear();
+            Inputs.AddRange(files);
+
+            // Ensure the database connection
+            var dbc = new SqliteConnection(_connectionString);
+            var slc = new SqliteCommand();
             dbc.Open();
 
             // Now, for each of these files, attempt to add the data found inside

@@ -13,11 +13,10 @@ namespace RombaSharp.Features
         public DatStats()
         {
             Name = Value;
-            Flags = ["datstats"];
+            Flags.AddRange(["datstats"]);
             Description = "Prints dat stats.";
             _featureType = ParameterType.Flag;
             LongDescription = "Print dat stats.";
-            Features = [];
 
             // Common Features
             AddCommonFeatures();
@@ -30,8 +29,8 @@ namespace RombaSharp.Features
                 return false;
 
             // If we have no inputs listed, we want to use datroot
-            if (Inputs == null || Inputs.Count == 0)
-                Inputs = new List<string> { Path.GetFullPath(_dats!) };
+            if (Inputs.Count == 0)
+                Inputs.Add(Path.GetFullPath(_dats!));
 
             // Now output the stats for all inputs
             var statistics = Statistics.CalculateStatistics(Inputs, single: true);

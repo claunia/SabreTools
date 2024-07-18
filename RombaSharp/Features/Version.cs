@@ -11,11 +11,10 @@ namespace RombaSharp.Features
         public Version()
         {
             Name = Value;
-            Flags = ["version"];
+            Flags.AddRange(["version"]);
             Description = "Prints version";
             _featureType = ParameterType.Flag;
             LongDescription = "Prints current program version.";
-            Features = [];
 
             // Common Features
             AddCommonFeatures();

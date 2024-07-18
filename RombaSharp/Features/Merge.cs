@@ -13,11 +13,10 @@ namespace RombaSharp.Features
         public Merge()
         {
             Name = Value;
-            Flags = ["merge"];
+            Flags.AddRange(["merge"]);
             Description = "Merges depot";
             _featureType = ParameterType.Flag;
             LongDescription = "Merges specified depot into current depot.";
-            Features = [];
 
             // Common Features
             AddCommonFeatures();
@@ -44,7 +43,9 @@ namespace RombaSharp.Features
             logger.Error("This feature is not yet implemented: merge");
 
             // Verify that the inputs are valid directories
-            Inputs = PathTool.GetDirectoriesOnly(Inputs).Select(p => p.CurrentPath).ToList();
+            var dirs = PathTool.GetDirectoriesOnly(Inputs).Select(p => p.CurrentPath);
+            Inputs.Clear();
+            Inputs.AddRange(dirs);
 
             // Loop over all input directories
             foreach (string input in Inputs)

@@ -11,7 +11,7 @@ namespace RombaSharp.Features
         public PurgeDelete()
         {
             Name = Value;
-            Flags = ["purge-delete"];
+            Flags.AddRange(["purge-delete"]);
             Description = "Deletes DAT index entries for orphaned DATs";
             _featureType = ParameterType.Flag;
             LongDescription = @"Deletes DAT index entries for orphaned DATs and moves ROM files that are no
@@ -19,7 +19,6 @@ longer associated with any current DATs to the specified backup folder.
 The files will be placed in the backup location using
 a folder structure according to the original DAT master directory tree
 structure. It also deletes the specified DATs from the DAT index.";
-            Features = [];
 
             // Common Features
             AddCommonFeatures();

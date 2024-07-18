@@ -16,7 +16,7 @@ namespace SabreTools.Features
         public Restore()
         {
             Name = Value;
-            Flags = ["re", "restore"];
+            Flags.AddRange(["re", "restore"]);
             Description = "Restore header to file based on SHA-1";
             _featureType = ParameterType.Flag;
             LongDescription = @"This will make use of stored copier headers and reapply them to files if they match the included hash. More than one header can be applied to a file, so they will be output to new files, suffixed with .newX, where X is a number. No input files are altered in the process. Only uncompressed files will be processed.
@@ -30,7 +30,6 @@ The following systems have headers that this program can work with:
   - Nintendo Famicom Disk System
   - Nintendo Super Famicom / Super Nintendo Entertainment System
   - Nintendo Super Famicom / Super Nintendo Entertainment System SPC";
-            Features = [];
 
             // Common Features
             AddCommonFeatures();

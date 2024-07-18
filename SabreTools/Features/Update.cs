@@ -19,11 +19,10 @@ namespace SabreTools.Features
         public Update()
         {
             Name = Value;
-            Flags = ["ud", "update"];
+            Flags.AddRange(["ud", "update"]);
             Description = "Update and manipulate DAT(s)";
             _featureType = ParameterType.Flag;
             LongDescription = "This is the multitool part of the program, allowing for almost every manipulation to a DAT, or set of DATs. This is also a combination of many different programs that performed DAT manipulation that work better together.";
-            Features = [];
 
             // Common Features
             AddCommonFeatures();

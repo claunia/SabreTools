@@ -20,14 +20,13 @@ namespace RombaSharp.Features
         public RefreshDats()
         {
             Name = Value;
-            Flags = ["refresh-dats"];
+            Flags.AddRange(["refresh-dats"]);
             Description = "Refreshes the DAT index from the files in the DAT master directory tree.";
             _featureType = ParameterType.Flag;
             LongDescription = @"Refreshes the DAT index from the files in the DAT master directory tree.
 Detects any changes in the DAT master directory tree and updates the DAT index
 accordingly, marking deleted or overwritten dats as orphaned and updating
 contents of any changed dats.";
-            Features = [];
 
             // Common Features
             AddCommonFeatures();

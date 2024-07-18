@@ -10,11 +10,10 @@ namespace RombaSharp.Features
         public Memstats()
         {
             Name = Value;
-            Flags = ["memstats"];
+            Flags.AddRange(["memstats"]);
             Description = "Prints memory stats.";
             _featureType = ParameterType.Flag;
             LongDescription = "Print memory stats.";
-            Features = [];
 
             // Common Features
             AddCommonFeatures();
