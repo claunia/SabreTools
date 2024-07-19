@@ -57,11 +57,7 @@ namespace SabreTools.FileTypes.CHD
                     return null;
 
                 // Read and return the current CHD
-                CHDFile? generated = ReadAsVersion(chdstream, version);
-                if (generated != null)
-                    generated.Type = FileType.CHD;
-
-                return generated;
+                return ReadAsVersion(chdstream, version);
             }
             catch
             {
