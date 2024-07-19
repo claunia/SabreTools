@@ -15,8 +15,6 @@ namespace SabreTools.FileTypes.Archives
     /// </summary>
     public class SevenZipArchive : BaseArchive
     {
-        #region Constants
-
         /* Torrent7z Header Format
             http://cpansearch.perl.org/src/BJOERN/Compress-Deflate7-1.0/7zip/DOC/7zFormat.txt
 
@@ -24,44 +22,6 @@ namespace SabreTools.FileTypes.Archives
             06-07		ArchiveVersion (0x00, 0x03)
             The rest is unknown
         */
-        private readonly static byte[] Torrent7ZipHeader = [0x37, 0x7a, 0xbc, 0xaf, 0x27, 0x1c, 0x00, 0x03];
-        private readonly static byte[] Torrent7ZipSignature = [0xa9,
-            0xa9,
-            0x9f,
-            0xd1,
-            0x57,
-            0x08,
-            0xa9,
-            0xd7,
-            0xea,
-            0x29,
-            0x64,
-            0xb2,
-            0x36,
-            0x1b,
-            0x83,
-            0x52,
-            0x33,
-            0x00,
-            0x74,
-            0x6f,
-            0x72,
-            0x72,
-            0x65,
-            0x6e,
-            0x74,
-            0x37,
-            0x7a,
-            0x5f,
-            0x30,
-            0x2e,
-            0x39,
-            0x62,
-            0x65,
-            0x74,
-            0x61];
-
-        #endregion
 
         #region Constructors
 

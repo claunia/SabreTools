@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+#if NET462_OR_GREATER || NETCOREAPP
 using System.Linq;
 using Compress;
 using SabreTools.Core.Tools;
 using SabreTools.Hashing;
 using SabreTools.Matching;
-#if NET462_OR_GREATER || NETCOREAPP
 using SharpCompress.Archives;
 using SharpCompress.Archives.Tar;
 using SharpCompress.Common;

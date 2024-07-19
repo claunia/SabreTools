@@ -4,8 +4,8 @@ using System.IO;
 using System.Text.RegularExpressions;
 using SabreTools.Core.Tools;
 using SabreTools.Hashing;
-using SabreTools.IO.Extensions;
 #if NET462_OR_GREATER || NETCOREAPP
+using SabreTools.IO.Extensions;
 using SharpCompress.Compressors.Xz;
 #endif
 
@@ -16,8 +16,6 @@ namespace SabreTools.FileTypes.Archives
     /// </summary>
     public class XZArchive : BaseArchive
     {
-        #region Constants
-
         /* (Torrent)XZ Header Format
             https://tukaani.org/xz/xz-file-format.txt
 
@@ -25,9 +23,6 @@ namespace SabreTools.FileTypes.Archives
             06			Flags (0x01 - CRC32, 0x04 - CRC64, 0x0A - SHA-256)
             07-0A		Flags CRC32 (uint, little-endian)
         */
-        private readonly static byte[] TorrentXZHeader = new byte[] { 0xfd, 0x37, 0x7a, 0x58, 0x5a, 0x00, 0x01, 0x69, 0x22, 0xde, 0x36 };
-
-        #endregion
 
         #region Fields
 
