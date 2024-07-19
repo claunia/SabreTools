@@ -78,7 +78,6 @@ namespace SabreTools.DatItems.Formats
             SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, TextHelper.ByteArrayToString(baseFile.SHA1));
 
             SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
-            SetFieldValue<string?>(Models.Metadata.Disk.StatusKey, ItemStatus.None.AsStringValue());
         }
 
         #endregion

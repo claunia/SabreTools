@@ -105,7 +105,6 @@ namespace SabreTools.DatItems.Formats
                 SetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey, System.Text.Encoding.UTF8.GetString(baseFile.SpamSum));
 
             SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
-            SetFieldValue<string?>(Models.Metadata.Rom.StatusKey, ItemStatus.None.AsStringValue());
         }
 
         public Rom(Models.Metadata.Rom item) : base(item)
