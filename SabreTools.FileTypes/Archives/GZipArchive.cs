@@ -251,7 +251,7 @@ namespace SabreTools.FileTypes.Archives
                     gzstream!.Dispose();
                 }
 
-                // Fill in comon details and add to the list
+                // Fill in common details and add to the list
                 gzipEntryRom.Parent = gamename;
                 _children.Add(gzipEntryRom);
             }

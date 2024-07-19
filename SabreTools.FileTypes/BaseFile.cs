@@ -368,9 +368,14 @@ namespace SabreTools.FileTypes
 
             // Deal with the input stream
             if (!keepReadOpen)
+            {
+                input.Close();
                 input.Dispose();
+            }
             else
+            {
                 input.SeekIfPossible();
+            }
 
             return baseFile;
         }

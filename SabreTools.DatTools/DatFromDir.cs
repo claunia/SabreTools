@@ -93,8 +93,9 @@ namespace SabreTools.DatTools
                 logger.User(totalSize, currentSize);
                 foreach (string item in files)
                 {
-                    CheckFileForHashes(datFile, item, basePath, asFiles, skipFileType, addBlanks, hashes);
                     currentSize += new FileInfo(item).Length;
+
+                    CheckFileForHashes(datFile, item, basePath, asFiles, skipFileType, addBlanks, hashes);
                     logger.User(totalSize, currentSize, item);
                 }
 

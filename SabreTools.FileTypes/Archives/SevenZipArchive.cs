@@ -328,7 +328,7 @@ namespace SabreTools.FileTypes.Archives
                         zipEntryRom = GetInfo(readStream, size: (long)zf.GetLocalFile(i).UncompressedSize, hashes: this.AvailableHashTypes, keepReadOpen: true);
                     }
 
-                    // Fill in comon details and add to the list
+                    // Fill in common details and add to the list
                     zipEntryRom.Filename = zf.GetLocalFile(i).Filename;
                     zipEntryRom.Parent = gamename;
                     found.Add(zipEntryRom);

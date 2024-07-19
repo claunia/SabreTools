@@ -210,7 +210,7 @@ namespace SabreTools.FileTypes.Archives
                         tarEntryRom = GetInfo(entryStream, size: entry.Size, hashes: this.AvailableHashTypes);
                     }
 
-                    // Fill in comon details and add to the list
+                    // Fill in common details and add to the list
                     tarEntryRom.Filename = entry.Key;
                     tarEntryRom.Parent = gamename;
                     tarEntryRom.Date = entry.LastModifiedTime?.ToString("yyyy/MM/dd hh:mm:ss");

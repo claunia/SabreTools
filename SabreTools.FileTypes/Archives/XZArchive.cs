@@ -228,7 +228,7 @@ namespace SabreTools.FileTypes.Archives
                     xzStream.Dispose();
                 }
 
-                // Fill in comon details and add to the list
+                // Fill in common details and add to the list
                 xzEntryRom.Parent = gamename;
                 _children.Add(xzEntryRom);
             }
