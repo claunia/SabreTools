@@ -101,7 +101,8 @@ namespace SabreTools.DatItems.Formats
             SetFieldValue<string?>(Models.Metadata.Rom.SHA384Key, TextHelper.ByteArrayToString(baseFile.SHA384));
             SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key, TextHelper.ByteArrayToString(baseFile.SHA512));
             SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, baseFile.Size.ToString());
-            SetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey, System.Text.Encoding.UTF8.GetString(baseFile.SpamSum ?? []));
+            if (baseFile.SpamSum != null)
+                SetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey, System.Text.Encoding.UTF8.GetString(baseFile.SpamSum));
 
             SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
             SetFieldValue<string?>(Models.Metadata.Rom.StatusKey, ItemStatus.None.AsStringValue());
@@ -121,6 +122,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         public BaseFile ConvertToBaseFile()
         {
+            string? spamSum = GetStringFieldValue(Models.Metadata.Rom.SpamSumKey);
             return new BaseFile()
             {
                 Filename = GetName(),
@@ -133,7 +135,7 @@ namespace SabreTools.DatItems.Formats
                 SHA256 = TextHelper.StringToByteArray(GetStringFieldValue(Models.Metadata.Rom.SHA256Key)),
                 SHA384 = TextHelper.StringToByteArray(GetStringFieldValue(Models.Metadata.Rom.SHA384Key)),
                 SHA512 = TextHelper.StringToByteArray(GetStringFieldValue(Models.Metadata.Rom.SHA512Key)),
-                SpamSum = System.Text.Encoding.UTF8.GetBytes(GetStringFieldValue(Models.Metadata.Rom.SpamSumKey) ?? string.Empty),
+                SpamSum = spamSum != null ? System.Text.Encoding.UTF8.GetBytes(spamSum) : null,
             };
         }
 
