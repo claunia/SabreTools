@@ -209,12 +209,6 @@ Below are originally from SabreTools / DATabase -
 				4 bytes of the SHA-1, 1 byte for each layer of the directory name. It also
 				includes two auxilary files, .romba_size and .romba_size.backup, that have the
 				compressed size of the folder inside for use with Romba.
-				
-		-tlrz				Enable Torrent Long-Range Zip output [NOT IMPLEMENTED]
-			Instead of ouputting the files to folder, files will be rebuilt to Torrent Long-Range
-			Zip (TLRZ) files. This format is based on the LRZip file format as defined at
-			https://github.com/ckolivas/lrzip but with custom header information. This is currently
-			unused by any major application.
 			
 		-trar				Enable Torrent RAR output [NOT IMPLEMENTED]
 			Instead of outputting files to folder, files will be rebuilt to Torrent RAR (TRAR)

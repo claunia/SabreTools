@@ -332,15 +332,15 @@ namespace SabreTools.DatTools
                 if (internalFileInfo == null)
                     internalDatItem = null;
 #if NETFRAMEWORK
-                else if (internalFileInfo.Type == FileType.AaruFormat && (asFiles & TreatAsFile.AaruFormat) == 0)
+                else if (internalFileInfo is FileTypes.Aaru.AaruFormat && (asFiles & TreatAsFile.AaruFormat) == 0)
 #else
-                else if (internalFileInfo.Type == FileType.AaruFormat && !asFiles.HasFlag(TreatAsFile.AaruFormat))
+                else if (internalFileInfo is FileTypes.Aaru.AaruFormat && !asFiles.HasFlag(TreatAsFile.AaruFormat))
 #endif
                     internalDatItem = new Media(internalFileInfo);
 #if NETFRAMEWORK
-                else if (internalFileInfo.Type == FileType.CHD && (asFiles & TreatAsFile.CHD) == 0)
+                else if (internalFileInfo is FileTypes.CHD.CHDFile && (asFiles & TreatAsFile.CHD) == 0)
 #else
-                else if (internalFileInfo.Type == FileType.CHD && !asFiles.HasFlag(TreatAsFile.CHD))
+                else if (internalFileInfo is FileTypes.CHD.CHDFile && !asFiles.HasFlag(TreatAsFile.CHD))
 #endif
                     internalDatItem = new Disk(internalFileInfo);
                 else
@@ -851,7 +851,6 @@ namespace SabreTools.DatTools
                 OutputFormat.Torrent7Zip => "Torrent7Z",
                 OutputFormat.TorrentGzip => "TorrentGZ",
                 OutputFormat.TorrentGzipRomba => "TorrentGZ",
-                OutputFormat.TorrentLRZip => "TorrentLRZ",
                 OutputFormat.TorrentRar => "TorrentRAR",
                 OutputFormat.TorrentXZ => "TorrentXZ",
                 OutputFormat.TorrentXZRomba => "TorrentXZ",

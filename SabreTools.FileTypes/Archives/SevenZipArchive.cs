@@ -71,7 +71,6 @@ namespace SabreTools.FileTypes.Archives
         public SevenZipArchive()
             : base()
         {
-            this.Type = FileType.SevenZipArchive;
         }
 
         /// <summary>
@@ -83,7 +82,6 @@ namespace SabreTools.FileTypes.Archives
         public SevenZipArchive(string filename, bool getHashes = false)
             : base(filename, getHashes)
         {
-            this.Type = FileType.SevenZipArchive;
         }
 
         #endregion

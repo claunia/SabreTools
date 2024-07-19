@@ -25,7 +25,6 @@ namespace SabreTools.FileTypes.Archives
         public RarArchive()
             : base()
         {
-            this.Type = FileType.RarArchive;
         }
 
         /// <summary>
@@ -37,7 +36,6 @@ namespace SabreTools.FileTypes.Archives
         public RarArchive(string filename, bool getHashes = false)
             : base(filename, getHashes)
         {
-            this.Type = FileType.RarArchive;
         }
 
         #endregion

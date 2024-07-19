@@ -45,7 +45,6 @@ namespace SabreTools.FileTypes
         public Folder(bool writeToParent = false)
             : base()
         {
-            this.Type = FileType.Folder;
             this.writeToParent = writeToParent;
             logger = new Logger(this);
         }
@@ -59,7 +58,6 @@ namespace SabreTools.FileTypes
         public Folder(string filename, bool getHashes = false)
             : base(filename, getHashes)
         {
-            this.Type = FileType.Folder;
             logger = new Logger(this);
         }
 
@@ -78,14 +76,10 @@ namespace SabreTools.FileTypes
                 OutputFormat.Torrent7Zip => new SevenZipArchive(),
                 OutputFormat.TorrentGzip => new GZipArchive(),
                 OutputFormat.TorrentGzipRomba => new GZipArchive(),
-                OutputFormat.TorrentLRZip => new LRZipArchive(),
-                OutputFormat.TorrentLZ4 => new LZ4Archive(),
                 OutputFormat.TorrentRar => new RarArchive(),
                 OutputFormat.TorrentXZ => new XZArchive(),
                 OutputFormat.TorrentXZRomba => new XZArchive(),
                 OutputFormat.TorrentZip => new ZipArchive(),
-                OutputFormat.TorrentZPAQ => new ZPAQArchive(),
-                OutputFormat.TorrentZstd => new ZstdArchive(),
                 _ => null,
             };
         }

@@ -46,7 +46,6 @@ namespace SabreTools.FileTypes.Archives
         public XZArchive()
             : base()
         {
-            this.Type = FileType.XZArchive;
         }
 
         /// <summary>
@@ -58,7 +57,6 @@ namespace SabreTools.FileTypes.Archives
         public XZArchive(string filename, bool getHashes = false)
             : base(filename, getHashes)
         {
-            this.Type = FileType.XZArchive;
         }
 
         #endregion

@@ -51,7 +51,6 @@ namespace SabreTools.FileTypes.Archives
         public ZipArchive()
             : base()
         {
-            this.Type = FileType.ZipArchive;
         }
 
         /// <summary>
@@ -63,7 +62,6 @@ namespace SabreTools.FileTypes.Archives
         public ZipArchive(string filename, bool getHashes = false)
             : base(filename, getHashes)
         {
-            this.Type = FileType.ZipArchive;
         }
 
         #endregion

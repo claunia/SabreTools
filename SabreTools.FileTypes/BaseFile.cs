@@ -14,39 +14,28 @@ namespace SabreTools.FileTypes
     {
         #region Constants
 
-        protected static readonly byte[] SevenZipSignature = { 0x37, 0x7a, 0xbc, 0xaf, 0x27, 0x1c };
-        protected static readonly byte[] AaruFormatSignature = { 0x41, 0x41, 0x52, 0x55, 0x46, 0x52, 0x4d, 0x54 };
-        protected static readonly byte[] BZ2Signature = { 0x42, 0x5a, 0x68 };
-        protected static readonly byte[] CabinetSignature = { 0x4d, 0x53, 0x43, 0x46 };
-        protected static readonly byte[] CHDSignature = { 0x4d, 0x43, 0x6f, 0x6d, 0x70, 0x72, 0x48, 0x44 };
-        protected static readonly byte[] ELFSignature = { 0x7f, 0x45, 0x4c, 0x46 };
-        protected static readonly byte[] FreeArcSignature = { 0x41, 0x72, 0x43, 0x01 };
-        protected static readonly byte[] GzSignature = { 0x1f, 0x8b, 0x08 };
-        protected static readonly byte[] LRZipSignature = { 0x4c, 0x52, 0x5a, 0x49 };
-        protected static readonly byte[] LZ4Signature = { 0x18, 0x4d, 0x22, 0x04 };
-        protected static readonly byte[] LZ4SkippableMinSignature = { 0x18, 0x4d, 0x22, 0x04 };
-        protected static readonly byte[] LZ4SkippableMaxSignature = { 0x18, 0x4d, 0x2a, 0x5f };
-        protected static readonly byte[] PESignature = { 0x4d, 0x5a };
-        protected static readonly byte[] RarSignature = { 0x52, 0x61, 0x72, 0x21, 0x1a, 0x07, 0x00 };
-        protected static readonly byte[] RarFiveSignature = { 0x52, 0x61, 0x72, 0x21, 0x1a, 0x07, 0x01, 0x00 };
-        protected static readonly byte[] TarSignature = { 0x75, 0x73, 0x74, 0x61, 0x72, 0x20, 0x20, 0x00 };
-        protected static readonly byte[] TarZeroSignature = { 0x75, 0x73, 0x74, 0x61, 0x72, 0x00, 0x30, 0x30 };
-        protected static readonly byte[] XZSignature = { 0xfd, 0x37, 0x7a, 0x58, 0x5a, 0x00, 0x00 };
-        protected static readonly byte[] ZipSignature = { 0x50, 0x4b, 0x03, 0x04 };
-        protected static readonly byte[] ZipSignatureEmpty = { 0x50, 0x4b, 0x05, 0x06 };
-        protected static readonly byte[] ZipSignatureSpanned = { 0x50, 0x4b, 0x07, 0x08 };
-        protected static readonly byte[] ZPAQSignature = { 0x7a, 0x50, 0x51 };
-        protected static readonly byte[] ZstdSignature = { 0xfd, 0x2f, 0xb5 };
+        protected static readonly byte[] SevenZipSignature = [0x37, 0x7a, 0xbc, 0xaf, 0x27, 0x1c];
+        protected static readonly byte[] AaruFormatSignature = [0x41, 0x41, 0x52, 0x55, 0x46, 0x52, 0x4d, 0x54];
+        protected static readonly byte[] BZ2Signature = [0x42, 0x5a, 0x68];
+        protected static readonly byte[] CabinetSignature = [0x4d, 0x53, 0x43, 0x46];
+        protected static readonly byte[] CHDSignature = [0x4d, 0x43, 0x6f, 0x6d, 0x70, 0x72, 0x48, 0x44];
+        protected static readonly byte[] ELFSignature = [0x7f, 0x45, 0x4c, 0x46];
+        protected static readonly byte[] FreeArcSignature = [0x41, 0x72, 0x43, 0x01];
+        protected static readonly byte[] GzSignature = [0x1f, 0x8b, 0x08];
+        protected static readonly byte[] PESignature = [0x4d, 0x5a];
+        protected static readonly byte[] RarSignature = [0x52, 0x61, 0x72, 0x21, 0x1a, 0x07, 0x00];
+        protected static readonly byte[] RarFiveSignature = [0x52, 0x61, 0x72, 0x21, 0x1a, 0x07, 0x01, 0x00];
+        protected static readonly byte[] TarSignature = [0x75, 0x73, 0x74, 0x61, 0x72, 0x20, 0x20, 0x00];
+        protected static readonly byte[] TarZeroSignature = [0x75, 0x73, 0x74, 0x61, 0x72, 0x00, 0x30, 0x30];
+        protected static readonly byte[] XZSignature = [0xfd, 0x37, 0x7a, 0x58, 0x5a, 0x00, 0x00];
+        protected static readonly byte[] ZipSignature = [0x50, 0x4b, 0x03, 0x04];
+        protected static readonly byte[] ZipSignatureEmpty = [0x50, 0x4b, 0x05, 0x06];
+        protected static readonly byte[] ZipSignatureSpanned = [0x50, 0x4b, 0x07, 0x08];
 
         #endregion
 
         // TODO: Get all of these values automatically so there is no public "set"
         #region Fields
-
-        /// <summary>
-        /// Internal type of the represented file
-        /// </summary>
-        public FileType Type { get; protected set; }
 
         /// <summary>
         /// Filename or path to the file
@@ -220,16 +209,6 @@ namespace SabreTools.FileTypes
             {
                 outFileType = FileType.GZipArchive;
             }
-            else if (magic.StartsWith(LRZipSignature))
-            {
-                outFileType = FileType.LRZipArchive;
-            }
-            else if (magic.StartsWith(LZ4Signature)
-                || magic.StartsWith(LZ4SkippableMinSignature)
-                || magic.StartsWith(LZ4SkippableMaxSignature))
-            {
-                outFileType = FileType.LZ4Archive;
-            }
             else if (magic.StartsWith(RarSignature)
                 || magic.StartsWith(RarFiveSignature))
             {
@@ -249,14 +228,6 @@ namespace SabreTools.FileTypes
                 || magic.StartsWith(ZipSignatureSpanned))
             {
                 outFileType = FileType.ZipArchive;
-            }
-            else if (magic.StartsWith(ZPAQSignature))
-            {
-                outFileType = FileType.ZPAQArchive;
-            }
-            else if (magic.StartsWith(ZstdSignature))
-            {
-                outFileType = FileType.ZstdArchive;
             }
 
             return outFileType;

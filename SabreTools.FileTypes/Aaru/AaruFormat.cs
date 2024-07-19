@@ -44,7 +44,6 @@ namespace SabreTools.FileTypes.Aaru
         /// </summary>
         public AaruFormat()
         {
-            Type = FileType.AaruFormat;
         }
 
         /// <summary>
@@ -71,12 +70,8 @@ namespace SabreTools.FileTypes.Aaru
                 if (!validated)
                     return null;
 
-                // Read and retrun the current AaruFormat
-                AaruFormat? generated = Deserialize(aarustream);
-                if (generated != null)
-                    generated.Type = FileType.AaruFormat;
-
-                return generated;
+                // Read and return the current AaruFormat
+                return Deserialize(aarustream);
             }
             catch
             {

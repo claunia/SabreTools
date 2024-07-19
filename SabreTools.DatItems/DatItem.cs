@@ -130,22 +130,25 @@ namespace SabreTools.DatItems
         /// <returns>DatItem of the specific internal type that corresponds to the inputs</returns>
         public static DatItem? Create(BaseFile? baseFile)
         {
-            return baseFile?.Type switch
+            return baseFile switch
             {
-                FileType.AaruFormat => new Media(baseFile),
-                FileType.CHD => new Disk(baseFile),
-                FileType.GZipArchive => new Rom(baseFile),
-                FileType.LRZipArchive => new Rom(baseFile),
-                FileType.LZ4Archive => new Rom(baseFile),
-                FileType.None => new Rom(baseFile),
-                FileType.RarArchive => new Rom(baseFile),
-                FileType.SevenZipArchive => new Rom(baseFile),
-                FileType.TapeArchive => new Rom(baseFile),
-                FileType.XZArchive => new Rom(baseFile),
-                FileType.ZipArchive => new Rom(baseFile),
-                FileType.ZPAQArchive => new Rom(baseFile),
-                FileType.ZstdArchive => new Rom(baseFile),
-                _ => null,
+                // Disk
+                FileTypes.CHD.CHDFile => new Disk(baseFile),
+
+                // Media
+                FileTypes.Aaru.AaruFormat => new Media(baseFile),
+
+                // Rom
+                FileTypes.Archives.GZipArchive => new Rom(baseFile),
+                FileTypes.Archives.RarArchive => new Rom(baseFile),
+                FileTypes.Archives.SevenZipArchive => new Rom(baseFile),
+                FileTypes.Archives.TapeArchive => new Rom(baseFile),
+                FileTypes.Archives.XZArchive => new Rom(baseFile),
+                FileTypes.Archives.ZipArchive => new Rom(baseFile),
+
+                // Miscellaneous
+                null => null,
+                _ => new Rom(baseFile),
             };
         }
 

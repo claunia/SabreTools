@@ -1953,20 +1953,12 @@ Some special strings that can be used:
                 return OutputFormat.Torrent7Zip;
             else if (GetBoolean(features, TorrentGzipValue))
                 return OutputFormat.TorrentGzip;
-            //else if (GetBoolean(features, SharedTorrentLrzipValue))
-            //    return OutputFormat.TorrentLRZip;
-            //else if (GetBoolean(features, SharedTorrentLz4Value))
-            //    return OutputFormat.TorrentLZ4;
             //else if (GetBoolean(features, SharedTorrentRarValue))
             //    return OutputFormat.TorrentRar;
             //else if (GetBoolean(features, SharedTorrentXzValue))
             //    return OutputFormat.TorrentXZ;
             else if (GetBoolean(features, TorrentZipValue))
                 return OutputFormat.TorrentZip;
-            //else if (GetBoolean(features, SharedTorrentZpaqValue))
-            //    return OutputFormat.TorrentZPAQ;
-            //else if (GetBoolean(features, SharedTorrentZstdValue))
-            //    return OutputFormat.TorrentZstd;
             else
                 return OutputFormat.Folder;
         }

@@ -1274,14 +1274,10 @@ namespace SabreTools.FileTypes
         Folder,
         SevenZipArchive,
         GZipArchive,
-        LRZipArchive,
-        LZ4Archive,
         RarArchive,
         TapeArchive,
         XZArchive,
         ZipArchive,
-        ZPAQArchive,
-        ZstdArchive,
     }
 
     /// <summary>
@@ -1302,10 +1298,6 @@ namespace SabreTools.FileTypes
         // Currently unimplemented fully
         Torrent7Zip,
         TorrentRar,
-        TorrentLRZip,
-        TorrentLZ4,
-        TorrentZstd,
-        TorrentZPAQ,
     }
 
     /// <summary>
