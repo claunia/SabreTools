@@ -27,7 +27,6 @@ namespace SabreTools.FileTypes.CHD
         /// </summary>
         public CHDFile()
         {
-            Type = FileType.CHD;
         }
 
         /// <summary>
