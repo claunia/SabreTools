@@ -26,6 +26,9 @@
   </ItemGroup>
 
   <!-- Support for old .NET versions -->
+  <ItemGroup Condition="!$(TargetFramework.StartsWith(`net2`)) AND !$(TargetFramework.StartsWith(`net3`)) AND !$(TargetFramework.StartsWith(`net40`))">
+    <PackageReference Include="System.IO.Compression" Version="4.3.0" />
+  </ItemGroup>
   <ItemGroup Condition="!$(TargetFramework.StartsWith(`net2`)) AND !$(TargetFramework.StartsWith(`net3`)) AND !$(TargetFramework.StartsWith(`net40`)) AND !$(TargetFramework.StartsWith(`net452`))">
     <PackageReference Include="SharpCompress" Version="0.37.0" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />

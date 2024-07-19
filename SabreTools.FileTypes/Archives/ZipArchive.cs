@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+#if NET452_OR_GREATER || NETCOREAPP
+using System.IO.Compression;
+#endif
 using System.Linq;
 using Compress;
 using Compress.ZipFile;
@@ -77,6 +80,7 @@ namespace SabreTools.FileTypes.Archives
                 // Create the temp directory
                 Directory.CreateDirectory(outDir);
 
+#if NET20 || NET35 || NET40
                 // Extract all files to the temp directory
                 var zf = new Zip();
                 ZipReturn zr = zf.ZipFileOpen(this.Filename!, -1, true);
@@ -85,23 +89,26 @@ namespace SabreTools.FileTypes.Archives
 
                 for (int i = 0; i < zf.LocalFilesCount() && zr == ZipReturn.ZipGood; i++)
                 {
+                    // Get the entry
+                    var entry = zf.GetLocalFile(i);
+
                     // Open the read stream
                     zr = zf.ZipFileOpenReadStream(i, false, out Stream? readStream, out ulong streamsize, out ushort cm);
 
-                    // Create the rest of the path, if needed
-                    if (!string.IsNullOrEmpty(Path.GetDirectoryName(zf.GetLocalFile(i).Filename)))
-                        Directory.CreateDirectory(Path.Combine(outDir, Path.GetDirectoryName(zf.GetLocalFile(i).Filename)!));
-
                     // If the entry ends with a directory separator, continue to the next item, if any
-                    if (zf.GetLocalFile(i).Filename!.EndsWith(Path.DirectorySeparatorChar.ToString())
-                        || zf.GetLocalFile(i).Filename!.EndsWith(Path.AltDirectorySeparatorChar.ToString())
-                        || zf.GetLocalFile(i).Filename!.EndsWith(Path.PathSeparator.ToString()))
+                    if (entry.Filename!.EndsWith(Path.DirectorySeparatorChar.ToString())
+                        || entry.Filename!.EndsWith(Path.AltDirectorySeparatorChar.ToString())
+                        || entry.Filename!.EndsWith(Path.PathSeparator.ToString()))
                     {
                         zf.ZipFileCloseReadStream();
                         continue;
                     }
 
-                    FileStream writeStream = File.Create(Path.Combine(outDir, zf.GetLocalFile(i).Filename!));
+                    // Create the rest of the path, if needed
+                    if (!string.IsNullOrEmpty(Path.GetDirectoryName(entry.Filename)))
+                        Directory.CreateDirectory(Path.Combine(outDir, Path.GetDirectoryName(entry.Filename)!));
+
+                    FileStream writeStream = File.Create(Path.Combine(outDir, entry.Filename!));
 
                     // If the stream is smaller than the buffer, just run one loop through to avoid issues
                     if (streamsize < _bufferSize)
@@ -130,6 +137,39 @@ namespace SabreTools.FileTypes.Archives
 
                 zf.ZipFileClose();
                 encounteredErrors = false;
+#else
+                // Extract all files to the temp directory
+                var zf = ZipFile.OpenRead(this.Filename);
+                if (zf == null)
+                    throw new Exception($"Could not open {Filename} as a zip file");
+
+                for (int i = 0; i < zf.Entries.Count; i++)
+                {
+                    // Get the entry
+                    var entry = zf.Entries[i];
+                    var readStream = entry.Open();
+
+                    // If the entry ends with a directory separator, continue to the next item, if any
+                    if (entry.FullName.EndsWith(Path.DirectorySeparatorChar.ToString())
+                        || entry.FullName.EndsWith(Path.AltDirectorySeparatorChar.ToString())
+                        || entry.FullName.EndsWith(Path.PathSeparator.ToString()))
+                    {
+                        readStream.Dispose();
+                        continue;
+                    }
+
+                    // Create the rest of the path, if needed
+                    if (!string.IsNullOrEmpty(Path.GetDirectoryName(entry.FullName)))
+                        Directory.CreateDirectory(Path.Combine(outDir, Path.GetDirectoryName(entry.FullName)!));
+
+                    // Extract the file to the output directory
+                    entry.ExtractToFile(Path.Combine(outDir, entry.FullName));
+                    readStream.Dispose();
+                }
+
+                zf.Dispose();
+                encounteredErrors = false;
+#endif
             }
             catch (EndOfStreamException ex)
             {
@@ -204,6 +244,7 @@ namespace SabreTools.FileTypes.Archives
                 Stream? stream = null;
                 string? realEntry = null;
 
+#if NET20 || NET35 || NET40
                 var zf = new Zip();
                 ZipReturn zr = zf.ZipFileOpen(this.Filename!, -1, true);
                 if (zr != ZipReturn.ZipGood)
@@ -234,6 +275,41 @@ namespace SabreTools.FileTypes.Archives
 
                 zf.ZipFileClose();
                 return (stream, realEntry);
+#else
+                var zf = ZipFile.OpenRead(this.Filename);
+                if (zf == null)
+                    throw new Exception($"Could not open {Filename} as a zip file");
+
+                for (int i = 0; i < zf.Entries.Count; i++)
+                {
+                    // Get the entry
+                    var entry = zf.Entries[i]; ;
+
+                    // Skip invalid entries
+                    if (entry.FullName == null)
+                        continue;
+
+                    // Skip directory entries
+                    if (entry.FullName.EndsWith(Path.DirectorySeparatorChar.ToString())
+                        || entry.FullName.EndsWith(Path.AltDirectorySeparatorChar.ToString())
+                        || entry.FullName.EndsWith(Path.PathSeparator.ToString()))
+                    {
+                        continue;
+                    }
+
+                    // Skip non-matching keys
+                    if (!entry.FullName.Contains(entryName))
+                        continue;
+
+                    // Open the entry stream
+                    realEntry = entry.FullName;
+                    stream = entry.Open();
+                    break;
+                }
+
+                zf.Dispose();
+                return (stream, realEntry);
+#endif
             }
             catch (Exception ex)
             {
@@ -249,11 +325,16 @@ namespace SabreTools.FileTypes.Archives
         /// <inheritdoc/>
         public override List<BaseFile>? GetChildren()
         {
+            // If we have an invalid file
+            if (this.Filename == null)
+                return null;
+
             var found = new List<BaseFile>();
             string? gamename = Path.GetFileNameWithoutExtension(this.Filename);
 
             try
             {
+#if NET20 || NET35 || NET40
                 var zf = new Zip();
                 ZipReturn zr = zf.ZipFileOpen(this.Filename!, -1, true);
                 if (zr != ZipReturn.ZipGood)
@@ -261,51 +342,115 @@ namespace SabreTools.FileTypes.Archives
 
                 for (int i = 0; i < zf.LocalFilesCount(); i++)
                 {
+                    // Get the local file
+                    var localFile = zf.GetLocalFile(i);
+                    if (localFile == null)
+                        continue;
+
                     // If the entry is a directory (or looks like a directory), we don't want to open it
-                    if (zf.GetLocalFile(i).IsDirectory
-                        || zf.GetLocalFile(i).Filename!.EndsWith(Path.DirectorySeparatorChar.ToString())
-                        || zf.GetLocalFile(i).Filename!.EndsWith(Path.AltDirectorySeparatorChar.ToString())
-                        || zf.GetLocalFile(i).Filename!.EndsWith(Path.PathSeparator.ToString()))
+                    if (localFile.IsDirectory
+                        || localFile.Filename!.EndsWith(Path.DirectorySeparatorChar.ToString())
+                        || localFile.Filename!.EndsWith(Path.AltDirectorySeparatorChar.ToString())
+                        || localFile.Filename!.EndsWith(Path.PathSeparator.ToString()))
                     {
                         continue;
                     }
 
                     // Open the read stream
-                    zr = zf.ZipFileOpenReadStream(i, false, out Stream? readStream, out ulong streamsize, out ushort cm);
+                    zr = zf.ZipFileOpenReadStream(i, false, out Stream? readStream, out _, out _);
 
                     // If we get a read error, log it and continue
-                    if (zr != ZipReturn.ZipGood)
+                    if (zr != ZipReturn.ZipGood || readStream == null)
                     {
                         logger.Warning($"An error occurred while reading archive {this.Filename}: Zip Error - {zr}");
-                        zr = zf.ZipFileCloseReadStream();
                         continue;
                     }
 
                     // Create a blank item for the entry
-                    BaseFile zipEntryRom = new();
+                    var zipEntryRom = new BaseFile();
 
                     // Perform a quickscan, if flagged to
                     if (this.AvailableHashTypes.Length == 1 && this.AvailableHashTypes[0] == HashType.CRC32)
                     {
-                        zipEntryRom.Size = (long)zf.GetLocalFile(i).UncompressedSize;
-                        zipEntryRom.CRC = zf.GetLocalFile(i).CRC;
+                        zipEntryRom.Size = (long)localFile.UncompressedSize;
+                        zipEntryRom.CRC = localFile.CRC;
                     }
                     // Otherwise, use the stream directly
                     else
                     {
-                        zipEntryRom = GetInfo(readStream, size: (long)zf.GetLocalFile(i).UncompressedSize, hashes: this.AvailableHashTypes, keepReadOpen: true);
+                        zipEntryRom = GetInfo(readStream,
+                            size: (long)localFile.UncompressedSize,
+                            hashes: this.AvailableHashTypes,
+                            keepReadOpen: true);
                     }
 
-                    // Fill in comon details and add to the list
-                    zipEntryRom.Filename = zf.GetLocalFile(i).Filename;
+                    // Fill in common details and add to the list
+                    zipEntryRom.Filename = localFile.Filename;
                     zipEntryRom.Parent = gamename;
-                    zipEntryRom.Date = zf.GetLocalFile(i).LastModified.ToString("yyyy/MM/dd hh:mm:ss");
+                    zipEntryRom.Date = localFile.LastModified.ToString("yyyy/MM/dd hh:mm:ss");
                     found.Add(zipEntryRom);
                 }
 
                 // Dispose of the archive
                 zr = zf.ZipFileCloseReadStream();
                 zf.ZipFileClose();
+#else
+                var zf = ZipFile.OpenRead(this.Filename);
+                if (zf == null)
+                    throw new Exception($"Could not open {Filename} as a zip file");
+
+                for (int i = 0; i < zf.Entries.Count; i++)
+                {
+                    // Get the local file
+                    var localFile = zf.Entries[i];
+                    if (localFile == null)
+                        continue;
+
+                    // If the entry is a directory (or looks like a directory), we don't want to open it
+                    if (localFile.FullName!.EndsWith(Path.DirectorySeparatorChar.ToString())
+                        || localFile.FullName!.EndsWith(Path.AltDirectorySeparatorChar.ToString())
+                        || localFile.FullName!.EndsWith(Path.PathSeparator.ToString()))
+                    {
+                        continue;
+                    }
+
+                    // Open the read stream
+                    var readStream = localFile.Open();
+                    if (readStream == null)
+                        continue;
+
+                    // Create a blank item for the entry
+                    var zipEntryRom = new BaseFile();
+
+                    // Perform a quickscan, if flagged to
+                    if (this.AvailableHashTypes.Length == 1 && this.AvailableHashTypes[0] == HashType.CRC32)
+                    {
+                        zipEntryRom.Size = localFile.Length;
+#if NETCOREAPP
+                        zipEntryRom.CRC = BitConverter.GetBytes(localFile.Crc32);
+#else
+                        // TODO: Figure out how to get the CRC from the header
+#endif
+                    }
+                    // Otherwise, use the stream directly
+                    else
+                    {
+                        zipEntryRom = GetInfo(readStream,
+                            size: localFile.Length,
+                            hashes: this.AvailableHashTypes,
+                            keepReadOpen: true);
+                    }
+
+                    // Fill in common details and add to the list
+                    zipEntryRom.Filename = localFile.FullName;
+                    zipEntryRom.Parent = gamename;
+                    zipEntryRom.Date = localFile.LastWriteTime.ToString("yyyy/MM/dd hh:mm:ss");
+                    found.Add(zipEntryRom);
+                }
+
+                // Dispose of the archive
+                zf.Dispose();
+#endif
             }
             catch (Exception ex)
             {
@@ -319,10 +464,15 @@ namespace SabreTools.FileTypes.Archives
         /// <inheritdoc/>
         public override List<string> GetEmptyFolders()
         {
+            // If we have an invalid file
+            if (this.Filename == null)
+                return [];
+
             List<string> empties = [];
 
             try
             {
+#if NET20 || NET35 || NET40
                 var zf = new Zip();
                 ZipReturn zr = zf.ZipFileOpen(this.Filename!, -1, true);
                 if (zr != ZipReturn.ZipGood)
@@ -352,6 +502,50 @@ namespace SabreTools.FileTypes.Archives
                         lastZipEntry = entry.Item1;
                     }
                 }
+#else
+                var zf = ZipFile.OpenRead(this.Filename);
+                if (zf == null)
+                    throw new Exception($"Could not open {Filename} as a zip file");
+
+                var zipEntries = new List<(string, bool)>();
+                for (int i = 0; i < zf.Entries.Count; i++)
+                {
+                    // Get the local file
+                    var entry = zf.Entries[i];
+                    if (entry == null)
+                        continue;
+
+                    // If the entry is a directory (or looks like a directory)
+                    bool isDirectory = false;
+                    if (entry.FullName!.EndsWith(Path.DirectorySeparatorChar.ToString())
+                        || entry.FullName!.EndsWith(Path.AltDirectorySeparatorChar.ToString())
+                        || entry.FullName!.EndsWith(Path.PathSeparator.ToString()))
+                    {
+                        isDirectory = true;
+                    }
+
+                    zipEntries.Add((entry.FullName, isDirectory));
+                }
+
+                zipEntries = zipEntries.OrderBy(p => p.Item1, new NaturalReversedComparer()).ToList();
+                string? lastZipEntry = null;
+                foreach ((string, bool) entry in zipEntries)
+                {
+                    // If the current is a superset of last, we skip it
+                    if (lastZipEntry != null && lastZipEntry.StartsWith(entry.Item1))
+                    {
+                        // No-op
+                    }
+                    // If the entry is a directory, we add it
+                    else
+                    {
+                        if (entry.Item2)
+                            empties.Add(entry.Item1);
+
+                        lastZipEntry = entry.Item1;
+                    }
+                }
+#endif
             }
             catch (Exception ex)
             {
