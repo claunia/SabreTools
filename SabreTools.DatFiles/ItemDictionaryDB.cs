@@ -1533,12 +1533,17 @@ namespace SabreTools.DatFiles
             if (machine.Item2 == null)
                 return;
 
-            string[] splitname = datItem.Item2.GetName()!.Split('.');
+            // Remove extensions from Rom items
+            string machineName = datItem.Item2.GetName()!;
+            if (datItem.Item2 is Rom)
+            {
+                string[] splitname = machineName.Split('.');
 #if NET20 || NET35
-            string machineName = machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1).ToArray())}";
+                machineName = datItem.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1).ToArray())}";
 #else
-            string machineName = machine.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1))}";
+                machineName = datItem.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1))}";
 #endif
+            }
 
             // Strip off "Default" prefix only for ORPG
             if (machineName.StartsWith("Default"))
