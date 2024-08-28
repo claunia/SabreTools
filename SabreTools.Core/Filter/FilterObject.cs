@@ -413,6 +413,10 @@ namespace SabreTools.Core.Filter
             if (filterString == null)
                 return (null, Operation.NONE, null);
 
+            // Trim quotations, if necessary
+            if (filterString.StartsWith("\""))
+                filterString = filterString.Substring(1, filterString.Length - 2);
+
             // Split the string using regex
             var match = Regex.Match(filterString, @"^(?<itemField>[a-zA-Z.]+)(?<operation>[=!:><]{1,2})(?<value>.*)$");
             if (!match.Success)
