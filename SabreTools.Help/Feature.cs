@@ -467,7 +467,7 @@ namespace SabreTools.Help
                     if (valid)
                     {
                         _value ??= new List<string>();
-                        (_value as List<string>)?.Add(string.Join("=", input.Split('=').Skip(1)));
+                        (_value as List<string>)?.Add(string.Join("=", input.Split('=').Skip(1).ToArray()));
                     }
 
                     break;
@@ -476,7 +476,7 @@ namespace SabreTools.Help
                     valid = input.Contains('=') && Flags.Contains(input.Split('=')[0]);
                     if (valid)
                     {
-                        _value = string.Join("=", input.Split('=').Skip(1));
+                        _value = string.Join("=", input.Split('=').Skip(1).ToArray());
 
                         // If we've already found this feature before
                         if (_foundOnce && !ignore)
