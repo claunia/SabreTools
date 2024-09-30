@@ -151,6 +151,18 @@ namespace SabreTools.DatFiles
                 if (header.ContainsKey(fieldName))
                     _internal[fieldName] = header[fieldName];
             }
+
+            // Get all fields specific to the DatFiles implementation
+            var nonStandardFields = TypeHelper.GetConstants(typeof(DatHeader));
+            if (nonStandardFields == null)
+                return;
+
+            // Populate the internal machine from filter fields
+            foreach (string fieldName in nonStandardFields)
+            {
+                if (header.ContainsKey(fieldName))
+                    _internal[fieldName] = header[fieldName];
+            }
         }
 
         #endregion
