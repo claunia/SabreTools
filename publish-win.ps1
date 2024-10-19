@@ -40,7 +40,7 @@ $RUNTIMES = @('win-x86', 'win-x64', 'win-arm64', 'linux-x64', 'linux-arm64', 'os
 
 # Use expanded lists, if requested
 if ($USE_ALL.IsPresent) {
-    $FRAMEWORKS = @('netcoreapp3.1', 'net5.0', 'net6.0', 'net7.0', 'net8.0') # TODO: Support all frameworks
+    $FRAMEWORKS = @('net48', 'netcoreapp3.1', 'net5.0', 'net6.0', 'net7.0', 'net8.0') # TODO: Support all frameworks
 }
 
 # Create the filter arrays
