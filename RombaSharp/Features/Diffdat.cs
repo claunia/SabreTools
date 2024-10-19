@@ -47,13 +47,13 @@ in -old DAT file. Ignores those entries in -old that are not in -new.";
             outdat = outdat.Ensure(create: true);
 
             // Check that all required files exist
-            if (!File.Exists(olddat))
+            if (olddat == null || !File.Exists(olddat))
             {
                 logger.Error($"File '{olddat}' does not exist!");
                 return false;
             }
 
-            if (!File.Exists(newdat))
+            if (newdat == null || !File.Exists(newdat))
             {
                 logger.Error($"File '{newdat}' does not exist!");
                 return false;

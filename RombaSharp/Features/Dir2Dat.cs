@@ -46,7 +46,7 @@ namespace RombaSharp.Features
             outdat = outdat.Ensure(create: true);
 
             // Check that all required directories exist
-            if (!Directory.Exists(source))
+            if (source == null || !Directory.Exists(source))
             {
                 logger.Error($"File '{source}' does not exist!");
                 return false;
