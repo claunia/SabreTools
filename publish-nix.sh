@@ -49,7 +49,7 @@ RUNTIMES=("win-x86" "win-x64" "win-arm64" "linux-x64" "linux-arm64" "osx-x64" "o
 
 # Use expanded lists, if requested
 if [ $USE_ALL = true ]; then
-    FRAMEWORKS=("net6.0" "net8.0") # TODO: Support all frameworks
+    FRAMEWORKS=("netcoreapp3.1" "net5.0" "net6.0" "net7.0" "net8.0") # TODO: Support all frameworks
 fi
 
 # Create the filter arrays
