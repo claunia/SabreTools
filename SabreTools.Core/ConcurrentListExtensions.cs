@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace SabreTools.Core
 {
@@ -8,7 +7,7 @@ namespace SabreTools.Core
         public static ConcurrentList<T> ToConcurrentList<T>(this IEnumerable<T> values)
         {
             var list = new ConcurrentList<T>();
-            list.SetInternalList(values.ToList());
+            list.SetInternalList([.. values]);
             return list;
         }
     }

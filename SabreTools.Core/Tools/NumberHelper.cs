@@ -141,25 +141,23 @@ namespace SabreTools.Core.Tools
             if (DetermineMultiplier(value) > 1)
                 value = value.TrimEnd(['k', 'm', 'g', 't', 'p', 'e', 'z', 'y', 'i', 'b', ' ']);
 
-#if NETFRAMEWORK || NETCOREAPP3_1 || NET5_0
-            return value.All(c => char.IsNumber(c) || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F') || c == '.' || c == ',');
-#elif NET7_0_OR_GREATER
+#if NET7_0_OR_GREATER
             return value.All(c => char.IsAsciiHexDigit(c) || c == '.' || c == ',');
 #else
             return value.All(c => c.IsAsciiHexDigit() || c == '.' || c == ',');
 #endif
         }
 
-#if NET6_0
+#if NETFRAMEWORK || NETCOREAPP3_1 || NET5_0 || NET6_0
         /// <summary>
         /// Indicates whether a character is categorized as an ASCII hexademical digit.
         /// </summary>
         /// <param name="c">The character to evaluate.</param>
         /// <returns>true if c is a hexademical digit; otherwise, false.</returns>
         /// <remarks>This method determines whether the character is in the range '0' through '9', inclusive, 'A' through 'F', inclusive, or 'a' through 'f', inclusive.</remarks>
-        private static bool IsAsciiHexDigit(this char c)
+        internal static bool IsAsciiHexDigit(this char c)
         {
-            return c switch
+            return char.ToLowerInvariant(c) switch
             {
                 '0' => true,
                 '1' => true,
@@ -172,17 +170,11 @@ namespace SabreTools.Core.Tools
                 '8' => true,
                 '9' => true,
                 'a' => true,
-                'A' => true,
                 'b' => true,
-                'B' => true,
                 'c' => true,
-                'C' => true,
                 'd' => true,
-                'D' => true,
                 'e' => true,
-                'E' => true,
                 'f' => true,
-                'F' => true,
                 _ => false,
             };
         }

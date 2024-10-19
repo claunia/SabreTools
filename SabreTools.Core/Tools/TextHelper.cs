@@ -124,7 +124,12 @@ namespace SabreTools.Core.Tools
                 return input;
 
             List<char> invalidPath = [.. Path.GetInvalidPathChars()];
-            return new string(input.Where(c => !invalidPath.Contains(c)).ToArray());
+            foreach (char invalid in Path.GetInvalidPathChars())
+            {
+                input = input!.Replace(invalid.ToString(), string.Empty);
+            }
+
+            return input;
         }
 
         /// <summary>
@@ -223,7 +228,11 @@ namespace SabreTools.Core.Tools
             hash = hash.ToLowerInvariant();
 
             // Otherwise, make sure that every character is a proper match
-            if (hash.Any(c => (c < '0' || c > '9') && (c < 'a' || c > 'f')))
+#if NET7_0_OR_GREATER
+            if (hash.Any(c => char.IsAsciiHexDigit(c)))
+#else
+            if (hash.Any(c => c.IsAsciiHexDigit()))
+#endif
                 hash = string.Empty;
 
             return hash;

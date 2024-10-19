@@ -53,11 +53,11 @@ namespace SabreTools.Core.Tools
                 List<Type> assemblyTypes = [];
                 try
                 {
-                    assemblyTypes = assembly.GetTypes().ToList<Type>();
+                    assemblyTypes = [.. assembly.GetTypes()];
                 }
                 catch (ReflectionTypeLoadException rtle)
                 {
-                    assemblyTypes = rtle.Types.Where(t => t != null)!.ToList<Type>();
+                    assemblyTypes = [.. rtle.Types.Where(t => t != null)];
                 }
 
                 // Loop through all types 
@@ -92,11 +92,11 @@ namespace SabreTools.Core.Tools
                 List<Type> assemblyTypes = [];
                 try
                 {
-                    assemblyTypes = assembly.GetTypes().ToList<Type>();
+                    assemblyTypes = [.. assembly.GetTypes()];
                 }
                 catch (ReflectionTypeLoadException rtle)
                 {
-                    assemblyTypes = rtle.Types.Where(t => t != null)!.ToList<Type>();
+                    assemblyTypes = [.. rtle.Types.Where(t => t != null)];
                 }
 
                 // Loop through all types 

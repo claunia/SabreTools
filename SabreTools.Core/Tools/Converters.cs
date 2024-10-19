@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using SabreTools.Logging;
 
 namespace SabreTools.Core.Tools
@@ -87,7 +86,7 @@ namespace SabreTools.Core.Tools
 
                     // Try to get the mapping attribute
                     MappingAttribute? attr = AttributeHelper<T>.GetAttribute(value);
-                    if (attr?.Mappings == null || !attr.Mappings.Any())
+                    if (attr?.Mappings == null || attr.Mappings.Length == 0)
                         continue;
 
                     // Loop through the mappings and add each
@@ -170,7 +169,7 @@ namespace SabreTools.Core.Tools
 
                     // Try to get the mapping attribute
                     MappingAttribute? attr = AttributeHelper<T>.GetAttribute(value);
-                    if (attr?.Mappings == null || !attr.Mappings.Any())
+                    if (attr?.Mappings == null || attr.Mappings.Length == 0)
                         continue;
 
                     // Use either the first or second item in the list
