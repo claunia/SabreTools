@@ -7,6 +7,7 @@ using Compress;
 using SabreTools.Core.Tools;
 using SabreTools.Hashing;
 using SabreTools.Matching;
+using SabreTools.Matching.Compare;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Tar;
 using SharpCompress.Common;

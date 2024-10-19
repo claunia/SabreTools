@@ -16,11 +16,12 @@ namespace SabreTools.Core.Filter
         /// <summary>
         /// Replace the machine name with the description
         /// </summary>
-        public static (bool Success, string? OriginalName) DescriptionToName(Machine? machine)
+        /// <returns>Original machine name on success, null on error</returns>
+        public static string? DescriptionToName(Machine? machine)
         {
             // If the machine is missing, we can't do anything
             if (machine == null)
-                return (false, null);
+                return null;
 
             // Get both the current name and description
             string? name = machine.ReadString(Header.NameKey);
@@ -34,7 +35,7 @@ namespace SabreTools.Core.Filter
 
             // Replace the name with the description
             machine[Header.NameKey] = description;
-            return (true, name);
+            return name;
         }
 
         /// <summary>

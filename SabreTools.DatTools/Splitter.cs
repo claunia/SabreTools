@@ -12,7 +12,7 @@ using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using SabreTools.IO.Extensions;
 using SabreTools.Logging;
-using SabreTools.Matching;
+using SabreTools.Matching.Compare;
 
 namespace SabreTools.DatTools
 {

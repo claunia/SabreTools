@@ -11,7 +11,7 @@ using SabreTools.DatItems.Formats;
 using SabreTools.FileTypes;
 using SabreTools.Hashing;
 using SabreTools.Logging;
-using SabreTools.Matching;
+using SabreTools.Matching.Compare;
 
 namespace SabreTools.DatItems
 {
