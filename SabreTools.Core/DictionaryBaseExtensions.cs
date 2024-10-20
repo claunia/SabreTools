@@ -284,8 +284,15 @@ namespace SabreTools.Core
                 return false;
 
             // Return if all hashes match according to merge rules
-            return Tools.Utilities.ConditionalHashEquals(self.ReadString(Disk.MD5Key), other.ReadString(Disk.MD5Key))
-                && Tools.Utilities.ConditionalHashEquals(self.ReadString(Disk.SHA1Key), other.ReadString(Disk.SHA1Key));
+            string? selfMd5 = self.ReadString(Disk.MD5Key);
+            string? otherMd5 = other.ReadString(Disk.MD5Key);
+            bool conditionalMd5 = Tools.Utilities.ConditionalHashEquals(selfMd5, otherMd5);
+
+            string? selfSha1 = self.ReadString(Disk.SHA1Key);
+            string? otherSha1 = other.ReadString(Disk.SHA1Key);
+            bool conditionalSha1 = Tools.Utilities.ConditionalHashEquals(selfSha1, otherSha1);
+
+            return conditionalMd5 && conditionalSha1;
         }
 
         /// <summary>
@@ -302,10 +309,23 @@ namespace SabreTools.Core
                 return false;
 
             // Return if all hashes match according to merge rules
-            return Tools.Utilities.ConditionalHashEquals(self.ReadString(Media.MD5Key), other.ReadString(Media.MD5Key))
-                && Tools.Utilities.ConditionalHashEquals(self.ReadString(Media.SHA1Key), other.ReadString(Media.SHA1Key))
-                && Tools.Utilities.ConditionalHashEquals(self.ReadString(Media.SHA256Key), other.ReadString(Media.SHA256Key))
-                && Tools.Utilities.ConditionalHashEquals(self.ReadString(Media.SpamSumKey), other.ReadString(Media.SpamSumKey));
+            string? selfMd5 = self.ReadString(Media.MD5Key);
+            string? otherMd5 = other.ReadString(Media.MD5Key);
+            bool conditionalMd5 = Tools.Utilities.ConditionalHashEquals(selfMd5, otherMd5);
+
+            string? selfSha1 = self.ReadString(Media.SHA1Key);
+            string? otherSha1 = other.ReadString(Media.SHA1Key);
+            bool conditionalSha1 = Tools.Utilities.ConditionalHashEquals(selfSha1, otherSha1);
+
+            string? selfSha256 = self.ReadString(Media.SHA256Key);
+            string? otherSha256 = other.ReadString(Media.SHA256Key);
+            bool conditionalSha256 = Tools.Utilities.ConditionalHashEquals(selfSha256, otherSha256);
+
+            string? selfSpamSum = self.ReadString(Media.SpamSumKey);
+            string? otherSpamSum = other.ReadString(Media.SpamSumKey);
+            bool conditionalSpamSum = Tools.Utilities.ConditionalHashEquals(selfSpamSum, otherSpamSum);
+
+            return conditionalMd5 && conditionalSha1 && conditionalSha256 && conditionalSpamSum;
         }
 
         /// <summary>
@@ -322,13 +342,35 @@ namespace SabreTools.Core
                 return false;
 
             // Return if all hashes match according to merge rules
-            return Tools.Utilities.ConditionalHashEquals(self.ReadString(Rom.CRCKey), other.ReadString(Rom.CRCKey))
-                && Tools.Utilities.ConditionalHashEquals(self.ReadString(Rom.MD5Key), other.ReadString(Rom.MD5Key))
-                && Tools.Utilities.ConditionalHashEquals(self.ReadString(Rom.SHA1Key), other.ReadString(Rom.SHA1Key))
-                && Tools.Utilities.ConditionalHashEquals(self.ReadString(Rom.SHA256Key), other.ReadString(Rom.SHA256Key))
-                && Tools.Utilities.ConditionalHashEquals(self.ReadString(Rom.SHA384Key), other.ReadString(Rom.SHA384Key))
-                && Tools.Utilities.ConditionalHashEquals(self.ReadString(Rom.SHA512Key), other.ReadString(Rom.SHA512Key))
-                && Tools.Utilities.ConditionalHashEquals(self.ReadString(Rom.SpamSumKey), other.ReadString(Rom.SpamSumKey));
+            string? selfCrc = self.ReadString(Rom.CRCKey);
+            string? otherCrc = other.ReadString(Rom.CRCKey);
+            bool conditionalCrc = Tools.Utilities.ConditionalHashEquals(selfCrc, otherCrc);
+
+            string? selfMd5 = self.ReadString(Rom.MD5Key);
+            string? otherMd5 = other.ReadString(Rom.MD5Key);
+            bool conditionalMd5 = Tools.Utilities.ConditionalHashEquals(selfMd5, otherMd5);
+
+            string? selfSha1 = self.ReadString(Rom.SHA1Key);
+            string? otherSha1 = other.ReadString(Rom.SHA1Key);
+            bool conditionalSha1 = Tools.Utilities.ConditionalHashEquals(selfSha1, otherSha1);
+
+            string? selfSha256 = self.ReadString(Rom.SHA256Key);
+            string? otherSha256 = other.ReadString(Rom.SHA256Key);
+            bool conditionalSha256 = Tools.Utilities.ConditionalHashEquals(selfSha256, otherSha256);
+
+            string? selfSha384 = self.ReadString(Rom.SHA384Key);
+            string? otherSha384 = other.ReadString(Rom.SHA384Key);
+            bool conditionalSha384 = Tools.Utilities.ConditionalHashEquals(selfSha384, otherSha384);
+
+            string? selfSha512 = self.ReadString(Rom.SHA512Key);
+            string? otherSha512 = other.ReadString(Rom.SHA512Key);
+            bool conditionalSha512 = Tools.Utilities.ConditionalHashEquals(selfSha512, otherSha512);
+
+            string? selfSpamSum = self.ReadString(Rom.SpamSumKey);
+            string? otherSpamSum = other.ReadString(Rom.SpamSumKey);
+            bool conditionalSpamSum = Tools.Utilities.ConditionalHashEquals(selfSpamSum, otherSpamSum);
+
+            return conditionalCrc && conditionalMd5 && conditionalSha1 && conditionalSha256 && conditionalSha384 && conditionalSha512 && conditionalSpamSum;
         }
 
         /// <summary>
