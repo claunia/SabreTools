@@ -51,7 +51,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         [JsonIgnore, XmlIgnore]
 #if NET40_OR_GREATER || NETCOREAPP
-        private readonly ConcurrentDictionary<long, DatItem> _items = new ConcurrentDictionary<long, DatItem>();
+        private readonly ConcurrentDictionary<long, DatItem> _items = [];
 #else
         private readonly Dictionary<long, DatItem> _items = [];
 #endif
@@ -67,7 +67,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         [JsonIgnore, XmlIgnore]
 #if NET40_OR_GREATER || NETCOREAPP
-        private readonly ConcurrentDictionary<long, Machine> _machines = new ConcurrentDictionary<long, Machine>();
+        private readonly ConcurrentDictionary<long, Machine> _machines = [];
 #else
         private readonly Dictionary<long, Machine> _machines = [];
 #endif
@@ -83,7 +83,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         [JsonIgnore, XmlIgnore]
 #if NET40_OR_GREATER || NETCOREAPP
-        private readonly ConcurrentDictionary<long, Source> _sources = new ConcurrentDictionary<long, Source>();
+        private readonly ConcurrentDictionary<long, Source> _sources = [];
 #else
         private readonly Dictionary<long, Source> _sources = [];
 #endif
@@ -99,7 +99,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         [JsonIgnore, XmlIgnore]
 #if NET40_OR_GREATER || NETCOREAPP
-        private readonly ConcurrentDictionary<long, long> _itemToMachineMapping = new ConcurrentDictionary<long, long>();
+        private readonly ConcurrentDictionary<long, long> _itemToMachineMapping = [];
 #else
         private readonly Dictionary<long, long> _itemToMachineMapping = [];
 #endif
@@ -109,7 +109,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         [JsonIgnore, XmlIgnore]
 #if NET40_OR_GREATER || NETCOREAPP
-        private readonly ConcurrentDictionary<long, long> _itemToSourceMapping = new ConcurrentDictionary<long, long>();
+        private readonly ConcurrentDictionary<long, long> _itemToSourceMapping = [];
 #else
         private readonly Dictionary<long, long> _itemToSourceMapping = [];
 #endif
@@ -119,7 +119,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         [JsonIgnore, XmlIgnore]
 #if NET40_OR_GREATER || NETCOREAPP
-        private readonly ConcurrentDictionary<string, ConcurrentList<long>> _buckets = new ConcurrentDictionary<string, ConcurrentList<long>>();
+        private readonly ConcurrentDictionary<string, ConcurrentList<long>> _buckets = [];
 #else
         private readonly Dictionary<string, ConcurrentList<long>> _buckets = [];
 #endif
@@ -342,17 +342,20 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Get all item to machine mappings
         /// </summary>
-        public (long, long)[] GetItemMachineMappings() => [.. _itemToMachineMapping.Select(kvp => (kvp.Key, kvp.Value))];
+        public (long, long)[] GetItemMachineMappings()
+            => [.. _itemToMachineMapping.Select(kvp => (kvp.Key, kvp.Value))];
 
         /// <summary>
         /// Get all item to source mappings
         /// </summary>
-        public (long, long)[] GetItemSourceMappings() => [.. _itemToSourceMapping.Select(kvp => (kvp.Key, kvp.Value))];
+        public (long, long)[] GetItemSourceMappings()
+            => [.. _itemToSourceMapping.Select(kvp => (kvp.Key, kvp.Value))];
 
         /// <summary>
         /// Get all items and their indicies
         /// </summary>
-        public (long, DatItem)[] GetItems() => [.. _items.Select(kvp => (kvp.Key, kvp.Value))];
+        public (long, DatItem)[] GetItems()
+            => [.. _items.Select(kvp => (kvp.Key, kvp.Value))];
 
         /// <summary>
         /// Get the indices and items associated with a bucket name
@@ -454,7 +457,8 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Get all machines and their indicies
         /// </summary>
-        public (long, Machine)[] GetMachines() => [.. _machines.Select(kvp => (kvp.Key, kvp.Value))];
+        public (long, Machine)[] GetMachines()
+            => [.. _machines.Select(kvp => (kvp.Key, kvp.Value))];
 
         /// <summary>
         /// Get a source based on the index
@@ -485,7 +489,8 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Get all sources and their indicies
         /// </summary>
-        public (long, Source)[] GetSources() => [.. _sources.Select(kvp => (kvp.Key, kvp.Value))];
+        public (long, Source)[] GetSources()
+            => [.. _sources.Select(kvp => (kvp.Key, kvp.Value))];
 
         /// <summary>
         /// Remove an item, returning if it could be removed
@@ -720,7 +725,7 @@ namespace SabreTools.DatFiles
                 return false;
 
             // Try to find duplicates
-            return roms.Any(r => datItem.Equals(r.Item2)) == true;
+            return roms.Any(r => datItem.Equals(r.Item2));
         }
 
         /// <summary>
@@ -1148,14 +1153,14 @@ namespace SabreTools.DatFiles
                         return xType.AsEnumValue<ItemType>() - yType.AsEnumValue<ItemType>();
 
                     // If directory names don't match
-                    string? xDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(x.Item2.GetName() ?? string.Empty));
-                    string? yDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(y.Item2.GetName() ?? string.Empty));
+                    string? xDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(x.Item2.GetName()));
+                    string? yDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(y.Item2.GetName()));
                     if (xDirectoryName != yDirectoryName)
                         return nc.Compare(xDirectoryName, yDirectoryName);
 
                     // If item names don't match
-                    string? xName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(x.Item2.GetName() ?? string.Empty));
-                    string? yName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(y.Item2.GetName() ?? string.Empty));
+                    string? xName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(x.Item2.GetName()));
+                    string? yName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(y.Item2.GetName()));
                     if (xName != yName)
                         return nc.Compare(xName, yName);
 
@@ -1243,11 +1248,7 @@ namespace SabreTools.DatFiles
             try
             {
                 // First we want to get a mapping for all games to description
-#if NET40_OR_GREATER || NETCOREAPP
-                ConcurrentDictionary<string, string> mapping = CreateMachineToDescriptionMapping();
-#else
-                Dictionary<string, string> mapping = CreateMachineToDescriptionMapping();
-#endif
+                var mapping = CreateMachineToDescriptionMapping();
 
                 // Now we loop through every item and update accordingly
                 UpdateMachineNamesFromDescriptions(mapping);
@@ -1443,11 +1444,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Create machine to description mapping dictionary
         /// </summary>
-#if NET40_OR_GREATER || NETCOREAPP
-        private ConcurrentDictionary<string, string> CreateMachineToDescriptionMapping()
-#else
-        private Dictionary<string, string> CreateMachineToDescriptionMapping()
-#endif
+        private IDictionary<string, string> CreateMachineToDescriptionMapping()
         {
 #if NET40_OR_GREATER || NETCOREAPP
             ConcurrentDictionary<string, string> mapping = new();
@@ -1555,11 +1552,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Update machine names from descriptions according to mappings
         /// </summary>
-#if NET40_OR_GREATER || NETCOREAPP
-        private void UpdateMachineNamesFromDescriptions(ConcurrentDictionary<string, string> mapping)
-#else
-        private void UpdateMachineNamesFromDescriptions(Dictionary<string, string> mapping)
-#endif
+        private void UpdateMachineNamesFromDescriptions(IDictionary<string, string> mapping)
         {
 #if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(SortedKeys, Globals.ParallelOptions, key =>
@@ -1626,9 +1619,8 @@ namespace SabreTools.DatFiles
             List<string> games = [.. SortedKeys];
             foreach (string game in games)
             {
+                // Get the items for this game
                 var items = GetItemsForBucket(game);
-
-                // If the game has no items in it, we want to continue
                 if (items == null || items.Length == 0)
                     continue;
 
@@ -1640,21 +1632,13 @@ namespace SabreTools.DatFiles
                 if (machine.Item2 == null)
                     continue;
 
-                // Determine if the game has a parent or not
-                (long, string?) parent = (-1, null);
-                if (!string.IsNullOrEmpty(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.RomOfKey)))
-                {
-                    string? romOf = machine.Item2.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
-                    var romOfMachine = GetMachine(romOf);
-                    parent = (romOfMachine.Item1, romOf);
-                }
-
-                // If the parent doesnt exist, we want to continue
-                if (string.IsNullOrEmpty(parent.Item2))
+                // Get the bios parent
+                string? romOf = machine.Item2.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
+                if (string.IsNullOrEmpty(romOf))
                     continue;
 
                 // If the parent doesn't have any items, we want to continue
-                var parentItems = GetItemsForBucket(parent.Item2!);
+                var parentItems = GetItemsForBucket(romOf);
                 if (parentItems == null || parentItems.Length == 0)
                     continue;
 
@@ -1679,10 +1663,8 @@ namespace SabreTools.DatFiles
             List<string> games = [.. SortedKeys];
             foreach (string game in games)
             {
-                // Get the items for this game
+                // If the game has no items in it, we want to continue
                 var items = GetItemsForBucket(game);
-
-                // If the machine doesn't have items, we continue
                 if (items == null || items.Length == 0)
                     continue;
 
@@ -1857,21 +1839,13 @@ namespace SabreTools.DatFiles
                 if (machine.Item2 == null)
                     continue;
 
-                // Determine if the game has a parent or not
-                (long, string?) parent = (-1, null);
-                if (!string.IsNullOrEmpty(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey)))
-                {
-                    string? cloneOf = machine.Item2.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey);
-                    var cloneOfMachine = GetMachine(cloneOf);
-                    parent = (cloneOfMachine.Item1, cloneOf);
-                }
-
-                // If there is no parent, then we continue
-                if (string.IsNullOrEmpty(parent.Item2))
+                // Get the clone parent
+                string? cloneOf = machine.Item2.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey);
+                if (string.IsNullOrEmpty(cloneOf))
                     continue;
 
                 // If the parent doesn't have any items, we want to continue
-                var parentItems = GetItemsForBucket(parent.Item2!);
+                var parentItems = GetItemsForBucket(cloneOf);
                 if (parentItems == null || parentItems.Length == 0)
                     continue;
 
@@ -1887,7 +1861,7 @@ namespace SabreTools.DatFiles
                 }
 
                 // Get the parent machine
-                var parentMachine = GetMachineForItem(GetItemsForBucket(parent.Item2!)![0].Item1);
+                var parentMachine = GetMachineForItem(GetItemsForBucket(cloneOf)![0].Item1);
                 if (parentMachine.Item2 == null)
                     continue;
 
@@ -1925,24 +1899,21 @@ namespace SabreTools.DatFiles
                 if (machine.Item2 == null)
                     continue;
 
-                // Determine if the game has a parent or not
-                (long, string?) parent = (-1, null);
-                if (!string.IsNullOrEmpty(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey)))
-                {
-                    string? cloneOf = machine.Item2.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey);
-                    var cloneOfMachine = GetMachine(cloneOf);
-                    parent = (cloneOfMachine.Item1, cloneOf);
-                }
+                // Get the clone parent
+                string? cloneOf = machine.Item2.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey);
+                if (string.IsNullOrEmpty(cloneOf))
+                    continue;
 
-                // If there is no parent, then we continue
-                if (string.IsNullOrEmpty(parent.Item2))
+                // Get the clone parent machine
+                var cloneOfMachine = GetMachine(cloneOf);
+                if (cloneOfMachine.Item2 == null)
                     continue;
 
                 items = GetItemsForBucket(game);
                 foreach ((long, DatItem) item in items!)
                 {
                     // Get the parent items and current machine name
-                    var parentItems = GetItemsForBucket(parent.Item2!);
+                    var parentItems = GetItemsForBucket(cloneOf);
                     string? machineName = GetMachineForItem(item.Item1).Item2?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
 
                     // Special disk handling
@@ -1965,15 +1936,15 @@ namespace SabreTools.DatFiles
                             .Select(i => (i.Item2 as Disk)!.GetName())
                             .Contains(mergeTag))
                         {
-                            _itemToMachineMapping[item.Item1] = parent.Item1;
-                            _buckets[parent.Item2!].Add(disk);
+                            _itemToMachineMapping[item.Item1] = cloneOfMachine.Item1;
+                            _buckets[cloneOf].Add(disk);
                         }
 
                         // If there is no merge tag, add to parent
                         else if (mergeTag == null)
                         {
-                            _itemToMachineMapping[item.Item1] = parent.Item1;
-                            _buckets[parent.Item2!].Add(disk);
+                            _itemToMachineMapping[item.Item1] = cloneOfMachine.Item1;
+                            _buckets[cloneOf].Add(disk);
                         }
                     }
 
@@ -1998,8 +1969,8 @@ namespace SabreTools.DatFiles
                             if (subfolder)
                                 rom.SetName($"{machineName}\\{rom.GetName()}");
 
-                            _itemToMachineMapping[item.Item1] = parent.Item1;
-                            _buckets[parent.Item2!].Add(rom);
+                            _itemToMachineMapping[item.Item1] = cloneOfMachine.Item1;
+                            _buckets[cloneOf].Add(rom);
                         }
 
                         // If the parent doesn't already contain this item, add to subfolder of parent
@@ -2008,8 +1979,8 @@ namespace SabreTools.DatFiles
                             if (subfolder)
                                 rom.SetName($"{machineName}\\{rom.GetName()}");
 
-                            _itemToMachineMapping[item.Item1] = parent.Item1;
-                            _buckets[parent.Item2!].Add(rom);
+                            _itemToMachineMapping[item.Item1] = cloneOfMachine.Item1;
+                            _buckets[cloneOf].Add(rom);
                         }
                     }
 
@@ -2019,8 +1990,8 @@ namespace SabreTools.DatFiles
                         if (subfolder)
                             item.Item2.SetName($"{machineName}\\{item.Item2.GetName()}");
 
-                        _itemToMachineMapping[item.Item1] = parent.Item1;
-                        _buckets[parent.Item2!].Add(item);
+                        _itemToMachineMapping[item.Item1] = cloneOfMachine.Item1;
+                        _buckets[cloneOf].Add(item);
                     }
                 }
 
@@ -2041,14 +2012,17 @@ namespace SabreTools.DatFiles
             List<string> games = [.. SortedKeys];
             foreach (string game in games)
             {
+                // If the game has no items in it, we want to continue
                 var items = GetItemsForBucket(game);
                 if (items == null || items.Length == 0)
                     continue;
 
+                // Get the machine
                 var machine = GetMachineForItem(items[0].Item1);
                 if (machine.Item2 == null)
                     continue;
 
+                // Remove flagged items
                 if ((machine.Item2.GetBoolFieldValue(Models.Metadata.Machine.IsBiosKey) == true)
                     || (machine.Item2.GetBoolFieldValue(Models.Metadata.Machine.IsDeviceKey) == true))
                 {
@@ -2084,17 +2058,13 @@ namespace SabreTools.DatFiles
                 if (bios ^ (machine.Item2.GetBoolFieldValue(Models.Metadata.Machine.IsBiosKey) == true))
                     continue;
 
-                // Determine if the game has a parent or not
-                string? parent = null;
-                if (!string.IsNullOrEmpty(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.RomOfKey)))
-                    parent = machine.Item2.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
-
-                // If the parent doesnt exist, we want to continue
-                if (string.IsNullOrEmpty(parent))
+                // Get the bios parent
+                string? romOf = machine.Item2.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
+                if (string.IsNullOrEmpty(romOf))
                     continue;
 
                 // If the parent doesn't have any items, we want to continue
-                var parentItems = GetItemsForBucket(parent!);
+                var parentItems = GetItemsForBucket(romOf);
                 if (parentItems == null || parentItems.Length == 0)
                     continue;
 
@@ -2118,12 +2088,9 @@ namespace SabreTools.DatFiles
             List<string> games = [.. SortedKeys];
             foreach (string game in games)
             {
-                var items = GetItemsForBucket(game);
-                if (items == null)
-                    continue;
-
                 // If the game has no items in it, we want to continue
-                if (items.Length == 0)
+                var items = GetItemsForBucket(game);
+                if (items == null || items.Length == 0)
                     continue;
 
                 // Get the machine for the first item
@@ -2131,17 +2098,13 @@ namespace SabreTools.DatFiles
                 if (machine.Item2 == null)
                     continue;
 
-                // Determine if the game has a parent or not
-                string? parent = null;
-                if (!string.IsNullOrEmpty(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey)))
-                    parent = machine.Item2.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey);
-
-                // If the parent doesnt exist, we want to continue
-                if (string.IsNullOrEmpty(parent))
+                // Get the clone parent
+                string? cloneOf = machine.Item2.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey);
+                if (string.IsNullOrEmpty(cloneOf))
                     continue;
 
                 // If the parent doesn't have any items, we want to continue
-                var parentItems = GetItemsForBucket(parent!);
+                var parentItems = GetItemsForBucket(cloneOf);
                 if (parentItems == null || parentItems.Length == 0)
                     continue;
 
@@ -2157,7 +2120,7 @@ namespace SabreTools.DatFiles
 
                 // Now we want to get the parent romof tag and put it in each of the remaining items
                 items = GetItemsForBucket(game);
-                machine = GetMachineForItem(GetItemsForBucket(parent!)![0].Item1);
+                machine = GetMachineForItem(GetItemsForBucket(cloneOf)![0].Item1);
                 if (machine.Item2 == null)
                     continue;
 
@@ -2181,8 +2144,9 @@ namespace SabreTools.DatFiles
             List<string> games = [.. SortedKeys];
             foreach (string game in games)
             {
+                // If the game has no items in it, we want to continue
                 var items = GetItemsForBucket(game);
-                if (items == null)
+                if (items == null || items.Length == 0)
                     continue;
 
                 foreach ((long, DatItem) item in items)

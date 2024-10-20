@@ -117,26 +117,26 @@ namespace SabreTools.Core.Tools
         /// <summary>
         /// Remove all chars that are considered path unsafe
         /// </summary>
-        public static string? RemovePathUnsafeCharacters(string? input)
+        public static string RemovePathUnsafeCharacters(string? input)
         {
             if (string.IsNullOrEmpty(input))
-                return input;
+                return string.Empty;
 
             foreach (char invalid in Path.GetInvalidPathChars())
             {
                 input = input!.Replace(invalid.ToString(), string.Empty);
             }
 
-            return input;
+            return input!;
         }
 
         /// <summary>
         /// Remove all unicode-specific chars from a string
         /// </summary>
-        public static string? RemoveUnicodeCharacters(string? input)
+        public static string RemoveUnicodeCharacters(string? input)
         {
             if (string.IsNullOrEmpty(input))
-                return input;
+                return string.Empty;
 
             return new string(input.Where(c => c <= 255).ToArray());
         }
