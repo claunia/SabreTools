@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading;
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
@@ -68,9 +67,9 @@ namespace SabreTools.DatTools
 
                 // Get a list of all files to process
 #if NET20 || NET35
-                List<string> files = Directory.GetFiles(basePath, "*").ToList();
+                List<string> files = [.. Directory.GetFiles(basePath, "*")];
 #else
-                List<string> files = Directory.EnumerateFiles(basePath, "*", SearchOption.AllDirectories).ToList();
+                List<string> files = [.. Directory.EnumerateFiles(basePath, "*", SearchOption.AllDirectories)];
 #endif
 
                 // Loop through and add the file sizes

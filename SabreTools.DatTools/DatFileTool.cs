@@ -169,7 +169,7 @@ namespace SabreTools.DatTools
             InternalStopwatch watch = new($"Replacing items in '{intDat.Header.GetStringFieldValue(DatHeader.FileNameKey)}' from the base DAT");
 
             // If we are matching based on DatItem fields of any sort
-            if (itemFieldNames.Any())
+            if (itemFieldNames.Count > 0)
             {
                 // For comparison's sake, we want to use CRC as the base bucketing
                 datFile.Items.BucketBy(ItemKey.CRC, DedupeType.Full);
@@ -201,7 +201,7 @@ namespace SabreTools.DatTools
 
                         // Replace fields from the first duplicate, if we have one
                         if (dupes.Count > 0)
-                            Replacer.ReplaceFields(newDatItem, dupes.First(), itemFieldNames);
+                            Replacer.ReplaceFields(newDatItem, dupes[0], itemFieldNames);
 
                         newDatItems.Add(newDatItem);
                     }
@@ -217,7 +217,7 @@ namespace SabreTools.DatTools
             }
 
             // If we are matching based on Machine fields of any sort
-            if (machineFieldNames.Any())
+            if (machineFieldNames.Count > 0)
             {
                 // For comparison's sake, we want to use Machine Name as the base bucketing
                 datFile.Items.BucketBy(ItemKey.Machine, DedupeType.Full);
@@ -286,7 +286,7 @@ namespace SabreTools.DatTools
             InternalStopwatch watch = new($"Replacing items in '{intDat.Header.GetStringFieldValue(DatHeader.FileNameKey)}' from the base DAT");
 
             // If we are matching based on DatItem fields of any sort
-            if (itemFieldNames.Any())
+            if (itemFieldNames.Count > 0)
             {
                 // For comparison's sake, we want to use CRC as the base bucketing
                 datFile.ItemsDB.BucketBy(ItemKey.CRC, DedupeType.Full);
@@ -317,7 +317,7 @@ namespace SabreTools.DatTools
 
                         // Replace fields from the first duplicate, if we have one
                         if (dupes.Count > 0)
-                            Replacer.ReplaceFields(datItem.Item2, dupes.First().Item2, itemFieldNames);
+                            Replacer.ReplaceFields(datItem.Item2, dupes[0].Item2, itemFieldNames);
                     }
 #if NET40_OR_GREATER || NETCOREAPP
                 });
@@ -327,7 +327,7 @@ namespace SabreTools.DatTools
             }
 
             // If we are matching based on Machine fields of any sort
-            if (machineFieldNames.Any())
+            if (machineFieldNames.Count > 0)
             {
                 // For comparison's sake, we want to use Machine Name as the base bucketing
                 datFile.ItemsDB.BucketBy(ItemKey.Machine, DedupeType.Full);
@@ -1209,7 +1209,7 @@ namespace SabreTools.DatTools
 
             watch.Stop();
 
-            return datFiles.Select(d => d.Header).ToList();
+            return [.. datFiles.Select(d => d.Header)];
         }
 
         /// <summary>
@@ -1221,7 +1221,7 @@ namespace SabreTools.DatTools
         private static void AddFromExisting(DatFile addTo, DatFile addFrom, bool delete = false)
         {
             // Get the list of keys from the DAT
-            var keys = addFrom.Items.Keys.ToList();
+            List<string> keys = [.. addFrom.Items.Keys];
             foreach (string key in keys)
             {
                 // Add everything from the key to the internal DAT

@@ -51,9 +51,9 @@ namespace RombaSharp.Features
             foreach (string input in Inputs)
             {
 #if NET20 || NET35
-                List<string> depotFiles = Directory.GetFiles(input, "*.gz").ToList();
+                List<string> depotFiles = [.. Directory.GetFiles(input, "*.gz")];
 #else
-                List<string> depotFiles = Directory.EnumerateFiles(input, "*.gz", SearchOption.AllDirectories).ToList();
+                List<string> depotFiles = [.. Directory.EnumerateFiles(input, "*.gz", SearchOption.AllDirectories)];
 #endif
 
                 // If we are copying all that is possible but we want to scan first

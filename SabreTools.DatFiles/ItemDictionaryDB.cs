@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
 #endif
@@ -150,7 +149,7 @@ namespace SabreTools.DatFiles
             {
                 List<string> keys = [.. _buckets.Keys];
                 keys.Sort(new NaturalComparer());
-                return keys.ToArray();
+                return [.. keys];
             }
         }
 
@@ -343,17 +342,17 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Get all item to machine mappings
         /// </summary>
-        public (long, long)[] GetItemMachineMappings() => _itemToMachineMapping.Select(kvp => (kvp.Key, kvp.Value)).ToArray();
+        public (long, long)[] GetItemMachineMappings() => [.. _itemToMachineMapping.Select(kvp => (kvp.Key, kvp.Value))];
 
         /// <summary>
         /// Get all item to source mappings
         /// </summary>
-        public (long, long)[] GetItemSourceMappings() => _itemToSourceMapping.Select(kvp => (kvp.Key, kvp.Value)).ToArray();
+        public (long, long)[] GetItemSourceMappings() => [.. _itemToSourceMapping.Select(kvp => (kvp.Key, kvp.Value))];
 
         /// <summary>
         /// Get all items and their indicies
         /// </summary>
-        public (long, DatItem)[] GetItems() => _items.Select(kvp => (kvp.Key, kvp.Value)).ToArray();
+        public (long, DatItem)[] GetItems() => [.. _items.Select(kvp => (kvp.Key, kvp.Value))];
 
         /// <summary>
         /// Get the indices and items associated with a bucket name
@@ -455,7 +454,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Get all machines and their indicies
         /// </summary>
-        public (long, Machine)[] GetMachines() => _machines.Select(kvp => (kvp.Key, kvp.Value)).ToArray();
+        public (long, Machine)[] GetMachines() => [.. _machines.Select(kvp => (kvp.Key, kvp.Value))];
 
         /// <summary>
         /// Get a source based on the index
@@ -486,7 +485,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Get all sources and their indicies
         /// </summary>
-        public (long, Source)[] GetSources() => _sources.Select(kvp => (kvp.Key, kvp.Value)).ToArray();
+        public (long, Source)[] GetSources() => [.. _sources.Select(kvp => (kvp.Key, kvp.Value))];
 
         /// <summary>
         /// Remove an item, returning if it could be removed
@@ -1718,7 +1717,7 @@ namespace SabreTools.DatFiles
                     .ToList();
 
                 // If we're checking device references
-                if (deviceReferences.Any())
+                if (deviceReferences.Count > 0)
                 {
                     // Loop through all names and check the corresponding machines
                     List<string> newDeviceReferences = [];
@@ -1773,7 +1772,7 @@ namespace SabreTools.DatFiles
                 }
 
                 // If we're checking slotoptions
-                if (useSlotOptions && slotOptions.Any())
+                if (useSlotOptions && slotOptions.Count > 0)
                 {
                     // Loop through all names and check the corresponding machines
                     List<string> newSlotOptions = [];

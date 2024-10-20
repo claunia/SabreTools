@@ -68,7 +68,7 @@ namespace SabreTools.FileTypes.Archives
 #if NET20 || NET35 || NET40
                 // Extract all files to the temp directory
                 var zf = new Zip();
-                ZipReturn zr = zf.ZipFileOpen(this.Filename!, -1, true);
+                ZipReturn zr = zf.ZipFileOpen(Filename!, -1, true);
                 if (zr != ZipReturn.ZipGood)
                     throw new Exception(CompressUtils.ZipErrorMessageText(zr));
 
@@ -124,7 +124,7 @@ namespace SabreTools.FileTypes.Archives
                 encounteredErrors = false;
 #else
                 // Extract all files to the temp directory
-                var zf = ZipFile.OpenRead(this.Filename);
+                var zf = ZipFile.OpenRead(Filename!);
                 if (zf == null)
                     throw new Exception($"Could not open {Filename} as a zip file");
 
@@ -221,7 +221,7 @@ namespace SabreTools.FileTypes.Archives
         public override (Stream?, string?) GetEntryStream(string entryName)
         {
             // If we have an invalid file
-            if (this.Filename == null)
+            if (Filename == null)
                 return (null, null);
 
             try
@@ -231,7 +231,7 @@ namespace SabreTools.FileTypes.Archives
 
 #if NET20 || NET35 || NET40
                 var zf = new Zip();
-                ZipReturn zr = zf.ZipFileOpen(this.Filename!, -1, true);
+                ZipReturn zr = zf.ZipFileOpen(Filename!, -1, true);
                 if (zr != ZipReturn.ZipGood)
                     throw new Exception(CompressUtils.ZipErrorMessageText(zr));
 
@@ -261,7 +261,7 @@ namespace SabreTools.FileTypes.Archives
                 zf.ZipFileClose();
                 return (stream, realEntry);
 #else
-                var zf = ZipFile.OpenRead(this.Filename);
+                var zf = ZipFile.OpenRead(Filename);
                 if (zf == null)
                     throw new Exception($"Could not open {Filename} as a zip file");
 
@@ -311,17 +311,17 @@ namespace SabreTools.FileTypes.Archives
         public override List<BaseFile>? GetChildren()
         {
             // If we have an invalid file
-            if (this.Filename == null)
+            if (Filename == null)
                 return null;
 
             var found = new List<BaseFile>();
-            string? gamename = Path.GetFileNameWithoutExtension(this.Filename);
+            string? gamename = Path.GetFileNameWithoutExtension(Filename);
 
             try
             {
 #if NET20 || NET35 || NET40
                 var zf = new Zip();
-                ZipReturn zr = zf.ZipFileOpen(this.Filename!, -1, true);
+                ZipReturn zr = zf.ZipFileOpen(Filename!, -1, true);
                 if (zr != ZipReturn.ZipGood)
                     throw new Exception(CompressUtils.ZipErrorMessageText(zr));
 
@@ -347,7 +347,7 @@ namespace SabreTools.FileTypes.Archives
                     // If we get a read error, log it and continue
                     if (zr != ZipReturn.ZipGood || readStream == null)
                     {
-                        logger.Warning($"An error occurred while reading archive {this.Filename}: Zip Error - {zr}");
+                        logger.Warning($"An error occurred while reading archive {Filename}: Zip Error - {zr}");
                         continue;
                     }
 
@@ -355,7 +355,7 @@ namespace SabreTools.FileTypes.Archives
                     var zipEntryRom = new BaseFile();
 
                     // Perform a quickscan, if flagged to
-                    if (this.AvailableHashTypes.Length == 1 && this.AvailableHashTypes[0] == HashType.CRC32)
+                    if (AvailableHashTypes.Length == 1 && AvailableHashTypes[0] == HashType.CRC32)
                     {
                         zipEntryRom.Size = (long)localFile.UncompressedSize;
                         zipEntryRom.CRC = localFile.CRC;
@@ -365,7 +365,7 @@ namespace SabreTools.FileTypes.Archives
                     {
                         zipEntryRom = GetInfo(readStream,
                             size: (long)localFile.UncompressedSize,
-                            hashes: this.AvailableHashTypes,
+                            hashes: AvailableHashTypes,
                             keepReadOpen: true);
                     }
 
@@ -380,7 +380,7 @@ namespace SabreTools.FileTypes.Archives
                 zr = zf.ZipFileCloseReadStream();
                 zf.ZipFileClose();
 #else
-                var zf = ZipFile.OpenRead(this.Filename);
+                var zf = ZipFile.OpenRead(Filename);
                 if (zf == null)
                     throw new Exception($"Could not open {Filename} as a zip file");
 
@@ -408,7 +408,7 @@ namespace SabreTools.FileTypes.Archives
                     var zipEntryRom = new BaseFile();
 
                     // Perform a quickscan, if flagged to
-                    if (this.AvailableHashTypes.Length == 1 && this.AvailableHashTypes[0] == HashType.CRC32)
+                    if (AvailableHashTypes.Length == 1 && AvailableHashTypes[0] == HashType.CRC32)
                     {
                         zipEntryRom.Size = localFile.Length;
 #if NETCOREAPP
@@ -422,7 +422,7 @@ namespace SabreTools.FileTypes.Archives
                     {
                         zipEntryRom = GetInfo(readStream,
                             size: localFile.Length,
-                            hashes: this.AvailableHashTypes,
+                            hashes: AvailableHashTypes,
                             keepReadOpen: true);
                     }
 
@@ -450,7 +450,7 @@ namespace SabreTools.FileTypes.Archives
         public override List<string> GetEmptyFolders()
         {
             // If we have an invalid file
-            if (this.Filename == null)
+            if (Filename == null)
                 return [];
 
             List<string> empties = [];
@@ -459,7 +459,7 @@ namespace SabreTools.FileTypes.Archives
             {
 #if NET20 || NET35 || NET40
                 var zf = new Zip();
-                ZipReturn zr = zf.ZipFileOpen(this.Filename!, -1, true);
+                ZipReturn zr = zf.ZipFileOpen(Filename!, -1, true);
                 if (zr != ZipReturn.ZipGood)
                     throw new Exception(CompressUtils.ZipErrorMessageText(zr));
 
@@ -488,7 +488,7 @@ namespace SabreTools.FileTypes.Archives
                     }
                 }
 #else
-                var zf = ZipFile.OpenRead(this.Filename);
+                var zf = ZipFile.OpenRead(Filename);
                 if (zf == null)
                     throw new Exception($"Could not open {Filename} as a zip file");
 
@@ -544,7 +544,7 @@ namespace SabreTools.FileTypes.Archives
         public override bool IsTorrent()
         {
             Zip zf = new();
-            ZipReturn zr = zf.ZipFileOpen(this.Filename!, -1, true);
+            ZipReturn zr = zf.ZipFileOpen(Filename!, -1, true);
             if (zr != ZipReturn.ZipGood)
                 throw new Exception(CompressUtils.ZipErrorMessageText(zr));
 
@@ -665,7 +665,7 @@ namespace SabreTools.FileTypes.Archives
                     zipFile.ZipFileCreate(tempFile);
 
                     // Get the order for the entries with the new file
-                    List<string> keys = inputIndexMap.Keys.ToList();
+                    List<string> keys = [.. inputIndexMap.Keys];
                     keys.Sort(CompressUtils.TrrntZipStringCompare);
 
                     // Copy over all files to the new archive
@@ -801,7 +801,7 @@ namespace SabreTools.FileTypes.Archives
                     }
 
                     // Sort the keys in TZIP order
-                    List<string> keys = inputIndexMap.Keys.ToList();
+                    List<string> keys = [.. inputIndexMap.Keys];
                     keys.Sort(CompressUtils.TrrntZipStringCompare);
 
                     // Now add all of the files in order
@@ -880,7 +880,7 @@ namespace SabreTools.FileTypes.Archives
                     zipFile.ZipFileCreate(tempFile);
 
                     // Get the order for the entries with the new file
-                    List<string> keys = inputIndexMap.Keys.ToList();
+                    List<string> keys = [.. inputIndexMap.Keys];
                     keys.Sort(CompressUtils.TrrntZipStringCompare);
 
                     // Copy over all files to the new archive

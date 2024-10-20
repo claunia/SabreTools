@@ -153,8 +153,13 @@ namespace SabreTools.DatFiles
             else if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(description))
             {
                 string[] splitpath = path.TrimEnd(Path.DirectorySeparatorChar).Split(Path.DirectorySeparatorChar);
-                Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, splitpath.Last());
-                Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, splitpath.Last() + (bare ? string.Empty : $" ({date})"));
+#if NETFRAMEWORK
+                Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, splitpath[splitpath.Length - 1]);
+                Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, splitpath[splitpath.Length - 1] + (bare ? string.Empty : $" ({date})"));
+#else
+                Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, splitpath[^1]);
+                Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, splitpath[^1] + (bare ? string.Empty : $" ({date})"));
+#endif
             }
         }
 

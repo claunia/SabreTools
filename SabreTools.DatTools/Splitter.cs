@@ -782,7 +782,7 @@ namespace SabreTools.DatTools
             {
                 // Get the current machine
                 var items = datFile.Items[machine];
-                if (items == null || !items.Any())
+                if (items == null || items.Count == 0)
                 {
                     logger.Error($"{machine} contains no items and will be skipped");
                     continue;

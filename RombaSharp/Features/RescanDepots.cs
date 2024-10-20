@@ -40,7 +40,7 @@ namespace RombaSharp.Features
             foreach (string depotname in Inputs)
             {
                 // Check that it's a valid depot first
-                if (!_depots!.ContainsKey(depotname))
+                if (!_depots.ContainsKey(depotname))
                 {
                     logger.User($"'{depotname}' is not a recognized depot. Please add it to your configuration file and try again");
                     return false;

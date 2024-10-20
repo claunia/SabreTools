@@ -484,7 +484,7 @@ namespace SabreTools.FileTypes.Archives
                 ds.Dispose();
 
                 // Now write the standard footer
-                sw.Write(baseFile.CRC!.Reverse().ToArray());
+                sw.Write([.. baseFile.CRC!.Reverse()]);
                 sw.Write((uint)(baseFile.Size ?? 0));
 
                 // Dispose of everything

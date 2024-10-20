@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
 #endif
@@ -111,7 +110,7 @@ namespace SabreTools.DatTools
             datFile.Items.BucketBy(ItemKey.SHA1, DedupeType.None);
 
             // Then we want to loop through each of the hashes and see if we can rebuild
-            var keys = datFile.Items.SortedKeys.ToList();
+            List<string> keys = [.. datFile.Items.SortedKeys];
             foreach (string hash in keys)
             {
                 // Pre-empt any issues that could arise from string length

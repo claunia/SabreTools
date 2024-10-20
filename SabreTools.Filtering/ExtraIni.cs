@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using SabreTools.Core.Filter;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
@@ -49,7 +48,7 @@ namespace SabreTools.Filtering
         public void PopulateFromList(List<string> inputs)
         {
             // If there are no inputs, just skip
-            if (inputs == null || !inputs.Any())
+            if (inputs == null || inputs.Count == 0)
                 return;
 
             InternalStopwatch watch = new("Populating extras from list");
@@ -59,7 +58,7 @@ namespace SabreTools.Filtering
                 ExtraIniItem item = new();
 
                 // If we don't even have a possible field and file combination
-                if (!input.Contains(':'))
+                if (!input.Contains(":"))
                 {
                     logger.Warning($"'{input}` is not a valid INI extras string. Valid INI extras strings are of the form 'key:value'. Please refer to README.1ST or the help feature for more details.");
                     return;
@@ -90,7 +89,7 @@ namespace SabreTools.Filtering
         public bool ApplyExtras(DatFile datFile, bool throwOnError = false)
         {
             // If we have no extras, don't attempt to apply and just return true
-            if (Items == null || !Items.Any())
+            if (Items == null || Items.Count == 0)
                 return true;
 
             var watch = new InternalStopwatch("Applying extra mappings to DAT");
@@ -153,7 +152,7 @@ namespace SabreTools.Filtering
         public bool ApplyExtrasDB(DatFile datFile, bool throwOnError = false)
         {
             // If we have no extras, don't attempt to apply and just return true
-            if (Items == null || !Items.Any())
+            if (Items == null || Items.Count == 0)
                 return true;
 
             var watch = new InternalStopwatch("Applying extra mappings to DAT");

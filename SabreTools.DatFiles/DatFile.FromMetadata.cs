@@ -20,7 +20,7 @@ namespace SabreTools.DatFiles
         public void ConvertMetadata(Models.Metadata.MetadataFile? item, string filename, int indexId, bool keep, bool statsOnly)
         {
             // If the metadata file is invalid, we can't do anything
-            if (item == null || !item.Any())
+            if (item == null || item.Count == 0)
                 return;
 
             // Create an internal source and add to the dictionary
@@ -46,7 +46,7 @@ namespace SabreTools.DatFiles
         private void ConvertHeader(Models.Metadata.Header? item, bool keep)
         {
             // If the header is invalid, we can't do anything
-            if (item == null || !item.Any())
+            if (item == null || item.Count == 0)
                 return;
 
             // Create an internal header
@@ -343,7 +343,7 @@ namespace SabreTools.DatFiles
         private void ConvertMachine(Models.Metadata.Machine? item, Source source, long sourceIndex, bool statsOnly)
         {
             // If the machine is invalid, we can't do anything
-            if (item == null || !item.Any())
+            if (item == null || item.Count == 0)
                 return;
 
             // Create an internal machine

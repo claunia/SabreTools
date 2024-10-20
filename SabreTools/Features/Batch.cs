@@ -468,7 +468,7 @@ Reset the internal state:           reset();";
                 }
 
                 // If we had any unmapped formats, return an issue
-                if (unmappedFormats.Any())
+                if (unmappedFormats.Count > 0)
                 {
                     string message = $"The following inputs were invalid formats: {string.Join(", ", unmappedFormats)}";
                     return (false, message);

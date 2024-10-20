@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Xml;
 using System.Xml.Schema;
 using Microsoft.Data.Sqlite;
@@ -423,7 +422,7 @@ Possible values are: Verbose, User, Warning, Error");
         internal static string? _db;			// Database name
 
         // Depot settings
-        internal static Dictionary<string, Tuple<long, bool>>? _depots; // Folder location, Max size
+        internal static Dictionary<string, Tuple<long, bool>> _depots = []; // Folder location, Max size
 
         // Server settings
         internal static int _port;			// Web server port
@@ -552,9 +551,9 @@ CREATE TABLE IF NOT EXISTS dat (
         {
             // Get a dictionary of filenames that actually exist in the DATRoot, logging which ones are not
 #if NET20 || NET35
-            List<string> datRootDats = Directory.GetFiles(_dats!, "*").ToList();
+            List<string> datRootDats = [.. Directory.GetFiles(_dats!, "*")];
 #else
-            List<string> datRootDats = Directory.EnumerateFiles(_dats!, "*", SearchOption.AllDirectories).ToList();
+            List<string> datRootDats = [.. Directory.EnumerateFiles(_dats!, "*", SearchOption.AllDirectories)];
 #endif
             List<string> lowerCaseDats = datRootDats.ConvertAll(i => Path.GetFileName(i).ToLowerInvariant());
             Dictionary<string, string> foundDats = [];
@@ -579,7 +578,7 @@ CREATE TABLE IF NOT EXISTS dat (
         /// <summary>
         /// Initialize the Romba application from XML config
         /// </summary>
-        private void InitializeConfiguration()
+        private static void InitializeConfiguration()
         {
             // Get default values if they're not written
             int workers = 4,
@@ -592,7 +591,7 @@ CREATE TABLE IF NOT EXISTS dat (
                 baddir = "bad",
                 dats = "dats",
                 db = "db";
-            Dictionary<string, Tuple<long, bool>> depots = new Dictionary<string, Tuple<long, bool>>();
+            Dictionary<string, Tuple<long, bool>> depots = [];
 
             // Get the XML text reader for the configuration file, if possible
             XmlReader xtr = XmlReader.Create(_config, new XmlReaderSettings

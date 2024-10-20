@@ -113,11 +113,11 @@ namespace SabreTools.DatFiles.Formats
 
             // Read in the machine array
             jtr.Read();
-            JsonSerializer js = new();
-            JArray? machineArray = js.Deserialize<JArray>(jtr);
+            var js = new JsonSerializer();
+            JArray machineArray = js.Deserialize<JArray>(jtr) ?? [];
 
             // Loop through each machine object and process
-            foreach (JObject machineObj in (machineArray ?? []).Cast<JObject>())
+            foreach (JObject machineObj in machineArray)
             {
                 ReadMachine(machineObj, statsOnly, source, sourceIndex);
             }
@@ -179,7 +179,7 @@ namespace SabreTools.DatFiles.Formats
                 return;
 
             // Loop through each datitem object and process
-            foreach (JObject itemObj in itemsArr.Cast<JObject>())
+            foreach (JObject itemObj in itemsArr)
             {
                 ReadItem(itemObj, statsOnly, source, sourceIndex, machine, machineIndex);
             }
@@ -480,7 +480,7 @@ namespace SabreTools.DatFiles.Formats
                         continue;
 
                     // Resolve the names in the block
-                    items = DatItem.ResolveNamesDB(items.ToConcurrentList()).ToArray();
+                    items = [.. DatItem.ResolveNamesDB(items.ToConcurrentList())];
 
                     for (int index = 0; index < items.Length; index++)
                     {

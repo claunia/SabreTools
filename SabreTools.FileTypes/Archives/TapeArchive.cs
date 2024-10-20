@@ -6,7 +6,6 @@ using System.Linq;
 using Compress;
 using SabreTools.Core.Tools;
 using SabreTools.Hashing;
-using SabreTools.Matching;
 using SabreTools.Matching.Compare;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Tar;
@@ -241,7 +240,7 @@ namespace SabreTools.FileTypes.Archives
             try
             {
                 TarArchive ta = TarArchive.Open(this.Filename!, new ReaderOptions { LeaveStreamOpen = false });
-                List<TarArchiveEntry> tarEntries = ta.Entries.OrderBy(e => e.Key, new NaturalReversedComparer()).ToList();
+                List<TarArchiveEntry> tarEntries = ta.Entries.OrderBy(e => e.Key ?? string.Empty, new NaturalReversedComparer()).ToList();
                 string? lastTarEntry = null;
                 foreach (TarArchiveEntry entry in tarEntries)
                 {
@@ -340,7 +339,7 @@ namespace SabreTools.FileTypes.Archives
                     oldTarFile = TarArchive.Open(archiveFileName);
 
                     // Get a list of all current entries
-                    var entries = oldTarFile.Entries.Select(i => i.Key).ToList();
+                    List<string> entries = [.. oldTarFile.Entries.Select(i => i.Key)];
 
                     // Map all inputs to index
                     var inputIndexMap = new Dictionary<string, int>();
@@ -367,7 +366,7 @@ namespace SabreTools.FileTypes.Archives
                     }
 
                     // Get the order for the entries with the new file
-                    List<string> keys = inputIndexMap.Keys.ToList();
+                    List<string> keys = [.. inputIndexMap.Keys];
                     keys.Sort(CompressUtils.TrrntZipStringCompare);
 
                     // Copy over all files to the new archive
@@ -480,7 +479,7 @@ namespace SabreTools.FileTypes.Archives
                     }
 
                     // Sort the keys in TZIP order
-                    List<string> keys = inputIndexMap.Keys.ToList();
+                    List<string> keys = [.. inputIndexMap.Keys];
                     keys.Sort(CompressUtils.TrrntZipStringCompare);
 
                     // Now add all of the files in order
@@ -506,7 +505,7 @@ namespace SabreTools.FileTypes.Archives
                     oldTarFile = TarArchive.Open(archiveFileName);
 
                     // Get a list of all current entries
-                    var entries = oldTarFile.Entries.Select(i => i.Key).ToList();
+                    List<string> entries = [.. oldTarFile.Entries.Select(i => i.Key)];
 
                     // Map all inputs to index
                     var inputIndexMap = new Dictionary<string, int>();
@@ -539,7 +538,7 @@ namespace SabreTools.FileTypes.Archives
                     }
 
                     // Get the order for the entries with the new file
-                    List<string> keys = inputIndexMap.Keys.ToList();
+                    List<string> keys = [.. inputIndexMap.Keys];
                     keys.Sort(CompressUtils.TrrntZipStringCompare);
 
                     // Copy over all files to the new archive

@@ -45,7 +45,7 @@ namespace RombaSharp.Features
             // Now, for each of these files, attempt to add the data found inside
             foreach (string input in Inputs)
             {
-                StreamReader sr = new StreamReader(File.OpenRead(input));
+                var sr = new StreamReader(File.OpenRead(input));
 
                 // The first line should be the hash header
                 string? line = sr.ReadLine();

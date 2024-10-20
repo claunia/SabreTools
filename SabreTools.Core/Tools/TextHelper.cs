@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -123,7 +122,6 @@ namespace SabreTools.Core.Tools
             if (string.IsNullOrEmpty(input))
                 return input;
 
-            List<char> invalidPath = [.. Path.GetInvalidPathChars()];
             foreach (char invalid in Path.GetInvalidPathChars())
             {
                 input = input!.Replace(invalid.ToString(), string.Empty);

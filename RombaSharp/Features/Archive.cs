@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Microsoft.Data.Sqlite;
 using SabreTools.Core;
 using SabreTools.DatFiles;
@@ -61,7 +60,7 @@ have a current entry in the DAT index.";
             bool onlyNeeded = GetBoolean(features, OnlyNeededValue);
 
             // First we want to get just all directories from the inputs
-            List<string> onlyDirs = new List<string>();
+            List<string> onlyDirs = [];
             foreach (string input in Inputs)
             {
                 if (Directory.Exists(input))
@@ -77,10 +76,15 @@ have a current entry in the DAT index.";
             }
 
             // Create an empty Dat for files that need to be rebuilt
-            DatFile need = DatFile.Create();
+            var need = DatFile.Create();
+
+            // Get the first depot as output
+            var depotKeyEnumerator = _depots.Keys.GetEnumerator();
+            depotKeyEnumerator.MoveNext();
+            string firstDepot = depotKeyEnumerator.Current;
 
             // Open the database connection
-            SqliteConnection dbc = new SqliteConnection(_connectionString);
+            var dbc = new SqliteConnection(_connectionString);
             dbc.Open();
 
             // Now that we have the Dats, add the files to the database
@@ -98,34 +102,38 @@ have a current entry in the DAT index.";
 
                 foreach (Rom rom in datItems)
                 {
+                    string? crc = rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.CRCKey);
+                    string? md5 = rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.MD5Key);
+                    string? sha1 = rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.SHA1Key);
+
                     // If we care about if the file exists, check the databse first
                     if (onlyNeeded && !noDb)
                     {
                         string query = "SELECT * FROM crcsha1 JOIN md5sha1 ON crcsha1.sha1=md5sha1.sha1"
-                                    + $" WHERE crcsha1.crc=\"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.CRCKey)}\""
-                                    + $" OR md5sha1.md5=\"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.MD5Key)}\""
-                                    + $" OR md5sha1.sha1=\"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.SHA1Key)}\"";
-                        SqliteCommand slc = new SqliteCommand(query, dbc);
+                                    + $" WHERE crcsha1.crc=\"{crc}\""
+                                    + $" OR md5sha1.md5=\"{md5}\""
+                                    + $" OR md5sha1.sha1=\"{sha1}\"";
+                        var slc = new SqliteCommand(query, dbc);
                         SqliteDataReader sldr = slc.ExecuteReader();
 
                         if (sldr.HasRows)
                         {
                             // Add to the queries
-                            if (!string.IsNullOrWhiteSpace(rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.CRCKey)))
-                                crcquery += $" (\"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.CRCKey)}\"),";
+                            if (!string.IsNullOrWhiteSpace(crc))
+                                crcquery += $" (\"{crc}\"),";
 
-                            if (!string.IsNullOrWhiteSpace(rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.MD5Key)))
-                                md5query += $" (\"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.MD5Key)}\"),";
+                            if (!string.IsNullOrWhiteSpace(md5))
+                                md5query += $" (\"{md5}\"),";
 
-                            if (!string.IsNullOrWhiteSpace(rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.SHA1Key)))
+                            if (!string.IsNullOrWhiteSpace(sha1))
                             {
-                                sha1query += $" (\"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.SHA1Key)}\", \"{_depots!.Keys.ToList()[0]}\"),";
+                                sha1query += $" (\"{sha1}\", \"{firstDepot}\"),";
 
-                                if (!string.IsNullOrWhiteSpace(rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.CRCKey)))
-                                    crcsha1query += $" (\"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.CRCKey)}\", \"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.SHA1Key)}\"),";
+                                if (!string.IsNullOrWhiteSpace(crc))
+                                    crcsha1query += $" (\"{crc}\", \"{sha1}\"),";
 
-                                if (!string.IsNullOrWhiteSpace(rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.MD5Key)))
-                                    md5sha1query += $" (\"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.MD5Key)}\", \"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.SHA1Key)}\"),";
+                                if (!string.IsNullOrWhiteSpace(md5))
+                                    md5sha1query += $" (\"{md5}\", \"{sha1}\"),";
                             }
 
                             // Add to the Dat
@@ -138,21 +146,21 @@ have a current entry in the DAT index.";
                         // Add to the queries
                         if (!noDb)
                         {
-                            if (!string.IsNullOrWhiteSpace(rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.CRCKey)))
-                                crcquery += $" (\"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.CRCKey)}\"),";
+                            if (!string.IsNullOrWhiteSpace(crc))
+                                crcquery += $" (\"{crc}\"),";
 
-                            if (!string.IsNullOrWhiteSpace(rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.MD5Key)))
-                                md5query += $" (\"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.MD5Key)}\"),";
+                            if (!string.IsNullOrWhiteSpace(md5))
+                                md5query += $" (\"{md5}\"),";
 
-                            if (!string.IsNullOrWhiteSpace(rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.SHA1Key)))
+                            if (!string.IsNullOrWhiteSpace(sha1))
                             {
-                                sha1query += $" (\"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.SHA1Key)}\", \"{_depots!.Keys.ToList()[0]}\"),";
+                                sha1query += $" (\"{sha1}\", \"{firstDepot}\"),";
 
-                                if (!string.IsNullOrWhiteSpace(rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.CRCKey)))
-                                    crcsha1query += $" (\"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.CRCKey)}\", \"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.SHA1Key)}\"),";
+                                if (!string.IsNullOrWhiteSpace(crc))
+                                    crcsha1query += $" (\"{crc}\", \"{sha1}\"),";
 
-                                if (!string.IsNullOrWhiteSpace(rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.MD5Key)))
-                                    md5sha1query += $" (\"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.MD5Key)}\", \"{rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.SHA1Key)}\"),";
+                                if (!string.IsNullOrWhiteSpace(md5))
+                                    md5sha1query += $" (\"{md5}\", \"{sha1}\"),";
                             }
                         }
 
@@ -165,28 +173,28 @@ have a current entry in the DAT index.";
             // Now run the queries, if they're populated
             if (crcquery != "INSERT OR IGNORE INTO crc (crc) VALUES")
             {
-                SqliteCommand slc = new SqliteCommand(crcquery.TrimEnd(','), dbc);
+                var slc = new SqliteCommand(crcquery.TrimEnd(','), dbc);
                 slc.ExecuteNonQuery();
                 slc.Dispose();
             }
 
             if (md5query != "INSERT OR IGNORE INTO md5 (md5) VALUES")
             {
-                SqliteCommand slc = new SqliteCommand(md5query.TrimEnd(','), dbc);
+                var slc = new SqliteCommand(md5query.TrimEnd(','), dbc);
                 slc.ExecuteNonQuery();
                 slc.Dispose();
             }
 
             if (sha1query != "INSERT OR IGNORE INTO sha1 (sha1, depot) VALUES")
             {
-                SqliteCommand slc = new SqliteCommand(sha1query.TrimEnd(','), dbc);
+                var slc = new SqliteCommand(sha1query.TrimEnd(','), dbc);
                 slc.ExecuteNonQuery();
                 slc.Dispose();
             }
 
             if (crcsha1query != "INSERT OR IGNORE INTO crcsha1 (crc, sha1) VALUES")
             {
-                SqliteCommand slc = new SqliteCommand(crcsha1query.TrimEnd(','), dbc);
+                var slc = new SqliteCommand(crcsha1query.TrimEnd(','), dbc);
                 slc.ExecuteNonQuery();
                 slc.Dispose();
             }
@@ -202,7 +210,7 @@ have a current entry in the DAT index.";
             Rebuilder.RebuildGeneric(
                 need,
                 onlyDirs,
-                outDir: _depots!.Keys.ToList()[0],
+                outDir: firstDepot,
                 outputFormat: OutputFormat.TorrentGzipRomba,
                 asFiles: TreatAsFile.NonArchive);
 

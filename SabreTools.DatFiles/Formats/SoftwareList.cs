@@ -122,9 +122,10 @@ namespace SabreTools.DatFiles.Formats
                         missingFields.Add(Models.Metadata.DipSwitch.MaskKey);
                     if (dipSwitch.ValuesSpecified)
                     {
-                        if (dipSwitch.GetFieldValue<DipValue[]?>(Models.Metadata.DipSwitch.DipValueKey)!.Any(dv => string.IsNullOrEmpty(dv.GetName())))
+                        var dipValues = dipSwitch.GetFieldValue<DipValue[]?>(Models.Metadata.DipSwitch.DipValueKey);
+                        if (dipValues!.Any(dv => string.IsNullOrEmpty(dv.GetName())))
                             missingFields.Add(Models.Metadata.DipValue.NameKey);
-                        if (dipSwitch.GetFieldValue<DipValue[]?>(Models.Metadata.DipSwitch.DipValueKey)!.Any(dv => string.IsNullOrEmpty(dv.GetStringFieldValue(Models.Metadata.DipValue.ValueKey))))
+                        if (dipValues!.Any(dv => string.IsNullOrEmpty(dv.GetStringFieldValue(Models.Metadata.DipValue.ValueKey))))
                             missingFields.Add(Models.Metadata.DipValue.ValueKey);
                     }
 

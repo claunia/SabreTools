@@ -705,7 +705,7 @@ namespace SabreTools.FileTypes.Archives
                     zipFile.ZipFileCreate(tempFile);
 
                     // Get the order for the entries with the new file
-                    List<string> keys = inputIndexMap.Keys.ToList();
+                    List<string> keys = [.. inputIndexMap.Keys];
                     keys.Sort(CompressUtils.TrrntZipStringCompare);
 
                     // Copy over all files to the new archive

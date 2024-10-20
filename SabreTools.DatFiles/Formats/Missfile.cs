@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using SabreTools.Core;
 using SabreTools.DatItems;
@@ -126,7 +125,7 @@ namespace SabreTools.DatFiles.Formats
                         continue;
 
                     // Resolve the names in the block
-                    items = DatItem.ResolveNamesDB(items.ToConcurrentList()).ToArray();
+                    items = [.. DatItem.ResolveNamesDB(items.ToConcurrentList())];
 
                     for (int index = 0; index < items.Length; index++)
                     {

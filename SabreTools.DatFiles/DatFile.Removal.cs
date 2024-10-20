@@ -99,7 +99,7 @@ namespace SabreTools.DatFiles
         private void RemoveHeaderFields(List<string> headerFieldNames)
         {
             // If we have an invalid input, return
-            if (Header == null || !headerFieldNames.Any())
+            if (Header == null || headerFieldNames.Count == 0)
                 return;
 
             foreach (var fieldName in headerFieldNames)
@@ -114,7 +114,7 @@ namespace SabreTools.DatFiles
         private static void RemoveFields(Machine? machine, List<string> machineFieldNames)
         {
             // If we have an invalid input, return
-            if (machine == null || !machineFieldNames.Any())
+            if (machine == null || machineFieldNames.Count == 0)
                 return;
 
             foreach (var fieldName in machineFieldNames)
@@ -136,11 +136,11 @@ namespace SabreTools.DatFiles
 
             // Handle Machine fields
             var machine = datItem.GetFieldValue<Machine>(DatItem.MachineKey);
-            if (machineFieldNames.Any() && machine != null)
+            if (machineFieldNames.Count > 0 && machine != null)
                 RemoveFields(machine, machineFieldNames);
 
             // If there are no field names, return
-            if (itemFieldNames == null || !itemFieldNames.Any())
+            if (itemFieldNames == null || itemFieldNames.Count == 0)
                 return;
 
             // If there are no field names for this type or generic, return

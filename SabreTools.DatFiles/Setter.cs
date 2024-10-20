@@ -143,7 +143,7 @@ namespace SabreTools.DatFiles
         public void SetFields(DatHeader datHeader)
         {
             // If we have an invalid input, return
-            if (datHeader == null || !HeaderFieldMappings.Any())
+            if (datHeader == null || HeaderFieldMappings.Count == 0)
                 return;
 
             foreach (var kvp in HeaderFieldMappings)
@@ -159,7 +159,7 @@ namespace SabreTools.DatFiles
         public void SetFields(Machine? machine)
         {
             // If we have an invalid input, return
-            if (machine == null || !MachineFieldMappings.Any())
+            if (machine == null || MachineFieldMappings.Count == 0)
                 return;
 
             foreach (var kvp in MachineFieldMappings)
@@ -181,11 +181,11 @@ namespace SabreTools.DatFiles
             #region Common
 
             // Handle Machine fields
-            if (MachineFieldMappings.Any() && datItem.GetFieldValue<Machine>(DatItem.MachineKey) != null)
+            if (MachineFieldMappings.Count > 0 && datItem.GetFieldValue<Machine>(DatItem.MachineKey) != null)
                 SetFields(datItem.GetFieldValue<Machine>(DatItem.MachineKey)!);
 
             // If there are no field names, return
-            if (ItemFieldMappings == null || !ItemFieldMappings.Any())
+            if (ItemFieldMappings == null || ItemFieldMappings.Count == 0)
                 return;
 
             // If there are no field names for this type or generic, return

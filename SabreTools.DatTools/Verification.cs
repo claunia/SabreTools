@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
@@ -59,7 +58,7 @@ namespace SabreTools.DatTools
             datFile.Items.BucketBy(ItemKey.SHA1, DedupeType.None);
 
             // Then we want to loop through each of the hashes and see if we can rebuild
-            var keys = datFile.Items.SortedKeys.ToList();
+            List<string> keys = [.. datFile.Items.SortedKeys];
             foreach (string hash in keys)
             {
                 // Pre-empt any issues that could arise from string length
@@ -144,7 +143,7 @@ namespace SabreTools.DatTools
             datFile.ItemsDB.BucketBy(ItemKey.SHA1, DedupeType.None);
 
             // Then we want to loop through each of the hashes and see if we can rebuild
-            var keys = datFile.ItemsDB.SortedKeys.ToList();
+            List<string> keys = [.. datFile.ItemsDB.SortedKeys];
             foreach (string hash in keys)
             {
                 // Pre-empt any issues that could arise from string length
@@ -217,7 +216,7 @@ namespace SabreTools.DatTools
                 datFile.Items.BucketBy(ItemKey.Machine, DedupeType.Full);
 
             // Then mark items for removal
-            var keys = datFile.Items.SortedKeys.ToList();
+            List<string> keys = [.. datFile.Items.SortedKeys];
             foreach (string key in keys)
             {
                 ConcurrentList<DatItem>? items = datFile.Items[key];
@@ -265,7 +264,7 @@ namespace SabreTools.DatTools
                 datFile.ItemsDB.BucketBy(ItemKey.Machine, DedupeType.Full);
 
             // Then mark items for removal
-            var keys = datFile.ItemsDB.SortedKeys.ToList();
+            List<string> keys = [.. datFile.ItemsDB.SortedKeys];
             foreach (string key in keys)
             {
                 var items = datFile.ItemsDB.GetItemsForBucket(key);

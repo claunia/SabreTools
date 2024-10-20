@@ -80,7 +80,7 @@ namespace SabreTools.DatFiles
         {
             get
             {
-                var keys = items.Keys.ToList();
+                List<string> keys = [.. items.Keys];
                 keys.Sort(new NaturalComparer());
                 return keys;
             }
@@ -315,7 +315,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         public void ClearEmpty()
         {
-            var keys = items.Keys.Where(k => k != null).ToList();
+            List<string> keys = [.. items.Keys];
             foreach (string key in keys)
             {
                 // If the key doesn't exist, skip
@@ -345,7 +345,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         public void ClearMarked()
         {
-            var keys = items.Keys.ToList();
+            List<string> keys = [.. items.Keys];
             foreach (string key in keys)
             {
                 ConcurrentList<DatItem>? oldItemList = items[key];
@@ -525,11 +525,7 @@ namespace SabreTools.DatFiles
         public void BucketBy(ItemKey bucketBy, DedupeType dedupeType, bool lower = true, bool norename = true)
         {
             // If we have a situation where there's no dictionary or no keys at all, we skip
-#if NET40_OR_GREATER || NETCOREAPP
-            if (items == null || items.IsEmpty)
-#else
             if (items == null || items.Count == 0)
-#endif
                 return;
 
             // If the sorted type isn't the same, we want to sort the dictionary accordingly
@@ -626,7 +622,10 @@ namespace SabreTools.DatFiles
 
             // Try to find duplicates
             ConcurrentList<DatItem>? roms = this[key];
-            return roms?.Any(r => datItem.Equals(r)) == true;
+            if (roms == null)
+                return false;
+
+            return roms.Any(r => datItem.Equals(r));
         }
 
         /// <summary>
@@ -739,32 +738,32 @@ namespace SabreTools.DatFiles
 #elif NET40_OR_GREATER
             Parallel.ForEach(keys, key =>
 #else
-                foreach (var key in keys)
+            foreach (var key in keys)
 #endif
-        {
-            // Get the possibly unsorted list
-            ConcurrentList<DatItem>? sortedlist = this[key]?.ToConcurrentList();
-            if (sortedlist == null)
+            {
+                // Get the possibly unsorted list
+                ConcurrentList<DatItem>? sortedlist = this[key]?.ToConcurrentList();
+                if (sortedlist == null)
 #if NET40_OR_GREATER || NETCOREAPP
-                return;
+                    return;
 #else
-                        continue;
+                    continue;
 #endif
 
-            // Sort the list of items to be consistent
-            DatItem.Sort(ref sortedlist, false);
+                // Sort the list of items to be consistent
+                DatItem.Sort(ref sortedlist, false);
 
-            // If we're merging the roms, do so
-            if (dedupeType == DedupeType.Full || (dedupeType == DedupeType.Game && bucketBy == ItemKey.Machine))
-                sortedlist = DatItem.Merge(sortedlist);
+                // If we're merging the roms, do so
+                if (dedupeType == DedupeType.Full || (dedupeType == DedupeType.Game && bucketBy == ItemKey.Machine))
+                    sortedlist = DatItem.Merge(sortedlist);
 
-            // Add the list back to the dictionary
-            Reset(key);
-            AddRange(key, sortedlist);
+                // Add the list back to the dictionary
+                Reset(key);
+                AddRange(key, sortedlist);
 #if NET40_OR_GREATER || NETCOREAPP
-        });
+            });
 #else
-                }
+            }
 #endif
         }
 
@@ -779,19 +778,19 @@ namespace SabreTools.DatFiles
 #elif NET40_OR_GREATER
             Parallel.ForEach(keys, key =>
 #else
-                foreach (var key in keys)
+            foreach (var key in keys)
 #endif
-        {
-            // Get the possibly unsorted list
-            ConcurrentList<DatItem>? sortedlist = this[key];
+            {
+                // Get the possibly unsorted list
+                ConcurrentList<DatItem>? sortedlist = this[key];
 
-            // Sort the list of items to be consistent
-            if (sortedlist != null)
-                DatItem.Sort(ref sortedlist, false);
+                // Sort the list of items to be consistent
+                if (sortedlist != null)
+                    DatItem.Sort(ref sortedlist, false);
 #if NET40_OR_GREATER || NETCOREAPP
-        });
+            });
 #else
-                }
+            }
 #endif
         }
 
@@ -1276,7 +1275,7 @@ namespace SabreTools.DatFiles
                     .ToList();
 
                 // If we're checking device references
-                if (deviceReferences.Any())
+                if (deviceReferences.Count > 0)
                 {
                     // Loop through all names and check the corresponding machines
                     List<string> newDeviceReferences = [];
@@ -1326,7 +1325,7 @@ namespace SabreTools.DatFiles
                 }
 
                 // If we're checking slotoptions
-                if (useSlotOptions && slotOptions.Any())
+                if (useSlotOptions && slotOptions.Count > 0)
                 {
                     // Loop through all names and check the corresponding machines
                     List<string> newSlotOptions = [];
