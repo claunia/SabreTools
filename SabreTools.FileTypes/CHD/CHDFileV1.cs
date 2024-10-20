@@ -10,12 +10,12 @@ namespace SabreTools.FileTypes.CHD
     /// </summary>
     public class CHDFileV1 : CHDFile
     {
-        public const int HeaderSize = 76;
+        internal const int HeaderSize = 76;
 
         /// <summary>
         /// Parse and validate the header as if it's V1
         /// </summary>
-        public static CHDFileV1? Deserialize(Stream stream)
+        internal static CHDFileV1? Deserialize(Stream stream)
         {
             var header = new HeaderV1();
 
@@ -45,9 +45,8 @@ namespace SabreTools.FileTypes.CHD
             return new CHDFileV1 { _header = header, MD5 = header.MD5 };
         }
 
-        /// <summary>
-        /// Return internal MD5 hash
-        /// </summary>
+        /// <inheritdoc/>
+        /// <remarks>Returns MD5 hash or empty array</remarks>
         public override byte[] GetHash()
         {
             return (_header as HeaderV1)?.MD5 ?? [];
