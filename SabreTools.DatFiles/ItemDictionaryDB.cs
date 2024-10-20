@@ -1638,7 +1638,7 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // If the parent doesn't have any items, we want to continue
-                var parentItems = GetItemsForBucket(romOf);
+                var parentItems = GetItemsForBucket(romOf!);
                 if (parentItems == null || parentItems.Length == 0)
                     continue;
 
@@ -1845,7 +1845,7 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // If the parent doesn't have any items, we want to continue
-                var parentItems = GetItemsForBucket(cloneOf);
+                var parentItems = GetItemsForBucket(cloneOf!);
                 if (parentItems == null || parentItems.Length == 0)
                     continue;
 
@@ -1861,7 +1861,7 @@ namespace SabreTools.DatFiles
                 }
 
                 // Get the parent machine
-                var parentMachine = GetMachineForItem(GetItemsForBucket(cloneOf)![0].Item1);
+                var parentMachine = GetMachineForItem(GetItemsForBucket(cloneOf!)![0].Item1);
                 if (parentMachine.Item2 == null)
                     continue;
 
@@ -1913,7 +1913,7 @@ namespace SabreTools.DatFiles
                 foreach ((long, DatItem) item in items!)
                 {
                     // Get the parent items and current machine name
-                    var parentItems = GetItemsForBucket(cloneOf);
+                    var parentItems = GetItemsForBucket(cloneOf!);
                     string? machineName = GetMachineForItem(item.Item1).Item2?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
 
                     // Special disk handling
@@ -1937,14 +1937,14 @@ namespace SabreTools.DatFiles
                             .Contains(mergeTag))
                         {
                             _itemToMachineMapping[item.Item1] = cloneOfMachine.Item1;
-                            _buckets[cloneOf].Add(disk);
+                            _buckets[cloneOf!].Add(disk);
                         }
 
                         // If there is no merge tag, add to parent
                         else if (mergeTag == null)
                         {
                             _itemToMachineMapping[item.Item1] = cloneOfMachine.Item1;
-                            _buckets[cloneOf].Add(disk);
+                            _buckets[cloneOf!].Add(disk);
                         }
                     }
 
@@ -1970,7 +1970,7 @@ namespace SabreTools.DatFiles
                                 rom.SetName($"{machineName}\\{rom.GetName()}");
 
                             _itemToMachineMapping[item.Item1] = cloneOfMachine.Item1;
-                            _buckets[cloneOf].Add(rom);
+                            _buckets[cloneOf!].Add(rom);
                         }
 
                         // If the parent doesn't already contain this item, add to subfolder of parent
@@ -1980,7 +1980,7 @@ namespace SabreTools.DatFiles
                                 rom.SetName($"{machineName}\\{rom.GetName()}");
 
                             _itemToMachineMapping[item.Item1] = cloneOfMachine.Item1;
-                            _buckets[cloneOf].Add(rom);
+                            _buckets[cloneOf!].Add(rom);
                         }
                     }
 
@@ -1991,7 +1991,7 @@ namespace SabreTools.DatFiles
                             item.Item2.SetName($"{machineName}\\{item.Item2.GetName()}");
 
                         _itemToMachineMapping[item.Item1] = cloneOfMachine.Item1;
-                        _buckets[cloneOf].Add(item);
+                        _buckets[cloneOf!].Add(item);
                     }
                 }
 
@@ -2064,7 +2064,7 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // If the parent doesn't have any items, we want to continue
-                var parentItems = GetItemsForBucket(romOf);
+                var parentItems = GetItemsForBucket(romOf!);
                 if (parentItems == null || parentItems.Length == 0)
                     continue;
 
@@ -2104,7 +2104,7 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // If the parent doesn't have any items, we want to continue
-                var parentItems = GetItemsForBucket(cloneOf);
+                var parentItems = GetItemsForBucket(cloneOf!);
                 if (parentItems == null || parentItems.Length == 0)
                     continue;
 
@@ -2120,7 +2120,7 @@ namespace SabreTools.DatFiles
 
                 // Now we want to get the parent romof tag and put it in each of the remaining items
                 items = GetItemsForBucket(game);
-                machine = GetMachineForItem(GetItemsForBucket(cloneOf)![0].Item1);
+                machine = GetMachineForItem(GetItemsForBucket(cloneOf!)![0].Item1);
                 if (machine.Item2 == null)
                     continue;
 

@@ -1210,7 +1210,7 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // If the parent doesn't have any items, we want to continue
-                var parentItems = this[romOf];
+                var parentItems = this[romOf!];
                 if (parentItems == null || parentItems.Count == 0)
                     continue;
 
@@ -1397,7 +1397,7 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // If the parent doesn't have any items, we want to continue
-                var parentItems = this[cloneOf];
+                var parentItems = this[cloneOf!];
                 if (parentItems == null || parentItems.Count == 0)
                     continue;
 
@@ -1416,7 +1416,7 @@ namespace SabreTools.DatFiles
 
                 // Now we want to get the parent romof tag and put it in each of the items
                 items = this[game];
-                string? romof = this[cloneOf]![0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
+                string? romof = this[cloneOf!]![0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
                 foreach (DatItem item in items!)
                 {
                     item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, romof);
@@ -1450,7 +1450,7 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // Get the parent items
-                var parentItems = this[cloneOf];
+                var parentItems = this[cloneOf!];
 
                 // Otherwise, move the items from the current game to a subfolder of the parent game
                 DatItem copyFrom;
@@ -1474,7 +1474,7 @@ namespace SabreTools.DatFiles
                         string? mergeTag = disk.GetStringFieldValue(Models.Metadata.Disk.MergeKey);
 
                         // If the merge tag exists and the parent already contains it, skip
-                        if (mergeTag != null && this[cloneOf]!
+                        if (mergeTag != null && this[cloneOf!]!
                             .Where(i => i is Disk)
                             .Select(i => (i as Disk)!.GetName()).Contains(mergeTag))
                         {
@@ -1482,19 +1482,19 @@ namespace SabreTools.DatFiles
                         }
 
                         // If the merge tag exists but the parent doesn't contain it, add to parent
-                        else if (mergeTag != null && !this[cloneOf]!
+                        else if (mergeTag != null && !this[cloneOf!]!
                             .Where(i => i is Disk)
                             .Select(i => (i as Disk)!.GetName()).Contains(mergeTag))
                         {
                             disk.CopyMachineInformation(copyFrom);
-                            Add(cloneOf, disk);
+                            Add(cloneOf!, disk);
                         }
 
                         // If there is no merge tag, add to parent
                         else if (mergeTag == null)
                         {
                             disk.CopyMachineInformation(copyFrom);
-                            Add(cloneOf, disk);
+                            Add(cloneOf!, disk);
                         }
                     }
 
@@ -1502,7 +1502,7 @@ namespace SabreTools.DatFiles
                     else if (item is Rom rom)
                     {
                         // If the merge tag exists and the parent already contains it, skip
-                        if (rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey) != null && this[cloneOf]!
+                        if (rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey) != null && this[cloneOf!]!
                             .Where(i => i is Rom).Select(i => (i as Rom)!.GetName())
                             .Contains(rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey)))
                         {
@@ -1510,7 +1510,7 @@ namespace SabreTools.DatFiles
                         }
 
                         // If the merge tag exists but the parent doesn't contain it, add to subfolder of parent
-                        else if (rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey) != null && !this[cloneOf]!
+                        else if (rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey) != null && !this[cloneOf!]!
                             .Where(i => i is Rom).Select(i => (i as Rom)!.GetName())
                             .Contains(rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey)))
                         {
@@ -1518,28 +1518,28 @@ namespace SabreTools.DatFiles
                                 rom.SetName($"{rom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)}\\{rom.GetName()}");
 
                             rom.CopyMachineInformation(copyFrom);
-                            Add(cloneOf, rom);
+                            Add(cloneOf!, rom);
                         }
 
                         // If the parent doesn't already contain this item, add to subfolder of parent
-                        else if (!this[cloneOf]!.Contains(item) || skipDedup)
+                        else if (!this[cloneOf!]!.Contains(item) || skipDedup)
                         {
                             if (subfolder)
                                 rom.SetName($"{item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)}\\{rom.GetName()}");
 
                             rom.CopyMachineInformation(copyFrom);
-                            Add(cloneOf, rom);
+                            Add(cloneOf!, rom);
                         }
                     }
 
                     // All other that would be missing to subfolder of parent
-                    else if (!this[cloneOf]!.Contains(item))
+                    else if (!this[cloneOf!]!.Contains(item))
                     {
                         if (subfolder)
                             item.SetName($"{item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)}\\{item.GetName()}");
 
                         item.CopyMachineInformation(copyFrom);
-                        Add(cloneOf, item);
+                        Add(cloneOf!, item);
                     }
                 }
 
@@ -1605,7 +1605,7 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // If the parent doesn't have any items, we want to continue
-                var parentItems = this[romOf];
+                var parentItems = this[romOf!];
                 if (parentItems == null || parentItems.Count == 0)
                     continue;
 
@@ -1645,7 +1645,7 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // If the parent doesn't have any items, we want to continue
-                var parentItems = this[cloneOf];
+                var parentItems = this[cloneOf!];
                 if (parentItems == null || parentItems.Count == 0)
                     continue;
 
