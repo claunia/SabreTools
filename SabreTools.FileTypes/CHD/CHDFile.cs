@@ -13,21 +13,16 @@ namespace SabreTools.FileTypes.CHD
     {
         #region Private instance variables
 
-        // Common header fields
-        protected char[] tag = new char[8]; // 'MComprHD'
-        protected uint length;              // length of header (including tag and length fields)
-        protected uint version;             // drive format version
+        protected const string Signature = "MComprHD";
+
+        /// <summary>
+        /// Model representing the correct CHD header
+        /// </summary>
+        protected Models.CHD.Header? _header;
 
         #endregion
 
         #region Constructors
-
-        /// <summary>
-        /// Empty constructor
-        /// </summary>
-        public CHDFile()
-        {
-        }
 
         /// <summary>
         /// Create a new CHDFile from an input file
@@ -47,13 +42,9 @@ namespace SabreTools.FileTypes.CHD
         {
             try
             {
-                // Read the standard CHD headers
-                (char[] tag, uint length, uint version) = GetHeaderValues(chdstream);
-                chdstream.SeekIfPossible(); // Seek back to start
-
                 // Validate that this is actually a valid CHD
-                uint validatedVersion = ValidateHeader(tag, length, version);
-                if (validatedVersion == 0)
+                uint version = ValidateHeader(chdstream);
+                if (version == 0)
                     return null;
 
                 // Read and return the current CHD
@@ -79,39 +70,25 @@ namespace SabreTools.FileTypes.CHD
         #region Header Parsing
 
         /// <summary>
-        /// Get the generic header values of a CHD, if possible
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <returns></returns>
-        private static (char[] tag, uint length, uint version) GetHeaderValues(Stream stream)
-        {
-            char[] parsedTag = new char[8];
-            uint parsedLength = 0;
-            uint parsedVersion = 0;
-
-#if NET20 || NET35 || NET40
-            using (BinaryReader br = new(stream, Encoding.Default))
-#else
-            using (BinaryReader br = new(stream, Encoding.Default, true))
-#endif
-            {
-                parsedTag = br.ReadChars(8);
-                parsedLength = br.ReadUInt32BigEndian();
-                parsedVersion = br.ReadUInt32BigEndian();
-            }
-
-            return (parsedTag, parsedLength, parsedVersion);
-        }
-
-        /// <summary>
         /// Validate the header values
         /// </summary>
         /// <returns>Matching version, 0 if none</returns>
-        private static uint ValidateHeader(char[] tag, uint length, uint version)
+        private static uint ValidateHeader(Stream stream)
         {
-            if (!string.Equals(new string(tag), "MComprHD", StringComparison.Ordinal))
+            // Read the header values
+            byte[] tagBytes = stream.ReadBytes(8);
+            string tag = Encoding.ASCII.GetString(tagBytes);
+            uint length = stream.ReadUInt32BigEndian();
+            uint version = stream.ReadUInt32BigEndian();
+
+            // Seek back to start
+            stream.SeekIfPossible();
+
+            // Check the signature
+            if (!string.Equals(tag, Signature, StringComparison.Ordinal))
                 return 0;
 
+            // Match the version to header length
             return version switch
             {
                 1 => length == CHDFileV1.HeaderSize ? version : 0,

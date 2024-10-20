@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Text;
 using SabreTools.IO.Extensions;
+using SabreTools.Models.CHD;
 
 namespace SabreTools.FileTypes.CHD
 {
@@ -9,87 +10,41 @@ namespace SabreTools.FileTypes.CHD
     /// </summary>
     public class CHDFileV5 : CHDFile
     {
-        /// <summary>
-        /// Uncompressed map format
-        /// </summary>
-        private class UncompressedMap
-        {
-            public uint offset; // starting offset within the file
-        }
-
-        /// <summary>
-        /// Compressed map header format
-        /// </summary>
-        private class CompressedMapHeader
-        {
-            public uint length;                         // length of compressed map
-            public byte[] datastart = new byte[12];     // UINT48; offset of first block
-            public ushort crc;                          // crc-16 of the map
-            public byte lengthbits;                     // bits used to encode complength
-            public byte hunkbits;                       // bits used to encode self-refs
-            public byte parentunitbits;                 // bits used to encode parent unit refs
-            public byte reserved;                       // future use
-        }
-
-        /// <summary>
-        /// Compressed map entry format
-        /// </summary>
-        private class CompressedMapEntry
-        {
-            public byte compression;                   // compression type
-            public byte[] complength = new byte[6];    // UINT24; compressed length
-            public byte[] offset = new byte[12];       // UINT48; offset
-            public ushort crc;                         // crc-16 of the data
-        }
-
         public const int HeaderSize = 124;
-        public const uint Version = 5;
-
-        // V5-specific header values
-        public uint[] compressors = new uint[4];   // which custom compressors are used?
-        public ulong logicalbytes;                 // logical size of the data (in bytes)
-        public ulong mapoffset;                    // offset to the map
-        public ulong metaoffset;                   // offset to the first blob of metadata
-        public uint hunkbytes;                     // number of bytes per hunk
-        public uint unitbytes;                     // number of bytes per unit within each hunk
-        public byte[] rawsha1 = new byte[20];      // raw data SHA1
-        public byte[] sha1 = new byte[20];         // combined raw+meta SHA1
-        public byte[] parentsha1 = new byte[20];   // combined raw+meta SHA1 of parent
 
         /// <summary>
         /// Parse and validate the header as if it's V5
         /// </summary>
-        public static CHDFileV5 Deserialize(Stream stream)
+        public static CHDFileV5? Deserialize(Stream stream)
         {
-            CHDFileV5 chd = new CHDFileV5();
+            var header = new HeaderV5();
 
-#if NET20 || NET35 || NET40
-            using (BinaryReader br = new BinaryReader(stream, Encoding.Default))
-#else
-            using (BinaryReader br = new BinaryReader(stream, Encoding.Default, true))
-#endif
+            byte[] tagBytes = stream.ReadBytes(8);
+            header.Tag = Encoding.ASCII.GetString(tagBytes);
+            if (header.Tag != Signature)
+                return null;
+
+            header.Length = stream.ReadUInt32BigEndian();
+            if (header.Length != HeaderSize)
+                return null;
+
+            header.Version = stream.ReadUInt32BigEndian();
+            header.Compressors = new uint[4];
+            for (int i = 0; i < header.Compressors.Length; i++)
             {
-                chd.tag = br.ReadChars(8);
-                chd.length = br.ReadUInt32BigEndian();
-                chd.version = br.ReadUInt32BigEndian();
-                chd.compressors = new uint[4];
-                for (int i = 0; i < 4; i++)
-                {
-                    chd.compressors[i] = br.ReadUInt32BigEndian();
-                }
-                chd.logicalbytes = br.ReadUInt64BigEndian();
-                chd.mapoffset = br.ReadUInt64BigEndian();
-                chd.metaoffset = br.ReadUInt64BigEndian();
-                chd.hunkbytes = br.ReadUInt32BigEndian();
-                chd.unitbytes = br.ReadUInt32BigEndian();
-                chd.rawsha1 = br.ReadBytes(20);
-                chd.sha1 = br.ReadBytes(20);
-                chd.parentsha1 = br.ReadBytes(20);
-
-                chd.SHA1 = chd.sha1;
+                header.Compressors[i] = stream.ReadUInt32BigEndian();
             }
 
-            return chd;
+            header.LogicalBytes = stream.ReadUInt64BigEndian();
+            header.MapOffset = stream.ReadUInt64BigEndian();
+            header.MetaOffset = stream.ReadUInt64BigEndian();
+            header.HunkBytes = stream.ReadUInt32BigEndian();
+            header.UnitBytes = stream.ReadUInt32BigEndian();
+            header.RawSHA1 = stream.ReadBytes(20);
+            header.SHA1 = stream.ReadBytes(20);
+            header.ParentSHA1 = stream.ReadBytes(20);
+
+            return new CHDFileV5 { _header = header, SHA1 = header.SHA1 };
         }
 
         /// <summary>
@@ -97,7 +52,7 @@ namespace SabreTools.FileTypes.CHD
         /// </summary>
         public override byte[] GetHash()
         {
-            return sha1;
+            return (_header as HeaderV5)?.SHA1 ?? [];
         }
     }
 }
