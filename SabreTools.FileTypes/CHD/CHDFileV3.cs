@@ -45,12 +45,5 @@ namespace SabreTools.FileTypes.CHD
 
             return new CHDFileV3 { _header = header, MD5 = header.MD5, SHA1 = header.SHA1 };
         }
-
-        /// <inheritdoc/>
-        /// <remarks>Returns SHA-1 hash or empty array</remarks>
-        public override byte[] GetHash()
-        {
-            return (_header as HeaderV3)?.SHA1 ?? [];
-        }
     }
 }

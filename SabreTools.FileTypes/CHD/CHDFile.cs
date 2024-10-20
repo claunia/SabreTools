@@ -64,15 +64,6 @@ namespace SabreTools.FileTypes.CHD
 
         #endregion
 
-        #region Abstract functionality
-
-        /// <summary>
-        /// Return the best-available hash for a particular CHD version
-        /// </summary>
-        public abstract byte[] GetHash();
-
-        #endregion
-
         #region Helpers
 
         /// <summary>

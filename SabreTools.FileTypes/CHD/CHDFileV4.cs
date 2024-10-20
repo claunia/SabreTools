@@ -44,12 +44,5 @@ namespace SabreTools.FileTypes.CHD
 
             return new CHDFileV4 { _header = header, SHA1 = header.SHA1 };
         }
-
-        /// <inheritdoc/>
-        /// <remarks>Returns SHA-1 hash or empty array</remarks>
-        public override byte[] GetHash()
-        {
-            return (_header as HeaderV4)?.SHA1 ?? [];
-        }
     }
 }
