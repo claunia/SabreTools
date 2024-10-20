@@ -30,25 +30,31 @@ namespace SabreTools.FileTypes.CHD
         /// <param name="filename">Filename respresenting the CHD file</param>
         public static CHDFile? Create(string filename)
         {
-            using FileStream fs = File.OpenRead(filename);
+            using var fs = File.OpenRead(filename);
             return Create(fs);
         }
 
         /// <summary>
         /// Create a new CHDFile from an input stream
         /// </summary>
-        /// <param name="chdstream">Stream representing the CHD file</param>
-        public static CHDFile? Create(Stream chdstream)
+        /// <param name="stream">Stream representing the CHD file</param>
+        public static CHDFile? Create(Stream stream)
         {
             try
             {
-                // Validate that this is actually a valid CHD
-                uint version = ValidateHeader(chdstream);
-                if (version == 0)
-                    return null;
+                // Get the detected CHD version
+                uint version = GetVersion(stream);
 
                 // Read and return the current CHD
-                return ReadAsVersion(chdstream, version);
+                return version switch
+                {
+                    1 => CHDFileV1.Deserialize(stream),
+                    2 => CHDFileV2.Deserialize(stream),
+                    3 => CHDFileV3.Deserialize(stream),
+                    4 => CHDFileV4.Deserialize(stream),
+                    5 => CHDFileV5.Deserialize(stream),
+                    _ => null,
+                };
             }
             catch
             {
@@ -67,13 +73,13 @@ namespace SabreTools.FileTypes.CHD
 
         #endregion
 
-        #region Header Parsing
+        #region Helpers
 
         /// <summary>
-        /// Validate the header values
+        /// Get the matching CHD version, if possible
         /// </summary>
         /// <returns>Matching version, 0 if none</returns>
-        private static uint ValidateHeader(Stream stream)
+        private static uint GetVersion(Stream stream)
         {
             // Read the header values
             byte[] tagBytes = stream.ReadBytes(8);
@@ -97,25 +103,6 @@ namespace SabreTools.FileTypes.CHD
                 4 => length == CHDFileV4.HeaderSize ? version : 0,
                 5 => length == CHDFileV5.HeaderSize ? version : 0,
                 _ => 0,
-            };
-        }
-
-        /// <summary>
-        /// Read a stream as a particular CHD version
-        /// </summary>
-        /// <param name="stream">CHD file as a stream</param>
-        /// <param name="version">CHD version to parse</param>
-        /// <returns>Populated CHD file, null on failure</returns>
-        private static CHDFile? ReadAsVersion(Stream stream, uint version)
-        {
-            return version switch
-            {
-                1 => CHDFileV1.Deserialize(stream),
-                2 => CHDFileV2.Deserialize(stream),
-                3 => CHDFileV3.Deserialize(stream),
-                4 => CHDFileV4.Deserialize(stream),
-                5 => CHDFileV5.Deserialize(stream),
-                _ => null,
             };
         }
 
