@@ -159,7 +159,7 @@ namespace SabreTools.Test.DatItems
             {
                 FileType.Folder => new Folder(),
                 FileType.AaruFormat => new AaruFormat(),
-                FileType.CHD => new CHDFileV5(),
+                FileType.CHD => new CHDFile(),
                 FileType.ZipArchive => new ZipArchive(),
                 _ => new BaseFile(),
             };
