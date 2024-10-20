@@ -19,7 +19,7 @@ namespace SabreTools.Reports
 
         #endregion
 
-        public List<DatStatistics> Statistics { get; set; }
+        public List<DatStatistics> Statistics { get; }
 
         /// <summary>
         /// Create a new report from the filename

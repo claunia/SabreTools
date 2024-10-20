@@ -38,7 +38,7 @@ namespace SabreTools.DatFiles.Formats
                 ValidationFlags = XmlSchemaValidationFlags.None,
                 ValidationType = ValidationType.None,
             });
-            var source = new Source { Index = indexId, Name = filename };
+            var source = new Source(indexId, filename);
             long sourceIndex = ItemsDB.AddSource(source);
 
             // If we got a null reader, just return

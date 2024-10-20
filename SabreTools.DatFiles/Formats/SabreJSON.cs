@@ -33,7 +33,7 @@ namespace SabreTools.DatFiles.Formats
             // Prepare all internal variables
             var sr = new StreamReader(System.IO.File.OpenRead(filename), new UTF8Encoding(false));
             var jtr = new JsonTextReader(sr);
-            var source = new Source { Index = indexId, Name = filename };
+            var source = new Source(indexId, filename);
             long sourceIndex = ItemsDB.AddSource(source);
 
             // If we got a null reader, just return

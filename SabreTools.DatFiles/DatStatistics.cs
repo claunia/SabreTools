@@ -30,7 +30,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Number of items for each item type
         /// </summary>
-        public Dictionary<ItemType, long> ItemCounts { get; private set; } = [];
+        public Dictionary<ItemType, long> ItemCounts { get; } = [];
 
         /// <summary>
         /// Number of machines
@@ -46,12 +46,12 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Number of items for each hash type
         /// </summary>
-        public Dictionary<HashType, long> HashCounts { get; private set; } = [];
+        public Dictionary<HashType, long> HashCounts { get; } = [];
 
         /// <summary>
         /// Number of items for each item status
         /// </summary>
-        public Dictionary<ItemStatus, long> StatusCounts { get; private set; } = [];
+        public Dictionary<ItemStatus, long> StatusCounts { get; } = [];
 
         /// <summary>
         /// Number of items with the remove flag
@@ -344,11 +344,11 @@ namespace SabreTools.DatFiles
         public void ResetStatistics()
         {
             TotalCount = 0;
-            ItemCounts = [];
+            ItemCounts.Clear();
             GameCount = 0;
             TotalSize = 0;
-            HashCounts = [];
-            StatusCounts = [];
+            HashCounts.Clear();
+            StatusCounts.Clear();
             RemovedCount = 0;
         }
 

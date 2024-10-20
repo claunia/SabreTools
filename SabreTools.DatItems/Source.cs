@@ -10,19 +10,19 @@ namespace SabreTools.DatItems
         /// <summary>
         /// Source index
         /// </summary>
-        public int Index { get; set; }
+        public int Index { get; }
 
         /// <summary>
         /// Source name
         /// </summary>
-        public string? Name { get; set; }
+        public string? Name { get; }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">Source ID, default 0</param>
-        /// <param name="source">Source name, default null</param>
-        public Source(int id = 0, string? source = null)
+        /// <param name="id">Source ID</param>
+        /// <param name="source">Source name, optional</param>
+        public Source(int id, string? source = null)
         {
             Index = id;
             Name = source;

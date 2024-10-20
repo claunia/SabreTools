@@ -11,25 +11,37 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Name or path of the Depot
         /// </summary>
-        public string? Name { get; private set; }
+        public string? Name { get; }
 
         /// <summary>
         /// Whether to use this Depot or not
         /// </summary>
-        public bool IsActive { get; private set; }
+        public bool IsActive { get; }
 
         /// <summary>
         /// Depot byte-depth
         /// </summary>
-        public int Depth { get; private set; }
+        public int Depth { get; }
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="isActive">Set active state</param>
         /// <param name="depth">Set depth between 0 and SHA-1's byte length</param>
-        public DepotInformation(bool isActive = false, int depth = 4)
+        public DepotInformation(bool isActive, int depth = 4)
+            : this(null, isActive, depth)
         {
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="name">Set active state</param>
+        /// <param name="isActive">Set active state</param>
+        /// <param name="depth">Set depth between 0 and SHA-1's byte length</param>
+        public DepotInformation(string? name, bool isActive, int depth = 4)
+        {
+            Name = name;
             IsActive = isActive;
             Depth = depth;
 
@@ -47,15 +59,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Clone the current object
         /// </summary>
-        public object Clone()
-        {
-            return new DepotInformation
-            {
-                Name = this.Name,
-                IsActive = this.IsActive,
-                Depth = this.Depth,
-            };
-        }
+        public object Clone() => new DepotInformation(Name, IsActive, Depth);
 
         #endregion
     }

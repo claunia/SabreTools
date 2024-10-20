@@ -172,7 +172,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         public void ResetDictionary()
         {
-            Items = [];
+            Items.Clear();
             ItemsDB = new ItemDictionaryDB();
         }
 

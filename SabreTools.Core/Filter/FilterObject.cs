@@ -14,29 +14,17 @@ namespace SabreTools.Core.Filter
         /// <summary>
         /// Key name for the filter
         /// </summary>
-#if NETFRAMEWORK || NETCOREAPP3_1
-        public string[] Key { get; private set; }
-#else
-        public string[] Key { get; init; }
-#endif
+        public string[] Key { get; }
 
         /// <summary>
         /// Value to match in the filter
         /// </summary>
-#if NETFRAMEWORK || NETCOREAPP3_1
-        public string? Value { get; private set; }
-#else
-        public string? Value { get; init; }
-#endif
+        public string? Value { get; }
 
         /// <summary>
         /// Operation on how to match the filter
         /// </summary>
-#if NETFRAMEWORK || NETCOREAPP3_1
-        public Operation Operation { get; private set; }
-#else
-        public Operation Operation { get; init; }
-#endif
+        public Operation Operation { get; }
 
         public FilterObject(string filterString)
         {
@@ -48,9 +36,9 @@ namespace SabreTools.Core.Filter
             if (itemName == null || fieldName == null)
                 throw new ArgumentOutOfRangeException(nameof(filterString));
 
-            this.Key = [itemName, fieldName];
-            this.Value = value;
-            this.Operation = operation;
+            Key = [itemName, fieldName];
+            Value = value;
+            Operation = operation;
         }
 
         public FilterObject(string itemField, string? value, string? operation)
@@ -59,9 +47,9 @@ namespace SabreTools.Core.Filter
             if (itemName == null || fieldName == null)
                 throw new ArgumentOutOfRangeException(nameof(value));
 
-            this.Key = [itemName, fieldName];
-            this.Value = value;
-            this.Operation = GetOperation(operation);
+            Key = [itemName, fieldName];
+            Value = value;
+            Operation = GetOperation(operation);
         }
 
         public FilterObject(string itemField, string? value, Operation operation)
@@ -70,9 +58,9 @@ namespace SabreTools.Core.Filter
             if (itemName == null || fieldName == null)
                 throw new ArgumentOutOfRangeException(nameof(value));
 
-            this.Key = [itemName, fieldName];
-            this.Value = value;
-            this.Operation = operation;
+            Key = [itemName, fieldName];
+            Value = value;
+            Operation = operation;
         }
 
         #region Matching
@@ -82,8 +70,8 @@ namespace SabreTools.Core.Filter
         /// </summary>
         public bool Matches(DictionaryBase dictionaryBase)
         {
-            // TODO: Add validation of dictionary base type from this.Key[0]
-            return this.Operation switch
+            // TODO: Add validation of dictionary base type from Key[0]
+            return Operation switch
             {
                 Operation.Equals => MatchesEqual(dictionaryBase),
                 Operation.NotEquals => MatchesNotEqual(dictionaryBase),
@@ -101,41 +89,41 @@ namespace SabreTools.Core.Filter
         private bool MatchesEqual(DictionaryBase dictionaryBase)
         {
             // If the key doesn't exist, we count it as null
-            if (!dictionaryBase.ContainsKey(this.Key[1]))
-                return this.Value == null;
+            if (!dictionaryBase.ContainsKey(Key[1]))
+                return Value == null;
 
             // If the value in the dictionary is null
-            string? checkValue = dictionaryBase.ReadString(this.Key[1]);
+            string? checkValue = dictionaryBase.ReadString(Key[1]);
             if (checkValue == null)
-                return this.Value == null;
+                return Value == null;
 
             // If we have both a potentally boolean check and value
             bool? checkValueBool = ConvertToBoolean(checkValue);
-            bool? matchValueBool = ConvertToBoolean(this.Value);
+            bool? matchValueBool = ConvertToBoolean(Value);
             if (checkValueBool != null && matchValueBool != null)
                 return checkValueBool == matchValueBool;
 
             // If we have both a potentially numeric check and value
-            if (NumberHelper.IsNumeric(checkValue) && NumberHelper.IsNumeric(this.Value))
+            if (NumberHelper.IsNumeric(checkValue) && NumberHelper.IsNumeric(Value))
             {
                 // Check Int64 values
                 long? checkValueLong = NumberHelper.ConvertToInt64(checkValue);
-                long? matchValueLong = NumberHelper.ConvertToInt64(this.Value);
+                long? matchValueLong = NumberHelper.ConvertToInt64(Value);
                 if (checkValueLong != null && matchValueLong != null)
                     return checkValueLong == matchValueLong;
 
                 // Check Double values
                 double? checkValueDouble = NumberHelper.ConvertToDouble(checkValue);
-                double? matchValueDouble = NumberHelper.ConvertToDouble(this.Value);
+                double? matchValueDouble = NumberHelper.ConvertToDouble(Value);
                 if (checkValueDouble != null && matchValueDouble != null)
                     return checkValueDouble == matchValueDouble;
             }
 
             // If the value might contain valid Regex
-            if (this.Value != null && ContainsRegex(this.Value))
-                return Regex.IsMatch(checkValue, this.Value);
+            if (Value != null && ContainsRegex(Value))
+                return Regex.IsMatch(checkValue, Value);
 
-            return string.Equals(checkValue, this.Value, StringComparison.OrdinalIgnoreCase);
+            return string.Equals(checkValue, Value, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -144,41 +132,41 @@ namespace SabreTools.Core.Filter
         private bool MatchesNotEqual(DictionaryBase dictionaryBase)
         {
             // If the key doesn't exist, we count it as null
-            if (!dictionaryBase.ContainsKey(this.Key[1]))
-                return this.Value != null;
+            if (!dictionaryBase.ContainsKey(Key[1]))
+                return Value != null;
 
             // If the value in the dictionary is null
-            string? checkValue = dictionaryBase.ReadString(this.Key[1]);
+            string? checkValue = dictionaryBase.ReadString(Key[1]);
             if (checkValue == null)
-                return this.Value == null;
+                return Value == null;
 
             // If we have both a potentally boolean check and value
             bool? checkValueBool = ConvertToBoolean(checkValue);
-            bool? matchValueBool = ConvertToBoolean(this.Value);
+            bool? matchValueBool = ConvertToBoolean(Value);
             if (checkValueBool != null && matchValueBool != null)
                 return checkValueBool != matchValueBool;
 
             // If we have both a potentially numeric check and value
-            if (NumberHelper.IsNumeric(checkValue) && NumberHelper.IsNumeric(this.Value))
+            if (NumberHelper.IsNumeric(checkValue) && NumberHelper.IsNumeric(Value))
             {
                 // Check Int64 values
                 long? checkValueLong = NumberHelper.ConvertToInt64(checkValue);
-                long? matchValueLong = NumberHelper.ConvertToInt64(this.Value);
+                long? matchValueLong = NumberHelper.ConvertToInt64(Value);
                 if (checkValueLong != null && matchValueLong != null)
                     return checkValueLong != matchValueLong;
 
                 // Check Double values
                 double? checkValueDouble = NumberHelper.ConvertToDouble(checkValue);
-                double? matchValueDouble = NumberHelper.ConvertToDouble(this.Value);
+                double? matchValueDouble = NumberHelper.ConvertToDouble(Value);
                 if (checkValueDouble != null && matchValueDouble != null)
                     return checkValueDouble != matchValueDouble;
             }
 
             // If the value might contain valid Regex
-            if (this.Value != null && ContainsRegex(this.Value))
-                return !Regex.IsMatch(checkValue, this.Value);
+            if (Value != null && ContainsRegex(Value))
+                return !Regex.IsMatch(checkValue, Value);
 
-            return !string.Equals(checkValue, this.Value, StringComparison.OrdinalIgnoreCase);
+            return !string.Equals(checkValue, Value, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -187,26 +175,26 @@ namespace SabreTools.Core.Filter
         private bool MatchesGreaterThan(DictionaryBase dictionaryBase)
         {
             // If the key doesn't exist, we count it as null
-            if (!dictionaryBase.ContainsKey(this.Key[1]))
+            if (!dictionaryBase.ContainsKey(Key[1]))
                 return false;
 
             // If the value in the dictionary is null
-            string? checkValue = dictionaryBase.ReadString(this.Key[1]);
+            string? checkValue = dictionaryBase.ReadString(Key[1]);
             if (checkValue == null)
                 return false;
 
             // If we have both a potentially numeric check and value
-            if (NumberHelper.IsNumeric(checkValue) && NumberHelper.IsNumeric(this.Value))
+            if (NumberHelper.IsNumeric(checkValue) && NumberHelper.IsNumeric(Value))
             {
                 // Check Int64 values
                 long? checkValueLong = NumberHelper.ConvertToInt64(checkValue);
-                long? matchValueLong = NumberHelper.ConvertToInt64(this.Value);
+                long? matchValueLong = NumberHelper.ConvertToInt64(Value);
                 if (checkValueLong != null && matchValueLong != null)
                     return checkValueLong > matchValueLong;
 
                 // Check Double values
                 double? checkValueDouble = NumberHelper.ConvertToDouble(checkValue);
-                double? matchValueDouble = NumberHelper.ConvertToDouble(this.Value);
+                double? matchValueDouble = NumberHelper.ConvertToDouble(Value);
                 if (checkValueDouble != null && matchValueDouble != null)
                     return checkValueDouble > matchValueDouble;
             }
@@ -220,26 +208,26 @@ namespace SabreTools.Core.Filter
         private bool MatchesGreaterThanOrEqual(DictionaryBase dictionaryBase)
         {
             // If the key doesn't exist, we count it as null
-            if (!dictionaryBase.ContainsKey(this.Key[1]))
+            if (!dictionaryBase.ContainsKey(Key[1]))
                 return false;
 
             // If the value in the dictionary is null
-            string? checkValue = dictionaryBase.ReadString(this.Key[1]);
+            string? checkValue = dictionaryBase.ReadString(Key[1]);
             if (checkValue == null)
                 return false;
 
             // If we have both a potentially numeric check and value
-            if (NumberHelper.IsNumeric(checkValue) && NumberHelper.IsNumeric(this.Value))
+            if (NumberHelper.IsNumeric(checkValue) && NumberHelper.IsNumeric(Value))
             {
                 // Check Int64 values
                 long? checkValueLong = NumberHelper.ConvertToInt64(checkValue);
-                long? matchValueLong = NumberHelper.ConvertToInt64(this.Value);
+                long? matchValueLong = NumberHelper.ConvertToInt64(Value);
                 if (checkValueLong != null && matchValueLong != null)
                     return checkValueLong >= matchValueLong;
 
                 // Check Double values
                 double? checkValueDouble = NumberHelper.ConvertToDouble(checkValue);
-                double? matchValueDouble = NumberHelper.ConvertToDouble(this.Value);
+                double? matchValueDouble = NumberHelper.ConvertToDouble(Value);
                 if (checkValueDouble != null && matchValueDouble != null)
                     return checkValueDouble >= matchValueDouble;
             }
@@ -253,26 +241,26 @@ namespace SabreTools.Core.Filter
         private bool MatchesLessThan(DictionaryBase dictionaryBase)
         {
             // If the key doesn't exist, we count it as null
-            if (!dictionaryBase.ContainsKey(this.Key[1]))
+            if (!dictionaryBase.ContainsKey(Key[1]))
                 return false;
 
             // If the value in the dictionary is null
-            string? checkValue = dictionaryBase.ReadString(this.Key[1]);
+            string? checkValue = dictionaryBase.ReadString(Key[1]);
             if (checkValue == null)
                 return false;
 
             // If we have both a potentially numeric check and value
-            if (NumberHelper.IsNumeric(checkValue) && NumberHelper.IsNumeric(this.Value))
+            if (NumberHelper.IsNumeric(checkValue) && NumberHelper.IsNumeric(Value))
             {
                 // Check Int64 values
                 long? checkValueLong = NumberHelper.ConvertToInt64(checkValue);
-                long? matchValueLong = NumberHelper.ConvertToInt64(this.Value);
+                long? matchValueLong = NumberHelper.ConvertToInt64(Value);
                 if (checkValueLong != null && matchValueLong != null)
                     return checkValueLong < matchValueLong;
 
                 // Check Double values
                 double? checkValueDouble = NumberHelper.ConvertToDouble(checkValue);
-                double? matchValueDouble = NumberHelper.ConvertToDouble(this.Value);
+                double? matchValueDouble = NumberHelper.ConvertToDouble(Value);
                 if (checkValueDouble != null && matchValueDouble != null)
                     return checkValueDouble < matchValueDouble;
             }
@@ -286,26 +274,26 @@ namespace SabreTools.Core.Filter
         private bool MatchesLessThanOrEqual(DictionaryBase dictionaryBase)
         {
             // If the key doesn't exist, we count it as null
-            if (!dictionaryBase.ContainsKey(this.Key[1]))
+            if (!dictionaryBase.ContainsKey(Key[1]))
                 return false;
 
             // If the value in the dictionary is null
-            string? checkValue = dictionaryBase.ReadString(this.Key[1]);
+            string? checkValue = dictionaryBase.ReadString(Key[1]);
             if (checkValue == null)
                 return false;
 
             // If we have both a potentially numeric check and value
-            if (NumberHelper.IsNumeric(checkValue) && NumberHelper.IsNumeric(this.Value))
+            if (NumberHelper.IsNumeric(checkValue) && NumberHelper.IsNumeric(Value))
             {
                 // Check Int64 values
                 long? checkValueLong = NumberHelper.ConvertToInt64(checkValue);
-                long? matchValueLong = NumberHelper.ConvertToInt64(this.Value);
+                long? matchValueLong = NumberHelper.ConvertToInt64(Value);
                 if (checkValueLong != null && matchValueLong != null)
                     return checkValueLong <= matchValueLong;
 
                 // Check Double values
                 double? checkValueDouble = NumberHelper.ConvertToDouble(checkValue);
-                double? matchValueDouble = NumberHelper.ConvertToDouble(this.Value);
+                double? matchValueDouble = NumberHelper.ConvertToDouble(Value);
                 if (checkValueDouble != null && matchValueDouble != null)
                     return checkValueDouble <= matchValueDouble;
             }

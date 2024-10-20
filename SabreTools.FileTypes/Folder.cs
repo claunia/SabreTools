@@ -32,7 +32,7 @@ namespace SabreTools.FileTypes
         /// <summary>
         /// Flag specific to Folder to omit Machine name from output path
         /// </summary>
-        private readonly bool writeToParent = false;
+        private readonly bool _writeToParent = false;
 
         #endregion
 
@@ -45,7 +45,7 @@ namespace SabreTools.FileTypes
         public Folder(bool writeToParent = false)
             : base()
         {
-            this.writeToParent = writeToParent;
+            _writeToParent = writeToParent;
             logger = new Logger(this);
         }
 
@@ -96,17 +96,17 @@ namespace SabreTools.FileTypes
         public virtual bool CopyAll(string outDir)
         {
             // If we have an invalid filename
-            if (this.Filename == null)
+            if (Filename == null)
                 return false;
 
             // Copy all files from the current folder to the output directory recursively
             try
             {
                 // Make sure the folders exist
-                Directory.CreateDirectory(this.Filename);
+                Directory.CreateDirectory(Filename);
                 Directory.CreateDirectory(outDir);
 
-                DirectoryCopy(this.Filename, outDir, true);
+                DirectoryCopy(Filename, outDir, true);
             }
             catch (Exception ex)
             {
@@ -167,18 +167,18 @@ namespace SabreTools.FileTypes
             string? realentry = null;
 
             // If we have an invalid filename
-            if (this.Filename == null)
+            if (Filename == null)
                 return null;
 
             // Copy single file from the current folder to the output directory, if exists
             try
             {
                 // Make sure the folders exist
-                Directory.CreateDirectory(this.Filename);
+                Directory.CreateDirectory(Filename);
                 Directory.CreateDirectory(outDir);
 
                 // Get all files from the input directory
-                List<string> files = PathTool.GetFilesOrdered(this.Filename);
+                List<string> files = PathTool.GetFilesOrdered(Filename);
 
                 // Now sort through to find the first file that matches
                 string? match = files.Where(s => s.EndsWith(entryName)).FirstOrDefault();
@@ -207,17 +207,17 @@ namespace SabreTools.FileTypes
         public virtual (Stream?, string?) GetEntryStream(string entryName)
         {
             // If we have an invalid filename
-            if (this.Filename == null)
+            if (Filename == null)
                 return (null, null);
 
             // Copy single file from the current folder to the output directory, if exists
             try
             {
                 // Make sure the folders exist
-                Directory.CreateDirectory(this.Filename);
+                Directory.CreateDirectory(Filename);
 
                 // Get all files from the input directory
-                List<string> files = PathTool.GetFilesOrdered(this.Filename);
+                List<string> files = PathTool.GetFilesOrdered(Filename);
 
                 // Now sort through to find the first file that matches
                 string? match = files.Where(s => s.EndsWith(entryName)).FirstOrDefault();
@@ -249,27 +249,27 @@ namespace SabreTools.FileTypes
         public virtual List<BaseFile>? GetChildren()
         {
             // If we have an invalid filename
-            if (this.Filename == null)
+            if (Filename == null)
                 return null;
 
             if (_children == null || _children.Count == 0)
             {
                 _children = [];
 #if NET20 || NET35
-                foreach (string file in Directory.GetFiles(this.Filename, "*"))
+                foreach (string file in Directory.GetFiles(Filename, "*"))
 #else
-                foreach (string file in Directory.EnumerateFiles(this.Filename, "*", SearchOption.TopDirectoryOnly))
+                foreach (string file in Directory.EnumerateFiles(Filename, "*", SearchOption.TopDirectoryOnly))
 #endif
                 {
-                    BaseFile? nf = GetInfo(file, hashes: this.AvailableHashTypes);
+                    BaseFile? nf = GetInfo(file, hashes: AvailableHashTypes);
                     if (nf != null)
                         _children.Add(nf);
                 }
 
 #if NET20 || NET35
-                foreach (string dir in Directory.GetDirectories(this.Filename, "*"))
+                foreach (string dir in Directory.GetDirectories(Filename, "*"))
 #else
-                foreach (string dir in Directory.EnumerateDirectories(this.Filename, "*", SearchOption.TopDirectoryOnly))
+                foreach (string dir in Directory.EnumerateDirectories(Filename, "*", SearchOption.TopDirectoryOnly))
 #endif
                 {
                     Folder fl = new(dir);
@@ -287,7 +287,7 @@ namespace SabreTools.FileTypes
         /// <returns>List of empty folders in the folder</returns>
         public virtual List<string>? GetEmptyFolders()
         {
-            return this.Filename.ListEmpty();
+            return Filename.ListEmpty();
         }
 
         #endregion
@@ -331,7 +331,7 @@ namespace SabreTools.FileTypes
 
             // Get the output folder name from the first rebuild rom
             string fileName;
-            if (writeToParent)
+            if (_writeToParent)
                 fileName = Path.Combine(outDir, TextHelper.RemovePathUnsafeCharacters(baseFile.Filename) ?? string.Empty);
             else
 #if NET20 || NET35

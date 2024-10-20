@@ -24,7 +24,7 @@ namespace SabreTools.DatFiles
                 return;
 
             // Create an internal source and add to the dictionary
-            var source = new DatItems.Source { Index = indexId, Name = filename };
+            var source = new DatItems.Source(indexId, filename);
             long sourceIndex = ItemsDB.AddSource(source);
 
             // Get the header from the metadata

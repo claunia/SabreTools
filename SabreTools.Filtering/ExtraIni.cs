@@ -14,7 +14,7 @@ namespace SabreTools.Filtering
         /// <summary>
         /// List of extras to apply
         /// </summary>
-        public List<ExtraIniItem> Items { get; set; } = [];
+        public List<ExtraIniItem> Items { get; } = [];
 
         #endregion
 

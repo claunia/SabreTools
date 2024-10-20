@@ -13,11 +13,7 @@ namespace SabreTools.Core.Filter
         /// <summary>
         /// Set of filters to be run against an object
         /// </summary>
-#if NETFRAMEWORK || NETCOREAPP3_1
-        public FilterObject[] Filters { get; private set; }
-#else
-        public FilterObject[] Filters { get; init; }
-#endif
+        public FilterObject[] Filters { get; }
 
         public FilterRunner(FilterObject[]? filters)
         {

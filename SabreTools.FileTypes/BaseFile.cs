@@ -115,22 +115,22 @@ namespace SabreTools.FileTypes
         /// <param name="getHashes">True if hashes for this file should be calculated (default), false otherwise</param>
         public BaseFile(string filename, bool getHashes = true)
         {
-            this.Filename = filename;
+            Filename = filename;
 
             if (getHashes)
             {
-                BaseFile? temp = GetInfo(this.Filename, hashes: this.AvailableHashTypes);
+                BaseFile? temp = GetInfo(Filename, hashes: AvailableHashTypes);
                 if (temp != null)
                 {
-                    this.Parent = temp.Parent;
-                    this.Date = temp.Date;
-                    this.CRC = temp.CRC;
-                    this.MD5 = temp.MD5;
-                    this.SHA1 = temp.SHA1;
-                    this.SHA256 = temp.SHA256;
-                    this.SHA384 = temp.SHA384;
-                    this.SHA512 = temp.SHA512;
-                    this.SpamSum = temp.SpamSum;
+                    Parent = temp.Parent;
+                    Date = temp.Date;
+                    CRC = temp.CRC;
+                    MD5 = temp.MD5;
+                    SHA1 = temp.SHA1;
+                    SHA256 = temp.SHA256;
+                    SHA384 = temp.SHA384;
+                    SHA512 = temp.SHA512;
+                    SpamSum = temp.SpamSum;
                 }
             }
         }
@@ -143,22 +143,22 @@ namespace SabreTools.FileTypes
         /// <param name="getHashes">True if hashes for this file should be calculated (default), false otherwise</param>
         public BaseFile(string filename, Stream stream, bool getHashes = true)
         {
-            this.Filename = filename;
+            Filename = filename;
 
             if (getHashes)
             {
-                BaseFile temp = GetInfo(stream, hashes: this.AvailableHashTypes);
+                BaseFile temp = GetInfo(stream, hashes: AvailableHashTypes);
                 if (temp != null)
                 {
-                    this.Parent = temp.Parent;
-                    this.Date = temp.Date;
-                    this.CRC = temp.CRC;
-                    this.MD5 = temp.MD5;
-                    this.SHA1 = temp.SHA1;
-                    this.SHA256 = temp.SHA256;
-                    this.SHA384 = temp.SHA384;
-                    this.SHA512 = temp.SHA512;
-                    this.SpamSum = temp.SpamSum;
+                    Parent = temp.Parent;
+                    Date = temp.Date;
+                    CRC = temp.CRC;
+                    MD5 = temp.MD5;
+                    SHA1 = temp.SHA1;
+                    SHA256 = temp.SHA256;
+                    SHA384 = temp.SHA384;
+                    SHA512 = temp.SHA512;
+                    SpamSum = temp.SpamSum;
                 }
             }
 

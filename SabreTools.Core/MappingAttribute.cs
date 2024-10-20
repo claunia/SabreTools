@@ -11,14 +11,14 @@ namespace SabreTools.Core
         /// <summary>
         /// Set of mapping strings
         /// </summary>
-        public string[] Mappings { get; private set; }
+        public string[] Mappings { get; }
 
         /// <summary>
         /// Constructor
         /// </summary>
         public MappingAttribute(params string[] mappings)
         {
-            this.Mappings = mappings;
+            Mappings = mappings;
         }
     }
 }
