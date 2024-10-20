@@ -1231,7 +1231,7 @@ namespace SabreTools.DatFiles
                 {
                     DatItem datItem = (DatItem)item.Clone();
                     datItem.CopyMachineInformation(copyFrom);
-                    if (!items.Where(i => i.GetName() == datItem.GetName()).Any() && !items.Contains(datItem))
+                    if (!items.Any(i => i.GetName() == datItem.GetName()) && !items.Contains(datItem))
                         Add(game, datItem);
                 }
             }
@@ -1417,7 +1417,7 @@ namespace SabreTools.DatFiles
                 {
                     DatItem datItem = (DatItem)item.Clone();
                     datItem.CopyMachineInformation(copyFrom);
-                    if (!items.Where(i => i.GetName()?.ToLowerInvariant() == datItem.GetName()?.ToLowerInvariant()).Any()
+                    if (!items.Any(i => i.GetName()?.ToLowerInvariant() == datItem.GetName()?.ToLowerInvariant())
                         && !items.Contains(datItem))
                     {
                         Add(game, datItem);

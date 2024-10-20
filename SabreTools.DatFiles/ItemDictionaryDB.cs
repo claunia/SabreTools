@@ -1662,7 +1662,7 @@ namespace SabreTools.DatFiles
                 foreach ((long, DatItem) item in parentItems)
                 {
                     DatItem datItem = (item.Item2.Clone() as DatItem)!;
-                    if (!items.Where(i => i.Item2.GetName() == datItem.GetName()).Any() && !items.Any(i => i.Item2 == datItem))
+                    if (!items.Any(i => i.Item2.GetName() == datItem.GetName()) && !items.Any(i => i.Item2 == datItem))
                         AddItem(datItem, machine.Item1, source.Item1);
                 }
             }
@@ -1879,7 +1879,7 @@ namespace SabreTools.DatFiles
                 foreach (var item in parentItems)
                 {
                     DatItem datItem = (DatItem)item.Item2.Clone();
-                    if (!items.Where(i => i.Item2.GetName()?.ToLowerInvariant() == datItem.GetName()?.ToLowerInvariant()).Any()
+                    if (!items.Any(i => i.Item2.GetName()?.ToLowerInvariant() == datItem.GetName()?.ToLowerInvariant())
                         && !items.Any(i => i.Item2 == datItem))
                     {
                         AddItem(datItem, machine.Item1, source.Item1);
