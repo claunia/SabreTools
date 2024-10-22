@@ -73,6 +73,10 @@ namespace SabreTools.Features
             DatFile basedat = DatFile.Create(Header!);
             basedat.Header.SetFieldValue<string?>(Models.Metadata.Header.DateKey, DateTime.Now.ToString("yyyy-MM-dd"));
 
+            // Update the cleaner based on certain flags
+            if (addBlankFiles)
+                Cleaner!.KeepEmptyGames = true;
+
             // For each input directory, create a DAT
             foreach (string path in Inputs)
             {

@@ -378,7 +378,7 @@ namespace SabreTools.DatTools
                 var blankMachine = new Machine();
                 blankMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, gamename);
 
-                var blankRom = new Rom();
+                var blankRom = new Blank();
                 blankRom.SetName(romname);
                 blankRom.SetFieldValue<Machine?>(DatItem.MachineKey, blankMachine);
 

@@ -20,7 +20,7 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         /// <summary>
-        /// Create a default, empty Archive object
+        /// Create a default, empty Blank object
         /// </summary>
         public Blank()
         {

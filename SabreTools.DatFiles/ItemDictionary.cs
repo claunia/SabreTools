@@ -692,39 +692,39 @@ namespace SabreTools.DatFiles
 #elif NET40_OR_GREATER
             Parallel.For(0, oldkeys.Count, k =>
 #else
-                for (int k = 0; k < oldkeys.Count; k++)
+            for (int k = 0; k < oldkeys.Count; k++)
 #endif
-        {
-            string key = oldkeys[k];
-            if (this[key] == null)
-                Remove(key);
-
-            // Now add each of the roms to their respective keys
-            for (int i = 0; i < this[key]!.Count; i++)
             {
-                DatItem item = this[key]![i];
-                if (item == null)
-                    continue;
+                string key = oldkeys[k];
+                if (this[key] == null)
+                    Remove(key);
 
-                // We want to get the key most appropriate for the given sorting type
-                string newkey = item.GetKey(bucketBy, lower, norename);
-
-                // If the key is different, move the item to the new key
-                if (newkey != key)
+                // Now add each of the roms to their respective keys
+                for (int i = 0; i < this[key]!.Count; i++)
                 {
-                    Add(newkey, item);
-                    Remove(key, item);
-                    i--; // This make sure that the pointer stays on the correct since one was removed
-                }
-            }
+                    DatItem item = this[key]![i];
+                    if (item == null)
+                        continue;
 
-            // If the key is now empty, remove it
-            if (this[key]!.Count == 0)
-                Remove(key);
-#if NET40_OR_GREATER || NETCOREAPP
-        });
-#else
+                    // We want to get the key most appropriate for the given sorting type
+                    string newkey = item.GetKey(bucketBy, lower, norename);
+
+                    // If the key is different, move the item to the new key
+                    if (newkey != key)
+                    {
+                        Add(newkey, item);
+                        Remove(key, item);
+                        i--; // This make sure that the pointer stays on the correct since one was removed
+                    }
                 }
+
+                // If the key is now empty, remove it
+                if (this[key]!.Count == 0)
+                    Remove(key);
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
 #endif
         }
 
