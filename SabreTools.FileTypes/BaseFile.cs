@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using SabreTools.Core.Tools;
 using SabreTools.FileTypes.Aaru;
 using SabreTools.FileTypes.CHD;
 using SabreTools.Hashing;

@@ -423,7 +423,7 @@ namespace SabreTools.FileTypes.Archives
                         zipEntryRom = GetInfo(readStream,
                             size: localFile.Length,
                             hashes: AvailableHashTypes,
-                            keepReadOpen: true);
+                            keepReadOpen: false);
                     }
 
                     // Fill in common details and add to the list
