@@ -225,8 +225,7 @@ namespace SabreTools.DatFiles.Formats
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
         /// <param name="deprecated">True if the output uses "game", false if the output uses "machine"</param>
-        public Logiqx(DatFile? datFile, bool deprecated)
-            : base(datFile)
+        public Logiqx(DatFile? datFile, bool deprecated) : base(datFile)
         {
             _deprecated = deprecated;
         }
@@ -353,7 +352,7 @@ namespace SabreTools.DatFiles.Formats
 
                 // Serialize the input file
                 var metadata = ConvertMetadata(ignoreblanks);
-                var datafile = new Serialization.CrossModel.Logiqx().Deserialize(metadata);
+                var datafile = new Serialization.CrossModel.Logiqx().Deserialize(metadata, _deprecated);
 
                 // TODO: Reenable doctype writing
                 // Only write the doctype if we don't have No-Intro data

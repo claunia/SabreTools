@@ -17,8 +17,7 @@ namespace SabreTools.DatFiles.Formats
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
-        public SeparatedValue(DatFile? datFile)
-            : base(datFile)
+        public SeparatedValue(DatFile? datFile) : base(datFile)
         {
         }
 
@@ -126,8 +125,7 @@ namespace SabreTools.DatFiles.Formats
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
-        public CommaSeparatedValue(DatFile? datFile)
-            : base(datFile)
+        public CommaSeparatedValue(DatFile? datFile) : base(datFile)
         {
             _delim = ',';
         }
@@ -142,8 +140,7 @@ namespace SabreTools.DatFiles.Formats
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
-        public SemicolonSeparatedValue(DatFile? datFile)
-            : base(datFile)
+        public SemicolonSeparatedValue(DatFile? datFile) : base(datFile)
         {
             _delim = ';';
         }
@@ -158,8 +155,7 @@ namespace SabreTools.DatFiles.Formats
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
-        public TabSeparatedValue(DatFile? datFile)
-            : base(datFile)
+        public TabSeparatedValue(DatFile? datFile) : base(datFile)
         {
             _delim = '\t';
         }

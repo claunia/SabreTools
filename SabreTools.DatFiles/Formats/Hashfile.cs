@@ -18,8 +18,7 @@ namespace SabreTools.DatFiles.Formats
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
-        public Hashfile(DatFile? datFile)
-            : base(datFile)
+        public Hashfile(DatFile? datFile) : base(datFile)
         {
         }
 
@@ -218,8 +217,7 @@ namespace SabreTools.DatFiles.Formats
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
-        public SfvFile(DatFile? datFile)
-            : base(datFile)
+        public SfvFile(DatFile? datFile) : base(datFile)
         {
             _hash = HashType.CRC32;
         }
@@ -234,8 +232,7 @@ namespace SabreTools.DatFiles.Formats
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
-        public Md5File(DatFile? datFile)
-            : base(datFile)
+        public Md5File(DatFile? datFile) : base(datFile)
         {
             _hash = HashType.MD5;
         }
@@ -250,8 +247,7 @@ namespace SabreTools.DatFiles.Formats
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
-        public Sha1File(DatFile? datFile)
-            : base(datFile)
+        public Sha1File(DatFile? datFile) : base(datFile)
         {
             _hash = HashType.SHA1;
         }
@@ -266,8 +262,7 @@ namespace SabreTools.DatFiles.Formats
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
-        public Sha256File(DatFile? datFile)
-            : base(datFile)
+        public Sha256File(DatFile? datFile) : base(datFile)
         {
             _hash = HashType.SHA256;
         }
@@ -282,8 +277,7 @@ namespace SabreTools.DatFiles.Formats
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
-        public Sha384File(DatFile? datFile)
-            : base(datFile)
+        public Sha384File(DatFile? datFile) : base(datFile)
         {
             _hash = HashType.SHA384;
         }
@@ -298,8 +292,7 @@ namespace SabreTools.DatFiles.Formats
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
-        public Sha512File(DatFile? datFile)
-            : base(datFile)
+        public Sha512File(DatFile? datFile) : base(datFile)
         {
             _hash = HashType.SHA512;
         }
@@ -314,8 +307,7 @@ namespace SabreTools.DatFiles.Formats
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
-        public SpamSumFile(DatFile? datFile)
-            : base(datFile)
+        public SpamSumFile(DatFile? datFile) : base(datFile)
         {
             _hash = HashType.SpamSum;
         }

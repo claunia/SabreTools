@@ -44,8 +44,7 @@ The softwaredb.xml file contains information about rom mapper types
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
-        public OpenMSX(DatFile? datFile)
-            : base(datFile)
+        public OpenMSX(DatFile? datFile) : base(datFile)
         {
         }
 
