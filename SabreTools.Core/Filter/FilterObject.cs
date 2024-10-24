@@ -31,30 +31,21 @@ namespace SabreTools.Core.Filter
             if (!SplitFilterString(filterString, out var keyItem, out Operation operation, out var value))
                 throw new ArgumentOutOfRangeException(nameof(filterString));
 
-            if (!FilterParser.ParseFilterId(keyItem, out string itemName, out string fieldName))
-                throw new ArgumentOutOfRangeException(nameof(filterString));
-
-            Key = new FilterKey(itemName, fieldName);
+            Key = new FilterKey(keyItem);
             Value = value;
             Operation = operation;
         }
 
         public FilterObject(string itemField, string? value, string? operation)
         {
-            if (!FilterParser.ParseFilterId(itemField, out string itemName, out string fieldName))
-                throw new ArgumentOutOfRangeException(nameof(value));
-
-            Key = new FilterKey(itemName, fieldName);
+            Key = new FilterKey(itemField);
             Value = value;
             Operation = GetOperation(operation);
         }
 
         public FilterObject(string itemField, string? value, Operation operation)
         {
-            if (!FilterParser.ParseFilterId(itemField, out string itemName, out string fieldName))
-                throw new ArgumentOutOfRangeException(nameof(value));
-
-            Key = new FilterKey(itemName, fieldName);
+            Key = new FilterKey(itemField);
             Value = value;
             Operation = operation;
         }

@@ -109,25 +109,14 @@ namespace SabreTools.DatFiles
         /// <param name="key">Key for the remover to be set</param>
         private bool SetSetter(FilterKey key, string value)
         {
-            // Split the key values for validation
-            string itemName = key.ItemName;
-            string fieldName = key.FieldName;
-
-            // Get the parser pair out of it, if possible
-            if (!FilterParser.ParseFilterId(ref itemName, ref fieldName))
-                return false;
-
-            // Set the values back on the key
-            key = new FilterKey(itemName, fieldName);
-
-            switch (itemName)
+            switch (key.ItemName)
             {
                 case Models.Metadata.MetadataFile.HeaderKey:
-                    HeaderFieldMappings[fieldName] = value;
+                    HeaderFieldMappings[key.FieldName] = value;
                     return true;
 
                 case Models.Metadata.MetadataFile.MachineKey:
-                    MachineFieldMappings[fieldName] = value;
+                    MachineFieldMappings[key.FieldName] = value;
                     return true;
 
                 default:

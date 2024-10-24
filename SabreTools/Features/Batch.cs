@@ -315,18 +315,22 @@ Reset the internal state:           reset();";
                 }
 
                 // Read in the individual arguments
-                bool parsed = FilterParser.ParseFilterId(Arguments[0], out _, out _);
+                string itemFieldString = Arguments[0];
                 string extraFile = Arguments[1];
 
                 // If we had an invalid input, log and continue
-                if (!parsed)
+                try
                 {
-                    string message = $"{Arguments[0]} was an invalid field name";
+                    _ = new FilterKey(itemFieldString);
+                }
+                catch
+                {
+                    string message = $"{itemFieldString} was an invalid field name";
                     return (false, message);
                 }
                 if (!File.Exists(extraFile))
                 {
-                    string message = $"{Arguments[1]} was an invalid file name";
+                    string message = $"{extraFile} was an invalid file name";
                     return (false, message);
                 }
 
@@ -337,12 +341,12 @@ Reset the internal state:           reset();";
             public override void Process(BatchState batchState)
             {
                 // Read in the individual arguments
-                FilterParser.ParseFilterId(Arguments[0], out string itemName, out string fieldName);
+                string key = Arguments[0];
                 string extraFile = Arguments[1];
 
                 // Create the extra INI
                 var extraIni = new ExtraIni();
-                var extraIniItem = new ExtraIniItem(itemName, fieldName, extraFile);
+                var extraIniItem = new ExtraIniItem(key, extraFile);
                 extraIni.Items.Add(extraIniItem);
 
                 // Apply the extra INI blindly
@@ -375,7 +379,7 @@ Reset the internal state:           reset();";
                 }
 
                 // Read in the individual arguments
-                bool parsed = FilterParser.ParseFilterId(Arguments[0], out _, out _);
+                string itemFieldString = Arguments[0];
                 bool? filterRemove = false;
                 if (Arguments.Count >= 3)
                     filterRemove = Arguments[2].AsYesNo();
@@ -384,9 +388,13 @@ Reset the internal state:           reset();";
                     filterPerMachine = Arguments[3].AsYesNo();
 
                 // If we had an invalid input, log and continue
-                if (!parsed)
+                try
                 {
-                    string message = $"{Arguments[0]} was an invalid field name";
+                    _ = new FilterKey(itemFieldString);
+                }
+                catch
+                {
+                    string message = $"{itemFieldString} was an invalid field name";
                     return (false, message);
                 }
                 if (filterRemove == null)
@@ -804,12 +812,18 @@ Reset the internal state:           reset();";
                 }
 
                 // Read in the individual arguments
-                bool parsed = FilterParser.ParseFilterId(Arguments[0], out string type, out _);
+                string itemFieldString = Arguments[0];
 
                 // If we had an invalid input, log and continue
-                if (!parsed || !string.Equals(type, Models.Metadata.MetadataFile.HeaderKey, StringComparison.OrdinalIgnoreCase))
+                try
                 {
-                    string message = $"{Arguments[0]} was an invalid field name";
+                    var key = new FilterKey(itemFieldString);
+                    if (!string.Equals(key.ItemName, Models.Metadata.MetadataFile.HeaderKey, StringComparison.OrdinalIgnoreCase))
+                        throw new Exception();
+                }
+                catch
+                {
+                    string message = $"{itemFieldString} was an invalid field name";
                     return (false, message);
                 }
 
@@ -824,8 +838,7 @@ Reset the internal state:           reset();";
                 string value = Arguments[1];
 
                 var setter = new Setter();
-                FilterParser.ParseFilterId(Arguments[0], out string itemName, out string fieldName);
-                setter.PopulateSetters(new FilterKey(itemName, fieldName), value);
+                setter.PopulateSetters(new FilterKey(field), value);
 
                 // Set the header field
                 setter.SetFields(batchState.DatFile.Header);

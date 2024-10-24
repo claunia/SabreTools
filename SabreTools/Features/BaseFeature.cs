@@ -2024,12 +2024,15 @@ Some special strings that can be used:
             foreach (string fieldName in GetList(features, UpdateFieldListValue))
             {
                 // Ensure the field is valid
-                if (!FilterParser.ParseFilterId(fieldName, out string itemType, out string key))
-                    continue;
-                if (itemType != Models.Metadata.MetadataFile.MachineKey)
-                    continue;
+                try
+                {
+                    var key = new FilterKey(fieldName);
+                    if (key.ItemName != Models.Metadata.MetadataFile.MachineKey)
+                        continue;
 
-                updateFields.Add(key);
+                    updateFields.Add(key.FieldName);
+                }
+                catch { }
             }
 
             return updateFields;
@@ -2044,15 +2047,18 @@ Some special strings that can be used:
             foreach (string fieldName in GetList(features, UpdateFieldListValue))
             {
                 // Ensure the field is valid
-                if (!FilterParser.ParseFilterId(fieldName, out string itemType, out string key))
-                    continue;
-                if (itemType == Models.Metadata.MetadataFile.HeaderKey || itemType == Models.Metadata.MetadataFile.MachineKey)
-                    continue;
+                try
+                {
+                    var key = new FilterKey(fieldName);
+                    if (key.ItemName == Models.Metadata.MetadataFile.HeaderKey || key.ItemName == Models.Metadata.MetadataFile.MachineKey)
+                        continue;
 
-                if (!updateFields.ContainsKey(itemType))
-                    updateFields[itemType] = [];
+                    if (!updateFields.ContainsKey(key.ItemName))
+                        updateFields[key.ItemName] = [];
 
-                updateFields[itemType].Add(key);
+                    updateFields[key.ItemName].Add(key.FieldName);
+                }
+                catch { }
             }
 
             return updateFields;

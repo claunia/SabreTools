@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Compress.Support.Filters;
 using SabreTools.Core.Filter;
 using SabreTools.DatFiles;
 using SabreTools.IO.Logging;
@@ -15,17 +16,17 @@ namespace SabreTools.Filtering
         /// <summary>
         /// List of header fields to exclude from writing
         /// </summary>
-        public List<string> HeaderFieldNames { get; } = [];
+        public readonly List<string> HeaderFieldNames = [];
 
         /// <summary>
         /// List of machine fields to exclude from writing
         /// </summary>
-        public List<string> MachineFieldNames { get; } = [];
+        public readonly List<string> MachineFieldNames = [];
 
         /// <summary>
         /// List of fields to exclude from writing
         /// </summary>
-        public Dictionary<string, List<string>> ItemFieldNames { get; } = [];
+        public readonly Dictionary<string, List<string>> ItemFieldNames = [];
 
         #endregion
 
@@ -92,25 +93,30 @@ namespace SabreTools.Filtering
                 return false;
 
             // Get the parser pair out of it, if possible
-            if (!FilterParser.ParseFilterId(field, out string type, out string key))
-                return false;
-
-            switch (type)
+            try
             {
-                case Models.Metadata.MetadataFile.HeaderKey:
-                    HeaderFieldNames.Add(key);
-                    return true;
+                var key = new FilterKey(field);
+                switch (key.ItemName)
+                {
+                    case Models.Metadata.MetadataFile.HeaderKey:
+                        HeaderFieldNames.Add(key.FieldName);
+                        return true;
 
-                case Models.Metadata.MetadataFile.MachineKey:
-                    MachineFieldNames.Add(key);
-                    return true;
+                    case Models.Metadata.MetadataFile.MachineKey:
+                        MachineFieldNames.Add(key.FieldName);
+                        return true;
 
-                default:
-                    if (!ItemFieldNames.ContainsKey(type))
-                        ItemFieldNames[type] = [];
+                    default:
+                        if (!ItemFieldNames.ContainsKey(key.ItemName))
+                            ItemFieldNames[key.ItemName] = [];
 
-                    ItemFieldNames[type].Add(key);
-                    return true;
+                        ItemFieldNames[key.ItemName].Add(key.FieldName);
+                        return true;
+                }
+            }
+            catch
+            {
+                return false;
             }
         }
 

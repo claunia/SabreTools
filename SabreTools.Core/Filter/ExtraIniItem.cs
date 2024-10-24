@@ -24,6 +24,13 @@ namespace SabreTools.Core.Filter
 
         #region Constructors
 
+        public ExtraIniItem(string key, string ini)
+        {
+            Key = new FilterKey(key);
+            if (!PopulateFromFile(ini))
+                Mappings.Clear();
+        }
+
         public ExtraIniItem(string itemName, string fieldName, string ini)
         {
             Key = new FilterKey(itemName, fieldName);
