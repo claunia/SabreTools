@@ -13,21 +13,15 @@ namespace SabreTools.Core.Filter
         /// <summary>
         /// Set of filters to be run against an object
         /// </summary>
-        public FilterObject[] Filters { get; }
+        public readonly FilterObject[] Filters;
 
-        public FilterRunner(FilterObject[]? filters)
+        public FilterRunner(FilterObject[] filters)
         {
-            if (filters == null)
-                throw new ArgumentNullException(nameof(filters));
-
             Filters = filters;
         }
 
-        public FilterRunner(string[]? filterStrings)
+        public FilterRunner(string[] filterStrings)
         {
-            if (filterStrings == null)
-                throw new ArgumentNullException(nameof(filterStrings));
-
             var filters = new List<FilterObject>();
             foreach (string filterString in filterStrings)
             {

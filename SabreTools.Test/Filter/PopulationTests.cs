@@ -7,16 +7,6 @@ namespace SabreTools.Test.Filter
     public class PopulationTests
     {
         [Fact]
-        public void PopulateFilterRunnerNullListTest()
-        {
-            // Setup the list
-            string[]? filters = null;
-
-            // Setup the filter
-            Assert.Throws<ArgumentNullException>(() => new FilterRunner(filters));
-        }
-
-        [Fact]
         public void PopulateFilterRunnerEmptyListTest()
         {
             // Setup the list
