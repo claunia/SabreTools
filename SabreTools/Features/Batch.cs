@@ -315,11 +315,11 @@ Reset the internal state:           reset();";
                 }
 
                 // Read in the individual arguments
-                (string? type, string? key) = FilterParser.ParseFilterId(Arguments[0]);
+                bool parsed = FilterParser.ParseFilterId(Arguments[0], out _, out _);
                 string extraFile = Arguments[1];
 
                 // If we had an invalid input, log and continue
-                if (type == null && key == null)
+                if (!parsed)
                 {
                     string message = $"{Arguments[0]} was an invalid field name";
                     return (false, message);
@@ -337,12 +337,12 @@ Reset the internal state:           reset();";
             public override void Process(BatchState batchState)
             {
                 // Read in the individual arguments
-                (string?, string?) fieldName = FilterParser.ParseFilterId(Arguments[0]);
+                FilterParser.ParseFilterId(Arguments[0], out string itemName, out string fieldName);
                 string extraFile = Arguments[1];
 
                 // Create the extra INI
                 var extraIni = new ExtraIni();
-                var extraIniItem = new ExtraIniItem() { FieldName = fieldName };
+                var extraIniItem = new ExtraIniItem() { FieldName = (itemName, fieldName) };
                 extraIniItem.PopulateFromFile(extraFile);
                 extraIni.Items.Add(extraIniItem);
 
@@ -376,7 +376,7 @@ Reset the internal state:           reset();";
                 }
 
                 // Read in the individual arguments
-                (string? type, string? key) = FilterParser.ParseFilterId(Arguments[0]);
+                bool parsed = FilterParser.ParseFilterId(Arguments[0], out _, out _);
                 bool? filterRemove = false;
                 if (Arguments.Count >= 3)
                     filterRemove = Arguments[2].AsYesNo();
@@ -385,7 +385,7 @@ Reset the internal state:           reset();";
                     filterPerMachine = Arguments[3].AsYesNo();
 
                 // If we had an invalid input, log and continue
-                if (type == null && key == null)
+                if (!parsed)
                 {
                     string message = $"{Arguments[0]} was an invalid field name";
                     return (false, message);
@@ -805,10 +805,10 @@ Reset the internal state:           reset();";
                 }
 
                 // Read in the individual arguments
-                (string? type, string? key) = FilterParser.ParseFilterId(Arguments[0]);
+                bool parsed = FilterParser.ParseFilterId(Arguments[0], out string type, out _);
 
                 // If we had an invalid input, log and continue
-                if ((type == null || !string.Equals(type, Models.Metadata.MetadataFile.HeaderKey, StringComparison.OrdinalIgnoreCase)) && key == null)
+                if (!parsed || !string.Equals(type, Models.Metadata.MetadataFile.HeaderKey, StringComparison.OrdinalIgnoreCase))
                 {
                     string message = $"{Arguments[0]} was an invalid field name";
                     return (false, message);

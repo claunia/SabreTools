@@ -20,7 +20,7 @@ namespace SabreTools.Core.Filter
             if (filters == null)
                 throw new ArgumentNullException(nameof(filters));
 
-            this.Filters = filters;
+            Filters = filters;
         }
 
         public FilterRunner(string[]? filterStrings)
@@ -34,7 +34,7 @@ namespace SabreTools.Core.Filter
                 filters.Add(new FilterObject(filterString));
             }
 
-            this.Filters = [.. filters];
+            Filters = [.. filters];
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace SabreTools.Core.Filter
             };
 
             // Loop through and run each filter in order
-            foreach (var filter in this.Filters)
+            foreach (var filter in Filters)
             {
                 // If the filter isn't for this object type, skip
                 if (filter.Key[0] != itemName)

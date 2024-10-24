@@ -42,7 +42,7 @@ namespace SabreTools.Core.Tools
         /// <summary>
         /// Attempt to get all DatItem types
         /// </summary>
-        public static string?[] GetDatItemTypeNames()
+        public static string[] GetDatItemTypeNames()
         {
             List<string> typeNames = [];
 

@@ -2023,9 +2023,13 @@ Some special strings that can be used:
             List<string> updateFields = [];
             foreach (string fieldName in GetList(features, UpdateFieldListValue))
             {
-                (string? itemType, string? key) = FilterParser.ParseFilterId(fieldName);
-                if (itemType == Models.Metadata.MetadataFile.MachineKey && key != null)
-                    updateFields.Add(key);
+                // Ensure the field is valid
+                if (!FilterParser.ParseFilterId(fieldName, out string itemType, out string key))
+                    continue;
+                if (itemType != Models.Metadata.MetadataFile.MachineKey)
+                    continue;
+
+                updateFields.Add(key);
             }
 
             return updateFields;
@@ -2039,14 +2043,16 @@ Some special strings that can be used:
             Dictionary<string, List<string>> updateFields = [];
             foreach (string fieldName in GetList(features, UpdateFieldListValue))
             {
-                (string? itemType, string? key) = FilterParser.ParseFilterId(fieldName);
-                if (itemType != null && itemType != Models.Metadata.MetadataFile.HeaderKey && itemType != Models.Metadata.MetadataFile.MachineKey && key != null)
-                {
-                    if (!updateFields.ContainsKey(itemType))
-                        updateFields[itemType] = [];
+                // Ensure the field is valid
+                if (!FilterParser.ParseFilterId(fieldName, out string itemType, out string key))
+                    continue;
+                if (itemType == Models.Metadata.MetadataFile.HeaderKey || itemType == Models.Metadata.MetadataFile.MachineKey)
+                    continue;
 
-                    updateFields[itemType].Add(key);
-                }
+                if (!updateFields.ContainsKey(itemType))
+                    updateFields[itemType] = [];
+
+                updateFields[itemType].Add(key);
             }
 
             return updateFields;

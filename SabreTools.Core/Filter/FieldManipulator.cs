@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 using SabreTools.Core.Tools;
 using SabreTools.Models.Metadata;
 
@@ -8,36 +7,6 @@ namespace SabreTools.Core.Filter
 {
     public static class FieldManipulator
     {
-        /// <summary>
-        /// Regex pattern to match scene dates
-        /// </summary>
-        private const string _sceneDateRegex = @"([0-9]{2}\.[0-9]{2}\.[0-9]{2}-)(.*?-.*?)";
-
-        /// <summary>
-        /// Replace the machine name with the description
-        /// </summary>
-        /// <returns>Original machine name on success, null on error</returns>
-        public static string? DescriptionToName(Machine? machine)
-        {
-            // If the machine is missing, we can't do anything
-            if (machine == null)
-                return null;
-
-            // Get both the current name and description
-            string? name = machine.ReadString(Header.NameKey);
-            string? description = machine.ReadString(Header.DescriptionKey);
-
-            // Sanitize the description string
-            description = description?
-                .Replace('/', '_')
-                .Replace("\"", "''")
-                .Replace(":", " -");
-
-            // Replace the name with the description
-            machine[Header.NameKey] = description;
-            return name;
-        }
-
         /// <summary>
         /// Remove a field from a given DictionaryBase
         /// </summary>
@@ -94,28 +63,6 @@ namespace SabreTools.Core.Filter
 
             // Set the field with the new value
             dictionaryBase[fieldName!] = value;
-            return true;
-        }
-
-        /// <summary>
-        /// Strip the dates from the beginning of scene-style machine name and description
-        /// </summary>
-        public static bool StripSceneDates(Machine? machine)
-        {
-            // If the machine is missing, we can't do anything
-            if (machine == null)
-                return false;
-
-            // Strip dates from the name field
-            string? name = machine.ReadString(Header.NameKey);
-            if (name != null && Regex.IsMatch(name, _sceneDateRegex))
-                machine[Header.NameKey] = Regex.Replace(name, _sceneDateRegex, @"$2");
-
-            // Strip dates from the description field
-            string? description = machine.ReadString(Header.DescriptionKey);
-            if (description != null && Regex.IsMatch(description, _sceneDateRegex))
-                machine[Header.DescriptionKey] = Regex.Replace(description, _sceneDateRegex, @"$2");
-
             return true;
         }
     }

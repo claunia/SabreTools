@@ -92,8 +92,7 @@ namespace SabreTools.Filtering
                 return false;
 
             // Get the parser pair out of it, if possible
-            (string? type, string? key) = FilterParser.ParseFilterId(field);
-            if (type == null || key == null)
+            if (!FilterParser.ParseFilterId(field, out string type, out string key))
                 return false;
 
             switch (type)

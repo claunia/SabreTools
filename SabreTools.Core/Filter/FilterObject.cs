@@ -14,26 +14,24 @@ namespace SabreTools.Core.Filter
         /// <summary>
         /// Key name for the filter
         /// </summary>
-        public string[] Key { get; }
+        public readonly string[] Key;
 
         /// <summary>
         /// Value to match in the filter
         /// </summary>
-        public string? Value { get; }
+        public readonly string? Value;
 
         /// <summary>
         /// Operation on how to match the filter
         /// </summary>
-        public Operation Operation { get; }
+        public readonly Operation Operation;
 
         public FilterObject(string filterString)
         {
-            (string? keyItem, Operation operation, string? value) = SplitFilterString(filterString);
-            if (keyItem == null)
+            if (!SplitFilterString(filterString, out var keyItem, out Operation operation, out var value))
                 throw new ArgumentOutOfRangeException(nameof(filterString));
 
-            (string? itemName, string? fieldName) = FilterParser.ParseFilterId(keyItem);
-            if (itemName == null || fieldName == null)
+            if (!FilterParser.ParseFilterId(keyItem, out var itemName, out var fieldName))
                 throw new ArgumentOutOfRangeException(nameof(filterString));
 
             Key = [itemName, fieldName];
@@ -43,8 +41,7 @@ namespace SabreTools.Core.Filter
 
         public FilterObject(string itemField, string? value, string? operation)
         {
-            (string? itemName, string? fieldName) = FilterParser.ParseFilterId(itemField);
-            if (itemName == null || fieldName == null)
+            if (!FilterParser.ParseFilterId(itemField, out var itemName, out var fieldName))
                 throw new ArgumentOutOfRangeException(nameof(value));
 
             Key = [itemName, fieldName];
@@ -54,11 +51,10 @@ namespace SabreTools.Core.Filter
 
         public FilterObject(string itemField, string? value, Operation operation)
         {
-            (string? itemName, string? fieldName) = FilterParser.ParseFilterId(itemField);
-            if (itemName == null || fieldName == null)
+            if (!FilterParser.ParseFilterId(itemField, out var itemName, out var fieldName))
                 throw new ArgumentOutOfRangeException(nameof(value));
 
-            Key = [itemName, fieldName];
+            Key = [itemName!, fieldName!];
             Value = value;
             Operation = operation;
         }
@@ -396,10 +392,13 @@ namespace SabreTools.Core.Filter
         /// <summary>
         /// Derive a key, operation, and value from the input string, if possible
         /// </summary>
-        private static (string?, Operation, string?) SplitFilterString(string? filterString)
+        private static bool SplitFilterString(string? filterString, out string? key, out Operation operation, out string? value)
         {
+            // Set default values
+            key = null; operation = Operation.NONE; value = null;
+
             if (filterString == null)
-                return (null, Operation.NONE, null);
+                return false;
 
             // Trim quotations, if necessary
             if (filterString.StartsWith("\""))
@@ -408,13 +407,13 @@ namespace SabreTools.Core.Filter
             // Split the string using regex
             var match = Regex.Match(filterString, @"^(?<itemField>[a-zA-Z.]+)(?<operation>[=!:><]{1,2})(?<value>.*)$");
             if (!match.Success)
-                return (null, Operation.NONE, null);
+                return false;
 
-            string itemField = match.Groups["itemField"].Value;
-            Operation operation = GetOperation(match.Groups["operation"].Value);
-            string value = match.Groups["value"].Value;
+            key = match.Groups["itemField"].Value;
+            operation = GetOperation(match.Groups["operation"].Value);
+            value = match.Groups["value"].Value;
 
-            return (itemField, operation, value);
+            return true;
         }
 
         #endregion
