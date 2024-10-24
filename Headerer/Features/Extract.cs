@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Microsoft.Data.Sqlite;
 using SabreTools.Core.Tools;
-using SabreTools.FileTypes;
 using SabreTools.Hashing;
 using SabreTools.Help;
 using SabreTools.IO;
@@ -110,8 +109,8 @@ The following systems have headers that this program can work with:
             // Now add the information to the database if it's not already there
             if (!nostore)
             {
-                BaseFile? baseFile = BaseFile.GetInfo(newfile, hashes: [HashType.SHA1], asFiles: TreatAsFile.NonArchive);
-                AddHeaderToDatabase(hstr, TextHelper.ByteArrayToString(baseFile!.SHA1)!, rule.SourceFile!);
+                string sha1 = HashTool.GetFileHash(newfile, HashType.SHA1) ?? string.Empty;
+                AddHeaderToDatabase(hstr, sha1, rule.SourceFile!);
             }
 
             return true;

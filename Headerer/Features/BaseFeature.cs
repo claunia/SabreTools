@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using Microsoft.Data.Sqlite;
-using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.Help;
 using SabreTools.IO;
@@ -56,24 +55,6 @@ namespace Headerer.Features
                     "Enable script mode (no clear screen)",
                     ParameterType.Flag,
                     "For times when SabreTools is being used in a scripted environment, the user may not want the screen to be cleared every time that it is called. This flag allows the user to skip clearing the screen on run just like if the console was being redirected.");
-            }
-        }
-
-        #endregion
-
-        #region Int32 features
-
-        internal const string ThreadsInt32Value = "threads";
-        internal static Feature ThreadsInt32Input
-        {
-            get
-            {
-                return new Feature(
-                    ThreadsInt32Value,
-                    new List<string>() { "-mt", "--threads" },
-                    "Amount of threads to use (default = # cores)",
-                    ParameterType.Int32,
-                    longDescription: "Optionally, set the number of threads to use for the multithreaded operations. The default is the number of available machine threads; -1 means unlimited threads created.");
             }
         }
 
@@ -142,22 +123,15 @@ Possible values are: Verbose, User, Warning, Error");
         {
             AddFeature(ScriptFlag);
             AddFeature(LogLevelStringInput);
-            AddFeature(ThreadsInt32Input);
         }
 
         #endregion
 
         public override bool ProcessFeatures(Dictionary<string, Feature?> features)
         {
-            // Generic feature flags
             LogLevel = GetString(features, LogLevelStringValue).AsLogLevel();
             OutputDir = GetString(features, OutputDirStringValue)?.Trim('"');
             ScriptMode = GetBoolean(features, ScriptValue);
-
-            // Set threading flag, if necessary
-            if (features.ContainsKey(ThreadsInt32Value))
-                Globals.MaxThreads = GetInt32(features, ThreadsInt32Value);
-
             return true;
         }
 
