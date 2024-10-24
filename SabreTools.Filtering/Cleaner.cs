@@ -231,36 +231,54 @@ namespace SabreTools.Filtering
         /// <param name="datItem">DatItem to clean</param>
         internal void CleanDatItem(DatItem datItem)
         {
+            // Get the machine associated with the item, if possible
+            var machine = datItem.GetFieldValue<Machine>(DatItem.MachineKey);
+            if (machine == null)
+                return;
+
+            // Get the fields for processing
+            string? machineName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+            string? machineDesc = machine.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey);
+            string? datItemName = datItem.GetName();
+
             // If we're stripping unicode characters, strip machine name and description
             if (RemoveUnicode)
             {
-                datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, TextHelper.RemoveUnicodeCharacters(datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)));
-                datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, TextHelper.RemoveUnicodeCharacters(datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)));
-                datItem.SetName(TextHelper.RemoveUnicodeCharacters(datItem.GetName()));
+                machineName = TextHelper.RemoveUnicodeCharacters(machineName);
+                machineDesc = TextHelper.RemoveUnicodeCharacters(machineDesc);
+                datItemName = TextHelper.RemoveUnicodeCharacters(datItemName);
             }
 
             // If we're in cleaning mode, sanitize machine name and description
             if (Clean)
             {
-                datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, TextHelper.NormalizeCharacters(datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)));
-                datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, TextHelper.NormalizeCharacters(datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)));
+                machineName = TextHelper.NormalizeCharacters(machineName);
+                machineDesc = TextHelper.NormalizeCharacters(machineDesc);
             }
 
             // If we are in single game mode, rename the machine
             if (Single)
-                datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "!");
+            {
+                machineName = "!";
+                machineDesc = "!";
+            }
 
             // If we are in NTFS trim mode, trim the item name
-            if (Trim && datItem.GetName() != null)
+            if (Trim && datItemName != null)
             {
                 // Windows max name length is 260
-                int usableLength = 260 - datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!.Length - (Root?.Length ?? 0);
-                if (datItem.GetName()!.Length > usableLength)
+                int usableLength = 260 - (machineName?.Length ?? 0) - (Root?.Length ?? 0);
+                if (datItemName.Length > usableLength)
                 {
-                    string ext = Path.GetExtension(datItem.GetName()!);
-                    datItem.SetName(datItem.GetName()!.Substring(0, usableLength - ext.Length) + ext);
+                    string ext = Path.GetExtension(datItemName);
+                    datItemName = datItemName.Substring(0, usableLength - ext.Length) + ext;
                 }
             }
+
+            // Set the fields back, if necessary
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineName);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, machineDesc);
+            datItem.SetName(datItemName);
         }
 
         /// <summary>
@@ -275,36 +293,49 @@ namespace SabreTools.Filtering
             if (machine.Item2 == null)
                 return;
 
+            // Get the fields for processing
+            string? machineName = machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+            string? machineDesc = machine.Item2.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey);
+            string? datItemName = datItem.Item2.GetName();
+
             // If we're stripping unicode characters, strip machine name and description
             if (RemoveUnicode)
             {
-                machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, TextHelper.RemoveUnicodeCharacters(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey)));
-                machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, TextHelper.RemoveUnicodeCharacters(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)));
-                datItem.Item2.SetName(TextHelper.RemoveUnicodeCharacters(datItem.Item2.GetName()));
+                machineName = TextHelper.RemoveUnicodeCharacters(machineName);
+                machineDesc = TextHelper.RemoveUnicodeCharacters(machineDesc);
+                datItemName = TextHelper.RemoveUnicodeCharacters(datItemName);
             }
 
             // If we're in cleaning mode, sanitize machine name and description
             if (Clean)
             {
-                machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, TextHelper.NormalizeCharacters(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey)));
-                machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, TextHelper.NormalizeCharacters(machine.Item2.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)));
+                machineName = TextHelper.NormalizeCharacters(machineName);
+                machineDesc = TextHelper.NormalizeCharacters(machineDesc);
             }
 
             // If we are in single game mode, rename the machine
             if (Single)
-                machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "!");
+            {
+                machineName = "!";
+                machineDesc = "!";
+            }
 
             // If we are in NTFS trim mode, trim the item name
-            if (Trim && datItem.Item2.GetName() != null)
+            if (Trim && datItemName != null)
             {
                 // Windows max name length is 260
-                int usableLength = 260 - machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey)!.Length - (Root?.Length ?? 0);
-                if (datItem.Item2.GetName()!.Length > usableLength)
+                int usableLength = 260 - (machineName?.Length ?? 0) - (Root?.Length ?? 0);
+                if (datItemName.Length > usableLength)
                 {
-                    string ext = Path.GetExtension(datItem.Item2.GetName()!);
-                    datItem.Item2.SetName(datItem.Item2.GetName()!.Substring(0, usableLength - ext.Length) + ext);
+                    string ext = Path.GetExtension(datItemName);
+                    datItemName = datItemName.Substring(0, usableLength - ext.Length) + ext;
                 }
             }
+
+            // Set the fields back, if necessary
+            machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineName);
+            machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, machineDesc);
+            datItem.Item2.SetName(datItemName);
         }
 
         #endregion
