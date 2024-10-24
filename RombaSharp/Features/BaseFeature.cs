@@ -763,7 +763,9 @@ CREATE TABLE IF NOT EXISTS dat (
                 port = 65535;
 
             // Finally set all of the fields
+#if NET452_OR_GREATER || NETCOREAPP
             Globals.MaxThreads = workers;
+#endif
             _logdir = logdir;
             _tmpdir = tmpdir;
             _webdir = webdir;

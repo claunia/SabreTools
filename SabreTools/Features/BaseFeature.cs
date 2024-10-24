@@ -1150,6 +1150,7 @@ namespace SabreTools.Features
             }
         }
 
+#if NET452_OR_GREATER || NETCOREAPP
         internal const string ThreadsInt32Value = "threads";
         internal static Feature ThreadsInt32Input
         {
@@ -1163,6 +1164,7 @@ namespace SabreTools.Features
                     longDescription: "Optionally, set the number of threads to use for the multithreaded operations. The default is the number of available machine threads; -1 means unlimited threads created.");
             }
         }
+#endif
 
         #endregion
 
@@ -1812,7 +1814,9 @@ Some special strings that can be used:
         {
             AddFeature(ScriptFlag);
             AddFeature(LogLevelStringInput);
+#if NET452_OR_GREATER || NETCOREAPP
             AddFeature(ThreadsInt32Input);
+#endif
         }
 
         /// <summary>
@@ -1886,8 +1890,10 @@ Some special strings that can be used:
             Splitter = GetSplitter(features);
 
             // Set threading flag, if necessary
+#if NET452_OR_GREATER || NETCOREAPP
             if (features.ContainsKey(ThreadsInt32Value))
                 Globals.MaxThreads = GetInt32(features, ThreadsInt32Value);
+#endif
 
             // Failure conditions
             if (Header == null)

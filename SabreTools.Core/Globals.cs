@@ -16,12 +16,12 @@ namespace SabreTools.Core
         /// </summary>
         public readonly static string? Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
 
+#if NET452_OR_GREATER || NETCOREAPP
         /// <summary>
         /// Maximum threads to use during parallel operations
         /// </summary>
         public static int MaxThreads { get; set; } = Environment.ProcessorCount;
 
-#if NET452_OR_GREATER || NETCOREAPP
         /// <summary>
         /// ParallelOptions object for use in parallel operations
         /// </summary>
