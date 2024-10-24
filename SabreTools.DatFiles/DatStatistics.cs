@@ -66,12 +66,36 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Total machine count to use on output
         /// </summary>
-        public long MachineCount { get; set; } = 0;
+        public long MachineCount { get; set; }
 
         /// <summary>
         /// Determines if statistics are for a directory or not
         /// </summary>
-        public bool IsDirectory { get; set; } = false;
+        public readonly bool IsDirectory;
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public DatStatistics()
+        {
+            DisplayName = null;
+            MachineCount = 0;
+            IsDirectory = false;
+        }
+
+        /// <summary>
+        /// Constructor for aggregate data
+        /// </summary>
+        public DatStatistics(string? displayName, bool isDirectory)
+        {
+            DisplayName = displayName;
+            MachineCount = 0;
+            IsDirectory = isDirectory;
+        }
 
         #endregion
 

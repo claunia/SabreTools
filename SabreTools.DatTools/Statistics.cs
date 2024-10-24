@@ -48,20 +48,11 @@ namespace SabreTools.DatTools
                 .ToList();
 
             // Init total
-            DatStatistics totalStats = new()
-            {
-                DisplayName = "DIR: All DATs",
-                MachineCount = 0,
-                IsDirectory = true,
-            };
+            DatStatistics totalStats = new("DIR: All DATs", isDirectory: true);
 
             // Init directory-level variables
             string? lastdir = null;
-            DatStatistics dirStats = new()
-            {
-                MachineCount = 0,
-                IsDirectory = true,
-            };
+            DatStatistics dirStats = new(displayName: null, isDirectory: true);
 
             // Now process each of the input files
             foreach (ParentablePath file in files)
@@ -79,11 +70,7 @@ namespace SabreTools.DatTools
 #endif
                     dirStats.MachineCount = dirStats.GameCount;
                     stats.Add(dirStats);
-                    dirStats = new DatStatistics
-                    {
-                        MachineCount = 0,
-                        IsDirectory = true,
-                    };
+                    dirStats = new DatStatistics(displayName: null, isDirectory: true);
                 }
 
                 InternalStopwatch watch = new($"Collecting statistics for '{file.CurrentPath}'");
@@ -98,7 +85,6 @@ namespace SabreTools.DatTools
                     //DatStatistics individualStats = datdata.ItemsDB.DatStatistics;
                     individualStats.DisplayName = datdata.Header.GetStringFieldValue(DatHeader.FileNameKey);
                     individualStats.MachineCount = datdata.Items.Keys.Count;
-                    individualStats.IsDirectory = false;
                     stats.Add(individualStats);
                 }
 
