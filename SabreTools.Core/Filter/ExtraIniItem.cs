@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using SabreTools.Core.Filter;
 using SabreTools.IO.Logging;
 using SabreTools.IO.Readers;
 
-namespace SabreTools.Filtering
+namespace SabreTools.Core.Filter
 {
     public class ExtraIniItem
     {
@@ -25,9 +24,11 @@ namespace SabreTools.Filtering
 
         #region Constructors
 
-        public ExtraIniItem(string itemName, string fieldName)
+        public ExtraIniItem(string itemName, string fieldName, string ini)
         {
             Key = new FilterKey(itemName, fieldName);
+            if (!PopulateFromFile(ini))
+                Mappings.Clear();
         }
 
         #endregion
@@ -46,7 +47,7 @@ namespace SabreTools.Filtering
         /// the value is boolean. If there's another section name, then that is set
         /// as the value instead.
         /// </remarks>
-        public bool PopulateFromFile(string ini)
+        private bool PopulateFromFile(string ini)
         {
             // Prepare all intenral variables
             IniReader ir = new(ini) { ValidateRows = false };

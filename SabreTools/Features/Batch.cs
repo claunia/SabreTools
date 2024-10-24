@@ -342,8 +342,7 @@ Reset the internal state:           reset();";
 
                 // Create the extra INI
                 var extraIni = new ExtraIni();
-                var extraIniItem = new ExtraIniItem(itemName, fieldName);
-                extraIniItem.PopulateFromFile(extraFile);
+                var extraIniItem = new ExtraIniItem(itemName, fieldName, extraFile);
                 extraIni.Items.Add(extraIniItem);
 
                 // Apply the extra INI blindly
