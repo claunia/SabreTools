@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using SabreTools.Logging;
+using SabreTools.IO.Logging;
 
 namespace SabreTools.Help
 {

@@ -4,7 +4,7 @@ using Microsoft.Data.Sqlite;
 using SabreTools.Core.Tools;
 using SabreTools.Help;
 using SabreTools.IO;
-using SabreTools.Logging;
+using SabreTools.IO.Logging;
 
 namespace Headerer.Features
 {

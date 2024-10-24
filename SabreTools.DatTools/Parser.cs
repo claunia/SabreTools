@@ -6,7 +6,7 @@ using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.IO;
 using SabreTools.IO.Extensions;
-using SabreTools.Logging;
+using SabreTools.IO.Logging;
 
 namespace SabreTools.DatTools
 {

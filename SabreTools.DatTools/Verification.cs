@@ -8,7 +8,7 @@ using SabreTools.DatItems.Formats;
 using SabreTools.FileTypes;
 using SabreTools.FileTypes.Archives;
 using SabreTools.Hashing;
-using SabreTools.Logging;
+using SabreTools.IO.Logging;
 
 namespace SabreTools.DatTools
 {

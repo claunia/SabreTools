@@ -7,7 +7,7 @@ using SabreTools.DatTools;
 using SabreTools.Help;
 using SabreTools.IO;
 using SabreTools.IO.Extensions;
-using SabreTools.Logging;
+using SabreTools.IO.Logging;
 
 namespace SabreTools.Features
 {

@@ -2,7 +2,7 @@
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
-using SabreTools.Logging;
+using SabreTools.IO.Logging;
 
 namespace SabreTools.Filtering
 {

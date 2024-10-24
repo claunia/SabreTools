@@ -15,7 +15,7 @@ using SabreTools.FileTypes;
 using SabreTools.FileTypes.Archives;
 using SabreTools.Hashing;
 using SabreTools.IO.Extensions;
-using SabreTools.Logging;
+using SabreTools.IO.Logging;
 
 namespace SabreTools.DatTools
 {

@@ -5,7 +5,7 @@ using Headerer.Features;
 using SabreTools.Core;
 using SabreTools.Help;
 using SabreTools.IO;
-using SabreTools.Logging;
+using SabreTools.IO.Logging;
 
 namespace Headerer
 {

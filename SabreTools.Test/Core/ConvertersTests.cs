@@ -1,7 +1,6 @@
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
-using SabreTools.Logging;
 using Xunit;
 
 namespace SabreTools.Test.Core
@@ -222,18 +221,6 @@ namespace SabreTools.Test.Core
         public void AsLoadFlagTest(string? field, LoadFlag expected)
         {
             LoadFlag actual = field.AsEnumValue<LoadFlag>();
-            Assert.Equal(expected, actual);
-        }
-
-        [Theory]
-        [InlineData(null, LogLevel.VERBOSE)]
-        [InlineData("verbose", LogLevel.VERBOSE)]
-        [InlineData("user", LogLevel.USER)]
-        [InlineData("warning", LogLevel.WARNING)]
-        [InlineData("error", LogLevel.ERROR)]
-        public void AsLogLevelTest(string? field, LogLevel expected)
-        {
-            LogLevel actual = field.AsEnumValue<LogLevel>();
             Assert.Equal(expected, actual);
         }
 
@@ -733,7 +720,6 @@ namespace SabreTools.Test.Core
         [InlineData(ItemStatus.NULL, 7)]
         [InlineData(ItemType.NULL, 54)]
         [InlineData(LoadFlag.NULL, 14)]
-        [InlineData(LogLevel.VERBOSE, 4)]
         [InlineData(MachineType.None, 6)]
         [InlineData(MergingFlag.None, 12)]
         [InlineData(NodumpFlag.None, 4)]

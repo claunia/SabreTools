@@ -5,8 +5,8 @@ using System.Text;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.Hashing;
+using SabreTools.IO.Logging;
 using SabreTools.IO.Writers;
-using SabreTools.Logging;
 
 namespace SabreTools.Reports.Formats
 {

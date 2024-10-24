@@ -5,7 +5,7 @@ using SabreTools.FileTypes;
 using SabreTools.Hashing;
 using SabreTools.Help;
 using SabreTools.IO;
-using SabreTools.Logging;
+using SabreTools.IO.Logging;
 
 namespace SabreTools.Features
 {

@@ -5,7 +5,7 @@ using SabreTools.Core;
 using SabreTools.Features;
 using SabreTools.Help;
 using SabreTools.IO;
-using SabreTools.Logging;
+using SabreTools.IO.Logging;
 
 namespace SabreTools
 {

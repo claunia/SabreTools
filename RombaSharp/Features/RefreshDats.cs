@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Microsoft.Data.Sqlite;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -8,8 +9,7 @@ using SabreTools.FileTypes;
 using SabreTools.Hashing;
 using SabreTools.Help;
 using SabreTools.IO;
-using SabreTools.Logging;
-using Microsoft.Data.Sqlite;
+using SabreTools.IO.Logging;
 
 namespace RombaSharp.Features
 {

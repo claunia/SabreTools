@@ -6,7 +6,7 @@ using SabreTools.Core.Tools;
 using SabreTools.FileTypes.Archives;
 using SabreTools.IO;
 using SabreTools.IO.Extensions;
-using SabreTools.Logging;
+using SabreTools.IO.Logging;
 
 namespace SabreTools.FileTypes
 {

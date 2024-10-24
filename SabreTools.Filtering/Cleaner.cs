@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
-using SabreTools.Logging;
+using SabreTools.IO.Logging;
 
 [assembly: InternalsVisibleTo("SabreTools.Test")]
 namespace SabreTools.Filtering

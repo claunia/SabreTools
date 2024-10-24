@@ -13,7 +13,7 @@ using SabreTools.DatTools;
 using SabreTools.FileTypes;
 using SabreTools.Hashing;
 using SabreTools.Help;
-using SabreTools.Logging;
+using SabreTools.IO.Logging;
 
 namespace RombaSharp.Features
 {

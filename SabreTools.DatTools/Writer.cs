@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.IO.Extensions;
-using SabreTools.Logging;
+using SabreTools.IO.Logging;
 using SabreTools.Reports;
 
 namespace SabreTools.DatTools

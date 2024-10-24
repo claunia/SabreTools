@@ -4,7 +4,7 @@ using SabreTools.Core.Filter;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
-using SabreTools.Logging;
+using SabreTools.IO.Logging;
 
 namespace SabreTools.DatFiles
 {
