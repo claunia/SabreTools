@@ -36,20 +36,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.10" />
-    </ItemGroup>
-
-    <ItemGroup>
         <ProjectReference Include="..\SabreTools.Core\SabreTools.Core.csproj" />
         <ProjectReference Include="..\SabreTools.Help\SabreTools.Help.csproj" />
         <ProjectReference Include="..\SabreTools.Logging\SabreTools.Logging.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Properties\" />
-    </ItemGroup>
-
-    <ItemGroup>
+        <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.10" />
+        <PackageReference Include="SabreTools.Hashing" Version="1.2.1" />
+        <PackageReference Include="SabreTools.IO" Version="1.4.12" />
         <PackageReference Include="SabreTools.Skippers" Version="1.1.2" />
     </ItemGroup>
 
