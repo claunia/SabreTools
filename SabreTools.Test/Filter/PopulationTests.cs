@@ -43,11 +43,13 @@ namespace SabreTools.Test.Filter
             var filter = new FilterRunner(filters);
 
             // Check the filters
-            Assert.Equal(new string[] {"machine", "name"}, filter.Filters[0].Key);
+            Assert.Equal("machine", filter.Filters[0].ItemName);
+            Assert.Equal("name", filter.Filters[0].FieldName);
             Assert.Equal("foo", filter.Filters[0].Value);
             Assert.Equal(Operation.Equals, filter.Filters[0].Operation);
 
-            Assert.Equal(new string[] {"machine", "name"}, filter.Filters[1].Key);
+            Assert.Equal("machine", filter.Filters[1].ItemName);
+            Assert.Equal("name", filter.Filters[1].FieldName);
             Assert.Equal("bar", filter.Filters[1].Value);
             Assert.Equal(Operation.NotEquals, filter.Filters[1].Operation);
         }
@@ -66,11 +68,13 @@ namespace SabreTools.Test.Filter
             var filter = new FilterRunner(filters);
 
             // Check the filters
-            Assert.Equal(new string[] { "rom", "name"}, filter.Filters[0].Key);
+            Assert.Equal("rom", filter.Filters[0].ItemName);
+            Assert.Equal("name", filter.Filters[0].FieldName);
             Assert.Equal("foo", filter.Filters[0].Value);
             Assert.Equal(Operation.Equals, filter.Filters[0].Operation);
 
-            Assert.Equal(new string[] { "item", "name"}, filter.Filters[1].Key);
+            Assert.Equal("item", filter.Filters[1].ItemName);
+            Assert.Equal("name", filter.Filters[1].FieldName);
             Assert.Equal("bar", filter.Filters[1].Value);
             Assert.Equal(Operation.NotEquals, filter.Filters[1].Operation);
         }

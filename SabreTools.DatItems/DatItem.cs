@@ -145,10 +145,12 @@ namespace SabreTools.DatItems
                 FileTypes.Archives.TapeArchive => new Rom(baseFile),
                 FileTypes.Archives.XZArchive => new Rom(baseFile),
                 FileTypes.Archives.ZipArchive => new Rom(baseFile),
+                FileTypes.BaseArchive => new Rom(baseFile),
+                FileTypes.Folder => null, // Folders cannot be a DatItem
+                FileTypes.BaseFile => new Rom(baseFile),
 
                 // Miscellaneous
-                null => null,
-                _ => new Rom(baseFile),
+                _ => null,
             };
         }
 
