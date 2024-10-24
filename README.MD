@@ -18,7 +18,7 @@ As the core of the SabreTools suite, the C# libraries provide nearly all of the 
 
 * **Dir2DAT / DATFromDir** - Create a DAT from a file, folder, or mix of both
   * Archives and files can be filtered selectively
-  * Aaruformat, Archives, and CHDs can be treated like files, that is, it will get an external hash only
+  * Aaruformat, Archives, and CHDs can have external hashes used
   * Multiple input archive formats are supported: 7zip, GZip, RAR, TAR, and ZIP/ZIP64
   * Multiple hashing algorithms available, up to SHA-512
   * Created DATs can be output in multiple formats at once, including ClrMamePro, Logiqx XML, and RomCenter
@@ -26,7 +26,7 @@ As the core of the SabreTools suite, the C# libraries provide nearly all of the 
   * Files with copier headers can be checked for additional hashes
 * **DAT Conversion** - Convert DATs between numerous formats, including standards such as ClrMamePro, Logiqx XML, and RomCenter
   * Converted DATs can be output in multiple formats at once
-  * Filtering can be done on all DATs based on criteria such as item type, sizes, hashes, and names
+  * Filtering can be performed based on criteria such as item type, sizes, hashes, and names
   * Input DATs can optionally be merged and diffed with each other
   * All DAT fields can be updated during the conversion
 * **DAT Splitting** - Split DATs based on multiple different criteria
