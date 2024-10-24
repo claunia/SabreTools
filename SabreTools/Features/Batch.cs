@@ -243,8 +243,8 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override void Process(BatchState batchState)
             {
-                Cleaner descNameCleaner = new() { DescriptionAsName = true };
-                descNameCleaner.ApplyCleaning(batchState.DatFile);
+                batchState.DatFile.Items.MachineDescriptionToName();
+                batchState.DatFile.ItemsDB.MachineDescriptionToName();
             }
         }
 
@@ -607,8 +607,8 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override void Process(BatchState batchState)
             {
-                Cleaner ogorCleaner = new() { OneGamePerRegion = true, RegionList = Arguments };
-                ogorCleaner.ApplyCleaning(batchState.DatFile);
+                batchState.DatFile.Items.SetOneGamePerRegion(Arguments);
+                batchState.DatFile.ItemsDB.SetOneGamePerRegion(Arguments);
             }
         }
 
@@ -641,8 +641,8 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override void Process(BatchState batchState)
             {
-                Cleaner orpgCleaner = new() { OneRomPerGame = true };
-                orpgCleaner.ApplyCleaning(batchState.DatFile);
+                batchState.DatFile.Items.SetOneRomPerGame();
+                batchState.DatFile.ItemsDB.SetOneRomPerGame();
             }
         }
 
@@ -776,8 +776,8 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override void Process(BatchState batchState)
             {
-                Cleaner stripCleaner = new() { SceneDateStrip = true };
-                stripCleaner.ApplyCleaning(batchState.DatFile);
+                batchState.DatFile.Items.StripSceneDatesFromItems();
+                batchState.DatFile.ItemsDB.StripSceneDatesFromItems();
             }
         }
 
