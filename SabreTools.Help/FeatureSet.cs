@@ -16,10 +16,6 @@ namespace SabreTools.Help
 
         #region Constructors
 
-        public FeatureSet()
-        {
-        }
-
         public FeatureSet(List<string> header)
         {
             _header.AddRange(header);
@@ -273,7 +269,7 @@ namespace SabreTools.Help
         /// <param name="key">Name that should be assigned to the feature</param>
         /// <param name="feature">Feature with possible subfeatures to test</param>
         /// <returns>List of Features representing what is enabled</returns>
-        private Dictionary<string, Feature?> GetEnabledSubfeatures(string key, Feature? feature)
+        private static Dictionary<string, Feature?> GetEnabledSubfeatures(string key, Feature? feature)
         {
             Dictionary<string, Feature?> enabled = [];
 
@@ -304,7 +300,6 @@ namespace SabreTools.Help
         /// <summary>
         /// Write out the help text with pauses, if needed
         /// </summary>
-        /// <param name="helptext"></param>
         private static void WriteOutWithPauses(List<string> helptext)
         {
             // Now output based on the size of the screen
