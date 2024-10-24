@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+#if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
+#endif
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
@@ -35,7 +37,7 @@ namespace SabreTools.DatFiles
         private void ApplyRemovalsItemDictionary(List<string> machineFieldNames, Dictionary<string, List<string>> itemFieldNames)
         {
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(Items.Keys, Globals.ParallelOptions, key =>
+            Parallel.ForEach(Items.Keys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
             Parallel.ForEach(Items.Keys, key =>
 #else
@@ -67,7 +69,7 @@ namespace SabreTools.DatFiles
         private void ApplyRemovalsItemDictionaryDB(List<string> machineFieldNames, Dictionary<string, List<string>> itemFieldNames)
         {
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(ItemsDB.SortedKeys, Globals.ParallelOptions, key =>
+            Parallel.ForEach(ItemsDB.SortedKeys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
             Parallel.ForEach(ItemsDB.SortedKeys, key =>
 #else

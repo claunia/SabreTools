@@ -156,7 +156,7 @@ namespace SabreTools.Features
             {
                 // Loop through each input and update
 #if NET452_OR_GREATER || NETCOREAPP
-                Parallel.ForEach(inputPaths, Globals.ParallelOptions, inputPath =>
+                Parallel.ForEach(inputPaths, Core.Globals.ParallelOptions, inputPath =>
 #elif NET40_OR_GREATER
                 Parallel.ForEach(inputPaths, inputPath =>
 #else
@@ -260,7 +260,7 @@ namespace SabreTools.Features
                 InternalStopwatch watch = new("Outputting all individual DATs");
 
 #if NET452_OR_GREATER || NETCOREAPP
-                Parallel.For(0, inputPaths.Count, Globals.ParallelOptions, j =>
+                Parallel.For(0, inputPaths.Count, Core.Globals.ParallelOptions, j =>
 #elif NET40_OR_GREATER
                 Parallel.For(0, inputPaths.Count, j =>
 #else
@@ -285,7 +285,7 @@ namespace SabreTools.Features
             {
                 // Preprocess the DatHeaders
 #if NET452_OR_GREATER || NETCOREAPP
-                Parallel.For(0, datHeaders.Count, Globals.ParallelOptions, j =>
+                Parallel.For(0, datHeaders.Count, Core.Globals.ParallelOptions, j =>
 #elif NET40_OR_GREATER
                 Parallel.For(0, datHeaders.Count, j =>
 #else
@@ -316,7 +316,7 @@ namespace SabreTools.Features
 
                 int startIndex = GetBoolean(features, SkipFirstOutputValue) ? 1 : 0;
 #if NET452_OR_GREATER || NETCOREAPP
-                Parallel.For(startIndex, inputPaths.Count, Globals.ParallelOptions, j =>
+                Parallel.For(startIndex, inputPaths.Count, Core.Globals.ParallelOptions, j =>
 #elif NET40_OR_GREATER
                 Parallel.For(startIndex, inputPaths.Count, j =>
 #else
@@ -341,7 +341,7 @@ namespace SabreTools.Features
             {
                 // Loop through each input and diff against the base
 #if NET452_OR_GREATER || NETCOREAPP
-                Parallel.ForEach(inputPaths, Globals.ParallelOptions, inputPath =>
+                Parallel.ForEach(inputPaths, Core.Globals.ParallelOptions, inputPath =>
 #elif NET40_OR_GREATER
                 Parallel.ForEach(inputPaths, inputPath =>
 #else
@@ -378,7 +378,7 @@ namespace SabreTools.Features
             {
                 // Loop through each input and apply the base DatFile
 #if NET452_OR_GREATER || NETCOREAPP
-                Parallel.ForEach(inputPaths, Globals.ParallelOptions, inputPath =>
+                Parallel.ForEach(inputPaths, Core.Globals.ParallelOptions, inputPath =>
 #elif NET40_OR_GREATER
                 Parallel.ForEach(inputPaths, inputPath =>
 #else

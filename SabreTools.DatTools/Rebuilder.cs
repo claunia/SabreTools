@@ -80,7 +80,7 @@ namespace SabreTools.DatTools
             // Now loop through and get only directories from the input paths
             List<string> directories = [];
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(inputs, Globals.ParallelOptions, input =>
+            Parallel.ForEach(inputs, Core.Globals.ParallelOptions, input =>
 #elif NET40_OR_GREATER
             Parallel.ForEach(inputs, input =>
 #else

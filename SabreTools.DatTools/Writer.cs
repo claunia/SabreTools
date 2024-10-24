@@ -80,7 +80,7 @@ namespace SabreTools.DatTools
             {
                 // Write out all required formats
 #if NET452_OR_GREATER || NETCOREAPP
-                Parallel.ForEach(outfiles.Keys, SabreTools.Core.Globals.ParallelOptions, datFormat =>
+                Parallel.ForEach(outfiles.Keys, Core.Globals.ParallelOptions, datFormat =>
 #elif NET40_OR_GREATER
                 Parallel.ForEach(outfiles.Keys, datFormat =>
 #else

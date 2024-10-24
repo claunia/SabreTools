@@ -66,7 +66,7 @@ namespace SabreTools.DatTools
 
             // Now separate the roms accordingly
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
+            Parallel.ForEach(datFile.Items.Keys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
             Parallel.ForEach(datFile.Items.Keys, key =>
 #else
@@ -170,7 +170,7 @@ namespace SabreTools.DatTools
 
             // Loop through and add the items
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(datItems, Globals.ParallelOptions, item =>
+            Parallel.ForEach(datItems, Core.Globals.ParallelOptions, item =>
 #elif NET40_OR_GREATER
             Parallel.ForEach(datItems, item =>
 #else
@@ -240,7 +240,7 @@ namespace SabreTools.DatTools
 
             // Now populate each of the DAT objects in turn
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
+            Parallel.ForEach(datFile.Items.Keys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
             Parallel.ForEach(datFile.Items.Keys, key =>
 #else
@@ -390,7 +390,7 @@ namespace SabreTools.DatTools
 
             // Loop through and add the items
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(datItems, Globals.ParallelOptions, item =>
+            Parallel.ForEach(datItems, Core.Globals.ParallelOptions, item =>
 #elif NET40_OR_GREATER
             Parallel.ForEach(datItems, item =>
 #else
@@ -489,7 +489,7 @@ namespace SabreTools.DatTools
 
             // Then, we loop over the games
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(keys, Globals.ParallelOptions, key =>
+            Parallel.ForEach(keys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
             Parallel.ForEach(keys, key =>
 #else
@@ -615,7 +615,7 @@ namespace SabreTools.DatTools
 
             // Now populate each of the DAT objects in turn
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
+            Parallel.ForEach(datFile.Items.Keys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
             Parallel.ForEach(datFile.Items.Keys, key =>
 #else
@@ -708,7 +708,7 @@ namespace SabreTools.DatTools
 
             // Loop through and add the items
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(datItems, Globals.ParallelOptions, item =>
+            Parallel.ForEach(datItems, Core.Globals.ParallelOptions, item =>
 #elif NET40_OR_GREATER
             Parallel.ForEach(datItems, item =>
 #else
@@ -867,7 +867,7 @@ namespace SabreTools.DatTools
 
             // Now populate each of the DAT objects in turn
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(outputTypes, Globals.ParallelOptions, itemType =>
+            Parallel.ForEach(outputTypes, Core.Globals.ParallelOptions, itemType =>
 #elif NET40_OR_GREATER
             Parallel.ForEach(outputTypes, itemType =>
 #else
@@ -897,7 +897,7 @@ namespace SabreTools.DatTools
         {
             // Loop through and add the items for this index to the output
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
+            Parallel.ForEach(datFile.Items.Keys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
             Parallel.ForEach(datFile.Items.Keys, key =>
 #else
@@ -962,7 +962,7 @@ namespace SabreTools.DatTools
 
             // Loop through and add the items
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(datItems, Globals.ParallelOptions, item =>
+            Parallel.ForEach(datItems, Core.Globals.ParallelOptions, item =>
 #elif NET40_OR_GREATER
             Parallel.ForEach(datItems, item =>
 #else

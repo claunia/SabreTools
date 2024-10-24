@@ -99,7 +99,7 @@ namespace SabreTools.Features
 
                     // Loop through each type DatFile
 #if NET452_OR_GREATER || NETCOREAPP
-                    Parallel.ForEach(typeDats.Keys, Globals.ParallelOptions, itemType =>
+                    Parallel.ForEach(typeDats.Keys, Core.Globals.ParallelOptions, itemType =>
 #elif NET40_OR_GREATER
                     Parallel.ForEach(typeDats.Keys, itemType =>
 #else
@@ -152,7 +152,7 @@ namespace SabreTools.Features
 
                     // Loop through each type DatFile
 #if NET452_OR_GREATER || NETCOREAPP
-                    Parallel.ForEach(sizedDats, Globals.ParallelOptions, sizedDat =>
+                    Parallel.ForEach(sizedDats, Core.Globals.ParallelOptions, sizedDat =>
 #elif NET40_OR_GREATER
                     Parallel.ForEach(sizedDats, sizedDat =>
 #else
@@ -178,7 +178,7 @@ namespace SabreTools.Features
 
                     // Loop through each type DatFile
 #if NET452_OR_GREATER || NETCOREAPP
-                    Parallel.ForEach(typeDats.Keys, Globals.ParallelOptions, itemType =>
+                    Parallel.ForEach(typeDats.Keys, Core.Globals.ParallelOptions, itemType =>
 #elif NET40_OR_GREATER
                     Parallel.ForEach(typeDats.Keys, itemType =>
 #else

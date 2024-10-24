@@ -688,7 +688,7 @@ namespace SabreTools.DatFiles
             List<string> oldkeys = [.. Keys];
 
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.For(0, oldkeys.Count, Globals.ParallelOptions, k =>
+            Parallel.For(0, oldkeys.Count, Core.Globals.ParallelOptions, k =>
 #elif NET40_OR_GREATER
             Parallel.For(0, oldkeys.Count, k =>
 #else
@@ -740,7 +740,7 @@ namespace SabreTools.DatFiles
 
             List<string> keys = [.. Keys];
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(keys, Globals.ParallelOptions, key =>
+            Parallel.ForEach(keys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
             Parallel.ForEach(keys, key =>
 #else
@@ -780,7 +780,7 @@ namespace SabreTools.DatFiles
         {
             List<string> keys = [.. Keys];
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(keys, Globals.ParallelOptions, key =>
+            Parallel.ForEach(keys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
             Parallel.ForEach(keys, key =>
 #else
@@ -828,7 +828,7 @@ namespace SabreTools.DatFiles
         {
             List<string> keys = [.. Keys];
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(keys, Globals.ParallelOptions, key =>
+            Parallel.ForEach(keys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
             Parallel.ForEach(keys, key =>
 #else
@@ -981,7 +981,7 @@ namespace SabreTools.DatFiles
         {
             // For each rom, we want to update the game to be "<game name>/<rom name>"
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(Keys, Globals.ParallelOptions, key =>
+            Parallel.ForEach(Keys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
             Parallel.ForEach(Keys, key =>
 #else
@@ -1017,7 +1017,7 @@ namespace SabreTools.DatFiles
 
             // Now process all of the roms
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(Keys, Globals.ParallelOptions, key =>
+            Parallel.ForEach(Keys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
             Parallel.ForEach(Keys, key =>
 #else
@@ -1064,7 +1064,7 @@ namespace SabreTools.DatFiles
             Dictionary<string, string> mapping = [];
 #endif
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(Keys, Globals.ParallelOptions, key =>
+            Parallel.ForEach(Keys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
             Parallel.ForEach(Keys, key =>
 #else
@@ -1134,7 +1134,7 @@ namespace SabreTools.DatFiles
         private void UpdateMachineNamesFromDescriptions(IDictionary<string, string> mapping)
         {
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(Keys, Globals.ParallelOptions, key =>
+            Parallel.ForEach(Keys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
             Parallel.ForEach(Keys, key =>
 #else
