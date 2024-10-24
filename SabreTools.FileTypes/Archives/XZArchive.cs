@@ -4,8 +4,8 @@ using System.IO;
 using System.Text.RegularExpressions;
 using SabreTools.Core.Tools;
 using SabreTools.Hashing;
-#if NET462_OR_GREATER || NETCOREAPP
 using SabreTools.IO.Extensions;
+#if NET462_OR_GREATER || NETCOREAPP
 using SharpCompress.Compressors.Xz;
 #endif
 
@@ -286,7 +286,7 @@ namespace SabreTools.FileTypes.Archives
             BaseFile baseFile = new()
             {
                 Filename = Path.GetFileNameWithoutExtension(this.Filename).ToLowerInvariant(),
-                SHA1 = TextHelper.StringToByteArray(Path.GetFileNameWithoutExtension(this.Filename)),
+                SHA1 = ByteArrayExtensions.StringToByteArray(Path.GetFileNameWithoutExtension(this.Filename)),
 
                 Parent = Path.GetFileNameWithoutExtension(this.Filename).ToLowerInvariant(),
             };
@@ -334,7 +334,7 @@ namespace SabreTools.FileTypes.Archives
             baseFile = GetInfo(inputStream, keepReadOpen: true);
 
             // Get the output file name
-            string outfile = Path.Combine(outDir, Utilities.GetDepotPath(TextHelper.ByteArrayToString(baseFile.SHA1), Depth)!);
+            string outfile = Path.Combine(outDir, Utilities.GetDepotPath(ByteArrayExtensions.ByteArrayToString(baseFile.SHA1), Depth)!);
             outfile = outfile.Replace(".gz", ".xz");
 
             // Check to see if the folder needs to be created

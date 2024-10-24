@@ -1,10 +1,10 @@
 ﻿using System.IO;
 using System.Collections.Generic;
 using Microsoft.Data.Sqlite;
-using SabreTools.Core.Tools;
 using SabreTools.Hashing;
 using SabreTools.Help;
 using SabreTools.IO;
+using SabreTools.IO.Extensions;
 using SabreTools.Skippers;
 
 namespace Headerer.Features
@@ -91,7 +91,7 @@ The following systems have headers that this program can work with:
                 int startOffset = int.Parse(rule.StartOffset ?? "0");
                 byte[] hbin = new byte[startOffset];
                 fs.Read(hbin, 0, startOffset);
-                hstr = TextHelper.ByteArrayToString(hbin)!;
+                hstr = ByteArrayExtensions.ByteArrayToString(hbin)!;
             }
             catch
             {

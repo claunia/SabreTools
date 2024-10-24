@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.FileTypes;
+using SabreTools.IO.Extensions;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -94,12 +95,12 @@ namespace SabreTools.DatItems.Formats
         {
             SetName(baseFile.Filename);
             SetFieldValue<string?>(Models.Metadata.Rom.DateKey, baseFile.Date);
-            SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, TextHelper.ByteArrayToString(baseFile.CRC));
-            SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, TextHelper.ByteArrayToString(baseFile.MD5));
-            SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, TextHelper.ByteArrayToString(baseFile.SHA1));
-            SetFieldValue<string?>(Models.Metadata.Rom.SHA256Key, TextHelper.ByteArrayToString(baseFile.SHA256));
-            SetFieldValue<string?>(Models.Metadata.Rom.SHA384Key, TextHelper.ByteArrayToString(baseFile.SHA384));
-            SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key, TextHelper.ByteArrayToString(baseFile.SHA512));
+            SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, ByteArrayExtensions.ByteArrayToString(baseFile.CRC));
+            SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, ByteArrayExtensions.ByteArrayToString(baseFile.MD5));
+            SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, ByteArrayExtensions.ByteArrayToString(baseFile.SHA1));
+            SetFieldValue<string?>(Models.Metadata.Rom.SHA256Key, ByteArrayExtensions.ByteArrayToString(baseFile.SHA256));
+            SetFieldValue<string?>(Models.Metadata.Rom.SHA384Key, ByteArrayExtensions.ByteArrayToString(baseFile.SHA384));
+            SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key, ByteArrayExtensions.ByteArrayToString(baseFile.SHA512));
             SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, baseFile.Size.ToString());
             if (baseFile.SpamSum != null)
                 SetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey, System.Text.Encoding.UTF8.GetString(baseFile.SpamSum));
@@ -128,12 +129,12 @@ namespace SabreTools.DatItems.Formats
                 Parent = GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey),
                 Date = GetStringFieldValue(Models.Metadata.Rom.DateKey),
                 Size = NumberHelper.ConvertToInt64(GetStringFieldValue(Models.Metadata.Rom.SizeKey)),
-                CRC = TextHelper.StringToByteArray(GetStringFieldValue(Models.Metadata.Rom.CRCKey)),
-                MD5 = TextHelper.StringToByteArray(GetStringFieldValue(Models.Metadata.Rom.MD5Key)),
-                SHA1 = TextHelper.StringToByteArray(GetStringFieldValue(Models.Metadata.Rom.SHA1Key)),
-                SHA256 = TextHelper.StringToByteArray(GetStringFieldValue(Models.Metadata.Rom.SHA256Key)),
-                SHA384 = TextHelper.StringToByteArray(GetStringFieldValue(Models.Metadata.Rom.SHA384Key)),
-                SHA512 = TextHelper.StringToByteArray(GetStringFieldValue(Models.Metadata.Rom.SHA512Key)),
+                CRC = ByteArrayExtensions.StringToByteArray(GetStringFieldValue(Models.Metadata.Rom.CRCKey)),
+                MD5 = ByteArrayExtensions.StringToByteArray(GetStringFieldValue(Models.Metadata.Rom.MD5Key)),
+                SHA1 = ByteArrayExtensions.StringToByteArray(GetStringFieldValue(Models.Metadata.Rom.SHA1Key)),
+                SHA256 = ByteArrayExtensions.StringToByteArray(GetStringFieldValue(Models.Metadata.Rom.SHA256Key)),
+                SHA384 = ByteArrayExtensions.StringToByteArray(GetStringFieldValue(Models.Metadata.Rom.SHA384Key)),
+                SHA512 = ByteArrayExtensions.StringToByteArray(GetStringFieldValue(Models.Metadata.Rom.SHA512Key)),
                 SpamSum = spamSum != null ? System.Text.Encoding.UTF8.GetBytes(spamSum) : null,
             };
         }

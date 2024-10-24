@@ -1,8 +1,8 @@
 ﻿using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
-using SabreTools.Core.Tools;
 using SabreTools.FileTypes;
+using SabreTools.IO.Extensions;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -37,9 +37,9 @@ namespace SabreTools.DatItems.Formats
         public Media(BaseFile baseFile) : base()
         {
             SetName(baseFile.Filename);
-            SetFieldValue<string?>(Models.Metadata.Media.MD5Key, TextHelper.ByteArrayToString(baseFile.MD5));
-            SetFieldValue<string?>(Models.Metadata.Media.SHA1Key, TextHelper.ByteArrayToString(baseFile.SHA1));
-            SetFieldValue<string?>(Models.Metadata.Media.SHA256Key, TextHelper.ByteArrayToString(baseFile.SHA256));
+            SetFieldValue<string?>(Models.Metadata.Media.MD5Key, ByteArrayExtensions.ByteArrayToString(baseFile.MD5));
+            SetFieldValue<string?>(Models.Metadata.Media.SHA1Key, ByteArrayExtensions.ByteArrayToString(baseFile.SHA1));
+            SetFieldValue<string?>(Models.Metadata.Media.SHA256Key, ByteArrayExtensions.ByteArrayToString(baseFile.SHA256));
             SetFieldValue<string?>(Models.Metadata.Media.SpamSumKey, System.Text.Encoding.UTF8.GetString(baseFile.SpamSum ?? []));
 
             SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
@@ -58,9 +58,9 @@ namespace SabreTools.DatItems.Formats
             {
                 Filename = this.GetName(),
                 Parent = GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey),
-                MD5 = TextHelper.StringToByteArray(GetStringFieldValue(Models.Metadata.Media.MD5Key)),
-                SHA1 = TextHelper.StringToByteArray(GetStringFieldValue(Models.Metadata.Media.SHA1Key)),
-                SHA256 = TextHelper.StringToByteArray(GetStringFieldValue(Models.Metadata.Media.SHA256Key)),
+                MD5 = ByteArrayExtensions.StringToByteArray(GetStringFieldValue(Models.Metadata.Media.MD5Key)),
+                SHA1 = ByteArrayExtensions.StringToByteArray(GetStringFieldValue(Models.Metadata.Media.SHA1Key)),
+                SHA256 = ByteArrayExtensions.StringToByteArray(GetStringFieldValue(Models.Metadata.Media.SHA256Key)),
                 SpamSum = System.Text.Encoding.UTF8.GetBytes(GetStringFieldValue(Models.Metadata.Media.SpamSumKey) ?? string.Empty),
             };
         }

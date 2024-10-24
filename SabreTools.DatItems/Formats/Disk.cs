@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.FileTypes;
+using SabreTools.IO.Extensions;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -74,8 +75,8 @@ namespace SabreTools.DatItems.Formats
         public Disk(BaseFile baseFile) : base()
         {
             SetName(baseFile.Filename);
-            SetFieldValue<string?>(Models.Metadata.Disk.MD5Key, TextHelper.ByteArrayToString(baseFile.MD5));
-            SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, TextHelper.ByteArrayToString(baseFile.SHA1));
+            SetFieldValue<string?>(Models.Metadata.Disk.MD5Key, ByteArrayExtensions.ByteArrayToString(baseFile.MD5));
+            SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, ByteArrayExtensions.ByteArrayToString(baseFile.SHA1));
 
             SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
         }
@@ -93,8 +94,8 @@ namespace SabreTools.DatItems.Formats
             {
                 Filename = this.GetName(),
                 Parent = GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey),
-                MD5 = TextHelper.StringToByteArray(GetStringFieldValue(Models.Metadata.Disk.MD5Key)),
-                SHA1 = TextHelper.StringToByteArray(GetStringFieldValue(Models.Metadata.Disk.SHA1Key)),
+                MD5 = ByteArrayExtensions.StringToByteArray(GetStringFieldValue(Models.Metadata.Disk.MD5Key)),
+                SHA1 = ByteArrayExtensions.StringToByteArray(GetStringFieldValue(Models.Metadata.Disk.SHA1Key)),
             };
         }
 

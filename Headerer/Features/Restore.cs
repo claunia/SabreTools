@@ -1,10 +1,10 @@
 ﻿using System.IO;
 using System.Collections.Generic;
 using Microsoft.Data.Sqlite;
-using SabreTools.Core.Tools;
 using SabreTools.Hashing;
 using SabreTools.Help;
 using SabreTools.IO;
+using SabreTools.IO.Extensions;
 
 namespace Headerer.Features
 {
@@ -79,7 +79,7 @@ The following systems have headers that this program can work with:
             {
                 string outputFile = (string.IsNullOrWhiteSpace(outDir) ? $"{Path.GetFullPath(file)}.new" : Path.Combine(outDir, Path.GetFileName(file))) + i;
                 logger.User($"Creating reheadered file: {outputFile}");
-                AppendBytes(file, outputFile, TextHelper.StringToByteArray(headers[i]), null);
+                AppendBytes(file, outputFile, ByteArrayExtensions.StringToByteArray(headers[i]), null);
                 logger.User("Reheadered file created!");
             }
 

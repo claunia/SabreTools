@@ -13,6 +13,7 @@ using SabreTools.DatTools;
 using SabreTools.FileTypes;
 using SabreTools.Hashing;
 using SabreTools.Help;
+using SabreTools.IO.Extensions;
 using SabreTools.IO.Logging;
 
 namespace RombaSharp.Features
@@ -562,7 +563,7 @@ CREATE TABLE IF NOT EXISTS dat (
                 if (lowerCaseDats.Contains(input.ToLowerInvariant()))
                 {
                     string fullpath = Path.GetFullPath(datRootDats[lowerCaseDats.IndexOf(input.ToLowerInvariant())]);
-                    string? sha1 = TextHelper.ByteArrayToString(BaseFile.GetInfo(fullpath, hashes: [HashType.SHA1])?.SHA1);
+                    string? sha1 = ByteArrayExtensions.ByteArrayToString(BaseFile.GetInfo(fullpath, hashes: [HashType.SHA1])?.SHA1);
                     if (sha1 != null)
                         foundDats.Add(sha1, fullpath);
                 }

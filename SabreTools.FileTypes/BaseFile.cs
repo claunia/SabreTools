@@ -328,13 +328,13 @@ namespace SabreTools.FileTypes
             var baseFile = new BaseFile()
             {
                 Size = size,
-                CRC = hashDict.ContainsKey(HashType.CRC32) ? TextHelper.StringToByteArray(hashDict[HashType.CRC32]) : null,
-                MD5 = hashDict.ContainsKey(HashType.MD5) ? TextHelper.StringToByteArray(hashDict[HashType.MD5]) : null,
-                SHA1 = hashDict.ContainsKey(HashType.SHA1) ? TextHelper.StringToByteArray(hashDict[HashType.SHA1]) : null,
-                SHA256 = hashDict.ContainsKey(HashType.SHA256) ? TextHelper.StringToByteArray(hashDict[HashType.SHA256]) : null,
-                SHA384 = hashDict.ContainsKey(HashType.SHA384) ? TextHelper.StringToByteArray(hashDict[HashType.SHA384]) : null,
-                SHA512 = hashDict.ContainsKey(HashType.SHA512) ? TextHelper.StringToByteArray(hashDict[HashType.SHA512]) : null,
-                SpamSum = hashDict.ContainsKey(HashType.SpamSum) ? TextHelper.StringToByteArray(hashDict[HashType.SpamSum]) : null,
+                CRC = hashDict.ContainsKey(HashType.CRC32) ? ByteArrayExtensions.StringToByteArray(hashDict[HashType.CRC32]) : null,
+                MD5 = hashDict.ContainsKey(HashType.MD5) ? ByteArrayExtensions.StringToByteArray(hashDict[HashType.MD5]) : null,
+                SHA1 = hashDict.ContainsKey(HashType.SHA1) ? ByteArrayExtensions.StringToByteArray(hashDict[HashType.SHA1]) : null,
+                SHA256 = hashDict.ContainsKey(HashType.SHA256) ? ByteArrayExtensions.StringToByteArray(hashDict[HashType.SHA256]) : null,
+                SHA384 = hashDict.ContainsKey(HashType.SHA384) ? ByteArrayExtensions.StringToByteArray(hashDict[HashType.SHA384]) : null,
+                SHA512 = hashDict.ContainsKey(HashType.SHA512) ? ByteArrayExtensions.StringToByteArray(hashDict[HashType.SHA512]) : null,
+                SpamSum = hashDict.ContainsKey(HashType.SpamSum) ? ByteArrayExtensions.StringToByteArray(hashDict[HashType.SpamSum]) : null,
             };
 
             // Deal with the input stream
