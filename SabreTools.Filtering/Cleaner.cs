@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.CompilerServices;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.IO.Logging;
 
-[assembly: InternalsVisibleTo("SabreTools.Test")]
 namespace SabreTools.Filtering
 {
     /// <summary>

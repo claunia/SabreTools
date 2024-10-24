@@ -19,10 +19,6 @@
         <RepositoryType>git</RepositoryType>
     </PropertyGroup>
 
-    <ItemGroup>
-        <InternalsVisibleTo Include="SabreTools.Test" />
-    </ItemGroup>
-
     <!-- Support All Frameworks -->
     <PropertyGroup Condition="$(TargetFramework.StartsWith(`net2`)) OR $(TargetFramework.StartsWith(`net3`)) OR $(TargetFramework.StartsWith(`net4`))">
         <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
@@ -36,6 +32,10 @@
     <PropertyGroup Condition="$(RuntimeIdentifier.StartsWith(`osx-arm`))">
         <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
     </PropertyGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="SabreTools.Test" />
+    </ItemGroup>
 
     <!-- Support for old .NET versions -->
     <ItemGroup Condition="$(TargetFramework.StartsWith(`net2`)) OR $(TargetFramework.StartsWith(`net3`))">
