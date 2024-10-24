@@ -170,11 +170,8 @@ namespace SabreTools.DatItems
         /// <param name="item">Existing item to copy information from</param>
         public void CopyMachineInformation(DatItem item)
         {
-            if (item?.GetFieldValue<Machine>(DatItem.MachineKey) == null)
-                return;
-
-            if (item!.GetFieldValue<Machine>(DatItem.MachineKey)!.Clone() is Machine cloned)
-                SetFieldValue<Machine>(DatItem.MachineKey, cloned);
+            var machine = item.GetFieldValue<Machine>(DatItem.MachineKey);
+            CopyMachineInformation(machine);
         }
 
         /// <summary>
@@ -383,16 +380,26 @@ namespace SabreTools.DatItems
                     break;
 
                 case ItemKey.Machine:
-                    key = (norename ? string.Empty
-                        : GetFieldValue<Source?>(DatItem.SourceKey)?.Index.ToString().PadLeft(10, '0')
-                            + "-")
-                    + (string.IsNullOrEmpty(GetFieldValue<Machine>(DatItem.MachineKey)?.GetStringFieldValue(Models.Metadata.Machine.NameKey))
-                            ? "Default"
-                            : GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!);
+                    string sourceString = string.Empty;
+                    if (!norename)
+                    {
+                        var source = GetFieldValue<Source?>(DatItem.SourceKey);
+                        if (source != null)
+                            sourceString = source.Index.ToString().PadLeft(10, '0') + "-";
+                    }
+
+                    string machineString = "Default";
+                    var machine = GetFieldValue<Machine>(DatItem.MachineKey);
+                    if (machine != null)
+                    {
+                        var machineName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                        if (!string.IsNullOrEmpty(machineName))
+                            machineString = machineName!;
+                    }
+
+                    key = $"{sourceString}{machineString}";
                     if (lower)
                         key = key.ToLowerInvariant();
-
-                    key ??= "null";
 
                     break;
 
@@ -448,16 +455,22 @@ namespace SabreTools.DatItems
                     break;
 
                 case ItemKey.Machine:
-                    key = (norename ? string.Empty
-                        : source?.Index.ToString().PadLeft(10, '0')
-                            + "-")
-                    + (string.IsNullOrEmpty(GetFieldValue<Machine>(DatItem.MachineKey)?.GetStringFieldValue(Models.Metadata.Machine.NameKey))
-                            ? "Default"
-                            : GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!);
+                    string sourceString = string.Empty;
+                    if (!norename && source != null)
+                        sourceString = source.Index.ToString().PadLeft(10, '0') + "-";
+
+                    string machineString = "Default";
+                    var machine = GetFieldValue<Machine>(DatItem.MachineKey);
+                    if (machine != null)
+                    {
+                        var machineName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                        if (!string.IsNullOrEmpty(machineName))
+                            machineString = machineName!;
+                    }
+
+                    key = $"{sourceString}{machineString}";
                     if (lower)
                         key = key.ToLowerInvariant();
-
-                    key ??= "null";
 
                     break;
 
@@ -526,9 +539,7 @@ namespace SabreTools.DatItems
 
                 // If we don't have a Disk, File, Media, or Rom, we skip checking for duplicates
                 if (item is not Disk && item is not Formats.File && item is not Media && item is not Rom)
-                {
                     continue;
-                }
 
                 // If it's a nodump, add and skip
                 if (item is Rom rom && rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump)
@@ -646,10 +657,14 @@ namespace SabreTools.DatItems
                 }
 
                 // Get the last item name, if applicable
-                string lastItemName = lastItem.GetName() ?? lastItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue() ?? string.Empty;
+                string lastItemName = lastItem.GetName()
+                    ?? lastItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue()
+                    ?? string.Empty;
 
                 // Get the current item name, if applicable
-                string datItemName = datItem.GetName() ?? datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue() ?? string.Empty;
+                string datItemName = datItem.GetName()
+                    ?? datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue()
+                    ?? string.Empty;
 
                 // If the current item exactly matches the last item, then we don't add it
 #if NETFRAMEWORK
