@@ -1,6 +1,6 @@
 # ![SabreTools Logo](images/sabretools-rect.png)
 
-[![Build status](https://ci.appveyor.com/api/projects/status/c3hsfpmqhg40al35/branch/main?svg=true)](https://ci.appveyor.com/project/mnadareski/sabretools/branch/main)
+[![Build Status](https://github.com/SabreTools/SabreTools/actions/workflows/build_and_publish.yml/badge.svg?branch=main)](https://github.com/SabreTools/SabreTools/actions/workflows/build_and_publish.yml)
 
 ## Introduction
 
@@ -74,7 +74,7 @@ An in-progress tool that will try to act as a C# port of the Go-based [Romba](ht
 
 Last stable releases can be found on [the Releases tab](https://github.com/SabreTools/SabreTools/releases).
 
-Latest unstable builds can be found on [AppVeyor](https://ci.appveyor.com/project/mnadareski/sabretools/branch/main).
+Latest unstable builds can be found on [the Rolling build](https://github.com/SabreTools/SabreTools/releases/tag/rolling).
 
 ## Contributions
 
