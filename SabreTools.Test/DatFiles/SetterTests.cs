@@ -1,7 +1,7 @@
 using SabreTools.Core.Filter;
-using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
+using SabreTools.Filtering;
 using Xunit;
 
 namespace SabreTools.Test.DatFiles

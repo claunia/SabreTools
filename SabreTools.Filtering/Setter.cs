@@ -2,16 +2,16 @@ using System.Collections.Generic;
 using System.Linq;
 using SabreTools.Core.Filter;
 using SabreTools.Core.Tools;
+using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using SabreTools.IO.Logging;
 
-namespace SabreTools.DatFiles
+namespace SabreTools.Filtering
 {
     /// <summary>
     /// Set fields on DatItems
     /// </summary>
-    /// TODO: Figure out how to get this into the Filtering namespace
     public class Setter
     {
         #region Fields
