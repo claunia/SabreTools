@@ -45,6 +45,7 @@ contents of any changed dats.";
             int workers = GetInt32(features, WorkersInt32Value);
             string? missingSha1s = GetString(features, MissingSha1sStringValue);
             HashType[] hashes = [HashType.CRC32, HashType.MD5, HashType.SHA1];
+            var dfd = new DatFromDir(hashes, SkipFileType.None, addBlanks: false);
 
             // Make sure the db is set
             if (string.IsNullOrWhiteSpace(_db))
@@ -70,7 +71,7 @@ contents of any changed dats.";
             // First get a list of SHA-1's from the input DATs
             DatFile datroot = DatFile.Create();
             datroot.Header.SetFieldValue<string?>(SabreTools.Models.Metadata.Header.TypeKey, "SuperDAT");
-            DatFromDir.PopulateFromDir(datroot, _dats, asFiles: TreatAsFile.NonArchive, hashes: hashes);
+            dfd.PopulateFromDir(datroot, _dats, TreatAsFile.NonArchive);
             datroot.Items.BucketBy(ItemKey.SHA1, DedupeType.None);
 
             // Create a List of dat hashes in the database (SHA-1)

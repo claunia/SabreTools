@@ -279,11 +279,12 @@ Reset the internal state:           reset();";
             public override void Process(BatchState batchState)
             {
                 HashType[] hashes = [HashType.CRC32, HashType.MD5, HashType.SHA1];
+                var dfd = new DatTools.DatFromDir(hashes, SkipFileType.None, addBlanks: false);
 
                 // Assume there could be multiple
                 foreach (string input in Arguments)
                 {
-                    DatTools.DatFromDir.PopulateFromDir(batchState.DatFile, input, hashes: hashes);
+                    dfd.PopulateFromDir(batchState.DatFile, input);
                 }
 
                 // TODO: We might not want to remove dates in the future

@@ -4,9 +4,6 @@ using System.Threading;
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
 #endif
-#if NET452_OR_GREATER || NETCOREAPP
-using SabreTools.Core;
-#endif
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
@@ -25,6 +22,25 @@ namespace SabreTools.DatTools
     /// </summary>
     public class DatFromDir
     {
+        #region Fields
+
+        /// <summary>
+        /// Hashes to include in the information
+        /// </summary>
+        private readonly HashType[] _hashes;
+
+        /// <summary>
+        /// Type of files that should be skipped
+        /// </summary>
+        private readonly SkipFileType _skipFileType;
+
+        /// <summary>
+        /// Indicates if blank items should be created for empty folders
+        /// </summary>
+        private readonly bool _addBlanks;
+
+        #endregion
+
         #region Logging
 
         /// <summary>
@@ -34,26 +50,25 @@ namespace SabreTools.DatTools
 
         #endregion
 
+        #region Constructors
+
+        public DatFromDir(HashType[]? hashes, SkipFileType skipFileType, bool addBlanks)
+        {
+            _hashes = hashes ?? [HashType.CRC32, HashType.MD5, HashType.SHA1];
+            _skipFileType = skipFileType;
+            _addBlanks = addBlanks;
+        }
+
+        #endregion
+
         /// <summary>
         /// Create a new Dat from a directory
         /// </summary>
         /// <param name="datFile">Current DatFile object to add to</param>
         /// <param name="basePath">Base folder to be used in creating the DAT</param>
         /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
-        /// <param name="skipFileType">Type of files that should be skipped</param>
-        /// <param name="addBlanks">True if blank items should be created for empty folders, false otherwise</param>
-        /// <param name="hashes">Hashes to include in the information</param>
-        public static bool PopulateFromDir(
-            DatFile datFile,
-            string basePath,
-            TreatAsFile asFiles = 0x00,
-            SkipFileType skipFileType = SkipFileType.None,
-            bool addBlanks = false,
-            HashType[]? hashes = null)
+        public bool PopulateFromDir(DatFile datFile, string basePath, TreatAsFile asFiles = 0x00)
         {
-            // If no hashes are set, use the standard array
-            hashes ??= [HashType.CRC32, HashType.MD5, HashType.SHA1];
-
             // Set the progress variables
             long totalSize = 0;
             long currentSize = 0;
@@ -74,7 +89,7 @@ namespace SabreTools.DatTools
 
                 // Loop through and add the file sizes
 #if NET452_OR_GREATER || NETCOREAPP
-                Parallel.ForEach(files, Globals.ParallelOptions, item =>
+                Parallel.ForEach(files, Core.Globals.ParallelOptions, item =>
 #elif NET40_OR_GREATER
                 Parallel.ForEach(files, item =>
 #else
@@ -94,12 +109,12 @@ namespace SabreTools.DatTools
                 {
                     currentSize += new FileInfo(item).Length;
 
-                    CheckFileForHashes(datFile, item, basePath, asFiles, skipFileType, addBlanks, hashes);
+                    CheckFileForHashes(datFile, item, basePath, asFiles);
                     logger.User(totalSize, currentSize, item);
                 }
 
                 // Now find all folders that are empty, if we are supposed to
-                if (addBlanks)
+                if (_addBlanks)
                     ProcessDirectoryBlanks(datFile, basePath);
             }
             else if (System.IO.File.Exists(basePath))
@@ -110,7 +125,7 @@ namespace SabreTools.DatTools
                 logger.User(totalSize, currentSize);
 
                 string? parentPath = Path.GetDirectoryName(Path.GetDirectoryName(basePath));
-                CheckFileForHashes(datFile, basePath, parentPath, asFiles, skipFileType, addBlanks, hashes);
+                CheckFileForHashes(datFile, basePath, parentPath, asFiles);
                 logger.User(totalSize, totalSize, basePath);
             }
 
@@ -125,17 +140,7 @@ namespace SabreTools.DatTools
         /// <param name="item">Filename of the item to be checked</param>
         /// <param name="basePath">Base folder to be used in creating the DAT</param>
         /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
-        /// <param name="skipFileType">Type of files that should be skipped</param>
-        /// <param name="addBlanks">True if blank items should be created for empty folders, false otherwise</param>
-        /// <param name="hashes">Hashes to include in the information</param>
-        private static void CheckFileForHashes(
-            DatFile datFile,
-            string item,
-            string? basePath,
-            TreatAsFile asFiles,
-            SkipFileType skipFileType,
-            bool addBlanks,
-            HashType[] hashes)
+        private void CheckFileForHashes(DatFile datFile, string item, string? basePath, TreatAsFile asFiles)
         {
             // If we're in depot mode, process it separately
             if (CheckDepotFile(datFile, item))
@@ -148,20 +153,20 @@ namespace SabreTools.DatTools
             if (archive != null)
             {
                 // Set the archive flags
-                archive.AvailableHashTypes = hashes;
+                archive.AvailableHashTypes = _hashes;
 
                 // Skip if we're treating archives as files and skipping files
 #if NETFRAMEWORK
-                if ((asFiles & TreatAsFile.Archive) != 0 && skipFileType == SkipFileType.File)
+                if ((asFiles & TreatAsFile.Archive) != 0 && _skipFileType == SkipFileType.File)
 #else
-                if (asFiles.HasFlag(TreatAsFile.Archive) && skipFileType == SkipFileType.File)
+                if (asFiles.HasFlag(TreatAsFile.Archive) && _skipFileType == SkipFileType.File)
 #endif
                 {
                     return;
                 }
 
                 // Skip if we're skipping archives
-                else if (skipFileType == SkipFileType.Archive)
+                else if (_skipFileType == SkipFileType.Archive)
                 {
                     return;
                 }
@@ -180,14 +185,14 @@ namespace SabreTools.DatTools
                         ProcessArchive(datFile, item, basePath, extracted);
 
                     // Now find all folders that are empty, if we are supposed to
-                    if (addBlanks)
+                    if (_addBlanks)
                         ProcessArchiveBlanks(datFile, item, basePath, archive);
                 }
 
                 // Process as file if we're treating archives as files
                 else
                 {
-                    ProcessFile(datFile, item, basePath, hashes, asFiles);
+                    ProcessFile(datFile, item, basePath, asFiles);
                 }
             }
 
@@ -195,12 +200,12 @@ namespace SabreTools.DatTools
             else
             {
                 // Skip if we're skipping files
-                if (skipFileType == SkipFileType.File)
+                if (_skipFileType == SkipFileType.File)
                     return;
 
                 // Process as file
                 else
-                    ProcessFile(datFile, item, basePath, hashes, asFiles);
+                    ProcessFile(datFile, item, basePath, asFiles);
             }
         }
 
@@ -251,7 +256,7 @@ namespace SabreTools.DatTools
 
             // First take care of the found items
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(extracted, Globals.ParallelOptions, baseFile =>
+            Parallel.ForEach(extracted, Core.Globals.ParallelOptions, baseFile =>
 #elif NET40_OR_GREATER
             Parallel.ForEach(extracted, baseFile =>
 #else
@@ -294,7 +299,7 @@ namespace SabreTools.DatTools
 
             // Add add all of the found empties to the DAT
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(empties, Globals.ParallelOptions, empty =>
+            Parallel.ForEach(empties, Core.Globals.ParallelOptions, empty =>
 #elif NET40_OR_GREATER
             Parallel.ForEach(empties, empty =>
 #else
@@ -329,7 +334,7 @@ namespace SabreTools.DatTools
 
             List<string> empties = basePath.ListEmpty() ?? [];
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(empties, Globals.ParallelOptions, dir =>
+            Parallel.ForEach(empties, Core.Globals.ParallelOptions, dir =>
 #elif NET40_OR_GREATER
             Parallel.ForEach(empties, dir =>
 #else
@@ -396,12 +401,12 @@ namespace SabreTools.DatTools
         /// <param name="datFile">Current DatFile object to add to</param>
         /// <param name="item">File to be added</param>
         /// <param name="basePath">Path the represents the parent directory</param>
-        /// <param name="hashes">Hashes to include in the information</param>
         /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
-        private static void ProcessFile(DatFile datFile, string item, string? basePath, HashType[] hashes, TreatAsFile asFiles)
+        private void ProcessFile(DatFile datFile, string item, string? basePath, TreatAsFile asFiles)
         {
             logger.Verbose($"'{Path.GetFileName(item)}' treated like a file");
-            BaseFile? baseFile = BaseFile.GetInfo(item, header: datFile.Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey), hashes: hashes, asFiles: asFiles);
+            var header = datFile.Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey);
+            BaseFile? baseFile = BaseFile.GetInfo(item, header, _hashes, asFiles);
             DatItem? datItem = DatItem.Create(baseFile);
             if (datItem != null)
                 ProcessFileHelper(datFile, item, datItem, basePath, string.Empty);

@@ -36,6 +36,7 @@ namespace RombaSharp.Features
                 return false;
 
             HashType[] hashes = [HashType.CRC32, HashType.MD5, HashType.SHA1];
+            var dfd = new DatFromDir(hashes, SkipFileType.None, addBlanks: false);
 
             logger.Error("This feature is not yet implemented: rescan-depots");
 
@@ -74,7 +75,7 @@ namespace RombaSharp.Features
 
                 // Now rescan the depot itself
                 DatFile depot = DatFile.Create();
-                DatFromDir.PopulateFromDir(depot, depotname, asFiles: TreatAsFile.NonArchive, hashes: hashes);
+                dfd.PopulateFromDir(depot, depotname, TreatAsFile.NonArchive);
                 depot.Items.BucketBy(ItemKey.SHA1, DedupeType.None);
 
                 // Set the base queries to use

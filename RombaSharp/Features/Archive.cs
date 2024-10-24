@@ -59,6 +59,7 @@ have a current entry in the DAT index.";
             bool noDb = GetBoolean(features, NoDbValue);
             bool onlyNeeded = GetBoolean(features, OnlyNeededValue);
             HashType[] hashes = [HashType.CRC32, HashType.MD5, HashType.SHA1];
+            var dfd = new DatFromDir(hashes, SkipFileType.None, addBlanks: false);
 
             // First we want to get just all directories from the inputs
             List<string> onlyDirs = [];
@@ -72,8 +73,8 @@ have a current entry in the DAT index.";
             DatFile df = DatFile.Create();
             foreach (string dir in onlyDirs)
             {
-                DatFromDir.PopulateFromDir(df, dir, asFiles: TreatAsFile.NonArchive, hashes: hashes);
-                DatFromDir.PopulateFromDir(df, dir, asFiles: TreatAsFile.All, hashes: hashes);
+                dfd.PopulateFromDir(df, dir, TreatAsFile.NonArchive);
+                dfd.PopulateFromDir(df, dir, TreatAsFile.All);
             }
 
             // Create an empty Dat for files that need to be rebuilt

@@ -64,6 +64,7 @@ namespace SabreTools.Features
             bool noAutomaticDate = GetBoolean(features, NoAutomaticDateValue);
             var includeInScan = GetIncludeInScan(features);
             var skipFileType = GetSkipFileType(features);
+            var dfd = new DatTools.DatFromDir(includeInScan, skipFileType, addBlankFiles);
 
             // Apply the specialized field removals to the cleaner
             if (!addFileDates)
@@ -90,14 +91,7 @@ namespace SabreTools.Features
                     datdata.FillHeaderFromPath(basePath, noAutomaticDate);
 
                     // Now populate from the path
-                    bool success = DatTools.DatFromDir.PopulateFromDir(
-                        datdata,
-                        basePath,
-                        asFiles,
-                        skipFileType,
-                        addBlankFiles,
-                        hashes: includeInScan);
-
+                    bool success = dfd.PopulateFromDir(datdata, basePath, asFiles);
                     if (success)
                     {
                         // Perform additional processing steps

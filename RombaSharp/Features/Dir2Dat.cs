@@ -42,6 +42,7 @@ namespace RombaSharp.Features
             string? source = GetString(features, SourceStringValue);
             string? outdat = GetString(features, OutStringValue);
             HashType[] hashes = [HashType.CRC32, HashType.MD5, HashType.SHA1];
+            var dfd = new DatFromDir(hashes, SkipFileType.None, addBlanks: false);
 
             // Ensure the output directory
             outdat = outdat.Ensure(create: true);
@@ -57,7 +58,7 @@ namespace RombaSharp.Features
             DatFile datfile = DatFile.Create();
             datfile.Header.SetFieldValue<string?>(SabreTools.Models.Metadata.Header.NameKey, string.IsNullOrWhiteSpace(name) ? "untitled" : name);
             datfile.Header.SetFieldValue<string?>(SabreTools.Models.Metadata.Header.DescriptionKey, description);
-            DatFromDir.PopulateFromDir(datfile, source, asFiles: TreatAsFile.NonArchive, hashes: hashes);
+            dfd.PopulateFromDir(datfile, source, TreatAsFile.NonArchive);
             Writer.Write(datfile, outdat!);
             return true;
         }
