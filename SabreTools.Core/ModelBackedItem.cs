@@ -36,11 +36,11 @@ namespace SabreTools.Core
         public U? GetFieldValue<U>(string? fieldName)
         {
             // Invalid field cannot be processed
-            if (string.IsNullOrEmpty(fieldName))
+            if (fieldName == null || !_internal.ContainsKey(fieldName))
                 return default;
 
             // Get the value based on the type
-            return _internal!.Read<U>(fieldName!);
+            return _internal.Read<U>(fieldName);
         }
 
         /// <summary>
@@ -51,11 +51,11 @@ namespace SabreTools.Core
         public bool? GetBoolFieldValue(string? fieldName)
         {
             // Invalid field cannot be processed
-            if (string.IsNullOrEmpty(fieldName) || !_internal.ContainsKey(fieldName!))
+            if (fieldName == null || !_internal.ContainsKey(fieldName))
                 return default;
 
             // Get the value based on the type
-            return _internal.ReadBool(fieldName!);
+            return _internal.ReadBool(fieldName);
         }
 
         /// <summary>
@@ -66,16 +66,16 @@ namespace SabreTools.Core
         public double? GetDoubleFieldValue(string? fieldName)
         {
             // Invalid field cannot be processed
-            if (string.IsNullOrEmpty(fieldName) || !_internal.ContainsKey(fieldName!))
+            if (fieldName == null || !_internal.ContainsKey(fieldName))
                 return default;
 
             // Try to parse directly
-            double? doubleValue = _internal.ReadDouble(fieldName!);
+            double? doubleValue = _internal.ReadDouble(fieldName);
             if (doubleValue != null)
                 return doubleValue;
 
             // Try to parse from the string
-            string? stringValue = _internal.ReadString(fieldName!);
+            string? stringValue = _internal.ReadString(fieldName);
             return NumberHelper.ConvertToDouble(stringValue);
         }
 
@@ -87,16 +87,16 @@ namespace SabreTools.Core
         public long? GetInt64FieldValue(string? fieldName)
         {
             // Invalid field cannot be processed
-            if (string.IsNullOrEmpty(fieldName) || !_internal.ContainsKey(fieldName!))
+            if (fieldName == null || !_internal.ContainsKey(fieldName))
                 return default;
 
             // Try to parse directly
-            long? longValue = _internal.ReadLong(fieldName!);
+            long? longValue = _internal.ReadLong(fieldName);
             if (longValue != null)
                 return longValue;
 
             // Try to parse from the string
-            string? stringValue = _internal.ReadString(fieldName!);
+            string? stringValue = _internal.ReadString(fieldName);
             return NumberHelper.ConvertToInt64(stringValue);
         }
 
@@ -108,11 +108,11 @@ namespace SabreTools.Core
         public string? GetStringFieldValue(string? fieldName)
         {
             // Invalid field cannot be processed
-            if (string.IsNullOrEmpty(fieldName) || !_internal.ContainsKey(fieldName!))
+            if (fieldName == null || !_internal.ContainsKey(fieldName))
                 return default;
 
             // Get the value based on the type
-            return _internal.ReadString(fieldName!);
+            return _internal.ReadString(fieldName);
         }
 
         /// <summary>
@@ -123,11 +123,11 @@ namespace SabreTools.Core
         public string[]? GetStringArrayFieldValue(string? fieldName)
         {
             // Invalid field cannot be processed
-            if (string.IsNullOrEmpty(fieldName) || !_internal.ContainsKey(fieldName!))
+            if (fieldName == null || !_internal.ContainsKey(fieldName))
                 return default;
 
             // Get the value based on the type
-            return _internal.ReadStringArray(fieldName!);
+            return _internal.ReadStringArray(fieldName);
         }
 
         /// <summary>
@@ -140,11 +140,11 @@ namespace SabreTools.Core
         public bool SetFieldValue<U>(string? fieldName, U? value)
         {
             // Invalid field cannot be processed
-            if (string.IsNullOrEmpty(fieldName))
+            if (fieldName == null)
                 return false;
 
             // Set the value based on the type
-            _internal[fieldName!] = value;
+            _internal[fieldName] = value;
             return true;
         }
 
