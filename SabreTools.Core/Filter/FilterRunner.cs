@@ -25,7 +25,12 @@ namespace SabreTools.Core.Filter
             var filters = new List<FilterObject>();
             foreach (string filterString in filterStrings)
             {
-                filters.Add(new FilterObject(filterString));
+                try
+                {
+                    var filter = new FilterObject(filterString);
+                    filters.Add(filter);
+                }
+                catch { }
             }
 
             Filters = [.. filters];
