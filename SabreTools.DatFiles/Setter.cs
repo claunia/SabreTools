@@ -82,7 +82,7 @@ namespace SabreTools.DatFiles
         /// Populate the setters using a set of field names
         /// </summary>
         /// <param name="mappings">Dictionary of mappings</param>
-        public void PopulateSettersFromDictionary(Dictionary<(string, string), string>? mappings)
+        public void PopulateSettersFromDictionary(Dictionary<string, string>? mappings)
         {
             // If the dictionary is null or empty, just return
             if (mappings == null || mappings.Count == 0)
@@ -93,7 +93,7 @@ namespace SabreTools.DatFiles
             // Now we loop through and get values for everything
             foreach (var mapping in mappings)
             {
-                string field = $"{mapping.Key.Item1}.{mapping.Key.Item2}";
+                string field = mapping.Key;
                 string value = mapping.Value;
 
                 if (!SetSetter(field, value))

@@ -14,7 +14,7 @@ namespace SabreTools.Filtering
         /// <summary>
         /// List of extras to apply
         /// </summary>
-        public List<ExtraIniItem> Items { get; } = [];
+        public readonly List<ExtraIniItem> Items = [];
 
         #endregion
 
@@ -55,8 +55,6 @@ namespace SabreTools.Filtering
 
             foreach (string input in inputs)
             {
-                ExtraIniItem item = new();
-
                 // If we don't even have a possible field and file combination
                 if (!input.Contains(":"))
                 {
@@ -69,7 +67,7 @@ namespace SabreTools.Filtering
                 string fileString = inputTrimmed.Substring(fieldString.Length + 1).Trim('"', ' ', '\t');
 
                 FilterParser.ParseFilterId(fieldString, out string itemName, out string fieldName);
-                item.FieldName = (itemName, fieldName);
+                var item = new ExtraIniItem(itemName, fieldName);
                 if (item.PopulateFromFile(fileString))
                     Items.Add(item);
             }
@@ -210,9 +208,9 @@ namespace SabreTools.Filtering
         /// Combine ExtraIni fields
         /// </summary>
         /// <returns>Mapping dictionary from machine name to field mapping</returns>
-        private Dictionary<string, Dictionary<(string, string), string>> CombineExtras()
+        private Dictionary<string, Dictionary<string, string>> CombineExtras()
         {
-            var machineMap = new Dictionary<string, Dictionary<(string, string), string>>();
+            var machineMap = new Dictionary<string, Dictionary<string, string>>();
 
             // Loop through each of the extras
             foreach (ExtraIniItem item in Items)
@@ -225,7 +223,7 @@ namespace SabreTools.Filtering
                     if (!machineMap.ContainsKey(machineName))
                         machineMap[machineName] = [];
 
-                    machineMap[machineName][item.FieldName!] = value;
+                    machineMap[machineName][item.Key] = value;
                 }
             }
 

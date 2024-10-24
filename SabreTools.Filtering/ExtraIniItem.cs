@@ -10,14 +10,35 @@ namespace SabreTools.Filtering
         #region Fields
 
         /// <summary>
-        /// Type and field to update with INI information
+        /// Item type and field to update with INI information
         /// </summary>
-        public (string?, string?) FieldName { get; set; } = (null, null);
+        /// <remarks>Formatted like "ItemName.FieldName"</remarks>
+        public string Key => $"{_itemName}.{_fieldName}";
+
+        /// <summary>
+        /// Item type to update with INI information
+        /// </summary>
+        private readonly string _itemName;
+
+        /// <summary>
+        /// Field to update with INI information
+        /// </summary>
+        private readonly string _fieldName;
 
         /// <summary>
         /// Mappings from machine names to value
         /// </summary>
-        public Dictionary<string, string> Mappings { get; } = [];
+        public readonly Dictionary<string, string> Mappings = [];
+
+        #endregion
+
+        #region Constructors
+
+        public ExtraIniItem(string itemName, string fieldName)
+        {
+            _itemName = itemName;
+            _fieldName = fieldName;
+        }
 
         #endregion
 
