@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using SabreTools.Core.Filter;
 using SabreTools.IO.Logging;
 using SabreTools.IO.Readers;
 
@@ -13,17 +14,7 @@ namespace SabreTools.Filtering
         /// Item type and field to update with INI information
         /// </summary>
         /// <remarks>Formatted like "ItemName.FieldName"</remarks>
-        public string Key => $"{_itemName}.{_fieldName}";
-
-        /// <summary>
-        /// Item type to update with INI information
-        /// </summary>
-        private readonly string _itemName;
-
-        /// <summary>
-        /// Field to update with INI information
-        /// </summary>
-        private readonly string _fieldName;
+        public readonly FilterKey Key;
 
         /// <summary>
         /// Mappings from machine names to value
@@ -36,8 +27,7 @@ namespace SabreTools.Filtering
 
         public ExtraIniItem(string itemName, string fieldName)
         {
-            _itemName = itemName;
-            _fieldName = fieldName;
+            Key = new FilterKey(itemName, fieldName);
         }
 
         #endregion

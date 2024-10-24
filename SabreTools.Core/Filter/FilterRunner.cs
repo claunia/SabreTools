@@ -54,9 +54,9 @@ namespace SabreTools.Core.Filter
             foreach (var filter in Filters)
             {
                 // If the filter isn't for this object type, skip
-                if (filter.ItemName != itemName)
+                if (filter.Key.ItemName != itemName)
                     continue;
-                else if (filter.ItemName == "item" && Array.IndexOf(TypeHelper.GetDatItemTypeNames(), itemName) > -1)
+                else if (filter.Key.ItemName == "item" && Array.IndexOf(TypeHelper.GetDatItemTypeNames(), itemName) > -1)
                     continue;
 
                 // If we don't get a match, it's a failure

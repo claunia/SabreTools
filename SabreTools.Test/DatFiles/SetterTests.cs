@@ -1,3 +1,4 @@
+using SabreTools.Core.Filter;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -12,7 +13,7 @@ namespace SabreTools.Test.DatFiles
         {
             var datItem = CreateDatItem();
             var setter = new Setter();
-            setter.PopulateSetters("datitem.name", "bar");
+            setter.PopulateSetters(new FilterKey("datitem", "name"), "bar");
             setter.SetFields(datItem);
             Assert.Equal("bar", datItem.GetName());
         }
@@ -22,7 +23,7 @@ namespace SabreTools.Test.DatFiles
         {
             var datItem = CreateDatItem();
             var setter = new Setter();
-            setter.PopulateSetters("machine.name", "foo");
+            setter.PopulateSetters(new FilterKey("machine", "name"), "foo");
             setter.SetFields(datItem.GetFieldValue<Machine>(DatItem.MachineKey));
             Assert.Equal("foo", datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey));
         }

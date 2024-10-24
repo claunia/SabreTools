@@ -208,9 +208,9 @@ namespace SabreTools.Filtering
         /// Combine ExtraIni fields
         /// </summary>
         /// <returns>Mapping dictionary from machine name to field mapping</returns>
-        private Dictionary<string, Dictionary<string, string>> CombineExtras()
+        private Dictionary<string, Dictionary<FilterKey, string>> CombineExtras()
         {
-            var machineMap = new Dictionary<string, Dictionary<string, string>>();
+            var machineMap = new Dictionary<string, Dictionary<FilterKey, string>>();
 
             // Loop through each of the extras
             foreach (ExtraIniItem item in Items)

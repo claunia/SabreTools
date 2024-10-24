@@ -825,7 +825,8 @@ Reset the internal state:           reset();";
                 string value = Arguments[1];
 
                 var setter = new Setter();
-                setter.PopulateSetters(field, value);
+                FilterParser.ParseFilterId(Arguments[0], out string itemName, out string fieldName);
+                setter.PopulateSetters(new FilterKey(itemName, fieldName), value);
 
                 // Set the header field
                 setter.SetFields(batchState.DatFile.Header);

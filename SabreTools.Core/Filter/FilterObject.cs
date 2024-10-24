@@ -12,14 +12,9 @@ namespace SabreTools.Core.Filter
     public class FilterObject
     {
         /// <summary>
-        /// Item name associated with the field
+        /// Item key associated with the filter
         /// </summary>
-        public readonly string ItemName;
-
-        /// <summary>
-        /// Field name associated with the filter
-        /// </summary>
-        public readonly string FieldName;
+        public readonly FilterKey Key;
 
         /// <summary>
         /// Value to match in the filter
@@ -39,8 +34,7 @@ namespace SabreTools.Core.Filter
             if (!FilterParser.ParseFilterId(keyItem, out string itemName, out string fieldName))
                 throw new ArgumentOutOfRangeException(nameof(filterString));
 
-            ItemName = itemName;
-            FieldName = fieldName;
+            Key = new FilterKey(itemName, fieldName);
             Value = value;
             Operation = operation;
         }
@@ -50,8 +44,7 @@ namespace SabreTools.Core.Filter
             if (!FilterParser.ParseFilterId(itemField, out string itemName, out string fieldName))
                 throw new ArgumentOutOfRangeException(nameof(value));
 
-            ItemName = itemName;
-            FieldName = fieldName;
+            Key = new FilterKey(itemName, fieldName);
             Value = value;
             Operation = GetOperation(operation);
         }
@@ -61,8 +54,7 @@ namespace SabreTools.Core.Filter
             if (!FilterParser.ParseFilterId(itemField, out string itemName, out string fieldName))
                 throw new ArgumentOutOfRangeException(nameof(value));
 
-            ItemName = itemName;
-            FieldName = fieldName;
+            Key = new FilterKey(itemName, fieldName);
             Value = value;
             Operation = operation;
         }
@@ -93,11 +85,11 @@ namespace SabreTools.Core.Filter
         private bool MatchesEqual(DictionaryBase dictionaryBase)
         {
             // If the key doesn't exist, we count it as null
-            if (!dictionaryBase.ContainsKey(FieldName))
+            if (!dictionaryBase.ContainsKey(Key.FieldName))
                 return Value == null;
 
             // If the value in the dictionary is null
-            string? checkValue = dictionaryBase.ReadString(FieldName);
+            string? checkValue = dictionaryBase.ReadString(Key.FieldName);
             if (checkValue == null)
                 return Value == null;
 
@@ -136,11 +128,11 @@ namespace SabreTools.Core.Filter
         private bool MatchesNotEqual(DictionaryBase dictionaryBase)
         {
             // If the key doesn't exist, we count it as null
-            if (!dictionaryBase.ContainsKey(FieldName))
+            if (!dictionaryBase.ContainsKey(Key.FieldName))
                 return Value != null;
 
             // If the value in the dictionary is null
-            string? checkValue = dictionaryBase.ReadString(FieldName);
+            string? checkValue = dictionaryBase.ReadString(Key.FieldName);
             if (checkValue == null)
                 return Value == null;
 
@@ -179,11 +171,11 @@ namespace SabreTools.Core.Filter
         private bool MatchesGreaterThan(DictionaryBase dictionaryBase)
         {
             // If the key doesn't exist, we count it as null
-            if (!dictionaryBase.ContainsKey(FieldName))
+            if (!dictionaryBase.ContainsKey(Key.FieldName))
                 return false;
 
             // If the value in the dictionary is null
-            string? checkValue = dictionaryBase.ReadString(FieldName);
+            string? checkValue = dictionaryBase.ReadString(Key.FieldName);
             if (checkValue == null)
                 return false;
 
@@ -212,11 +204,11 @@ namespace SabreTools.Core.Filter
         private bool MatchesGreaterThanOrEqual(DictionaryBase dictionaryBase)
         {
             // If the key doesn't exist, we count it as null
-            if (!dictionaryBase.ContainsKey(FieldName))
+            if (!dictionaryBase.ContainsKey(Key.FieldName))
                 return false;
 
             // If the value in the dictionary is null
-            string? checkValue = dictionaryBase.ReadString(FieldName);
+            string? checkValue = dictionaryBase.ReadString(Key.FieldName);
             if (checkValue == null)
                 return false;
 
@@ -245,11 +237,11 @@ namespace SabreTools.Core.Filter
         private bool MatchesLessThan(DictionaryBase dictionaryBase)
         {
             // If the key doesn't exist, we count it as null
-            if (!dictionaryBase.ContainsKey(FieldName))
+            if (!dictionaryBase.ContainsKey(Key.FieldName))
                 return false;
 
             // If the value in the dictionary is null
-            string? checkValue = dictionaryBase.ReadString(FieldName);
+            string? checkValue = dictionaryBase.ReadString(Key.FieldName);
             if (checkValue == null)
                 return false;
 
@@ -278,11 +270,11 @@ namespace SabreTools.Core.Filter
         private bool MatchesLessThanOrEqual(DictionaryBase dictionaryBase)
         {
             // If the key doesn't exist, we count it as null
-            if (!dictionaryBase.ContainsKey(FieldName))
+            if (!dictionaryBase.ContainsKey(Key.FieldName))
                 return false;
 
             // If the value in the dictionary is null
-            string? checkValue = dictionaryBase.ReadString(FieldName);
+            string? checkValue = dictionaryBase.ReadString(Key.FieldName);
             if (checkValue == null)
                 return false;
 

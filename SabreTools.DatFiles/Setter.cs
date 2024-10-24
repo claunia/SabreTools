@@ -29,7 +29,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Mappings to set DatItem fields
         /// </summary>
-        public Dictionary<(string, string), string> ItemFieldMappings { get; } = [];
+        public Dictionary<FilterKey, string> ItemFieldMappings { get; } = [];
 
         #endregion
 
@@ -49,7 +49,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="field">Field name</param>
         /// <param name="value">Field value</param>
-        public void PopulateSetters(string field, string value)
+        public void PopulateSetters(FilterKey field, string value)
             => PopulateSettersFromList([field], [value]);
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="fields">List of field names</param>
         /// <param name="values">List of field values</param>
-        public void PopulateSettersFromList(List<string> fields, List<string> values)
+        public void PopulateSettersFromList(List<FilterKey> fields, List<string> values)
         {
             // If the list is null or empty, just return
             if (values == null || values.Count == 0)
@@ -68,7 +68,7 @@ namespace SabreTools.DatFiles
             // Now we loop through and get values for everything
             for (int i = 0; i < fields.Count; i++)
             {
-                string field = fields[i];
+                FilterKey field = fields[i];
                 string value = values[i];
 
                 if (!SetSetter(field, value))
@@ -82,7 +82,7 @@ namespace SabreTools.DatFiles
         /// Populate the setters using a set of field names
         /// </summary>
         /// <param name="mappings">Dictionary of mappings</param>
-        public void PopulateSettersFromDictionary(Dictionary<string, string>? mappings)
+        public void PopulateSettersFromDictionary(Dictionary<FilterKey, string>? mappings)
         {
             // If the dictionary is null or empty, just return
             if (mappings == null || mappings.Count == 0)
@@ -93,7 +93,7 @@ namespace SabreTools.DatFiles
             // Now we loop through and get values for everything
             foreach (var mapping in mappings)
             {
-                string field = mapping.Key;
+                FilterKey field = mapping.Key;
                 string value = mapping.Value;
 
                 if (!SetSetter(field, value))
@@ -106,29 +106,32 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Set remover from a value
         /// </summary>
-        /// <param name="field">Key for the remover to be set</param>
-        private bool SetSetter(string field, string value)
+        /// <param name="key">Key for the remover to be set</param>
+        private bool SetSetter(FilterKey key, string value)
         {
-            // If the key is null or empty, return false
-            if (string.IsNullOrEmpty(field))
-                return false;
+            // Split the key values for validation
+            string itemName = key.ItemName;
+            string fieldName = key.FieldName;
 
             // Get the parser pair out of it, if possible
-            if (!FilterParser.ParseFilterId(field, out string type, out string key))
+            if (!FilterParser.ParseFilterId(ref itemName, ref fieldName))
                 return false;
 
-            switch (type)
+            // Set the values back on the key
+            key = new FilterKey(itemName, fieldName);
+
+            switch (itemName)
             {
                 case Models.Metadata.MetadataFile.HeaderKey:
-                    HeaderFieldMappings[key] = value;
+                    HeaderFieldMappings[fieldName] = value;
                     return true;
 
                 case Models.Metadata.MetadataFile.MachineKey:
-                    MachineFieldMappings[key] = value;
+                    MachineFieldMappings[fieldName] = value;
                     return true;
 
                 default:
-                    ItemFieldMappings[(type, key)] = value;
+                    ItemFieldMappings[key] = value;
                     return true;
             }
         }
@@ -189,16 +192,16 @@ namespace SabreTools.DatFiles
 
             // If there are no field names for this type or generic, return
             string? itemType = datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue();
-            if (itemType == null || (!ItemFieldMappings.Keys.Any(kvp => kvp.Item1 == itemType) && !ItemFieldMappings.Keys.Any(kvp => kvp.Item1 == "item")))
+            if (itemType == null || (!ItemFieldMappings.Keys.Any(kvp => kvp.ItemName == itemType) && !ItemFieldMappings.Keys.Any(kvp => kvp.ItemName == "item")))
                 return;
 
             // Get the combined list of fields to remove
             var fieldMappings = new Dictionary<string, string>();
-            foreach (var mapping in ItemFieldMappings.Where(kvp => kvp.Key.Item1 == "item").ToDictionary(kvp => kvp.Key.Item2, kvp => kvp.Value))
+            foreach (var mapping in ItemFieldMappings.Where(kvp => kvp.Key.ItemName == "item").ToDictionary(kvp => kvp.Key.FieldName, kvp => kvp.Value))
             {
                 fieldMappings[mapping.Key] = mapping.Value;
             }
-            foreach (var mapping in ItemFieldMappings.Where(kvp => kvp.Key.Item1 == itemType).ToDictionary(kvp => kvp.Key.Item2, kvp => kvp.Value))
+            foreach (var mapping in ItemFieldMappings.Where(kvp => kvp.Key.ItemName == itemType).ToDictionary(kvp => kvp.Key.FieldName, kvp => kvp.Value))
             {
                 fieldMappings[mapping.Key] = mapping.Value;
             }
