@@ -7,7 +7,7 @@ using SabreTools.Hashing;
 using SabreTools.Help;
 using SabreTools.IO;
 
-namespace SabreTools.Features
+namespace Headerer.Features
 {
     internal class Restore : BaseFeature
     {

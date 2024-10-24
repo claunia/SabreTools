@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Headerer.Features;
 using SabreTools.Core;
-using SabreTools.Features;
 using SabreTools.Help;
 using SabreTools.IO;
 using SabreTools.Logging;
 
-namespace SabreTools
+namespace Headerer
 {
     public class Program
     {
@@ -32,7 +32,7 @@ namespace SabreTools
         public static void Main(string[] args)
         {
             // Perform initial setup and verification
-            LoggerImpl.SetFilename(Path.Combine(PathTool.GetRuntimeDirectory(), "logs", "sabretools.log"), true);
+            LoggerImpl.SetFilename(Path.Combine(PathTool.GetRuntimeDirectory(), "logs", "headerer.log"), true);
             LoggerImpl.AppendPrefix = true;
             LoggerImpl.LowestLogLevel = LogLevel.VERBOSE;
             LoggerImpl.ThrowOnError = false;
@@ -104,7 +104,7 @@ namespace SabreTools
             if (!Console.IsOutputRedirected && feature.ScriptMode)
             {
                 Console.Clear();
-                Globals.SetConsoleHeader("SabreTools");
+                Globals.SetConsoleHeader("Headerer");
             }
 
             // Now process the current feature
@@ -118,18 +118,9 @@ namespace SabreTools
                     break;
 
                 // Require input verification
-                case Batch.Value:
-                case DatFromDir.Value:
-                case Split.Value:
-                case Stats.Value:
-                case Update.Value:
-                case Verify.Value:
+                case Extract.Value:
+                case Restore.Value:
                     VerifyInputs(feature.Inputs, feature);
-                    success = feature.ProcessFeatures(features);
-                    break;
-
-                // Requires no input verification
-                case Sort.Value:
                     success = feature.ProcessFeatures(features);
                     break;
 
@@ -160,9 +151,9 @@ namespace SabreTools
             string barrier = "-----------------------------------------";
             List<string> helpHeader =
             [
-                "SabreTools - Manipulate, convert, and use DAT files",
+                "Headerer - Remove, store, and restore copier headers",
                 barrier,
-                "Usage: SabreTools [option] [flags] [filename|dirname] ...",
+                "Usage: Headerer [option] [flags] [filename|dirname] ...",
                 string.Empty
             ];
 
@@ -172,13 +163,8 @@ namespace SabreTools
             // Add all of the features
             help.Add(new DisplayHelp());
             help.Add(new DisplayHelpDetailed());
-            help.Add(new Batch());
-            help.Add(new DatFromDir());
-            help.Add(new Sort());
-            help.Add(new Split());
-            help.Add(new Stats());
-            help.Add(new Update());
-            help.Add(new Verify());
+            help.Add(new Extract());
+            help.Add(new Restore());
 
             return help;
         }

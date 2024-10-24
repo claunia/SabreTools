@@ -8,7 +8,7 @@ using SabreTools.Help;
 using SabreTools.IO;
 using SabreTools.Skippers;
 
-namespace SabreTools.Features
+namespace Headerer.Features
 {
     internal class Extract : BaseFeature
     {

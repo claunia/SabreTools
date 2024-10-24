@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using Microsoft.Data.Sqlite;
 using SabreTools.Core;
 using SabreTools.Core.Filter;
 using SabreTools.Core.Tools;
@@ -721,20 +720,6 @@ namespace SabreTools.Features
                     "Add statistics for nodumps to output",
                     ParameterType.Flag,
                     longDescription: "Add a new column or field for counting the number of nodumps in the DAT.");
-            }
-        }
-
-        internal const string NoStoreHeaderValue = "no-store-header";
-        internal static Feature NoStoreHeaderFlag
-        {
-            get
-            {
-                return new Feature(
-                    NoStoreHeaderValue,
-                    new List<string>() { "-nsh", "--no-store-header" },
-                    "Don't store the extracted header",
-                    ParameterType.Flag,
-                    longDescription: "By default, all headers that are removed from files are backed up in the database. This flag allows users to skip that step entirely, avoiding caching the headers at all.");
             }
         }
 
@@ -2292,33 +2277,6 @@ Some special strings that can be used:
         #endregion
 
         #region Protected Helpers
-
-        /// <summary>
-        /// Ensure that the database exists and has the proper schema
-        /// </summary>
-        protected static void EnsureDatabase()
-        {
-            // Make sure the file exists
-            if (!File.Exists(HeadererFileName))
-                File.Create(HeadererFileName);
-
-            // Open the database connection
-            SqliteConnection dbc = new(HeadererConnectionString);
-            dbc.Open();
-
-            // Make sure the database has the correct schema
-            string query = @"
-CREATE TABLE IF NOT EXISTS data (
-    'sha1'		TEXT		NOT NULL,
-    'header'	TEXT		NOT NULL,
-    'type'		TEXT		NOT NULL,
-    PRIMARY KEY (sha1, header, type)
-)";
-            SqliteCommand slc = new(query, dbc);
-            slc.ExecuteNonQuery();
-            slc.Dispose();
-            dbc.Dispose();
-        }
 
         /// <summary>
         /// Get DatFormat value from input string

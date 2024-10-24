@@ -36,10 +36,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.10" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\SabreTools.DatFiles\SabreTools.DatFiles.csproj" />
     <ProjectReference Include="..\SabreTools.DatTools\SabreTools.DatTools.csproj" />
     <ProjectReference Include="..\SabreTools.Filtering\SabreTools.Filtering.csproj" />

@@ -39,17 +39,6 @@ As the core of the SabreTools suite, the C# libraries provide nearly all of the 
   * Includes the total uncompressed size of all items
   * Optionally includes statistics on individual DATs in a folder
   * Reports can be output in standard text, CSV, and/or HTML formats
-* **Extract and Restore Copier Headers** - Extract and store or restore from DB copier headers
-  * Supports copier headers from the following systems:
-    * Atari 7800
-    * Atari Lynx
-    * Commodore 64 PSID music
-    * NEC PC-Engine / TurboGrafx 16
-    * Nintendo Famicom Disk System
-    * Nintendo Entertainment System / Famicom
-    * Super Nintendo Entertainment System / Super Famicom
-    * Super Nintendo Entertainment System / Super Famicom SPC music
-  * Stores the header information linked to unheadered hash
 * **Rebuild From DAT** - Act as a simple rebuilder for files
   * Two options for rebuild origin: standard folder and Romba depot
   * Multiple output formats: unarchived, TAR, TorrentZip, 7zip, TorrentGZ
@@ -65,6 +54,19 @@ As the core of the SabreTools suite, the C# libraries provide nearly all of the 
   * Aaruformat and CHDs can be treated like files
 
 This tool has a comprehensive list of command line parameters that can be used to do the above and much more.
+
+### Headerer
+
+A small tool that allows users to extract, store, and remove copier headers for a variety of systems. Optionally, the stored headers can be replaced on the original files using a separate command. Each of the headers are stored in a Sqlite database file that links each header to the unheadered hash of the original file. The following copier header types are supported:
+
+* Atari 7800
+* Atari Lynx
+* Commodore 64 PSID music
+* NEC PC-Engine / TurboGrafx 16
+* Nintendo Famicom Disk System
+* Nintendo Entertainment System / Famicom
+* Super Nintendo Entertainment System / Super Famicom
+* Super Nintendo Entertainment System / Super Famicom SPC music
 
 ### RombaSharp
 
