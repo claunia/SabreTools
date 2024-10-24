@@ -56,13 +56,18 @@ namespace SabreTools.Core.Filter
             if (dictionaryBase == null || string.IsNullOrEmpty(fieldName))
                 return false;
 
-            // Retrieve the list of valid fields for the item and validate
+            // Retrieve the list of valid fields for the item
             var constants = TypeHelper.GetConstants(dictionaryBase.GetType());
-            if (constants == null || !constants.Any(c => string.Equals(c, fieldName, StringComparison.OrdinalIgnoreCase)))
+            if (constants == null)
+                return false;
+
+            // Get the value that matches the field name provided
+            string? realField = constants.FirstOrDefault(c => string.Equals(c, fieldName, StringComparison.OrdinalIgnoreCase));
+            if (realField == null)
                 return false;
 
             // Set the field with the new value
-            dictionaryBase[fieldName!] = value;
+            dictionaryBase[realField] = value;
             return true;
         }
     }
