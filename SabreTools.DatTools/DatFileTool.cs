@@ -55,16 +55,17 @@ namespace SabreTools.DatTools
                 foreach (DatItem item in items)
                 {
                     DatItem newItem = item;
-                    if (newItem.GetFieldValue<Source?>(DatItem.SourceKey) == null)
+                    var source = newItem.GetFieldValue<Source?>(DatItem.SourceKey);
+                    if (source == null)
                         continue;
 
-                    string filename = inputs[newItem.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].CurrentPath;
-                    string? rootpath = inputs[newItem.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].ParentPath;
+                    string filename = inputs[source.Index].CurrentPath;
+                    string rootpath = inputs[source.Index].ParentPath ?? string.Empty;
 
-                    if (!string.IsNullOrEmpty(rootpath)
+                    if (rootpath.Length > 0
 #if NETFRAMEWORK
-                        && !rootpath!.EndsWith(Path.DirectorySeparatorChar.ToString())
-                        && !rootpath!.EndsWith(Path.AltDirectorySeparatorChar.ToString()))
+                        && !rootpath.EndsWith(Path.DirectorySeparatorChar.ToString())
+                        && !rootpath.EndsWith(Path.AltDirectorySeparatorChar.ToString()))
 #else
                         && !rootpath.EndsWith(Path.DirectorySeparatorChar)
                         && !rootpath.EndsWith(Path.AltDirectorySeparatorChar))
@@ -73,10 +74,17 @@ namespace SabreTools.DatTools
                         rootpath += Path.DirectorySeparatorChar.ToString();
                     }
 
-                    filename = filename.Remove(0, rootpath?.Length ?? 0);
-                    newItem.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Path.GetDirectoryName(filename) + Path.DirectorySeparatorChar
-                        + Path.GetFileNameWithoutExtension(filename) + Path.DirectorySeparatorChar
-                        + newItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+                    filename = filename.Remove(0, rootpath.Length);
+
+                    var machine = newItem.GetFieldValue<Machine>(DatItem.MachineKey);
+                    if (machine == null)
+                        continue;
+
+                    machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Path.GetDirectoryName(filename)
+                        + Path.DirectorySeparatorChar
+                        + Path.GetFileNameWithoutExtension(filename)
+                        + Path.DirectorySeparatorChar
+                        + machine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
 
                     newItems.Add(newItem);
                 }
@@ -125,9 +133,9 @@ namespace SabreTools.DatTools
                         continue;
 
                     string filename = inputs[source.Item2.Index].CurrentPath;
-                    string? rootpath = inputs[source.Item2.Index].ParentPath;
+                    string rootpath = inputs[source.Item2.Index].ParentPath ?? string.Empty;
 
-                    if (!string.IsNullOrEmpty(rootpath)
+                    if (rootpath.Length > 0
 #if NETFRAMEWORK
                         && !rootpath!.EndsWith(Path.DirectorySeparatorChar.ToString())
                         && !rootpath!.EndsWith(Path.AltDirectorySeparatorChar.ToString()))
@@ -139,7 +147,8 @@ namespace SabreTools.DatTools
                         rootpath += Path.DirectorySeparatorChar.ToString();
                     }
 
-                    filename = filename.Remove(0, rootpath?.Length ?? 0);
+                    filename = filename.Remove(0, rootpath.Length);
+
                     machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Path.GetDirectoryName(filename) + Path.DirectorySeparatorChar
                         + Path.GetFileNameWithoutExtension(filename) + Path.DirectorySeparatorChar
                         + machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey));
@@ -1330,7 +1339,8 @@ namespace SabreTools.DatTools
 
                 foreach (DatItem item in items)
                 {
-                    if (item.GetFieldValue<Source?>(DatItem.SourceKey) != null && item.GetFieldValue<Source?>(DatItem.SourceKey)!.Index == index)
+                    var source = item.GetFieldValue<Source?>(DatItem.SourceKey);
+                    if (source != null && source.Index == index)
                         indexDat.Items.Add(key, item);
                 }
 #if NET40_OR_GREATER || NETCOREAPP
