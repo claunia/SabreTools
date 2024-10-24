@@ -452,53 +452,6 @@ Features and Options:
 		  This sets an output folder to be used when the files are created. If
 		  a path is not defined, the runtime directory is used instead.
 
-  ex, extract			  Extract and remove copier headers
-	  This will detect, store, and remove copier headers from a file or folder
-	  of files. The headers are backed up and collated by the hash of the
-	  unheadered file. Files are then output without the detected copier header
-	  alongside the originals with the suffix .new. No input files are altered
-	  in the process. Only uncompressed files will be processed.
-	  
-	  The following systems have headers that this program can work with:
-	  - Atari 7800
-	  - Atari Lynx
-	  - Commodore PSID Music
-	  - NEC PC - Engine / TurboGrafx 16
-	  - Nintendo Famicom / Nintendo Entertainment System
-	  - Nintendo Famicom Disk System
-	  - Nintendo Super Famicom / Super Nintendo Entertainment System
-	  - Nintendo Super Famicom / Super Nintendo Entertainment System SPC
-
-	  -out=, --output-dir=		Set output directory
-		  This sets an output folder to be used when the files are created. If
-		  a path is not defined, the runtime directory is used instead.
-
-	  -nsh, --no-store-header	 Don't store the extracted header
-		  By default, all headers that are removed from files are backed up in
-		  the database. This flag allows users to skip that step entirely,
-		  avoiding caching the headers at all.
-
-  re, restore			  Restore header to file based on SHA-1
-	  This will make use of stored copier headers and reapply them to files if
-	  they match the included hash. More than one header can be applied to a
-	  file, so they will be output to new files, suffixed with .newX, where X
-	  is a number. No input files are altered in the process. Only uncompressed
-	  files will be processed.
-	  
-	  The following systems have headers that this program can work with:
-	  - Atari 7800
-	  - Atari Lynx
-	  - Commodore PSID Music
-	  - NEC PC - Engine / TurboGrafx 16
-	  - Nintendo Famicom / Nintendo Entertainment System
-	  - Nintendo Famicom Disk System
-	  - Nintendo Super Famicom / Super Nintendo Entertainment System
-	  - Nintendo Super Famicom / Super Nintendo Entertainment System SPC
-
-	  -out=, --output-dir=		 Set output directory
-		  This sets an output folder to be used when the files are created. If
-		  a path is not defined, the runtime directory is used instead.
-
   ss, sort				  Sort inputs by a set of DATs
 	  This feature allows the user to quickly rebuild based on a supplied DAT
 	  file(s). By default all files will be rebuilt to uncompressed folders in
