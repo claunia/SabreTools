@@ -140,11 +140,9 @@ namespace SabreTools.DatTools
 
             datFile.Items.DatStatistics.DisplayName = datFile.Header.GetStringFieldValue(DatHeader.FileNameKey);
             datFile.Items.DatStatistics.MachineCount = datFile.Items.Keys.Count;
-            datFile.Items.DatStatistics.IsDirectory = false;
 
             datFile.ItemsDB.DatStatistics.DisplayName = datFile.Header.GetStringFieldValue(DatHeader.FileNameKey);
             datFile.ItemsDB.DatStatistics.MachineCount = datFile.Items.Keys.Count;
-            datFile.ItemsDB.DatStatistics.IsDirectory = false;
 
             var statsList = new List<DatStatistics>
             {
