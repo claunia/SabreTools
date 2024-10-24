@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using SabreTools.Hashing;
+using SabreTools.IO.Extensions;
 using SabreTools.Matching;
 
 namespace SabreTools.Core.Tools
@@ -43,6 +44,18 @@ namespace SabreTools.Core.Tools
 
             // Otherwise, they need to match exactly
             return string.Equals(firstHash, secondHash, StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// Get a proper romba sub path
+        /// </summary>
+        /// <param name="hash">SHA-1 hash to get the path for</param>
+        /// <param name="depth">Positive value representing the depth of the depot</param>
+        /// <returns>Subfolder path for the given hash</returns>
+        public static string? GetDepotPath(byte[]? hash, int depth)
+        {
+            string? sha1 = ByteArrayExtensions.ByteArrayToString(hash);
+            return GetDepotPath(sha1, depth);
         }
 
         /// <summary>

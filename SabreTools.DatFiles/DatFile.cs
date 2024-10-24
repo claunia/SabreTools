@@ -467,27 +467,30 @@ namespace SabreTools.DatFiles
                 if (item is Disk disk)
                 {
                     // We can only write out if there's a SHA-1
-                    if (!string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)))
+                    string? sha1 = disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key);
+                    if (!string.IsNullOrEmpty(sha1))
                     {
-                        name = Utilities.GetDepotPath(disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key), outputDepot.Depth)?.Replace('\\', '/');
+                        name = Utilities.GetDepotPath(sha1, outputDepot.Depth)?.Replace('\\', '/');
                         item.SetName($"{pre}{name}{post}");
                     }
                 }
                 else if (item is Media media)
                 {
                     // We can only write out if there's a SHA-1
-                    if (!string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA1Key)))
+                    string? sha1 = media.GetStringFieldValue(Models.Metadata.Media.SHA1Key);
+                    if (!string.IsNullOrEmpty(sha1))
                     {
-                        name = Utilities.GetDepotPath(media.GetStringFieldValue(Models.Metadata.Media.SHA1Key), outputDepot.Depth)?.Replace('\\', '/');
+                        name = Utilities.GetDepotPath(sha1, outputDepot.Depth)?.Replace('\\', '/');
                         item.SetName($"{pre}{name}{post}");
                     }
                 }
                 else if (item is Rom rom)
                 {
                     // We can only write out if there's a SHA-1
-                    if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key)))
+                    string? sha1 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key);
+                    if (!string.IsNullOrEmpty(sha1))
                     {
-                        name = Utilities.GetDepotPath(rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key), outputDepot.Depth)?.Replace('\\', '/');
+                        name = Utilities.GetDepotPath(sha1, outputDepot.Depth)?.Replace('\\', '/');
                         item.SetName($"{pre}{name}{post}");
                     }
                 }
@@ -567,27 +570,30 @@ namespace SabreTools.DatFiles
                 if (item.Item2 is Disk disk)
                 {
                     // We can only write out if there's a SHA-1
-                    if (!string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)))
+                    string? sha1 = disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key);
+                    if (!string.IsNullOrEmpty(sha1))
                     {
-                        name = Utilities.GetDepotPath(disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key), outputDepot.Depth)?.Replace('\\', '/');
+                        name = Utilities.GetDepotPath(sha1, outputDepot.Depth)?.Replace('\\', '/');
                         item.Item2.SetName($"{pre}{name}{post}");
                     }
                 }
                 else if (item.Item2 is Media media)
                 {
                     // We can only write out if there's a SHA-1
-                    if (!string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA1Key)))
+                    string? sha1 = media.GetStringFieldValue(Models.Metadata.Media.SHA1Key);
+                    if (!string.IsNullOrEmpty(sha1))
                     {
-                        name = Utilities.GetDepotPath(media.GetStringFieldValue(Models.Metadata.Media.SHA1Key), outputDepot.Depth)?.Replace('\\', '/');
+                        name = Utilities.GetDepotPath(sha1, outputDepot.Depth)?.Replace('\\', '/');
                         item.Item2.SetName($"{pre}{name}{post}");
                     }
                 }
                 else if (item.Item2 is Rom rom)
                 {
                     // We can only write out if there's a SHA-1
-                    if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key)))
+                    string? sha1 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key);
+                    if (!string.IsNullOrEmpty(sha1))
                     {
-                        name = Utilities.GetDepotPath(rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key), outputDepot.Depth)?.Replace('\\', '/');
+                        name = Utilities.GetDepotPath(sha1, outputDepot.Depth)?.Replace('\\', '/');
                         item.Item2.SetName($"{pre}{name}{post}");
                     }
                 }
