@@ -278,10 +278,12 @@ Reset the internal state:           reset();";
             /// <remarks>TODO: Should any of the other options be added for D2D?</remarks>
             public override void Process(BatchState batchState)
             {
+                HashType[] hashes = [HashType.CRC32, HashType.MD5, HashType.SHA1];
+
                 // Assume there could be multiple
                 foreach (string input in Arguments)
                 {
-                    DatTools.DatFromDir.PopulateFromDir(batchState.DatFile, input, hashes: [HashType.CRC32, HashType.MD5, HashType.SHA1]);
+                    DatTools.DatFromDir.PopulateFromDir(batchState.DatFile, input, hashes: hashes);
                 }
 
                 // TODO: We might not want to remove dates in the future

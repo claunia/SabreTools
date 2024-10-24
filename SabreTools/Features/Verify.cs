@@ -53,6 +53,7 @@ namespace SabreTools.Features
             TreatAsFile asFiles = GetTreatAsFiles(features);
             bool hashOnly = GetBoolean(features, HashOnlyValue);
             bool quickScan = GetBoolean(features, QuickValue);
+            HashType[] hashes = quickScan ? [HashType.CRC32] : [HashType.CRC32, HashType.MD5, HashType.SHA1];
 
             // If we are in individual mode, process each DAT on their own
             if (GetBoolean(features, IndividualValue))
@@ -91,7 +92,7 @@ namespace SabreTools.Features
                         logger.User("Processing files:\n");
                         foreach (string input in Inputs)
                         {
-                            DatTools.DatFromDir.PopulateFromDir(datdata, input, asFiles: asFiles, hashes: quickScan ? [HashType.CRC32] : [HashType.CRC32, HashType.MD5, HashType.SHA1]);
+                            DatTools.DatFromDir.PopulateFromDir(datdata, input, asFiles: asFiles, hashes: hashes);
                         }
 
                         Verification.VerifyGeneric(datdata, hashOnly);
@@ -145,7 +146,7 @@ namespace SabreTools.Features
                     logger.User("Processing files:\n");
                     foreach (string input in Inputs)
                     {
-                        DatTools.DatFromDir.PopulateFromDir(datdata, input, asFiles: asFiles, hashes: quickScan ? [HashType.CRC32] : [HashType.CRC32, HashType.MD5, HashType.SHA1]);
+                        DatTools.DatFromDir.PopulateFromDir(datdata, input, asFiles: asFiles, hashes: hashes);
                     }
 
                     Verification.VerifyGeneric(datdata, hashOnly);

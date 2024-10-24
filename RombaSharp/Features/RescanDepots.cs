@@ -35,6 +35,8 @@ namespace RombaSharp.Features
             if (!base.ProcessFeatures(features))
                 return false;
 
+            HashType[] hashes = [HashType.CRC32, HashType.MD5, HashType.SHA1];
+
             logger.Error("This feature is not yet implemented: rescan-depots");
 
             foreach (string depotname in Inputs)
@@ -58,7 +60,7 @@ namespace RombaSharp.Features
                 dbc.Open();
 
                 // If we have it, then check for all hashes that are in that depot
-                List<string> hashes = [];
+                List<string> sha1Hashes = [];
                 string query = $"SELECT sha1 FROM sha1 WHERE depot=\"{depotname}\"";
                 SqliteCommand slc = new SqliteCommand(query, dbc);
                 SqliteDataReader sldr = slc.ExecuteReader();
@@ -66,13 +68,13 @@ namespace RombaSharp.Features
                 {
                     while (sldr.Read())
                     {
-                        hashes.Add(sldr.GetString(0));
+                        sha1Hashes.Add(sldr.GetString(0));
                     }
                 }
 
                 // Now rescan the depot itself
                 DatFile depot = DatFile.Create();
-                DatFromDir.PopulateFromDir(depot, depotname, asFiles: TreatAsFile.NonArchive, hashes: [HashType.CRC32, HashType.MD5, HashType.SHA1]);
+                DatFromDir.PopulateFromDir(depot, depotname, asFiles: TreatAsFile.NonArchive, hashes: hashes);
                 depot.Items.BucketBy(ItemKey.SHA1, DedupeType.None);
 
                 // Set the base queries to use
@@ -93,10 +95,10 @@ namespace RombaSharp.Features
 
                     foreach (Rom rom in roms)
                     {
-                        if (hashes.Contains(rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.SHA1Key)!))
+                        if (sha1Hashes.Contains(rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.SHA1Key)!))
                         {
                             dupehashes.Add(rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.SHA1Key)!);
-                            hashes.Remove(rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.SHA1Key)!);
+                            sha1Hashes.Remove(rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.SHA1Key)!);
                         }
                         else if (!dupehashes.Contains(rom.GetStringFieldValue(SabreTools.Models.Metadata.Rom.SHA1Key)!))
                         {
@@ -162,7 +164,7 @@ JOIN crc
 JOIN md5
     ON md5sha1.md5=md5.md5
 WHERE sha1.sha1 IN ";
-                query += $"({string.Join("\",\"", hashes)}\")";
+                query += $"({string.Join("\",\"", sha1Hashes)}\")";
                 slc = new SqliteCommand(query, dbc);
                 slc.ExecuteNonQuery();
 

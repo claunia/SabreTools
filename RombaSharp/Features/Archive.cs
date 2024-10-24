@@ -58,6 +58,7 @@ have a current entry in the DAT index.";
             // Get feature flags
             bool noDb = GetBoolean(features, NoDbValue);
             bool onlyNeeded = GetBoolean(features, OnlyNeededValue);
+            HashType[] hashes = [HashType.CRC32, HashType.MD5, HashType.SHA1];
 
             // First we want to get just all directories from the inputs
             List<string> onlyDirs = [];
@@ -71,8 +72,8 @@ have a current entry in the DAT index.";
             DatFile df = DatFile.Create();
             foreach (string dir in onlyDirs)
             {
-                DatFromDir.PopulateFromDir(df, dir, asFiles: TreatAsFile.NonArchive, hashes: [HashType.CRC32, HashType.MD5, HashType.SHA1]);
-                DatFromDir.PopulateFromDir(df, dir, asFiles: TreatAsFile.All, hashes: [HashType.CRC32, HashType.MD5, HashType.SHA1]);
+                DatFromDir.PopulateFromDir(df, dir, asFiles: TreatAsFile.NonArchive, hashes: hashes);
+                DatFromDir.PopulateFromDir(df, dir, asFiles: TreatAsFile.All, hashes: hashes);
             }
 
             // Create an empty Dat for files that need to be rebuilt
