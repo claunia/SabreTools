@@ -14,8 +14,9 @@ namespace Headerer
         /// </summary>
         /// <param name="file">Name of the file to be parsed</param>
         /// <param name="outDir">Output directory to write the file to, empty means the same directory as the input file</param>
+        /// <param name="debug">Enable additional log statements for debugging</param>
         /// <returns>True if a header was found and appended, false otherwise</returns>
-        public static bool RestoreHeader(string file, string? outDir)
+        public static bool RestoreHeader(string file, string? outDir, bool debug = false)
         {
             // Create the output directory if it doesn't exist
             if (!string.IsNullOrWhiteSpace(outDir) && !Directory.Exists(outDir))
@@ -25,7 +26,7 @@ namespace Headerer
             string sha1 = HashTool.GetFileHash(file, HashType.SHA1) ?? string.Empty;
 
             // Retrieve a list of all related headers from the database
-            List<string> headers = RetrieveHeadersFromDatabase(sha1);
+            List<string> headers = RetrieveHeadersFromDatabase(sha1, debug);
 
             // If we have nothing retrieved, we return false
             if (headers.Count == 0)
@@ -47,8 +48,9 @@ namespace Headerer
         /// Retrieve headers from the database
         /// </summary>
         /// <param name="SHA1">SHA-1 of the deheadered file</param>
+        /// <param name="debug">Enable additional log statements for debugging</param>
         /// <returns>List of strings representing the headers to add</returns>
-        private static List<string> RetrieveHeadersFromDatabase(string SHA1)
+        private static List<string> RetrieveHeadersFromDatabase(string SHA1, bool debug)
         {
             // Ensure the database exists
             Database.EnsureDatabase();
@@ -68,7 +70,7 @@ namespace Headerer
             {
                 while (sldr.Read())
                 {
-                    Console.WriteLine($"Found match with rom type '{sldr.GetString(1)}'"); // TODO: Gate behind debug flag
+                    if (debug) Console.WriteLine($"Found match with rom type '{sldr.GetString(1)}'");
                     headers.Add(sldr.GetString(0));
                 }
             }

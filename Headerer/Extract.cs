@@ -15,8 +15,9 @@ namespace Headerer
         /// <param name="file">Name of the file to be parsed</param>
         /// <param name="outDir">Output directory to write the file to, empty means the same directory as the input file</param>
         /// <param name="nostore">True if headers should not be stored in the database, false otherwise</param>
+        /// <param name="debug">Enable additional log statements for debugging</param>
         /// <returns>True if the output file was created, false otherwise</returns>
-        public static bool DetectTransformStore(string file, string? outDir, bool nostore)
+        public static bool DetectTransformStore(string file, string? outDir, bool nostore, bool debug = false)
         {
             // Create the output directory if it doesn't exist
             if (!string.IsNullOrWhiteSpace(outDir) && !Directory.Exists(outDir))
@@ -62,7 +63,7 @@ namespace Headerer
             if (!nostore)
             {
                 string sha1 = HashTool.GetFileHash(newfile, HashType.SHA1) ?? string.Empty;
-                AddHeaderToDatabase(hstr, sha1, rule.SourceFile!);
+                AddHeaderToDatabase(hstr, sha1, rule.SourceFile!, debug);
             }
 
             return true;
@@ -74,7 +75,8 @@ namespace Headerer
         /// <param name="header">String representing the header bytes</param>
         /// <param name="SHA1">SHA-1 of the deheadered file</param>
         /// <param name="type">Name of the source skipper file</param>
-        private static void AddHeaderToDatabase(string header, string SHA1, string source)
+        /// <param name="debug">Enable additional log statements for debugging</param>
+        private static void AddHeaderToDatabase(string header, string SHA1, string source, bool debug)
         {
             // Ensure the database exists
             Database.EnsureDatabase();
@@ -92,7 +94,7 @@ namespace Headerer
             {
                 query = $"INSERT INTO data (sha1, header, type) VALUES ('{SHA1}', '{header}', '{source}')";
                 slc = new SqliteCommand(query, dbc);
-                Console.WriteLine($"Result of inserting header: {slc.ExecuteNonQuery()}"); // TODO: Gate behind debug flag
+                if (debug) Console.WriteLine($"Result of inserting header: {slc.ExecuteNonQuery()}");
             }
 
             // Dispose of database objects

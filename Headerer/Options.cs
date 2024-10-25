@@ -18,6 +18,11 @@ namespace Headerer
         public Feature Feature { get; private set; } = Feature.NONE;
 
         /// <summary>
+        /// Output debug statements to console
+        /// </summary>
+        public bool Debug { get; private set; } = false;
+
+        /// <summary>
         /// Optional output directory
         /// </summary>
         public string? OutputDir { get; private set; }
@@ -71,6 +76,11 @@ namespace Headerer
                 string arg = args[index];
                 switch (arg)
                 {
+                    case "-dbg":
+                    case "--debug":
+                        options.Debug = true;
+                        break;
+
                     case "-o":
                     case "--outdir":
                         options.OutputDir = index + 1 < args.Length ? args[++index] : string.Empty;
@@ -120,10 +130,11 @@ namespace Headerer
             Console.WriteLine();
             Console.WriteLine("Common options:");
             Console.WriteLine("-?, -h, --help           Display this help text and quit");
+            Console.WriteLine("-dbg, --debug            Enable debug logging statements");
             Console.WriteLine("-o, --outdir [PATH]      Set output directory");
             Console.WriteLine();
             Console.WriteLine("Extraction options:");
-            Console.WriteLine("-nsh, --no-store-header  Set output path for extraction (required)");
+            Console.WriteLine("-nsh, --no-store-header  Don't store the extracted header");
         }
     }
 }
