@@ -1,64 +1,21 @@
-﻿using System.IO;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Microsoft.Data.Sqlite;
 using SabreTools.Hashing;
-using SabreTools.Help;
-using SabreTools.IO;
 using SabreTools.IO.Extensions;
 
-namespace Headerer.Features
+namespace Headerer
 {
-    internal class Restore : BaseFeature
+    internal static class Restore
     {
-        public const string Value = "Restore";
-
-        public Restore()
-        {
-            Name = Value;
-            Flags.AddRange(["re", "restore"]);
-            Description = "Restore header to file based on SHA-1";
-            _featureType = ParameterType.Flag;
-            LongDescription = @"This will make use of stored copier headers and reapply them to files if they match the included hash. More than one header can be applied to a file, so they will be output to new files, suffixed with .newX, where X is a number. No input files are altered in the process. Only uncompressed files will be processed.
-
-The following systems have headers that this program can work with:
-  - Atari 7800
-  - Atari Lynx
-  - Commodore PSID Music
-  - NEC PC - Engine / TurboGrafx 16
-  - Nintendo Famicom / Nintendo Entertainment System
-  - Nintendo Famicom Disk System
-  - Nintendo Super Famicom / Super Nintendo Entertainment System
-  - Nintendo Super Famicom / Super Nintendo Entertainment System SPC";
-
-            // Common Features
-            AddCommonFeatures();
-
-            AddFeature(OutputDirStringInput);
-        }
-
-        public override bool ProcessFeatures(Dictionary<string, Feature?> features)
-        {
-            // If the base fails, just fail out
-            if (!base.ProcessFeatures(features))
-                return false;
-
-            // Get only files from the inputs
-            List<ParentablePath> files = PathTool.GetFilesOnly(Inputs);
-            foreach (ParentablePath file in files)
-            {
-                RestoreHeader(file.CurrentPath, OutputDir);
-            }
-
-            return true;
-        }
-
         /// <summary>
         /// Detect and replace header(s) to the given file
         /// </summary>
         /// <param name="file">Name of the file to be parsed</param>
         /// <param name="outDir">Output directory to write the file to, empty means the same directory as the input file</param>
         /// <returns>True if a header was found and appended, false otherwise</returns>
-        public bool RestoreHeader(string file, string? outDir)
+        public static bool RestoreHeader(string file, string? outDir)
         {
             // Create the output directory if it doesn't exist
             if (!string.IsNullOrWhiteSpace(outDir) && !Directory.Exists(outDir))
@@ -78,9 +35,9 @@ The following systems have headers that this program can work with:
             for (int i = 0; i < headers.Count; i++)
             {
                 string outputFile = (string.IsNullOrWhiteSpace(outDir) ? $"{Path.GetFullPath(file)}.new" : Path.Combine(outDir, Path.GetFileName(file))) + i;
-                logger.User($"Creating reheadered file: {outputFile}");
+                Console.WriteLine($"Creating reheadered file: {outputFile}");
                 AppendBytes(file, outputFile, ByteArrayExtensions.StringToByteArray(headers[i]), null);
-                logger.User("Reheadered file created!");
+                Console.WriteLine("Reheadered file created!");
             }
 
             return true;
@@ -91,33 +48,33 @@ The following systems have headers that this program can work with:
         /// </summary>
         /// <param name="SHA1">SHA-1 of the deheadered file</param>
         /// <returns>List of strings representing the headers to add</returns>
-        private List<string> RetrieveHeadersFromDatabase(string SHA1)
+        private static List<string> RetrieveHeadersFromDatabase(string SHA1)
         {
             // Ensure the database exists
-            EnsureDatabase();
+            Database.EnsureDatabase();
 
             // Open the database connection
-            SqliteConnection dbc = new SqliteConnection(HeadererConnectionString);
+            var dbc = new SqliteConnection(Database.HeadererConnectionString);
             dbc.Open();
 
             // Create the output list of headers
             List<string> headers = [];
 
             string query = $"SELECT header, type FROM data WHERE sha1='{SHA1}'";
-            SqliteCommand slc = new SqliteCommand(query, dbc);
+            var slc = new SqliteCommand(query, dbc);
             SqliteDataReader sldr = slc.ExecuteReader();
 
             if (sldr.HasRows)
             {
                 while (sldr.Read())
                 {
-                    logger.Verbose($"Found match with rom type '{sldr.GetString(1)}'");
+                    Console.WriteLine($"Found match with rom type '{sldr.GetString(1)}'"); // TODO: Gate behind debug flag
                     headers.Add(sldr.GetString(0));
                 }
             }
             else
             {
-                logger.Warning("No matching header could be found!");
+                Console.Error.WriteLine("No matching header could be found!");
             }
 
             // Dispose of database objects
