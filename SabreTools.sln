@@ -32,8 +32,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SabreTools.Reports", "Sabre
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SabreTools.Test", "SabreTools.Test\SabreTools.Test.csproj", "{5B4E67D5-F4DA-4750-8FE2-04D08E343791}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Headerer", "Headerer\Headerer.csproj", "{6629F05A-6696-4FCA-9614-83791725E499}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -130,14 +128,6 @@ Global
 		{5B4E67D5-F4DA-4750-8FE2-04D08E343791}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5B4E67D5-F4DA-4750-8FE2-04D08E343791}.Release|x64.ActiveCfg = Release|Any CPU
 		{5B4E67D5-F4DA-4750-8FE2-04D08E343791}.Release|x64.Build.0 = Release|Any CPU
-		{6629F05A-6696-4FCA-9614-83791725E499}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6629F05A-6696-4FCA-9614-83791725E499}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6629F05A-6696-4FCA-9614-83791725E499}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{6629F05A-6696-4FCA-9614-83791725E499}.Debug|x64.Build.0 = Debug|Any CPU
-		{6629F05A-6696-4FCA-9614-83791725E499}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6629F05A-6696-4FCA-9614-83791725E499}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6629F05A-6696-4FCA-9614-83791725E499}.Release|x64.ActiveCfg = Release|Any CPU
-		{6629F05A-6696-4FCA-9614-83791725E499}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

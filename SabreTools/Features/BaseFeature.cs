@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using SabreTools.Core;
 using SabreTools.Core.Filter;
 using SabreTools.Core.Tools;
@@ -9,7 +8,6 @@ using SabreTools.FileTypes;
 using SabreTools.Filtering;
 using SabreTools.Hashing;
 using SabreTools.Help;
-using SabreTools.IO;
 using SabreTools.IO.Logging;
 using SabreTools.Reports;
 
@@ -23,13 +21,6 @@ namespace SabreTools.Features
         /// Logging object
         /// </summary>
         protected Logger logger = new();
-
-        #endregion
-
-        #region Constants
-
-        public static string HeadererFileName = Path.Combine(PathTool.GetRuntimeDirectory(), "Headerer.sqlite");
-        public static string HeadererConnectionString = $"Data Source={HeadererFileName};";
 
         #endregion
 
