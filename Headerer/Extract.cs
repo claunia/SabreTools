@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using Microsoft.Data.Sqlite;
 using SabreTools.Hashing;
 using SabreTools.IO.Extensions;
 using SabreTools.Skippers;
@@ -63,44 +62,10 @@ namespace Headerer
             if (!nostore)
             {
                 string sha1 = HashTool.GetFileHash(newfile, HashType.SHA1) ?? string.Empty;
-                AddHeaderToDatabase(hstr, sha1, rule.SourceFile!, debug);
+                Database.AddHeader(hstr, sha1, rule.SourceFile!, debug);
             }
 
             return true;
-        }
-
-        /// <summary>
-        /// Add a header to the database
-        /// </summary>
-        /// <param name="header">String representing the header bytes</param>
-        /// <param name="SHA1">SHA-1 of the deheadered file</param>
-        /// <param name="type">Name of the source skipper file</param>
-        /// <param name="debug">Enable additional log statements for debugging</param>
-        private static void AddHeaderToDatabase(string header, string SHA1, string source, bool debug)
-        {
-            // Ensure the database exists
-            Database.EnsureDatabase();
-
-            // Open the database connection
-            SqliteConnection dbc = new(Database.HeadererConnectionString);
-            dbc.Open();
-
-            string query = $"SELECT * FROM data WHERE sha1='{SHA1}' AND header='{header}'";
-            var slc = new SqliteCommand(query, dbc);
-            SqliteDataReader sldr = slc.ExecuteReader();
-            bool exists = sldr.HasRows;
-
-            if (!exists)
-            {
-                query = $"INSERT INTO data (sha1, header, type) VALUES ('{SHA1}', '{header}', '{source}')";
-                slc = new SqliteCommand(query, dbc);
-                if (debug) Console.WriteLine($"Result of inserting header: {slc.ExecuteNonQuery()}");
-            }
-
-            // Dispose of database objects
-            slc.Dispose();
-            sldr.Dispose();
-            dbc.Dispose();
         }
     }
 }

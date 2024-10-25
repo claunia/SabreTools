@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.Data.Sqlite;
 using SabreTools.Hashing;
 using SabreTools.IO.Extensions;
 
@@ -26,7 +25,7 @@ namespace Headerer
             string sha1 = HashTool.GetFileHash(file, HashType.SHA1) ?? string.Empty;
 
             // Retrieve a list of all related headers from the database
-            List<string> headers = RetrieveHeadersFromDatabase(sha1, debug);
+            List<string> headers = Database.RetrieveHeaders(sha1, debug);
 
             // If we have nothing retrieved, we return false
             if (headers.Count == 0)
@@ -42,49 +41,6 @@ namespace Headerer
             }
 
             return true;
-        }
-
-        /// <summary>
-        /// Retrieve headers from the database
-        /// </summary>
-        /// <param name="SHA1">SHA-1 of the deheadered file</param>
-        /// <param name="debug">Enable additional log statements for debugging</param>
-        /// <returns>List of strings representing the headers to add</returns>
-        private static List<string> RetrieveHeadersFromDatabase(string SHA1, bool debug)
-        {
-            // Ensure the database exists
-            Database.EnsureDatabase();
-
-            // Open the database connection
-            var dbc = new SqliteConnection(Database.HeadererConnectionString);
-            dbc.Open();
-
-            // Create the output list of headers
-            List<string> headers = [];
-
-            string query = $"SELECT header, type FROM data WHERE sha1='{SHA1}'";
-            var slc = new SqliteCommand(query, dbc);
-            SqliteDataReader sldr = slc.ExecuteReader();
-
-            if (sldr.HasRows)
-            {
-                while (sldr.Read())
-                {
-                    if (debug) Console.WriteLine($"Found match with rom type '{sldr.GetString(1)}'");
-                    headers.Add(sldr.GetString(0));
-                }
-            }
-            else
-            {
-                Console.Error.WriteLine("No matching header could be found!");
-            }
-
-            // Dispose of database objects
-            slc.Dispose();
-            sldr.Dispose();
-            dbc.Dispose();
-
-            return headers;
         }
 
         /// <summary>
