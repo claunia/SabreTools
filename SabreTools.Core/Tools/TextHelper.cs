@@ -176,9 +176,9 @@ namespace SabreTools.Core.Tools
 
             // Otherwise, make sure that every character is a proper match
 #if NET7_0_OR_GREATER
-            if (hash.Any(c => char.IsAsciiHexDigit(c)))
+            if (!hash.Any(c => char.IsAsciiHexDigit(c)))
 #else
-            if (hash.Any(c => c.IsAsciiHexDigit()))
+            if (!hash.Any(c => c.IsAsciiHexDigit()))
 #endif
                 hash = string.Empty;
 
