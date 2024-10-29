@@ -473,7 +473,7 @@ Possible values are: Verbose, User, Warning, Error");
                 System.IO.File.Create(db);
 
             // Open the database connection
-            SqliteConnection dbc = new SqliteConnection(connectionString);
+            var dbc = new SqliteConnection(connectionString);
             dbc.Open();
 
             // Make sure the database has the correct schema

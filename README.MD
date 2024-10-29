@@ -70,9 +70,11 @@ A small tool that allows users to extract, store, and remove copier headers for 
 
 This tool is no longer hosted in this repository. If you wish to use this tool, you can find it [here](https://github.com/SabreTools/SabreTools.Skippers/).
 
-### RombaSharp
+### RombaSharp \[Deprecated\]
 
 An in-progress tool that will try to act as a C# port of the Go-based [Romba](https://github.com/uwedeportivo/romba/) program. All features that are not already a part of SabreTools will be attempted to be added to this program. It is NOT ready for use yet. For any inquiries into the full features of this tool, please contact the project.
+
+As of 2024-10-29, this tool is considered deprecated and will be removed at some future point. Previous releases of RombaSharp will still be made available in their respective release pages. No further explicit updates will be made.
 
 ## Builds
 

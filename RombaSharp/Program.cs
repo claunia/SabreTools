@@ -49,7 +49,7 @@ namespace RombaSharp
             _help = RetrieveHelp();
 
             // Credits take precidence over all
-            if ((new List<string>(args)).Contains("--credits"))
+            if (new List<string>(args).Contains("--credits"))
             {
                 FeatureSet.OutputCredits();
                 LoggerImpl.Close();
@@ -104,7 +104,7 @@ namespace RombaSharp
             if (!Console.IsOutputRedirected && feature.ScriptMode)
             {
                 Console.Clear();
-                Globals.SetConsoleHeader("SabreTools");
+                Globals.SetConsoleHeader("RombaSharp [Deprecated]");
             }
 
             // Now process the current feature
