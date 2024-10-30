@@ -6,7 +6,6 @@ using Newtonsoft.Json;
 using SabreTools.Core;
 using SabreTools.Core.Filter;
 using SabreTools.Core.Tools;
-using SabreTools.DatFiles.Formats;
 
 namespace SabreTools.DatFiles
 {
