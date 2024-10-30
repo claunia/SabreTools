@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+#if NET40_OR_GREATER || NETCOREAPP
 using System.Net;
+#endif
 using System.Text;
 using System.Xml;
 using SabreTools.DatFiles;
