@@ -1177,60 +1177,6 @@ namespace SabreTools.FileTypes
 
     #endregion
 
-    #region CHD
-
-    /// <summary>
-    /// Compression being used in CHD
-    /// </summary>
-    internal enum CHDCompression : uint
-    {
-        CHDCOMPRESSION_NONE = 0,
-        CHDCOMPRESSION_ZLIB = 1,
-        CHDCOMPRESSION_ZLIB_PLUS = 2,
-        CHDCOMPRESSION_AV = 3,
-    }
-
-    /// <summary>
-    /// Availible CHD codec formats
-    /// </summary>
-    internal enum CHD_CODEC : uint
-    {
-        NONE = 0,
-
-        #region General Codecs
-
-        ZLIB = 0x7a6c6962, // zlib
-        LZMA = 0x6c7a6d61, // lzma
-        HUFFMAN = 0x68756666, // huff
-        FLAC = 0x666c6163, // flac
-
-        #endregion
-
-        #region General Codecs with CD Frontend
-
-        CD_ZLIB = 0x63647a6c, // cdzl
-        CD_LZMA = 0x63646c7a, // cdlz
-        CD_FLAC = 0x6364666c, // cdfl
-
-        #endregion
-
-        #region A/V Codecs
-
-        AVHUFF = 0x61766875, // avhu
-
-        #endregion
-
-        #region Pseudo-Codecs Returned by hunk_info
-
-        SELF = 1,  // copy of another hunk
-        PARENT = 2,  // copy of a parent's hunk
-        MINI = 3,  // legacy "mini" 8-byte repeat
-
-        #endregion
-    }
-
-    #endregion
-
     /// <summary>
     /// Compression method based on flag
     /// </summary>
