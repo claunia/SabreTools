@@ -70,11 +70,11 @@ namespace SabreTools.DatFiles
                 var infos = item.Read<Models.OfflineList.Infos>(Models.Metadata.Header.InfosKey);
                 if (infos != null)
                 {
-                    var offlineListInfos = new List<Formats.OfflineListInfo>();
+                    var offlineListInfos = new List<OfflineListInfo>();
 
                     if (infos.Title != null)
                     {
-                        offlineListInfos.Add(new Formats.OfflineListInfo
+                        offlineListInfos.Add(new OfflineListInfo
                         {
                             Name = "title",
                             Visible = infos.Title.Visible.AsYesNo(),
@@ -84,7 +84,7 @@ namespace SabreTools.DatFiles
                     }
                     if (infos.Location != null)
                     {
-                        offlineListInfos.Add(new Formats.OfflineListInfo
+                        offlineListInfos.Add(new OfflineListInfo
                         {
                             Name = "location",
                             Visible = infos.Location.Visible.AsYesNo(),
@@ -94,7 +94,7 @@ namespace SabreTools.DatFiles
                     }
                     if (infos.Publisher != null)
                     {
-                        offlineListInfos.Add(new Formats.OfflineListInfo
+                        offlineListInfos.Add(new OfflineListInfo
                         {
                             Name = "publisher",
                             Visible = infos.Publisher.Visible.AsYesNo(),
@@ -104,7 +104,7 @@ namespace SabreTools.DatFiles
                     }
                     if (infos.SourceRom != null)
                     {
-                        offlineListInfos.Add(new Formats.OfflineListInfo
+                        offlineListInfos.Add(new OfflineListInfo
                         {
                             Name = "sourceRom",
                             Visible = infos.SourceRom.Visible.AsYesNo(),
@@ -114,7 +114,7 @@ namespace SabreTools.DatFiles
                     }
                     if (infos.SaveType != null)
                     {
-                        offlineListInfos.Add(new Formats.OfflineListInfo
+                        offlineListInfos.Add(new OfflineListInfo
                         {
                             Name = "saveType",
                             Visible = infos.SaveType.Visible.AsYesNo(),
@@ -124,7 +124,7 @@ namespace SabreTools.DatFiles
                     }
                     if (infos.RomSize != null)
                     {
-                        offlineListInfos.Add(new Formats.OfflineListInfo
+                        offlineListInfos.Add(new OfflineListInfo
                         {
                             Name = "romSize",
                             Visible = infos.RomSize.Visible.AsYesNo(),
@@ -134,7 +134,7 @@ namespace SabreTools.DatFiles
                     }
                     if (infos.ReleaseNumber != null)
                     {
-                        offlineListInfos.Add(new Formats.OfflineListInfo
+                        offlineListInfos.Add(new OfflineListInfo
                         {
                             Name = "releaseNumber",
                             Visible = infos.ReleaseNumber.Visible.AsYesNo(),
@@ -144,7 +144,7 @@ namespace SabreTools.DatFiles
                     }
                     if (infos.ImageNumber != null)
                     {
-                        offlineListInfos.Add(new Formats.OfflineListInfo
+                        offlineListInfos.Add(new OfflineListInfo
                         {
                             Name = "imageNumber",
                             Visible = infos.ImageNumber.Visible.AsYesNo(),
@@ -154,7 +154,7 @@ namespace SabreTools.DatFiles
                     }
                     if (infos.LanguageNumber != null)
                     {
-                        offlineListInfos.Add(new Formats.OfflineListInfo
+                        offlineListInfos.Add(new OfflineListInfo
                         {
                             Name = "languageNumber",
                             Visible = infos.LanguageNumber.Visible.AsYesNo(),
@@ -164,7 +164,7 @@ namespace SabreTools.DatFiles
                     }
                     if (infos.Comment != null)
                     {
-                        offlineListInfos.Add(new Formats.OfflineListInfo
+                        offlineListInfos.Add(new OfflineListInfo
                         {
                             Name = "comment",
                             Visible = infos.Comment.Visible.AsYesNo(),
@@ -174,7 +174,7 @@ namespace SabreTools.DatFiles
                     }
                     if (infos.RomCRC != null)
                     {
-                        offlineListInfos.Add(new Formats.OfflineListInfo
+                        offlineListInfos.Add(new OfflineListInfo
                         {
                             Name = "romCRC",
                             Visible = infos.RomCRC.Visible.AsYesNo(),
@@ -184,7 +184,7 @@ namespace SabreTools.DatFiles
                     }
                     if (infos.Im1CRC != null)
                     {
-                        offlineListInfos.Add(new Formats.OfflineListInfo
+                        offlineListInfos.Add(new OfflineListInfo
                         {
                             Name = "im1CRC",
                             Visible = infos.Im1CRC.Visible.AsYesNo(),
@@ -194,7 +194,7 @@ namespace SabreTools.DatFiles
                     }
                     if (infos.Im2CRC != null)
                     {
-                        offlineListInfos.Add(new Formats.OfflineListInfo
+                        offlineListInfos.Add(new OfflineListInfo
                         {
                             Name = "im2CRC",
                             Visible = infos.Im2CRC.Visible.AsYesNo(),
@@ -204,7 +204,7 @@ namespace SabreTools.DatFiles
                     }
                     if (infos.Languages != null)
                     {
-                        offlineListInfos.Add(new Formats.OfflineListInfo
+                        offlineListInfos.Add(new OfflineListInfo
                         {
                             Name = "languages",
                             Visible = infos.Languages.Visible.AsYesNo(),
@@ -213,7 +213,7 @@ namespace SabreTools.DatFiles
                         });
                     }
 
-                    Header.SetFieldValue<Formats.OfflineListInfo[]?>(Models.Metadata.Header.InfosKey, [.. offlineListInfos]);
+                    Header.SetFieldValue<OfflineListInfo[]?>(Models.Metadata.Header.InfosKey, [.. offlineListInfos]);
                 }
             }
             if (item.ContainsKey(Models.Metadata.Header.NewDatKey))

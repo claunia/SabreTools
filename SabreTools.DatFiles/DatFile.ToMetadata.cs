@@ -87,7 +87,7 @@ namespace SabreTools.DatFiles
             if (Header.InfosSpecified)
             {
                 var infoItem = new Models.OfflineList.Infos();
-                var infos = Header.GetFieldValue<Formats.OfflineListInfo[]?>(Models.Metadata.Header.InfosKey)!;
+                var infos = Header.GetFieldValue<OfflineListInfo[]?>(Models.Metadata.Header.InfosKey)!;
                 foreach (var info in infos)
                 {
                     switch (info.Name)

@@ -1,12 +1,5 @@
-﻿/// <summary>
-/// This holds all of the auxiliary types needed for proper parsing
-/// </summary>
-namespace SabreTools.DatFiles.Formats
+﻿namespace SabreTools.DatFiles
 {
-    #region DatHeader
-
-    #region OfflineList
-
     /// <summary>
     /// Represents one OfflineList infos object
     /// </summary>
@@ -18,8 +11,4 @@ namespace SabreTools.DatFiles.Formats
         public bool? InNamingOption { get; set; }
         public bool? Default { get; set; }
     }
-
-    #endregion
-
-    #endregion // DatHeader
 }
