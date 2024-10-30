@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
-using SabreTools.Core.Tools;
 using SabreTools.Hashing;
 using SabreTools.IO.Extensions;
 #if NET462_OR_GREATER || NETCOREAPP
