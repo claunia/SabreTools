@@ -13,19 +13,18 @@ namespace SabreTools.Reports.Formats
     /// <summary>
     /// Separated-Value report format
     /// </summary>
-    internal class SeparatedValue : BaseReport
+    internal abstract class SeparatedValue : BaseReport
     {
-        private readonly char _separator;
+        // Private instance variables specific to Hashfile DATs
+        protected char _delim;
 
         /// <summary>
         /// Create a new report from the filename
         /// </summary>
         /// <param name="statsList">List of statistics objects to set</param>
-        /// <param name="separator">Separator character to use in output</param>
-        public SeparatedValue(List<DatStatistics> statsList, char separator)
+        public SeparatedValue(List<DatStatistics> statsList)
             : base(statsList)
         {
-            _separator = separator;
         }
 
         /// <inheritdoc/>
@@ -45,7 +44,7 @@ namespace SabreTools.Reports.Formats
 
                 SeparatedValueWriter svw = new(fs, Encoding.UTF8)
                 {
-                    Separator = _separator,
+                    Separator = _delim,
                     Quotes = true,
                 };
 
@@ -156,6 +155,51 @@ namespace SabreTools.Reports.Formats
         {
             svw.WriteString("\n");
             svw.Flush();
+        }
+    }
+
+    /// <summary>
+    /// Represents a comma-separated value file
+    /// </summary>
+    internal sealed class CommaSeparatedValue : SeparatedValue
+    {
+        /// <summary>
+        /// Create a new report from the filename
+        /// </summary>
+        /// <param name="statsList">List of statistics objects to set</param>
+        public CommaSeparatedValue(List<DatStatistics> statsList) : base(statsList)
+        {
+            _delim = ',';
+        }
+    }
+
+    /// <summary>
+    /// Represents a semicolon-separated value file
+    /// </summary>
+    internal sealed class SemicolonSeparatedValue : SeparatedValue
+    {
+        /// <summary>
+        /// Create a new report from the filename
+        /// </summary>
+        /// <param name="statsList">List of statistics objects to set</param>
+        public SemicolonSeparatedValue(List<DatStatistics> statsList) : base(statsList)
+        {
+            _delim = ';';
+        }
+    }
+
+    /// <summary>
+    /// Represents a tab-separated value file
+    /// </summary>
+    internal sealed class TabSeparatedValue : SeparatedValue
+    {
+        /// <summary>
+        /// Create a new report from the filename
+        /// </summary>
+        /// <param name="statsList">List of statistics objects to set</param>
+        public TabSeparatedValue(List<DatStatistics> statsList) : base(statsList)
+        {
+            _delim = '\t';
         }
     }
 }

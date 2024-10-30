@@ -42,10 +42,10 @@ namespace SabreTools.Reports
             {
                 StatReportFormat.None => new Textfile(statsList, true),
                 StatReportFormat.Textfile => new Textfile(statsList, false),
-                StatReportFormat.CSV => new SeparatedValue(statsList, ','),
+                StatReportFormat.CSV => new CommaSeparatedValue(statsList),
                 StatReportFormat.HTML => new Html(statsList),
-                StatReportFormat.SSV => new SeparatedValue(statsList, ';'),
-                StatReportFormat.TSV => new SeparatedValue(statsList, '\t'),
+                StatReportFormat.SSV => new SemicolonSeparatedValue(statsList),
+                StatReportFormat.TSV => new TabSeparatedValue(statsList),
                 _ => null,
             };
         }
