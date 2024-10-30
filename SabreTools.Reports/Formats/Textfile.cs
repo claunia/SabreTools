@@ -13,17 +13,15 @@ namespace SabreTools.Reports.Formats
     /// </summary>
     internal class Textfile : BaseReport
     {
-        private readonly bool _writeToConsole;
+        protected bool _writeToConsole = false;
 
         /// <summary>
         /// Create a new report from the filename
         /// </summary>
         /// <param name="statsList">List of statistics objects to set</param>
-        /// <param name="writeToConsole">True to write to consoke output, false otherwise</param>
-        public Textfile(List<DatStatistics> statsList, bool writeToConsole)
+        public Textfile(List<DatStatistics> statsList)
             : base(statsList)
         {
-            _writeToConsole = writeToConsole;
         }
 
         /// <inheritdoc/>
@@ -125,6 +123,21 @@ namespace SabreTools.Reports.Formats
         {
             sw.Write("\n");
             sw.Flush();
+        }
+    }
+
+    /// <summary>
+    /// Console report format
+    /// </summary>
+    internal sealed class ConsoleOutput : Textfile
+    {
+        /// <summary>
+        /// Create a new report from the filename
+        /// </summary>
+        /// <param name="statsList">List of statistics objects to set</param>
+        public ConsoleOutput(List<DatStatistics> statsList) : base(statsList)
+        {
+            _writeToConsole = true;
         }
     }
 }

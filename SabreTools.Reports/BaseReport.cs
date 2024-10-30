@@ -40,8 +40,8 @@ namespace SabreTools.Reports
         {
             return statReportFormat switch
             {
-                StatReportFormat.None => new Textfile(statsList, true),
-                StatReportFormat.Textfile => new Textfile(statsList, false),
+                StatReportFormat.None => new ConsoleOutput(statsList),
+                StatReportFormat.Textfile => new Textfile(statsList),
                 StatReportFormat.CSV => new CommaSeparatedValue(statsList),
                 StatReportFormat.HTML => new Html(statsList),
                 StatReportFormat.SSV => new SemicolonSeparatedValue(statsList),
