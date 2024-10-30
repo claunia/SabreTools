@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -518,14 +519,14 @@ namespace SabreTools.DatItems
         /// </summary>
         /// <param name="infiles">List of File objects representing the roms to be merged</param>
         /// <returns>A List of DatItem objects representing the merged roms</returns>
-        public static ConcurrentList<DatItem> Merge(ConcurrentList<DatItem>? infiles)
+        public static List<DatItem> Merge(List<DatItem>? infiles)
         {
             // Check for null or blank roms first
             if (infiles == null || infiles.Count == 0)
                 return [];
 
             // Create output list
-            ConcurrentList<DatItem> outfiles = [];
+            List<DatItem> outfiles = [];
 
             // Then deduplicate them by checking to see if data matches previous saved roms
             int nodumpCount = 0;
@@ -632,10 +633,10 @@ namespace SabreTools.DatItems
         /// </summary>
         /// <param name="infiles">List of File objects representing the roms to be merged</param>
         /// <returns>A List of DatItem objects representing the renamed roms</returns>
-        public static ConcurrentList<DatItem> ResolveNames(ConcurrentList<DatItem> infiles)
+        public static List<DatItem> ResolveNames(List<DatItem> infiles)
         {
             // Create the output list
-            ConcurrentList<DatItem> output = [];
+            List<DatItem> output = [];
 
             // First we want to make sure the list is in alphabetical order
             Sort(ref infiles, true);
@@ -729,10 +730,10 @@ namespace SabreTools.DatItems
         /// </summary>
         /// <param name="infiles">List of File objects representing the roms to be merged</param>
         /// <returns>A List of DatItem objects representing the renamed roms</returns>
-        public static ConcurrentList<(long, DatItem)> ResolveNamesDB(ConcurrentList<(long, DatItem)> infiles)
+        public static List<(long, DatItem)> ResolveNamesDB(List<(long, DatItem)> infiles)
         {
             // Create the output list
-            ConcurrentList<(long, DatItem)> output = [];
+            List<(long, DatItem)> output = [];
 
             // First we want to make sure the list is in alphabetical order
             Sort(ref infiles, true);
@@ -842,7 +843,7 @@ namespace SabreTools.DatItems
         /// <param name="roms">List of File objects representing the roms to be sorted</param>
         /// <param name="norename">True if files are not renamed, false otherwise</param>
         /// <returns>True if it sorted correctly, false otherwise</returns>
-        public static bool Sort(ref ConcurrentList<DatItem> roms, bool norename)
+        public static bool Sort(ref List<DatItem> roms, bool norename)
         {
             roms.Sort(delegate (DatItem x, DatItem y)
             {
@@ -895,7 +896,7 @@ namespace SabreTools.DatItems
         /// <param name="roms">List of File objects representing the roms to be sorted</param>
         /// <param name="norename">True if files are not renamed, false otherwise</param>
         /// <returns>True if it sorted correctly, false otherwise</returns>
-        public static bool Sort(ref ConcurrentList<(long, DatItem)> roms, bool norename)
+        public static bool Sort(ref List<(long, DatItem)> roms, bool norename)
         {
             roms.Sort(delegate ((long, DatItem) x, (long, DatItem) y)
             {

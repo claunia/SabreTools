@@ -44,7 +44,7 @@ namespace SabreTools.DatFiles
             foreach (var key in Items.Keys)
 #endif
             {
-                ConcurrentList<DatItem>? items = Items[key];
+                List<DatItem>? items = Items[key];
                 if (items == null)
 #if NET40_OR_GREATER || NETCOREAPP
                     return;

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
@@ -219,7 +218,7 @@ namespace SabreTools.DatTools
             List<string> keys = [.. datFile.Items.SortedKeys];
             foreach (string key in keys)
             {
-                ConcurrentList<DatItem>? items = datFile.Items[key];
+                List<DatItem>? items = datFile.Items[key];
                 if (items == null)
                     continue;
 

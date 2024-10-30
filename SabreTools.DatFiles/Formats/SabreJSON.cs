@@ -6,7 +6,6 @@ using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
-using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -392,7 +391,7 @@ namespace SabreTools.DatFiles.Formats
                 // Use a sorted list of games to output
                 foreach (string key in Items.SortedKeys)
                 {
-                    ConcurrentList<DatItem> datItems = Items.FilteredItems(key);
+                    List<DatItem> datItems = Items.FilteredItems(key);
 
                     // If this machine doesn't contain any writable items, skip
                     if (!ContainsWritable(datItems))
@@ -479,7 +478,7 @@ namespace SabreTools.DatFiles.Formats
                         continue;
 
                     // Resolve the names in the block
-                    items = [.. DatItem.ResolveNamesDB(items.ToConcurrentList())];
+                    items = [.. DatItem.ResolveNamesDB(items.ToList())];
 
                     for (int index = 0; index < items.Length; index++)
                     {

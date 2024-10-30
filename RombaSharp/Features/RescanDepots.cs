@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using Microsoft.Data.Sqlite;
-using SabreTools.Core;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -90,7 +89,7 @@ namespace RombaSharp.Features
                 IEnumerable<string> keys = depot.Items.Keys;
                 foreach (string key in keys)
                 {
-                    ConcurrentList<DatItem>? roms = depot.Items[key];
+                    List<DatItem>? roms = depot.Items[key];
                     if (roms == null)
                         continue;
 

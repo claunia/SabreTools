@@ -27,7 +27,7 @@ namespace SabreTools.DatFiles
     /// Item dictionary with statistics, bucketing, and sorting
     /// </summary>
     [JsonObject("items"), XmlRoot("items")]
-    public class ItemDictionary : IDictionary<string, ConcurrentList<DatItem>?>
+    public class ItemDictionary : IDictionary<string, List<DatItem>?>
     {
         #region Private instance variables
 
@@ -45,9 +45,9 @@ namespace SabreTools.DatFiles
         /// Internal dictionary for the class
         /// </summary>
 #if NET40_OR_GREATER || NETCOREAPP
-        private readonly ConcurrentDictionary<string, ConcurrentList<DatItem>?> items = [];
+        private readonly ConcurrentDictionary<string, List<DatItem>?> items = [];
 #else
-        private readonly Dictionary<string, ConcurrentList<DatItem>?> items = [];
+        private readonly Dictionary<string, List<DatItem>?> items = [];
 #endif
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace SabreTools.DatFiles
         /// Passthrough to access the file dictionary
         /// </summary>
         /// <param name="key">Key in the dictionary to reference</param>
-        public ConcurrentList<DatItem>? this[string key]
+        public List<DatItem>? this[string key]
         {
             get
             {
@@ -174,7 +174,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="key">Key in the dictionary to add to</param>
         /// <param name="value">Value to add to the dictionary</param>
-        public void Add(string key, ConcurrentList<DatItem>? value)
+        public void Add(string key, List<DatItem>? value)
         {
             AddRange(key, value);
         }
@@ -282,7 +282,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="key">Key in the dictionary to add to</param>
         /// <param name="value">Value to add to the dictionary</param>
-        public void AddRange(string key, ConcurrentList<DatItem>? value)
+        public void AddRange(string key, List<DatItem>? value)
         {
             // Explicit lock for some weird corner cases
             lock (key)
@@ -349,8 +349,8 @@ namespace SabreTools.DatFiles
             List<string> keys = [.. items.Keys];
             foreach (string key in keys)
             {
-                ConcurrentList<DatItem>? oldItemList = items[key];
-                ConcurrentList<DatItem>? newItemList = oldItemList?.Where(i => i.GetBoolFieldValue(DatItem.RemoveKey) != true)?.ToConcurrentList();
+                List<DatItem>? oldItemList = items[key];
+                List<DatItem>? newItemList = oldItemList?.Where(i => i.GetBoolFieldValue(DatItem.RemoveKey) != true)?.ToList();
 
                 Remove(key);
                 AddRange(key, newItemList);
@@ -421,12 +421,12 @@ namespace SabreTools.DatFiles
         /// Get a list of filtered items for a given key
         /// </summary>
         /// <param name="key">Key in the dictionary to retrieve</param>
-        public ConcurrentList<DatItem> FilteredItems(string key)
+        public List<DatItem> FilteredItems(string key)
         {
             lock (key)
             {
                 // Get the list, if possible
-                ConcurrentList<DatItem>? fi = items[key];
+                List<DatItem>? fi = items[key];
                 if (fi == null)
                     return [];
 
@@ -434,7 +434,7 @@ namespace SabreTools.DatFiles
                 return fi.Where(i => i != null)
                     .Where(i => i.GetBoolFieldValue(DatItem.RemoveKey) != true)
                     .Where(i => i.GetFieldValue<Machine>(DatItem.MachineKey) != null)
-                    .ToConcurrentList();
+                    .ToList();
             }
         }
 
@@ -561,9 +561,9 @@ namespace SabreTools.DatFiles
         /// <param name="datItem">Item to try to match</param>
         /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
         /// <returns>List of matched DatItem objects</returns>
-        public ConcurrentList<DatItem> GetDuplicates(DatItem datItem, bool sorted = false)
+        public List<DatItem> GetDuplicates(DatItem datItem, bool sorted = false)
         {
-            ConcurrentList<DatItem> output = [];
+            List<DatItem> output = [];
 
             // Check for an empty rom list first
             if (DatStatistics.TotalCount == 0)
@@ -577,11 +577,11 @@ namespace SabreTools.DatFiles
                 return output;
 
             // Try to find duplicates
-            ConcurrentList<DatItem>? roms = this[key];
+            List<DatItem>? roms = this[key];
             if (roms == null)
                 return output;
 
-            ConcurrentList<DatItem> left = [];
+            List<DatItem> left = [];
             for (int i = 0; i < roms.Count; i++)
             {
                 DatItem other = roms[i];
@@ -627,7 +627,7 @@ namespace SabreTools.DatFiles
                 return false;
 
             // Try to find duplicates
-            ConcurrentList<DatItem>? roms = this[key];
+            List<DatItem>? roms = this[key];
             if (roms == null)
                 return false;
 
@@ -748,7 +748,7 @@ namespace SabreTools.DatFiles
 #endif
             {
                 // Get the possibly unsorted list
-                ConcurrentList<DatItem>? sortedlist = this[key]?.ToConcurrentList();
+                List<DatItem>? sortedlist = this[key]?.ToList();
                 if (sortedlist == null)
 #if NET40_OR_GREATER || NETCOREAPP
                     return;
@@ -788,7 +788,7 @@ namespace SabreTools.DatFiles
 #endif
             {
                 // Get the possibly unsorted list
-                ConcurrentList<DatItem>? sortedlist = this[key];
+                List<DatItem>? sortedlist = this[key];
 
                 // Sort the list of items to be consistent
                 if (sortedlist != null)
@@ -835,7 +835,7 @@ namespace SabreTools.DatFiles
             foreach (var key in keys)
 #endif
             {
-                ConcurrentList<DatItem>? items = this[key];
+                List<DatItem>? items = this[key];
                 if (items == null)
 #if NET40_OR_GREATER || NETCOREAPP
                     return;
@@ -844,7 +844,7 @@ namespace SabreTools.DatFiles
 #endif
 
                 // Filter all items in the current key
-                var newItems = new ConcurrentList<DatItem>();
+                var newItems = new List<DatItem>();
                 foreach (var item in items)
                 {
                     if (item.PassesFilter(filterRunner))
@@ -1149,7 +1149,7 @@ namespace SabreTools.DatFiles
                     continue;
 #endif
 
-                ConcurrentList<DatItem> newItems = [];
+                List<DatItem> newItems = [];
                 foreach (DatItem item in items)
                 {
                     // Update machine name
@@ -1710,7 +1710,7 @@ namespace SabreTools.DatFiles
             // Loop through and add
             foreach (string key in items.Keys)
             {
-                ConcurrentList<DatItem>? datItems = items[key];
+                List<DatItem>? datItems = items[key];
                 if (datItems == null)
                     continue;
 
@@ -1725,45 +1725,45 @@ namespace SabreTools.DatFiles
 
         #region IDictionary Implementations
 
-        public ICollection<ConcurrentList<DatItem>?> Values => ((IDictionary<string, ConcurrentList<DatItem>?>)items).Values;
+        public ICollection<List<DatItem>?> Values => ((IDictionary<string, List<DatItem>?>)items).Values;
 
-        public int Count => ((ICollection<KeyValuePair<string, ConcurrentList<DatItem>?>>)items).Count;
+        public int Count => ((ICollection<KeyValuePair<string, List<DatItem>?>>)items).Count;
 
-        public bool IsReadOnly => ((ICollection<KeyValuePair<string, ConcurrentList<DatItem>?>>)items).IsReadOnly;
+        public bool IsReadOnly => ((ICollection<KeyValuePair<string, List<DatItem>?>>)items).IsReadOnly;
 
-        public bool TryGetValue(string key, out ConcurrentList<DatItem>? value)
+        public bool TryGetValue(string key, out List<DatItem>? value)
         {
-            return ((IDictionary<string, ConcurrentList<DatItem>?>)items).TryGetValue(key, out value);
+            return ((IDictionary<string, List<DatItem>?>)items).TryGetValue(key, out value);
         }
 
-        public void Add(KeyValuePair<string, ConcurrentList<DatItem>?> item)
+        public void Add(KeyValuePair<string, List<DatItem>?> item)
         {
-            ((ICollection<KeyValuePair<string, ConcurrentList<DatItem>?>>)items).Add(item);
+            ((ICollection<KeyValuePair<string, List<DatItem>?>>)items).Add(item);
         }
 
         public void Clear()
         {
-            ((ICollection<KeyValuePair<string, ConcurrentList<DatItem>?>>)items).Clear();
+            ((ICollection<KeyValuePair<string, List<DatItem>?>>)items).Clear();
         }
 
-        public bool Contains(KeyValuePair<string, ConcurrentList<DatItem>?> item)
+        public bool Contains(KeyValuePair<string, List<DatItem>?> item)
         {
-            return ((ICollection<KeyValuePair<string, ConcurrentList<DatItem>?>>)items).Contains(item);
+            return ((ICollection<KeyValuePair<string, List<DatItem>?>>)items).Contains(item);
         }
 
-        public void CopyTo(KeyValuePair<string, ConcurrentList<DatItem>?>[] array, int arrayIndex)
+        public void CopyTo(KeyValuePair<string, List<DatItem>?>[] array, int arrayIndex)
         {
-            ((ICollection<KeyValuePair<string, ConcurrentList<DatItem>?>>)items).CopyTo(array, arrayIndex);
+            ((ICollection<KeyValuePair<string, List<DatItem>?>>)items).CopyTo(array, arrayIndex);
         }
 
-        public bool Remove(KeyValuePair<string, ConcurrentList<DatItem>?> item)
+        public bool Remove(KeyValuePair<string, List<DatItem>?> item)
         {
-            return ((ICollection<KeyValuePair<string, ConcurrentList<DatItem>?>>)items).Remove(item);
+            return ((ICollection<KeyValuePair<string, List<DatItem>?>>)items).Remove(item);
         }
 
-        public IEnumerator<KeyValuePair<string, ConcurrentList<DatItem>?>> GetEnumerator()
+        public IEnumerator<KeyValuePair<string, List<DatItem>?>> GetEnumerator()
         {
-            return ((IEnumerable<KeyValuePair<string, ConcurrentList<DatItem>?>>)items).GetEnumerator();
+            return ((IEnumerable<KeyValuePair<string, List<DatItem>?>>)items).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

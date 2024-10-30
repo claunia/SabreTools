@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using Microsoft.Data.Sqlite;
-using SabreTools.Core;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -98,7 +97,7 @@ have a current entry in the DAT index.";
 
             foreach (string key in df.Items.Keys)
             {
-                ConcurrentList<DatItem>? datItems = df.Items[key];
+                List<DatItem>? datItems = df.Items[key];
                 if (datItems == null)
                     continue;
 

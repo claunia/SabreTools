@@ -5,7 +5,6 @@ using System.Net;
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
 #endif
-using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
@@ -505,7 +504,7 @@ namespace SabreTools.DatTools
                 }
 
                 // Clean the input list and set all games to be pathless
-                ConcurrentList<DatItem>? items = datFile.Items[key];
+                List<DatItem>? items = datFile.Items[key];
                 if (items == null)
 #if NET40_OR_GREATER || NETCOREAPP
                     return;
@@ -622,7 +621,7 @@ namespace SabreTools.DatTools
             foreach (var key in datFile.Items.Keys)
 #endif
             {
-                ConcurrentList<DatItem>? items = datFile.Items[key];
+                List<DatItem>? items = datFile.Items[key];
                 if (items == null)
 #if NET40_OR_GREATER || NETCOREAPP
                     return;
@@ -904,7 +903,7 @@ namespace SabreTools.DatTools
             foreach (var key in datFile.Items.Keys)
 #endif
             {
-                ConcurrentList<DatItem> items = DatItem.Merge(datFile.Items[key]);
+                List<DatItem> items = DatItem.Merge(datFile.Items[key]);
 
                 // If the rom list is empty or null, just skip it
                 if (items == null || items.Count == 0)

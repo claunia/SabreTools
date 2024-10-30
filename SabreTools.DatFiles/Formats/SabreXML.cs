@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using SabreTools.Core;
 using SabreTools.DatItems;
 
 namespace SabreTools.DatFiles.Formats
@@ -220,7 +220,7 @@ namespace SabreTools.DatFiles.Formats
                 // Use a sorted list of games to output
                 foreach (string key in Items.SortedKeys)
                 {
-                    ConcurrentList<DatItem> datItems = Items.FilteredItems(key);
+                    List<DatItem> datItems = Items.FilteredItems(key);
 
                     // If this machine doesn't contain any writable items, skip
                     if (!ContainsWritable(datItems))
@@ -308,7 +308,7 @@ namespace SabreTools.DatFiles.Formats
                         continue;
 
                     // Resolve the names in the block
-                    items = [.. DatItem.ResolveNamesDB(items.ToConcurrentList())];
+                    items = [.. DatItem.ResolveNamesDB([.. items])];
 
                     for (int index = 0; index < items.Length; index++)
                     {

@@ -3,7 +3,6 @@ using System.IO;
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
 #endif
-using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
@@ -413,8 +412,8 @@ namespace SabreTools.DatTools
                 return false;
 
             // If either we have duplicates or we're filtering
-            if (ShouldRebuild(datFile, datItem, fileStream, inverse, out ConcurrentList<DatItem> dupes))
-            //if (ShouldRebuildDB(datFile, datItem, fileStream, inverse, out ConcurrentList<DatItem> dupes))
+            if (ShouldRebuild(datFile, datItem, fileStream, inverse, out List<DatItem> dupes))
+            //if (ShouldRebuildDB(datFile, datItem, fileStream, inverse, out List<DatItem> dupes))
             {
                 // If we have a very specific TGZ->TGZ case, just copy it accordingly
                 if (RebuildTorrentGzip(datFile, datItem, file, outDir, outputFormat, isZip))
@@ -549,7 +548,7 @@ namespace SabreTools.DatTools
         /// <param name="inverse">True if the DAT should be used as a filter instead of a template, false otherwise</param>
         /// <param name="dupes">Output list of duplicate items to rebuild to</param>
         /// <returns>True if the item should be rebuilt, false otherwise</returns>
-        private static bool ShouldRebuild(DatFile datFile, DatItem datItem, Stream? stream, bool inverse, out ConcurrentList<DatItem> dupes)
+        private static bool ShouldRebuild(DatFile datFile, DatItem datItem, Stream? stream, bool inverse, out List<DatItem> dupes)
         {
             // Find if the file has duplicates in the DAT
             dupes = datFile.Items.GetDuplicates(datItem);
@@ -604,7 +603,7 @@ namespace SabreTools.DatTools
         /// <param name="inverse">True if the DAT should be used as a filter instead of a template, false otherwise</param>
         /// <param name="dupes">Output list of duplicate items to rebuild to</param>
         /// <returns>True if the item should be rebuilt, false otherwise</returns>
-        private static bool ShouldRebuildDB(DatFile datFile, (long, DatItem) datItem, Stream? stream, bool inverse, out ConcurrentList<(long, DatItem)> dupes)
+        private static bool ShouldRebuildDB(DatFile datFile, (long, DatItem) datItem, Stream? stream, bool inverse, out List<(long, DatItem)> dupes)
         {
             // Find if the file has duplicates in the DAT
             dupes = datFile.ItemsDB.GetDuplicates(datItem);
@@ -645,7 +644,8 @@ namespace SabreTools.DatTools
                     machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machinename);
                 }
 
-                dupes.Add(item);
+                long index = datFile.ItemsDB.AddItem(item, machineIndex, -1, false);
+                dupes.Add((index, item));
                 return true;
             }
 

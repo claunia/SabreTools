@@ -4,7 +4,6 @@ using System.Linq;
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
 #endif
-using SabreTools.Core;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.Filtering;
@@ -43,7 +42,7 @@ namespace SabreTools.DatTools
             foreach (var key in keys)
 #endif
             {
-                ConcurrentList<DatItem>? items = datFile.Items[key];
+                List<DatItem>? items = datFile.Items[key];
                 if (items == null)
 #if NET40_OR_GREATER || NETCOREAPP
                     return;
@@ -51,7 +50,7 @@ namespace SabreTools.DatTools
                     continue;
 #endif
 
-                ConcurrentList<DatItem> newItems = [];
+                List<DatItem> newItems = [];
                 foreach (DatItem item in items)
                 {
                     DatItem newItem = item;
@@ -193,7 +192,7 @@ namespace SabreTools.DatTools
                 foreach (var key in intDat.Items.Keys)
 #endif
                 {
-                    ConcurrentList<DatItem>? datItems = intDat.Items[key];
+                    List<DatItem>? datItems = intDat.Items[key];
                     if (datItems == null)
 #if NET40_OR_GREATER || NETCOREAPP
                         return;
@@ -201,10 +200,10 @@ namespace SabreTools.DatTools
                         continue;
 #endif
 
-                    ConcurrentList<DatItem> newDatItems = [];
+                    List<DatItem> newDatItems = [];
                     foreach (DatItem datItem in datItems)
                     {
-                        ConcurrentList<DatItem> dupes = datFile.Items.GetDuplicates(datItem, sorted: true);
+                        List<DatItem> dupes = datFile.Items.GetDuplicates(datItem, sorted: true);
                         if (datItem.Clone() is not DatItem newDatItem)
                             continue;
 
@@ -241,7 +240,7 @@ namespace SabreTools.DatTools
                 foreach (var key in intDat.Items.Keys)
 #endif
                 {
-                    ConcurrentList<DatItem>? datItems = intDat.Items[key];
+                    List<DatItem>? datItems = intDat.Items[key];
                     if (datItems == null)
 #if NET40_OR_GREATER || NETCOREAPP
                         return;
@@ -249,7 +248,7 @@ namespace SabreTools.DatTools
                         continue;
 #endif
 
-                    ConcurrentList<DatItem> newDatItems = [];
+                    List<DatItem> newDatItems = [];
                     foreach (DatItem datItem in datItems)
                     {
                         if (datItem.Clone() is not DatItem newDatItem)
@@ -455,7 +454,7 @@ namespace SabreTools.DatTools
                 // Standard Against uses hashes
                 else
                 {
-                    ConcurrentList<DatItem>? datItems = intDat.Items[key];
+                    List<DatItem>? datItems = intDat.Items[key];
                     if (datItems == null)
 #if NET40_OR_GREATER || NETCOREAPP
                         return;
@@ -463,7 +462,7 @@ namespace SabreTools.DatTools
                         continue;
 #endif
 
-                    ConcurrentList<DatItem> keepDatItems = [];
+                    List<DatItem> keepDatItems = [];
                     foreach (DatItem datItem in datItems)
                     {
                         if (!datFile.Items.HasDuplicates(datItem, true))
@@ -578,7 +577,7 @@ namespace SabreTools.DatTools
             foreach (var key in datFile.Items.Keys)
 #endif
             {
-                ConcurrentList<DatItem> items = DatItem.Merge(datFile.Items[key]);
+                List<DatItem> items = DatItem.Merge(datFile.Items[key]);
 
                 // If the rom list is empty or null, just skip it
                 if (items == null || items.Count == 0)
@@ -803,7 +802,7 @@ namespace SabreTools.DatTools
             foreach (var key in datFile.Items.Keys)
 #endif
             {
-                ConcurrentList<DatItem> items = DatItem.Merge(datFile.Items[key]);
+                List<DatItem> items = DatItem.Merge(datFile.Items[key]);
 
                 // If the rom list is empty or null, just skip it
                 if (items == null || items.Count == 0)
@@ -1013,7 +1012,7 @@ namespace SabreTools.DatTools
             foreach (var key in datFile.Items.Keys)
 #endif
             {
-                ConcurrentList<DatItem> items = DatItem.Merge(datFile.Items[key]);
+                List<DatItem> items = DatItem.Merge(datFile.Items[key]);
 
                 // If the rom list is empty or null, just skip it
                 if (items == null || items.Count == 0)
@@ -1327,7 +1326,7 @@ namespace SabreTools.DatTools
             foreach (var key in datFile.Items.Keys)
 #endif
             {
-                ConcurrentList<DatItem> items = DatItem.Merge(datFile.Items[key]);
+                List<DatItem> items = DatItem.Merge(datFile.Items[key]);
 
                 // If the rom list is empty or null, just skip it
                 if (items == null || items.Count == 0)

@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 #endif
 using System.Xml.Serialization;
 using Newtonsoft.Json;
-using SabreTools.Core;
 using SabreTools.Core.Filter;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
@@ -119,9 +118,9 @@ namespace SabreTools.DatFiles
         /// </summary>
         [JsonIgnore, XmlIgnore]
 #if NET40_OR_GREATER || NETCOREAPP
-        private readonly ConcurrentDictionary<string, ConcurrentList<long>> _buckets = [];
+        private readonly ConcurrentDictionary<string, List<long>> _buckets = [];
 #else
-        private readonly Dictionary<string, ConcurrentList<long>> _buckets = [];
+        private readonly Dictionary<string, List<long>> _buckets = [];
 #endif
 
         /// <summary>
@@ -618,9 +617,9 @@ namespace SabreTools.DatFiles
         /// <param name="datItem">Item to try to match</param>
         /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
         /// <returns>List of matched DatItem objects</returns>
-        public ConcurrentList<(long, DatItem)> GetDuplicates(DatItem datItem, bool sorted = false)
+        public List<(long, DatItem)> GetDuplicates(DatItem datItem, bool sorted = false)
         {
-            ConcurrentList<(long, DatItem)> output = [];
+            List<(long, DatItem)> output = [];
 
             // Check for an empty rom list first
             if (DatStatistics.TotalCount == 0)
@@ -635,26 +634,26 @@ namespace SabreTools.DatFiles
                 return output;
 
             // Try to find duplicates
-            ConcurrentList<(long, DatItem)> left = [];
+            List<(long, DatItem)> left = [];
             for (int i = 0; i < roms.Length; i++)
             {
-                DatItem other = roms[i].Item2;
+                (long index, DatItem other) = roms[i];
                 if (other.GetBoolFieldValue(DatItem.RemoveKey) == true)
                     continue;
 
                 if (datItem.Equals(other))
                 {
                     other.SetFieldValue<bool?>(DatItem.RemoveKey, true);
-                    output.Add(other);
+                    output.Add((index, other));
                 }
                 else
                 {
-                    left.Add(other);
+                    left.Add((index, other));
                 }
             }
 
             // Add back all roms with the proper flags
-            _buckets[key] = output.Concat(left).Select(i => i.Item1).ToConcurrentList();
+            _buckets[key] = output.Concat(left).Select(i => i.Item1).ToList();
             return output;
         }
 
@@ -664,9 +663,9 @@ namespace SabreTools.DatFiles
         /// <param name="datItem">Item to try to match</param>
         /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
         /// <returns>List of matched DatItem objects</returns>
-        public ConcurrentList<(long, DatItem)> GetDuplicates((long, DatItem) datItem, bool sorted = false)
+        public List<(long, DatItem)> GetDuplicates((long, DatItem) datItem, bool sorted = false)
         {
-            ConcurrentList<(long, DatItem)> output = [];
+            List<(long, DatItem)> output = [];
 
             // Check for an empty rom list first
             if (DatStatistics.TotalCount == 0)
@@ -681,26 +680,26 @@ namespace SabreTools.DatFiles
                 return output;
 
             // Try to find duplicates
-            ConcurrentList<(long, DatItem)> left = [];
+            List<(long, DatItem)> left = [];
             for (int i = 0; i < roms.Length; i++)
             {
-                DatItem other = roms[i].Item2;
+                (long index, DatItem other) = roms[i];
                 if (other.GetBoolFieldValue(DatItem.RemoveKey) == true)
                     continue;
 
                 if (datItem.Item2.Equals(other))
                 {
                     other.SetFieldValue<bool?>(DatItem.RemoveKey, true);
-                    output.Add(other);
+                    output.Add((index, other));
                 }
                 else
                 {
-                    left.Add(other);
+                    left.Add((index, other));
                 }
             }
 
             // Add back all roms with the proper flags
-            _buckets[key] = output.Concat(left).Select(i => i.Item1).ToConcurrentList();
+            _buckets[key] = output.Concat(left).Select(i => i.Item1).ToList();
             return output;
         }
 
@@ -1075,7 +1074,7 @@ namespace SabreTools.DatFiles
                 if (dedupeType == DedupeType.Full || (dedupeType == DedupeType.Game && bucketBy == ItemKey.Machine))
                     datItems = Deduplicate(datItems);
 
-                _buckets[bucketKeys[i]] = datItems.Select(m => m.Item1).ToConcurrentList();
+                _buckets[bucketKeys[i]] = datItems.Select(m => m.Item1).ToList();
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
@@ -1118,7 +1117,7 @@ namespace SabreTools.DatFiles
 
                 Sort(ref datItems, norename);
 
-                _buckets[bucketKeys[i]] = datItems.Select(m => m.Item1).ToConcurrentList();
+                _buckets[bucketKeys[i]] = datItems.Select(m => m.Item1).ToList();
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
@@ -1433,7 +1432,7 @@ namespace SabreTools.DatFiles
                     items[j] = item;
                 }
 
-                _buckets[key] = items.Select(i => i.Item1).ToConcurrentList();
+                _buckets[key] = items.Select(i => i.Item1).ToList();
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
@@ -1504,7 +1503,7 @@ namespace SabreTools.DatFiles
                 return;
 
             // Filter all items in the current key
-            var newItems = new ConcurrentList<(long, DatItem)>();
+            var newItems = new List<(long, DatItem)>();
             foreach (var item in items)
             {
                 if (item.Item2.PassesFilter(filterRunner))
@@ -1512,7 +1511,7 @@ namespace SabreTools.DatFiles
             }
 
             // Set the value in the key to the new set
-            _buckets[bucketName] = newItems.Select(i => i.Item1).ToConcurrentList();
+            _buckets[bucketName] = newItems.Select(i => i.Item1).ToList();
         }
 
         /// <summary>
@@ -1570,7 +1569,7 @@ namespace SabreTools.DatFiles
                     continue;
 #endif
 
-                ConcurrentList<(long, DatItem)> newItems = [];
+                List<(long, DatItem)> newItems = [];
                 foreach ((long, DatItem) item in items)
                 {
                     // Get the current machine
@@ -1599,7 +1598,7 @@ namespace SabreTools.DatFiles
                 }
 
                 // Replace the old list of roms with the new one
-                _buckets[key] = newItems.Select(i => i.Item1).ToConcurrentList();
+                _buckets[key] = newItems.Select(i => i.Item1).ToList();
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
@@ -1937,14 +1936,14 @@ namespace SabreTools.DatFiles
                             .Contains(mergeTag))
                         {
                             _itemToMachineMapping[item.Item1] = cloneOfMachine.Item1;
-                            _buckets[cloneOf!].Add(disk);
+                            _buckets[cloneOf!].Add(item.Item1);
                         }
 
                         // If there is no merge tag, add to parent
                         else if (mergeTag == null)
                         {
                             _itemToMachineMapping[item.Item1] = cloneOfMachine.Item1;
-                            _buckets[cloneOf!].Add(disk);
+                            _buckets[cloneOf!].Add(item.Item1);
                         }
                     }
 
@@ -1970,7 +1969,7 @@ namespace SabreTools.DatFiles
                                 rom.SetName($"{machineName}\\{rom.GetName()}");
 
                             _itemToMachineMapping[item.Item1] = cloneOfMachine.Item1;
-                            _buckets[cloneOf!].Add(rom);
+                            _buckets[cloneOf!].Add(item.Item1);
                         }
 
                         // If the parent doesn't already contain this item, add to subfolder of parent
@@ -1980,7 +1979,7 @@ namespace SabreTools.DatFiles
                                 rom.SetName($"{machineName}\\{rom.GetName()}");
 
                             _itemToMachineMapping[item.Item1] = cloneOfMachine.Item1;
-                            _buckets[cloneOf!].Add(rom);
+                            _buckets[cloneOf!].Add(item.Item1);
                         }
                     }
 
@@ -1991,7 +1990,7 @@ namespace SabreTools.DatFiles
                             item.Item2.SetName($"{machineName}\\{item.Item2.GetName()}");
 
                         _itemToMachineMapping[item.Item1] = cloneOfMachine.Item1;
-                        _buckets[cloneOf!].Add(item);
+                        _buckets[cloneOf!].Add(item.Item1);
                     }
                 }
 
