@@ -6,7 +6,7 @@ using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.IO.Logging;
 
-namespace SabreTools.Filtering
+namespace SabreTools.DatTools
 {
     /// <summary>
     /// Represents the cleaning operations that need to be performed on a set of items, usually a DAT

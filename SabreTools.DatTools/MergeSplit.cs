@@ -4,9 +4,9 @@ using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.IO.Logging;
 
-namespace SabreTools.Filtering
+namespace SabreTools.DatTools
 {
-    public class Splitter
+    public class MergeSplit
     {
         #region Fields
 

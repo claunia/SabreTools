@@ -3,7 +3,7 @@ using SabreTools.Core.Filter;
 using SabreTools.DatFiles;
 using SabreTools.IO.Logging;
 
-namespace SabreTools.Filtering
+namespace SabreTools.DatTools
 {
     /// <summary>
     /// Represents the removal operations that need to be performed on a set of items, usually a DAT

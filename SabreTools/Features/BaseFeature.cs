@@ -5,7 +5,6 @@ using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatTools;
 using SabreTools.FileTypes;
-using SabreTools.Filtering;
 using SabreTools.Hashing;
 using SabreTools.Help;
 using SabreTools.IO.Logging;
@@ -1792,7 +1791,7 @@ Some special strings that can be used:
         /// <summary>
         /// Pre-configured Splitter
         /// </summary>
-        protected Filtering.Splitter? Splitter { get; set; }
+        protected MergeSplit? Splitter { get; set; }
 
         #endregion
 
@@ -2252,9 +2251,9 @@ Some special strings that can be used:
         /// <summary>
         /// Get Splitter from feature list
         /// </summary>
-        private static Filtering.Splitter GetSplitter(Dictionary<string, Feature?> features)
+        private static MergeSplit GetSplitter(Dictionary<string, Feature?> features)
         {
-            Filtering.Splitter splitter = new()
+            MergeSplit splitter = new()
             {
                 SplitType = GetSplitType(features),
             };

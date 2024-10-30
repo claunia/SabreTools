@@ -7,7 +7,7 @@ using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using SabreTools.IO.Logging;
 
-namespace SabreTools.Filtering
+namespace SabreTools.DatTools
 {
     /// <summary>
     /// Set fields on DatItems

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
-using SabreTools.Filtering;
+using SabreTools.DatTools;
 using Xunit;
 
 namespace SabreTools.Test.Filtering

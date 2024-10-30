@@ -20,8 +20,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SabreTools.Core", "SabreToo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SabreTools.Help", "SabreTools.Help\SabreTools.Help.csproj", "{55364167-844F-4B58-8280-F5327FA3D8E7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SabreTools.Filtering", "SabreTools.Filtering\SabreTools.Filtering.csproj", "{35129634-0F13-416A-8D4D-35B71DFECFFD}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SabreTools.FileTypes", "SabreTools.FileTypes\SabreTools.FileTypes.csproj", "{0B36F39B-69CB-4E8A-B251-D063CB08B247}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SabreTools.DatItems", "SabreTools.DatItems\SabreTools.DatItems.csproj", "{90ADE461-33B1-4E0D-925F-C99913665F0C}"
@@ -80,14 +78,6 @@ Global
 		{55364167-844F-4B58-8280-F5327FA3D8E7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{55364167-844F-4B58-8280-F5327FA3D8E7}.Release|x64.ActiveCfg = Release|Any CPU
 		{55364167-844F-4B58-8280-F5327FA3D8E7}.Release|x64.Build.0 = Release|Any CPU
-		{35129634-0F13-416A-8D4D-35B71DFECFFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{35129634-0F13-416A-8D4D-35B71DFECFFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{35129634-0F13-416A-8D4D-35B71DFECFFD}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{35129634-0F13-416A-8D4D-35B71DFECFFD}.Debug|x64.Build.0 = Debug|Any CPU
-		{35129634-0F13-416A-8D4D-35B71DFECFFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{35129634-0F13-416A-8D4D-35B71DFECFFD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{35129634-0F13-416A-8D4D-35B71DFECFFD}.Release|x64.ActiveCfg = Release|Any CPU
-		{35129634-0F13-416A-8D4D-35B71DFECFFD}.Release|x64.Build.0 = Release|Any CPU
 		{0B36F39B-69CB-4E8A-B251-D063CB08B247}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0B36F39B-69CB-4E8A-B251-D063CB08B247}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B36F39B-69CB-4E8A-B251-D063CB08B247}.Debug|x64.ActiveCfg = Debug|Any CPU

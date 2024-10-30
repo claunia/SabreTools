@@ -7,7 +7,6 @@ using SabreTools.Core.Filter;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatTools;
-using SabreTools.Filtering;
 using SabreTools.Hashing;
 using SabreTools.Help;
 using SabreTools.IO;
@@ -583,7 +582,7 @@ Reset the internal state:           reset();";
                 MergingFlag mergingFlag = Arguments[0].AsEnumValue<MergingFlag>();
 
                 // Apply the merging flag
-                Filtering.Splitter splitter = new() { SplitType = mergingFlag };
+                MergeSplit splitter = new() { SplitType = mergingFlag };
                 splitter.ApplySplitting(batchState.DatFile, false, false);
             }
         }

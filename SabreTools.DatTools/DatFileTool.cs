@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 #endif
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
-using SabreTools.Filtering;
 using SabreTools.IO;
 using SabreTools.IO.Logging;
 
