@@ -106,7 +106,7 @@ namespace SabreTools.DatFiles
         {
             get
             {
-                var infos = GetFieldValue<OfflineListInfo[]?>(Models.Metadata.Header.InfosKey);
+                var infos = GetFieldValue<Models.OfflineList.InfoBase[]?>(Models.Metadata.Header.InfosKey);
                 return infos != null && infos.Length > 0;
             }
         }
