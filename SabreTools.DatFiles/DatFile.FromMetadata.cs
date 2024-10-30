@@ -74,11 +74,7 @@ namespace SabreTools.DatFiles
             {
                 var newDat = item.Read<Models.OfflineList.NewDat>(Models.Metadata.Header.NewDatKey);
                 if (newDat != null)
-                {
-                    Header.SetFieldValue<string?>("DATVERSIONURL", newDat.DatVersionUrl);
-                    Header.SetFieldValue<Models.OfflineList.DatUrl?>("DATURL", newDat.DatUrl);
-                    Header.SetFieldValue<string?>("IMURL", newDat.ImUrl);
-                }
+                    Header.SetFieldValue<Models.OfflineList.NewDat?>(Models.Metadata.Header.NewDatKey, newDat);
             }
             if (item.ContainsKey(Models.Metadata.Header.SearchKey))
             {

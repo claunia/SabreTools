@@ -106,8 +106,7 @@ namespace SabreTools.DatFiles
         {
             get
             {
-                var infos = GetFieldValue<Models.OfflineList.InfoBase[]?>(Models.Metadata.Header.InfosKey);
-                return infos != null && infos.Length > 0;
+                return GetFieldValue<Models.OfflineList.Infos?>(Models.Metadata.Header.InfosKey) != null;
             }
         }
 
@@ -116,9 +115,7 @@ namespace SabreTools.DatFiles
         {
             get
             {
-                return GetStringFieldValue("DATVERSIONURL") != null
-                    && GetFieldValue<Models.OfflineList.DatUrl?>("DATURL") != null
-                    && GetStringFieldValue("IMURL") != null;
+                return GetFieldValue<Models.OfflineList.NewDat?>(Models.Metadata.Header.NewDatKey) != null;
             }
         }
 

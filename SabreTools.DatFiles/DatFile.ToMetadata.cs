@@ -87,15 +87,7 @@ namespace SabreTools.DatFiles
             if (Header.InfosSpecified)
                 header[Models.Metadata.Header.InfosKey] = Header.GetFieldValue<Models.OfflineList.Infos>(Models.Metadata.Header.InfosKey);
             if (Header.NewDatSpecified)
-            {
-                var newDat = new Models.OfflineList.NewDat
-                {
-                    DatVersionUrl = Header.GetStringFieldValue("DATVERSIONURL"),
-                    DatUrl = Header.GetFieldValue<Models.OfflineList.DatUrl?>("DATURL"),
-                    ImUrl = Header.GetStringFieldValue("IMURL"),
-                };
-                header[Models.Metadata.Header.NewDatKey] = newDat;
-            }
+                header[Models.Metadata.Header.NewDatKey] = Header.GetFieldValue<Models.OfflineList.NewDat>(Models.Metadata.Header.NewDatKey);
             if (Header.SearchSpecified)
                 header[Models.Metadata.Header.SearchKey] = Header.GetFieldValue<Models.OfflineList.Search>(Models.Metadata.Header.SearchKey);
 
