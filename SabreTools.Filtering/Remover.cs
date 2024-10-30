@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Compress.Support.Filters;
 using SabreTools.Core.Filter;
 using SabreTools.DatFiles;
 using SabreTools.IO.Logging;
