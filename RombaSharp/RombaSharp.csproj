@@ -10,6 +10,7 @@
         <Nullable>enable</Nullable>
         <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <WarningsNotAsErrors>NU1901;NU1902;NU1903;NU1904</WarningsNotAsErrors>
         <Version>1.1.2</Version>
 
         <!-- Package Properties -->
