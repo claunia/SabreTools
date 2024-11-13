@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -63,12 +62,11 @@ namespace SabreTools.DatTools
                 return;
 
             // Get the combined list of fields to remove
-            var fieldNames = new List<string>();
+            var fieldNames = new HashSet<string>();
             if (itemFieldNames.ContainsKey(itemType))
-                fieldNames.AddRange(itemFieldNames[itemType]);
+                fieldNames.IntersectWith(itemFieldNames[itemType]);
             if (itemFieldNames.ContainsKey("item"))
-                fieldNames.AddRange(itemFieldNames["item"]);
-            fieldNames = fieldNames.Distinct().ToList();
+                fieldNames.IntersectWith(itemFieldNames["item"]);
 
             // If the field specifically contains Name, set it separately
             if (fieldNames.Contains(Models.Metadata.Rom.NameKey))
@@ -88,9 +86,9 @@ namespace SabreTools.DatTools
             // Handle special cases
             switch (datItem, repDatItem)
             {
-                case (Disk disk, Disk repDisk): ReplaceFields(disk, repDisk, fieldNames); break;
-                case (Media media, Media repMedia): ReplaceFields(media, repMedia, fieldNames); break;
-                case (Rom rom, Rom repRom): ReplaceFields(rom, repRom, fieldNames); break;
+                case (Disk disk, Disk repDisk): ReplaceFields(disk, repDisk, [.. fieldNames]); break;
+                case (Media media, Media repMedia): ReplaceFields(media, repMedia, [.. fieldNames]); break;
+                case (Rom rom, Rom repRom): ReplaceFields(rom, repRom, [.. fieldNames]); break;
             }
 
             #endregion

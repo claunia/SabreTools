@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
 #endif
@@ -150,12 +149,11 @@ namespace SabreTools.DatFiles
                 return;
 
             // Get the combined list of fields to remove
-            var fieldNames = new List<string>();
+            var fieldNames = new HashSet<string>();
             if (itemFieldNames.ContainsKey(itemType))
-                fieldNames.AddRange(itemFieldNames[itemType]);
+                fieldNames.IntersectWith(itemFieldNames[itemType]);
             if (itemFieldNames.ContainsKey("item"))
-                fieldNames.AddRange(itemFieldNames["item"]);
-            fieldNames = fieldNames.Distinct().ToList();
+                fieldNames.IntersectWith(itemFieldNames["item"]);
 
             // If the field specifically contains Name, set it separately
             if (fieldNames.Contains(Models.Metadata.Rom.NameKey))
