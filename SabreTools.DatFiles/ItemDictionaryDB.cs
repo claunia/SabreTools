@@ -221,13 +221,13 @@ namespace SabreTools.DatFiles
                     && (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey)) || rom.HasZeroHash()))
                 {
                     rom.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, Constants.SizeZero.ToString());
-                    rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, Constants.CRCZero);
-                    rom.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, Constants.MD5Zero);
-                    rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, Constants.SHA1Zero);
-                    rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA256Key, null); // Constants.SHA256Zero;
-                    rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA384Key, null); // Constants.SHA384Zero;
-                    rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key, null); // Constants.SHA512Zero;
-                    rom.SetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey, null); // Constants.SpamSumZero;
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, ZeroHash.CRC32Str);
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, ZeroHash.MD5Str);
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, ZeroHash.SHA1Str);
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA256Key, null); // ZeroHash.SHA256Str;
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA384Key, null); // ZeroHash.SHA384Str;
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key, null); // ZeroHash.SHA512Str;
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey, null); // ZeroHash.SpamSumStr;
                 }
 
                 // If the file has no size and it's not the above case, skip and log
@@ -933,23 +933,23 @@ namespace SabreTools.DatFiles
             {
                 Disk disk => bucketBy switch
                 {
-                    ItemKey.CRC => Constants.CRCZero,
+                    ItemKey.CRC => ZeroHash.CRC32Str,
                     ItemKey.MD5 => disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key) ?? string.Empty,
                     ItemKey.SHA1 => disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key) ?? string.Empty,
-                    ItemKey.SHA256 => Constants.SHA256Zero,
-                    ItemKey.SHA384 => Constants.SHA384Zero,
-                    ItemKey.SHA512 => Constants.SHA512Zero,
-                    ItemKey.SpamSum => Constants.SpamSumZero,
+                    ItemKey.SHA256 => ZeroHash.SHA256Str,
+                    ItemKey.SHA384 => ZeroHash.SHA384Str,
+                    ItemKey.SHA512 => ZeroHash.SHA512Str,
+                    ItemKey.SpamSum => ZeroHash.SpamSumStr,
                     _ => string.Empty,
                 },
                 Media media => bucketBy switch
                 {
-                    ItemKey.CRC => Constants.CRCZero,
+                    ItemKey.CRC => ZeroHash.CRC32Str,
                     ItemKey.MD5 => media.GetStringFieldValue(Models.Metadata.Media.MD5Key) ?? string.Empty,
                     ItemKey.SHA1 => media.GetStringFieldValue(Models.Metadata.Media.SHA1Key) ?? string.Empty,
                     ItemKey.SHA256 => media.GetStringFieldValue(Models.Metadata.Media.SHA256Key) ?? string.Empty,
-                    ItemKey.SHA384 => Constants.SHA384Zero,
-                    ItemKey.SHA512 => Constants.SHA512Zero,
+                    ItemKey.SHA384 => ZeroHash.SHA384Str,
+                    ItemKey.SHA512 => ZeroHash.SHA512Str,
                     ItemKey.SpamSum => media.GetStringFieldValue(Models.Metadata.Media.SpamSumKey) ?? string.Empty,
                     _ => string.Empty,
                 },
@@ -966,13 +966,13 @@ namespace SabreTools.DatFiles
                 },
                 _ => bucketBy switch
                 {
-                    ItemKey.CRC => Constants.CRCZero,
-                    ItemKey.MD5 => Constants.MD5Zero,
-                    ItemKey.SHA1 => Constants.SHA1Zero,
-                    ItemKey.SHA256 => Constants.SHA256Zero,
-                    ItemKey.SHA384 => Constants.SHA384Zero,
-                    ItemKey.SHA512 => Constants.SHA512Zero,
-                    ItemKey.SpamSum => Constants.SpamSumZero,
+                    ItemKey.CRC => ZeroHash.CRC32Str,
+                    ItemKey.MD5 => ZeroHash.MD5Str,
+                    ItemKey.SHA1 => ZeroHash.SHA1Str,
+                    ItemKey.SHA256 => ZeroHash.SHA256Str,
+                    ItemKey.SHA384 => ZeroHash.SHA384Str,
+                    ItemKey.SHA512 => ZeroHash.SHA512Str,
+                    ItemKey.SpamSum => ZeroHash.SpamSumStr,
                     _ => string.Empty,
                 },
             };

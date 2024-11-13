@@ -18,7 +18,11 @@ namespace SabreTools.Core.Tools
         public static bool ConditionalHashEquals(byte[]? firstHash, byte[]? secondHash)
         {
             // If either hash is empty, we say they're equal for merging
+#if NET20
+            if (Matching.Extensions.IsNullOrEmpty(firstHash) || Matching.Extensions.IsNullOrEmpty(secondHash))
+#else
             if (firstHash.IsNullOrEmpty() || secondHash.IsNullOrEmpty())
+#endif
                 return true;
 
             // If they're different sizes, they can't match
@@ -77,8 +81,8 @@ namespace SabreTools.Core.Tools
             // Cap the depth between 0 and 20, for now
             if (depth < 0)
                 depth = 0;
-            else if (depth > Constants.SHA1Zero.Length)
-                depth = Constants.SHA1Zero.Length;
+            else if (depth > ZeroHash.SHA1Str.Length)
+                depth = ZeroHash.SHA1Str.Length;
 
             // Loop through and generate the subdirectory
             string path = string.Empty;

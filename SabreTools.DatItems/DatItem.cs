@@ -376,7 +376,7 @@ namespace SabreTools.DatItems
             switch (bucketedBy)
             {
                 case ItemKey.CRC:
-                    key = Constants.CRCZero;
+                    key = ZeroHash.CRC32Str;
                     break;
 
                 case ItemKey.Machine:
@@ -404,27 +404,27 @@ namespace SabreTools.DatItems
                     break;
 
                 case ItemKey.MD5:
-                    key = Constants.MD5Zero;
+                    key = ZeroHash.MD5Str;
                     break;
 
                 case ItemKey.SHA1:
-                    key = Constants.SHA1Zero;
+                    key = ZeroHash.SHA1Str;
                     break;
 
                 case ItemKey.SHA256:
-                    key = Constants.SHA256Zero;
+                    key = ZeroHash.SHA256Str;
                     break;
 
                 case ItemKey.SHA384:
-                    key = Constants.SHA384Zero;
+                    key = ZeroHash.SHA384Str;
                     break;
 
                 case ItemKey.SHA512:
-                    key = Constants.SHA512Zero;
+                    key = ZeroHash.SHA512Str;
                     break;
 
                 case ItemKey.SpamSum:
-                    key = Constants.SpamSumZero;
+                    key = ZeroHash.SpamSumStr;
                     break;
             }
 
@@ -451,7 +451,7 @@ namespace SabreTools.DatItems
             switch (bucketedBy)
             {
                 case ItemKey.CRC:
-                    key = Constants.CRCZero;
+                    key = ZeroHash.CRC32Str;
                     break;
 
                 case ItemKey.Machine:
@@ -475,27 +475,27 @@ namespace SabreTools.DatItems
                     break;
 
                 case ItemKey.MD5:
-                    key = Constants.MD5Zero;
+                    key = ZeroHash.MD5Str;
                     break;
 
                 case ItemKey.SHA1:
-                    key = Constants.SHA1Zero;
+                    key = ZeroHash.SHA1Str;
                     break;
 
                 case ItemKey.SHA256:
-                    key = Constants.SHA256Zero;
+                    key = ZeroHash.SHA256Str;
                     break;
 
                 case ItemKey.SHA384:
-                    key = Constants.SHA384Zero;
+                    key = ZeroHash.SHA384Str;
                     break;
 
                 case ItemKey.SHA512:
-                    key = Constants.SHA512Zero;
+                    key = ZeroHash.SHA512Str;
                     break;
 
                 case ItemKey.SpamSum:
-                    key = Constants.SpamSumZero;
+                    key = ZeroHash.SpamSumStr;
                     break;
             }
 

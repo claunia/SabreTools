@@ -191,6 +191,44 @@ namespace SabreTools.FileTypes
 #endif
 
             // Now try to match it to a known signature
+#if NET20
+            if (Matching.Extensions.StartsWith(magic, SevenZipSignature))
+            {
+                outFileType = FileType.SevenZipArchive;
+            }
+            else if (Matching.Extensions.StartsWith(magic, AaruFormatSignature))
+            {
+                outFileType = FileType.AaruFormat;
+            }
+            else if (Matching.Extensions.StartsWith(magic, CHDSignature))
+            {
+                outFileType = FileType.CHD;
+            }
+            else if (Matching.Extensions.StartsWith(magic, GzSignature))
+            {
+                outFileType = FileType.GZipArchive;
+            }
+            else if (Matching.Extensions.StartsWith(magic, RarSignature)
+                || Matching.Extensions.StartsWith(magic, RarFiveSignature))
+            {
+                outFileType = FileType.RarArchive;
+            }
+            else if (Matching.Extensions.StartsWith(magic, TarSignature)
+                || Matching.Extensions.StartsWith(magic, TarZeroSignature))
+            {
+                outFileType = FileType.TapeArchive;
+            }
+            else if (Matching.Extensions.StartsWith(magic, XZSignature))
+            {
+                outFileType = FileType.XZArchive;
+            }
+            else if (Matching.Extensions.StartsWith(magic, ZipSignature)
+                || Matching.Extensions.StartsWith(magic, ZipSignatureEmpty)
+                || Matching.Extensions.StartsWith(magic, ZipSignatureSpanned))
+            {
+                outFileType = FileType.ZipArchive;
+            }
+#else
             if (magic.StartsWith(SevenZipSignature))
             {
                 outFileType = FileType.SevenZipArchive;
@@ -227,6 +265,7 @@ namespace SabreTools.FileTypes
             {
                 outFileType = FileType.ZipArchive;
             }
+#endif
 
             return outFileType;
         }
