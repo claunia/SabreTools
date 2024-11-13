@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Microsoft.Data.Sqlite;
 using SabreTools.Help;
 using SabreTools.IO;
@@ -33,7 +32,7 @@ namespace RombaSharp.Features
             logger.Error("This feature is not yet implemented: import");
 
             // Ensure the inputs
-            var files = PathTool.GetFilesOnly(Inputs).Select(p => p.CurrentPath);
+            var files = PathTool.GetFilesOnly(Inputs).ConvertAll(p => p.CurrentPath);
             Inputs.Clear();
             Inputs.AddRange(files);
 

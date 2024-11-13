@@ -33,8 +33,8 @@ namespace SabreTools.Core
                     // Enumerable types
                     byte[] bytArr => bytArr.Clone(),
                     string[] strArr => strArr.Clone(),
-                    DictionaryBase[] dbArr => dbArr.Select(Clone).ToArray(),
-                    ICloneable[] clArr => clArr.Select(cl => cl.Clone()).ToArray(),
+                    DictionaryBase[] dbArr => Array.ConvertAll(dbArr, Clone),
+                    ICloneable[] clArr => Array.ConvertAll(clArr, cl => cl.Clone()),
 
                     // Everything else just copies
                     _ => value,

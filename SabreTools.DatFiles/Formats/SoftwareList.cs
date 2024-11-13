@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 
@@ -122,9 +122,9 @@ namespace SabreTools.DatFiles.Formats
                     if (dipSwitch.ValuesSpecified)
                     {
                         var dipValues = dipSwitch.GetFieldValue<DipValue[]?>(Models.Metadata.DipSwitch.DipValueKey);
-                        if (dipValues!.Any(dv => string.IsNullOrEmpty(dv.GetName())))
+                        if (Array.Find(dipValues!, dv => string.IsNullOrEmpty(dv.GetName())) != null)
                             missingFields.Add(Models.Metadata.DipValue.NameKey);
-                        if (dipValues!.Any(dv => string.IsNullOrEmpty(dv.GetStringFieldValue(Models.Metadata.DipValue.ValueKey))))
+                        if (Array.Find(dipValues!, dv => string.IsNullOrEmpty(dv.GetStringFieldValue(Models.Metadata.DipValue.ValueKey))) != null)
                             missingFields.Add(Models.Metadata.DipValue.ValueKey);
                     }
 

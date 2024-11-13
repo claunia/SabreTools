@@ -50,19 +50,23 @@ namespace SabreTools.Core.Tools
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 // If not all types can be loaded, use the ones that could be
-                List<Type> assemblyTypes = [];
+                Type?[] assemblyTypes = [];
                 try
                 {
-                    assemblyTypes = [.. assembly.GetTypes()];
+                    assemblyTypes = assembly.GetTypes();
                 }
                 catch (ReflectionTypeLoadException rtle)
                 {
-                    assemblyTypes = [.. rtle.Types.Where(t => t != null)];
+                    assemblyTypes = Array.FindAll(rtle.Types ?? [], t => t != null);
                 }
 
                 // Loop through all types 
-                foreach (Type type in assemblyTypes)
+                foreach (Type? type in assemblyTypes)
                 {
+                    // If the type is invalid
+                    if (type == null)
+                        continue;
+
                     // If the type isn't a class or doesn't implement the interface
                     if (!type.IsClass || !typeof(DatItem).IsAssignableFrom(type))
                         continue;
@@ -89,19 +93,23 @@ namespace SabreTools.Core.Tools
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 // If not all types can be loaded, use the ones that could be
-                List<Type> assemblyTypes = [];
+                Type?[] assemblyTypes = [];
                 try
                 {
-                    assemblyTypes = [.. assembly.GetTypes()];
+                    assemblyTypes = assembly.GetTypes();
                 }
                 catch (ReflectionTypeLoadException rtle)
                 {
-                    assemblyTypes = [.. rtle.Types.Where(t => t != null)];
+                    assemblyTypes = Array.FindAll(rtle.Types ?? [], t => t != null);
                 }
 
                 // Loop through all types 
-                foreach (Type type in assemblyTypes)
+                foreach (Type? type in assemblyTypes)
                 {
+                    // If the type is invalid
+                    if (type == null)
+                        continue;
+
                     // If the type isn't a class or doesn't implement the interface
                     if (!type.IsClass || !typeof(DatItem).IsAssignableFrom(type))
                         continue;

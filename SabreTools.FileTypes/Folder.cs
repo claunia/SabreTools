@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using SabreTools.Core.Tools;
 using SabreTools.FileTypes.Archives;
 using SabreTools.IO;
@@ -181,7 +180,7 @@ namespace SabreTools.FileTypes
                 List<string> files = PathTool.GetFilesOrdered(Filename);
 
                 // Now sort through to find the first file that matches
-                string? match = files.Where(s => s.EndsWith(entryName)).FirstOrDefault();
+                string? match = files.Find(s => s.EndsWith(entryName));
 
                 // If we had a file, copy that over to the new name
                 if (!string.IsNullOrEmpty(match))
@@ -220,7 +219,7 @@ namespace SabreTools.FileTypes
                 List<string> files = PathTool.GetFilesOrdered(Filename);
 
                 // Now sort through to find the first file that matches
-                string? match = files.Where(s => s.EndsWith(entryName)).FirstOrDefault();
+                string? match = files.Find(s => s.EndsWith(entryName));
 
                 // If we had a file, open and return the stream
                 if (!string.IsNullOrEmpty(match))

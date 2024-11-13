@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 using SabreTools.Core.Filter;
 using SabreTools.Core.Tools;
@@ -118,7 +117,7 @@ Reset the internal state:           reset();";
                     }
 
                     // Now run the command
-                    logger.User($"Attempting to invoke {command.Name} with {(command.Arguments.Count == 0 ? "no arguments" : "the following argument(s): " + string.Join(", ", command.Arguments))}");
+                    logger.User($"Attempting to invoke {command.Name} with {(command.Arguments.Length == 0 ? "no arguments" : "the following argument(s): " + string.Join(", ", command.Arguments))}");
                     command.Process(batchState);
                 }
             }
@@ -136,14 +135,14 @@ Reset the internal state:           reset();";
         private abstract class BatchCommand
         {
             public string? Name { get; set; }
-            public List<string> Arguments { get; private set; } = [];
+            public string[] Arguments { get; private set; } = [];
 
             /// <summary>
             /// Default constructor for setting arguments
             /// </summary>
-            public BatchCommand(List<string> arguments)
+            public BatchCommand(string[] args)
             {
-                Arguments = arguments;
+                Arguments = args;
             }
 
             /// <summary>
@@ -166,13 +165,8 @@ Reset the internal state:           reset();";
 
                 // Otherwise, get the name and arguments
                 string commandName = match.Groups[1].Value;
-                List<string> arguments = match
-                    .Groups[2]
-                    .Value
-                    .Split(',')
-                    .Select(s => s.Trim().Trim('"').Trim())
-                    .Where(s => !string.IsNullOrWhiteSpace(s)) // TODO: This may interfere with header value replacement
-                    .ToList();
+                string[] arguments = match.Groups[2].Value.Split(',');
+                arguments = Array.ConvertAll(arguments, s => s.Trim().Trim('"').Trim());
 
                 return commandName.ToLowerInvariant() switch
                 {
@@ -219,7 +213,7 @@ Reset the internal state:           reset();";
         private class DescriptionAsNameCommand : BatchCommand
         {
             /// <inheritdoc/>
-            public DescriptionAsNameCommand(List<string> arguments) : base(arguments) { }
+            public DescriptionAsNameCommand(string[] args) : base(args) { }
 
             /// <inheritdoc/>
             public override string Usage()
@@ -230,9 +224,9 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override (bool, string?) ValidateArguments()
             {
-                if (Arguments.Count != 0)
+                if (Arguments.Length != 0)
                 {
-                    string message = $"Invoked {Name} and expected no arguments, but {Arguments.Count} arguments were provided";
+                    string message = $"Invoked {Name} and expected no arguments, but {Arguments.Length} arguments were provided";
                     return (false, message);
                 }
 
@@ -253,7 +247,7 @@ Reset the internal state:           reset();";
         private class DFDCommand : BatchCommand
         {
             /// <inheritdoc/>
-            public DFDCommand(List<string> arguments) : base(arguments) { }
+            public DFDCommand(string[] args) : base(args) { }
 
             /// <inheritdoc/>
             public override string Usage()
@@ -264,7 +258,7 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override (bool, string?) ValidateArguments()
             {
-                if (Arguments.Count == 0)
+                if (Arguments.Length == 0)
                 {
                     string message = $"Invoked {Name} but no arguments were provided";
                     return (false, message);
@@ -299,7 +293,7 @@ Reset the internal state:           reset();";
         private class ExtraCommand : BatchCommand
         {
             /// <inheritdoc/>
-            public ExtraCommand(List<string> arguments) : base(arguments) { }
+            public ExtraCommand(string[] args) : base(args) { }
 
             /// <inheritdoc/>
             public override string Usage()
@@ -310,9 +304,9 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override (bool, string?) ValidateArguments()
             {
-                if (Arguments.Count != 2)
+                if (Arguments.Length != 2)
                 {
-                    string message = $"Invoked {Name} and expected 2 arguments, but {Arguments.Count} arguments were provided";
+                    string message = $"Invoked {Name} and expected 2 arguments, but {Arguments.Length} arguments were provided";
                     return (false, message);
                 }
 
@@ -363,7 +357,7 @@ Reset the internal state:           reset();";
         private class FilterCommand : BatchCommand
         {
             /// <inheritdoc/>
-            public FilterCommand(List<string> arguments) : base(arguments) { }
+            public FilterCommand(string[] args) : base(args) { }
 
             /// <inheritdoc/>
             public override string Usage()
@@ -374,19 +368,19 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override (bool, string?) ValidateArguments()
             {
-                if (Arguments.Count < 2 || Arguments.Count > 4)
+                if (Arguments.Length < 2 || Arguments.Length > 4)
                 {
-                    string message = $"Invoked {Name} and expected between 2-4 arguments, but {Arguments.Count} arguments were provided";
+                    string message = $"Invoked {Name} and expected between 2-4 arguments, but {Arguments.Length} arguments were provided";
                     return (false, message);
                 }
 
                 // Read in the individual arguments
                 string itemFieldString = Arguments[0];
                 bool? filterRemove = false;
-                if (Arguments.Count >= 3)
+                if (Arguments.Length >= 3)
                     filterRemove = Arguments[2].AsYesNo();
                 bool? filterPerMachine = false;
-                if (Arguments.Count >= 4)
+                if (Arguments.Length >= 4)
                     filterPerMachine = Arguments[3].AsYesNo();
 
                 // If we had an invalid input, log and continue
@@ -420,11 +414,11 @@ Reset the internal state:           reset();";
                 string filterField = Arguments[0];
                 string filterValue = Arguments[1];
                 bool? filterRemove = false;
-                if (Arguments.Count >= 3)
+                if (Arguments.Length >= 3)
                     filterRemove = Arguments[2].AsYesNo();
                 // TODO: Add back this functionality
                 bool? filterPerMachine = false;
-                if (Arguments.Count >= 4)
+                if (Arguments.Length >= 4)
                     filterPerMachine = Arguments[3].AsYesNo();
 
                 // Build the filter statement
@@ -451,7 +445,7 @@ Reset the internal state:           reset();";
         private class FormatCommand : BatchCommand
         {
             /// <inheritdoc/>
-            public FormatCommand(List<string> arguments) : base(arguments) { }
+            public FormatCommand(string[] args) : base(args) { }
 
             /// <inheritdoc/>
             public override string Usage()
@@ -462,7 +456,7 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override (bool, string?) ValidateArguments()
             {
-                if (Arguments.Count == 0)
+                if (Arguments.Length == 0)
                 {
                     string message = $"Invoked {Name} but no arguments were provided";
                     return (false, message);
@@ -505,7 +499,7 @@ Reset the internal state:           reset();";
         private class InputCommand : BatchCommand
         {
             /// <inheritdoc/>
-            public InputCommand(List<string> arguments) : base(arguments) { }
+            public InputCommand(string[] args) : base(args) { }
 
             /// <inheritdoc/>
             public override string Usage()
@@ -516,7 +510,7 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override (bool, string?) ValidateArguments()
             {
-                if (Arguments.Count == 0)
+                if (Arguments.Length == 0)
                 {
                     string message = $"Invoked {Name} but no arguments were provided";
                     return (false, message);
@@ -529,7 +523,7 @@ Reset the internal state:           reset();";
             public override void Process(BatchState batchState)
             {
                 // Get only files from inputs
-                List<ParentablePath> datFilePaths = PathTool.GetFilesOnly(Arguments);
+                List<ParentablePath> datFilePaths = PathTool.GetFilesOnly([.. Arguments]);
 
                 // Assume there could be multiple
                 foreach (ParentablePath datFilePath in datFilePaths)
@@ -545,7 +539,7 @@ Reset the internal state:           reset();";
         private class MergeCommand : BatchCommand
         {
             /// <inheritdoc/>
-            public MergeCommand(List<string> arguments) : base(arguments) { }
+            public MergeCommand(string[] args) : base(args) { }
 
             /// <inheritdoc/>
             public override string Usage()
@@ -556,9 +550,9 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override (bool, string?) ValidateArguments()
             {
-                if (Arguments.Count != 1)
+                if (Arguments.Length != 1)
                 {
-                    string message = $"Invoked {Name} and expected 1 argument, but {Arguments.Count} arguments were provided";
+                    string message = $"Invoked {Name} and expected 1 argument, but {Arguments.Length} arguments were provided";
                     return (false, message);
                 }
 
@@ -593,7 +587,7 @@ Reset the internal state:           reset();";
         private class OneGamePerRegionCommand : BatchCommand
         {
             /// <inheritdoc/>
-            public OneGamePerRegionCommand(List<string> arguments) : base(arguments) { }
+            public OneGamePerRegionCommand(string[] args) : base(args) { }
 
             /// <inheritdoc/>
             public override string Usage()
@@ -604,7 +598,7 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override (bool, string?) ValidateArguments()
             {
-                if (Arguments.Count == 0)
+                if (Arguments.Length == 0)
                 {
                     string message = $"Invoked {Name} but no arguments were provided";
                     return (false, message);
@@ -616,8 +610,8 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override void Process(BatchState batchState)
             {
-                batchState.DatFile.Items.SetOneGamePerRegion(Arguments);
-                batchState.DatFile.ItemsDB.SetOneGamePerRegion(Arguments);
+                batchState.DatFile.Items.SetOneGamePerRegion([.. Arguments]);
+                batchState.DatFile.ItemsDB.SetOneGamePerRegion([.. Arguments]);
             }
         }
 
@@ -627,7 +621,7 @@ Reset the internal state:           reset();";
         private class OneRomPerGameCommand : BatchCommand
         {
             /// <inheritdoc/>
-            public OneRomPerGameCommand(List<string> arguments) : base(arguments) { }
+            public OneRomPerGameCommand(string[] args) : base(args) { }
 
             /// <inheritdoc/>
             public override string Usage()
@@ -638,9 +632,9 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override (bool, string?) ValidateArguments()
             {
-                if (Arguments.Count == 0)
+                if (Arguments.Length == 0)
                 {
-                    string message = $"Invoked {Name} and expected no arguments, but {Arguments.Count} arguments were provided";
+                    string message = $"Invoked {Name} and expected no arguments, but {Arguments.Length} arguments were provided";
                     return (false, message);
                 }
 
@@ -661,7 +655,7 @@ Reset the internal state:           reset();";
         private class OutputCommand : BatchCommand
         {
             /// <inheritdoc/>
-            public OutputCommand(List<string> arguments) : base(arguments) { }
+            public OutputCommand(string[] args) : base(args) { }
 
             /// <inheritdoc/>
             public override string Usage()
@@ -672,9 +666,9 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override (bool, string?) ValidateArguments()
             {
-                if (Arguments.Count != 1)
+                if (Arguments.Length != 1)
                 {
-                    string message = $"Invoked {Name} and expected exactly 1 argument, but {Arguments.Count} arguments were provided";
+                    string message = $"Invoked {Name} and expected exactly 1 argument, but {Arguments.Length} arguments were provided";
                     return (false, message);
                 }
 
@@ -694,7 +688,7 @@ Reset the internal state:           reset();";
         private class RemoveCommand : BatchCommand
         {
             /// <inheritdoc/>
-            public RemoveCommand(List<string> arguments) : base(arguments) { }
+            public RemoveCommand(string[] args) : base(args) { }
 
             /// <inheritdoc/>
             public override string Usage()
@@ -705,7 +699,7 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override (bool, string?) ValidateArguments()
             {
-                if (Arguments.Count == 0)
+                if (Arguments.Length == 0)
                 {
                     string message = $"Invoked {Name} but no arguments were provided";
                     return (false, message);
@@ -718,7 +712,7 @@ Reset the internal state:           reset();";
             public override void Process(BatchState batchState)
             {
                 var remover = new Remover();
-                remover.PopulateExclusionsFromList(Arguments);
+                remover.PopulateExclusionsFromList([.. Arguments]);
                 remover.ApplyRemovals(batchState.DatFile);
             }
         }
@@ -729,7 +723,7 @@ Reset the internal state:           reset();";
         private class ResetCommand : BatchCommand
         {
             /// <inheritdoc/>
-            public ResetCommand(List<string> arguments) : base(arguments) { }
+            public ResetCommand(string[] args) : base(args) { }
 
             /// <inheritdoc/>
             public override string Usage()
@@ -740,9 +734,9 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override (bool, string?) ValidateArguments()
             {
-                if (Arguments.Count != 0)
+                if (Arguments.Length != 0)
                 {
-                    string message = $"Invoked {Name} and expected no arguments, but {Arguments.Count} arguments were provided";
+                    string message = $"Invoked {Name} and expected no arguments, but {Arguments.Length} arguments were provided";
                     return (false, message);
                 }
 
@@ -762,7 +756,7 @@ Reset the internal state:           reset();";
         private class SceneDateStripCommand : BatchCommand
         {
             /// <inheritdoc/>
-            public SceneDateStripCommand(List<string> arguments) : base(arguments) { }
+            public SceneDateStripCommand(string[] args) : base(args) { }
 
             /// <inheritdoc/>
             public override string Usage()
@@ -773,9 +767,9 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override (bool, string?) ValidateArguments()
             {
-                if (Arguments.Count != 0)
+                if (Arguments.Length != 0)
                 {
-                    string message = $"Invoked {Name} and expected no arguments, but {Arguments.Count} arguments were provided";
+                    string message = $"Invoked {Name} and expected no arguments, but {Arguments.Length} arguments were provided";
                     return (false, message);
                 }
 
@@ -796,7 +790,7 @@ Reset the internal state:           reset();";
         private class SetCommand : BatchCommand
         {
             /// <inheritdoc/>
-            public SetCommand(List<string> arguments) : base(arguments) { }
+            public SetCommand(string[] args) : base(args) { }
 
             /// <inheritdoc/>
             public override string Usage()
@@ -807,7 +801,7 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override (bool, string?) ValidateArguments()
             {
-                if (Arguments.Count != 2)
+                if (Arguments.Length != 2)
                 {
                     string message = $"Invoked {Name} but no arguments were provided";
                     return (false, message);
@@ -853,7 +847,7 @@ Reset the internal state:           reset();";
         private class WriteCommand : BatchCommand
         {
             /// <inheritdoc/>
-            public WriteCommand(List<string> arguments) : base(arguments) { }
+            public WriteCommand(string[] args) : base(args) { }
 
             /// <inheritdoc/>
             public override string Usage()
@@ -864,15 +858,15 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override (bool, string?) ValidateArguments()
             {
-                if (Arguments.Count > 1)
+                if (Arguments.Length > 1)
                 {
-                    string message = $"Invoked {Name} and expected 0-1 arguments, but {Arguments.Count} arguments were provided";
+                    string message = $"Invoked {Name} and expected 0-1 arguments, but {Arguments.Length} arguments were provided";
                     return (false, message);
                 }
 
                 // Get overwrite value, if possible
                 bool? overwrite = true;
-                if (Arguments.Count == 1)
+                if (Arguments.Length == 1)
                     overwrite = Arguments[0].AsYesNo();
 
                 // If we had an invalid input, log and continue
@@ -890,7 +884,7 @@ Reset the internal state:           reset();";
             {
                 // Get overwrite value, if possible
                 bool overwrite = true;
-                if (Arguments.Count == 1)
+                if (Arguments.Length == 1)
                     overwrite = Arguments[0].AsYesNo() ?? true;
 
                 // Write out the dat with the current state

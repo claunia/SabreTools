@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -46,10 +47,10 @@ namespace SabreTools.DatTools
             InternalStopwatch watch = new($"Splitting DAT by extension");
 
             // Make sure all of the extensions don't have a dot at the beginning
-            var newExtA = extA.Select(s => s.TrimStart('.').ToLowerInvariant()).ToArray();
+            var newExtA = extA.ConvertAll(s => s.TrimStart('.').ToLowerInvariant()).ToArray();
             string newExtAString = string.Join(",", newExtA);
 
-            var newExtB = extB.Select(s => s.TrimStart('.').ToLowerInvariant()).ToArray();
+            var newExtB = extB.ConvertAll(s => s.TrimStart('.').ToLowerInvariant()).ToArray();
             string newExtBString = string.Join(",", newExtB);
 
             // Set all of the appropriate outputs for each of the subsets
@@ -82,11 +83,11 @@ namespace SabreTools.DatTools
 
                 foreach (DatItem item in items)
                 {
-                    if (newExtA.Contains((item.GetName() ?? string.Empty).GetNormalizedExtension()))
+                    if (Array.IndexOf(newExtA, (item.GetName() ?? string.Empty).GetNormalizedExtension()) > -1)
                     {
                         extADat.Items.Add(key, item);
                     }
-                    else if (newExtB.Contains((item.GetName() ?? string.Empty).GetNormalizedExtension()))
+                    if (Array.IndexOf(newExtB, (item.GetName() ?? string.Empty).GetNormalizedExtension()) > -1)
                     {
                         extBDat.Items.Add(key, item);
                     }
@@ -123,10 +124,10 @@ namespace SabreTools.DatTools
             InternalStopwatch watch = new($"Splitting DAT by extension");
 
             // Make sure all of the extensions don't have a dot at the beginning
-            var newExtA = extA.Select(s => s.TrimStart('.').ToLowerInvariant()).ToArray();
+            var newExtA = extA.ConvertAll(s => s.TrimStart('.').ToLowerInvariant()).ToArray();
             string newExtAString = string.Join(",", newExtA);
 
-            var newExtB = extB.Select(s => s.TrimStart('.').ToLowerInvariant()).ToArray();
+            var newExtB = extB.ConvertAll(s => s.TrimStart('.').ToLowerInvariant()).ToArray();
             string newExtBString = string.Join(",", newExtB);
 
             // Set all of the appropriate outputs for each of the subsets

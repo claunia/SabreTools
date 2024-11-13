@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using SabreTools.Core.Tools;
 using SabreTools.Models.Metadata;
 
@@ -110,7 +109,7 @@ namespace SabreTools.Core.Filter
 
             // Get if there's a match to the constant
             string localFieldName = fieldName;
-            string? constantMatch = constants.FirstOrDefault(c => string.Equals(c, localFieldName, StringComparison.OrdinalIgnoreCase));
+            string? constantMatch = Array.Find(constants, c => string.Equals(c, localFieldName, StringComparison.OrdinalIgnoreCase));
             if (constantMatch == null)
                 return false;
 
@@ -132,7 +131,7 @@ namespace SabreTools.Core.Filter
 
             // Get if there's a match to the constant
             string localFieldName = fieldName;
-            string? constantMatch = constants.FirstOrDefault(c => string.Equals(c, localFieldName, StringComparison.OrdinalIgnoreCase));
+            string? constantMatch = Array.Find(constants, c => string.Equals(c, localFieldName, StringComparison.OrdinalIgnoreCase));
             if (constantMatch == null)
                 return false;
 
@@ -156,7 +155,7 @@ namespace SabreTools.Core.Filter
 
                 // If we get any matches
                 string localFieldName = fieldName;
-                string? matchedType = itemTypes.FirstOrDefault(t => DatItemContainsField(t, localFieldName));
+                string? matchedType = Array.Find(itemTypes, t => DatItemContainsField(t, localFieldName));
                 if (matchedType != null)
                 {
                     // Check for a matching field
@@ -208,7 +207,7 @@ namespace SabreTools.Core.Filter
 
             // Get if there's a match to the constant
             string localFieldName = fieldName;
-            string? constantMatch = constants.FirstOrDefault(c => string.Equals(c, localFieldName, StringComparison.OrdinalIgnoreCase));
+            string? constantMatch = Array.Find(constants, c => string.Equals(c, localFieldName, StringComparison.OrdinalIgnoreCase));
             return constantMatch;
         }
 

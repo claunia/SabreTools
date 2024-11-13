@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SabreTools.Help
 {
@@ -84,7 +83,20 @@ namespace SabreTools.Help
         /// <returns>Feature name</returns>
         public string GetFeatureName(string name)
         {
-            return _features.Keys.FirstOrDefault(f => _features[f]?.ValidateInput(name, exact: true, ignore: true) ?? false) ?? string.Empty;
+            foreach (var key in _features.Keys)
+            {
+                // Skip invalid features
+                var feature = _features[key];
+                if (feature == null)
+                    continue;
+
+                // If validation passes
+                if (feature.ValidateInput(name, exact: true, ignore: true))
+                    return key;
+            }
+
+            // No feature could be found
+            return string.Empty;
         }
 
         /// <summary>
@@ -236,7 +248,20 @@ namespace SabreTools.Help
         /// <returns>True if the feature was found, false otherwise</returns>
         public bool TopLevelFlag(string flag)
         {
-            return _features.Keys.Any(f => _features[f]?.ValidateInput(flag, exact: true) ?? false);
+            foreach (var key in _features.Keys)
+            {
+                // Skip invalid features
+                var feature = _features[key];
+                if (feature == null)
+                    continue;
+
+                // If validation passes
+                if (feature.ValidateInput(flag, exact: true))
+                    return true;
+            }
+
+            // No feature could be found
+            return false;
         }
 
         /// <summary>

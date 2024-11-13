@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -532,7 +533,7 @@ namespace SabreTools.DatTools
         /// <param name="inputs">List of inputs to write out from</param>
         public static DatFile DiffDuplicates(DatFile datFile, List<string> inputs)
         {
-            List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
+            List<ParentablePath> paths = inputs.ConvertAll(i => new ParentablePath(i));
             return DiffDuplicates(datFile, paths);
             //return DiffDuplicatesDB(datFile, paths);
         }
@@ -737,7 +738,7 @@ namespace SabreTools.DatTools
         /// <param name="inputs">List of inputs to write out from</param>
         public static List<DatFile> DiffIndividuals(DatFile datFile, List<string> inputs)
         {
-            List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
+            List<ParentablePath> paths = inputs.ConvertAll(i => new ParentablePath(i));
             return DiffIndividuals(datFile, paths);
             //return DiffIndividualsDB(datFile, paths);
         }
@@ -967,7 +968,7 @@ namespace SabreTools.DatTools
         /// <param name="inputs">List of inputs to write out from</param>
         public static DatFile DiffNoDuplicates(DatFile datFile, List<string> inputs)
         {
-            List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
+            List<ParentablePath> paths = inputs.ConvertAll(i => new ParentablePath(i));
             return DiffNoDuplicates(datFile, paths);
             //return DiffNoDuplicatesDB(datFile, paths);
         }
@@ -1171,7 +1172,7 @@ namespace SabreTools.DatTools
         /// <returns>List of DatHeader objects representing headers</returns>
         public static List<DatHeader> PopulateUserData(DatFile datFile, List<string> inputs)
         {
-            List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
+            List<ParentablePath> paths = inputs.ConvertAll(i => new ParentablePath(i));
             return PopulateUserData(datFile, paths);
         }
 
@@ -1216,7 +1217,7 @@ namespace SabreTools.DatTools
 
             watch.Stop();
 
-            return [.. datFiles.Select(d => d.Header)];
+            return [.. Array.ConvertAll(datFiles, d => d.Header)];
         }
 
         /// <summary>

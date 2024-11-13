@@ -116,7 +116,7 @@ namespace SabreTools.Help
         /// <returns>True if the flag was found, false otherwise</returns>
         public bool ContainsFlag(string name)
         {
-            return Flags.Any(f => f == name || f.TrimStart('-') == name);
+            return Flags.Exists(f => f == name || f.TrimStart('-') == name);
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace SabreTools.Help
         /// <returns>True if the flag was found, false otherwise</returns>
         public bool StartsWith(char c)
         {
-            return Flags.Any(f => f.TrimStart('-').ToLowerInvariant()[0] == c);
+            return Flags.Exists(f => f.TrimStart('-').ToLowerInvariant()[0] == c);
         }
 
         #endregion
@@ -202,7 +202,7 @@ namespace SabreTools.Help
                 for (int i = 0; i < split.Length; i++)
                 {
                     // If we have a newline character, reset the line and continue
-                    if (split[i].Contains('\n'))
+                    if (split[i].Contains("\n"))
                     {
                         string[] subsplit = split[i].Replace("\r", string.Empty).Split('\n');
                         for (int j = 0; j < subsplit.Length - 1; j++)
@@ -339,7 +339,7 @@ namespace SabreTools.Help
                 for (int i = 0; i < split.Length; i++)
                 {
                     // If we have a newline character, reset the line and continue
-                    if (split[i].Contains('\n'))
+                    if (split[i].Contains("\n"))
                     {
                         string[] subsplit = split[i].Replace("\r", string.Empty).Split('\n');
                         for (int j = 0; j < subsplit.Length - 1; j++)
@@ -404,12 +404,15 @@ namespace SabreTools.Help
         {
             bool valid = false;
 
+            // Pre-split the input for efficiency
+            string[] splitInput = input.Split('=');
+
             // Determine what we should be looking for
             switch (_featureType)
             {
                 // If we have a flag, make sure it doesn't have an equal sign in it 
                 case ParameterType.Flag:
-                    valid = !input.Contains('=') && Flags.Contains(input);
+                    valid = !input.Contains("=") && Flags.Contains(input);
                     if (valid)
                     {
                         _value = true;
@@ -425,10 +428,10 @@ namespace SabreTools.Help
 
                 // If we have an Int32, try to parse it if at all possible
                 case ParameterType.Int32:
-                    valid = input.Contains('=') && Flags.Contains(input.Split('=')[0]);
+                    valid = input.Contains("=") && Flags.Contains(splitInput[0]);
                     if (valid)
                     {
-                        if (!Int32.TryParse(input.Split('=')[1], out int value))
+                        if (!Int32.TryParse(splitInput[1], out int value))
                             value = Int32.MinValue;
 
                         _value = value;
@@ -444,10 +447,10 @@ namespace SabreTools.Help
 
                 // If we have an Int32, try to parse it if at all possible
                 case ParameterType.Int64:
-                    valid = input.Contains('=') && Flags.Contains(input.Split('=')[0]);
+                    valid = input.Contains("=") && Flags.Contains(splitInput[0]);
                     if (valid)
                     {
-                        if (!Int64.TryParse(input.Split('=')[1], out long value))
+                        if (!Int64.TryParse(splitInput[1], out long value))
                             value = Int64.MinValue;
 
                         _value = value;
@@ -463,20 +466,20 @@ namespace SabreTools.Help
 
                 // If we have an input, make sure it has an equals sign in it
                 case ParameterType.List:
-                    valid = input.Contains('=') && Flags.Contains(input.Split('=')[0]);
+                    valid = input.Contains("=") && Flags.Contains(splitInput[0]);
                     if (valid)
                     {
                         _value ??= new List<string>();
-                        (_value as List<string>)?.Add(string.Join("=", input.Split('=').Skip(1).ToArray()));
+                        (_value as List<string>)?.Add(string.Join("=", splitInput, 1, splitInput.Length - 1));
                     }
 
                     break;
 
                 case ParameterType.String:
-                    valid = input.Contains('=') && Flags.Contains(input.Split('=')[0]);
+                    valid = input.Contains("=") && Flags.Contains(input.Split('=')[0]);
                     if (valid)
                     {
-                        _value = string.Join("=", input.Split('=').Skip(1).ToArray());
+                        _value = string.Join("=", splitInput, 1, splitInput.Length - 1);
 
                         // If we've already found this feature before
                         if (_foundOnce && !ignore)

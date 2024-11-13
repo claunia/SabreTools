@@ -322,7 +322,7 @@ namespace SabreTools.DatFiles
                     items.TryRemove(key, out _);
 
                 // If there are no non-blank items, remove
-                else if (!value!.Any(i => i != null && i is not Blank))
+                else if (value!.FindIndex(i => i != null && i is not Blank) == -1)
                     items.TryRemove(key, out _);
 #else
                 // If the key doesn't exist, skip
@@ -334,7 +334,7 @@ namespace SabreTools.DatFiles
                     items.Remove(key);
 
                 // If there are no non-blank items, remove
-                else if (!items[key]!.Any(i => i != null && i is not Blank))
+                else if (items[key]!.FindIndex(i => i != null && i is not Blank) == -1)
                     items.Remove(key);
 #endif
             }
@@ -348,8 +348,12 @@ namespace SabreTools.DatFiles
             List<string> keys = [.. items.Keys];
             foreach (string key in keys)
             {
+                // Skip invalid item lists
                 List<DatItem>? oldItemList = items[key];
-                List<DatItem>? newItemList = oldItemList?.Where(i => i.GetBoolFieldValue(DatItem.RemoveKey) != true)?.ToList();
+                if (oldItemList == null)
+                    return;
+
+                List<DatItem> newItemList = oldItemList.FindAll(i => i.GetBoolFieldValue(DatItem.RemoveKey) != true);
 
                 Remove(key);
                 AddRange(key, newItemList);
@@ -630,7 +634,7 @@ namespace SabreTools.DatFiles
             if (roms == null)
                 return false;
 
-            return roms.Any(r => datItem.Equals(r));
+            return roms.FindIndex(r => datItem.Equals(r)) > -1;
         }
 
         /// <summary>
@@ -747,7 +751,7 @@ namespace SabreTools.DatFiles
 #endif
             {
                 // Get the possibly unsorted list
-                List<DatItem>? sortedlist = this[key]?.ToList();
+                List<DatItem>? sortedlist = this[key];
                 if (sortedlist == null)
 #if NET40_OR_GREATER || NETCOREAPP
                     return;
@@ -953,7 +957,7 @@ namespace SabreTools.DatFiles
                 string? machine = default;
                 foreach (string region in regionList)
                 {
-                    machine = parents[key].FirstOrDefault(m => Regex.IsMatch(m, @"\(.*" + region + @".*\)", RegexOptions.IgnoreCase));
+                    machine = parents[key].Find(m => Regex.IsMatch(m, @"\(.*" + region + @".*\)", RegexOptions.IgnoreCase));
                     if (machine != default)
                         break;
                 }
@@ -1190,7 +1194,9 @@ namespace SabreTools.DatFiles
         /// </summary>
         public void AddRomsFromBios()
         {
-            List<string> games = [.. Keys.OrderBy(g => g)];
+            List<string> games = [.. Keys];
+            games.Sort();
+
             foreach (string game in games)
             {
                 // If the game has no items in it, we want to continue
@@ -1219,7 +1225,7 @@ namespace SabreTools.DatFiles
                 {
                     DatItem datItem = (DatItem)item.Clone();
                     datItem.CopyMachineInformation(copyFrom);
-                    if (!items.Any(i => i.GetName() == datItem.GetName()) && !items.Contains(datItem))
+                    if (items.FindIndex(i => i.GetName() == datItem.GetName()) == -1 && !items.Contains(datItem))
                         Add(game, datItem);
                 }
             }
@@ -1233,7 +1239,9 @@ namespace SabreTools.DatFiles
         public bool AddRomsFromDevices(bool dev, bool useSlotOptions)
         {
             bool foundnew = false;
-            List<string> machines = [.. Keys.OrderBy(g => g)];
+            List<string> machines = [.. Keys];
+            machines.Sort();
+
             foreach (string machine in machines)
             {
                 // If the machine doesn't have items, we continue
@@ -1266,7 +1274,7 @@ namespace SabreTools.DatFiles
                 if (deviceReferences.Count > 0)
                 {
                     // Loop through all names and check the corresponding machines
-                    List<string> newDeviceReferences = [];
+                    var newDeviceReferences = new HashSet<string>();
                     foreach (string? deviceReference in deviceReferences)
                     {
                         // If the machine doesn't exist then we continue
@@ -1278,7 +1286,7 @@ namespace SabreTools.DatFiles
                         if (devItems == null)
                             continue;
 
-                        newDeviceReferences.AddRange(devItems
+                        newDeviceReferences.IntersectWith(devItems
                             .Where(i => i is DeviceRef)
                             .Select(i => (i as DeviceRef)!.GetName()!));
 
@@ -1301,7 +1309,7 @@ namespace SabreTools.DatFiles
                     }
 
                     // Now that every device reference is accounted for, add the new list of device references, if they don't already exist
-                    foreach (string deviceReference in newDeviceReferences.Distinct())
+                    foreach (string deviceReference in newDeviceReferences)
                     {
                         if (!deviceReferences.Contains(deviceReference))
                         {
@@ -1316,7 +1324,7 @@ namespace SabreTools.DatFiles
                 if (useSlotOptions && slotOptions.Count > 0)
                 {
                     // Loop through all names and check the corresponding machines
-                    List<string> newSlotOptions = [];
+                    var newSlotOptions = new HashSet<string>();
                     foreach (string? slotOption in slotOptions)
                     {
                         // If the machine doesn't exist then we continue
@@ -1328,7 +1336,7 @@ namespace SabreTools.DatFiles
                         if (slotItems == null)
                             continue;
 
-                        newSlotOptions.AddRange(slotItems
+                        newSlotOptions.IntersectWith(slotItems
                             .Where(i => i is Slot)
                             .Where(s => (s as Slot)!.SlotOptionsSpecified)
                             .SelectMany(s => (s as Slot)!.GetFieldValue<SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey)!)
@@ -1353,7 +1361,7 @@ namespace SabreTools.DatFiles
                     }
 
                     // Now that every device is accounted for, add the new list of slot options, if they don't already exist
-                    foreach (string slotOption in newSlotOptions.Distinct())
+                    foreach (string slotOption in newSlotOptions)
                     {
                         if (!slotOptions.Contains(slotOption))
                         {
@@ -1377,7 +1385,9 @@ namespace SabreTools.DatFiles
         /// </summary>
         public void AddRomsFromParent()
         {
-            List<string> games = [.. Keys.OrderBy(g => g)];
+            List<string> games = [.. Keys];
+            games.Sort();
+
             foreach (string game in games)
             {
                 // If the game has no items in it, we want to continue
@@ -1406,7 +1416,7 @@ namespace SabreTools.DatFiles
                 {
                     DatItem datItem = (DatItem)item.Clone();
                     datItem.CopyMachineInformation(copyFrom);
-                    if (!items.Any(i => string.Equals(i.GetName(), datItem.GetName(), StringComparison.OrdinalIgnoreCase))
+                    if (items.FindIndex(i => string.Equals(i.GetName(), datItem.GetName(), StringComparison.OrdinalIgnoreCase)) == -1
                         && !items.Contains(datItem))
                     {
                         Add(game, datItem);
@@ -1430,7 +1440,9 @@ namespace SabreTools.DatFiles
         /// <param name="skipDedup">True to skip checking for duplicate ROMs in parent, false otherwise</param>
         public void AddRomsFromChildren(bool subfolder, bool skipDedup)
         {
-            List<string> games = [.. Keys.OrderBy(g => g)];
+            List<string> games = [.. Keys];
+            games.Sort();
+
             foreach (string game in games)
             {
                 // If the game has no items in it, we want to continue
@@ -1552,7 +1564,9 @@ namespace SabreTools.DatFiles
         /// </summary>
         public void RemoveBiosAndDeviceSets()
         {
-            List<string> games = [.. Keys.OrderBy(g => g)];
+            List<string> games = [.. Keys];
+            games.Sort();
+
             foreach (string game in games)
             {
                 // If the game has no items in it, we want to continue
@@ -1581,7 +1595,9 @@ namespace SabreTools.DatFiles
         public void RemoveBiosRomsFromChild(bool bios)
         {
             // Loop through the romof tags
-            List<string> games = [.. Keys.OrderBy(g => g)];
+            List<string> games = [.. Keys];
+            games.Sort();
+
             foreach (string game in games)
             {
                 // If the game has no items in it, we want to continue
@@ -1625,7 +1641,9 @@ namespace SabreTools.DatFiles
         /// </summary>
         public void RemoveRomsFromChild()
         {
-            List<string> games = [.. Keys.OrderBy(g => g)];
+            List<string> games = [.. Keys];
+            games.Sort();
+
             foreach (string game in games)
             {
                 // If the game has no items in it, we want to continue
@@ -1673,7 +1691,9 @@ namespace SabreTools.DatFiles
         /// </summary>
         public void RemoveTagsFromChild()
         {
-            List<string> games = [.. Keys.OrderBy(g => g)];
+            List<string> games = [.. Keys];
+            games.Sort();
+
             foreach (string game in games)
             {
                 // If the game has no items in it, we want to continue

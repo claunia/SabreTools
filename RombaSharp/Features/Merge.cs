@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using SabreTools.Help;
 using SabreTools.IO;
 
@@ -43,7 +42,7 @@ namespace RombaSharp.Features
             logger.Error("This feature is not yet implemented: merge");
 
             // Verify that the inputs are valid directories
-            var dirs = PathTool.GetDirectoriesOnly(Inputs).Select(p => p.CurrentPath);
+            var dirs = PathTool.GetDirectoriesOnly(Inputs).ConvertAll(p => p.CurrentPath);
             Inputs.Clear();
             Inputs.AddRange(dirs);
 

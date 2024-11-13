@@ -286,7 +286,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         public void ClearEmpty()
         {
-            var keys = SortedKeys.Where(k => k != null).ToList();
+            var keys = Array.FindAll(SortedKeys, k => k != null);
             foreach (string key in keys)
             {
                 // If the key doesn't exist, skip
@@ -302,7 +302,7 @@ namespace SabreTools.DatFiles
 #endif
 
                 // If there are no non-blank items, remove
-                else if (!_buckets[key]!.Any(i => GetItem(i) != null && GetItem(i) is not Blank))
+                else if (!_buckets[key].Any(i => GetItem(i) != null && GetItem(i) is not Blank))
 #if NET40_OR_GREATER || NETCOREAPP
                     _buckets.TryRemove(key, out _);
 #else
@@ -724,7 +724,7 @@ namespace SabreTools.DatFiles
                 return false;
 
             // Try to find duplicates
-            return roms.Any(r => datItem.Equals(r.Item2));
+            return Array.Exists(roms, r => datItem.Equals(r.Item2));
         }
 
         /// <summary>
@@ -1064,9 +1064,8 @@ namespace SabreTools.DatFiles
 #endif
 
                 var datItems = itemIndices
-                    .Where(i => _items.ContainsKey(i))
-                    .Select(i => (i, _items[i]))
-                    .ToList();
+                    .FindAll(i => _items.ContainsKey(i))
+                    .ConvertAll(i => (i, _items[i]));
 
                 Sort(ref datItems, false);
 
@@ -1074,7 +1073,7 @@ namespace SabreTools.DatFiles
                 if (dedupeType == DedupeType.Full || (dedupeType == DedupeType.Game && bucketBy == ItemKey.Machine))
                     datItems = Deduplicate(datItems);
 
-                _buckets[bucketKeys[i]] = datItems.Select(m => m.Item1).ToList();
+                _buckets[bucketKeys[i]] = datItems.ConvertAll(m => m.i);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
@@ -1338,7 +1337,7 @@ namespace SabreTools.DatFiles
                 string? machine = default;
                 foreach (string region in regionList)
                 {
-                    machine = parents[key].FirstOrDefault(m => Regex.IsMatch(m, @"\(.*" + region + @".*\)", RegexOptions.IgnoreCase));
+                    machine = parents[key].Find(m => Regex.IsMatch(m, @"\(.*" + region + @".*\)", RegexOptions.IgnoreCase));
                     if (machine != default)
                         break;
                 }
@@ -1432,7 +1431,7 @@ namespace SabreTools.DatFiles
                     items[j] = item;
                 }
 
-                _buckets[key] = items.Select(i => i.Item1).ToList();
+                _buckets[key] = [.. Array.ConvertAll(items, i => i.Item1)];
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
@@ -1511,7 +1510,7 @@ namespace SabreTools.DatFiles
             }
 
             // Set the value in the key to the new set
-            _buckets[bucketName] = newItems.Select(i => i.Item1).ToList();
+            _buckets[bucketName] = newItems.ConvertAll(i => i.Item1);
         }
 
         /// <summary>
@@ -1598,7 +1597,7 @@ namespace SabreTools.DatFiles
                 }
 
                 // Replace the old list of roms with the new one
-                _buckets[key] = newItems.Select(i => i.Item1).ToList();
+                _buckets[key] = newItems.ConvertAll(i => i.Item1);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
@@ -1645,8 +1644,11 @@ namespace SabreTools.DatFiles
                 foreach ((long, DatItem) item in parentItems)
                 {
                     DatItem datItem = (item.Item2.Clone() as DatItem)!;
-                    if (!items.Any(i => i.Item2.GetName() == datItem.GetName()) && !items.Any(i => i.Item2 == datItem))
+                    if (Array.FindIndex(items, i => i.Item2.GetName() == datItem.GetName()) > -1
+                        && Array.FindIndex(items, i => i.Item2 == datItem) > -1)
+                    {
                         AddItem(datItem, machine.Item1, source.Item1);
+                    }
                 }
             }
         }
@@ -1701,7 +1703,7 @@ namespace SabreTools.DatFiles
                 if (deviceReferences.Count > 0)
                 {
                     // Loop through all names and check the corresponding machines
-                    List<string> newDeviceReferences = [];
+                    var newDeviceReferences = new HashSet<string>();
                     foreach (string? deviceReference in deviceReferences)
                     {
                         // If the device reference is invalid
@@ -1714,7 +1716,7 @@ namespace SabreTools.DatFiles
                             continue;
 
                         // Add to the list of new device reference names
-                        newDeviceReferences.AddRange(devItems
+                        newDeviceReferences.IntersectWith(devItems
                             .Where(i => i.Item2 is DeviceRef)
                             .Select(i => (i.Item2 as DeviceRef)!.GetName()!));
 
@@ -1741,7 +1743,7 @@ namespace SabreTools.DatFiles
                     }
 
                     // Now that every device reference is accounted for, add the new list of device references, if they don't already exist
-                    foreach (string deviceReference in newDeviceReferences.Distinct())
+                    foreach (string deviceReference in newDeviceReferences)
                     {
                         if (!deviceReferences.Contains(deviceReference))
                         {
@@ -1756,7 +1758,7 @@ namespace SabreTools.DatFiles
                 if (useSlotOptions && slotOptions.Count > 0)
                 {
                     // Loop through all names and check the corresponding machines
-                    List<string> newSlotOptions = [];
+                    var newSlotOptions = new HashSet<string>();
                     foreach (string? slotOption in slotOptions)
                     {
                         // If the slot option is invalid
@@ -1769,7 +1771,7 @@ namespace SabreTools.DatFiles
                             continue;
 
                         // Add to the list of new slot option names
-                        newSlotOptions.AddRange(slotItems
+                        newSlotOptions.IntersectWith(slotItems
                             .Where(i => i.Item2 is Slot)
                             .Where(s => (s.Item2 as Slot)!.SlotOptionsSpecified)
                             .SelectMany(s => (s.Item2 as Slot)!.GetFieldValue<SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey)!)
@@ -1798,7 +1800,7 @@ namespace SabreTools.DatFiles
                     }
 
                     // Now that every device is accounted for, add the new list of slot options, if they don't already exist
-                    foreach (string slotOption in newSlotOptions.Distinct())
+                    foreach (string slotOption in newSlotOptions)
                     {
                         if (!slotOptions.Contains(slotOption))
                         {
@@ -1852,8 +1854,8 @@ namespace SabreTools.DatFiles
                 foreach (var item in parentItems)
                 {
                     DatItem datItem = (DatItem)item.Item2.Clone();
-                    if (!items.Any(i => i.Item2.GetName()?.ToLowerInvariant() == datItem.GetName()?.ToLowerInvariant())
-                        && !items.Any(i => i.Item2 == datItem))
+                    if (Array.FindIndex(items, i => i.Item2.GetName()?.ToLowerInvariant() == datItem.GetName()?.ToLowerInvariant()) > -1
+                        && Array.FindIndex(items, i => i.Item2 == datItem) > -1)
                     {
                         AddItem(datItem, machine.Item1, source.Item1);
                     }
@@ -1913,6 +1915,9 @@ namespace SabreTools.DatFiles
                 {
                     // Get the parent items and current machine name
                     var parentItems = GetItemsForBucket(cloneOf!);
+                    if (parentItems == null)
+                        continue;
+
                     string? machineName = GetMachineForItem(item.Item1).Item2?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
 
                     // Special disk handling
@@ -1921,7 +1926,7 @@ namespace SabreTools.DatFiles
                         string? mergeTag = disk.GetStringFieldValue(Models.Metadata.Disk.MergeKey);
 
                         // If the merge tag exists and the parent already contains it, skip
-                        if (mergeTag != null && parentItems!
+                        if (mergeTag != null && parentItems
                             .Where(i => i.Item2 is Disk)
                             .Select(i => (i.Item2 as Disk)!.GetName())
                             .Contains(mergeTag))
@@ -1930,7 +1935,7 @@ namespace SabreTools.DatFiles
                         }
 
                         // If the merge tag exists but the parent doesn't contain it, add to parent
-                        else if (mergeTag != null && !parentItems!
+                        else if (mergeTag != null && !parentItems
                             .Where(i => i.Item2 is Disk)
                             .Select(i => (i.Item2 as Disk)!.GetName())
                             .Contains(mergeTag))
@@ -1951,7 +1956,7 @@ namespace SabreTools.DatFiles
                     else if (item.Item2 is Rom rom)
                     {
                         // If the merge tag exists and the parent already contains it, skip
-                        if (rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey) != null && parentItems!
+                        if (rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey) != null && parentItems
                             .Where(i => i.Item2 is Rom)
                             .Select(i => (i.Item2 as Rom)!.GetName())
                             .Contains(rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey)))
@@ -1960,7 +1965,7 @@ namespace SabreTools.DatFiles
                         }
 
                         // If the merge tag exists but the parent doesn't contain it, add to subfolder of parent
-                        else if (rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey) != null && !parentItems!
+                        else if (rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey) != null && !parentItems
                             .Where(i => i.Item2 is Rom)
                             .Select(i => (i.Item2 as Rom)!.GetName())
                             .Contains(rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey)))
@@ -1973,7 +1978,7 @@ namespace SabreTools.DatFiles
                         }
 
                         // If the parent doesn't already contain this item, add to subfolder of parent
-                        else if (!parentItems!.Contains(item) || skipDedup)
+                        else if (Array.IndexOf(parentItems, item) == -1 || skipDedup)
                         {
                             if (subfolder)
                                 rom.SetName($"{machineName}\\{rom.GetName()}");
@@ -1984,7 +1989,7 @@ namespace SabreTools.DatFiles
                     }
 
                     // All other that would be missing to subfolder of parent
-                    else if (!parentItems!.Contains(item))
+                    else if (Array.IndexOf(parentItems, item) == -1)
                     {
                         if (subfolder)
                             item.Item2.SetName($"{machineName}\\{item.Item2.GetName()}");
@@ -2070,8 +2075,8 @@ namespace SabreTools.DatFiles
                 // If the parent exists and has items, we remove the items that are in the parent from the current game
                 foreach ((long, DatItem) item in parentItems)
                 {
-                    var matchedIndices = items.Where(i => i.Item2 == item.Item2).Select(i => i.Item1);
-                    foreach (long index in matchedIndices)
+                    var matchedItems = Array.FindAll(items, i => i.Item2 == item.Item2);
+                    foreach ((long index, _) in matchedItems)
                     {
                         RemoveItem(index);
                     }
@@ -2110,8 +2115,8 @@ namespace SabreTools.DatFiles
                 // If the parent exists and has items, we remove the parent items from the current game
                 foreach ((long, DatItem) item in parentItems)
                 {
-                    var matchedIndices = items.Where(i => i.Item2 == item.Item2).Select(i => i.Item1);
-                    foreach (long index in matchedIndices)
+                    var matchedItems = Array.FindAll(items, i => i.Item2 == item.Item2);
+                    foreach ((long index, _) in matchedItems)
                     {
                         RemoveItem(index);
                     }

@@ -754,7 +754,7 @@ namespace SabreTools.DatFiles
             foreach (DatItem datItem in datItems)
             {
                 ItemType itemType = datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>();
-                if (GetSupportedTypes().Contains(itemType))
+                if (Array.Exists(GetSupportedTypes(), t => t == itemType))
                     return true;
             }
 
@@ -776,7 +776,7 @@ namespace SabreTools.DatFiles
             foreach ((long, DatItem) datItem in datItems)
             {
                 ItemType itemType = datItem.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>();
-                if (GetSupportedTypes().Contains(itemType))
+                if (Array.Exists(GetSupportedTypes(), t => t == itemType))
                     return true;
             }
 

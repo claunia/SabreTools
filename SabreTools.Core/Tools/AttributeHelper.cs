@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 
 namespace SabreTools.Core.Tools
 {
@@ -32,7 +31,7 @@ namespace SabreTools.Core.Tools
                 return null;
 
             // Get the enum value info from the array, if possible
-            var enumValueMemberInfo = memberInfos.FirstOrDefault(m => m.DeclaringType == enumType);
+            var enumValueMemberInfo = Array.Find(memberInfos, m => m.DeclaringType == enumType);
             if (enumValueMemberInfo == null)
                 return null;
 
@@ -42,7 +41,7 @@ namespace SabreTools.Core.Tools
                 return null;
 
             // Return the first attribute, if possible
-            return (MappingAttribute?)attributes.FirstOrDefault();
+            return (MappingAttribute?)attributes[0];
         }
     }
 }

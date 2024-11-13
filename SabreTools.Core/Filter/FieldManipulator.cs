@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using SabreTools.Core.Tools;
 using SabreTools.Models.Metadata;
 
@@ -62,7 +61,7 @@ namespace SabreTools.Core.Filter
                 return false;
 
             // Get the value that matches the field name provided
-            string? realField = constants.FirstOrDefault(c => string.Equals(c, fieldName, StringComparison.OrdinalIgnoreCase));
+            string? realField = Array.Find(constants, c => string.Equals(c, fieldName, StringComparison.OrdinalIgnoreCase));
             if (realField == null)
                 return false;
 

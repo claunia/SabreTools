@@ -478,7 +478,7 @@ namespace SabreTools.DatFiles.Formats
                         continue;
 
                     // Resolve the names in the block
-                    items = [.. DatItem.ResolveNamesDB(items.ToList())];
+                    items = [.. DatItem.ResolveNamesDB([.. items])];
 
                     for (int index = 0; index < items.Length; index++)
                     {

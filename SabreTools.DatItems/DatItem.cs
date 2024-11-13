@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
@@ -1022,9 +1021,8 @@ namespace SabreTools.DatItems
         /// <returns>Clone of the DatItem</returns>
         public override object Clone()
         {
-            var concrete = Assembly.GetExecutingAssembly()
-                .GetTypes()
-                .FirstOrDefault(t => !t.IsAbstract && t.IsClass && t.BaseType == typeof(DatItem<T>));
+            var concrete = Array.Find(Assembly.GetExecutingAssembly().GetTypes(),
+                t => !t.IsAbstract && t.IsClass && t.BaseType == typeof(DatItem<T>));
 
             var clone = Activator.CreateInstance(concrete!);
             (clone as DatItem<T>)!._internal = _internal?.Clone() as T ?? Activator.CreateInstance<T>();
