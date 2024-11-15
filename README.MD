@@ -1,5 +1,6 @@
 # ![SabreTools Logo](images/sabretools-rect.png)
 
+[![Build status](https://ci.appveyor.com/api/projects/status/c3hsfpmqhg40al35/branch/main?svg=true)](https://ci.appveyor.com/project/mnadareski/sabretools/branch/main)
 [![Build Status](https://github.com/SabreTools/SabreTools/actions/workflows/build_and_publish.yml/badge.svg?branch=main)](https://github.com/SabreTools/SabreTools/actions/workflows/build_and_publish.yml)
 
 ## Introduction
