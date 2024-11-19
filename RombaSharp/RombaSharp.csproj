@@ -7,11 +7,11 @@
         <CheckEolTargetFramework>false</CheckEolTargetFramework>
         <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
         <LangVersion>latest</LangVersion>
+        <NoWarn>NU1902;NU1903</NoWarn>
         <Nullable>enable</Nullable>
         <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <Version>1.1.2</Version>
-        <WarningsNotAsErrors>NU1902;NU1903</WarningsNotAsErrors>
 
         <!-- Package Properties -->
         <Authors>Matt Nadareski</Authors>
