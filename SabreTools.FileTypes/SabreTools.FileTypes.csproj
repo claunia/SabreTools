@@ -8,8 +8,9 @@
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
         <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
-        <!-- <TreatWarningsAsErrors>true</TreatWarningsAsErrors> --> <!-- Can't be enabled because of external code -->
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <Version>1.1.2</Version>
+        <WarningsNotAsErrors>CA2200;CA2022;CS0168;CS0618;CS8600;CS8602;CS8603;CS8604;CS8618;CS8625</WarningsNotAsErrors>
 
         <!-- Package Properties -->
         <Authors>Matt Nadareski</Authors>
