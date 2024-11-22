@@ -37,7 +37,7 @@ namespace SabreTools.Core.Tools
 
             // Try to get the relevant attribute
             var attributes = enumValueMemberInfo.GetCustomAttributes(typeof(MappingAttribute), true);
-            if (attributes == null)
+            if (attributes == null || attributes.Length == 0)
                 return null;
 
             // Return the first attribute, if possible
