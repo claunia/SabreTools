@@ -13,6 +13,10 @@ param(
     [switch]$USE_ALL,
 
     [Parameter(Mandatory = $false)]
+    [Alias("IncludeDebug")]
+    [switch]$INCLUDE_DEBUG,
+
+    [Parameter(Mandatory = $false)]
     [Alias("NoBuild")]
     [switch]$NO_BUILD,
 
@@ -30,6 +34,7 @@ $COMMIT = git log --pretty=format:"%H" -1
 # Output the selected options
 Write-Host "Selected Options:"
 Write-Host "  Use all frameworks (-UseAll)          $USE_ALL"
+Write-Host "  Include debug builds (-IncludeDebug)  $INCLUDE_DEBUG"
 Write-Host "  No build (-NoBuild)                   $NO_BUILD"
 Write-Host "  No archive (-NoArchive)               $NO_ARCHIVE"
 Write-Host " "
@@ -75,15 +80,15 @@ if (!$NO_BUILD.IsPresent) {
 
             # Only .NET 5 and above can publish to a single file
             if ($SINGLE_FILE_CAPABLE -contains $FRAMEWORK) {
-                # Only include Debug if building all
-                if ($USE_ALL.IsPresent) {
+                # Only include Debug if set
+                if ($INCLUDE_DEBUG.IsPresent) {
                     dotnet publish RombaSharp\RombaSharp.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true
                 }
                 dotnet publish RombaSharp\RombaSharp.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
             }
             else {
-                # Only include Debug if building all
-                if ($USE_ALL.IsPresent) {
+                # Only include Debug if set
+                if ($INCLUDE_DEBUG.IsPresent) {
                     dotnet publish RombaSharp\RombaSharp.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
                 }
                 dotnet publish RombaSharp\RombaSharp.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
@@ -111,15 +116,15 @@ if (!$NO_BUILD.IsPresent) {
 
             # Only .NET 5 and above can publish to a single file
             if ($SINGLE_FILE_CAPABLE -contains $FRAMEWORK) {
-                # Only include Debug if building all
-                if ($USE_ALL.IsPresent) {
+                # Only include Debug if set
+                if ($INCLUDE_DEBUG.IsPresent) {
                     dotnet publish SabreTools\SabreTools.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true
                 }
                 dotnet publish SabreTools\SabreTools.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
             }
             else {
-                # Only include Debug if building all
-                if ($USE_ALL.IsPresent) {
+                # Only include Debug if set
+                if ($INCLUDE_DEBUG.IsPresent) {
                     dotnet publish SabreTools\SabreTools.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
                 }
                 dotnet publish SabreTools\SabreTools.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
@@ -148,8 +153,8 @@ if (!$NO_ARCHIVE.IsPresent) {
                 continue
             }
 
-            # Only include Debug if building all
-            if ($USE_ALL.IsPresent) {
+            # Only include Debug if set
+            if ($INCLUDE_DEBUG.IsPresent) {
                 Set-Location -Path $BUILD_FOLDER\RombaSharp\bin\Debug\${FRAMEWORK}\${RUNTIME}\publish\
                 7z a -tzip $BUILD_FOLDER\RombaSharp_${FRAMEWORK}_${RUNTIME}_debug.zip *
             }
@@ -177,8 +182,8 @@ if (!$NO_ARCHIVE.IsPresent) {
                 continue
             }
 
-            # Only include Debug if building all
-            if ($USE_ALL.IsPresent) {
+            # Only include Debug if set
+            if ($INCLUDE_DEBUG.IsPresent) {
                 Set-Location -Path $BUILD_FOLDER\SabreTools\bin\Debug\${FRAMEWORK}\${RUNTIME}\publish\
                 7z a -tzip $BUILD_FOLDER\SabreTools_${FRAMEWORK}_${RUNTIME}_debug.zip *
             }

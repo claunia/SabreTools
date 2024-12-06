@@ -1,7 +1,6 @@
 # ![SabreTools Logo](images/sabretools-rect.png)
 
-[![Build status](https://ci.appveyor.com/api/projects/status/c3hsfpmqhg40al35/branch/main?svg=true)](https://ci.appveyor.com/project/mnadareski/sabretools/branch/main)
-[![Build Status](https://github.com/SabreTools/SabreTools/actions/workflows/build_and_publish.yml/badge.svg?branch=main)](https://github.com/SabreTools/SabreTools/actions/workflows/build_and_publish.yml)
+[![Build and Test](https://github.com/SabreTools/SabreTools/actions/workflows/build_and_test.yml/badge.svg)](https://github.com/SabreTools/SabreTools/actions/workflows/build_and_test.yml)
 
 ## Introduction
 
@@ -79,9 +78,9 @@ As of 2024-10-29, this tool is considered deprecated and will be removed at some
 
 ## Builds
 
-Last stable releases can be found on [the Releases tab](https://github.com/SabreTools/SabreTools/releases).
+For the most recent stable build, download the latest release here: [Releases Page](https://github.com/SabreTools/SabreTools/releases)
 
-Latest unstable builds can be found on [the Rolling build](https://github.com/SabreTools/SabreTools/releases/tag/rolling).
+For the latest WIP build here: [Rolling Release](https://github.com/SabreTools/SabreTools/releases/rolling)
 
 ## Contributions
 
