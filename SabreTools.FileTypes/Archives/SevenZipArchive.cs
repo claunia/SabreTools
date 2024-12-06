@@ -54,7 +54,7 @@ namespace SabreTools.FileTypes.Archives
             bool encounteredErrors = true;
 
             // If we have an invalid file
-            if (this.Filename == null)
+            if (Filename == null)
                 return true;
 
             try
@@ -64,7 +64,7 @@ namespace SabreTools.FileTypes.Archives
 
                 // Extract all files to the temp directory
                 var zf = new SevenZ();
-                ZipReturn zr = zf.ZipFileOpen(this.Filename, -1, true);
+                ZipReturn zr = zf.ZipFileOpen(Filename, -1, true);
                 if (zr != ZipReturn.ZipGood)
                     throw new Exception(CompressUtils.ZipErrorMessageText(zr));
 
@@ -181,7 +181,7 @@ namespace SabreTools.FileTypes.Archives
         public override (Stream?, string?) GetEntryStream(string entryName)
         {
             // If we have an invalid file
-            if (this.Filename == null)
+            if (Filename == null)
                 return (null, null);
 
             try
@@ -190,7 +190,7 @@ namespace SabreTools.FileTypes.Archives
                 string? realEntry = null;
 
                 var zf = new SevenZ();
-                ZipReturn zr = zf.ZipFileOpen(this.Filename, -1, true);
+                ZipReturn zr = zf.ZipFileOpen(Filename, -1, true);
                 if (zr != ZipReturn.ZipGood)
                     throw new Exception(CompressUtils.ZipErrorMessageText(zr));
 
@@ -237,15 +237,15 @@ namespace SabreTools.FileTypes.Archives
             List<BaseFile> found = [];
 
             // If we have an invalid file
-            if (this.Filename == null)
+            if (Filename == null)
                 return null;
 
-            string? gamename = Path.GetFileNameWithoutExtension(this.Filename);
+            string? gamename = Path.GetFileNameWithoutExtension(Filename);
 
             try
             {
                 var zf = new SevenZ();
-                ZipReturn zr = zf.ZipFileOpen(this.Filename, -1, true);
+                ZipReturn zr = zf.ZipFileOpen(Filename, -1, true);
                 if (zr != ZipReturn.ZipGood)
                     throw new Exception(CompressUtils.ZipErrorMessageText(zr));
 
@@ -266,7 +266,7 @@ namespace SabreTools.FileTypes.Archives
                     // If we get a read error, log it and continue
                     if (zr != ZipReturn.ZipGood)
                     {
-                        logger.Warning($"An error occurred while reading archive {this.Filename}: Zip Error - {zr}");
+                        logger.Warning($"An error occurred while reading archive {Filename}: Zip Error - {zr}");
                         zr = zf.ZipFileCloseReadStream();
                         continue;
                     }
@@ -275,7 +275,7 @@ namespace SabreTools.FileTypes.Archives
                     BaseFile zipEntryRom = new();
 
                     // Perform a quickscan, if flagged to
-                    if (this.AvailableHashTypes.Length == 1 && this.AvailableHashTypes[0] == HashType.CRC32)
+                    if (AvailableHashTypes.Length == 1 && AvailableHashTypes[0] == HashType.CRC32)
                     {
                         zipEntryRom.Size = (long)zf.GetLocalFile(i).UncompressedSize;
                         zipEntryRom.CRC = zf.GetLocalFile(i).CRC;
@@ -283,7 +283,7 @@ namespace SabreTools.FileTypes.Archives
                     // Otherwise, use the stream directly
                     else
                     {
-                        zipEntryRom = GetInfo(readStream, size: (long)zf.GetLocalFile(i).UncompressedSize, hashes: this.AvailableHashTypes, keepReadOpen: true);
+                        zipEntryRom = GetInfo(readStream, size: (long)zf.GetLocalFile(i).UncompressedSize, hashes: AvailableHashTypes, keepReadOpen: true);
                     }
 
                     // Fill in common details and add to the list
@@ -311,13 +311,13 @@ namespace SabreTools.FileTypes.Archives
             List<string> empties = [];
 
             // If we have an invalid file
-            if (this.Filename == null)
+            if (Filename == null)
                 return empties;
 
             try
             {
                 var zf = new SevenZ();
-                ZipReturn zr = zf.ZipFileOpen(this.Filename, -1, true);
+                ZipReturn zr = zf.ZipFileOpen(Filename, -1, true);
                 if (zr != ZipReturn.ZipGood)
                     throw new Exception(CompressUtils.ZipErrorMessageText(zr));
 
@@ -358,11 +358,11 @@ namespace SabreTools.FileTypes.Archives
         public override bool IsTorrent()
         {
             // If we have an invalid file
-            if (this.Filename == null)
+            if (Filename == null)
                 return false;
 
             SevenZ zf = new();
-            ZipReturn zr = zf.ZipFileOpen(this.Filename, -1, true);
+            ZipReturn zr = zf.ZipFileOpen(Filename, -1, true);
             if (zr != ZipReturn.ZipGood)
                 throw new Exception(CompressUtils.ZipErrorMessageText(zr));
 

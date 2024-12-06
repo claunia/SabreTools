@@ -49,7 +49,7 @@ namespace SabreTools.FileTypes.Archives
             bool encounteredErrors = true;
 
             // If we have an invalid file
-            if (this.Filename == null)
+            if (Filename == null)
                 return true;
 
             try
@@ -58,7 +58,7 @@ namespace SabreTools.FileTypes.Archives
                 Directory.CreateDirectory(outDir);
 
                 // Extract all files to the temp directory
-                SharpCompress.Archives.Rar.RarArchive ra = SharpCompress.Archives.Rar.RarArchive.Open(this.Filename);
+                SharpCompress.Archives.Rar.RarArchive ra = SharpCompress.Archives.Rar.RarArchive.Open(Filename);
                 foreach (RarArchiveEntry entry in ra.Entries)
                 {
                     entry.WriteToDirectory(outDir, new SharpCompress.Common.ExtractionOptions { PreserveFileTime = true, ExtractFullPath = true, Overwrite = true });
@@ -136,7 +136,7 @@ namespace SabreTools.FileTypes.Archives
         {
 #if NET462_OR_GREATER || NETCOREAPP
             // If we have an invalid file
-            if (this.Filename == null)
+            if (Filename == null)
                 return (null, null);
 
             try
@@ -144,7 +144,7 @@ namespace SabreTools.FileTypes.Archives
                 Stream? stream = null;
                 string? realEntry = null;
 
-                var ra = SharpCompress.Archives.Rar.RarArchive.Open(this.Filename, new ReaderOptions { LeaveStreamOpen = false, });
+                var ra = SharpCompress.Archives.Rar.RarArchive.Open(Filename, new ReaderOptions { LeaveStreamOpen = false, });
                 foreach (RarArchiveEntry entry in ra.Entries)
                 {
                     // Skip invalid entries
@@ -188,22 +188,22 @@ namespace SabreTools.FileTypes.Archives
         {
 #if NET462_OR_GREATER || NETCOREAPP
             // If we have an invalid file
-            if (this.Filename == null)
+            if (Filename == null)
                 return null;
 
             List<BaseFile> found = [];
-            string? gamename = Path.GetFileNameWithoutExtension(this.Filename);
+            string? gamename = Path.GetFileNameWithoutExtension(Filename);
 
             try
             {
-                SharpCompress.Archives.Rar.RarArchive ra = SharpCompress.Archives.Rar.RarArchive.Open(File.OpenRead(this.Filename));
+                SharpCompress.Archives.Rar.RarArchive ra = SharpCompress.Archives.Rar.RarArchive.Open(File.OpenRead(Filename));
                 foreach (RarArchiveEntry entry in ra.Entries.Where(e => e != null && !e.IsDirectory))
                 {
                     // Create a blank item for the entry
                     BaseFile rarEntryRom = new();
 
                     // Perform a quickscan, if flagged to
-                    if (this.AvailableHashTypes.Length == 1 && this.AvailableHashTypes[0] == HashType.CRC32)
+                    if (AvailableHashTypes.Length == 1 && AvailableHashTypes[0] == HashType.CRC32)
                     {
                         rarEntryRom.Size = entry.Size;
                         rarEntryRom.CRC = BitConverter.GetBytes(entry.Crc);
@@ -212,7 +212,7 @@ namespace SabreTools.FileTypes.Archives
                     else
                     {
                         using Stream entryStream = entry.OpenEntryStream();
-                        rarEntryRom = GetInfo(entryStream, size: entry.Size, hashes: this.AvailableHashTypes);
+                        rarEntryRom = GetInfo(entryStream, size: entry.Size, hashes: AvailableHashTypes);
                     }
 
                     // Fill in common details and add to the list
@@ -245,12 +245,12 @@ namespace SabreTools.FileTypes.Archives
             List<string> empties = [];
 
             // If we have an invalid file
-            if (this.Filename == null)
+            if (Filename == null)
                 return empties;
 
             try
             {
-                SharpCompress.Archives.Rar.RarArchive ra = SharpCompress.Archives.Rar.RarArchive.Open(this.Filename, new ReaderOptions { LeaveStreamOpen = false });
+                SharpCompress.Archives.Rar.RarArchive ra = SharpCompress.Archives.Rar.RarArchive.Open(Filename, new ReaderOptions { LeaveStreamOpen = false });
                 List<RarArchiveEntry> rarEntries = [.. ra.Entries.OrderBy(e => e.Key ?? string.Empty, new NaturalReversedComparer())];
                 string? lastRarEntry = null;
                 foreach (RarArchiveEntry entry in rarEntries)

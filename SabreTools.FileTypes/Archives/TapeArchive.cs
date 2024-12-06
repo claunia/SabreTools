@@ -59,7 +59,7 @@ namespace SabreTools.FileTypes.Archives
                 Directory.CreateDirectory(outDir);
 
                 // Extract all files to the temp directory
-                TarArchive ta = TarArchive.Open(this.Filename!);
+                TarArchive ta = TarArchive.Open(Filename!);
                 foreach (TarArchiveEntry entry in ta.Entries)
                 {
                     entry.WriteToDirectory(outDir, new ExtractionOptions { PreserveFileTime = true, ExtractFullPath = true, Overwrite = true });
@@ -141,7 +141,7 @@ namespace SabreTools.FileTypes.Archives
                 Stream? stream = null;
                 string? realEntry = null;
 
-                var ta = TarArchive.Open(this.Filename!, new ReaderOptions { LeaveStreamOpen = false, });
+                var ta = TarArchive.Open(Filename!, new ReaderOptions { LeaveStreamOpen = false, });
                 foreach (TarArchiveEntry entry in ta.Entries)
                 {
                     // Skip invalid entries
@@ -185,18 +185,18 @@ namespace SabreTools.FileTypes.Archives
         {
 #if NET462_OR_GREATER || NETCOREAPP
             List<BaseFile> found = [];
-            string? gamename = Path.GetFileNameWithoutExtension(this.Filename);
+            string? gamename = Path.GetFileNameWithoutExtension(Filename);
 
             try
             {
-                TarArchive ta = TarArchive.Open(File.OpenRead(this.Filename!));
+                TarArchive ta = TarArchive.Open(File.OpenRead(Filename!));
                 foreach (TarArchiveEntry entry in ta.Entries.Where(e => e != null && !e.IsDirectory))
                 {
                     // Create a blank item for the entry
                     BaseFile tarEntryRom = new();
 
                     // Perform a quickscan, if flagged to
-                    if (this.AvailableHashTypes.Length == 1 && this.AvailableHashTypes[0] == HashType.CRC32)
+                    if (AvailableHashTypes.Length == 1 && AvailableHashTypes[0] == HashType.CRC32)
                     {
                         tarEntryRom.Size = entry.Size;
                         tarEntryRom.CRC = BitConverter.GetBytes(entry.Crc);
@@ -205,7 +205,7 @@ namespace SabreTools.FileTypes.Archives
                     else
                     {
                         using Stream entryStream = entry.OpenEntryStream();
-                        tarEntryRom = GetInfo(entryStream, size: entry.Size, hashes: this.AvailableHashTypes);
+                        tarEntryRom = GetInfo(entryStream, size: entry.Size, hashes: AvailableHashTypes);
                     }
 
                     // Fill in common details and add to the list
@@ -239,7 +239,7 @@ namespace SabreTools.FileTypes.Archives
 
             try
             {
-                TarArchive ta = TarArchive.Open(this.Filename!, new ReaderOptions { LeaveStreamOpen = false });
+                TarArchive ta = TarArchive.Open(Filename!, new ReaderOptions { LeaveStreamOpen = false });
                 List<TarArchiveEntry> tarEntries = ta.Entries.OrderBy(e => e.Key ?? string.Empty, new NaturalReversedComparer()).ToList();
                 string? lastTarEntry = null;
                 foreach (TarArchiveEntry entry in tarEntries)

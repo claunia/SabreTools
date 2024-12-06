@@ -168,7 +168,7 @@ namespace SabreTools.DatItems.Formats
         public Rom ConvertToRom()
         {
             var rom = new Rom();
-            rom.SetName($"{this.Id}.{this.Extension}");
+            rom.SetName($"{Id}.{Extension}");
             rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, CRC);
             rom.SetFieldValue<DupeType>(DatItem.DupeTypeKey, GetFieldValue<DupeType>(DatItem.DupeTypeKey));
             rom.SetFieldValue<Machine>(DatItem.MachineKey, GetFieldValue<Machine>(DatItem.MachineKey)!.Clone() as Machine ?? new Machine());

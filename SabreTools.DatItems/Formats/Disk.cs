@@ -92,7 +92,7 @@ namespace SabreTools.DatItems.Formats
         {
             return new BaseFile()
             {
-                Filename = this.GetName(),
+                Filename = GetName(),
                 Parent = GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey),
                 MD5 = GetStringFieldValue(Models.Metadata.Disk.MD5Key).FromHexString(),
                 SHA1 = GetStringFieldValue(Models.Metadata.Disk.SHA1Key).FromHexString(),
@@ -106,7 +106,7 @@ namespace SabreTools.DatItems.Formats
         public Rom ConvertToRom()
         {
             var rom = new Rom(_internal.ConvertToRom()!);
-            rom.GetFieldValue<DataArea?>(Rom.DataAreaKey)?.SetName(this.GetFieldValue<DiskArea?>(Disk.DiskAreaKey)?.GetName());
+            rom.GetFieldValue<DataArea?>(Rom.DataAreaKey)?.SetName(GetFieldValue<DiskArea?>(Disk.DiskAreaKey)?.GetName());
             rom.SetFieldValue<DupeType>(DatItem.DupeTypeKey, GetFieldValue<DupeType>(DatItem.DupeTypeKey));
             rom.SetFieldValue<Machine>(DatItem.MachineKey, GetFieldValue<Machine>(DatItem.MachineKey)!.Clone() as Machine ?? new Machine());
             rom.SetFieldValue<bool?>(DatItem.RemoveKey, GetBoolFieldValue(DatItem.RemoveKey));

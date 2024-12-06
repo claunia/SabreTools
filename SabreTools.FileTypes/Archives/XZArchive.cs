@@ -69,8 +69,8 @@ namespace SabreTools.FileTypes.Archives
                 Directory.CreateDirectory(outDir);
 
                 // Decompress the _filename stream
-                FileStream outstream = File.Create(Path.Combine(outDir, Path.GetFileNameWithoutExtension(this.Filename)!));
-                var xz = new XZStream(File.OpenRead(this.Filename!));
+                FileStream outstream = File.Create(Path.Combine(outDir, Path.GetFileNameWithoutExtension(Filename)!));
+                var xz = new XZStream(File.OpenRead(Filename!));
                 xz.CopyTo(outstream);
 
                 // Dispose of the streams
@@ -149,14 +149,14 @@ namespace SabreTools.FileTypes.Archives
         {
 #if NET462_OR_GREATER || NETCOREAPP
             // If we have an invalid file
-            if (this.Filename == null)
+            if (Filename == null)
                 return (null, null);
 
             try
             {
                 // Open the entry stream
-                string realEntry = Path.GetFileNameWithoutExtension(this.Filename);
-                var stream = new XZStream(File.OpenRead(this.Filename));
+                string realEntry = Path.GetFileNameWithoutExtension(Filename);
+                var stream = new XZStream(File.OpenRead(Filename));
 
                 // Return the stream
                 return (stream, realEntry);
@@ -186,7 +186,7 @@ namespace SabreTools.FileTypes.Archives
 #if NET462_OR_GREATER || NETCOREAPP
             _children = [];
 
-            string? gamename = Path.GetFileNameWithoutExtension(this.Filename);
+            string? gamename = Path.GetFileNameWithoutExtension(Filename);
             BaseFile? possibleTxz = GetTorrentXZFileInfo();
 
             // If it was, then add it to the outputs and continue
@@ -202,11 +202,11 @@ namespace SabreTools.FileTypes.Archives
                 BaseFile xzEntryRom = new();
 
                 // Perform a quickscan, if flagged to
-                if (this.AvailableHashTypes.Length == 1 && this.AvailableHashTypes[0] == HashType.CRC32)
+                if (AvailableHashTypes.Length == 1 && AvailableHashTypes[0] == HashType.CRC32)
                 {
                     xzEntryRom.Filename = gamename;
 
-                    using BinaryReader br = new(File.OpenRead(this.Filename!));
+                    using BinaryReader br = new(File.OpenRead(Filename!));
                     br.BaseStream.Seek(-8, SeekOrigin.End);
                     xzEntryRom.CRC = br.ReadBytesBigEndian(4);
                     xzEntryRom.Size = br.ReadInt32BigEndian();
@@ -214,8 +214,8 @@ namespace SabreTools.FileTypes.Archives
                 // Otherwise, use the stream directly
                 else
                 {
-                    var xzStream = new XZStream(File.OpenRead(this.Filename!));
-                    xzEntryRom = GetInfo(xzStream, hashes: this.AvailableHashTypes);
+                    var xzStream = new XZStream(File.OpenRead(Filename!));
+                    xzEntryRom = GetInfo(xzStream, hashes: AvailableHashTypes);
                     xzEntryRom.Filename = gamename;
                     xzStream.Dispose();
                 }
@@ -248,15 +248,15 @@ namespace SabreTools.FileTypes.Archives
         public override bool IsTorrent()
         {
             // Check for the file existing first
-            if (this.Filename == null || !File.Exists(this.Filename))
+            if (Filename == null || !File.Exists(Filename))
                 return false;
 
-            string datum = Path.GetFileName(this.Filename).ToLowerInvariant();
+            string datum = Path.GetFileName(Filename).ToLowerInvariant();
 
             // Check if the name is the right length
             if (!Regex.IsMatch(datum, @"^[0-9a-f]{" + Constants.SHA1Length + @"}\.xz"))
             {
-                logger.Warning($"Non SHA-1 filename found, skipping: '{Path.GetFullPath(this.Filename)}'");
+                logger.Warning($"Non SHA-1 filename found, skipping: '{Path.GetFullPath(Filename)}'");
                 return false;
             }
 
@@ -270,24 +270,24 @@ namespace SabreTools.FileTypes.Archives
         public BaseFile? GetTorrentXZFileInfo()
         {
             // Check for the file existing first
-            if (this.Filename == null || !File.Exists(this.Filename))
+            if (Filename == null || !File.Exists(Filename))
                 return null;
 
-            string datum = Path.GetFileName(this.Filename).ToLowerInvariant();
+            string datum = Path.GetFileName(Filename).ToLowerInvariant();
 
             // Check if the name is the right length
             if (!Regex.IsMatch(datum, @"^[0-9a-f]{" + Constants.SHA1Length + @"}\.xz"))
             {
-                logger.Warning($"Non SHA-1 filename found, skipping: '{Path.GetFullPath(this.Filename)}'");
+                logger.Warning($"Non SHA-1 filename found, skipping: '{Path.GetFullPath(Filename)}'");
                 return null;
             }
 
             BaseFile baseFile = new()
             {
-                Filename = Path.GetFileNameWithoutExtension(this.Filename).ToLowerInvariant(),
-                SHA1 = Path.GetFileNameWithoutExtension(this.Filename).FromHexString(),
+                Filename = Path.GetFileNameWithoutExtension(Filename).ToLowerInvariant(),
+                SHA1 = Path.GetFileNameWithoutExtension(Filename).FromHexString(),
 
-                Parent = Path.GetFileNameWithoutExtension(this.Filename).ToLowerInvariant(),
+                Parent = Path.GetFileNameWithoutExtension(Filename).ToLowerInvariant(),
             };
 
             return baseFile;

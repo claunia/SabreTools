@@ -910,9 +910,9 @@ Reset the internal state:           reset();";
             /// </summary>
             public void Reset()
             {
-                this.Index = 0;
-                this.DatFile = DatFile.Create();
-                this.OutputDirectory = null;
+                Index = 0;
+                DatFile = DatFile.Create();
+                OutputDirectory = null;
             }
         }
 

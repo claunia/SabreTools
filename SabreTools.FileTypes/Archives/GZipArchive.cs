@@ -78,7 +78,7 @@ namespace SabreTools.FileTypes.Archives
             bool encounteredErrors = true;
 
             // If we have an invalid file
-            if (this.Filename == null)
+            if (Filename == null)
                 return true;
 
             try
@@ -87,9 +87,9 @@ namespace SabreTools.FileTypes.Archives
                 Directory.CreateDirectory(outDir);
 
                 // Decompress the _filename stream
-                FileStream outstream = File.Create(Path.Combine(outDir, Path.GetFileNameWithoutExtension(this.Filename)));
+                FileStream outstream = File.Create(Path.Combine(outDir, Path.GetFileNameWithoutExtension(Filename)));
                 var gz = new gZip();
-                ZipReturn ret = gz.ZipFileOpen(this.Filename);
+                ZipReturn ret = gz.ZipFileOpen(Filename);
                 ret = gz.ZipFileOpenReadStream(0, out Stream? gzstream, out ulong streamSize);
                 byte[] buffer = new byte[32768];
                 int read;
@@ -172,15 +172,15 @@ namespace SabreTools.FileTypes.Archives
         public override (Stream?, string?) GetEntryStream(string entryName)
         {
             // If we have an invalid file
-            if (this.Filename == null)
+            if (Filename == null)
                 return (null, null);
 
             try
             {
                 // Open the entry stream
-                string realEntry = Path.GetFileNameWithoutExtension(this.Filename);
+                string realEntry = Path.GetFileNameWithoutExtension(Filename);
                 var gz = new gZip();
-                ZipReturn ret = gz.ZipFileOpen(this.Filename);
+                ZipReturn ret = gz.ZipFileOpen(Filename);
                 ret = gz.ZipFileOpenReadStream(0, out Stream? stream, out ulong streamSize);
 
                 // Return the stream
@@ -201,7 +201,7 @@ namespace SabreTools.FileTypes.Archives
         public override List<BaseFile>? GetChildren()
         {
             // If we have an invalid file
-            if (this.Filename == null)
+            if (Filename == null)
                 return null;
 
             // If we have children cached already
@@ -210,7 +210,7 @@ namespace SabreTools.FileTypes.Archives
 
             _children = [];
 
-            string gamename = Path.GetFileNameWithoutExtension(this.Filename);
+            string gamename = Path.GetFileNameWithoutExtension(Filename);
 
             BaseFile? possibleTgz = GetTorrentGZFileInfo();
 
@@ -227,11 +227,11 @@ namespace SabreTools.FileTypes.Archives
                 BaseFile gzipEntryRom = new();
 
                 // Perform a quickscan, if flagged to
-                if (this.AvailableHashTypes.Length == 1 && this.AvailableHashTypes[0] == HashType.CRC32)
+                if (AvailableHashTypes.Length == 1 && AvailableHashTypes[0] == HashType.CRC32)
                 {
                     gzipEntryRom.Filename = gamename;
 
-                    using BinaryReader br = new(File.OpenRead(this.Filename));
+                    using BinaryReader br = new(File.OpenRead(Filename));
                     br.BaseStream.Seek(-8, SeekOrigin.End);
                     gzipEntryRom.CRC = br.ReadBytesBigEndian(4);
                     gzipEntryRom.Size = br.ReadInt32BigEndian();
@@ -240,9 +240,9 @@ namespace SabreTools.FileTypes.Archives
                 else
                 {
                     var gz = new gZip();
-                    ZipReturn ret = gz.ZipFileOpen(this.Filename);
+                    ZipReturn ret = gz.ZipFileOpen(Filename);
                     ret = gz.ZipFileOpenReadStream(0, out Stream? gzstream, out ulong streamSize);
-                    gzipEntryRom = GetInfo(gzstream, hashes: this.AvailableHashTypes);
+                    gzipEntryRom = GetInfo(gzstream, hashes: AvailableHashTypes);
                     gzipEntryRom.Filename = gz.GetLocalFile(0).Filename;
                     gzipEntryRom.Parent = gamename;
                     gzipEntryRom.Date = (gz.TimeStamp > 0 ? gz.TimeStamp.ToString() : null);
@@ -273,35 +273,35 @@ namespace SabreTools.FileTypes.Archives
         public override bool IsTorrent()
         {
             // Check for the file existing first
-            if (this.Filename == null || !File.Exists(this.Filename))
+            if (Filename == null || !File.Exists(Filename))
                 return false;
 
-            string datum = Path.GetFileName(this.Filename).ToLowerInvariant();
-            long filesize = new FileInfo(this.Filename).Length;
+            string datum = Path.GetFileName(Filename).ToLowerInvariant();
+            long filesize = new FileInfo(Filename).Length;
 
             // If we have the romba depot files, just skip them gracefully
             if (datum == ".romba_size" || datum == ".romba_size.backup")
             {
-                logger.Verbose($"Romba depot file found, skipping: {this.Filename}");
+                logger.Verbose($"Romba depot file found, skipping: {Filename}");
                 return false;
             }
 
             // Check if the name is the right length
             if (!Regex.IsMatch(datum, @"^[0-9a-f]{" + Constants.SHA1Length + @"}\.gz"))
             {
-                logger.Warning($"Non SHA-1 filename found, skipping: '{Path.GetFullPath(this.Filename)}'");
+                logger.Warning($"Non SHA-1 filename found, skipping: '{Path.GetFullPath(Filename)}'");
                 return false;
             }
 
             // Check if the file is at least the minimum length
             if (filesize < 40 /* bytes */)
             {
-                logger.Warning($"Possibly corrupt file '{Path.GetFullPath(this.Filename)}' with size {filesize}");
+                logger.Warning($"Possibly corrupt file '{Path.GetFullPath(Filename)}' with size {filesize}");
                 return false;
             }
 
             // Get the Romba-specific header data
-            BinaryReader br = new(File.OpenRead(this.Filename));
+            BinaryReader br = new(File.OpenRead(Filename));
             byte[] header = br.ReadBytes(12); // Get preamble header for checking
             br.ReadBytes(16); // headermd5
             br.ReadBytes(4); // headercrc
@@ -334,30 +334,30 @@ namespace SabreTools.FileTypes.Archives
         public BaseFile? GetTorrentGZFileInfo()
         {
             // Check for the file existing first
-            if (this.Filename == null || !File.Exists(this.Filename))
+            if (Filename == null || !File.Exists(Filename))
                 return null;
 
-            string datum = Path.GetFileName(this.Filename).ToLowerInvariant();
-            long filesize = new FileInfo(this.Filename).Length;
+            string datum = Path.GetFileName(Filename).ToLowerInvariant();
+            long filesize = new FileInfo(Filename).Length;
 
             // If we have the romba depot files, just skip them gracefully
             if (datum == ".romba_size" || datum == ".romba_size.backup")
             {
-                logger.Verbose($"Romba depot file found, skipping: {this.Filename}");
+                logger.Verbose($"Romba depot file found, skipping: {Filename}");
                 return null;
             }
 
             // Check if the name is the right length
             if (!Regex.IsMatch(datum, @"^[0-9a-f]{" + Constants.SHA1Length + @"}\.gz"))
             {
-                logger.Warning($"Non SHA-1 filename found, skipping: '{Path.GetFullPath(this.Filename)}'");
+                logger.Warning($"Non SHA-1 filename found, skipping: '{Path.GetFullPath(Filename)}'");
                 return null;
             }
 
             // Check if the file is at least the minimum length
             if (filesize < 40 /* bytes */)
             {
-                logger.Warning($"Possibly corrupt file '{Path.GetFullPath(this.Filename)}' with size {filesize}");
+                logger.Warning($"Possibly corrupt file '{Path.GetFullPath(Filename)}' with size {filesize}");
                 return null;
             }
 
@@ -366,7 +366,7 @@ namespace SabreTools.FileTypes.Archives
             byte[] headermd5; // MD5
             byte[] headercrc; // CRC
             ulong headersz; // Int64 size
-            BinaryReader br = new(File.OpenRead(this.Filename));
+            BinaryReader br = new(File.OpenRead(Filename));
             header = br.ReadBytes(12);
             headermd5 = br.ReadBytes(16);
             headercrc = br.ReadBytes(4);
@@ -395,13 +395,13 @@ namespace SabreTools.FileTypes.Archives
 
             BaseFile baseFile = new()
             {
-                Filename = Path.GetFileNameWithoutExtension(this.Filename).ToLowerInvariant(),
+                Filename = Path.GetFileNameWithoutExtension(Filename).ToLowerInvariant(),
                 Size = extractedsize,
                 CRC = headercrc,
                 MD5 = headermd5,
-                SHA1 = Path.GetFileNameWithoutExtension(this.Filename).FromHexString(),
+                SHA1 = Path.GetFileNameWithoutExtension(Filename).FromHexString(),
 
-                Parent = Path.GetFileNameWithoutExtension(this.Filename).ToLowerInvariant(),
+                Parent = Path.GetFileNameWithoutExtension(Filename).ToLowerInvariant(),
             };
 
             return baseFile;
