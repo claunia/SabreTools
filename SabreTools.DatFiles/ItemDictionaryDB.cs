@@ -1716,7 +1716,7 @@ namespace SabreTools.DatFiles
                             continue;
 
                         // Add to the list of new device reference names
-                        newDeviceReferences.IntersectWith(devItems
+                        newDeviceReferences.UnionWith(devItems
                             .Where(i => i.Item2 is DeviceRef)
                             .Select(i => (i.Item2 as DeviceRef)!.GetName()!));
 
@@ -1771,7 +1771,7 @@ namespace SabreTools.DatFiles
                             continue;
 
                         // Add to the list of new slot option names
-                        newSlotOptions.IntersectWith(slotItems
+                        newSlotOptions.UnionWith(slotItems
                             .Where(i => i.Item2 is Slot)
                             .Where(s => (s.Item2 as Slot)!.SlotOptionsSpecified)
                             .SelectMany(s => (s.Item2 as Slot)!.GetFieldValue<SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey)!)

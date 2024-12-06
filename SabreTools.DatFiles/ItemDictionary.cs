@@ -1286,7 +1286,7 @@ namespace SabreTools.DatFiles
                         if (devItems == null)
                             continue;
 
-                        newDeviceReferences.IntersectWith(devItems
+                        newDeviceReferences.UnionWith(devItems
                             .Where(i => i is DeviceRef)
                             .Select(i => (i as DeviceRef)!.GetName()!));
 
@@ -1336,7 +1336,7 @@ namespace SabreTools.DatFiles
                         if (slotItems == null)
                             continue;
 
-                        newSlotOptions.IntersectWith(slotItems
+                        newSlotOptions.UnionWith(slotItems
                             .Where(i => i is Slot)
                             .Where(s => (s as Slot)!.SlotOptionsSpecified)
                             .SelectMany(s => (s as Slot)!.GetFieldValue<SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey)!)

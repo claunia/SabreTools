@@ -64,9 +64,9 @@ namespace SabreTools.DatTools
             // Get the combined list of fields to remove
             var fieldNames = new HashSet<string>();
             if (itemFieldNames.ContainsKey(itemType))
-                fieldNames.IntersectWith(itemFieldNames[itemType]);
+                fieldNames.UnionWith(itemFieldNames[itemType]);
             if (itemFieldNames.ContainsKey("item"))
-                fieldNames.IntersectWith(itemFieldNames["item"]);
+                fieldNames.UnionWith(itemFieldNames["item"]);
 
             // If the field specifically contains Name, set it separately
             if (fieldNames.Contains(Models.Metadata.Rom.NameKey))
