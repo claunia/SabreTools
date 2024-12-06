@@ -69,45 +69,6 @@ if [ $NO_BUILD = false ]; then
     echo "Restoring Nuget packages"
     dotnet restore
 
-    # Build RombaSharp
-    for FRAMEWORK in "${FRAMEWORKS[@]}"; do
-        for RUNTIME in "${RUNTIMES[@]}"; do
-            # Output the current build
-            echo "===== Build RombaSharp - $FRAMEWORK, $RUNTIME ====="
-
-            # If we have an invalid combination of framework and runtime
-            if [[ ! $(echo ${VALID_CROSS_PLATFORM_FRAMEWORKS[@]} | fgrep -w $FRAMEWORK) ]]; then
-                if [[ $(echo ${VALID_CROSS_PLATFORM_RUNTIMES[@]} | fgrep -w $RUNTIME) ]]; then
-                    echo "Skipped due to invalid combination"
-                    continue
-                fi
-            fi
-
-            # If we have Apple silicon but an unsupported framework
-            if [[ ! $(echo ${VALID_APPLE_FRAMEWORKS[@]} | fgrep -w $FRAMEWORK) ]]; then
-                if [ $RUNTIME = "osx-arm64" ]; then
-                    echo "Skipped due to no Apple Silicon support"
-                    continue
-                fi
-            fi
-
-            # Only .NET 5 and above can publish to a single file
-            if [[ $(echo ${SINGLE_FILE_CAPABLE[@]} | fgrep -w $FRAMEWORK) ]]; then
-                # Only include Debug if set
-                if [ $INCLUDE_DEBUG = true ]; then
-                    dotnet publish RombaSharp/RombaSharp.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true
-                fi
-                dotnet publish RombaSharp/RombaSharp.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
-            else
-                # Only include Debug if set
-                if [ $INCLUDE_DEBUG = true ]; then
-                    dotnet publish RombaSharp/RombaSharp.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
-                fi
-                dotnet publish RombaSharp/RombaSharp.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
-            fi
-        done
-    done
-
     # Build SabreTools
     for FRAMEWORK in "${FRAMEWORKS[@]}"; do
         for RUNTIME in "${RUNTIMES[@]}"; do
@@ -150,38 +111,6 @@ fi
 
 # Only create archives if requested
 if [ $NO_ARCHIVE = false ]; then
-    # Create RombaSharp archives
-    for FRAMEWORK in "${FRAMEWORKS[@]}"; do
-        for RUNTIME in "${RUNTIMES[@]}"; do
-            # Output the current build
-            echo "===== Archive RombaSharp - $FRAMEWORK, $RUNTIME ====="
-
-            # If we have an invalid combination of framework and runtime
-            if [[ ! $(echo ${VALID_CROSS_PLATFORM_FRAMEWORKS[@]} | fgrep -w $FRAMEWORK) ]]; then
-                if [[ $(echo ${VALID_CROSS_PLATFORM_RUNTIMES[@]} | fgrep -w $RUNTIME) ]]; then
-                    echo "Skipped due to invalid combination"
-                    continue
-                fi
-            fi
-
-            # If we have Apple silicon but an unsupported framework
-            if [[ ! $(echo ${VALID_APPLE_FRAMEWORKS[@]} | fgrep -w $FRAMEWORK) ]]; then
-                if [ $RUNTIME = "osx-arm64" ]; then
-                    echo "Skipped due to no Apple Silicon support"
-                    continue
-                fi
-            fi
-
-            # Only include Debug if set
-            if [ $INCLUDE_DEBUG = true ]; then
-                cd $BUILD_FOLDER/RombaSharp/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
-                zip -r $BUILD_FOLDER/RombaSharp_${FRAMEWORK}_${RUNTIME}_debug.zip .
-            fi
-            cd $BUILD_FOLDER/RombaSharp/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
-            zip -r $BUILD_FOLDER/RombaSharp_${FRAMEWORK}_${RUNTIME}_release.zip .
-        done
-    done
-
     # Create SabreTools archives
     for FRAMEWORK in "${FRAMEWORKS[@]}"; do
         for RUNTIME in "${RUNTIMES[@]}"; do
