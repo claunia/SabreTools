@@ -87,7 +87,7 @@ namespace SabreTools.Core.Tools
             if (string.IsNullOrEmpty(input))
                 return string.Empty;
 
-            return new string(input.Where(c => c <= 255).ToArray());
+            return new string(input!.Where(c => c <= 255).ToArray());
         }
 
         #endregion

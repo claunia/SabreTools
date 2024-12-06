@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Xml.Serialization;
 using SabreTools.Models;
@@ -22,21 +21,13 @@ namespace SabreTools.Core.Tools
             if (fields == null)
                 return null;
 
-#if NET20 || NET35 || NET40
-            return fields
-                .Where(f => f.IsLiteral && !f.IsInitOnly)
-                .Where(f => Attribute.GetCustomAttributes(f, typeof(NoFilterAttribute)).Length == 0)
-                .Select(f => f.GetRawConstantValue() as string)
-                .Where(v => v != null)
-                .ToArray()!;
-#else
-            return fields
-                .Where(f => f.IsLiteral && !f.IsInitOnly)
-                .Where(f => !f.CustomAttributes.Any(a => a.AttributeType == typeof(NoFilterAttribute)))
-                .Select(f => f.GetRawConstantValue() as string)
-                .Where(v => v != null)
-                .ToArray()!;
-#endif
+            FieldInfo[] noFilterFields = Array.FindAll(fields,
+                f => f.IsLiteral
+                && !f.IsInitOnly
+                && Attribute.GetCustomAttributes(f, typeof(NoFilterAttribute)).Length == 0);
+            string[] constantValues = Array.ConvertAll(noFilterFields,
+                f => (f.GetRawConstantValue() as string) ?? string.Empty);
+            return Array.FindAll(constantValues, s => s.Length > 0);
         }
 
         /// <summary>

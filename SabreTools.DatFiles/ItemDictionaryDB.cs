@@ -302,7 +302,7 @@ namespace SabreTools.DatFiles
 #endif
 
                 // If there are no non-blank items, remove
-                else if (!_buckets[key].Any(i => GetItem(i) != null && GetItem(i) is not Blank))
+                else if (!_buckets[key].Exists(i => GetItem(i) != null && GetItem(i) is not Blank))
 #if NET40_OR_GREATER || NETCOREAPP
                     _buckets.TryRemove(key, out _);
 #else
@@ -653,7 +653,8 @@ namespace SabreTools.DatFiles
             }
 
             // Add back all roms with the proper flags
-            _buckets[key] = output.Concat(left).Select(i => i.Item1).ToList();
+            List<(long, DatItem)> combined = [.. output, .. left];
+            _buckets[key] = combined.ConvertAll(i => i.Item1);
             return output;
         }
 
@@ -699,7 +700,8 @@ namespace SabreTools.DatFiles
             }
 
             // Add back all roms with the proper flags
-            _buckets[key] = output.Concat(left).Select(i => i.Item1).ToList();
+            List<(long, DatItem)> combined = [.. output, .. left];
+            _buckets[key] = combined.ConvertAll(i => i.Item1);
             return output;
         }
 
@@ -1110,13 +1112,12 @@ namespace SabreTools.DatFiles
                 }
 
                 var datItems = itemIndices
-                    .Where(i => _items.ContainsKey(i))
-                    .Select(i => (i, _items[i]))
-                    .ToList();
+                    .FindAll(i => _items.ContainsKey(i))
+                    .ConvertAll(i => (i, _items[i]));
 
                 Sort(ref datItems, norename);
 
-                _buckets[bucketKeys[i]] = datItems.Select(m => m.Item1).ToList();
+                _buckets[bucketKeys[i]] = datItems.ConvertAll(m => m.Item1);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
@@ -1532,11 +1533,9 @@ namespace SabreTools.DatFiles
             if (datItem.Item2 is Rom)
             {
                 string[] splitname = machineName.Split('.');
-#if NET20 || NET35
-                machineName = datItem.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1).ToArray())}";
-#else
-                machineName = datItem.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1))}";
-#endif
+                machineName = datItem.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!
+                        .GetStringFieldValue(Models.Metadata.Machine.NameKey)
+                    + $"/{string.Join(".", splitname, 0, splitname.Length > 1 ? splitname.Length - 1 : 1)}";
             }
 
             // Strip off "Default" prefix only for ORPG
@@ -1682,18 +1681,19 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // Get all device reference names from the current machine
-                List<string?> deviceReferences = items
-                    .Where(i => i.Item2 is DeviceRef)
-                    .Select(i => i.Item2 as DeviceRef)
-                    .Select(dr => dr!.GetName())
+                List<(long, DatItem)> itemsList = [.. items];
+                List<string?> deviceReferences = itemsList
+                    .FindAll(i => i.Item2 is DeviceRef)
+                    .ConvertAll(i => i.Item2 as DeviceRef)
+                    .ConvertAll(dr => dr!.GetName())
                     .Distinct()
                     .ToList();
 
                 // Get all slot option names from the current machine
-                List<string?> slotOptions = items
-                    .Where(i => i.Item2 is Slot)
-                    .Select(i => i.Item2 as Slot)
-                    .Where(s => s!.SlotOptionsSpecified)
+                List<string?> slotOptions = itemsList
+                    .FindAll(i => i.Item2 is Slot)
+                    .ConvertAll(i => i.Item2 as Slot)
+                    .FindAll(s => s!.SlotOptionsSpecified)
                     .SelectMany(s => s!.GetFieldValue<SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey)!)
                     .Select(so => so.GetStringFieldValue(Models.Metadata.SlotOption.DevNameKey))
                     .Distinct()
@@ -1716,20 +1716,21 @@ namespace SabreTools.DatFiles
                             continue;
 
                         // Add to the list of new device reference names
-                        newDeviceReferences.UnionWith(devItems
-                            .Where(i => i.Item2 is DeviceRef)
-                            .Select(i => (i.Item2 as DeviceRef)!.GetName()!));
+                        List<(long, DatItem)> devItemsList = [.. devItems];
+                        newDeviceReferences.UnionWith(devItemsList
+                            .FindAll(i => i.Item2 is DeviceRef)
+                            .ConvertAll(i => (i.Item2 as DeviceRef)!.GetName()!));
 
                         // Set new machine information and add to the current machine
-                        var copyFrom = GetMachineForItem(GetItemsForBucket(game)![0].Item1);
+                        var copyFrom = GetMachineForItem(items[0].Item1);
                         if (copyFrom.Item2 == null)
                             continue;
 
                         foreach ((long, DatItem) item in devItems)
                         {
                             // If the parent machine doesn't already contain this item, add it
-                            if (!GetItemsForBucket(game)!
-                                .Any(i => i.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey) == item.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey)
+                            if (!Array.Exists(items,
+                                i => i.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey) == item.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey)
                                     && i.Item2.GetName() == item.Item2.GetName()))
                             {
                                 // Set that we found new items
@@ -1771,9 +1772,10 @@ namespace SabreTools.DatFiles
                             continue;
 
                         // Add to the list of new slot option names
-                        newSlotOptions.UnionWith(slotItems
-                            .Where(i => i.Item2 is Slot)
-                            .Where(s => (s.Item2 as Slot)!.SlotOptionsSpecified)
+                        List<(long, DatItem)> slotItemsList = [.. slotItems];
+                        newSlotOptions.UnionWith(slotItemsList
+                            .FindAll(i => i.Item2 is Slot)
+                            .FindAll(s => (s.Item2 as Slot)!.SlotOptionsSpecified)
                             .SelectMany(s => (s.Item2 as Slot)!.GetFieldValue<SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey)!)
                             .Select(o => o.GetStringFieldValue(Models.Metadata.SlotOption.DevNameKey)!));
 
@@ -1785,8 +1787,8 @@ namespace SabreTools.DatFiles
                         foreach ((long, DatItem) item in slotItems)
                         {
                             // If the parent machine doesn't already contain this item, add it
-                            if (!GetItemsForBucket(game)!
-                                .Any(i => i.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey) == item.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey)
+                            if (!Array.Exists(items,
+                                i => i.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey) == item.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey)
                                     && i.Item2.GetName() == item.Item2.GetName()))
                             {
                                 // Set that we found new items
@@ -1915,9 +1917,10 @@ namespace SabreTools.DatFiles
                 {
                     // Get the parent items and current machine name
                     var parentItems = GetItemsForBucket(cloneOf!);
-                    if (parentItems == null)
+                    if (parentItems == null || parentItems.Length == 0)
                         continue;
 
+                    List<(long, DatItem)> parentItemslist = [.. parentItems];
                     string? machineName = GetMachineForItem(item.Item1).Item2?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
 
                     // Special disk handling
@@ -1926,18 +1929,18 @@ namespace SabreTools.DatFiles
                         string? mergeTag = disk.GetStringFieldValue(Models.Metadata.Disk.MergeKey);
 
                         // If the merge tag exists and the parent already contains it, skip
-                        if (mergeTag != null && parentItems
-                            .Where(i => i.Item2 is Disk)
-                            .Select(i => (i.Item2 as Disk)!.GetName())
+                        if (mergeTag != null && parentItemslist
+                            .FindAll(i => i.Item2 is Disk)
+                            .ConvertAll(i => (i.Item2 as Disk)!.GetName())
                             .Contains(mergeTag))
                         {
                             continue;
                         }
 
                         // If the merge tag exists but the parent doesn't contain it, add to parent
-                        else if (mergeTag != null && !parentItems
-                            .Where(i => i.Item2 is Disk)
-                            .Select(i => (i.Item2 as Disk)!.GetName())
+                        else if (mergeTag != null && !parentItemslist
+                            .FindAll(i => i.Item2 is Disk)
+                            .ConvertAll(i => (i.Item2 as Disk)!.GetName())
                             .Contains(mergeTag))
                         {
                             _itemToMachineMapping[item.Item1] = cloneOfMachine.Item1;
@@ -1956,18 +1959,18 @@ namespace SabreTools.DatFiles
                     else if (item.Item2 is Rom rom)
                     {
                         // If the merge tag exists and the parent already contains it, skip
-                        if (rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey) != null && parentItems
-                            .Where(i => i.Item2 is Rom)
-                            .Select(i => (i.Item2 as Rom)!.GetName())
+                        if (rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey) != null && parentItemslist
+                            .FindAll(i => i.Item2 is Rom)
+                            .ConvertAll(i => (i.Item2 as Rom)!.GetName())
                             .Contains(rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey)))
                         {
                             continue;
                         }
 
                         // If the merge tag exists but the parent doesn't contain it, add to subfolder of parent
-                        else if (rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey) != null && !parentItems
-                            .Where(i => i.Item2 is Rom)
-                            .Select(i => (i.Item2 as Rom)!.GetName())
+                        else if (rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey) != null && !parentItemslist
+                            .FindAll(i => i.Item2 is Rom)
+                            .ConvertAll(i => (i.Item2 as Rom)!.GetName())
                             .Contains(rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey)))
                         {
                             if (subfolder)
@@ -1989,7 +1992,7 @@ namespace SabreTools.DatFiles
                     }
 
                     // All other that would be missing to subfolder of parent
-                    else if (Array.IndexOf(parentItems, item) == -1)
+                    else if (parentItemslist.IndexOf(item) == -1)
                     {
                         if (subfolder)
                             item.Item2.SetName($"{machineName}\\{item.Item2.GetName()}");

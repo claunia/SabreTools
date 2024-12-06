@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core.Filter;
@@ -829,7 +828,8 @@ namespace SabreTools.DatFiles
 
             // If we have an item type not in the list of supported values
             string datFormat = Header?.GetFieldValue<DatFormat>(DatHeader.DatFormatKey).ToString() ?? "Unknown Format";
-            if (!GetSupportedTypes().Contains(datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>()))
+            ItemType itemType = datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>();
+            if (!Array.Exists(GetSupportedTypes(), t => t == itemType))
             {
                 string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
                 logger?.Verbose($"Item '{itemString}' was skipped because it was not supported in {datFormat}");
@@ -898,7 +898,8 @@ namespace SabreTools.DatFiles
 
             // If we have an item type not in the list of supported values
             string datFormat = Header?.GetFieldValue<DatFormat>(DatHeader.DatFormatKey).ToString() ?? "Unknown Format";
-            if (!GetSupportedTypes().Contains(datItem.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>()))
+            ItemType itemType = datItem.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>();
+            if (!Array.Exists(GetSupportedTypes(), t => t == itemType))
             {
                 string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
                 logger?.Verbose($"Item '{itemString}' was skipped because it was not supported in {datFormat}");

@@ -462,10 +462,7 @@ namespace SabreTools.FileTypes.Archives
                 BinaryWriter sw = new(outputStream);
 
                 // Write standard header and TGZ info
-                byte[] data = TorrentGZHeader
-                            .Concat(baseFile.MD5!) // MD5
-                            .Concat(baseFile.CRC!) // CRC
-                            .ToArray();
+                byte[] data = [.. TorrentGZHeader, .. baseFile.MD5!, .. baseFile.CRC!];
                 sw.Write(data);
                 sw.Write((ulong)(baseFile.Size ?? 0)); // Long size (Unsigned, Mirrored)
 
