@@ -145,7 +145,7 @@ namespace SabreTools.Features
             }
 
             // Ensure we only have files in the inputs
-            List<ParentablePath> inputPaths = PathTool.GetFilesOnly(Inputs, appendparent: true);
+            List<ParentablePath> inputPaths = PathTool.GetFilesOnly(Inputs, appendParent: true);
             List<ParentablePath> basePaths = PathTool.GetFilesOnly(GetList(features, BaseDatListValue));
 
             // Ensure the output directory

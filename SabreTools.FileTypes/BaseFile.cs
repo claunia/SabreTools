@@ -191,44 +191,6 @@ namespace SabreTools.FileTypes
 #endif
 
             // Now try to match it to a known signature
-#if NET20
-            if (Matching.Extensions.StartsWith(magic, SevenZipSignature))
-            {
-                outFileType = FileType.SevenZipArchive;
-            }
-            else if (Matching.Extensions.StartsWith(magic, AaruFormatSignature))
-            {
-                outFileType = FileType.AaruFormat;
-            }
-            else if (Matching.Extensions.StartsWith(magic, CHDSignature))
-            {
-                outFileType = FileType.CHD;
-            }
-            else if (Matching.Extensions.StartsWith(magic, GzSignature))
-            {
-                outFileType = FileType.GZipArchive;
-            }
-            else if (Matching.Extensions.StartsWith(magic, RarSignature)
-                || Matching.Extensions.StartsWith(magic, RarFiveSignature))
-            {
-                outFileType = FileType.RarArchive;
-            }
-            else if (Matching.Extensions.StartsWith(magic, TarSignature)
-                || Matching.Extensions.StartsWith(magic, TarZeroSignature))
-            {
-                outFileType = FileType.TapeArchive;
-            }
-            else if (Matching.Extensions.StartsWith(magic, XZSignature))
-            {
-                outFileType = FileType.XZArchive;
-            }
-            else if (Matching.Extensions.StartsWith(magic, ZipSignature)
-                || Matching.Extensions.StartsWith(magic, ZipSignatureEmpty)
-                || Matching.Extensions.StartsWith(magic, ZipSignatureSpanned))
-            {
-                outFileType = FileType.ZipArchive;
-            }
-#else
             if (magic.StartsWith(SevenZipSignature))
             {
                 outFileType = FileType.SevenZipArchive;
@@ -265,7 +227,6 @@ namespace SabreTools.FileTypes
             {
                 outFileType = FileType.ZipArchive;
             }
-#endif
 
             return outFileType;
         }
@@ -365,13 +326,13 @@ namespace SabreTools.FileTypes
             var baseFile = new BaseFile()
             {
                 Size = size,
-                CRC = hashDict.ContainsKey(HashType.CRC32) ? ByteArrayExtensions.StringToByteArray(hashDict[HashType.CRC32]) : null,
-                MD5 = hashDict.ContainsKey(HashType.MD5) ? ByteArrayExtensions.StringToByteArray(hashDict[HashType.MD5]) : null,
-                SHA1 = hashDict.ContainsKey(HashType.SHA1) ? ByteArrayExtensions.StringToByteArray(hashDict[HashType.SHA1]) : null,
-                SHA256 = hashDict.ContainsKey(HashType.SHA256) ? ByteArrayExtensions.StringToByteArray(hashDict[HashType.SHA256]) : null,
-                SHA384 = hashDict.ContainsKey(HashType.SHA384) ? ByteArrayExtensions.StringToByteArray(hashDict[HashType.SHA384]) : null,
-                SHA512 = hashDict.ContainsKey(HashType.SHA512) ? ByteArrayExtensions.StringToByteArray(hashDict[HashType.SHA512]) : null,
-                SpamSum = hashDict.ContainsKey(HashType.SpamSum) ? ByteArrayExtensions.StringToByteArray(hashDict[HashType.SpamSum]) : null,
+                CRC = hashDict.ContainsKey(HashType.CRC32) ? hashDict[HashType.CRC32].FromHexString() : null,
+                MD5 = hashDict.ContainsKey(HashType.MD5) ? hashDict[HashType.MD5].FromHexString() : null,
+                SHA1 = hashDict.ContainsKey(HashType.SHA1) ? hashDict[HashType.SHA1].FromHexString() : null,
+                SHA256 = hashDict.ContainsKey(HashType.SHA256) ? hashDict[HashType.SHA256].FromHexString() : null,
+                SHA384 = hashDict.ContainsKey(HashType.SHA384) ? hashDict[HashType.SHA384].FromHexString() : null,
+                SHA512 = hashDict.ContainsKey(HashType.SHA512) ? hashDict[HashType.SHA512].FromHexString() : null,
+                SpamSum = hashDict.ContainsKey(HashType.SpamSum) ? hashDict[HashType.SpamSum].FromHexString() : null,
             };
 
             // Deal with the input stream

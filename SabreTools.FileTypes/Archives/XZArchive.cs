@@ -285,7 +285,7 @@ namespace SabreTools.FileTypes.Archives
             BaseFile baseFile = new()
             {
                 Filename = Path.GetFileNameWithoutExtension(this.Filename).ToLowerInvariant(),
-                SHA1 = ByteArrayExtensions.StringToByteArray(Path.GetFileNameWithoutExtension(this.Filename)),
+                SHA1 = Path.GetFileNameWithoutExtension(this.Filename).FromHexString(),
 
                 Parent = Path.GetFileNameWithoutExtension(this.Filename).ToLowerInvariant(),
             };

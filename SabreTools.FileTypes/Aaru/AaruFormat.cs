@@ -97,11 +97,7 @@ namespace SabreTools.FileTypes.Aaru
                 return false;
 
             // If the bytes don't match, we don't have an AaruFormat
-#if NET20
-            if (!Matching.Extensions.StartsWith(magicBytes, AaruFormatSignature))
-#else
             if (!magicBytes.StartsWith(AaruFormatSignature))
-#endif
                 return false;
 
             return true;

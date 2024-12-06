@@ -5,7 +5,6 @@ using SabreTools.Core.Tools;
 using SabreTools.FileTypes;
 using SabreTools.Hashing;
 using SabreTools.IO.Extensions;
-using SabreTools.Matching;
 
 // TODO: Add item mappings for all fields
 namespace SabreTools.DatItems.Formats
@@ -54,8 +53,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("crc", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("crc")]
         public string? CRC
         {
-            get { return ByteArrayExtensions.ByteArrayToString(_crc); }
-            set { _crc = (value == "null" ? ZeroHash.CRC32Arr : ByteArrayExtensions.StringToByteArray(TextHelper.NormalizeCRC32(value))); }
+            get { return _crc.ToHexString(); }
+            set { _crc = (value == "null" ? ZeroHash.CRC32Arr : TextHelper.NormalizeCRC32(value).FromHexString()); }
         }
 
         /// <summary>
@@ -64,8 +63,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("md5", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("md5")]
         public string? MD5
         {
-            get { return ByteArrayExtensions.ByteArrayToString(_md5); }
-            set { _md5 = ByteArrayExtensions.StringToByteArray(TextHelper.NormalizeMD5(value)); }
+            get { return _md5.ToHexString(); }
+            set { _md5 = TextHelper.NormalizeMD5(value).FromHexString(); }
         }
 
         /// <summary>
@@ -74,8 +73,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("sha1", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha1")]
         public string? SHA1
         {
-            get { return ByteArrayExtensions.ByteArrayToString(_sha1); }
-            set { _sha1 = ByteArrayExtensions.StringToByteArray(TextHelper.NormalizeSHA1(value)); }
+            get { return _sha1.ToHexString(); }
+            set { _sha1 = TextHelper.NormalizeSHA1(value).FromHexString(); }
         }
 
         /// <summary>
@@ -84,8 +83,8 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("sha256", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha256")]
         public string? SHA256
         {
-            get { return ByteArrayExtensions.ByteArrayToString(_sha256); }
-            set { _sha256 = ByteArrayExtensions.StringToByteArray(TextHelper.NormalizeSHA256(value)); }
+            get { return _sha256.ToHexString(); }
+            set { _sha256 = TextHelper.NormalizeSHA256(value).FromHexString(); }
         }
 
         /// <summary>
@@ -228,19 +227,6 @@ namespace SabreTools.DatItems.Formats
             if (Size == null && other.Size != null)
                 Size = other.Size;
 
-#if NET20
-            if (Matching.Extensions.IsNullOrEmpty(_crc) && !Matching.Extensions.IsNullOrEmpty(other._crc))
-                _crc = other._crc;
-
-            if (Matching.Extensions.IsNullOrEmpty(_md5) && !Matching.Extensions.IsNullOrEmpty(other._md5))
-                _md5 = other._md5;
-
-            if (Matching.Extensions.IsNullOrEmpty(_sha1) && !Matching.Extensions.IsNullOrEmpty(other._sha1))
-                _sha1 = other._sha1;
-
-            if (Matching.Extensions.IsNullOrEmpty(_sha256) && !Matching.Extensions.IsNullOrEmpty(other._sha256))
-                _sha256 = other._sha256;
-#else
             if (_crc.IsNullOrEmpty() && !other._crc.IsNullOrEmpty())
                 _crc = other._crc;
 
@@ -252,7 +238,6 @@ namespace SabreTools.DatItems.Formats
 
             if (_sha256.IsNullOrEmpty() && !other._sha256.IsNullOrEmpty())
                 _sha256 = other._sha256;
-#endif
         }
 
         /// <summary>
@@ -261,18 +246,6 @@ namespace SabreTools.DatItems.Formats
         /// <returns>String representing the suffix</returns>
         public string GetDuplicateSuffix()
         {
-#if NET20
-            if (!Matching.Extensions.IsNullOrEmpty(_crc))
-                return $"_{CRC}";
-            else if (!Matching.Extensions.IsNullOrEmpty(_md5))
-                return $"_{MD5}";
-            else if (!Matching.Extensions.IsNullOrEmpty(_sha1))
-                return $"_{SHA1}";
-            else if (!Matching.Extensions.IsNullOrEmpty(_sha256))
-                return $"_{SHA256}";
-            else
-                return "_1";
-#else
             if (!_crc.IsNullOrEmpty())
                 return $"_{CRC}";
             else if (!_md5.IsNullOrEmpty())
@@ -283,7 +256,6 @@ namespace SabreTools.DatItems.Formats
                 return $"_{SHA256}";
             else
                 return "_1";
-#endif
         }
 
         /// <summary>
@@ -292,17 +264,10 @@ namespace SabreTools.DatItems.Formats
         /// <returns>True if any hash exists, false otherwise</returns>
         public bool HasHashes()
         {
-#if NET20
-            return !Matching.Extensions.IsNullOrEmpty(_crc)
-                || !Matching.Extensions.IsNullOrEmpty(_md5)
-                || !Matching.Extensions.IsNullOrEmpty(_sha1)
-                || !Matching.Extensions.IsNullOrEmpty(_sha256);
-#else
             return !_crc.IsNullOrEmpty()
                 || !_md5.IsNullOrEmpty()
                 || !_sha1.IsNullOrEmpty()
                 || !_sha256.IsNullOrEmpty();
-#endif
         }
 
         /// <summary>
@@ -324,17 +289,10 @@ namespace SabreTools.DatItems.Formats
         /// <returns>True if at least one hash is not mutually exclusive, false otherwise</returns>
         private bool HasCommonHash(File other)
         {
-#if NET20
-            return !(Matching.Extensions.IsNullOrEmpty(_crc) ^ Matching.Extensions.IsNullOrEmpty(other._crc))
-                || !(Matching.Extensions.IsNullOrEmpty(_md5) ^ Matching.Extensions.IsNullOrEmpty(other._md5))
-                || !(Matching.Extensions.IsNullOrEmpty(_sha1) ^ Matching.Extensions.IsNullOrEmpty(other._sha1))
-                || !(Matching.Extensions.IsNullOrEmpty(_sha256) ^ Matching.Extensions.IsNullOrEmpty(other._sha256));
-#else
             return !(_crc.IsNullOrEmpty() ^ other._crc.IsNullOrEmpty())
                 || !(_md5.IsNullOrEmpty() ^ other._md5.IsNullOrEmpty())
                 || !(_sha1.IsNullOrEmpty() ^ other._sha1.IsNullOrEmpty())
                 || !(_sha256.IsNullOrEmpty() ^ other._sha256.IsNullOrEmpty());
-#endif
         }
 
         /// <summary>

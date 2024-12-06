@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using SabreTools.Hashing;
 using SabreTools.IO.Extensions;
-using SabreTools.Matching;
 
 namespace SabreTools.Core.Tools
 {
@@ -18,11 +17,7 @@ namespace SabreTools.Core.Tools
         public static bool ConditionalHashEquals(byte[]? firstHash, byte[]? secondHash)
         {
             // If either hash is empty, we say they're equal for merging
-#if NET20
-            if (Matching.Extensions.IsNullOrEmpty(firstHash) || Matching.Extensions.IsNullOrEmpty(secondHash))
-#else
             if (firstHash.IsNullOrEmpty() || secondHash.IsNullOrEmpty())
-#endif
                 return true;
 
             // If they're different sizes, they can't match
@@ -58,7 +53,7 @@ namespace SabreTools.Core.Tools
         /// <returns>Subfolder path for the given hash</returns>
         public static string? GetDepotPath(byte[]? hash, int depth)
         {
-            string? sha1 = ByteArrayExtensions.ByteArrayToString(hash);
+            string? sha1 = hash.ToHexString();
             return GetDepotPath(sha1, depth);
         }
 

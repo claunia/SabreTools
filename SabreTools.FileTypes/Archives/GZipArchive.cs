@@ -399,7 +399,7 @@ namespace SabreTools.FileTypes.Archives
                 Size = extractedsize,
                 CRC = headercrc,
                 MD5 = headermd5,
-                SHA1 = ByteArrayExtensions.StringToByteArray(Path.GetFileNameWithoutExtension(this.Filename)),
+                SHA1 = Path.GetFileNameWithoutExtension(this.Filename).FromHexString(),
 
                 Parent = Path.GetFileNameWithoutExtension(this.Filename).ToLowerInvariant(),
             };
