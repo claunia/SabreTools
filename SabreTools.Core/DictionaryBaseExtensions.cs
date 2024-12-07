@@ -582,13 +582,13 @@ namespace SabreTools.Core
             switch (self, other)
             {
                 case (Disk diskSelf, Disk diskOther):
-                    FillMissingHashes(diskSelf, diskOther);
+                    diskSelf.FillMissingHashes(diskOther);
                     break;
                 case (Media mediaSelf, Media mediaOther):
-                    FillMissingHashes(mediaSelf, mediaOther);
+                    mediaSelf.FillMissingHashes(mediaOther);
                     break;
                 case (Rom romSelf, Rom romOther):
-                    FillMissingHashes(romSelf, romOther);
+                    romSelf.FillMissingHashes(romOther);
                     break;
             };
         }
@@ -704,9 +704,9 @@ namespace SabreTools.Core
 
             return self switch
             {
-                Disk diskSelf => GetDuplicateSuffix(diskSelf),
-                Media mediaSelf => GetDuplicateSuffix(mediaSelf),
-                Rom romSelf => GetDuplicateSuffix(romSelf),
+                Disk diskSelf => diskSelf.GetDuplicateSuffix(),
+                Media mediaSelf => mediaSelf.GetDuplicateSuffix(),
+                Rom romSelf => romSelf.GetDuplicateSuffix(),
                 _ => "_1",
             };
         }
