@@ -182,11 +182,11 @@ namespace SabreTools.DatTools
                     // Loop through and set the fields accordingly
                     foreach (var datItem in datItems)
                     {
-                        var machine = datFile.ItemsDB.GetMachineForItem(datItem.Item1);
-                        if (machine.Item2 != null)
-                            setter.SetFields(machine.Item2);
+                        var machine = datFile.ItemsDB.GetMachineForItem(datItem.Key);
+                        if (machine.Value != null)
+                            setter.SetFields(machine.Value);
 
-                        setter.SetFields(datItem.Item2);
+                        setter.SetFields(datItem.Value);
                     }
                 }
             }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
@@ -729,45 +730,43 @@ namespace SabreTools.DatItems
         /// </summary>
         /// <param name="infiles">List of File objects representing the roms to be merged</param>
         /// <returns>A List of DatItem objects representing the renamed roms</returns>
-        public static List<(long, DatItem)> ResolveNamesDB(List<(long, DatItem)> infiles)
+        public static List<KeyValuePair<long, DatItem>> ResolveNamesDB(List<KeyValuePair<long, DatItem>> infiles)
         {
-            // Create the output list
-            List<(long, DatItem)> output = [];
+            // Create the output dict
+            List<KeyValuePair<long, DatItem>> output = [];
 
             // First we want to make sure the list is in alphabetical order
             Sort(ref infiles, true);
 
             // Now we want to loop through and check names
-            (long, DatItem?) lastItem = (-1, null);
+            DatItem? lastItem = null;
             string? lastrenamed = null;
             int lastid = 0;
-            for (int i = 0; i < infiles.Count; i++)
+            foreach (var datItem in infiles)
             {
-                var datItem = infiles[i];
-
                 // If we have the first item, we automatically add it
-                if (lastItem.Item2 == null)
+                if (lastItem == null)
                 {
                     output.Add(datItem);
-                    lastItem = datItem;
+                    lastItem = datItem.Value;
                     continue;
                 }
 
                 // Get the last item name, if applicable
-                string lastItemName = lastItem.Item2.GetName()
-                    ?? lastItem.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue()
+                string lastItemName = lastItem.GetName()
+                    ?? lastItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue()
                     ?? string.Empty;
 
                 // Get the current item name, if applicable
-                string datItemName = datItem.Item2.GetName()
-                    ?? datItem.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue()
+                string datItemName = datItem.Value.GetName()
+                    ?? datItem.Value.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue()
                     ?? string.Empty;
 
                 // If the current item exactly matches the last item, then we don't add it
 #if NETFRAMEWORK
-                if ((datItem.Item2.GetDuplicateStatus(lastItem.Item2) & DupeType.All) != 0)
+                if ((datItem.Value.GetDuplicateStatus(lastItem) & DupeType.All) != 0)
 #else
-                if (datItem.Item2.GetDuplicateStatus(lastItem.Item2).HasFlag(DupeType.All))
+                if (datItem.Value.GetDuplicateStatus(lastItem).HasFlag(DupeType.All))
 #endif
                 {
                     staticLogger.Verbose($"Exact duplicate found for '{datItemName}'");
@@ -779,9 +778,9 @@ namespace SabreTools.DatItems
                 {
                     staticLogger.Verbose($"Name duplicate found for '{datItemName}'");
 
-                    if (datItem.Item2 is Disk || datItem.Item2 is Formats.File || datItem.Item2 is Media || datItem.Item2 is Rom)
+                    if (datItem.Value is Disk || datItem.Value is Formats.File || datItem.Value is Media || datItem.Value is Rom)
                     {
-                        datItemName += GetDuplicateSuffix(datItem.Item2);
+                        datItemName += GetDuplicateSuffix(datItem.Value);
                         lastrenamed ??= datItemName;
                     }
 
@@ -800,8 +799,7 @@ namespace SabreTools.DatItems
                     }
 
                     // Set the item name back to the datItem
-                    datItem.Item2.SetName(datItemName);
-
+                    datItem.Value.SetName(datItemName);
                     output.Add(datItem);
                 }
 
@@ -809,7 +807,7 @@ namespace SabreTools.DatItems
                 else
                 {
                     output.Add(datItem);
-                    lastItem = datItem;
+                    lastItem = datItem.Value;
                     lastrenamed = null;
                     lastid = 0;
                 }
@@ -895,41 +893,41 @@ namespace SabreTools.DatItems
         /// <param name="roms">List of File objects representing the roms to be sorted</param>
         /// <param name="norename">True if files are not renamed, false otherwise</param>
         /// <returns>True if it sorted correctly, false otherwise</returns>
-        public static bool Sort(ref List<(long, DatItem)> roms, bool norename)
+        public static bool Sort(ref List<KeyValuePair<long, DatItem>> roms, bool norename)
         {
-            roms.Sort(delegate ((long, DatItem) x, (long, DatItem) y)
+            roms.Sort(delegate (KeyValuePair<long, DatItem> x, KeyValuePair<long, DatItem> y)
             {
                 try
                 {
                     var nc = new NaturalComparer();
 
                     // If machine names don't match
-                    string? xMachineName = x.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
-                    string? yMachineName = y.Item2.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    string? xMachineName = x.Value.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    string? yMachineName = y.Value.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
                     if (xMachineName != yMachineName)
                         return nc.Compare(xMachineName, yMachineName);
 
                     // If types don't match
-                    string? xType = x.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
-                    string? yType = y.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
+                    string? xType = x.Value.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
+                    string? yType = y.Value.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
                     if (xType != yType)
                         return xType.AsEnumValue<ItemType>() - yType.AsEnumValue<ItemType>();
 
                     // If directory names don't match
-                    string? xDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(x.Item2.GetName() ?? string.Empty));
-                    string? yDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(y.Item2.GetName() ?? string.Empty));
+                    string? xDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(x.Value.GetName() ?? string.Empty));
+                    string? yDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(y.Value.GetName() ?? string.Empty));
                     if (xDirectoryName != yDirectoryName)
                         return nc.Compare(xDirectoryName, yDirectoryName);
 
                     // If item names don't match
-                    string? xName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(x.Item2.GetName() ?? string.Empty));
-                    string? yName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(y.Item2.GetName() ?? string.Empty));
+                    string? xName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(x.Value.GetName() ?? string.Empty));
+                    string? yName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(y.Value.GetName() ?? string.Empty));
                     if (xName != yName)
                         return nc.Compare(xName, yName);
 
                     // Otherwise, compare on machine or source, depending on the flag
-                    int? xSourceIndex = x.Item2.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
-                    int? ySourceIndex = y.Item2.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
+                    int? xSourceIndex = x.Value.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
+                    int? ySourceIndex = y.Value.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
                     return (norename ? nc.Compare(xMachineName, yMachineName) : (xSourceIndex - ySourceIndex) ?? 0);
                 }
                 catch

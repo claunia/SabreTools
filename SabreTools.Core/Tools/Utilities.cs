@@ -25,7 +25,7 @@ namespace SabreTools.Core.Tools
                 return false;
 
             // Otherwise, they need to match exactly
-            return Enumerable.SequenceEqual(firstHash, secondHash);
+            return firstHash.SequenceEqual(secondHash);
         }
 
         /// <summary>

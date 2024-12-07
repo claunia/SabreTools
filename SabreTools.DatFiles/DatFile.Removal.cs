@@ -82,9 +82,9 @@ namespace SabreTools.DatFiles
                     continue;
 #endif
 
-                for (int j = 0; j < items.Length; j++)
+                foreach (var item in items.Values)
                 {
-                    RemoveFields(items[j].Item2, machineFieldNames, itemFieldNames);
+                    RemoveFields(item, machineFieldNames, itemFieldNames);
                 }
 #if NET40_OR_GREATER || NETCOREAPP
             });

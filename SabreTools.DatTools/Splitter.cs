@@ -142,11 +142,11 @@ namespace SabreTools.DatTools
             extBDat.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, extBDat.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" ({newExtBString})");
 
             // Get all current items, machines, and mappings
-            var datItems = datFile.ItemsDB.GetItems().ToDictionary(m => m.Item1, m => m.Item2);
-            var machines = datFile.ItemsDB.GetMachines().ToDictionary(m => m.Item1, m => m.Item2);
-            var sources = datFile.ItemsDB.GetSources().ToDictionary(m => m.Item1, m => m.Item2);
-            var itemMachineMappings = datFile.ItemsDB.GetItemMachineMappings().ToDictionary(m => m.Item1, m => m.Item2);
-            var itemSourceMappings = datFile.ItemsDB.GetItemSourceMappings().ToDictionary(m => m.Item1, m => m.Item2);
+            var datItems = datFile.ItemsDB.GetItems();
+            var machines = datFile.ItemsDB.GetMachines();
+            var sources = datFile.ItemsDB.GetSources();
+            var itemMachineMappings = datFile.ItemsDB.GetItemMachineMappings();
+            var itemSourceMappings = datFile.ItemsDB.GetItemSourceMappings();
 
             // Create mappings from old index to new index
             var machineRemapping = new Dictionary<long, long>();
@@ -350,11 +350,11 @@ namespace SabreTools.DatTools
             }
 
             // Get all current items, machines, and mappings
-            var datItems = datFile.ItemsDB.GetItems().ToDictionary(m => m.Item1, m => m.Item2);
-            var machines = datFile.ItemsDB.GetMachines().ToDictionary(m => m.Item1, m => m.Item2);
-            var sources = datFile.ItemsDB.GetSources().ToDictionary(m => m.Item1, m => m.Item2);
-            var itemMachineMappings = datFile.ItemsDB.GetItemMachineMappings().ToDictionary(m => m.Item1, m => m.Item2);
-            var itemSourceMappings = datFile.ItemsDB.GetItemSourceMappings().ToDictionary(m => m.Item1, m => m.Item2);
+            var datItems = datFile.ItemsDB.GetItems();
+            var machines = datFile.ItemsDB.GetMachines();
+            var sources = datFile.ItemsDB.GetSources();
+            var itemMachineMappings = datFile.ItemsDB.GetItemMachineMappings();
+            var itemSourceMappings = datFile.ItemsDB.GetItemSourceMappings();
 
             // Create mappings from old index to new index
             var machineRemapping = new Dictionary<long, long>();
@@ -680,11 +680,11 @@ namespace SabreTools.DatTools
             greaterThan.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, greaterThan.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" (equal-greater than {radix})");
 
             // Get all current items, machines, and mappings
-            var datItems = datFile.ItemsDB.GetItems().ToDictionary(m => m.Item1, m => m.Item2);
-            var machines = datFile.ItemsDB.GetMachines().ToDictionary(m => m.Item1, m => m.Item2);
-            var sources = datFile.ItemsDB.GetSources().ToDictionary(m => m.Item1, m => m.Item2);
-            var itemMachineMappings = datFile.ItemsDB.GetItemMachineMappings().ToDictionary(m => m.Item1, m => m.Item2);
-            var itemSourceMappings = datFile.ItemsDB.GetItemSourceMappings().ToDictionary(m => m.Item1, m => m.Item2);
+            var datItems = datFile.ItemsDB.GetItems();
+            var machines = datFile.ItemsDB.GetMachines();
+            var sources = datFile.ItemsDB.GetSources();
+            var itemMachineMappings = datFile.ItemsDB.GetItemMachineMappings();
+            var itemSourceMappings = datFile.ItemsDB.GetItemSourceMappings();
 
             // Create mappings from old index to new index
             var machineRemapping = new Dictionary<long, long>();
@@ -936,11 +936,11 @@ namespace SabreTools.DatTools
         private static void FillWithItemTypeDB(DatFile datFile, DatFile indexDat, ItemType itemType)
         {
             // Get all current items, machines, and mappings
-            var datItems = datFile.ItemsDB.GetItems().ToDictionary(m => m.Item1, m => m.Item2);
-            var machines = datFile.ItemsDB.GetMachines().ToDictionary(m => m.Item1, m => m.Item2);
-            var sources = datFile.ItemsDB.GetSources().ToDictionary(m => m.Item1, m => m.Item2);
-            var itemMachineMappings = datFile.ItemsDB.GetItemMachineMappings().ToDictionary(m => m.Item1, m => m.Item2);
-            var itemSourceMappings = datFile.ItemsDB.GetItemSourceMappings().ToDictionary(m => m.Item1, m => m.Item2);
+            var datItems = datFile.ItemsDB.GetItems();
+            var machines = datFile.ItemsDB.GetMachines();
+            var sources = datFile.ItemsDB.GetSources();
+            var itemMachineMappings = datFile.ItemsDB.GetItemMachineMappings();
+            var itemSourceMappings = datFile.ItemsDB.GetItemSourceMappings();
 
             // Create mappings from old index to new index
             var machineRemapping = new Dictionary<long, long>();

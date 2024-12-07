@@ -459,7 +459,7 @@ namespace SabreTools.FileTypes.Archives
 
                     // Map all inputs to index
                     Dictionary<string, int> inputIndexMap = [];
-                    var oldZipFileContents = new List<string>();
+                    List<string> oldZipFileContents = [];
                     for (int i = 0; i < oldZipFile.LocalFilesCount(); i++)
                     {
                         oldZipFileContents.Add(oldZipFile.GetLocalFile(i).Filename!);
@@ -675,7 +675,7 @@ namespace SabreTools.FileTypes.Archives
                     Dictionary<string, int> inputIndexMap = new();
                     for (int i = 0; i < inputFiles.Count; i++)
                     {
-                        var oldZipFileContents = new List<string>();
+                        List<string> oldZipFileContents = [];
                         for (int j = 0; j < oldZipFile.LocalFilesCount(); j++)
                         {
                             oldZipFileContents.Add(oldZipFile.GetLocalFile(j).Filename!);

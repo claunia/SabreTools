@@ -22,7 +22,7 @@ namespace SabreTools.Core.Filter
 
         public FilterRunner(string[] filterStrings)
         {
-            var filters = new List<FilterObject>();
+            List<FilterObject> filters = [];
             foreach (string filterString in filterStrings)
             {
                 try

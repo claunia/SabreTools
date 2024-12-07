@@ -846,7 +846,7 @@ namespace SabreTools.DatFiles
 #endif
 
                 // Filter all items in the current key
-                var newItems = new List<DatItem>();
+                List<DatItem> newItems = [];
                 foreach (var item in items)
                 {
                     if (item.PassesFilter(filterRunner))
@@ -1242,15 +1242,16 @@ namespace SabreTools.DatFiles
             foreach (string machine in machines)
             {
                 // If the machine doesn't have items, we continue
-                if (this[machine] == null || this[machine]!.Count == 0)
+                var datItems = this[machine];
+                if (datItems == null || datItems.Count == 0)
                     continue;
 
                 // If the machine (is/is not) a device, we want to continue
-                if (dev ^ (this[machine]![0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetBoolFieldValue(Models.Metadata.Machine.IsDeviceKey) == true))
+                if (dev ^ (datItems[0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetBoolFieldValue(Models.Metadata.Machine.IsDeviceKey) == true))
                     continue;
 
                 // Get all device reference names from the current machine
-                List<string?> deviceReferences = this[machine]!
+                List<string?> deviceReferences = datItems
                     .FindAll(i => i is DeviceRef)
                     .ConvertAll(i => i as DeviceRef)
                     .ConvertAll(dr => dr!.GetName())
@@ -1258,7 +1259,7 @@ namespace SabreTools.DatFiles
                     .ToList();
 
                 // Get all slot option names from the current machine
-                List<string?> slotOptions = this[machine]!
+                List<string?> slotOptions = datItems
                     .FindAll(i => i is Slot)
                     .ConvertAll(i => i as Slot)
                     .FindAll(s => s!.SlotOptionsSpecified)
@@ -1274,13 +1275,13 @@ namespace SabreTools.DatFiles
                     var newDeviceReferences = new HashSet<string>();
                     foreach (string? deviceReference in deviceReferences)
                     {
-                        // If the machine doesn't exist then we continue
-                        if (deviceReference == null || this[deviceReference] == null || this[deviceReference]!.Count == 0)
+                        // If the device reference is missing
+                        if (string.IsNullOrEmpty(deviceReference))
                             continue;
 
                         // Add to the list of new device reference names
-                        var devItems = this[deviceReference];
-                        if (devItems == null)
+                        var devItems = this[deviceReference!];
+                        if (devItems == null || devItems.Count == 0)
                             continue;
 
                         newDeviceReferences.UnionWith(devItems
@@ -1288,11 +1289,11 @@ namespace SabreTools.DatFiles
                             .ConvertAll(i => (i as DeviceRef)!.GetName()!));
 
                         // Set new machine information and add to the current machine
-                        DatItem copyFrom = this[machine]![0];
+                        DatItem copyFrom = datItems[0];
                         foreach (DatItem item in devItems)
                         {
                             // If the parent machine doesn't already contain this item, add it
-                            if (!this[machine]!.Exists(i => i.GetStringFieldValue(Models.Metadata.DatItem.TypeKey) == item.GetStringFieldValue(Models.Metadata.DatItem.TypeKey) && i.GetName() == item.GetName()))
+                            if (!datItems.Exists(i => i.GetStringFieldValue(Models.Metadata.DatItem.TypeKey) == item.GetStringFieldValue(Models.Metadata.DatItem.TypeKey) && i.GetName() == item.GetName()))
                             {
                                 // Set that we found new items
                                 foundnew = true;
@@ -1312,7 +1313,7 @@ namespace SabreTools.DatFiles
                         {
                             var deviceRef = new DeviceRef();
                             deviceRef.SetName(deviceReference);
-                            this[machine]!.Add(deviceRef);
+                            datItems.Add(deviceRef);
                         }
                     }
                 }
@@ -1324,13 +1325,14 @@ namespace SabreTools.DatFiles
                     var newSlotOptions = new HashSet<string>();
                     foreach (string? slotOption in slotOptions)
                     {
+                        // If the slot option is missing
+                        if (string.IsNullOrEmpty(slotOption))
                         // If the machine doesn't exist then we continue
-                        if (slotOption == null || this[slotOption] == null || this[slotOption]!.Count == 0)
                             continue;
 
                         // Add to the list of new slot option names
-                        var slotItems = this[slotOption];
-                        if (slotItems == null)
+                        var slotItems = this[slotOption!];
+                        if (slotItems == null || slotItems.Count == 0)
                             continue;
 
                         newSlotOptions.UnionWith(slotItems
@@ -1340,11 +1342,11 @@ namespace SabreTools.DatFiles
                             .Select(o => o.GetStringFieldValue(Models.Metadata.SlotOption.DevNameKey)!));
 
                         // Set new machine information and add to the current machine
-                        DatItem copyFrom = this[machine]![0];
+                        DatItem copyFrom = datItems[0];
                         foreach (DatItem item in slotItems)
                         {
                             // If the parent machine doesn't already contain this item, add it
-                            if (!this[machine]!.Exists(i => i.GetStringFieldValue(Models.Metadata.DatItem.TypeKey) == item.GetStringFieldValue(Models.Metadata.DatItem.TypeKey) && i.GetName() == item.GetName()))
+                            if (!datItems.Exists(i => i.GetStringFieldValue(Models.Metadata.DatItem.TypeKey) == item.GetStringFieldValue(Models.Metadata.DatItem.TypeKey) && i.GetName() == item.GetName()))
                             {
                                 // Set that we found new items
                                 foundnew = true;
@@ -1368,7 +1370,7 @@ namespace SabreTools.DatFiles
                             var slotItem = new Slot();
                             slotItem.SetFieldValue<SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey, [slotOptionItem]);
 
-                            this[machine]!.Add(slotItem);
+                            datItems.Add(slotItem);
                         }
                     }
                 }

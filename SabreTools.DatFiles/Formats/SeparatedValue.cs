@@ -54,7 +54,7 @@ namespace SabreTools.DatFiles.Formats
         /// <inheritdoc/>
         protected override List<string>? GetMissingRequiredFields(DatItem datItem)
         {
-            var missingFields = new List<string>();
+            List<string> missingFields = [];
 
             // Check item name
             if (string.IsNullOrEmpty(datItem.GetName()))

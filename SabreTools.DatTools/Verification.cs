@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
@@ -180,8 +181,8 @@ namespace SabreTools.DatTools
                     continue;
 
                 // Now we want to remove all duplicates from the DAT
-                datFile.ItemsDB.GetDuplicates((-1, new Rom(fileinfo)))
-                    .AddRange(datFile.ItemsDB.GetDuplicates((-1, new Disk(fileinfo))));
+                datFile.ItemsDB.GetDuplicates(new KeyValuePair<long, DatItem>(-1, new Rom(fileinfo)))
+                    .Concat(datFile.ItemsDB.GetDuplicates(new KeyValuePair<long, DatItem>(-1, new Disk(fileinfo))));
             }
 
             watch.Stop();
@@ -270,14 +271,14 @@ namespace SabreTools.DatTools
                 if (items == null)
                     continue;
 
-                for (int i = 0; i < items.Length; i++)
+                foreach (var item in items)
                 {
                     // Get the source associated with the item
-                    var source = datFile.ItemsDB.GetSourceForItem(items[i].Item1);
+                    var source = datFile.ItemsDB.GetSourceForItem(item.Key);
 
                     // Unmatched items will have a source ID of int.MaxValue, remove all others
-                    if (source.Item2?.Index != int.MaxValue)
-                        items[i].Item2.SetFieldValue<bool?>(DatItem.RemoveKey, true);
+                    if (source.Value?.Index != int.MaxValue)
+                        item.Value.SetFieldValue<bool?>(DatItem.RemoveKey, true);
                 }
             }
 

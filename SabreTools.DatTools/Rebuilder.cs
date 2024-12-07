@@ -603,7 +603,7 @@ namespace SabreTools.DatTools
         /// <param name="inverse">True if the DAT should be used as a filter instead of a template, false otherwise</param>
         /// <param name="dupes">Output list of duplicate items to rebuild to</param>
         /// <returns>True if the item should be rebuilt, false otherwise</returns>
-        private static bool ShouldRebuildDB(DatFile datFile, (long, DatItem) datItem, Stream? stream, bool inverse, out List<(long, DatItem)> dupes)
+        private static bool ShouldRebuildDB(DatFile datFile, KeyValuePair<long, DatItem> datItem, Stream? stream, bool inverse, out Dictionary<long, DatItem> dupes)
         {
             // Find if the file has duplicates in the DAT
             dupes = datFile.ItemsDB.GetDuplicates(datItem);
@@ -645,7 +645,7 @@ namespace SabreTools.DatTools
                 }
 
                 long index = datFile.ItemsDB.AddItem(item, machineIndex, -1, false);
-                dupes.Add((index, item));
+                dupes[index] = item;
                 return true;
             }
 

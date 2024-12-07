@@ -314,7 +314,7 @@ namespace SabreTools.FileTypes.Archives
             if (Filename == null)
                 return null;
 
-            var found = new List<BaseFile>();
+            List<BaseFile> found = [];
             string? gamename = Path.GetFileNameWithoutExtension(Filename);
 
             try
@@ -492,7 +492,7 @@ namespace SabreTools.FileTypes.Archives
                 if (zf == null)
                     throw new Exception($"Could not open {Filename} as a zip file");
 
-                var zipEntries = new List<(string, bool)>();
+                List<(string, bool)> zipEntries = [];
                 for (int i = 0; i < zf.Entries.Count; i++)
                 {
                     // Get the local file
@@ -638,7 +638,7 @@ namespace SabreTools.FileTypes.Archives
 
                     // Map all inputs to index
                     Dictionary<string, int> inputIndexMap = new();
-                    var oldZipFileContents = new List<string>();
+                    List<string> oldZipFileContents = [];
                     for (int i = 0; i < oldZipFile.LocalFilesCount(); i++)
                     {
                         oldZipFileContents.Add(oldZipFile.GetLocalFile(i).Filename!);
@@ -850,7 +850,7 @@ namespace SabreTools.FileTypes.Archives
                     Dictionary<string, int> inputIndexMap = new();
                     for (int i = 0; i < inputFiles.Count; i++)
                     {
-                        var oldZipFileContents = new List<string>();
+                        List<string> oldZipFileContents = [];
                         for (int j = 0; j < oldZipFile.LocalFilesCount(); j++)
                         {
                             oldZipFileContents.Add(oldZipFile.GetLocalFile(j).Filename!);

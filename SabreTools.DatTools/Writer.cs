@@ -144,11 +144,11 @@ namespace SabreTools.DatTools
             datFile.ItemsDB.DatStatistics.DisplayName = datFile.Header.GetStringFieldValue(DatHeader.FileNameKey);
             datFile.ItemsDB.DatStatistics.MachineCount = datFile.Items.Keys.Count;
 
-            var statsList = new List<DatStatistics>
-            {
+            List<DatStatistics> statsList =
+            [
                 datFile.Items.DatStatistics,
                 //datFile.ItemsDB.DatStatistics,
-            };
+            ];
             var consoleOutput = BaseReport.Create(StatReportFormat.None, statsList);
             consoleOutput!.WriteToFile(null, true, true);
         }

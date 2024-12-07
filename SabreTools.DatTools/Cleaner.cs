@@ -211,10 +211,10 @@ namespace SabreTools.DatTools
                 if (items == null)
                     continue;
 
-                foreach ((long, DatItem) item in items)
+                foreach (var item in items)
                 {
                     // If we have a null item, we can't clean it it
-                    if (item.Item2 == null)
+                    if (item.Value == null)
                         continue;
 
                     // Run cleaning per item
@@ -284,17 +284,17 @@ namespace SabreTools.DatTools
         /// </summary>
         /// <param name="db">ItemDictionaryDB to get machine information from</param>
         /// <param name="datItem">DatItem to clean</param>
-        internal void CleanDatItemDB(ItemDictionaryDB db, (long, DatItem) datItem)
+        internal void CleanDatItemDB(ItemDictionaryDB db, KeyValuePair<long, DatItem> datItem)
         {
             // Get the machine associated with the item, if possible
-            var machine = db.GetMachineForItem(datItem.Item1);
-            if (machine.Item2 == null)
+            var machine = db.GetMachineForItem(datItem.Key);
+            if (machine.Value == null)
                 return;
 
             // Get the fields for processing
-            string? machineName = machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey);
-            string? machineDesc = machine.Item2.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey);
-            string? datItemName = datItem.Item2.GetName();
+            string? machineName = machine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+            string? machineDesc = machine.Value.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey);
+            string? datItemName = datItem.Value.GetName();
 
             // If we're stripping unicode characters, strip machine name and description
             if (RemoveUnicode)
@@ -331,9 +331,9 @@ namespace SabreTools.DatTools
             }
 
             // Set the fields back, if necessary
-            machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineName);
-            machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, machineDesc);
-            datItem.Item2.SetName(datItemName);
+            machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineName);
+            machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, machineDesc);
+            datItem.Value.SetName(datItemName);
         }
 
         #endregion

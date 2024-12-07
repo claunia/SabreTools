@@ -248,7 +248,7 @@ namespace SabreTools.DatFiles.Formats
         /// <inheritdoc/>
         protected override List<string>? GetMissingRequiredFields(DatItem datItem)
         {
-            var missingFields = new List<string>();
+            List<string> missingFields = [];
             switch (datItem)
             {
                 case Release release:

@@ -121,18 +121,18 @@ namespace SabreTools.DatTools
                     continue;
 #endif
 
-                foreach ((long, DatItem) item in items)
+                foreach (var item in items)
                 {
-                    var source = datFile.ItemsDB.GetSourceForItem(item.Item1);
-                    if (source.Item2 == null)
+                    var source = datFile.ItemsDB.GetSourceForItem(item.Key);
+                    if (source.Value == null)
                         continue;
 
-                    var machine = datFile.ItemsDB.GetMachineForItem(item.Item1);
-                    if (machine.Item2 == null)
+                    var machine = datFile.ItemsDB.GetMachineForItem(item.Key);
+                    if (machine.Value == null)
                         continue;
 
-                    string filename = inputs[source.Item2.Index].CurrentPath;
-                    string rootpath = inputs[source.Item2.Index].ParentPath ?? string.Empty;
+                    string filename = inputs[source.Value.Index].CurrentPath;
+                    string rootpath = inputs[source.Value.Index].ParentPath ?? string.Empty;
 
                     if (rootpath.Length > 0
 #if NETFRAMEWORK
@@ -148,9 +148,9 @@ namespace SabreTools.DatTools
 
                     filename = filename.Remove(0, rootpath.Length);
 
-                    machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Path.GetDirectoryName(filename) + Path.DirectorySeparatorChar
+                    machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Path.GetDirectoryName(filename) + Path.DirectorySeparatorChar
                         + Path.GetFileNameWithoutExtension(filename) + Path.DirectorySeparatorChar
-                        + machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+                        + machine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey));
                 }
 #if NET40_OR_GREATER || NETCOREAPP
             });
@@ -317,15 +317,15 @@ namespace SabreTools.DatTools
                         continue;
 #endif
 
-                    foreach ((long, DatItem) datItem in datItems)
+                    foreach (var datItem in datItems)
                     {
                         var dupes = datFile.ItemsDB.GetDuplicates(datItem, sorted: true);
-                        if (datItem.Item2.Clone() is not DatItem newDatItem)
+                        if (datItem.Value.Clone() is not DatItem newDatItem)
                             continue;
 
                         // Replace fields from the first duplicate, if we have one
                         if (dupes.Count > 0)
-                            Replacer.ReplaceFields(datItem.Item2, dupes[0].Item2, itemFieldNames);
+                            Replacer.ReplaceFields(datItem.Value, dupes.First().Value, itemFieldNames);
                     }
 #if NET40_OR_GREATER || NETCOREAPP
                 });
@@ -358,12 +358,12 @@ namespace SabreTools.DatTools
                         continue;
 #endif
 
-                    foreach ((long, DatItem) datItem in datItems)
+                    foreach (var datItem in datItems)
                     {
-                        var datMachine = datFile.ItemsDB.GetMachineForItem(datFile.ItemsDB.GetItemsForBucket(key)![0].Item1);
-                        var intMachine = intDat.ItemsDB.GetMachineForItem(datItem.Item1);
-                        if (datMachine.Item2 != null && intMachine.Item2 != null)
-                            Replacer.ReplaceFields(intMachine.Item2, datMachine.Item2, machineFieldNames, onlySame);
+                        var datMachine = datFile.ItemsDB.GetMachineForItem(datFile.ItemsDB.GetItemsForBucket(key)!.First().Key);
+                        var intMachine = intDat.ItemsDB.GetMachineForItem(datItem.Key);
+                        if (datMachine.Value != null && intMachine.Value != null)
+                            Replacer.ReplaceFields(intMachine.Value, datMachine.Value, machineFieldNames, onlySame);
                     }
 #if NET40_OR_GREATER || NETCOREAPP
                 });
@@ -648,11 +648,11 @@ namespace SabreTools.DatTools
             watch.Start("Populating duplicate DAT");
 
             // Get all current items, machines, and mappings
-            var datItems = datFile.ItemsDB.GetItems().ToDictionary(m => m.Item1, m => m.Item2);
-            var machines = datFile.ItemsDB.GetMachines().ToDictionary(m => m.Item1, m => m.Item2);
-            var sources = datFile.ItemsDB.GetSources().ToDictionary(m => m.Item1, m => m.Item2);
-            var itemMachineMappings = datFile.ItemsDB.GetItemMachineMappings().ToDictionary(m => m.Item1, m => m.Item2);
-            var itemSourceMappings = datFile.ItemsDB.GetItemSourceMappings().ToDictionary(m => m.Item1, m => m.Item2);
+            var datItems = datFile.ItemsDB.GetItems();
+            var machines = datFile.ItemsDB.GetMachines();
+            var sources = datFile.ItemsDB.GetSources();
+            var itemMachineMappings = datFile.ItemsDB.GetItemMachineMappings();
+            var itemSourceMappings = datFile.ItemsDB.GetItemSourceMappings();
 
             // Create mappings from old index to new index
             var machineRemapping = new Dictionary<long, long>();
@@ -701,7 +701,7 @@ namespace SabreTools.DatTools
                 var currentSource = sources[sourceIndex];
                 string? currentMachineName = machines[machineIndex].GetStringFieldValue(Models.Metadata.Machine.NameKey);
                 var currentMachine = datFile.ItemsDB.GetMachine(currentMachineName);
-                if (currentMachine.Item2 == null)
+                if (currentMachine.Value == null)
 #if NET40_OR_GREATER || NETCOREAPP
                     return;
 #else
@@ -711,15 +711,15 @@ namespace SabreTools.DatTools
                 // Get the source-specific machine
                 string? renamedMachineName = $"{currentMachineName} ({Path.GetFileNameWithoutExtension(inputs[currentSource!.Index].CurrentPath)})";
                 var renamedMachine = datFile.ItemsDB.GetMachine(renamedMachineName);
-                if (renamedMachine.Item2 == null)
+                if (renamedMachine.Value == null)
                 {
-                    var newMachine = currentMachine.Item2.Clone() as Machine;
+                    var newMachine = currentMachine.Value.Clone() as Machine;
                     newMachine!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, renamedMachineName);
                     long newMachineIndex = dupeData.ItemsDB.AddMachine(newMachine!);
-                    renamedMachine = (newMachineIndex, newMachine);
+                    renamedMachine = new KeyValuePair<long, Machine?>(newMachineIndex, newMachine);
                 }
 
-                dupeData.ItemsDB.AddItem(item.Value, renamedMachine.Item1, sourceRemapping[sourceIndex], statsOnly: false);
+                dupeData.ItemsDB.AddItem(item.Value, renamedMachine.Key, sourceRemapping[sourceIndex], statsOnly: false);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
@@ -888,11 +888,11 @@ namespace SabreTools.DatTools
             watch.Start("Populating all individual DATs");
 
             // Get all current items, machines, and mappings
-            var datItems = datFile.ItemsDB.GetItems().ToDictionary(m => m.Item1, m => m.Item2);
-            var machines = datFile.ItemsDB.GetMachines().ToDictionary(m => m.Item1, m => m.Item2);
-            var sources = datFile.ItemsDB.GetSources().ToDictionary(m => m.Item1, m => m.Item2);
-            var itemMachineMappings = datFile.ItemsDB.GetItemMachineMappings().ToDictionary(m => m.Item1, m => m.Item2);
-            var itemSourceMappings = datFile.ItemsDB.GetItemSourceMappings().ToDictionary(m => m.Item1, m => m.Item2);
+            var datItems = datFile.ItemsDB.GetItems();
+            var machines = datFile.ItemsDB.GetMachines();
+            var sources = datFile.ItemsDB.GetSources();
+            var itemMachineMappings = datFile.ItemsDB.GetItemMachineMappings();
+            var itemSourceMappings = datFile.ItemsDB.GetItemSourceMappings();
 
             // Create mappings from old index to new index
             var machineRemapping = new Dictionary<long, long>();
@@ -1081,11 +1081,11 @@ namespace SabreTools.DatTools
             watch.Start("Populating no duplicate DAT");
 
             // Get all current items, machines, and mappings
-            var datItems = datFile.ItemsDB.GetItems().ToDictionary(m => m.Item1, m => m.Item2);
-            var machines = datFile.ItemsDB.GetMachines().ToDictionary(m => m.Item1, m => m.Item2);
-            var sources = datFile.ItemsDB.GetSources().ToDictionary(m => m.Item1, m => m.Item2);
-            var itemMachineMappings = datFile.ItemsDB.GetItemMachineMappings().ToDictionary(m => m.Item1, m => m.Item2);
-            var itemSourceMappings = datFile.ItemsDB.GetItemSourceMappings().ToDictionary(m => m.Item1, m => m.Item2);
+            var datItems = datFile.ItemsDB.GetItems();
+            var machines = datFile.ItemsDB.GetMachines();
+            var sources = datFile.ItemsDB.GetSources();
+            var itemMachineMappings = datFile.ItemsDB.GetItemMachineMappings();
+            var itemSourceMappings = datFile.ItemsDB.GetItemSourceMappings();
 
             // Create mappings from old index to new index
             var machineRemapping = new Dictionary<long, long>();
@@ -1134,7 +1134,7 @@ namespace SabreTools.DatTools
                 var currentSource = sources[sourceIndex];
                 string? currentMachineName = machines[machineIndex].GetStringFieldValue(Models.Metadata.Machine.NameKey);
                 var currentMachine = datFile.ItemsDB.GetMachine(currentMachineName);
-                if (currentMachine.Item2 == null)
+                if (currentMachine.Value == null)
 #if NET40_OR_GREATER || NETCOREAPP
                     return;
 #else
@@ -1144,15 +1144,15 @@ namespace SabreTools.DatTools
                 // Get the source-specific machine
                 string? renamedMachineName = $"{currentMachineName} ({Path.GetFileNameWithoutExtension(inputs[currentSource!.Index].CurrentPath)})";
                 var renamedMachine = datFile.ItemsDB.GetMachine(renamedMachineName);
-                if (renamedMachine.Item2 == null)
+                if (renamedMachine.Value == null)
                 {
-                    var newMachine = currentMachine.Item2.Clone() as Machine;
+                    var newMachine = currentMachine.Value.Clone() as Machine;
                     newMachine!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, renamedMachineName);
                     long newMachineIndex = outerDiffData.ItemsDB.AddMachine(newMachine);
-                    renamedMachine = (newMachineIndex, newMachine);
+                    renamedMachine = new KeyValuePair<long, Machine?>(newMachineIndex, newMachine);
                 }
 
-                outerDiffData.ItemsDB.AddItem(item.Value, renamedMachine.Item1, sourceRemapping[sourceIndex], statsOnly: false);
+                outerDiffData.ItemsDB.AddItem(item.Value, renamedMachine.Key, sourceRemapping[sourceIndex], statsOnly: false);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
@@ -1254,11 +1254,11 @@ namespace SabreTools.DatTools
         private static void AddFromExistingDB(DatFile addTo, DatFile addFrom, bool delete = false)
         {
             // Get all current items, machines, and mappings
-            var datItems = addFrom.ItemsDB.GetItems().ToDictionary(m => m.Item1, m => m.Item2);
-            var machines = addFrom.ItemsDB.GetMachines().ToDictionary(m => m.Item1, m => m.Item2);
-            var sources = addFrom.ItemsDB.GetSources().ToDictionary(m => m.Item1, m => m.Item2);
-            var itemMachineMappings = addFrom.ItemsDB.GetItemMachineMappings().ToDictionary(m => m.Item1, m => m.Item2);
-            var itemSourceMappings = addFrom.ItemsDB.GetItemSourceMappings().ToDictionary(m => m.Item1, m => m.Item2);
+            var datItems = addFrom.ItemsDB.GetItems();
+            var machines = addFrom.ItemsDB.GetMachines();
+            var sources = addFrom.ItemsDB.GetSources();
+            var itemMachineMappings = addFrom.ItemsDB.GetItemMachineMappings();
+            var itemSourceMappings = addFrom.ItemsDB.GetItemSourceMappings();
 
             // Create mappings from old index to new index
             var machineRemapping = new Dictionary<long, long>();
@@ -1359,11 +1359,11 @@ namespace SabreTools.DatTools
         private static void FillWithSourceIndexDB(DatFile datFile, DatFile indexDat, int index)
         {
             // Get all current items, machines, and mappings
-            var datItems = datFile.ItemsDB.GetItems().ToDictionary(m => m.Item1, m => m.Item2);
-            var machines = datFile.ItemsDB.GetMachines().ToDictionary(m => m.Item1, m => m.Item2);
-            var sources = datFile.ItemsDB.GetSources().ToDictionary(m => m.Item1, m => m.Item2);
-            var itemMachineMappings = datFile.ItemsDB.GetItemMachineMappings().ToDictionary(m => m.Item1, m => m.Item2);
-            var itemSourceMappings = datFile.ItemsDB.GetItemSourceMappings().ToDictionary(m => m.Item1, m => m.Item2);
+            var datItems = datFile.ItemsDB.GetItems();
+            var machines = datFile.ItemsDB.GetMachines();
+            var sources = datFile.ItemsDB.GetSources();
+            var itemMachineMappings = datFile.ItemsDB.GetItemMachineMappings();
+            var itemSourceMappings = datFile.ItemsDB.GetItemSourceMappings();
 
             // Create mappings from old index to new index
             var machineRemapping = new Dictionary<long, long>();

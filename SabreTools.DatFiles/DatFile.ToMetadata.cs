@@ -100,7 +100,7 @@ namespace SabreTools.DatFiles
         private Models.Metadata.Machine[]? ConvertMachines(bool ignoreblanks = false)
         {
             // Create a machine list to hold all outputs
-            var machines = new List<Models.Metadata.Machine>();
+            List<Models.Metadata.Machine> machines = [];
 
             // Loop through the sorted items and create games for them
             foreach (string key in Items.SortedKeys)
@@ -374,7 +374,7 @@ namespace SabreTools.DatFiles
                             {
                                 // Get existing data areas as a list
                                 var dataAreasArr = partItems[partName].Read<Models.Metadata.DataArea[]>(Models.Metadata.Part.DataAreaKey) ?? [];
-                                var dataAreas = new List<Models.Metadata.DataArea>(dataAreasArr);
+                                List<Models.Metadata.DataArea> dataAreas = [.. dataAreasArr];
 
                                 // Find the existing disk area to append to, otherwise create a new disk area
                                 int dataAreaIndex = dataAreas.FindIndex(da => da.ReadString(Models.Metadata.DataArea.NameKey) == dataAreaName);
@@ -397,7 +397,7 @@ namespace SabreTools.DatFiles
 
                                 // Get existing roms as a list
                                 var romsArr = aggregateDataArea.Read<Models.Metadata.Rom[]>(Models.Metadata.DataArea.RomKey) ?? [];
-                                var roms = new List<Models.Metadata.Rom>(romsArr);
+                                List<Models.Metadata.Rom> roms = [.. romsArr];
 
                                 // Add the rom to the data area
                                 roms.Add(romItem);
@@ -431,7 +431,7 @@ namespace SabreTools.DatFiles
                             {
                                 // Get existing disk areas as a list
                                 var diskAreasArr = partItems[partName].Read<Models.Metadata.DiskArea[]>(Models.Metadata.Part.DiskAreaKey) ?? [];
-                                var diskAreas = new List<Models.Metadata.DiskArea>(diskAreasArr);
+                                List<Models.Metadata.DiskArea> diskAreas = [.. diskAreasArr];
 
                                 // Find the existing disk area to append to, otherwise create a new disk area
                                 int diskAreaIndex = diskAreas.FindIndex(da => da.ReadString(Models.Metadata.DiskArea.NameKey) == diskAreaName);
@@ -451,7 +451,7 @@ namespace SabreTools.DatFiles
 
                                 // Get existing disks as a list
                                 var disksArr = aggregateDiskArea.Read<Models.Metadata.Disk[]>(Models.Metadata.DiskArea.DiskKey) ?? [];
-                                var disks = new List<Models.Metadata.Disk>(disksArr);
+                                List<Models.Metadata.Disk> disks = [.. disksArr];
 
                                 // Add the disk to the data area
                                 disks.Add(diskItem);
@@ -475,7 +475,7 @@ namespace SabreTools.DatFiles
                         {
                             // Get existing dipswitches as a list
                             var dipSwitchesArr = partItems[partName].Read<Models.Metadata.DipSwitch[]>(Models.Metadata.Part.DipSwitchKey) ?? [];
-                            var dipSwitches = new List<Models.Metadata.DipSwitch>(dipSwitchesArr);
+                            List<Models.Metadata.DipSwitch> dipSwitches = [.. dipSwitchesArr];
 
                             // Clear any empty fields
                             ClearEmptyKeys(dipSwitchItem);
@@ -492,7 +492,7 @@ namespace SabreTools.DatFiles
                         {
                             // Get existing features as a list
                             var featuresArr = partItems[partName].Read<Models.Metadata.Feature[]>(Models.Metadata.Part.FeatureKey) ?? [];
-                            var features = new List<Models.Metadata.Feature>(featuresArr);
+                            List<Models.Metadata.Feature> features = [.. featuresArr];
 
                             // Clear any empty fields
                             ClearEmptyKeys(featureItem);
@@ -523,17 +523,17 @@ namespace SabreTools.DatFiles
         private Models.Metadata.Machine[]? ConvertMachinesDB(bool ignoreblanks = false)
         {
             // Create a machine list to hold all outputs
-            var machines = new List<Models.Metadata.Machine>();
+            List<Models.Metadata.Machine> machines = [];
 
             // Loop through the sorted items and create games for them
             foreach (string key in ItemsDB.SortedKeys)
             {
                 var items = ItemsDB.GetItemsForBucket(key, filter: true);
-                if (items == null || items.Length == 0)
+                if (items == null || items.Count == 0)
                     continue;
 
                 // Create a machine to hold everything
-                var machine = ItemsDB.GetMachineForItem(items[0].Item1).Item2!.GetInternalClone();
+                var machine = ItemsDB.GetMachineForItem(items.First().Key).Value!.GetInternalClone();
 
                 // Handle Trurip object, if it exists
                 if (machine.ContainsKey(Models.Metadata.Machine.TruripKey))
@@ -557,19 +557,16 @@ namespace SabreTools.DatFiles
                 Dictionary<Models.Metadata.Part, (Models.Metadata.DiskArea, Models.Metadata.Disk)> diskAreaMappings = [];
 
                 // Loop through and convert the items to respective lists
-                for (int index = 0; index < items.Length; index++)
+                foreach (var kvp in items)
                 {
-                    // Get the item
-                    var item = items[index];
-
                     // Check for a "null" item
-                    item = ProcessNullifiedItem(item);
+                    var item = ProcessNullifiedItem(kvp);
 
                     // Skip if we're ignoring the item
-                    if (ShouldIgnore(item, ignoreblanks))
+                    if (ShouldIgnore(item.Value, ignoreblanks))
                         continue;
 
-                    switch (item.Item2)
+                    switch (item.Value)
                     {
                         case DatItems.Formats.Adjuster adjuster:
                             var adjusterItem = ProcessItem(adjuster);
@@ -797,7 +794,7 @@ namespace SabreTools.DatFiles
                             {
                                 // Get existing data areas as a list
                                 var dataAreasArr = partItems[partName].Read<Models.Metadata.DataArea[]>(Models.Metadata.Part.DataAreaKey) ?? [];
-                                var dataAreas = new List<Models.Metadata.DataArea>(dataAreasArr);
+                                List<Models.Metadata.DataArea> dataAreas = [.. dataAreasArr];
 
                                 // Find the existing disk area to append to, otherwise create a new disk area
                                 int dataAreaIndex = dataAreas.FindIndex(da => da.ReadString(Models.Metadata.DataArea.NameKey) == dataAreaName);
@@ -820,7 +817,7 @@ namespace SabreTools.DatFiles
 
                                 // Get existing roms as a list
                                 var romsArr = aggregateDataArea.Read<Models.Metadata.Rom[]>(Models.Metadata.DataArea.RomKey) ?? [];
-                                var roms = new List<Models.Metadata.Rom>(romsArr);
+                                List<Models.Metadata.Rom> roms = [.. romsArr];
 
                                 // Add the rom to the data area
                                 roms.Add(romItem);
@@ -854,7 +851,7 @@ namespace SabreTools.DatFiles
                             {
                                 // Get existing disk areas as a list
                                 var diskAreasArr = partItems[partName].Read<Models.Metadata.DiskArea[]>(Models.Metadata.Part.DiskAreaKey) ?? [];
-                                var diskAreas = new List<Models.Metadata.DiskArea>(diskAreasArr);
+                                List<Models.Metadata.DiskArea> diskAreas = [.. diskAreasArr];
 
                                 // Find the existing disk area to append to, otherwise create a new disk area
                                 int diskAreaIndex = diskAreas.FindIndex(da => da.ReadString(Models.Metadata.DiskArea.NameKey) == diskAreaName);
@@ -874,7 +871,7 @@ namespace SabreTools.DatFiles
 
                                 // Get existing disks as a list
                                 var disksArr = aggregateDiskArea.Read<Models.Metadata.Disk[]>(Models.Metadata.DiskArea.DiskKey) ?? [];
-                                var disks = new List<Models.Metadata.Disk>(disksArr);
+                                List<Models.Metadata.Disk> disks = [.. disksArr];
 
                                 // Add the disk to the data area
                                 disks.Add(diskItem);
@@ -898,7 +895,7 @@ namespace SabreTools.DatFiles
                         {
                             // Get existing dipswitches as a list
                             var dipSwitchesArr = partItems[partName].Read<Models.Metadata.DipSwitch[]>(Models.Metadata.Part.DipSwitchKey) ?? [];
-                            var dipSwitches = new List<Models.Metadata.DipSwitch>(dipSwitchesArr);
+                            List<Models.Metadata.DipSwitch> dipSwitches = [.. dipSwitchesArr];
 
                             // Clear any empty fields
                             ClearEmptyKeys(dipSwitchItem);
@@ -915,7 +912,7 @@ namespace SabreTools.DatFiles
                         {
                             // Get existing features as a list
                             var featuresArr = partItems[partName].Read<Models.Metadata.Feature[]>(Models.Metadata.Part.FeatureKey) ?? [];
-                            var features = new List<Models.Metadata.Feature>(featuresArr);
+                            List<Models.Metadata.Feature> features = [.. featuresArr];
 
                             // Clear any empty fields
                             ClearEmptyKeys(featureItem);
@@ -970,7 +967,7 @@ namespace SabreTools.DatFiles
             var confLocations = item.GetFieldValue<DatItems.Formats.ConfLocation[]?>(Models.Metadata.Configuration.ConfLocationKey);
             if (confLocations != null)
             {
-                var confLocationItems = new List<Models.Metadata.ConfLocation>();
+                List<Models.Metadata.ConfLocation> confLocationItems = [];
                 foreach (var confLocation in confLocations)
                 {
                     var confLocationItem = confLocation.GetInternalClone();
@@ -983,7 +980,7 @@ namespace SabreTools.DatFiles
             var confSettings = item.GetFieldValue<DatItems.Formats.ConfSetting[]?>(Models.Metadata.Configuration.ConfSettingKey);
             if (confSettings != null)
             {
-                var confSettingItems = new List<Models.Metadata.ConfSetting>();
+                List<Models.Metadata.ConfSetting> confSettingItems = [];
                 foreach (var confSetting in confSettings)
                 {
                     var confSettingItem = confSetting.GetInternalClone();
@@ -1011,7 +1008,7 @@ namespace SabreTools.DatFiles
             var extensions = item.GetFieldValue<DatItems.Formats.Extension[]?>(Models.Metadata.Device.ExtensionKey);
             if (extensions != null)
             {
-                var extensionItems = new List<Models.Metadata.Extension>();
+                List<Models.Metadata.Extension> extensionItems = [];
                 foreach (var extension in extensions)
                 {
                     var extensionItem = extension.GetInternalClone();
@@ -1040,7 +1037,7 @@ namespace SabreTools.DatFiles
             var dipLocations = item.GetFieldValue<DatItems.Formats.DipLocation[]?>(Models.Metadata.DipSwitch.DipLocationKey);
             if (dipLocations != null)
             {
-                var dipLocationItems = new List<Models.Metadata.DipLocation>();
+                List<Models.Metadata.DipLocation> dipLocationItems = [];
                 foreach (var dipLocation in dipLocations)
                 {
                     var extensionItem = dipLocation.GetInternalClone();
@@ -1053,7 +1050,7 @@ namespace SabreTools.DatFiles
             var dipValues = item.GetFieldValue<DatItems.Formats.DipValue[]?>(Models.Metadata.DipSwitch.DipValueKey);
             if (dipValues != null)
             {
-                var dipValueItems = new List<Models.Metadata.DipValue>();
+                List<Models.Metadata.DipValue> dipValueItems = [];
                 foreach (var dipValue in dipValues)
                 {
                     var extensionItem = dipValue.GetInternalClone();
@@ -1104,7 +1101,7 @@ namespace SabreTools.DatFiles
             var controls = item.GetFieldValue<DatItems.Formats.Control[]?>(Models.Metadata.Input.ControlKey);
             if (controls != null)
             {
-                var controlItems = new List<Models.Metadata.Control>();
+                List<Models.Metadata.Control> controlItems = [];
                 foreach (var control in controls)
                 {
                     var controlItem = control.GetInternalClone();
@@ -1128,7 +1125,7 @@ namespace SabreTools.DatFiles
             var analogs = item.GetFieldValue<DatItems.Formats.Analog[]?>(Models.Metadata.Port.AnalogKey);
             if (analogs != null)
             {
-                var analogItems = new List<Models.Metadata.Analog>();
+                List<Models.Metadata.Analog> analogItems = [];
                 foreach (var analog in analogs)
                 {
                     var extensionItem = analog.GetInternalClone();
@@ -1252,7 +1249,7 @@ namespace SabreTools.DatFiles
             var slotOptions = item.GetFieldValue<DatItems.Formats.SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey);
             if (slotOptions != null)
             {
-                var slotOptionItems = new List<Models.Metadata.SlotOption>();
+                List<Models.Metadata.SlotOption> slotOptionItems = [];
                 foreach (var slotOption in slotOptions)
                 {
                     var extensionItem = slotOption.GetInternalClone();

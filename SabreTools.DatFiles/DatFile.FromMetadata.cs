@@ -537,7 +537,7 @@ namespace SabreTools.DatFiles
                 var confLocations = ReadItemArray<Models.Metadata.ConfLocation>(item, Models.Metadata.Configuration.ConfLocationKey);
                 if (confLocations != null)
                 {
-                    var subLocations = new List<DatItems.Formats.ConfLocation>();
+                    List<DatItems.Formats.ConfLocation> subLocations = [];
                     foreach (var location in confLocations)
                     {
                         var subItem = new DatItems.Formats.ConfLocation(location);
@@ -555,7 +555,7 @@ namespace SabreTools.DatFiles
                 var confSettings = ReadItemArray<Models.Metadata.ConfSetting>(item, Models.Metadata.Configuration.ConfSettingKey);
                 if (confSettings != null)
                 {
-                    var subValues = new List<DatItems.Formats.ConfSetting>();
+                    List<DatItems.Formats.ConfSetting> subValues = [];
                     foreach (var setting in confSettings)
                     {
                         var subItem = new DatItems.Formats.ConfSetting(setting);
@@ -626,7 +626,7 @@ namespace SabreTools.DatFiles
                 var extensions = ReadItemArray<Models.Metadata.Extension>(item, Models.Metadata.Device.ExtensionKey);
                 if (extensions != null)
                 {
-                    var subExtensions = new List<DatItems.Formats.Extension>();
+                    List<DatItems.Formats.Extension> subExtensions = [];
                     foreach (var extension in extensions)
                     {
                         var subItem = new DatItems.Formats.Extension(extension);
@@ -709,7 +709,7 @@ namespace SabreTools.DatFiles
                 var dipLocations = ReadItemArray<Models.Metadata.DipLocation>(item, Models.Metadata.DipSwitch.DipLocationKey);
                 if (dipLocations != null)
                 {
-                    var subLocations = new List<DatItems.Formats.DipLocation>();
+                    List<DatItems.Formats.DipLocation> subLocations = [];
                     foreach (var location in dipLocations)
                     {
                         var subItem = new DatItems.Formats.DipLocation(location);
@@ -727,7 +727,7 @@ namespace SabreTools.DatFiles
                 var dipValues = ReadItemArray<Models.Metadata.DipValue>(item, Models.Metadata.DipSwitch.DipValueKey);
                 if (dipValues != null)
                 {
-                    var subValues = new List<DatItems.Formats.DipValue>();
+                    List<DatItems.Formats.DipValue> subValues = [];
                     foreach (var value in dipValues)
                     {
                         var subItem = new DatItems.Formats.DipValue(value);
@@ -1093,7 +1093,7 @@ namespace SabreTools.DatFiles
                 var controls = ReadItemArray<Models.Metadata.Control>(item, Models.Metadata.Input.ControlKey);
                 if (controls != null)
                 {
-                    var subControls = new List<DatItems.Formats.Control>();
+                    List<DatItems.Formats.Control> subControls = [];
                     foreach (var control in controls)
                     {
                         var subItem = new DatItems.Formats.Control(control);
@@ -1319,7 +1319,7 @@ namespace SabreTools.DatFiles
                         var dipLocations = ReadItemArray<Models.Metadata.DipLocation>(dipSwitch, Models.Metadata.DipSwitch.DipLocationKey);
                         if (dipLocations != null)
                         {
-                            var subLocations = new List<DatItems.Formats.DipLocation>();
+                            List<DatItems.Formats.DipLocation> subLocations = [];
                             foreach (var location in dipLocations)
                             {
                                 var subItem = new DatItems.Formats.DipLocation(location);
@@ -1337,7 +1337,7 @@ namespace SabreTools.DatFiles
                         var dipValues = ReadItemArray<Models.Metadata.DipValue>(dipSwitch, Models.Metadata.DipSwitch.DipValueKey);
                         if (dipValues != null)
                         {
-                            var subValues = new List<DatItems.Formats.DipValue>();
+                            List<DatItems.Formats.DipValue> subValues = [];
                             foreach (var value in dipValues)
                             {
                                 var subItem = new DatItems.Formats.DipValue(value);
@@ -1420,7 +1420,7 @@ namespace SabreTools.DatFiles
                 var analogs = ReadItemArray<Models.Metadata.Analog>(item, Models.Metadata.Port.AnalogKey);
                 if (analogs != null)
                 {
-                    var subAnalogs = new List<DatItems.Formats.Analog>();
+                    List<DatItems.Formats.Analog> subAnalogs = [];
                     foreach (var analog in analogs)
                     {
                         var subItem = new DatItems.Formats.Analog(analog);
@@ -1636,7 +1636,7 @@ namespace SabreTools.DatFiles
                 var slotOptions = ReadItemArray<Models.Metadata.SlotOption>(item, Models.Metadata.Slot.SlotOptionKey);
                 if (slotOptions != null)
                 {
-                    var subOptions = new List<DatItems.Formats.SlotOption>();
+                    List<DatItems.Formats.SlotOption> subOptions = [];
                     foreach (var slotOption in slotOptions)
                     {
                         var subItem = new DatItems.Formats.SlotOption(slotOption);

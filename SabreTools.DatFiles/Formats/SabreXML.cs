@@ -303,37 +303,35 @@ namespace SabreTools.DatFiles.Formats
                 foreach (string key in ItemsDB.SortedKeys)
                 {
                     // If this machine doesn't contain any writable items, skip
-                    var items = ItemsDB.GetItemsForBucket(key, filter: true);
-                    if (items == null || !ContainsWritable(items))
+                    var itemsDict = ItemsDB.GetItemsForBucket(key, filter: true);
+                    if (itemsDict == null || !ContainsWritable(itemsDict))
                         continue;
 
                     // Resolve the names in the block
-                    items = [.. DatItem.ResolveNamesDB([.. items])];
+                    var items = DatItem.ResolveNamesDB([.. itemsDict]);
 
-                    for (int index = 0; index < items.Length; index++)
+                    foreach (var kvp in items)
                     {
-                        var datItem = items[index];
-
                         // Get the machine for the item
-                        var machine = ItemsDB.GetMachineForItem(datItem.Item1);
+                        var machine = ItemsDB.GetMachineForItem(kvp.Key);
 
                         // If we have a different game and we're not at the start of the list, output the end of last item
-                        if (lastgame != null && !string.Equals(lastgame, machine.Item2!.GetStringFieldValue(Models.Metadata.Machine.NameKey), StringComparison.OrdinalIgnoreCase))
+                        if (lastgame != null && !string.Equals(lastgame, machine.Value!.GetStringFieldValue(Models.Metadata.Machine.NameKey), StringComparison.OrdinalIgnoreCase))
                             WriteEndGame(xtw);
 
                         // If we have a new game, output the beginning of the new item
-                        if (lastgame == null || !string.Equals(lastgame, machine.Item2!.GetStringFieldValue(Models.Metadata.Machine.NameKey), StringComparison.OrdinalIgnoreCase))
-                            WriteStartGameDB(xtw, datItem);
+                        if (lastgame == null || !string.Equals(lastgame, machine.Value!.GetStringFieldValue(Models.Metadata.Machine.NameKey), StringComparison.OrdinalIgnoreCase))
+                            WriteStartGame(xtw, kvp.Value);
 
                         // Check for a "null" item
-                        datItem = ProcessNullifiedItem(datItem);
+                        var datItem = ProcessNullifiedItem(kvp);
 
                         // Write out the item if we're not ignoring
-                        if (!ShouldIgnore(datItem, ignoreblanks))
-                            WriteDatItemDB(xtw, datItem);
+                        if (!ShouldIgnore(datItem.Value, ignoreblanks))
+                            WriteDatItem(xtw, datItem.Value);
 
                         // Set the new data to compare against
-                        lastgame = machine.Item2!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                        lastgame = machine.Value!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
                     }
                 }
 
@@ -401,31 +399,6 @@ namespace SabreTools.DatFiles.Formats
         /// Write out Game start using the supplied StreamWriter
         /// </summary>
         /// <param name="xtw">XmlTextWriter to output to</param>
-        /// <param name="datItem">DatItem object to be output</param>
-        private void WriteStartGameDB(XmlTextWriter xtw, (long, DatItem) datItem)
-        {
-            // Get the machine for the item
-            var machine = ItemsDB.GetMachineForItem(datItem.Item1);
-
-            // No game should start with a path separator
-            machine.Item2!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machine.Item2!.GetStringFieldValue(Models.Metadata.Machine.NameKey)?.TrimStart(Path.DirectorySeparatorChar) ?? string.Empty);
-
-            // Write the machine
-            xtw.WriteStartElement("directory");
-            XmlSerializer xs = new(typeof(Machine));
-            XmlSerializerNamespaces ns = new();
-            ns.Add("", "");
-            xs.Serialize(xtw, machine.Item2, ns);
-
-            xtw.WriteStartElement("files");
-
-            xtw.Flush();
-        }
-
-        /// <summary>
-        /// Write out Game start using the supplied StreamWriter
-        /// </summary>
-        /// <param name="xtw">XmlTextWriter to output to</param>
         private static void WriteEndGame(XmlTextWriter xtw)
         {
             // End files
@@ -452,25 +425,6 @@ namespace SabreTools.DatFiles.Formats
             XmlSerializerNamespaces ns = new();
             ns.Add("", "");
             xs.Serialize(xtw, datItem, ns);
-
-            xtw.Flush();
-        }
-
-        /// <summary>
-        /// Write out DatItem using the supplied StreamWriter
-        /// </summary>
-        /// <param name="xtw">XmlTextWriter to output to</param>
-        /// <param name="datItem">DatItem object to be output</param>
-        private void WriteDatItemDB(XmlTextWriter xtw, (long, DatItem) datItem)
-        {
-            // Pre-process the item name
-            ProcessItemNameDB(datItem, true);
-
-            // Write the DatItem
-            XmlSerializer xs = new(typeof(DatItem));
-            XmlSerializerNamespaces ns = new();
-            ns.Add("", "");
-            xs.Serialize(xtw, datItem.Item2, ns);
 
             xtw.Flush();
         }

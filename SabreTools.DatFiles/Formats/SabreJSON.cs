@@ -406,11 +406,11 @@ namespace SabreTools.DatFiles.Formats
 
                         // If we have a different game and we're not at the start of the list, output the end of last item
                         if (lastgame != null && !string.Equals(lastgame, datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey), StringComparison.OrdinalIgnoreCase))
-                            SabreJSON.WriteEndGame(jtw);
+                            WriteEndGame(jtw);
 
                         // If we have a new game, output the beginning of the new item
                         if (lastgame == null || !string.Equals(lastgame, datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey), StringComparison.OrdinalIgnoreCase))
-                            SabreJSON.WriteStartGame(jtw, datItem);
+                            WriteStartGame(jtw, datItem);
 
                         // Check for a "null" item
                         datItem = ProcessNullifiedItem(datItem);
@@ -425,7 +425,7 @@ namespace SabreTools.DatFiles.Formats
                 }
 
                 // Write the file footer out
-                SabreJSON.WriteFooter(jtw);
+                WriteFooter(jtw);
 
                 logger.User($"'{outfile}' written!{Environment.NewLine}");
                 jtw.Close();
@@ -473,42 +473,40 @@ namespace SabreTools.DatFiles.Formats
                 foreach (string key in ItemsDB.SortedKeys)
                 {
                     // If this machine doesn't contain any writable items, skip
-                    var items = ItemsDB.GetItemsForBucket(key, filter: true);
-                    if (items == null || !ContainsWritable(items))
+                    var itemsDict = ItemsDB.GetItemsForBucket(key, filter: true);
+                    if (itemsDict == null || !ContainsWritable(itemsDict))
                         continue;
 
                     // Resolve the names in the block
-                    items = [.. DatItem.ResolveNamesDB([.. items])];
+                    var items = DatItem.ResolveNamesDB([.. itemsDict]);
 
-                    for (int index = 0; index < items.Length; index++)
+                    foreach (var kvp in items)
                     {
-                        var datItem = items[index];
-
                         // Get the machine for the item
-                        var machine = ItemsDB.GetMachineForItem(datItem.Item1);
+                        var machine = ItemsDB.GetMachineForItem(kvp.Key);
 
                         // If we have a different game and we're not at the start of the list, output the end of last item
-                        if (lastgame != null && !string.Equals(lastgame, machine.Item2!.GetStringFieldValue(Models.Metadata.Machine.NameKey), StringComparison.OrdinalIgnoreCase))
-                            SabreJSON.WriteEndGame(jtw);
+                        if (lastgame != null && !string.Equals(lastgame, machine.Value!.GetStringFieldValue(Models.Metadata.Machine.NameKey), StringComparison.OrdinalIgnoreCase))
+                            WriteEndGame(jtw);
 
                         // If we have a new game, output the beginning of the new item
-                        if (lastgame == null || !string.Equals(lastgame, machine.Item2!.GetStringFieldValue(Models.Metadata.Machine.NameKey), StringComparison.OrdinalIgnoreCase))
-                            WriteStartGameDB(jtw, datItem);
+                        if (lastgame == null || !string.Equals(lastgame, machine.Value!.GetStringFieldValue(Models.Metadata.Machine.NameKey), StringComparison.OrdinalIgnoreCase))
+                            WriteStartGame(jtw, kvp.Value);
 
                         // Check for a "null" item
-                        datItem = ProcessNullifiedItem(datItem);
+                        var datItem = ProcessNullifiedItem(kvp);
 
                         // Write out the item if we're not ignoring
-                        if (!ShouldIgnore(datItem, ignoreblanks))
-                            WriteDatItemDB(jtw, datItem);
+                        if (!ShouldIgnore(datItem.Value, ignoreblanks))
+                            WriteDatItem(jtw, datItem.Value);
 
                         // Set the new data to compare against
-                        lastgame = machine.Item2!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                        lastgame = machine.Value!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
                     }
                 }
 
                 // Write the file footer out
-                SabreJSON.WriteFooter(jtw);
+                WriteFooter(jtw);
 
                 logger.User($"'{outfile}' written!{Environment.NewLine}");
                 jtw.Close();
@@ -568,34 +566,6 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <summary>
-        /// Write out Game start using the supplied JsonTextWriter
-        /// </summary>
-        /// <param name="jtw">JsonTextWriter to output to</param>
-        /// <param name="datItem">DatItem object to be output</param>
-        private void WriteStartGameDB(JsonTextWriter jtw, (long, DatItem) datItem)
-        {
-            // Get the machine for the item
-            var machine = ItemsDB.GetMachineForItem(datItem.Item1);
-
-            // No game should start with a path separator
-            if (!string.IsNullOrEmpty(machine.Item2!.GetStringFieldValue(Models.Metadata.Machine.NameKey)))
-                machine.Item2!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machine.Item2!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!.TrimStart(Path.DirectorySeparatorChar));
-
-            // Build the state
-            jtw.WriteStartObject();
-
-            // Write the Machine
-            jtw.WritePropertyName("machine");
-            JsonSerializer js = new() { Formatting = Formatting.Indented };
-            js.Serialize(jtw, machine.Item2!);
-
-            jtw.WritePropertyName("items");
-            jtw.WriteStartArray();
-
-            jtw.Flush();
-        }
-
-        /// <summary>
         /// Write out Game end using the supplied JsonTextWriter
         /// </summary>
         /// <param name="jtw">JsonTextWriter to output to</param>
@@ -627,30 +597,6 @@ namespace SabreTools.DatFiles.Formats
             jtw.WritePropertyName("datitem");
             JsonSerializer js = new() { ContractResolver = new BaseFirstContractResolver(), Formatting = Formatting.Indented };
             js.Serialize(jtw, datItem);
-
-            // End item
-            jtw.WriteEndObject();
-
-            jtw.Flush();
-        }
-
-        /// <summary>
-        /// Write out DatItem using the supplied JsonTextWriter
-        /// </summary>
-        /// <param name="jtw">JsonTextWriter to output to</param>
-        /// <param name="datItem">DatItem object to be output</param>
-        private void WriteDatItemDB(JsonTextWriter jtw, (long, DatItem) datItem)
-        {
-            // Pre-process the item name
-            ProcessItemNameDB(datItem, true);
-
-            // Build the state
-            jtw.WriteStartObject();
-
-            // Write the DatItem
-            jtw.WritePropertyName("datitem");
-            JsonSerializer js = new() { ContractResolver = new BaseFirstContractResolver(), Formatting = Formatting.Indented };
-            js.Serialize(jtw, datItem.Item2);
 
             // End item
             jtw.WriteEndObject();

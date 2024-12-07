@@ -342,21 +342,21 @@ namespace SabreTools.DatFiles
         /// <param name="item">DatItem to create a prefix/postfix for</param>
         /// <param name="prefix">True for prefix, false for postfix</param>
         /// <returns>Sanitized string representing the postfix or prefix</returns>
-        protected string CreatePrefixPostfixDB((long, DatItem) item, bool prefix)
+        protected string CreatePrefixPostfixDB(KeyValuePair<long, DatItem> item, bool prefix)
         {
             // Get machine for the item
-            var machine = ItemsDB.GetMachineForItem(item.Item1);
-            if (machine.Item2 == null)
+            var machine = ItemsDB.GetMachineForItem(item.Key);
+            if (machine.Value == null)
                 return string.Empty;
 
             // Initialize strings
-            string? type = item.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
+            string? type = item.Value.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
             string fix,
-                game = machine.Item2.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty,
-                manufacturer = machine.Item2.GetStringFieldValue(Models.Metadata.Machine.ManufacturerKey) ?? string.Empty,
-                publisher = machine.Item2.GetStringFieldValue(Models.Metadata.Machine.PublisherKey) ?? string.Empty,
-                category = machine.Item2.GetStringFieldValue(Models.Metadata.Machine.CategoryKey) ?? string.Empty,
-                name = item.Item2.GetName() ?? type.AsEnumValue<ItemType>().AsStringValue() ?? string.Empty,
+                game = machine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty,
+                manufacturer = machine.Value.GetStringFieldValue(Models.Metadata.Machine.ManufacturerKey) ?? string.Empty,
+                publisher = machine.Value.GetStringFieldValue(Models.Metadata.Machine.PublisherKey) ?? string.Empty,
+                category = machine.Value.GetStringFieldValue(Models.Metadata.Machine.CategoryKey) ?? string.Empty,
+                name = item.Value.GetName() ?? type.AsEnumValue<ItemType>().AsStringValue() ?? string.Empty,
                 crc = string.Empty,
                 md5 = string.Empty,
                 sha1 = string.Empty,
@@ -384,19 +384,19 @@ namespace SabreTools.DatFiles
             }
 
             // Ensure we have the proper values for replacement
-            if (item.Item2 is Disk disk)
+            if (item.Value is Disk disk)
             {
                 md5 = disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key) ?? string.Empty;
                 sha1 = disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key) ?? string.Empty;
             }
-            else if (item.Item2 is Media media)
+            else if (item.Value is Media media)
             {
                 md5 = media.GetStringFieldValue(Models.Metadata.Media.MD5Key) ?? string.Empty;
                 sha1 = media.GetStringFieldValue(Models.Metadata.Media.SHA1Key) ?? string.Empty;
                 sha256 = media.GetStringFieldValue(Models.Metadata.Media.SHA256Key) ?? string.Empty;
                 spamsum = media.GetStringFieldValue(Models.Metadata.Media.SpamSumKey) ?? string.Empty;
             }
-            else if (item.Item2 is Rom rom)
+            else if (item.Value is Rom rom)
             {
                 crc = rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey) ?? string.Empty;
                 md5 = rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key) ?? string.Empty;
@@ -539,7 +539,7 @@ namespace SabreTools.DatFiles
         /// <param name="item">DatItem to update</param>
         /// <param name="forceRemoveQuotes">True if the Quotes flag should be ignored, false otherwise</param>
         /// <param name="forceRomName">True if the UseRomName should be always on (default), false otherwise</param>
-        protected void ProcessItemNameDB((long, DatItem) item, bool forceRemoveQuotes, bool forceRomName = true)
+        protected void ProcessItemNameDB(KeyValuePair<long, DatItem> item, bool forceRemoveQuotes, bool forceRomName = true)
         {
             // Backup relevant values and set new ones accordingly
             bool? quotesBackup = Header.GetBoolFieldValue(DatHeader.QuotesKey);
@@ -550,12 +550,12 @@ namespace SabreTools.DatFiles
                 Header.SetFieldValue<bool>(DatHeader.UseRomNameKey, true);
 
             // Get machine for the item
-            var machine = ItemsDB.GetMachineForItem(item.Item1);
+            var machine = ItemsDB.GetMachineForItem(item.Key);
 
             // Get the name to update
             string? name = (Header.GetBoolFieldValue(DatHeader.UseRomNameKey) == true
-                ? item.Item2.GetName()
-                : machine.Item2!.GetStringFieldValue(Models.Metadata.Machine.NameKey)) ?? string.Empty;
+                ? item.Value.GetName()
+                : machine.Value!.GetStringFieldValue(Models.Metadata.Machine.NameKey)) ?? string.Empty;
 
             // Create the proper Prefix and Postfix
             string pre = CreatePrefixPostfixDB(item, true);
@@ -565,34 +565,34 @@ namespace SabreTools.DatFiles
             var outputDepot = Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey);
             if (outputDepot?.IsActive == true)
             {
-                if (item.Item2 is Disk disk)
+                if (item.Value is Disk disk)
                 {
                     // We can only write out if there's a SHA-1
                     string? sha1 = disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key);
                     if (!string.IsNullOrEmpty(sha1))
                     {
                         name = Utilities.GetDepotPath(sha1, outputDepot.Depth)?.Replace('\\', '/');
-                        item.Item2.SetName($"{pre}{name}{post}");
+                        item.Value.SetName($"{pre}{name}{post}");
                     }
                 }
-                else if (item.Item2 is Media media)
+                else if (item.Value is Media media)
                 {
                     // We can only write out if there's a SHA-1
                     string? sha1 = media.GetStringFieldValue(Models.Metadata.Media.SHA1Key);
                     if (!string.IsNullOrEmpty(sha1))
                     {
                         name = Utilities.GetDepotPath(sha1, outputDepot.Depth)?.Replace('\\', '/');
-                        item.Item2.SetName($"{pre}{name}{post}");
+                        item.Value.SetName($"{pre}{name}{post}");
                     }
                 }
-                else if (item.Item2 is Rom rom)
+                else if (item.Value is Rom rom)
                 {
                     // We can only write out if there's a SHA-1
                     string? sha1 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key);
                     if (!string.IsNullOrEmpty(sha1))
                     {
                         name = Utilities.GetDepotPath(sha1, outputDepot.Depth)?.Replace('\\', '/');
-                        item.Item2.SetName($"{pre}{name}{post}");
+                        item.Value.SetName($"{pre}{name}{post}");
                     }
                 }
 
@@ -619,14 +619,14 @@ namespace SabreTools.DatFiles
                 name += addExtension;
 
             if (Header.GetBoolFieldValue(DatHeader.UseRomNameKey) == true && Header.GetBoolFieldValue(DatHeader.GameNameKey) == true)
-                name = Path.Combine(machine.Item2!.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty, name);
+                name = Path.Combine(machine.Value!.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty, name);
 
             // Now assign back the formatted name
             name = $"{pre}{name}{post}";
             if (Header.GetBoolFieldValue(DatHeader.UseRomNameKey) == true)
-                item.Item2.SetName(name);
-            else if (machine.Item2 != null)
-                machine.Item2.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, name);
+                item.Value.SetName(name);
+            else if (machine.Value != null)
+                machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, name);
 
             // Restore all relevant values
             if (forceRemoveQuotes)
@@ -684,15 +684,15 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="item">DatItem to check for "null" status</param>
         /// <returns>Cleaned DatItem</returns>
-        protected (long, DatItem) ProcessNullifiedItem((long, DatItem) item)
+        protected KeyValuePair<long, DatItem> ProcessNullifiedItem(KeyValuePair<long, DatItem> item)
         {
             // If we don't have a Rom, we can ignore it
-            if (item.Item2 is not Rom rom)
+            if (item.Value is not Rom rom)
                 return item;
 
             // Get machine for the item
-            var machine = ItemsDB.GetMachineForItem(item.Item1);
-            var machineObj = machine.Item2;
+            var machine = ItemsDB.GetMachineForItem(item.Key);
+            var machineObj = machine.Value;
             if (machineObj == null)
                 return item;
 
@@ -720,7 +720,7 @@ namespace SabreTools.DatFiles
                     rom.GetStringFieldValue(Models.Metadata.Rom.SpamSumKey) == "null" ? ZeroHash.SpamSumStr : null);
             }
 
-            return (item.Item1, rom);
+            return new KeyValuePair<long, DatItem>(item.Key, rom);
         }
 
         /// <summary>
@@ -766,15 +766,15 @@ namespace SabreTools.DatFiles
         /// <param name="datItems">DatItems to check</param>
         /// <returns>True if the machine contains at least one writable item, false otherwise</returns>
         /// <remarks>Empty machines are kept with this</remarks>
-        protected bool ContainsWritable((long, DatItem)[]? datItems)
+        protected bool ContainsWritable(Dictionary<long, DatItem>? datItems)
         {
             // Empty machines are considered writable
-            if (datItems == null || datItems.Length == 0)
+            if (datItems == null || datItems.Count == 0)
                 return true;
 
-            foreach ((long, DatItem) datItem in datItems)
+            foreach (var datItem in datItems)
             {
-                ItemType itemType = datItem.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>();
+                ItemType itemType = datItem.Value.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>();
                 if (Array.Exists(GetSupportedTypes(), t => t == itemType))
                     return true;
             }
@@ -838,76 +838,6 @@ namespace SabreTools.DatFiles
 
             // If we have an item with missing required fields
             List<string>? missingFields = GetMissingRequiredFields(datItem);
-            if (missingFields != null && missingFields.Count != 0)
-            {
-                string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
-#if NET20 || NET35
-                logger?.Verbose($"Item '{itemString}' was skipped because it was missing required fields for {datFormat}: {string.Join(", ", [.. missingFields])}");
-#else
-                logger?.Verbose($"Item '{itemString}' was skipped because it was missing required fields for {datFormat}: {string.Join(", ", missingFields)}");
-#endif
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Get if an item should be ignored on write
-        /// </summary>
-        /// <param name="datItem">DatItem to check</param>
-        /// <param name="ignoreBlanks">True if blank roms should be skipped on output, false otherwise</param>
-        /// <returns>True if the item should be skipped on write, false otherwise</returns>
-        protected bool ShouldIgnore((long, DatItem?) datItem, bool ignoreBlanks)
-        {
-            // If this is invoked with a null DatItem, we ignore
-            if (datItem.Item1 < 0 || datItem.Item2 == null)
-            {
-                logger?.Verbose($"Item was skipped because it was null");
-                return true;
-            }
-
-            // If the item is supposed to be removed, we ignore
-            if (datItem.Item2.GetBoolFieldValue(DatItem.RemoveKey) == true)
-            {
-                string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
-                logger?.Verbose($"Item '{itemString}' was skipped because it was marked for removal");
-                return true;
-            }
-
-            // If we have the Blank dat item, we ignore
-            if (datItem.Item2 is Blank)
-            {
-                string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
-                logger?.Verbose($"Item '{itemString}' was skipped because it was of type 'Blank'");
-                return true;
-            }
-
-            // If we're ignoring blanks and we have a Rom
-            if (ignoreBlanks && datItem.Item2 is Rom rom)
-            {
-                // If we have a 0-size or blank rom, then we ignore
-                long? size = rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey);
-                if (size == 0 || size == null)
-                {
-                    string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
-                    logger?.Verbose($"Item '{itemString}' was skipped because it had an invalid size");
-                    return true;
-                }
-            }
-
-            // If we have an item type not in the list of supported values
-            string datFormat = Header?.GetFieldValue<DatFormat>(DatHeader.DatFormatKey).ToString() ?? "Unknown Format";
-            ItemType itemType = datItem.Item2.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>();
-            if (!Array.Exists(GetSupportedTypes(), t => t == itemType))
-            {
-                string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
-                logger?.Verbose($"Item '{itemString}' was skipped because it was not supported in {datFormat}");
-                return true;
-            }
-
-            // If we have an item with missing required fields
-            List<string>? missingFields = GetMissingRequiredFields(datItem.Item2);
             if (missingFields != null && missingFields.Count != 0)
             {
                 string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
