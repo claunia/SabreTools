@@ -808,6 +808,7 @@ namespace SabreTools.DatTools
                 PackingFlag.Unzip => OutputFormat.Folder,
                 PackingFlag.Partial => OutputFormat.Folder,
                 PackingFlag.Flat => OutputFormat.ParentFolder,
+                PackingFlag.FileOnly => OutputFormat.Folder,
                 PackingFlag.None => OutputFormat.Folder,
                 _ => OutputFormat.Folder,
             };

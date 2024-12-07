@@ -290,6 +290,7 @@ namespace SabreTools.Test.Core
         [InlineData("unzip", PackingFlag.Unzip)]
         [InlineData("partial", PackingFlag.Partial)]
         [InlineData("flat", PackingFlag.Flat)]
+        [InlineData("fileonly", PackingFlag.FileOnly)]
         public void AsPackingFlagTest(string? field, PackingFlag expected)
         {
             PackingFlag actual = field.AsEnumValue<PackingFlag>();
@@ -638,6 +639,8 @@ namespace SabreTools.Test.Core
         [InlineData(PackingFlag.Partial, false, "partial")]
         [InlineData(PackingFlag.Flat, true, "flat")]
         [InlineData(PackingFlag.Flat, false, "flat")]
+        [InlineData(PackingFlag.FileOnly, true, "fileonly")]
+        [InlineData(PackingFlag.FileOnly, false, "fileonly")]
         public void FromPackingFlagTest(PackingFlag field, bool useSecond, string? expected)
         {
             string? actual = field.AsStringValue<PackingFlag>(useSecond);
@@ -724,7 +727,7 @@ namespace SabreTools.Test.Core
         [InlineData(MergingFlag.None, 12)]
         [InlineData(NodumpFlag.None, 4)]
         [InlineData(OpenMSXSubType.NULL, 3)]
-        [InlineData(PackingFlag.None, 7)]
+        [InlineData(PackingFlag.None, 8)]
         [InlineData(Relation.NULL, 6)]
         [InlineData(Runnable.NULL, 3)]
         [InlineData(SoftwareListStatus.None, 3)]

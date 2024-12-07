@@ -256,5 +256,11 @@ namespace SabreTools.DatFiles
         /// </summary>
         [Mapping("flat")]
         Flat,
+
+        /// <summary>
+        /// Force all sets to have all archives treated as files
+        /// </summary>
+        [Mapping("fileonly")]
+        FileOnly, 
     }
 }
