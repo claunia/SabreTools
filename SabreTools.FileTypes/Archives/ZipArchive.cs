@@ -372,7 +372,7 @@ namespace SabreTools.FileTypes.Archives
                     // Fill in common details and add to the list
                     zipEntryRom.Filename = localFile.Filename;
                     zipEntryRom.Parent = gamename;
-                    zipEntryRom.Date = localFile.LastModified.ToString("yyyy/MM/dd hh:mm:ss");
+                    zipEntryRom.Date = localFile.LastModified.ToString("yyyy/MM/dd HH:mm:ss");
                     found.Add(zipEntryRom);
                 }
 
@@ -429,7 +429,7 @@ namespace SabreTools.FileTypes.Archives
                     // Fill in common details and add to the list
                     zipEntryRom.Filename = localFile.FullName;
                     zipEntryRom.Parent = gamename;
-                    zipEntryRom.Date = localFile.LastWriteTime.ToString("yyyy/MM/dd hh:mm:ss");
+                    zipEntryRom.Date = localFile.LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss");
                     found.Add(zipEntryRom);
                 }
 

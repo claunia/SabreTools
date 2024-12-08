@@ -211,7 +211,7 @@ namespace SabreTools.FileTypes.Archives
                     // Fill in common details and add to the list
                     tarEntryRom.Filename = entry.Key;
                     tarEntryRom.Parent = gamename;
-                    tarEntryRom.Date = entry.LastModifiedTime?.ToString("yyyy/MM/dd hh:mm:ss");
+                    tarEntryRom.Date = entry.LastModifiedTime?.ToString("yyyy/MM/dd HH:mm:ss");
                     found.Add(tarEntryRom);
                 }
 
