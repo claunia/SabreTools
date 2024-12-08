@@ -44,6 +44,8 @@ namespace SabreTools.DatFiles.Formats
                     //     missingFields.Add(Models.Metadata.Rom.DateKey);
                     if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey)))
                         missingFields.Add(Models.Metadata.Rom.CRCKey);
+                    // if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key)))
+                    //     missingFields.Add(Models.Metadata.Rom.SHA1Key);
                     break;
             }
 
