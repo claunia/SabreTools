@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using SabreTools.Core;
 using SabreTools.Features;
 using SabreTools.Help;
@@ -37,6 +38,9 @@ namespace SabreTools
             LoggerImpl.LowestLogLevel = LogLevel.VERBOSE;
             LoggerImpl.ThrowOnError = false;
             LoggerImpl.Start();
+
+            // Reformat the arguments
+            args = ReformatArguments(args);
 
             // Create a new Help object for this program
             _help = RetrieveHelp();
@@ -148,6 +152,27 @@ namespace SabreTools
 
             LoggerImpl.Close();
             return;
+        }
+
+        /// <summary>
+        /// Reformat arguments incorrectly split in quotes
+        /// </summary>
+        private static string[] ReformatArguments(string[] args)
+        {
+            // Handle empty arguments
+            if (args.Length == 0)
+                return args;
+
+            // Recombine arguments using a single space
+            string argsString = string.Join(" ", args).Trim();
+
+            // Split the string using Regex
+            var matches = Regex.Matches(argsString, @"([a-zA-Z0-9\-]*=)?[\""].+?[\""]|[^ ]+", RegexOptions.Compiled);
+
+            // Get just the values from the matches
+            var matchArr = new Match[matches.Count];
+            matches.CopyTo(matchArr, 0);
+            return Array.ConvertAll(matchArr, m => m.Value);
         }
 
         /// <summary>
