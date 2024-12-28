@@ -134,6 +134,7 @@ namespace SabreTools
 
                 // Requires no input verification
                 case Sort.Value:
+                case Features.Version.Value:
                     success = feature.ProcessFeatures(features);
                     break;
 
