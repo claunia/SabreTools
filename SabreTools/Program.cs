@@ -104,12 +104,14 @@ namespace SabreTools
             // Set the new log level based on settings
             LoggerImpl.LowestLogLevel = feature.LogLevel;
 
+#if NET452_OR_GREATER || NETCOREAPP
             // If output is being redirected or we are in script mode, don't allow clear screens
             if (!Console.IsOutputRedirected && feature.ScriptMode)
             {
                 Console.Clear();
                 Globals.SetConsoleHeader("SabreTools");
             }
+#endif
 
             // Now process the current feature
             Dictionary<string, Feature?> features = _help.GetEnabledFeatures();
