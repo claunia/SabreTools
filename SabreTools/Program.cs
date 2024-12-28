@@ -179,6 +179,7 @@ namespace SabreTools
             help.Add(new Stats());
             help.Add(new Update());
             help.Add(new Verify());
+            help.Add(new Features.Version());
 
             return help;
         }
