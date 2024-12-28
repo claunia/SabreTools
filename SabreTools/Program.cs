@@ -39,8 +39,9 @@ namespace SabreTools
             LoggerImpl.ThrowOnError = false;
             LoggerImpl.Start();
 
-            // Reformat the arguments
-            args = ReformatArguments(args);
+            // Reformat the arguments, if needed
+            if (Array.Exists(args, a => a.Contains('"')))
+                args = ReformatArguments(args);
 
             // Create a new Help object for this program
             _help = RetrieveHelp();
