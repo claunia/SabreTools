@@ -42,7 +42,7 @@ namespace SabreTools
             _help = RetrieveHelp();
 
             // Credits take precidence over all
-            if (new List<string>(args).Contains("--credits"))
+            if (Array.Exists(args, a => a == "--credits"))
             {
                 FeatureSet.OutputCredits();
                 LoggerImpl.Close();
