@@ -33,14 +33,18 @@ namespace SabreTools
         public static void Main(string[] args)
         {
             // Perform initial setup and verification
+#if NET20 || NET35
+            LoggerImpl.SetFilename(Path.Combine(Path.Combine(PathTool.GetRuntimeDirectory(), "logs"), "sabretools.log"), true);
+#else
             LoggerImpl.SetFilename(Path.Combine(PathTool.GetRuntimeDirectory(), "logs", "sabretools.log"), true);
+#endif
             LoggerImpl.AppendPrefix = true;
             LoggerImpl.LowestLogLevel = LogLevel.VERBOSE;
             LoggerImpl.ThrowOnError = false;
             LoggerImpl.Start();
 
             // Reformat the arguments, if needed
-            if (Array.Exists(args, a => a.Contains('"')))
+            if (Array.Exists(args, a => a.Contains("\"")))
                 args = ReformatArguments(args);
 
             // Create a new Help object for this program

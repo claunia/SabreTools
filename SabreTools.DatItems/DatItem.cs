@@ -237,7 +237,7 @@ namespace SabreTools.DatItems
                 return output;
 
             // If the duplicate is external already or should be, set it
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((lastItem.GetFieldValue<DupeType>(DatItem.DupeTypeKey) & DupeType.External) != 0
                 || lastItem?.GetFieldValue<Source?>(DatItem.SourceKey)?.Index != GetFieldValue<Source?>(DatItem.SourceKey)?.Index)
 #else
@@ -283,7 +283,7 @@ namespace SabreTools.DatItems
                 return output;
 
             // If the duplicate is external already or should be, set it
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((lastItem.GetFieldValue<DupeType>(DatItem.DupeTypeKey) & DupeType.External) != 0
                 || lastSource?.Index != source?.Index)
 #else
@@ -668,7 +668,7 @@ namespace SabreTools.DatItems
                     ?? string.Empty;
 
                 // If the current item exactly matches the last item, then we don't add it
-#if NETFRAMEWORK
+#if NET20 || NET35
                 if ((datItem.GetDuplicateStatus(lastItem) & DupeType.All) != 0)
 #else
                 if (datItem.GetDuplicateStatus(lastItem).HasFlag(DupeType.All))
@@ -763,7 +763,7 @@ namespace SabreTools.DatItems
                     ?? string.Empty;
 
                 // If the current item exactly matches the last item, then we don't add it
-#if NETFRAMEWORK
+#if NET20 || NET35
                 if ((datItem.Value.GetDuplicateStatus(lastItem) & DupeType.All) != 0)
 #else
                 if (datItem.Value.GetDuplicateStatus(lastItem).HasFlag(DupeType.All))

@@ -222,35 +222,35 @@ namespace SabreTools.DatTools
             // For each output format, get the appropriate stream writer
             output.Add(StatReportFormat.None, CreateOutStatsNamesHelper(outDir, ".null", reportName, overwrite));
 
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((statDatFormat & StatReportFormat.Textfile) != 0)
 #else
             if (statDatFormat.HasFlag(StatReportFormat.Textfile))
 #endif
                 output.Add(StatReportFormat.Textfile, CreateOutStatsNamesHelper(outDir, ".txt", reportName, overwrite));
 
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((statDatFormat & StatReportFormat.CSV) != 0)
 #else
             if (statDatFormat.HasFlag(StatReportFormat.CSV))
 #endif
                 output.Add(StatReportFormat.CSV, CreateOutStatsNamesHelper(outDir, ".csv", reportName, overwrite));
 
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((statDatFormat & StatReportFormat.HTML) != 0)
 #else
             if (statDatFormat.HasFlag(StatReportFormat.HTML))
 #endif
                 output.Add(StatReportFormat.HTML, CreateOutStatsNamesHelper(outDir, ".html", reportName, overwrite));
 
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((statDatFormat & StatReportFormat.SSV) != 0)
 #else
             if (statDatFormat.HasFlag(StatReportFormat.SSV))
 #endif
                 output.Add(StatReportFormat.SSV, CreateOutStatsNamesHelper(outDir, ".ssv", reportName, overwrite));
 
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((statDatFormat & StatReportFormat.TSV) != 0)
 #else
             if (statDatFormat.HasFlag(StatReportFormat.TSV))

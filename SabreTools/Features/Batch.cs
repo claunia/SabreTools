@@ -91,7 +91,7 @@ Reset the internal state:           reset();";
                 foreach (string line in lines)
                 {
                     // Skip empty lines
-                    if (string.IsNullOrWhiteSpace(line))
+                    if (string.IsNullOrEmpty(line))
                         continue;
 
                     // Skip lines that start with REM or #
@@ -473,7 +473,7 @@ Reset the internal state:           reset();";
                 // If we had any unmapped formats, return an issue
                 if (unmappedFormats.Count > 0)
                 {
-                    string message = $"The following inputs were invalid formats: {string.Join(", ", unmappedFormats)}";
+                    string message = $"The following inputs were invalid formats: {string.Join(", ", [.. unmappedFormats])}";
                     return (false, message);
                 }
 

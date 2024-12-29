@@ -590,7 +590,7 @@ namespace SabreTools.DatTools
                 // Loop through and add the items correctly
                 foreach (DatItem item in items)
                 {
-#if NETFRAMEWORK
+#if NET20 || NET35
                     if ((item.GetFieldValue<DupeType>(DatItem.DupeTypeKey) & DupeType.External) != 0)
 #else
                     if (item.GetFieldValue<DupeType>(DatItem.DupeTypeKey).HasFlag(DupeType.External))
@@ -686,7 +686,7 @@ namespace SabreTools.DatTools
                 long sourceIndex = itemSourceMappings[item.Key];
 
                 // If the current item isn't an external duplicate
-#if NETFRAMEWORK
+#if NET20 || NET35
                 if ((item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey) & DupeType.External) == 0)
 #else
                 if (!item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey).HasFlag(DupeType.External))
@@ -818,7 +818,7 @@ namespace SabreTools.DatTools
                     if (item.GetFieldValue<Source?>(DatItem.SourceKey) == null)
                         continue;
 
-#if NETFRAMEWORK
+#if NET20 || NET35
                     if ((item.GetFieldValue<DupeType>(DatItem.DupeTypeKey) & DupeType.Internal) != 0 || item.GetFieldValue<DupeType>(DatItem.DupeTypeKey) == 0x00)
 #else
                     if (item.GetFieldValue<DupeType>(DatItem.DupeTypeKey).HasFlag(DupeType.Internal) || item.GetFieldValue<DupeType>(DatItem.DupeTypeKey) == 0x00)
@@ -944,7 +944,7 @@ namespace SabreTools.DatTools
                     continue;
 #endif
 
-#if NETFRAMEWORK
+#if NET20 || NET35
                 if ((item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey) & DupeType.Internal) != 0 || item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey) == 0x00)
 #else
                 if (item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey).HasFlag(DupeType.Internal) || item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey) == 0x00)
@@ -1025,7 +1025,7 @@ namespace SabreTools.DatTools
                 // Loop through and add the items correctly
                 foreach (DatItem item in items)
                 {
-#if NETFRAMEWORK
+#if NET20 || NET35
                     if ((item.GetFieldValue<DupeType>(DatItem.DupeTypeKey) & DupeType.Internal) != 0 || item.GetFieldValue<DupeType>(DatItem.DupeTypeKey) == 0x00)
 #else
                     if (item.GetFieldValue<DupeType>(DatItem.DupeTypeKey).HasFlag(DupeType.Internal) || item.GetFieldValue<DupeType>(DatItem.DupeTypeKey) == 0x00)
@@ -1119,7 +1119,7 @@ namespace SabreTools.DatTools
                 long sourceIndex = itemSourceMappings[item.Key];
 
                 // If the current item isn't a duplicate
-#if NETFRAMEWORK
+#if NET20 || NET35
                 if ((item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey) & DupeType.Internal) == 0 && item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey) != 0x00)
 #else
                 if (!item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey).HasFlag(DupeType.Internal) && item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey) != 0x00)

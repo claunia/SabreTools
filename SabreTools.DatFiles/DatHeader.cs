@@ -436,7 +436,7 @@ namespace SabreTools.DatFiles
             #region .csv
 
             // CSV
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((datFormat & DatFormat.CSV) != 0)
 #else
             if (datFormat.HasFlag(DatFormat.CSV))
@@ -451,7 +451,7 @@ namespace SabreTools.DatFiles
             #region .dat
 
             // ClrMamePro
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((datFormat & DatFormat.ClrMamePro) != 0)
 #else
             if (datFormat.HasFlag(DatFormat.ClrMamePro))
@@ -462,7 +462,7 @@ namespace SabreTools.DatFiles
             };
 
             // RomCenter
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((datFormat & DatFormat.RomCenter) != 0)
 #else
             if (datFormat.HasFlag(DatFormat.RomCenter))
@@ -481,7 +481,7 @@ namespace SabreTools.DatFiles
             }
 
             // DOSCenter
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((datFormat & DatFormat.DOSCenter) != 0)
 #else
             if (datFormat.HasFlag(DatFormat.DOSCenter))
@@ -504,7 +504,7 @@ namespace SabreTools.DatFiles
             #region .json
 
             // JSON
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((datFormat & DatFormat.SabreJSON) != 0)
 #else
             if (datFormat.HasFlag(DatFormat.SabreJSON))
@@ -519,7 +519,7 @@ namespace SabreTools.DatFiles
             #region .md5
 
             // Redump MD5
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((datFormat & DatFormat.RedumpMD5) != 0)
 #else
             if (datFormat.HasFlag(DatFormat.RedumpMD5))
@@ -534,7 +534,7 @@ namespace SabreTools.DatFiles
             #region .sfv
 
             // Redump SFV
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((datFormat & DatFormat.RedumpSFV) != 0)
 #else
             if (datFormat.HasFlag(DatFormat.RedumpSFV))
@@ -549,7 +549,7 @@ namespace SabreTools.DatFiles
             #region .sha1
 
             // Redump SHA-1
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((datFormat & DatFormat.RedumpSHA1) != 0)
 #else
             if (datFormat.HasFlag(DatFormat.RedumpSHA1))
@@ -564,7 +564,7 @@ namespace SabreTools.DatFiles
             #region .sha256
 
             // Redump SHA-256
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((datFormat & DatFormat.RedumpSHA256) != 0)
 #else
             if (datFormat.HasFlag(DatFormat.RedumpSHA256))
@@ -579,7 +579,7 @@ namespace SabreTools.DatFiles
             #region .sha384
 
             // Redump SHA-384
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((datFormat & DatFormat.RedumpSHA384) != 0)
 #else
             if (datFormat.HasFlag(DatFormat.RedumpSHA384))
@@ -594,7 +594,7 @@ namespace SabreTools.DatFiles
             #region .sha512
 
             // Redump SHA-512
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((datFormat & DatFormat.RedumpSHA512) != 0)
 #else
             if (datFormat.HasFlag(DatFormat.RedumpSHA512))
@@ -609,7 +609,7 @@ namespace SabreTools.DatFiles
             #region .spamsum
 
             // Redump SpamSum
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((datFormat & DatFormat.RedumpSpamSum) != 0)
 #else
             if (datFormat.HasFlag(DatFormat.RedumpSpamSum))
@@ -624,7 +624,7 @@ namespace SabreTools.DatFiles
             #region .ssv
 
             // SSV
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((datFormat & DatFormat.SSV) != 0)
 #else
             if (datFormat.HasFlag(DatFormat.SSV))
@@ -639,7 +639,7 @@ namespace SabreTools.DatFiles
             #region .tsv
 
             // TSV
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((datFormat & DatFormat.TSV) != 0)
 #else
             if (datFormat.HasFlag(DatFormat.TSV))
@@ -654,7 +654,7 @@ namespace SabreTools.DatFiles
             #region .txt
 
             // AttractMode
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((datFormat & DatFormat.AttractMode) != 0)
 #else
             if (datFormat.HasFlag(DatFormat.AttractMode))
@@ -665,7 +665,7 @@ namespace SabreTools.DatFiles
             }
 
             // MAME Listroms
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((datFormat & DatFormat.Listrom) != 0)
 #else
             if (datFormat.HasFlag(DatFormat.Listrom))
@@ -684,7 +684,7 @@ namespace SabreTools.DatFiles
             }
 
             // Missfile
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((datFormat & DatFormat.MissFile) != 0)
 #else
             if (datFormat.HasFlag(DatFormat.MissFile))
@@ -703,7 +703,7 @@ namespace SabreTools.DatFiles
             }
 
             // Everdrive SMDB
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((datFormat & DatFormat.EverdriveSMDB) != 0)
 #else
             if (datFormat.HasFlag(DatFormat.EverdriveSMDB))
@@ -726,7 +726,7 @@ namespace SabreTools.DatFiles
             #region .xml
 
             // Logiqx XML
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((datFormat & DatFormat.Logiqx) != 0)
 #else
             if (datFormat.HasFlag(DatFormat.Logiqx))
@@ -735,7 +735,7 @@ namespace SabreTools.DatFiles
                 outfileNames.Add(DatFormat.Logiqx, CreateOutFileNamesHelper(outDir, ".xml", overwrite));
                 usedExtensions.Add(".xml");
             }
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((datFormat & DatFormat.LogiqxDeprecated) != 0)
 #else
             if (datFormat.HasFlag(DatFormat.LogiqxDeprecated))
@@ -746,7 +746,7 @@ namespace SabreTools.DatFiles
             }
 
             // SabreDAT
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((datFormat & DatFormat.SabreXML) != 0)
 #else
             if (datFormat.HasFlag(DatFormat.SabreXML))
@@ -765,7 +765,7 @@ namespace SabreTools.DatFiles
             }
 
             // Software List
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((datFormat & DatFormat.SoftwareList) != 0)
 #else
             if (datFormat.HasFlag(DatFormat.SoftwareList))
@@ -784,7 +784,7 @@ namespace SabreTools.DatFiles
             }
 
             // MAME Listxml
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((datFormat & DatFormat.Listxml) != 0)
 #else
             if (datFormat.HasFlag(DatFormat.Listxml))
@@ -803,7 +803,7 @@ namespace SabreTools.DatFiles
             }
 
             // OfflineList
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((datFormat & DatFormat.OfflineList) != 0)
 #else
             if (datFormat.HasFlag(DatFormat.OfflineList))
@@ -822,7 +822,7 @@ namespace SabreTools.DatFiles
             }
 
             // openMSX
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((datFormat & DatFormat.OpenMSX) != 0)
 #else
             if (datFormat.HasFlag(DatFormat.OpenMSX))
@@ -841,7 +841,7 @@ namespace SabreTools.DatFiles
             }
 
             // Archive.org
-#if NETFRAMEWORK
+#if NET20 || NET35
             if ((datFormat & DatFormat.ArchiveDotOrg) != 0)
 #else
             if (datFormat.HasFlag(DatFormat.ArchiveDotOrg))

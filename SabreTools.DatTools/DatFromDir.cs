@@ -156,7 +156,7 @@ namespace SabreTools.DatTools
                 archive.AvailableHashTypes = _hashes;
 
                 // Skip if we're treating archives as files and skipping files
-#if NETFRAMEWORK
+#if NET20 || NET35
                 if ((asFiles & TreatAsFile.Archive) != 0 && _skipFileType == SkipFileType.File)
 #else
                 if (asFiles.HasFlag(TreatAsFile.Archive) && _skipFileType == SkipFileType.File)
@@ -172,7 +172,7 @@ namespace SabreTools.DatTools
                 }
 
                 // Process as archive if we're not treating archives as files
-#if NETFRAMEWORK
+#if NET20 || NET35
                 else if ((asFiles & TreatAsFile.Archive) == 0)
 #else
                 else if (!asFiles.HasFlag(TreatAsFile.Archive))

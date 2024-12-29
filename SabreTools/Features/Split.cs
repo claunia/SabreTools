@@ -72,7 +72,11 @@ namespace SabreTools.Features
                 OutputDir = file.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
 
                 // Extension splitting
+#if NET20 || NET35
+                if ((splittingMode & SplittingMode.Extension) != 0)
+#else
                 if (splittingMode.HasFlag(SplittingMode.Extension))
+#endif
                 {
                     (DatFile? extADat, DatFile? extBDat) = DatTools.Splitter.SplitByExtension(internalDat, GetList(features, ExtAListValue), GetList(features, ExtBListValue));
                     //(DatFile? extADat, DatFile? extBDat) = DatTools.Splitter.SplitByExtensionDB(internalDat, GetList(features, ExtAListValue), GetList(features, ExtBListValue));
@@ -89,7 +93,11 @@ namespace SabreTools.Features
                 }
 
                 // Hash splitting
+#if NET20 || NET35
+                if ((splittingMode & SplittingMode.Hash) != 0)
+#else
                 if (splittingMode.HasFlag(SplittingMode.Hash))
+#endif
                 {
                     Dictionary<string, DatFile> typeDats = DatTools.Splitter.SplitByHash(internalDat);
                     //Dictionary<string, DatFile> typeDats = DatTools.Splitter.SplitByHashDB(internalDat);
@@ -116,7 +124,11 @@ namespace SabreTools.Features
                 }
 
                 // Level splitting
+#if NET20 || NET35
+                if ((splittingMode & SplittingMode.Level) != 0)
+#else
                 if (splittingMode.HasFlag(SplittingMode.Level))
+#endif
                 {
                     logger.Warning("This feature is not implemented: level-split");
                     DatTools.Splitter.SplitByLevel(
@@ -127,7 +139,11 @@ namespace SabreTools.Features
                 }
 
                 // Size splitting
+#if NET20 || NET35
+                if ((splittingMode & SplittingMode.Size) != 0)
+#else
                 if (splittingMode.HasFlag(SplittingMode.Size))
+#endif
                 {
                     (DatFile lessThan, DatFile greaterThan) = DatTools.Splitter.SplitBySize(internalDat, GetInt64(features, RadixInt64Value));
                     //(DatFile lessThan, DatFile greaterThan) = DatTools.Splitter.SplitBySizeDB(internalDat, GetInt64(features, RadixInt64Value));
@@ -142,7 +158,11 @@ namespace SabreTools.Features
                 }
 
                 // Total Size splitting
+#if NET20 || NET35
+                if ((splittingMode & SplittingMode.TotalSize) != 0)
+#else
                 if (splittingMode.HasFlag(SplittingMode.TotalSize))
+#endif
                 {
                     logger.Warning("This feature is not implemented: level-split");
                     List<DatFile> sizedDats = DatTools.Splitter.SplitByTotalSize(internalDat, GetInt64(features, ChunkSizeInt64Value));
@@ -169,7 +189,11 @@ namespace SabreTools.Features
                 }
 
                 // Type splitting
+#if NET20 || NET35
+                if ((splittingMode & SplittingMode.Type) != 0)
+#else
                 if (splittingMode.HasFlag(SplittingMode.Type))
+#endif
                 {
                     Dictionary<ItemType, DatFile> typeDats = DatTools.Splitter.SplitByType(internalDat);
 

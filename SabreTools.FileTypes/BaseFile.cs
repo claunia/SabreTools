@@ -272,7 +272,7 @@ namespace SabreTools.FileTypes
 
             // Get the info in the proper manner
             BaseFile? baseFile;
-#if NETFRAMEWORK
+#if NET20 || NET35
             if (fileType == FileType.AaruFormat && (asFiles & TreatAsFile.AaruFormat) == 0)
                 baseFile = AaruFormat.Create(inputStream);
             else if (fileType == FileType.CHD && (asFiles & TreatAsFile.CHD) == 0)

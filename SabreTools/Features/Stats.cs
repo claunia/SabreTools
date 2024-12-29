@@ -50,7 +50,7 @@ The stats that are outputted are as follows:
             string filename = Header!.GetStringFieldValue(DatFiles.DatHeader.FileNameKey)!;
             if (Path.GetFileName(filename) != filename)
             {
-                if (string.IsNullOrWhiteSpace(OutputDir))
+                if (string.IsNullOrEmpty(OutputDir))
                     OutputDir = Path.GetDirectoryName(filename);
                 else
                     OutputDir = Path.Combine(OutputDir, Path.GetDirectoryName(filename)!);
