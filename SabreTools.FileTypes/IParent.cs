@@ -6,7 +6,7 @@ namespace SabreTools.FileTypes
     /// <summary>
     /// Represents an item that can contain children
     /// </summary>
-    public interface IFolder
+    public interface IParent
     {
         #region Extraction
 

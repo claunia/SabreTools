@@ -12,7 +12,7 @@ namespace SabreTools.FileTypes
     /// <summary>
     /// Represents a folder for reading and writing
     /// </summary>
-    public class Folder : BaseFile, IFolder
+    public class Folder : BaseFile, IParent
     {
         #region Protected instance variables
 

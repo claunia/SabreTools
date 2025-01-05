@@ -5,7 +5,7 @@ using SabreTools.IO.Logging;
 
 namespace SabreTools.FileTypes
 {
-    public abstract class BaseArchive : BaseFile, IFolder
+    public abstract class BaseArchive : BaseFile, IParent
     {
         #region Protected instance variables
 
