@@ -354,7 +354,7 @@ namespace SabreTools.FileTypes.Archives
         }
 
         /// <inheritdoc/>
-        public override bool IsTorrent()
+        public override bool IsStandardized()
         {
             // If we have an invalid file
             if (Filename == null)

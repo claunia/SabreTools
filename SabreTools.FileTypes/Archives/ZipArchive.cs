@@ -539,7 +539,7 @@ namespace SabreTools.FileTypes.Archives
         }
 
         /// <inheritdoc/>
-        public override bool IsTorrent()
+        public override bool IsStandardized()
         {
             Zip zf = new();
             ZipReturn zr = zf.ZipFileOpen(Filename!, -1, true);

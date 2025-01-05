@@ -245,7 +245,7 @@ namespace SabreTools.FileTypes.Archives
         }
 
         /// <inheritdoc/>
-        public override bool IsTorrent()
+        public override bool IsStandardized()
         {
             // Check for the file existing first
             if (Filename == null || !File.Exists(Filename))

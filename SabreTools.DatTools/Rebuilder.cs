@@ -308,7 +308,7 @@ namespace SabreTools.DatTools
             // Get the TGZ and TXZ status for later
             GZipArchive tgz = new(file);
             XZArchive txz = new(file);
-            bool isSingleTorrent = tgz.IsTorrent() || txz.IsTorrent();
+            bool isSingleTorrent = tgz.IsStandardized() || txz.IsStandardized();
 
             // Get the base archive first
             BaseArchive? archive = FileTypeTool.CreateArchiveType(file);

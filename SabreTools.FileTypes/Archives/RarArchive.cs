@@ -282,7 +282,7 @@ namespace SabreTools.FileTypes.Archives
         }
 
         /// <inheritdoc/>
-        public override bool IsTorrent()
+        public override bool IsStandardized()
         {
             throw new NotImplementedException();
         }

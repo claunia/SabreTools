@@ -58,7 +58,7 @@ namespace SabreTools.FileTypes
         /// <summary>
         /// Check whether the input file is a standardized format
         /// </summary>
-        public abstract bool IsTorrent();
+        public abstract bool IsStandardized();
 
         #endregion
 
