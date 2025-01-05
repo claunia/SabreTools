@@ -5,10 +5,6 @@ namespace SabreTools.FileTypes
 {
     public abstract class BaseArchive : Folder
     {
-        #region Fields
-
-        #endregion
-
         #region Protected instance variables
 
         /// <summary>
