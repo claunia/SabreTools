@@ -14,25 +14,16 @@ namespace SabreTools.FileTypes
 
         protected static readonly byte[] SevenZipSignature = [0x37, 0x7a, 0xbc, 0xaf, 0x27, 0x1c];
         protected static readonly byte[] AaruFormatSignature = [0x41, 0x41, 0x52, 0x55, 0x46, 0x52, 0x4d, 0x54];
-        protected static readonly byte[] BZ2Signature = [0x42, 0x5a, 0x68];
-        protected static readonly byte[] CabinetSignature = [0x4d, 0x53, 0x43, 0x46];
         protected static readonly byte[] CHDSignature = [0x4d, 0x43, 0x6f, 0x6d, 0x70, 0x72, 0x48, 0x44];
-        protected static readonly byte[] ELFSignature = [0x7f, 0x45, 0x4c, 0x46];
-        protected static readonly byte[] FreeArcSignature = [0x41, 0x72, 0x43, 0x01];
         protected static readonly byte[] GzSignature = [0x1f, 0x8b, 0x08];
-        protected static readonly byte[] PESignature = [0x4d, 0x5a];
         protected static readonly byte[] RarSignature = [0x52, 0x61, 0x72, 0x21, 0x1a, 0x07, 0x00];
         protected static readonly byte[] RarFiveSignature = [0x52, 0x61, 0x72, 0x21, 0x1a, 0x07, 0x01, 0x00];
         protected static readonly byte[] TarSignature = [0x75, 0x73, 0x74, 0x61, 0x72, 0x20, 0x20, 0x00];
         protected static readonly byte[] TarZeroSignature = [0x75, 0x73, 0x74, 0x61, 0x72, 0x00, 0x30, 0x30];
         protected static readonly byte[] XZSignature = [0xfd, 0x37, 0x7a, 0x58, 0x5a, 0x00, 0x00];
-        protected static readonly byte[] ZipSignature = [0x50, 0x4b, 0x03, 0x04];
-        protected static readonly byte[] ZipSignatureEmpty = [0x50, 0x4b, 0x05, 0x06];
-        protected static readonly byte[] ZipSignatureSpanned = [0x50, 0x4b, 0x07, 0x08];
 
         #endregion
 
-        // TODO: Get all of these values automatically so there is no public "set"
         #region Fields
 
         /// <summary>
@@ -110,56 +101,9 @@ namespace SabreTools.FileTypes
         /// Create a new BaseFile from the given file
         /// </summary>
         /// <param name="filename">Name of the file to use</param>
-        /// <param name="getHashes">True if hashes for this file should be calculated (default), false otherwise</param>
-        public BaseFile(string filename, bool getHashes = true)
+        public BaseFile(string filename)
         {
             Filename = filename;
-
-            if (getHashes)
-            {
-                BaseFile? temp = GetInfo(Filename, hashes: AvailableHashTypes);
-                if (temp != null)
-                {
-                    Parent = temp.Parent;
-                    Date = temp.Date;
-                    CRC = temp.CRC;
-                    MD5 = temp.MD5;
-                    SHA1 = temp.SHA1;
-                    SHA256 = temp.SHA256;
-                    SHA384 = temp.SHA384;
-                    SHA512 = temp.SHA512;
-                    SpamSum = temp.SpamSum;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Create a new BaseFile from the given file
-        /// </summary>
-        /// <param name="filename">Name of the file to use</param>
-        /// <param name="stream">Stream to populate information from</param>
-        /// <param name="getHashes">True if hashes for this file should be calculated (default), false otherwise</param>
-        public BaseFile(string filename, Stream stream, bool getHashes = true)
-        {
-            Filename = filename;
-
-            if (getHashes)
-            {
-                BaseFile temp = GetInfo(stream, hashes: AvailableHashTypes);
-                if (temp != null)
-                {
-                    Parent = temp.Parent;
-                    Date = temp.Date;
-                    CRC = temp.CRC;
-                    MD5 = temp.MD5;
-                    SHA1 = temp.SHA1;
-                    SHA256 = temp.SHA256;
-                    SHA384 = temp.SHA384;
-                    SHA512 = temp.SHA512;
-                    SpamSum = temp.SpamSum;
-                }
-            }
-
         }
 
         #endregion
@@ -221,9 +165,9 @@ namespace SabreTools.FileTypes
             {
                 outFileType = FileType.XZArchive;
             }
-            else if (magic.StartsWith(ZipSignature)
-                || magic.StartsWith(ZipSignatureEmpty)
-                || magic.StartsWith(ZipSignatureSpanned))
+            else if (magic.StartsWith(Models.PKZIP.Constants.LocalFileHeaderSignatureBytes)
+                || magic.StartsWith(Models.PKZIP.Constants.EndOfCentralDirectoryRecordSignatureBytes)
+                || magic.StartsWith(Models.PKZIP.Constants.DataDescriptorSignatureBytes))
             {
                 outFileType = FileType.ZipArchive;
             }

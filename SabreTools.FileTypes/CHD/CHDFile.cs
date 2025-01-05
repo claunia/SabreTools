@@ -3,10 +3,6 @@ using SabreTools.Models.CHD;
 
 namespace SabreTools.FileTypes.CHD
 {
-    /// <summary>
-    /// This is code adapted from chd.h and chd.cpp in MAME
-    /// Additional archival code from https://github.com/rtissera/libchdr/blob/master/src/chd.h
-    /// </summary>
     public class CHDFile : BaseFile
     {
         #region Private instance variables

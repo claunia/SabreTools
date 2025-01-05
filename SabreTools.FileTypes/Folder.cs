@@ -31,14 +31,14 @@ namespace SabreTools.FileTypes
         /// <summary>
         /// Flag specific to Folder to omit Machine name from output path
         /// </summary>
-        private readonly bool _writeToParent = false;
+        private readonly bool _writeToParent;
 
         #endregion
 
         #region Constructors
 
         /// <summary>
-        /// Create a new folder with no base file
+        /// Create a new Folder with no base file
         /// </summary>
         /// <param name="writeToParent">True to write directly to parent, false otherwise</param>
         public Folder(bool writeToParent = false)
@@ -49,14 +49,14 @@ namespace SabreTools.FileTypes
         }
 
         /// <summary>
-        /// Create a new folder from the given file
+        /// Create a new Folder from the given file
         /// </summary>
-        /// <param name="filename">Name of the file to use as an archive</param>
-        /// <param name="read">True for opening file as read, false for opening file as write</param>
-        /// <param name="getHashes">True if hashes for this file should be calculated, false otherwise (default)</param>
-        public Folder(string filename, bool getHashes = false)
-            : base(filename, getHashes)
+        /// <param name="filename">Name of the folder to use</param>
+        /// <param name="writeToParent">True to write directly to parent, false otherwise</param>
+        public Folder(string filename, bool writeToParent = false)
+            : base(filename)
         {
+            _writeToParent = writeToParent;
             logger = new Logger(this);
         }
 
@@ -271,7 +271,7 @@ namespace SabreTools.FileTypes
                 foreach (string dir in Directory.EnumerateDirectories(Filename, "*", SearchOption.TopDirectoryOnly))
 #endif
                 {
-                    Folder fl = new(dir);
+                    var fl = new Folder(dir);
                     _children.Add(fl);
                 }
             }

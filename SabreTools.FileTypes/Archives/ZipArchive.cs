@@ -44,10 +44,8 @@ namespace SabreTools.FileTypes.Archives
         /// Create a new TorrentZipArchive from the given file
         /// </summary>
         /// <param name="filename">Name of the file to use as an archive</param>
-        /// <param name="read">True for opening file as read, false for opening file as write</param>
-        /// <param name="getHashes">True if hashes for this file should be calculated, false otherwise (default)</param>
-        public ZipArchive(string filename, bool getHashes = false)
-            : base(filename, getHashes)
+        public ZipArchive(string filename)
+            : base(filename)
         {
         }
 
