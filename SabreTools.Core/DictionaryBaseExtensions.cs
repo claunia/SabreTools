@@ -74,9 +74,14 @@ namespace SabreTools.Core
             if (disk == null)
                 return null;
 
+            // Append a suffix to the name
+            string? name = disk.ReadString(Disk.NameKey);
+            if (name != null)
+                name += ".chd";
+
             return new Rom
             {
-                [Rom.NameKey] = disk.ReadString(Disk.NameKey) + ".chd",
+                [Rom.NameKey] = name,
                 [Rom.MergeKey] = disk.ReadString(Disk.MergeKey),
                 [Rom.RegionKey] = disk.ReadString(Disk.RegionKey),
                 [Rom.StatusKey] = disk.ReadString(Disk.StatusKey),
@@ -95,9 +100,14 @@ namespace SabreTools.Core
             if (media == null)
                 return null;
 
+            // Append a suffix to the name
+            string? name = media.ReadString(Media.NameKey);
+            if (name != null)
+                name += ".aaruf";
+
             return new Rom
             {
-                [Rom.NameKey] = media.ReadString(Media.NameKey) + ".aaruf",
+                [Rom.NameKey] = name,
                 [Rom.MD5Key] = media.ReadString(Media.MD5Key),
                 [Rom.SHA1Key] = media.ReadString(Media.SHA1Key),
                 [Rom.SHA256Key] = media.ReadString(Media.SHA256Key),
@@ -179,8 +189,18 @@ namespace SabreTools.Core
                         break;
 
                     default:
-                        if (kvp.Value != other[kvp.Key])
+                        // Handle cases where a null is involved
+                        if (kvp.Value == null && other[kvp.Key] == null)
+                            return true;
+                        else if (kvp.Value == null && other[kvp.Key] != null)
                             return false;
+                        else if (kvp.Value != null && other[kvp.Key] == null)
+                            return false;
+
+                        // Try to rely on type hashes
+                        else if (kvp.Value!.GetHashCode() != other[kvp.Key]!.GetHashCode())
+                            return false;
+
                         break;
                 }
             }
@@ -256,6 +276,8 @@ namespace SabreTools.Core
 
             // If we have a file that has no known size, rely on the hashes only
             if (selfSize == null && self.HashMatch(other))
+                return true;
+            else if (otherSize == null && self.HashMatch(other))
                 return true;
 
             // If we get a partial match
@@ -714,11 +736,8 @@ namespace SabreTools.Core
         /// <summary>
         /// Get unique duplicate suffix on name collision
         /// </summary>
-        private static string GetDuplicateSuffix(this Disk? self)
+        private static string GetDuplicateSuffix(this Disk self)
         {
-            if (self == null)
-                return string.Empty;
-
             string? md5 = self.ReadString(Disk.MD5Key);
             if (!string.IsNullOrEmpty(md5))
                 return $"_{md5}";
@@ -733,11 +752,8 @@ namespace SabreTools.Core
         /// <summary>
         /// Get unique duplicate suffix on name collision
         /// </summary>
-        private static string GetDuplicateSuffix(this Media? self)
+        private static string GetDuplicateSuffix(this Media self)
         {
-            if (self == null)
-                return string.Empty;
-
             string? md5 = self.ReadString(Media.MD5Key);
             if (!string.IsNullOrEmpty(md5))
                 return $"_{md5}";
@@ -760,11 +776,8 @@ namespace SabreTools.Core
         /// <summary>
         /// Get unique duplicate suffix on name collision
         /// </summary>
-        private static string GetDuplicateSuffix(this Rom? self)
+        private static string GetDuplicateSuffix(this Rom self)
         {
-            if (self == null)
-                return string.Empty;
-
             string? crc = self.ReadString(Rom.CRCKey);
             if (!string.IsNullOrEmpty(crc))
                 return $"_{crc}";

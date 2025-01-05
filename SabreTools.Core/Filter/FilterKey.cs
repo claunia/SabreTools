@@ -55,11 +55,11 @@ namespace SabreTools.Core.Filter
             itemName = string.Empty; fieldName = string.Empty;
 
             // If we don't have a filter ID, we can't do anything
-            if (itemFieldString == null)
+            if (string.IsNullOrEmpty(itemFieldString))
                 return false;
 
             // If we only have one part, we can't do anything
-            string[] splitFilter = itemFieldString.Split('.');
+            string[] splitFilter = itemFieldString!.Split('.');
             if (splitFilter.Length != 2)
                 return false;
 

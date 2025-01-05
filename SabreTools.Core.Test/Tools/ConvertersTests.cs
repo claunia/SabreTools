@@ -3,8 +3,9 @@ using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using Xunit;
 
-namespace SabreTools.Test.Core
+namespace SabreTools.Core.Test.Tools
 {
+    // TODO: Remove reliance on anything but SabreTools.Core
     public class ConvertersTests
     {
         #region String to Enum
@@ -357,6 +358,19 @@ namespace SabreTools.Test.Core
             Assert.Equal(expected, actual);
         }
 
+        [Theory]
+        [InlineData(null, null)]
+        [InlineData("INVALID", null)]
+        [InlineData("yes", true)]
+        [InlineData("True", true)]
+        [InlineData("no", false)]
+        [InlineData("False", false)]
+        public void AsYesNoTest(string? field, bool? expected)
+        {
+            bool? actual = field.AsYesNo();
+            Assert.Equal(expected, actual);
+        }
+
         #endregion
 
         #region Enum to String
@@ -705,6 +719,16 @@ namespace SabreTools.Test.Core
         public void FromSupportStatusTest(SupportStatus field, string? expected)
         {
             string? actual = field.AsStringValue<SupportStatus>();
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(null, null)]
+        [InlineData(true, "yes")]
+        [InlineData(false, "no")]
+        public void FromYesNo(bool? field, string? expected)
+        {
+            string? actual = field.FromYesNo();
             Assert.Equal(expected, actual);
         }
 

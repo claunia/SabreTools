@@ -26,10 +26,10 @@ namespace SabreTools.Core.Filter
         /// </summary>
         public readonly Operation Operation;
 
-        public FilterObject(string filterString)
+        public FilterObject(string? filterString)
         {
             if (!SplitFilterString(filterString, out var keyItem, out Operation operation, out var value))
-                throw new ArgumentOutOfRangeException(nameof(filterString));
+                throw new ArgumentException(nameof(filterString));
 
             Key = new FilterKey(keyItem);
             Value = value;
@@ -57,7 +57,6 @@ namespace SabreTools.Core.Filter
         /// </summary>
         public bool Matches(DictionaryBase dictionaryBase)
         {
-            // TODO: Add validation of dictionary base type from the key values
             return Operation switch
             {
                 Operation.Equals => MatchesEqual(dictionaryBase),
@@ -77,16 +76,16 @@ namespace SabreTools.Core.Filter
         {
             // If the key doesn't exist, we count it as null
             if (!dictionaryBase.ContainsKey(Key.FieldName))
-                return Value == null;
+                return string.IsNullOrEmpty(Value);
 
             // If the value in the dictionary is null
             string? checkValue = dictionaryBase.ReadString(Key.FieldName);
             if (checkValue == null)
-                return Value == null;
+                return string.IsNullOrEmpty(Value);
 
             // If we have both a potentally boolean check and value
-            bool? checkValueBool = ConvertToBoolean(checkValue);
-            bool? matchValueBool = ConvertToBoolean(Value);
+            bool? checkValueBool = checkValue.AsYesNo();
+            bool? matchValueBool = Value.AsYesNo();
             if (checkValueBool != null && matchValueBool != null)
                 return checkValueBool == matchValueBool;
 
@@ -120,16 +119,16 @@ namespace SabreTools.Core.Filter
         {
             // If the key doesn't exist, we count it as null
             if (!dictionaryBase.ContainsKey(Key.FieldName))
-                return Value != null;
+                return !string.IsNullOrEmpty(Value);
 
             // If the value in the dictionary is null
             string? checkValue = dictionaryBase.ReadString(Key.FieldName);
             if (checkValue == null)
-                return Value == null;
+                return !string.IsNullOrEmpty(Value);
 
             // If we have both a potentally boolean check and value
-            bool? checkValueBool = ConvertToBoolean(checkValue);
-            bool? matchValueBool = ConvertToBoolean(Value);
+            bool? checkValueBool = checkValue.AsYesNo();
+            bool? matchValueBool = Value.AsYesNo();
             if (checkValueBool != null && matchValueBool != null)
                 return checkValueBool != matchValueBool;
 
@@ -309,19 +308,11 @@ namespace SabreTools.Core.Filter
                 return false;
 
             // If we find a special character, try parsing as regex
-#if NETFRAMEWORK
             if (value.Contains("^")
                 || value.Contains("$")
                 || value.Contains("*")
                 || value.Contains("?")
                 || value.Contains("+"))
-#else
-            if (value.Contains('^')
-                || value.Contains('$')
-                || value.Contains('*')
-                || value.Contains('?')
-                || value.Contains('+'))
-#endif
             {
                 try
                 {
@@ -335,23 +326,6 @@ namespace SabreTools.Core.Filter
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Convert a string to a Boolean
-        /// </summary>
-        private bool? ConvertToBoolean(string? value)
-        {
-            // If we don't have a valid string, we can't do anything
-            if (string.IsNullOrEmpty(value))
-                return null;
-
-            return value!.ToLowerInvariant() switch
-            {
-                "true" or "yes" => true,
-                "false" or "no" => false,
-                _ => null,
-            };
         }
 
         /// <summary>
@@ -388,11 +362,11 @@ namespace SabreTools.Core.Filter
             // Set default values
             key = null; operation = Operation.NONE; value = null;
 
-            if (filterString == null)
+            if (string.IsNullOrEmpty(filterString))
                 return false;
 
             // Trim quotations, if necessary
-            if (filterString.StartsWith("\""))
+            if (filterString!.StartsWith("\""))
                 filterString = filterString.Substring(1, filterString.Length - 2);
 
             // Split the string using regex
@@ -402,7 +376,10 @@ namespace SabreTools.Core.Filter
 
             key = match.Groups["itemField"].Value;
             operation = GetOperation(match.Groups["operation"].Value);
-            value = match.Groups["value"].Value;
+
+            // Only non-zero length values are counted as non-null
+            if (value?.Length > 0)
+                value = match.Groups["value"].Value;
 
             return true;
         }

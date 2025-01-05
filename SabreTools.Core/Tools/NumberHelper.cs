@@ -14,9 +14,11 @@ namespace SabreTools.Core.Tools
         private readonly static long GigaByte = (long)Math.Pow(KiloByte, 3);
         private readonly static long TeraByte = (long)Math.Pow(KiloByte, 4);
         private readonly static long PetaByte = (long)Math.Pow(KiloByte, 5);
-        private readonly static long ExaByte = (long)Math.Pow(KiloByte, 6);
-        private readonly static long ZettaByte = (long)Math.Pow(KiloByte, 7);
-        private readonly static long YottaByte = (long)Math.Pow(KiloByte, 8);
+
+        // The following are too big to be represented in Int64
+        // private readonly static long ExaByte = (long)Math.Pow(KiloByte, 6);
+        // private readonly static long ZettaByte = (long)Math.Pow(KiloByte, 7);
+        // private readonly static long YottaByte = (long)Math.Pow(KiloByte, 8);
 
         #endregion
 
@@ -27,9 +29,11 @@ namespace SabreTools.Core.Tools
         private readonly static long GibiByte = (long)Math.Pow(KibiByte, 3);
         private readonly static long TibiByte = (long)Math.Pow(KibiByte, 4);
         private readonly static long PibiByte = (long)Math.Pow(KibiByte, 5);
-        private readonly static long ExiByte = (long)Math.Pow(KibiByte, 6);
-        private readonly static long ZittiByte = (long)Math.Pow(KibiByte, 7);
-        private readonly static long YittiByte = (long)Math.Pow(KibiByte, 8);
+
+        // The following are too big to be represented in Int64
+        // private readonly static long ExiByte = (long)Math.Pow(KibiByte, 6);
+        // private readonly static long ZittiByte = (long)Math.Pow(KibiByte, 7);
+        // private readonly static long YittiByte = (long)Math.Pow(KibiByte, 8);
 
         #endregion
 
@@ -108,18 +112,20 @@ namespace SabreTools.Core.Tools
                 multiplier = PetaByte;
             else if (numeric.EndsWith("pi") || numeric.EndsWith("pib"))
                 multiplier = PibiByte;
-            else if (numeric.EndsWith("e") || numeric.EndsWith("eb"))
-                multiplier = ExaByte;
-            else if (numeric.EndsWith("ei") || numeric.EndsWith("eib"))
-                multiplier = ExiByte;
-            else if (numeric.EndsWith("z") || numeric.EndsWith("zb"))
-                multiplier = ZettaByte;
-            else if (numeric.EndsWith("zi") || numeric.EndsWith("zib"))
-                multiplier = ZittiByte;
-            else if (numeric.EndsWith("y") || numeric.EndsWith("yb"))
-                multiplier = YottaByte;
-            else if (numeric.EndsWith("yi") || numeric.EndsWith("yib"))
-                multiplier = YittiByte;
+
+            // The following are too big to be represented in Int64
+            // else if (numeric.EndsWith("e") || numeric.EndsWith("eb"))
+            //     multiplier = ExaByte;
+            // else if (numeric.EndsWith("ei") || numeric.EndsWith("eib"))
+            //     multiplier = ExiByte;
+            // else if (numeric.EndsWith("z") || numeric.EndsWith("zb"))
+            //     multiplier = ZettaByte;
+            // else if (numeric.EndsWith("zi") || numeric.EndsWith("zib"))
+            //     multiplier = ZittiByte;
+            // else if (numeric.EndsWith("y") || numeric.EndsWith("yb"))
+            //     multiplier = YottaByte;
+            // else if (numeric.EndsWith("yi") || numeric.EndsWith("yib"))
+            //     multiplier = YittiByte;
 
             return multiplier;
         }
@@ -138,8 +144,17 @@ namespace SabreTools.Core.Tools
             if (value.StartsWith("0x"))
                 value = value.Substring(2);
 
+            // If we have a negative value
+            if (value.StartsWith("-"))
+                value = value.Substring(1);
+
+            // If the value has a multiplier
             if (DetermineMultiplier(value) > 1)
                 value = value.TrimEnd(['k', 'm', 'g', 't', 'p', 'e', 'z', 'y', 'i', 'b', ' ']);
+
+            // If the value is empty after trimming
+            if (value.Length == 0)
+                return false;
 
 #if NET7_0_OR_GREATER
             return value.All(c => char.IsAsciiHexDigit(c) || c == '.' || c == ',');

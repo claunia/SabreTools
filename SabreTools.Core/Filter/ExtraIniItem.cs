@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using SabreTools.IO.Logging;
 using SabreTools.IO.Readers;
 
@@ -12,7 +13,6 @@ namespace SabreTools.Core.Filter
         /// <summary>
         /// Item type and field to update with INI information
         /// </summary>
-        /// <remarks>Formatted like "ItemName.FieldName"</remarks>
         public readonly FilterKey Key;
 
         /// <summary>
@@ -24,17 +24,17 @@ namespace SabreTools.Core.Filter
 
         #region Constructors
 
-        public ExtraIniItem(string key, string ini)
+        public ExtraIniItem(string key, string iniPath)
         {
             Key = new FilterKey(key);
-            if (!PopulateFromFile(ini))
+            if (!PopulateFromFile(iniPath))
                 Mappings.Clear();
         }
 
-        public ExtraIniItem(string itemName, string fieldName, string ini)
+        public ExtraIniItem(string itemName, string fieldName, string iniPath)
         {
             Key = new FilterKey(itemName, fieldName);
-            if (!PopulateFromFile(ini))
+            if (!PopulateFromFile(iniPath))
                 Mappings.Clear();
         }
 
@@ -45,7 +45,7 @@ namespace SabreTools.Core.Filter
         /// <summary>
         /// Populate the dictionary from an INI file
         /// </summary>
-        /// <param name="ini">Path to INI file to populate from</param>
+        /// <param name="iniPath">Path to INI file to populate from</param>
         /// <remarks>
         /// The INI file format that is supported here is not exactly the same
         /// as a traditional one. This expects a MAME extras format, which usually
@@ -54,10 +54,16 @@ namespace SabreTools.Core.Filter
         /// the value is boolean. If there's another section name, then that is set
         /// as the value instead.
         /// </remarks>
-        private bool PopulateFromFile(string ini)
+        private bool PopulateFromFile(string iniPath)
         {
-            // Prepare all intenral variables
-            IniReader ir = new(ini) { ValidateRows = false };
+            // Validate the path
+            if (iniPath.Length == 0)
+                return false;
+            else if (!File.Exists(iniPath))
+                return false;
+
+            // Prepare all internal variables
+            var ir = new IniReader(iniPath) { ValidateRows = false };
             bool foundRootFolder = false;
 
             // If we got a null reader, just return
@@ -107,7 +113,7 @@ namespace SabreTools.Core.Filter
             }
             catch (Exception ex)
             {
-                LoggerImpl.Warning(ex, $"Exception found while parsing '{ini}'");
+                LoggerImpl.Warning(ex, $"Exception found while parsing '{iniPath}'");
                 return false;
             }
 

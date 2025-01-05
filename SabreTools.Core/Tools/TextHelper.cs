@@ -80,8 +80,14 @@ namespace SabreTools.Core.Tools
         }
 
         /// <summary>
-        /// Remove all unicode-specific chars from a string
+        /// Remove all Unicode-specific chars from a string
         /// </summary>
+        /// <remarks>
+        /// "Unicode characters" here means any characters outside of the
+        /// Extended ASCII (0x00 to 0xFF) set. This is just a simple
+        /// way of filtering out characters that won't work on all
+        /// supported platforms.
+        /// </remarks>
         public static string RemoveUnicodeCharacters(string? input)
         {
             if (string.IsNullOrEmpty(input))
@@ -151,9 +157,9 @@ namespace SabreTools.Core.Tools
         private static string? NormalizeHashData(string? hash, int expectedLength)
         {
             // If we have a known blank hash, return blank
-            if (string.IsNullOrEmpty(hash))
+            if (hash == null)
                 return null;
-            else if (hash == "-" || hash == "_")
+            else if (hash == string.Empty || hash == "-" || hash == "_")
                 return string.Empty;
 
             // Check to see if it's a "hex" hash
