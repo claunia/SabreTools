@@ -80,16 +80,16 @@ namespace SabreTools.FileTypes.Archives
             catch (EndOfStreamException ex)
             {
                 // Catch this but don't count it as an error because SharpCompress is unsafe
-                logger.Verbose(ex);
+                _logger.Verbose(ex);
             }
             catch (InvalidOperationException ex)
             {
-                logger.Warning(ex);
+                _logger.Warning(ex);
                 encounteredErrors = true;
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 encounteredErrors = true;
             }
 
@@ -161,7 +161,7 @@ namespace SabreTools.FileTypes.Archives
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 return (null, null);
             }
 #else
@@ -200,7 +200,7 @@ namespace SabreTools.FileTypes.Archives
                 BaseFile xzEntryRom = new();
 
                 // Perform a quickscan, if flagged to
-                if (AvailableHashTypes.Length == 1 && AvailableHashTypes[0] == HashType.CRC32)
+                if (_hashTypes.Length == 1 && _hashTypes[0] == HashType.CRC32)
                 {
                     xzEntryRom.Filename = gamename;
 
@@ -213,7 +213,7 @@ namespace SabreTools.FileTypes.Archives
                 else
                 {
                     var xzStream = new XZStream(File.OpenRead(Filename!));
-                    xzEntryRom = GetInfo(xzStream, hashes: AvailableHashTypes);
+                    xzEntryRom = GetInfo(xzStream, hashes: _hashTypes);
                     xzEntryRom.Filename = gamename;
                     xzStream.Dispose();
                 }
@@ -224,7 +224,7 @@ namespace SabreTools.FileTypes.Archives
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 return null;
             }
 
@@ -254,7 +254,7 @@ namespace SabreTools.FileTypes.Archives
             // Check if the name is the right length
             if (!Regex.IsMatch(datum, @"^[0-9a-f]{" + Constants.SHA1Length + @"}\.xz"))
             {
-                logger.Warning($"Non SHA-1 filename found, skipping: '{Path.GetFullPath(Filename)}'");
+                _logger.Warning($"Non SHA-1 filename found, skipping: '{Path.GetFullPath(Filename)}'");
                 return false;
             }
 
@@ -276,7 +276,7 @@ namespace SabreTools.FileTypes.Archives
             // Check if the name is the right length
             if (!Regex.IsMatch(datum, @"^[0-9a-f]{" + Constants.SHA1Length + @"}\.xz"))
             {
-                logger.Warning($"Non SHA-1 filename found, skipping: '{Path.GetFullPath(Filename)}'");
+                _logger.Warning($"Non SHA-1 filename found, skipping: '{Path.GetFullPath(Filename)}'");
                 return null;
             }
 
@@ -301,7 +301,7 @@ namespace SabreTools.FileTypes.Archives
             // Check that the input file exists
             if (!File.Exists(inputFile))
             {
-                logger.Warning($"File '{inputFile}' does not exist!");
+                _logger.Warning($"File '{inputFile}' does not exist!");
                 return false;
             }
 

@@ -68,16 +68,16 @@ namespace SabreTools.FileTypes.Archives
             catch (EndOfStreamException ex)
             {
                 // Catch this but don't count it as an error because SharpCompress is unsafe
-                logger.Verbose(ex);
+                _logger.Verbose(ex);
             }
             catch (InvalidOperationException ex)
             {
-                logger.Warning(ex);
+                _logger.Warning(ex);
                 encounteredErrors = true;
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 encounteredErrors = true;
             }
 
@@ -165,7 +165,7 @@ namespace SabreTools.FileTypes.Archives
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 return (null, null);
             }
 #else
@@ -194,7 +194,7 @@ namespace SabreTools.FileTypes.Archives
                     BaseFile tarEntryRom = new();
 
                     // Perform a quickscan, if flagged to
-                    if (AvailableHashTypes.Length == 1 && AvailableHashTypes[0] == HashType.CRC32)
+                    if (_hashTypes.Length == 1 && _hashTypes[0] == HashType.CRC32)
                     {
                         tarEntryRom.Size = entry.Size;
                         tarEntryRom.CRC = BitConverter.GetBytes(entry.Crc);
@@ -203,7 +203,7 @@ namespace SabreTools.FileTypes.Archives
                     else
                     {
                         using Stream entryStream = entry.OpenEntryStream();
-                        tarEntryRom = GetInfo(entryStream, size: entry.Size, hashes: AvailableHashTypes);
+                        tarEntryRom = GetInfo(entryStream, size: entry.Size, hashes: _hashTypes);
                     }
 
                     // Fill in common details and add to the list
@@ -218,7 +218,7 @@ namespace SabreTools.FileTypes.Archives
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 return null;
             }
 
@@ -260,7 +260,7 @@ namespace SabreTools.FileTypes.Archives
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
             }
 
             return empties;
@@ -409,7 +409,7 @@ namespace SabreTools.FileTypes.Archives
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 success = false;
             }
             finally
@@ -578,7 +578,7 @@ namespace SabreTools.FileTypes.Archives
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 success = false;
             }
             finally

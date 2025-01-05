@@ -157,16 +157,16 @@ namespace SabreTools.FileTypes.Archives
             catch (EndOfStreamException ex)
             {
                 // Catch this but don't count it as an error because SharpCompress is unsafe
-                logger.Verbose(ex);
+                _logger.Verbose(ex);
             }
             catch (InvalidOperationException ex)
             {
-                logger.Warning(ex);
+                _logger.Warning(ex);
                 encounteredErrors = true;
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 encounteredErrors = true;
             }
 
@@ -296,7 +296,7 @@ namespace SabreTools.FileTypes.Archives
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 return (null, null);
             }
         }
@@ -345,7 +345,7 @@ namespace SabreTools.FileTypes.Archives
                     // If we get a read error, log it and continue
                     if (zr != ZipReturn.ZipGood || readStream == null)
                     {
-                        logger.Warning($"An error occurred while reading archive {Filename}: Zip Error - {zr}");
+                        _logger.Warning($"An error occurred while reading archive {Filename}: Zip Error - {zr}");
                         continue;
                     }
 
@@ -353,7 +353,7 @@ namespace SabreTools.FileTypes.Archives
                     var zipEntryRom = new BaseFile();
 
                     // Perform a quickscan, if flagged to
-                    if (AvailableHashTypes.Length == 1 && AvailableHashTypes[0] == HashType.CRC32)
+                    if (_hashTypes.Length == 1 && _hashTypes[0] == HashType.CRC32)
                     {
                         zipEntryRom.Size = (long)localFile.UncompressedSize;
                         zipEntryRom.CRC = localFile.CRC;
@@ -363,7 +363,7 @@ namespace SabreTools.FileTypes.Archives
                     {
                         zipEntryRom = GetInfo(readStream,
                             size: (long)localFile.UncompressedSize,
-                            hashes: AvailableHashTypes,
+                            hashes: _hashTypes,
                             keepReadOpen: true);
                     }
 
@@ -406,7 +406,7 @@ namespace SabreTools.FileTypes.Archives
                     var zipEntryRom = new BaseFile();
 
                     // Perform a quickscan, if flagged to
-                    if (AvailableHashTypes.Length == 1 && AvailableHashTypes[0] == HashType.CRC32)
+                    if (_hashTypes.Length == 1 && _hashTypes[0] == HashType.CRC32)
                     {
                         zipEntryRom.Size = localFile.Length;
 #if NETCOREAPP
@@ -420,7 +420,7 @@ namespace SabreTools.FileTypes.Archives
                     {
                         zipEntryRom = GetInfo(readStream,
                             size: localFile.Length,
-                            hashes: AvailableHashTypes,
+                            hashes: _hashTypes,
                             keepReadOpen: false);
                     }
 
@@ -437,7 +437,7 @@ namespace SabreTools.FileTypes.Archives
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 return null;
             }
 
@@ -532,7 +532,7 @@ namespace SabreTools.FileTypes.Archives
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
             }
 
             return empties;
@@ -734,7 +734,7 @@ namespace SabreTools.FileTypes.Archives
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 success = false;
             }
             finally
@@ -949,7 +949,7 @@ namespace SabreTools.FileTypes.Archives
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 success = false;
             }
 

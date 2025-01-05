@@ -311,19 +311,19 @@ namespace SabreTools.DatTools
             bool isSingleTorrent = tgz.IsTorrent() || txz.IsTorrent();
 
             // Get the base archive first
-            BaseArchive? archive = BaseArchive.Create(file);
+            BaseArchive? archive = FileTypeTool.CreateArchiveType(file);
 
             // Now get all extracted items from the archive
             if (archive != null)
             {
-                archive.AvailableHashTypes = quickScan ? [HashType.CRC32] : [HashType.CRC32, HashType.MD5, HashType.SHA1];
+                archive.SetHashTypes(quickScan ? [HashType.CRC32] : [HashType.CRC32, HashType.MD5, HashType.SHA1]);
                 entries = archive.GetChildren();
             }
 
             // If the entries list is null, we encountered an error or have a file and should scan externally
             if (entries == null && System.IO.File.Exists(file))
             {
-                BaseFile? internalFileInfo = BaseFile.GetInfo(file, asFiles: asFiles);
+                BaseFile? internalFileInfo = FileTypeTool.GetInfo(file, asFiles: asFiles);
 
                 // Create the correct DatItem
                 DatItem? internalDatItem;
@@ -498,7 +498,7 @@ namespace SabreTools.DatTools
                     if (rule.TransformStream(fileStream, transformStream, keepReadOpen: true, keepWriteOpen: true))
                     {
                         // Get the file informations that we will be using
-                        Rom headerless = new(BaseFile.GetInfo(transformStream, keepReadOpen: true));
+                        Rom headerless = new(FileTypeTool.GetInfo(transformStream, keepReadOpen: true));
 
                         // If we have duplicates and we're not filtering
                         if (ShouldRebuild(datFile, headerless, transformStream, false, out dupes))
@@ -572,7 +572,7 @@ namespace SabreTools.DatTools
                 string? machinename = null;
 
                 // Get the item from the current file
-                Rom item = new(BaseFile.GetInfo(stream, keepReadOpen: true));
+                Rom item = new(FileTypeTool.GetInfo(stream, keepReadOpen: true));
                 item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, Path.GetFileNameWithoutExtension(item.GetName()));
                 item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Path.GetFileNameWithoutExtension(item.GetName()));
 
@@ -629,7 +629,7 @@ namespace SabreTools.DatTools
                 string? machinename = null;
 
                 // Get the item from the current file
-                var item = new Rom(BaseFile.GetInfo(stream, keepReadOpen: true));
+                var item = new Rom(FileTypeTool.GetInfo(stream, keepReadOpen: true));
 
                 // Create a machine for the current item
                 var machine = new Machine();
@@ -764,7 +764,7 @@ namespace SabreTools.DatTools
             // If we have a zipfile, extract the stream to memory
             if (isZip != null)
             {
-                BaseArchive? archive = BaseArchive.Create(file);
+                BaseArchive? archive = FileTypeTool.CreateArchiveType(file);
                 if (archive == null)
                     return false;
 
@@ -823,7 +823,7 @@ namespace SabreTools.DatTools
         /// <returns>Folder configured with proper flags</returns>
         private static Folder? GetPreconfiguredFolder(DatFile datFile, bool date, OutputFormat outputFormat)
         {
-            Folder? outputArchive = Folder.Create(outputFormat);
+            Folder? outputArchive = FileTypeTool.CreateFolderType(outputFormat);
             if (outputArchive is BaseArchive baseArchive && date)
                 baseArchive.UseDates = date;
 

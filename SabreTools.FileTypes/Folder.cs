@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using SabreTools.Core.Tools;
-using SabreTools.FileTypes.Archives;
+using SabreTools.Hashing;
 using SabreTools.IO;
 using SabreTools.IO.Extensions;
 using SabreTools.IO.Logging;
@@ -16,17 +16,25 @@ namespace SabreTools.FileTypes
     {
         #region Protected instance variables
 
+        /// <summary>
+        /// Hashes that are available for children
+        /// </summary>
+        protected HashType[] _hashTypes = [HashType.CRC32, HashType.MD5, HashType.SHA1];
+
+        /// <summary>
+        /// Set of children file objects
+        /// </summary>
         protected List<BaseFile>? _children;
 
         /// <summary>
         /// Logging object
         /// </summary>
-        protected Logger logger;
+        protected Logger _logger;
 
         /// <summary>
         /// Static logger for static methods
         /// </summary>
-        protected static Logger staticLogger = new();
+        protected static Logger _staticLogger = new();
 
         /// <summary>
         /// Flag specific to Folder to omit Machine name from output path
@@ -41,11 +49,10 @@ namespace SabreTools.FileTypes
         /// Create a new Folder with no base file
         /// </summary>
         /// <param name="writeToParent">True to write directly to parent, false otherwise</param>
-        public Folder(bool writeToParent = false)
-            : base()
+        public Folder(bool writeToParent = false) : base()
         {
             _writeToParent = writeToParent;
-            logger = new Logger(this);
+            _logger = new Logger(this);
         }
 
         /// <summary>
@@ -53,34 +60,10 @@ namespace SabreTools.FileTypes
         /// </summary>
         /// <param name="filename">Name of the folder to use</param>
         /// <param name="writeToParent">True to write directly to parent, false otherwise</param>
-        public Folder(string filename, bool writeToParent = false)
-            : base(filename)
+        public Folder(string filename, bool writeToParent = false) : base(filename)
         {
             _writeToParent = writeToParent;
-            logger = new Logger(this);
-        }
-
-        /// <summary>
-        /// Create an folder object of the specified type, if possible
-        /// </summary>
-        /// <param name="outputFormat">OutputFormat representing the archive to create</param>
-        /// <returns>Archive object representing the inputs</returns>
-        public static Folder? Create(OutputFormat outputFormat)
-        {
-            return outputFormat switch
-            {
-                OutputFormat.Folder => new Folder(false),
-                OutputFormat.ParentFolder => new Folder(true),
-                OutputFormat.TapeArchive => new TapeArchive(),
-                OutputFormat.Torrent7Zip => new SevenZipArchive(),
-                OutputFormat.TorrentGzip => new GZipArchive(),
-                OutputFormat.TorrentGzipRomba => new GZipArchive(),
-                OutputFormat.TorrentRar => new RarArchive(),
-                OutputFormat.TorrentXZ => new XZArchive(),
-                OutputFormat.TorrentXZRomba => new XZArchive(),
-                OutputFormat.TorrentZip => new ZipArchive(),
-                _ => null,
-            };
+            _logger = new Logger(this);
         }
 
         #endregion
@@ -109,7 +92,7 @@ namespace SabreTools.FileTypes
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 return false;
             }
 
@@ -191,7 +174,7 @@ namespace SabreTools.FileTypes
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 return realentry;
             }
 
@@ -232,7 +215,7 @@ namespace SabreTools.FileTypes
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 return (null, null);
             }
         }
@@ -240,6 +223,18 @@ namespace SabreTools.FileTypes
         #endregion
 
         #region Information
+
+        /// <summary>
+        /// Set the hash type that can be included in children
+        /// </summary>
+        public void SetHashType(HashType hashType)
+            => SetHashTypes([hashType]);
+
+        /// <summary>
+        /// Set the hash types that can be included in children
+        /// </summary>
+        public void SetHashTypes(HashType[] hashTypes)
+            => _hashTypes = hashTypes;
 
         /// <summary>
         /// Generate a list of immediate children from the current folder
@@ -260,7 +255,7 @@ namespace SabreTools.FileTypes
                 foreach (string file in Directory.EnumerateFiles(Filename, "*", SearchOption.TopDirectoryOnly))
 #endif
                 {
-                    BaseFile? nf = GetInfo(file, hashes: AvailableHashTypes);
+                    BaseFile? nf = FileTypeTool.GetInfo(file, hashes: _hashTypes);
                     if (nf != null)
                         _children.Add(nf);
                 }
@@ -384,7 +379,7 @@ namespace SabreTools.FileTypes
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 return false;
             }
             finally

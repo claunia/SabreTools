@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using SabreTools.FileTypes.Archives;
 
 namespace SabreTools.FileTypes
 {
@@ -29,84 +28,13 @@ namespace SabreTools.FileTypes
         /// <summary>
         /// Create a new Archive with no base file
         /// </summary>
-        public BaseArchive()
-        {
-        }
+        public BaseArchive() : base() { }
 
         /// <summary>
         /// Create a new BaseArchive from the given file
         /// </summary>
         /// <param name="filename">Name of the file to use</param>
-        public BaseArchive(string filename)
-            : base(filename)
-        {
-        }
-
-        /// <summary>
-        /// Create an archive object from a filename, if possible
-        /// </summary>
-        /// <param name="input">Name of the file to create the archive from</param>
-        /// <returns>Archive object representing the inputs</returns>
-        public static BaseArchive? Create(string input)
-        {
-            BaseArchive? archive = null;
-
-            // First get the archive type
-            FileType? at = GetFileType(input);
-
-            // If we got back null, then it's not an archive, so we we return
-            if (at == null)
-                return archive;
-
-            // Create the archive based on the type
-            staticLogger.Verbose($"Found archive of type: {at}");
-            switch (at)
-            {
-                case FileType.GZipArchive:
-                    archive = new GZipArchive(input);
-                    break;
-
-                case FileType.RarArchive:
-                    archive = new RarArchive(input);
-                    break;
-
-                case FileType.SevenZipArchive:
-                    archive = new SevenZipArchive(input);
-                    break;
-
-                case FileType.TapeArchive:
-                    archive = new TapeArchive(input);
-                    break;
-
-                case FileType.ZipArchive:
-                    archive = new ZipArchive(input);
-                    break;
-
-                default:
-                    // We ignore all other types for now
-                    break;
-            }
-
-            return archive;
-        }
-
-        /// <summary>
-        /// Create an archive object of the specified type, if possible
-        /// </summary>
-        /// <param name="archiveType">SharpCompress.Common.ArchiveType representing the archive to create</param>
-        /// <returns>Archive object representing the inputs</returns>
-        public static BaseArchive? Create(FileType archiveType)
-        {
-            return archiveType switch
-            {
-                FileType.GZipArchive => new GZipArchive(),
-                FileType.RarArchive => new RarArchive(),
-                FileType.SevenZipArchive => new SevenZipArchive(),
-                FileType.TapeArchive => new TapeArchive(),
-                FileType.ZipArchive => new ZipArchive(),
-                _ => null,
-            };
-        }
+        public BaseArchive(string filename) : base(filename) { }
 
         #endregion
 

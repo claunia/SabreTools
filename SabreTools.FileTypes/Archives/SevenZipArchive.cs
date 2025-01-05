@@ -118,16 +118,16 @@ namespace SabreTools.FileTypes.Archives
             catch (EndOfStreamException ex)
             {
                 // Catch this but don't count it as an error because SharpCompress is unsafe
-                logger.Verbose(ex);
+                _logger.Verbose(ex);
             }
             catch (InvalidOperationException ex)
             {
-                logger.Warning(ex);
+                _logger.Warning(ex);
                 encounteredErrors = true;
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 encounteredErrors = true;
             }
 
@@ -221,7 +221,7 @@ namespace SabreTools.FileTypes.Archives
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 return (null, null);
             }
         }
@@ -265,7 +265,7 @@ namespace SabreTools.FileTypes.Archives
                     // If we get a read error, log it and continue
                     if (zr != ZipReturn.ZipGood)
                     {
-                        logger.Warning($"An error occurred while reading archive {Filename}: Zip Error - {zr}");
+                        _logger.Warning($"An error occurred while reading archive {Filename}: Zip Error - {zr}");
                         zr = zf.ZipFileCloseReadStream();
                         continue;
                     }
@@ -274,7 +274,7 @@ namespace SabreTools.FileTypes.Archives
                     BaseFile zipEntryRom = new();
 
                     // Perform a quickscan, if flagged to
-                    if (AvailableHashTypes.Length == 1 && AvailableHashTypes[0] == HashType.CRC32)
+                    if (_hashTypes.Length == 1 && _hashTypes[0] == HashType.CRC32)
                     {
                         zipEntryRom.Size = (long)zf.GetLocalFile(i).UncompressedSize;
                         zipEntryRom.CRC = zf.GetLocalFile(i).CRC;
@@ -282,7 +282,7 @@ namespace SabreTools.FileTypes.Archives
                     // Otherwise, use the stream directly
                     else
                     {
-                        zipEntryRom = GetInfo(readStream, size: (long)zf.GetLocalFile(i).UncompressedSize, hashes: AvailableHashTypes, keepReadOpen: true);
+                        zipEntryRom = GetInfo(readStream, size: (long)zf.GetLocalFile(i).UncompressedSize, hashes: _hashTypes, keepReadOpen: true);
                     }
 
                     // Fill in common details and add to the list
@@ -297,7 +297,7 @@ namespace SabreTools.FileTypes.Archives
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 return null;
             }
 
@@ -347,7 +347,7 @@ namespace SabreTools.FileTypes.Archives
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
             }
 
             return empties;
@@ -560,7 +560,7 @@ namespace SabreTools.FileTypes.Archives
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 success = false;
             }
             finally
@@ -774,7 +774,7 @@ namespace SabreTools.FileTypes.Archives
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 success = false;
             }
 

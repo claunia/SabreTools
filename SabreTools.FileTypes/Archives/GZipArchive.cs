@@ -105,16 +105,16 @@ namespace SabreTools.FileTypes.Archives
             catch (EndOfStreamException ex)
             {
                 // Catch this but don't count it as an error because SharpCompress is unsafe
-                logger.Verbose(ex);
+                _logger.Verbose(ex);
             }
             catch (InvalidOperationException ex)
             {
-                logger.Warning(ex);
+                _logger.Warning(ex);
                 encounteredErrors = true;
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 encounteredErrors = true;
             }
 
@@ -185,7 +185,7 @@ namespace SabreTools.FileTypes.Archives
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 return (null, null);
             }
         }
@@ -224,7 +224,7 @@ namespace SabreTools.FileTypes.Archives
                 BaseFile gzipEntryRom = new();
 
                 // Perform a quickscan, if flagged to
-                if (AvailableHashTypes.Length == 1 && AvailableHashTypes[0] == HashType.CRC32)
+                if (_hashTypes.Length == 1 && _hashTypes[0] == HashType.CRC32)
                 {
                     gzipEntryRom.Filename = gamename;
 
@@ -239,7 +239,7 @@ namespace SabreTools.FileTypes.Archives
                     var gz = new gZip();
                     ZipReturn ret = gz.ZipFileOpen(Filename);
                     ret = gz.ZipFileOpenReadStream(0, out Stream? gzstream, out ulong streamSize);
-                    gzipEntryRom = GetInfo(gzstream, hashes: AvailableHashTypes);
+                    gzipEntryRom = GetInfo(gzstream, hashes: _hashTypes);
                     gzipEntryRom.Filename = gz.GetLocalFile(0).Filename;
                     gzipEntryRom.Parent = gamename;
                     gzipEntryRom.Date = (gz.TimeStamp > 0 ? gz.TimeStamp.ToString() : null);
@@ -252,7 +252,7 @@ namespace SabreTools.FileTypes.Archives
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 return null;
             }
 
@@ -279,21 +279,21 @@ namespace SabreTools.FileTypes.Archives
             // If we have the romba depot files, just skip them gracefully
             if (datum == ".romba_size" || datum == ".romba_size.backup")
             {
-                logger.Verbose($"Romba depot file found, skipping: {Filename}");
+                _logger.Verbose($"Romba depot file found, skipping: {Filename}");
                 return false;
             }
 
             // Check if the name is the right length
             if (!Regex.IsMatch(datum, @"^[0-9a-f]{" + Constants.SHA1Length + @"}\.gz"))
             {
-                logger.Warning($"Non SHA-1 filename found, skipping: '{Path.GetFullPath(Filename)}'");
+                _logger.Warning($"Non SHA-1 filename found, skipping: '{Path.GetFullPath(Filename)}'");
                 return false;
             }
 
             // Check if the file is at least the minimum length
             if (filesize < 40 /* bytes */)
             {
-                logger.Warning($"Possibly corrupt file '{Path.GetFullPath(Filename)}' with size {filesize}");
+                _logger.Warning($"Possibly corrupt file '{Path.GetFullPath(Filename)}' with size {filesize}");
                 return false;
             }
 
@@ -340,21 +340,21 @@ namespace SabreTools.FileTypes.Archives
             // If we have the romba depot files, just skip them gracefully
             if (datum == ".romba_size" || datum == ".romba_size.backup")
             {
-                logger.Verbose($"Romba depot file found, skipping: {Filename}");
+                _logger.Verbose($"Romba depot file found, skipping: {Filename}");
                 return null;
             }
 
             // Check if the name is the right length
             if (!Regex.IsMatch(datum, @"^[0-9a-f]{" + Constants.SHA1Length + @"}\.gz"))
             {
-                logger.Warning($"Non SHA-1 filename found, skipping: '{Path.GetFullPath(Filename)}'");
+                _logger.Warning($"Non SHA-1 filename found, skipping: '{Path.GetFullPath(Filename)}'");
                 return null;
             }
 
             // Check if the file is at least the minimum length
             if (filesize < 40 /* bytes */)
             {
-                logger.Warning($"Possibly corrupt file '{Path.GetFullPath(Filename)}' with size {filesize}");
+                _logger.Warning($"Possibly corrupt file '{Path.GetFullPath(Filename)}' with size {filesize}");
                 return null;
             }
 
@@ -414,7 +414,7 @@ namespace SabreTools.FileTypes.Archives
             // Check that the input file exists
             if (!File.Exists(inputFile))
             {
-                logger.Warning($"File '{inputFile}' does not exist!");
+                _logger.Warning($"File '{inputFile}' does not exist!");
                 return false;
             }
 

@@ -147,13 +147,13 @@ namespace SabreTools.DatTools
                 return;
 
             // Initialize possible archive variables
-            BaseArchive? archive = BaseArchive.Create(item);
+            BaseArchive? archive = FileTypeTool.CreateArchiveType(item);
 
             // Process archives according to flags
             if (archive != null)
             {
                 // Set the archive flags
-                archive.AvailableHashTypes = _hashes;
+                archive.SetHashTypes(_hashes);
 
                 // Skip if we're treating archives as files and skipping files
 #if NET20 || NET35
@@ -406,7 +406,7 @@ namespace SabreTools.DatTools
         {
             logger.Verbose($"'{Path.GetFileName(item)}' treated like a file");
             var header = datFile.Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey);
-            BaseFile? baseFile = BaseFile.GetInfo(item, header, _hashes, asFiles);
+            BaseFile? baseFile = FileTypeTool.GetInfo(item, header, _hashes, asFiles);
             DatItem? datItem = DatItem.Create(baseFile);
             if (datItem != null)
                 ProcessFileHelper(datFile, item, datItem, basePath, string.Empty);
