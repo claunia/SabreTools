@@ -49,25 +49,7 @@ namespace SabreTools.FileTypes
 
             // Get input information
             var fileType = GetFileType(input);
-            Stream inputStream = File.OpenRead(input);
-
-            // Try to match the supplied header skipper
-            if (header != null)
-            {
-                SkipperMatch.Init();
-                var rule = SkipperMatch.GetMatchingRule(input, Path.GetFileNameWithoutExtension(header));
-
-                // If there's a match, transform the stream before getting info
-                if (rule.Tests != null && rule.Tests.Length != 0)
-                {
-                    // Create the output stream
-                    MemoryStream outputStream = new();
-
-                    // Transform the stream and get the information from it
-                    rule.TransformStream(inputStream, outputStream, keepReadOpen: false, keepWriteOpen: true);
-                    inputStream = outputStream;
-                }
-            }
+            Stream inputStream = GetInfoStream(input, header);
 
             // Get the info in the proper manner
             BaseFile? baseFile;
@@ -172,6 +154,33 @@ namespace SabreTools.FileTypes
             }
 
             return baseFile;
+        }
+
+        /// <summary>
+        /// Get the required stream for info hashing
+        /// </summary>
+        /// <param name="input">Filename to get information from</param>
+        /// <param name="header">Populated string representing the name of the skipper to use, a blank string to use the first available checker, null otherwise</param>
+        /// <returns>Open stream representing the file</returns>
+        private static Stream GetInfoStream(string input, string? header)
+        {
+            // Open the file directly
+            Stream inputStream = File.Open(input, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            if (header == null)
+                return inputStream;
+
+            // Try to match the supplied header skipper
+            SkipperMatch.Init();
+            var rule = SkipperMatch.GetMatchingRule(input, Path.GetFileNameWithoutExtension(header));
+
+            // If there's no match, return the original stream
+            if (rule.Tests == null || rule.Tests.Length == 0)
+                return inputStream;
+
+            // Transform the stream and get the information from it
+            var outputStream = new MemoryStream();
+            rule.TransformStream(inputStream, outputStream, keepReadOpen: false, keepWriteOpen: true);
+            return outputStream;
         }
 
         #endregion
