@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using SabreTools.FileTypes.Aaru;
 using SabreTools.FileTypes.Archives;
@@ -20,8 +19,8 @@ namespace SabreTools.FileTypes
         /// </summary>
         /// <param name="input">Filename to get information from</param>
         /// <param name="hashes">Hashes to include in the information</param>
-        /// <returns>Populated BaseFile object if success, null on error</returns>
-        public static BaseFile? GetInfo(string input, HashType[] hashes)
+        /// <returns>Populated BaseFile object if success, empty on error</returns>
+        public static BaseFile GetInfo(string input, HashType[] hashes)
             => GetInfo(input, header: null, hashes, asFiles: 0x00);
 
         /// <summary>
@@ -30,8 +29,8 @@ namespace SabreTools.FileTypes
         /// <param name="input">Filename to get information from</param>
         /// <param name="hashes">Hashes to include in the information</param>
         /// <param name="asFiles">TreatAsFiles representing special format scanning</param>
-        /// <returns>Populated BaseFile object if success, null on error</returns>
-        public static BaseFile? GetInfo(string input, HashType[] hashes, TreatAsFile asFiles)
+        /// <returns>Populated BaseFile object if success, empty on error</returns>
+        public static BaseFile GetInfo(string input, HashType[] hashes, TreatAsFile asFiles)
             => GetInfo(input, header: null, hashes, asFiles);
 
         /// <summary>
@@ -41,12 +40,12 @@ namespace SabreTools.FileTypes
         /// <param name="header">Populated string representing the name of the skipper to use, a blank string to use the first available checker, null otherwise</param>
         /// <param name="hashes">Hashes to include in the information</param>
         /// <param name="asFiles">TreatAsFiles representing special format scanning</param>
-        /// <returns>Populated BaseFile object if success, null on error</returns>
-        public static BaseFile? GetInfo(string input, string? header, HashType[] hashes, TreatAsFile asFiles)
+        /// <returns>Populated BaseFile object if success, empty on error</returns>
+        public static BaseFile GetInfo(string input, string? header, HashType[] hashes, TreatAsFile asFiles)
         {
             // Add safeguard if file doesn't exist
             if (!File.Exists(input))
-                return null;
+                return new BaseFile();
 
             // Get input information
             var fileType = GetFileType(input);
@@ -97,21 +96,47 @@ namespace SabreTools.FileTypes
         }
 
         /// <summary>
-        /// Retrieve file information for a single file
+        /// Retrieve file information for a single stream
         /// </summary>
-        /// <param name="input">Filename to get information from</param>
+        /// <param name="input">Stream to get information from</param>
+        /// <param name="hashes">Hashes to include in the information</param>
+        /// <returns>Populated BaseFile object if success, null on error</returns>
+        public static BaseFile GetInfo(Stream? input, HashType[] hashes)
+            => GetInfo(input, size: -1, hashes, keepReadOpen: false);
+
+        /// <summary>
+        /// Retrieve file information for a single stream
+        /// </summary>
+        /// <param name="input">Stream to get information from</param>
         /// <param name="size">Size of the input stream</param>
         /// <param name="hashes">Hashes to include in the information</param>
-        /// <param name="keepReadOpen">True if the underlying read stream should be kept open, false otherwise</param>
+        /// <returns>Populated BaseFile object if success, null on error</returns>
+        public static BaseFile GetInfo(Stream? input, long size, HashType[] hashes)
+            => GetInfo(input, size, hashes, keepReadOpen: false);
+
+        /// <summary>
+        /// Retrieve file information for a single stream
+        /// </summary>
+        /// <param name="input">Stream to get information from</param>
+        /// <param name="hashes">Hashes to include in the information</param>
+        /// <param name="keepReadOpen">Indicates if the underlying read stream should be kept open</param>
+        /// <returns>Populated BaseFile object if success, null on error</returns>
+        public static BaseFile GetInfo(Stream? input, HashType[] hashes, bool keepReadOpen)
+            => GetInfo(input, size: -1, hashes, keepReadOpen);
+
+        /// <summary>
+        /// Retrieve file information for a single file
+        /// </summary>
+        /// <param name="input">Stream to get information from</param>
+        /// <param name="size">Size of the input stream</param>
+        /// <param name="hashes">Hashes to include in the information</param>
+        /// <param name="keepReadOpen">Indicates if the underlying read stream should be kept open</param>
         /// <returns>Populated BaseFile object if success, empty one on error</returns>
-        public static BaseFile GetInfo(Stream? input, long size = -1, HashType[]? hashes = null, bool keepReadOpen = false)
+        public static BaseFile GetInfo(Stream? input, long size, HashType[]? hashes, bool keepReadOpen)
         {
             // If we have no stream
             if (input == null)
                 return new BaseFile();
-
-            // If no hashes are set, use the standard array
-            hashes ??= [HashType.CRC32, HashType.MD5, HashType.SHA1];
 
             // If we want to automatically set the size
             if (size == -1)

@@ -282,7 +282,10 @@ namespace SabreTools.FileTypes.Archives
                     // Otherwise, use the stream directly
                     else
                     {
-                        zipEntryRom = FileTypeTool.GetInfo(readStream, size: (long)zf.GetLocalFile(i).UncompressedSize, hashes: _hashTypes, keepReadOpen: true);
+                        zipEntryRom = FileTypeTool.GetInfo(readStream,
+                            (long)zf.GetLocalFile(i).UncompressedSize,
+                            _hashTypes,
+                            keepReadOpen: true);
                     }
 
                     // Fill in common details and add to the list

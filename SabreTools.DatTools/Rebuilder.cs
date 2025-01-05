@@ -499,7 +499,8 @@ namespace SabreTools.DatTools
                     if (rule.TransformStream(fileStream, transformStream, keepReadOpen: true, keepWriteOpen: true))
                     {
                         // Get the file informations that we will be using
-                        Rom headerless = new(FileTypeTool.GetInfo(transformStream, keepReadOpen: true));
+                        HashType[] hashes = [HashType.CRC32, HashType.MD5, HashType.SHA1];
+                        Rom headerless = new(FileTypeTool.GetInfo(transformStream, hashes, keepReadOpen: true));
 
                         // If we have duplicates and we're not filtering
                         if (ShouldRebuild(datFile, headerless, transformStream, false, out dupes))
@@ -573,7 +574,8 @@ namespace SabreTools.DatTools
                 string? machinename = null;
 
                 // Get the item from the current file
-                Rom item = new(FileTypeTool.GetInfo(stream, keepReadOpen: true));
+                HashType[] hashes = [HashType.CRC32, HashType.MD5, HashType.SHA1];
+                Rom item = new(FileTypeTool.GetInfo(stream, hashes, keepReadOpen: true));
                 item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, Path.GetFileNameWithoutExtension(item.GetName()));
                 item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Path.GetFileNameWithoutExtension(item.GetName()));
 
@@ -630,7 +632,8 @@ namespace SabreTools.DatTools
                 string? machinename = null;
 
                 // Get the item from the current file
-                var item = new Rom(FileTypeTool.GetInfo(stream, keepReadOpen: true));
+                HashType[] hashes = [HashType.CRC32, HashType.MD5, HashType.SHA1];
+                var item = new Rom(FileTypeTool.GetInfo(stream, hashes, keepReadOpen: true));
 
                 // Create a machine for the current item
                 var machine = new Machine();
