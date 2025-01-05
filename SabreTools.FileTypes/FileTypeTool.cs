@@ -47,34 +47,43 @@ namespace SabreTools.FileTypes
             if (!File.Exists(input))
                 return new BaseFile();
 
-            // Get input information
-            var fileType = GetFileType(input);
-            Stream inputStream = GetInfoStream(input, header);
+            try
+            {
+                // Get input information
+                var fileType = GetFileType(input);
+                Stream inputStream = GetInfoStream(input, header);
 
-            // Get the info in the proper manner
-            BaseFile? baseFile;
+                // Get the info in the proper manner
+                BaseFile? baseFile;
 #if NET20 || NET35
-            if (fileType == FileType.AaruFormat && (asFiles & TreatAsFile.AaruFormat) == 0)
-                baseFile = AaruFormat.Create(inputStream);
-            else if (fileType == FileType.CHD && (asFiles & TreatAsFile.CHD) == 0)
-                baseFile = CHDFile.Create(inputStream);
+                if (fileType == FileType.AaruFormat && (asFiles & TreatAsFile.AaruFormat) == 0)
+                    baseFile = AaruFormat.Create(inputStream);
+                else if (fileType == FileType.CHD && (asFiles & TreatAsFile.CHD) == 0)
+                    baseFile = CHDFile.Create(inputStream);
 #else
-            if (fileType == FileType.AaruFormat && !asFiles.HasFlag(TreatAsFile.AaruFormat))
-                baseFile = AaruFormat.Create(inputStream);
-            else if (fileType == FileType.CHD && !asFiles.HasFlag(TreatAsFile.CHD))
-                baseFile = CHDFile.Create(inputStream);
+                if (fileType == FileType.AaruFormat && !asFiles.HasFlag(TreatAsFile.AaruFormat))
+                    baseFile = AaruFormat.Create(inputStream);
+                else if (fileType == FileType.CHD && !asFiles.HasFlag(TreatAsFile.CHD))
+                    baseFile = CHDFile.Create(inputStream);
 #endif
-            else
-                baseFile = GetInfo(inputStream, hashes: hashes, keepReadOpen: false);
+                else
+                    baseFile = GetInfo(inputStream, hashes: hashes, keepReadOpen: false);
 
-            // Dispose of the input stream
-            inputStream?.Dispose();
+                // Dispose of the input stream
+                inputStream?.Dispose();
 
-            // Add unique data from the file
-            baseFile!.Filename = Path.GetFileName(input);
-            baseFile.Date = new FileInfo(input).LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss");
+                // Add unique data from the file
+                baseFile!.Filename = Path.GetFileName(input);
+                baseFile.Date = new FileInfo(input).LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss");
 
-            return baseFile;
+                return baseFile;
+            }
+            catch
+            {
+                // Exceptions are currently not logged
+                // TODO: Log exceptions
+                return new BaseFile();
+            }
         }
 
         /// <summary>
@@ -120,40 +129,49 @@ namespace SabreTools.FileTypes
             if (input == null)
                 return new BaseFile();
 
-            // If we want to automatically set the size
-            if (size == -1)
-                size = input.Length;
+            try
+            {
+                // If we want to automatically set the size
+                if (size == -1)
+                    size = input.Length;
 
-            // Run the hashing on the input stream
-            var hashDict = HashTool.GetStreamHashes(input, hashes);
-            if (hashDict == null)
+                // Run the hashing on the input stream
+                var hashDict = HashTool.GetStreamHashes(input, hashes);
+                if (hashDict == null)
+                    return new BaseFile();
+
+                // Create a base file with the resulting hashes
+                var baseFile = new BaseFile()
+                {
+                    Size = size,
+                    CRC = hashDict.ContainsKey(HashType.CRC32) ? hashDict[HashType.CRC32].FromHexString() : null,
+                    MD5 = hashDict.ContainsKey(HashType.MD5) ? hashDict[HashType.MD5].FromHexString() : null,
+                    SHA1 = hashDict.ContainsKey(HashType.SHA1) ? hashDict[HashType.SHA1].FromHexString() : null,
+                    SHA256 = hashDict.ContainsKey(HashType.SHA256) ? hashDict[HashType.SHA256].FromHexString() : null,
+                    SHA384 = hashDict.ContainsKey(HashType.SHA384) ? hashDict[HashType.SHA384].FromHexString() : null,
+                    SHA512 = hashDict.ContainsKey(HashType.SHA512) ? hashDict[HashType.SHA512].FromHexString() : null,
+                    SpamSum = hashDict.ContainsKey(HashType.SpamSum) ? hashDict[HashType.SpamSum].FromHexString() : null,
+                };
+
+                // Deal with the input stream
+                if (!keepReadOpen)
+                {
+                    input.Close();
+                    input.Dispose();
+                }
+                else
+                {
+                    input.SeekIfPossible();
+                }
+
+                return baseFile;
+            }
+            catch
+            {
+                // Exceptions are currently not logged
+                // TODO: Log exceptions
                 return new BaseFile();
-
-            // Create a base file with the resulting hashes
-            var baseFile = new BaseFile()
-            {
-                Size = size,
-                CRC = hashDict.ContainsKey(HashType.CRC32) ? hashDict[HashType.CRC32].FromHexString() : null,
-                MD5 = hashDict.ContainsKey(HashType.MD5) ? hashDict[HashType.MD5].FromHexString() : null,
-                SHA1 = hashDict.ContainsKey(HashType.SHA1) ? hashDict[HashType.SHA1].FromHexString() : null,
-                SHA256 = hashDict.ContainsKey(HashType.SHA256) ? hashDict[HashType.SHA256].FromHexString() : null,
-                SHA384 = hashDict.ContainsKey(HashType.SHA384) ? hashDict[HashType.SHA384].FromHexString() : null,
-                SHA512 = hashDict.ContainsKey(HashType.SHA512) ? hashDict[HashType.SHA512].FromHexString() : null,
-                SpamSum = hashDict.ContainsKey(HashType.SpamSum) ? hashDict[HashType.SpamSum].FromHexString() : null,
-            };
-
-            // Deal with the input stream
-            if (!keepReadOpen)
-            {
-                input.Close();
-                input.Dispose();
             }
-            else
-            {
-                input.SeekIfPossible();
-            }
-
-            return baseFile;
         }
 
         /// <summary>
