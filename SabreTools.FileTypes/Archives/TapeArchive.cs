@@ -203,7 +203,7 @@ namespace SabreTools.FileTypes.Archives
                     else
                     {
                         using Stream entryStream = entry.OpenEntryStream();
-                        tarEntryRom = GetInfo(entryStream, size: entry.Size, hashes: _hashTypes);
+                        tarEntryRom = FileTypeTool.GetInfo(entryStream, size: entry.Size, hashes: _hashTypes);
                     }
 
                     // Fill in common details and add to the list

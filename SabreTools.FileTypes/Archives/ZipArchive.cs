@@ -361,7 +361,7 @@ namespace SabreTools.FileTypes.Archives
                     // Otherwise, use the stream directly
                     else
                     {
-                        zipEntryRom = GetInfo(readStream,
+                        zipEntryRom = FileTypeTool.GetInfo(readStream,
                             size: (long)localFile.UncompressedSize,
                             hashes: _hashTypes,
                             keepReadOpen: true);
@@ -418,7 +418,7 @@ namespace SabreTools.FileTypes.Archives
                     // Otherwise, use the stream directly
                     else
                     {
-                        zipEntryRom = GetInfo(readStream,
+                        zipEntryRom = FileTypeTool.GetInfo(readStream,
                             size: localFile.Length,
                             hashes: _hashTypes,
                             keepReadOpen: false);

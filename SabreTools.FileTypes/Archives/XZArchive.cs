@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+#if NET462_OR_GREATER || NETCOREAPP
 using SabreTools.Hashing;
+#endif
 using SabreTools.IO.Extensions;
 #if NET462_OR_GREATER || NETCOREAPP
 using SharpCompress.Compressors.Xz;
@@ -213,7 +215,7 @@ namespace SabreTools.FileTypes.Archives
                 else
                 {
                     var xzStream = new XZStream(File.OpenRead(Filename!));
-                    xzEntryRom = GetInfo(xzStream, hashes: _hashTypes);
+                    xzEntryRom = FileTypeTool.GetInfo(xzStream, hashes: _hashTypes);
                     xzEntryRom.Filename = gamename;
                     xzStream.Dispose();
                 }
@@ -252,7 +254,7 @@ namespace SabreTools.FileTypes.Archives
             string datum = Path.GetFileName(Filename).ToLowerInvariant();
 
             // Check if the name is the right length
-            if (!Regex.IsMatch(datum, @"^[0-9a-f]{" + Constants.SHA1Length + @"}\.xz"))
+            if (!Regex.IsMatch(datum, @"^[0-9a-f]{" + Hashing.Constants.SHA1Length + @"}\.xz"))
             {
                 _logger.Warning($"Non SHA-1 filename found, skipping: '{Path.GetFullPath(Filename)}'");
                 return false;
@@ -274,7 +276,7 @@ namespace SabreTools.FileTypes.Archives
             string datum = Path.GetFileName(Filename).ToLowerInvariant();
 
             // Check if the name is the right length
-            if (!Regex.IsMatch(datum, @"^[0-9a-f]{" + Constants.SHA1Length + @"}\.xz"))
+            if (!Regex.IsMatch(datum, @"^[0-9a-f]{" + Hashing.Constants.SHA1Length + @"}\.xz"))
             {
                 _logger.Warning($"Non SHA-1 filename found, skipping: '{Path.GetFullPath(Filename)}'");
                 return null;
@@ -328,7 +330,7 @@ namespace SabreTools.FileTypes.Archives
             outDir = Path.GetFullPath(outDir);
 
             // Now get the Rom info for the file so we have hashes and size
-            baseFile = GetInfo(inputStream, keepReadOpen: true);
+            baseFile = FileTypeTool.GetInfo(inputStream, keepReadOpen: true);
 
             // Get the output file name
             string outfile = Path.Combine(outDir, Core.Tools.Utilities.GetDepotPath(baseFile.SHA1, Depth)!);

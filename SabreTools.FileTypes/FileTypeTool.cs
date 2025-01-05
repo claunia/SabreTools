@@ -7,25 +7,12 @@ using SabreTools.Hashing;
 using SabreTools.IO.Extensions;
 using SabreTools.Matching;
 using SabreTools.Skippers;
+using static SabreTools.FileTypes.Constants;
 
 namespace SabreTools.FileTypes
 {
     public static class FileTypeTool
     {
-        #region Constants
-
-        private static readonly byte[] SevenZipSignature = [0x37, 0x7a, 0xbc, 0xaf, 0x27, 0x1c];
-        private static readonly byte[] AaruFormatSignature = [0x41, 0x41, 0x52, 0x55, 0x46, 0x52, 0x4d, 0x54];
-        private static readonly byte[] CHDSignature = [0x4d, 0x43, 0x6f, 0x6d, 0x70, 0x72, 0x48, 0x44];
-        private static readonly byte[] GzSignature = [0x1f, 0x8b, 0x08];
-        private static readonly byte[] RarSignature = [0x52, 0x61, 0x72, 0x21, 0x1a, 0x07, 0x00];
-        private static readonly byte[] RarFiveSignature = [0x52, 0x61, 0x72, 0x21, 0x1a, 0x07, 0x01, 0x00];
-        private static readonly byte[] TarSignature = [0x75, 0x73, 0x74, 0x61, 0x72, 0x20, 0x20, 0x00];
-        private static readonly byte[] TarZeroSignature = [0x75, 0x73, 0x74, 0x61, 0x72, 0x00, 0x30, 0x30];
-        private static readonly byte[] XZSignature = [0xfd, 0x37, 0x7a, 0x58, 0x5a, 0x00, 0x00];
-
-        #endregion
-
         #region File Info
 
         /// <summary>

@@ -210,7 +210,7 @@ namespace SabreTools.FileTypes.Archives
                     else
                     {
                         using Stream entryStream = entry.OpenEntryStream();
-                        rarEntryRom = GetInfo(entryStream, size: entry.Size, hashes: _hashTypes);
+                        rarEntryRom = FileTypeTool.GetInfo(entryStream, size: entry.Size, hashes: _hashTypes);
                     }
 
                     // Fill in common details and add to the list

@@ -239,7 +239,7 @@ namespace SabreTools.FileTypes.Archives
                     var gz = new gZip();
                     ZipReturn ret = gz.ZipFileOpen(Filename);
                     ret = gz.ZipFileOpenReadStream(0, out Stream? gzstream, out ulong streamSize);
-                    gzipEntryRom = GetInfo(gzstream, hashes: _hashTypes);
+                    gzipEntryRom = FileTypeTool.GetInfo(gzstream, hashes: _hashTypes);
                     gzipEntryRom.Filename = gz.GetLocalFile(0).Filename;
                     gzipEntryRom.Parent = gamename;
                     gzipEntryRom.Date = (gz.TimeStamp > 0 ? gz.TimeStamp.ToString() : null);
@@ -284,7 +284,7 @@ namespace SabreTools.FileTypes.Archives
             }
 
             // Check if the name is the right length
-            if (!Regex.IsMatch(datum, @"^[0-9a-f]{" + Constants.SHA1Length + @"}\.gz"))
+            if (!Regex.IsMatch(datum, @"^[0-9a-f]{" + Hashing.Constants.SHA1Length + @"}\.gz"))
             {
                 _logger.Warning($"Non SHA-1 filename found, skipping: '{Path.GetFullPath(Filename)}'");
                 return false;
@@ -345,7 +345,7 @@ namespace SabreTools.FileTypes.Archives
             }
 
             // Check if the name is the right length
-            if (!Regex.IsMatch(datum, @"^[0-9a-f]{" + Constants.SHA1Length + @"}\.gz"))
+            if (!Regex.IsMatch(datum, @"^[0-9a-f]{" + Hashing.Constants.SHA1Length + @"}\.gz"))
             {
                 _logger.Warning($"Non SHA-1 filename found, skipping: '{Path.GetFullPath(Filename)}'");
                 return null;
@@ -440,7 +440,7 @@ namespace SabreTools.FileTypes.Archives
             outDir = Path.GetFullPath(outDir);
 
             // Now get the Rom info for the file so we have hashes and size
-            baseFile = GetInfo(inputStream, keepReadOpen: true);
+            baseFile = FileTypeTool.GetInfo(inputStream, keepReadOpen: true);
 
             // Get the output file name
             string outfile = Path.Combine(outDir, Utilities.GetDepotPath(baseFile.SHA1, Depth) ?? string.Empty);
