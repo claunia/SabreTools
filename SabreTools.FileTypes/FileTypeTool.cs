@@ -254,62 +254,67 @@ namespace SabreTools.FileTypes
         /// <returns>FileType of inputted file (null on error)</returns>
         public static FileType? GetFileType(string input)
         {
-            FileType? outFileType = null;
-
             // If the file is null, then we have no archive type
-            if (input == null)
-                return outFileType;
+            if (string.IsNullOrEmpty(input))
+                return null;
 
             // First line of defense is going to be the extension, for better or worse
             if (!HasValidArchiveExtension(input))
-                return outFileType;
+                return null;
 
             // Read the first bytes of the file and get the magic number
-            BinaryReader br = new(File.OpenRead(input));
-            byte[] magic = br.ReadBytes(8);
-#if NET40_OR_GREATER
-            br.Dispose();
-#endif
+            byte[] magic;
+            try
+            {
+                using Stream stream = File.Open(input, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                magic = stream.ReadBytes(8);
+            }
+            catch
+            {
+                // Exceptions are currently not logged
+                // TODO: Log exceptions
+                return null;
+            }
 
             // Now try to match it to a known signature
             if (magic.StartsWith(SevenZipSignature))
             {
-                outFileType = FileType.SevenZipArchive;
+                return FileType.SevenZipArchive;
             }
             else if (magic.StartsWith(AaruFormatSignature))
             {
-                outFileType = FileType.AaruFormat;
+                return FileType.AaruFormat;
             }
             else if (magic.StartsWith(CHDSignature))
             {
-                outFileType = FileType.CHD;
+                return FileType.CHD;
             }
             else if (magic.StartsWith(GzSignature))
             {
-                outFileType = FileType.GZipArchive;
+                return FileType.GZipArchive;
             }
             else if (magic.StartsWith(RarSignature)
                 || magic.StartsWith(RarFiveSignature))
             {
-                outFileType = FileType.RarArchive;
+                return FileType.RarArchive;
             }
             else if (magic.StartsWith(TarSignature)
                 || magic.StartsWith(TarZeroSignature))
             {
-                outFileType = FileType.TapeArchive;
+                return FileType.TapeArchive;
             }
             else if (magic.StartsWith(XZSignature))
             {
-                outFileType = FileType.XZArchive;
+                return FileType.XZArchive;
             }
             else if (magic.StartsWith(Models.PKZIP.Constants.LocalFileHeaderSignatureBytes)
                 || magic.StartsWith(Models.PKZIP.Constants.EndOfCentralDirectoryRecordSignatureBytes)
                 || magic.StartsWith(Models.PKZIP.Constants.DataDescriptorSignatureBytes))
             {
-                outFileType = FileType.ZipArchive;
+                return FileType.ZipArchive;
             }
 
-            return outFileType;
+            return null;
         }
 
         /// <summary>
