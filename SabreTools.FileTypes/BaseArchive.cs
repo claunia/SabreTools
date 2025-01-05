@@ -24,13 +24,13 @@ namespace SabreTools.FileTypes
         /// <summary>
         /// Create a new Archive with no base file
         /// </summary>
-        public BaseArchive() : base() { }
+        public BaseArchive() : base(writeToParent: false) { }
 
         /// <summary>
         /// Create a new BaseArchive from the given file
         /// </summary>
         /// <param name="filename">Name of the file to use</param>
-        public BaseArchive(string filename) : base(filename) { }
+        public BaseArchive(string filename) : base(filename, writeToParent: false) { }
 
         #endregion
 
