@@ -7,14 +7,14 @@ namespace SabreTools.FileTypes
     {
         #region Fields
 
-        /// <summary>
-        /// Determines if dates are read or written
-        /// </summary>
-        public bool UseDates { get; set; } = false;
-
         #endregion
 
         #region Protected instance variables
+
+        /// <summary>
+        /// Determines if real dates are written
+        /// </summary>
+        protected bool _realDates = false;
 
         /// <summary>
         /// Buffer size used by archives
@@ -67,6 +67,14 @@ namespace SabreTools.FileTypes
         #endregion
 
         #region Writing
+
+        /// <summary>
+        /// Set if real dates are written
+        /// </summary>
+        public void SetRealDates(bool realDates)
+        {
+            _realDates = realDates;
+        }
 
         /// <inheritdoc/>
         public override abstract bool Write(string inputFile, string outDir, BaseFile? baseFile);

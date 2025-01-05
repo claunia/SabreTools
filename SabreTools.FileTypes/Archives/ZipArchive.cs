@@ -605,7 +605,7 @@ namespace SabreTools.FileTypes.Archives
                     ulong istreamSize = (ulong)(inputStream.Length);
 
                     DateTime dt = DateTime.Now;
-                    if (UseDates && !string.IsNullOrEmpty(baseFile.Date) && DateTime.TryParse(baseFile.Date!.Replace('\\', '/'), out dt))
+                    if (_realDates && !string.IsNullOrEmpty(baseFile.Date) && DateTime.TryParse(baseFile.Date!.Replace('\\', '/'), out dt))
                     {
                         long msDosDateTime = DateTimeHelper.ConvertToMsDosTimeFormat(dt);
                         TimeStamps ts = new() { ModTime = msDosDateTime };
@@ -679,7 +679,7 @@ namespace SabreTools.FileTypes.Archives
                             ulong istreamSize = (ulong)(inputStream.Length);
 
                             DateTime dt = DateTime.Now;
-                            if (UseDates && !string.IsNullOrEmpty(baseFile.Date) && DateTime.TryParse(baseFile.Date!.Replace('\\', '/'), out dt))
+                            if (_realDates && !string.IsNullOrEmpty(baseFile.Date) && DateTime.TryParse(baseFile.Date!.Replace('\\', '/'), out dt))
                             {
                                 long msDosDateTime = DateTimeHelper.ConvertToMsDosTimeFormat(dt);
                                 TimeStamps ts = new() { ModTime = msDosDateTime };
@@ -813,7 +813,7 @@ namespace SabreTools.FileTypes.Archives
                         ulong istreamSize = (ulong)(new FileInfo(inputFiles[index]).Length);
 
                         DateTime dt = DateTime.Now;
-                        if (UseDates && !string.IsNullOrEmpty(baseFiles[index].Date) && DateTime.TryParse(baseFiles[index].Date?.Replace('\\', '/'), out dt))
+                        if (_realDates && !string.IsNullOrEmpty(baseFiles[index].Date) && DateTime.TryParse(baseFiles[index].Date?.Replace('\\', '/'), out dt))
                         {
                             long msDosDateTime = DateTimeHelper.ConvertToMsDosTimeFormat(dt);
                             TimeStamps ts = new() { ModTime = msDosDateTime };
@@ -895,7 +895,7 @@ namespace SabreTools.FileTypes.Archives
                             ulong istreamSize = (ulong)(new FileInfo(inputFiles[-index - 1]).Length);
 
                             DateTime dt = DateTime.Now;
-                            if (UseDates && !string.IsNullOrEmpty(baseFiles[-index - 1].Date) && DateTime.TryParse(baseFiles[-index - 1].Date?.Replace('\\', '/'), out dt))
+                            if (_realDates && !string.IsNullOrEmpty(baseFiles[-index - 1].Date) && DateTime.TryParse(baseFiles[-index - 1].Date?.Replace('\\', '/'), out dt))
                             {
                                 long msDosDateTime = DateTimeHelper.ConvertToMsDosTimeFormat(dt);
                                 TimeStamps ts = new() { ModTime = msDosDateTime };

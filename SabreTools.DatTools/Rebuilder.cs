@@ -826,7 +826,7 @@ namespace SabreTools.DatTools
         {
             Folder? outputArchive = FileTypeTool.CreateFolderType(outputFormat);
             if (outputArchive is BaseArchive baseArchive && date)
-                baseArchive.UseDates = date;
+                baseArchive.SetRealDates(date);
 
             // Set the depth fields where appropriate
             if (outputArchive is GZipArchive gzipArchive)

@@ -320,7 +320,7 @@ namespace SabreTools.FileTypes.Archives
                 {
                     // Get temporary date-time if possible
                     DateTime? usableDate = null;
-                    if (UseDates && !string.IsNullOrEmpty(baseFile.Date) && DateTime.TryParse(baseFile.Date!.Replace('\\', '/'), out DateTime dt))
+                    if (_realDates && !string.IsNullOrEmpty(baseFile.Date) && DateTime.TryParse(baseFile.Date!.Replace('\\', '/'), out DateTime dt))
                         usableDate = dt;
 
                     // Copy the input stream to the output
@@ -375,7 +375,7 @@ namespace SabreTools.FileTypes.Archives
 
                         // Get temporary date-time if possible
                         DateTime? usableDate = null;
-                        if (UseDates && !string.IsNullOrEmpty(baseFile.Date) && DateTime.TryParse(baseFile.Date!.Replace('\\', '/'), out DateTime dt))
+                        if (_realDates && !string.IsNullOrEmpty(baseFile.Date) && DateTime.TryParse(baseFile.Date!.Replace('\\', '/'), out DateTime dt))
                             usableDate = dt;
 
                         // If we have the input file, add it now
@@ -488,7 +488,7 @@ namespace SabreTools.FileTypes.Archives
 
                         // Get temporary date-time if possible
                         DateTime? usableDate = null;
-                        if (UseDates && !string.IsNullOrEmpty(baseFiles[index].Date) && DateTime.TryParse(baseFiles[index].Date?.Replace('\\', '/'), out DateTime dt))
+                        if (_realDates && !string.IsNullOrEmpty(baseFiles[index].Date) && DateTime.TryParse(baseFiles[index].Date?.Replace('\\', '/'), out DateTime dt))
                             usableDate = dt;
 
                         // Copy the input stream to the output
@@ -550,7 +550,7 @@ namespace SabreTools.FileTypes.Archives
                         {
                             // Get temporary date-time if possible
                             DateTime? usableDate = null;
-                            if (UseDates && !string.IsNullOrEmpty(baseFiles[-index - 1].Date) && DateTime.TryParse(baseFiles[-index - 1].Date?.Replace('\\', '/'), out DateTime dt))
+                            if (_realDates && !string.IsNullOrEmpty(baseFiles[-index - 1].Date) && DateTime.TryParse(baseFiles[-index - 1].Date?.Replace('\\', '/'), out DateTime dt))
                                 usableDate = dt;
 
                             // Copy the input file to the output
