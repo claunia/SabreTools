@@ -12,7 +12,7 @@ namespace SabreTools.FileTypes
     /// <summary>
     /// Represents a folder for reading and writing
     /// </summary>
-    public class Folder : BaseFile
+    public class Folder : BaseFile, IFolder
     {
         #region Protected instance variables
 
@@ -30,11 +30,6 @@ namespace SabreTools.FileTypes
         /// Logging object
         /// </summary>
         protected Logger _logger;
-
-        /// <summary>
-        /// Static logger for static methods
-        /// </summary>
-        protected static Logger _staticLogger = new();
 
         /// <summary>
         /// Flag specific to Folder to omit Machine name from output path
@@ -70,12 +65,8 @@ namespace SabreTools.FileTypes
 
         #region Extraction
 
-        /// <summary>
-        /// Attempt to extract a file as an archive
-        /// </summary>
-        /// <param name="outDir">Output directory for archive extraction</param>
-        /// <returns>True if the extraction was a success, false otherwise</returns>
-        public virtual bool CopyAll(string outDir)
+        /// <inheritdoc/>
+        public bool CopyAll(string outDir)
         {
             // If we have an invalid filename
             if (Filename == null)
@@ -138,13 +129,8 @@ namespace SabreTools.FileTypes
             }
         }
 
-        /// <summary>
-        /// Attempt to extract a file from an archive
-        /// </summary>
-        /// <param name="entryName">Name of the entry to be extracted</param>
-        /// <param name="outDir">Output directory for archive extraction</param>
-        /// <returns>Name of the extracted file, null on error</returns>
-        public virtual string? CopyToFile(string entryName, string outDir)
+        /// <inheritdoc/>
+        public string? CopyToFile(string entryName, string outDir)
         {
             string? realentry = null;
 
@@ -181,12 +167,8 @@ namespace SabreTools.FileTypes
             return realentry;
         }
 
-        /// <summary>
-        /// Attempt to extract a stream from an archive
-        /// </summary>
-        /// <param name="entryName">Name of the entry to be extracted</param>
-        /// <returns>Stream representing the entry, null on error</returns>
-        public virtual (Stream?, string?) GetEntryStream(string entryName)
+        /// <inheritdoc/>
+        public (Stream?, string?) GetEntryStream(string entryName)
         {
             // If we have an invalid filename
             if (Filename == null)
@@ -236,11 +218,8 @@ namespace SabreTools.FileTypes
         public void SetHashTypes(HashType[] hashTypes)
             => _hashTypes = hashTypes;
 
-        /// <summary>
-        /// Generate a list of immediate children from the current folder
-        /// </summary>
-        /// <returns>List of BaseFile objects representing the found data</returns>
-        public virtual List<BaseFile>? GetChildren()
+        /// <inheritdoc/>
+        public List<BaseFile>? GetChildren()
         {
             // If we have an invalid filename
             if (Filename == null)
@@ -274,12 +253,8 @@ namespace SabreTools.FileTypes
             return _children;
         }
 
-        /// <summary>
-        /// Generate a list of empty folders in an archive
-        /// </summary>
-        /// <param name="input">Input file to get data from</param>
-        /// <returns>List of empty folders in the folder</returns>
-        public virtual List<string>? GetEmptyFolders()
+        /// <inheritdoc/>
+        public List<string>? GetEmptyFolders()
         {
             return Filename.ListEmpty();
         }
@@ -288,29 +263,15 @@ namespace SabreTools.FileTypes
 
         #region Writing
 
-        /// <summary>
-        /// Write an input file to an output folder
-        /// </summary>
-        /// <param name="inputFile">Input filename to be moved</param>
-        /// <param name="outDir">Output directory to build to</param>
-        /// <param name="baseFile">BaseFile representing the new information</param>
-        /// <returns>True if the write was a success, false otherwise</returns>
-        /// <remarks>This works for now, but it can be sped up by using Ionic.Zip or another zlib wrapper that allows for header values built-in. See edc's code.</remarks>
-        public virtual bool Write(string inputFile, string outDir, BaseFile? baseFile)
+        /// <inheritdoc/>
+        public bool Write(string inputFile, string outDir, BaseFile? baseFile)
         {
             FileStream fs = File.OpenRead(inputFile);
             return Write(fs, outDir, baseFile);
         }
 
-        /// <summary>
-        /// Write an input stream to an output folder
-        /// </summary>
-        /// <param name="inputStream">Input stream to be moved</param>
-        /// <param name="outDir">Output directory to build to</param>
-        /// <param name="baseFile">BaseFile representing the new information</param>
-        /// <returns>True if the write was a success, false otherwise</returns>
-        /// <remarks>This works for now, but it can be sped up by using Ionic.Zip or another zlib wrapper that allows for header values built-in. See edc's code.</remarks>
-        public virtual bool Write(Stream? inputStream, string outDir, BaseFile? baseFile)
+        /// <inheritdoc/>
+        public bool Write(Stream? inputStream, string outDir, BaseFile? baseFile)
         {
             // If either input is null or empty, return
             if (inputStream == null || baseFile == null || baseFile.Filename == null)
@@ -388,14 +349,8 @@ namespace SabreTools.FileTypes
             }
         }
 
-        /// <summary>
-        /// Write a set of input files to an output folder (assuming the same output archive name)
-        /// </summary>
-        /// <param name="inputFiles">Input files to be moved</param>
-        /// <param name="outDir">Output directory to build to</param>
-        /// <param name="baseFiles">BaseFiles representing the new information</param>
-        /// <returns>True if the inputs were written properly, false otherwise</returns>
-        public virtual bool Write(List<string> inputFiles, string outDir, List<BaseFile>? baseFiles)
+        /// <inheritdoc/>
+        public bool Write(List<string> inputFiles, string outDir, List<BaseFile>? baseFiles)
         {
             throw new NotImplementedException();
         }

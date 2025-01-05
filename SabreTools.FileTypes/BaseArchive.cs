@@ -1,11 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using SabreTools.Hashing;
+using SabreTools.IO.Logging;
 
 namespace SabreTools.FileTypes
 {
-    public abstract class BaseArchive : Folder
+    public abstract class BaseArchive : BaseFile, IFolder
     {
         #region Protected instance variables
+
+        /// <summary>
+        /// Hashes that are available for children
+        /// </summary>
+        protected HashType[] _hashTypes = [HashType.CRC32, HashType.MD5, HashType.SHA1];
+
+        /// <summary>
+        /// Set of children file objects
+        /// </summary>
+        protected List<BaseFile>? _children;
 
         /// <summary>
         /// Determines if real dates are written
@@ -17,6 +29,11 @@ namespace SabreTools.FileTypes
         /// </summary>
         protected const int _bufferSize = 4096 * 128;
 
+        /// <summary>
+        /// Logging object
+        /// </summary>
+        protected Logger _logger;
+
         #endregion
 
         #region Construtors
@@ -24,36 +41,54 @@ namespace SabreTools.FileTypes
         /// <summary>
         /// Create a new Archive with no base file
         /// </summary>
-        public BaseArchive() : base(writeToParent: false) { }
+        public BaseArchive()
+        {
+            _logger = new Logger(this);
+        }
 
         /// <summary>
         /// Create a new BaseArchive from the given file
         /// </summary>
         /// <param name="filename">Name of the file to use</param>
-        public BaseArchive(string filename) : base(filename, writeToParent: false) { }
+        public BaseArchive(string filename) : base(filename)
+        {
+            _logger = new Logger(this);
+        }
 
         #endregion
 
         #region Extraction
 
         /// <inheritdoc/>
-        public override abstract bool CopyAll(string outDir);
+        public abstract bool CopyAll(string outDir);
 
         /// <inheritdoc/>
-        public override abstract string? CopyToFile(string entryName, string outDir);
+        public abstract string? CopyToFile(string entryName, string outDir);
 
         /// <inheritdoc/>
-        public override abstract (Stream?, string?) GetEntryStream(string entryName);
+        public abstract (Stream?, string?) GetEntryStream(string entryName);
 
         #endregion
 
         #region Information
 
-        /// <inheritdoc/>
-        public override abstract List<BaseFile>? GetChildren();
+        /// <summary>
+        /// Set the hash type that can be included in children
+        /// </summary>
+        public void SetHashType(HashType hashType)
+            => SetHashTypes([hashType]);
+
+        /// <summary>
+        /// Set the hash types that can be included in children
+        /// </summary>
+        public void SetHashTypes(HashType[] hashTypes)
+            => _hashTypes = hashTypes;
 
         /// <inheritdoc/>
-        public override abstract List<string> GetEmptyFolders();
+        public abstract List<BaseFile>? GetChildren();
+
+        /// <inheritdoc/>
+        public abstract List<string> GetEmptyFolders();
 
         /// <summary>
         /// Check whether the input file is a standardized format
@@ -73,13 +108,13 @@ namespace SabreTools.FileTypes
         }
 
         /// <inheritdoc/>
-        public override abstract bool Write(string inputFile, string outDir, BaseFile? baseFile);
+        public abstract bool Write(string inputFile, string outDir, BaseFile? baseFile);
 
         /// <inheritdoc/>
-        public override abstract bool Write(Stream? inputStream, string outDir, BaseFile? baseFile);
+        public abstract bool Write(Stream? inputStream, string outDir, BaseFile? baseFile);
 
         /// <inheritdoc/>
-        public override abstract bool Write(List<string> inputFiles, string outDir, List<BaseFile>? baseFiles);
+        public abstract bool Write(List<string> inputFiles, string outDir, List<BaseFile>? baseFiles);
 
         #endregion
     }

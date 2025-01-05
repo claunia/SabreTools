@@ -173,11 +173,11 @@ namespace SabreTools.FileTypes
         }
 
         /// <summary>
-        /// Create an Folder object of the specified type, if possible
+        /// Create an IFolder object of the specified type, if possible
         /// </summary>
         /// <param name="outputFormat">OutputFormat representing the archive to create</param>
-        /// <returns>Archive object representing the inputs</returns>
-        public static Folder? CreateFolderType(OutputFormat outputFormat)
+        /// <returns>IFolder object representing the inputs</returns>
+        public static IFolder? CreateFolderType(OutputFormat outputFormat)
         {
             return outputFormat switch
             {

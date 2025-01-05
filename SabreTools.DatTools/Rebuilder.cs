@@ -470,7 +470,7 @@ namespace SabreTools.DatTools
                         outputFormat = OutputFormat.ParentFolder;
 
                     // Get the output archive, if possible
-                    Folder? outputArchive = GetPreconfiguredFolder(datFile, date, outputFormat);
+                    IFolder? outputArchive = GetPreconfiguredFolder(datFile, date, outputFormat);
 
                     // Now rebuild to the output file
                     outputArchive!.Write(fileStream, outDir, (item as Rom)!.ConvertToBaseFile());
@@ -516,7 +516,7 @@ namespace SabreTools.DatTools
                                 datItem.SetName($"{datItem.GetName()}_{crc}");
 
                                 // Get the output archive, if possible
-                                Folder? outputArchive = GetPreconfiguredFolder(datFile, date, outputFormat);
+                                IFolder? outputArchive = GetPreconfiguredFolder(datFile, date, outputFormat);
 
                                 // Now rebuild to the output file
                                 bool eitherSuccess = false;
@@ -822,9 +822,9 @@ namespace SabreTools.DatTools
         /// <param name="date">True if the date from the DAT should be used if available, false otherwise</param>
         /// <param name="outputFormat">Output format that files should be written to</param>
         /// <returns>Folder configured with proper flags</returns>
-        private static Folder? GetPreconfiguredFolder(DatFile datFile, bool date, OutputFormat outputFormat)
+        private static IFolder? GetPreconfiguredFolder(DatFile datFile, bool date, OutputFormat outputFormat)
         {
-            Folder? outputArchive = FileTypeTool.CreateFolderType(outputFormat);
+            IFolder? outputArchive = FileTypeTool.CreateFolderType(outputFormat);
             if (outputArchive is BaseArchive baseArchive && date)
                 baseArchive.SetRealDates(date);
 
