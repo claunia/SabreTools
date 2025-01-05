@@ -228,10 +228,11 @@ namespace SabreTools.FileTypes.Archives
                 {
                     gzipEntryRom.Filename = gamename;
 
-                    using BinaryReader br = new(File.OpenRead(Filename));
-                    br.BaseStream.Seek(-8, SeekOrigin.End);
-                    gzipEntryRom.CRC = br.ReadBytesBigEndian(4);
-                    gzipEntryRom.Size = br.ReadInt32BigEndian();
+                    using Stream stream = File.Open(Filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                    stream.Seek(-8, SeekOrigin.End);
+                    gzipEntryRom.CRC = stream.ReadBytes(4);
+                    Array.Reverse(gzipEntryRom.CRC);
+                    gzipEntryRom.Size = stream.ReadInt32BigEndian();
                 }
                 // Otherwise, use the stream directly
                 else
@@ -298,14 +299,12 @@ namespace SabreTools.FileTypes.Archives
             }
 
             // Get the Romba-specific header data
-            BinaryReader br = new(File.OpenRead(Filename));
-            byte[] header = br.ReadBytes(12); // Get preamble header for checking
-            br.ReadBytes(16); // headermd5
-            br.ReadBytes(4); // headercrc
-            br.ReadUInt64(); // headersz
-#if NET40_OR_GREATER
-            br.Dispose();
-#endif
+            Stream stream = File.Open(Filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            byte[] header = stream.ReadBytes(12); // Get preamble header for checking
+            _ = stream.ReadBytes(16); // headermd5
+            _ = stream.ReadBytes(4); // headercrc
+            _ = stream.ReadUInt64(); // headersz
+            stream.Dispose();
 
             // If the header is not correct, return a blank rom
             bool correct = true;
@@ -363,14 +362,12 @@ namespace SabreTools.FileTypes.Archives
             byte[] headermd5; // MD5
             byte[] headercrc; // CRC
             ulong headersz; // Int64 size
-            BinaryReader br = new(File.OpenRead(Filename));
-            header = br.ReadBytes(12);
-            headermd5 = br.ReadBytes(16);
-            headercrc = br.ReadBytes(4);
-            headersz = br.ReadUInt64();
-#if NET40_OR_GREATER
-            br.Dispose();
-#endif
+            Stream stream = File.Open(Filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            header = stream.ReadBytes(12);
+            headermd5 = stream.ReadBytes(16);
+            headercrc = stream.ReadBytes(4);
+            headersz = stream.ReadUInt64();
+            stream.Dispose();
 
             // If the header is not correct, return a blank rom
             bool correct = true;
@@ -421,7 +418,8 @@ namespace SabreTools.FileTypes.Archives
             inputFile = Path.GetFullPath(inputFile);
 
             // Get the file stream for the file and write out
-            return Write(File.OpenRead(inputFile), outDir, baseFile);
+            using Stream inputStream = File.Open(inputFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            return Write(inputStream, outDir, baseFile);
         }
 
         /// <inheritdoc/>

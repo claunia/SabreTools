@@ -194,7 +194,7 @@ namespace SabreTools.FileTypes.Archives
 
             try
             {
-                SharpCompress.Archives.Rar.RarArchive ra = SharpCompress.Archives.Rar.RarArchive.Open(File.OpenRead(Filename));
+                SharpCompress.Archives.Rar.RarArchive ra = SharpCompress.Archives.Rar.RarArchive.Open(File.Open(Filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
                 foreach (RarArchiveEntry entry in ra.Entries.Where(e => e != null && !e.IsDirectory))
                 {
                     // Create a blank item for the entry
@@ -294,8 +294,18 @@ namespace SabreTools.FileTypes.Archives
         /// <inheritdoc/>
         public override bool Write(string inputFile, string outDir, BaseFile? baseFile)
         {
+            // Check that the input file exists
+            if (!File.Exists(inputFile))
+            {
+                _logger.Warning($"File '{inputFile}' does not exist!");
+                return false;
+            }
+
+            inputFile = Path.GetFullPath(inputFile);
+
             // Get the file stream for the file and write out
-            return Write(File.OpenRead(inputFile), outDir, baseFile);
+            using Stream inputStream = File.Open(inputFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            return Write(inputStream, outDir, baseFile);
         }
 
         /// <inheritdoc/>

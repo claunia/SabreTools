@@ -189,7 +189,7 @@ namespace SabreTools.FileTypes
                 // If we had a file, open and return the stream
                 if (!string.IsNullOrEmpty(match))
                 {
-                    var stream = File.OpenRead(match);
+                    Stream stream = File.Open(match, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                     return (stream, match);
                 }
 
@@ -266,8 +266,8 @@ namespace SabreTools.FileTypes
         /// <inheritdoc/>
         public bool Write(string inputFile, string outDir, BaseFile? baseFile)
         {
-            FileStream fs = File.OpenRead(inputFile);
-            return Write(fs, outDir, baseFile);
+            using Stream inputStream = File.Open(inputFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            return Write(inputStream, outDir, baseFile);
         }
 
         /// <inheritdoc/>

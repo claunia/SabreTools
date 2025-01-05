@@ -187,7 +187,7 @@ namespace SabreTools.FileTypes.Archives
 
             try
             {
-                TarArchive ta = TarArchive.Open(File.OpenRead(Filename!));
+                TarArchive ta = TarArchive.Open(File.Open(Filename!, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
                 foreach (TarArchiveEntry entry in ta.Entries.Where(e => e != null && !e.IsDirectory))
                 {
                     // Create a blank item for the entry
@@ -283,8 +283,18 @@ namespace SabreTools.FileTypes.Archives
         /// <inheritdoc/>
         public override bool Write(string inputFile, string outDir, BaseFile? baseFile)
         {
+            // Check that the input file exists
+            if (!File.Exists(inputFile))
+            {
+                _logger.Warning($"File '{inputFile}' does not exist!");
+                return false;
+            }
+
+            inputFile = Path.GetFullPath(inputFile);
+
             // Get the file stream for the file and write out
-            return Write(File.OpenRead(inputFile), outDir, baseFile);
+            using Stream inputStream = File.Open(inputFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            return Write(inputStream, outDir, baseFile);
         }
 
         /// <inheritdoc/>
@@ -492,7 +502,10 @@ namespace SabreTools.FileTypes.Archives
                             usableDate = dt;
 
                         // Copy the input stream to the output
-                        tarFile.AddEntry(baseFiles[index].Filename!, File.OpenRead(inputFiles[index]), size: baseFiles[index].Size ?? 0, modified: usableDate);
+                        tarFile.AddEntry(baseFiles[index].Filename!,
+                            File.Open(inputFiles[index], FileMode.Open, FileAccess.Read, FileShare.ReadWrite),
+                            size: baseFiles[index].Size ?? 0,
+                            modified: usableDate);
                     }
                 }
 
@@ -554,7 +567,10 @@ namespace SabreTools.FileTypes.Archives
                                 usableDate = dt;
 
                             // Copy the input file to the output
-                            tarFile.AddEntry(baseFiles[-index - 1].Filename!, File.OpenRead(inputFiles[-index - 1]), size: baseFiles[-index - 1].Size ?? 0, modified: usableDate);
+                            tarFile.AddEntry(baseFiles[-index - 1].Filename!,
+                                File.Open(inputFiles[-index - 1], FileMode.Open, FileAccess.Read, FileShare.ReadWrite),
+                                size: baseFiles[-index - 1].Size ?? 0,
+                                modified: usableDate);
                         }
 
                         // Otherwise, copy the file from the old archive

@@ -123,7 +123,7 @@ namespace SabreTools.FileTypes
         /// <param name="hashes">Hashes to include in the information</param>
         /// <param name="keepReadOpen">Indicates if the underlying read stream should be kept open</param>
         /// <returns>Populated BaseFile object if success, empty one on error</returns>
-        public static BaseFile GetInfo(Stream? input, long size, HashType[]? hashes, bool keepReadOpen)
+        public static BaseFile GetInfo(Stream? input, long size, HashType[] hashes, bool keepReadOpen)
         {
             // If we have no stream
             if (input == null)

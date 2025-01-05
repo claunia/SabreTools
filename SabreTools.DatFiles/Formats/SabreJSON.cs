@@ -29,7 +29,8 @@ namespace SabreTools.DatFiles.Formats
         public override void ParseFile(string filename, int indexId, bool keep, bool statsOnly = false, bool throwOnError = false)
         {
             // Prepare all internal variables
-            var sr = new StreamReader(System.IO.File.OpenRead(filename), new UTF8Encoding(false));
+            var fs = System.IO.File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            var sr = new StreamReader(fs, new UTF8Encoding(false));
             var jtr = new JsonTextReader(sr);
             var source = new Source(indexId, filename);
             long sourceIndex = ItemsDB.AddSource(source);

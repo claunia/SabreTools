@@ -70,7 +70,7 @@ namespace SabreTools.FileTypes.Archives
 
                 // Decompress the _filename stream
                 FileStream outstream = File.Create(Path.Combine(outDir, Path.GetFileNameWithoutExtension(Filename)!));
-                var xz = new XZStream(File.OpenRead(Filename!));
+                var xz = new XZStream(File.Open(Filename!, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
                 xz.CopyTo(outstream);
 
                 // Dispose of the streams
@@ -156,7 +156,7 @@ namespace SabreTools.FileTypes.Archives
             {
                 // Open the entry stream
                 string realEntry = Path.GetFileNameWithoutExtension(Filename);
-                var stream = new XZStream(File.OpenRead(Filename));
+                var stream = new XZStream(File.Open(Filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
 
                 // Return the stream
                 return (stream, realEntry);
@@ -206,15 +206,16 @@ namespace SabreTools.FileTypes.Archives
                 {
                     xzEntryRom.Filename = gamename;
 
-                    using BinaryReader br = new(File.OpenRead(Filename!));
-                    br.BaseStream.Seek(-8, SeekOrigin.End);
-                    xzEntryRom.CRC = br.ReadBytesBigEndian(4);
-                    xzEntryRom.Size = br.ReadInt32BigEndian();
+                    using Stream fs = File.Open(Filename!, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                    fs.Seek(-8, SeekOrigin.End);
+                    xzEntryRom.CRC = fs.ReadBytes(4);
+                    Array.Reverse(xzEntryRom.CRC);
+                    xzEntryRom.Size = fs.ReadInt32BigEndian();
                 }
                 // Otherwise, use the stream directly
                 else
                 {
-                    var xzStream = new XZStream(File.OpenRead(Filename!));
+                    var xzStream = new XZStream(File.Open(Filename!, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
                     xzEntryRom = FileTypeTool.GetInfo(xzStream, _hashTypes);
                     xzEntryRom.Filename = gamename;
                     xzStream.Dispose();
@@ -310,7 +311,8 @@ namespace SabreTools.FileTypes.Archives
             inputFile = Path.GetFullPath(inputFile);
 
             // Get the file stream for the file and write out
-            return Write(File.OpenRead(inputFile), outDir, baseFile);
+            using Stream inputStream = File.Open(inputFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            return Write(inputStream, outDir, baseFile);
         }
 
         /// <inheritdoc/>

@@ -22,7 +22,7 @@ namespace SabreTools.FileTypes.CHD
         /// <param name="filename">Filename respresenting the CHD file</param>
         public static CHDFile? Create(string filename)
         {
-            using var fs = File.OpenRead(filename);
+            using Stream fs = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             return Create(fs);
         }
 

@@ -556,8 +556,18 @@ namespace SabreTools.FileTypes.Archives
         /// <inheritdoc/>
         public override bool Write(string inputFile, string outDir, BaseFile? baseFile)
         {
+            // Check that the input file exists
+            if (!File.Exists(inputFile))
+            {
+                _logger.Warning($"File '{inputFile}' does not exist!");
+                return false;
+            }
+
+            inputFile = Path.GetFullPath(inputFile);
+
             // Get the file stream for the file and write out
-            return Write(File.OpenRead(inputFile), outDir, baseFile);
+            using Stream inputStream = File.Open(inputFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            return Write(inputStream, outDir, baseFile);
         }
 
         /// <inheritdoc/>
@@ -809,7 +819,7 @@ namespace SabreTools.FileTypes.Archives
                         int index = inputIndexMap[key];
 
                         // Open the input file for reading
-                        Stream freadStream = File.OpenRead(inputFiles[index]);
+                        Stream freadStream = File.Open(inputFiles[index], FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                         ulong istreamSize = (ulong)(new FileInfo(inputFiles[index]).Length);
 
                         DateTime dt = DateTime.Now;
@@ -891,7 +901,7 @@ namespace SabreTools.FileTypes.Archives
                         if (index < 0)
                         {
                             // Open the input file for reading
-                            Stream freadStream = File.OpenRead(inputFiles[-index - 1]);
+                            Stream freadStream = File.Open(inputFiles[-index - 1], FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                             ulong istreamSize = (ulong)(new FileInfo(inputFiles[-index - 1]).Length);
 
                             DateTime dt = DateTime.Now;

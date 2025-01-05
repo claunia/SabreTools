@@ -53,7 +53,7 @@ namespace SabreTools.FileTypes.Aaru
         /// <param name="filename">Filename respresenting the AaruFormat file</param>
         public static AaruFormat? Create(string filename)
         {
-            using FileStream fs = File.OpenRead(filename);
+            using Stream fs = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             return Create(fs);
         }
 

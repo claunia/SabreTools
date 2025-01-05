@@ -787,7 +787,7 @@ namespace SabreTools.DatTools
             // Otherwise, just open the filestream
             else
             {
-                stream = System.IO.File.OpenRead(file);
+                stream = System.IO.File.Open(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             }
 
             // If the stream is null, then continue
