@@ -255,7 +255,7 @@ namespace SabreTools.FileTypes
                 foreach (string file in Directory.EnumerateFiles(Filename, "*", SearchOption.TopDirectoryOnly))
 #endif
                 {
-                    BaseFile? nf = FileTypeTool.GetInfo(file, hashes: _hashTypes);
+                    BaseFile? nf = FileTypeTool.GetInfo(file, _hashTypes);
                     if (nf != null)
                         _children.Add(nf);
                 }

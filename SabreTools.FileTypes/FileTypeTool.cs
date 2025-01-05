@@ -19,18 +19,34 @@ namespace SabreTools.FileTypes
         /// Retrieve file information for a single file
         /// </summary>
         /// <param name="input">Filename to get information from</param>
+        /// <param name="hashes">Hashes to include in the information</param>
+        /// <returns>Populated BaseFile object if success, null on error</returns>
+        public static BaseFile? GetInfo(string input, HashType[] hashes)
+            => GetInfo(input, header: null, hashes, asFiles: 0x00);
+
+        /// <summary>
+        /// Retrieve file information for a single file
+        /// </summary>
+        /// <param name="input">Filename to get information from</param>
+        /// <param name="hashes">Hashes to include in the information</param>
+        /// <param name="asFiles">TreatAsFiles representing special format scanning</param>
+        /// <returns>Populated BaseFile object if success, null on error</returns>
+        public static BaseFile? GetInfo(string input, HashType[] hashes, TreatAsFile asFiles)
+            => GetInfo(input, header: null, hashes, asFiles);
+
+        /// <summary>
+        /// Retrieve file information for a single file
+        /// </summary>
+        /// <param name="input">Filename to get information from</param>
         /// <param name="header">Populated string representing the name of the skipper to use, a blank string to use the first available checker, null otherwise</param>
         /// <param name="hashes">Hashes to include in the information</param>
         /// <param name="asFiles">TreatAsFiles representing special format scanning</param>
-        /// <returns>Populated BaseFile object if success, empty one on error</returns>
-        public static BaseFile? GetInfo(string input, string? header = null, HashType[]? hashes = null, TreatAsFile asFiles = 0x00)
+        /// <returns>Populated BaseFile object if success, null on error</returns>
+        public static BaseFile? GetInfo(string input, string? header, HashType[] hashes, TreatAsFile asFiles)
         {
             // Add safeguard if file doesn't exist
             if (!File.Exists(input))
                 return null;
-
-            // If no hashes are set, use the standard array
-            hashes ??= [HashType.CRC32, HashType.MD5, HashType.SHA1];
 
             // Get input information
             var fileType = GetFileType(input);

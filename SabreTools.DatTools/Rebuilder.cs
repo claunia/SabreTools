@@ -314,16 +314,17 @@ namespace SabreTools.DatTools
             BaseArchive? archive = FileTypeTool.CreateArchiveType(file);
 
             // Now get all extracted items from the archive
+            HashType[] hashTypes = quickScan ? [HashType.CRC32] : [HashType.CRC32, HashType.MD5, HashType.SHA1];
             if (archive != null)
             {
-                archive.SetHashTypes(quickScan ? [HashType.CRC32] : [HashType.CRC32, HashType.MD5, HashType.SHA1]);
+                archive.SetHashTypes(hashTypes);
                 entries = archive.GetChildren();
             }
 
             // If the entries list is null, we encountered an error or have a file and should scan externally
             if (entries == null && System.IO.File.Exists(file))
             {
-                BaseFile? internalFileInfo = FileTypeTool.GetInfo(file, asFiles: asFiles);
+                BaseFile? internalFileInfo = FileTypeTool.GetInfo(file, hashTypes, asFiles);
 
                 // Create the correct DatItem
                 DatItem? internalDatItem;
