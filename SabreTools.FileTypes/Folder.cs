@@ -264,9 +264,19 @@ namespace SabreTools.FileTypes
         #region Writing
 
         /// <inheritdoc/>
-        public bool Write(string file,  string outDir, BaseFile? baseFile)
+        public bool Write(string file, string outDir, BaseFile? baseFile)
         {
-            using Stream inputStream = File.Open(inputFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            // Check that the input file exists
+            if (!File.Exists(file))
+            {
+                _logger.Warning($"File '{file}' does not exist!");
+                return false;
+            }
+
+            file = Path.GetFullPath(file);
+
+            // Get the file stream for the file and write out
+            using Stream inputStream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             return Write(inputStream, outDir, baseFile);
         }
 
