@@ -332,7 +332,7 @@ namespace SabreTools.FileTypes.Archives
             outDir = Path.GetFullPath(outDir);
 
             // If the base file is null, get the hash information
-            baseFile ??= FileTypeTool.GetInfo(stream, _hashTypes, keepReadOpen: true);
+            baseFile ??= FileTypeTool.GetInfo(stream, _hashTypes);
 
             // Get the output file name
             string outfile = Path.Combine(outDir, Core.Tools.Utilities.GetDepotPath(baseFile.SHA1, Depth)!);

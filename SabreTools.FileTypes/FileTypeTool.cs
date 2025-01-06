@@ -61,23 +61,12 @@ namespace SabreTools.FileTypes
         }
 
         /// <summary>
-        /// Retrieve file information for a single stream
-        /// </summary>
-        /// <param name="input">Stream to get information from</param>
-        /// <param name="hashes">Hashes to include in the information</param>
-        /// <returns>Populated BaseFile object if success, null on error</returns>
-        public static BaseFile GetInfo(Stream? input, HashType[] hashes)
-            => GetInfo(input, hashes, keepReadOpen: false);
-
-        /// <summary>
         /// Retrieve file information for a single file
         /// </summary>
         /// <param name="input">Stream to get information from</param>
-        /// <param name="size">Size of the input stream</param>
         /// <param name="hashes">Hashes to include in the information</param>
-        /// <param name="keepReadOpen">Indicates if the underlying read stream should be kept open</param>
         /// <returns>Populated BaseFile object if success, empty one on error</returns>
-        public static BaseFile GetInfo(Stream? input, HashType[] hashes, bool keepReadOpen)
+        public static BaseFile GetInfo(Stream? input, HashType[] hashes)
         {
             // If we have no stream
             if (input == null)
@@ -103,17 +92,8 @@ namespace SabreTools.FileTypes
                     SpamSum = hashDict.ContainsKey(HashType.SpamSum) ? hashDict[HashType.SpamSum].FromHexString() : null,
                 };
 
-                // Deal with the input stream
-                if (!keepReadOpen)
-                {
-                    input.Close();
-                    input.Dispose();
-                }
-                else
-                {
-                    input.SeekIfPossible();
-                }
-
+                // Deal with the input stream and return
+                input.SeekIfPossible();
                 return baseFile;
             }
             catch
@@ -148,7 +128,7 @@ namespace SabreTools.FileTypes
         private static BaseFile? GetBaseFile(Stream input, FileType? fileType, HashType[] hashes)
         {
             // Get external file information
-            BaseFile? baseFile = GetInfo(input, hashes, keepReadOpen: true);
+            BaseFile? baseFile = GetInfo(input, hashes);
 
             // Get internal hashes, if they exist
             if (fileType == FileType.AaruFormat)

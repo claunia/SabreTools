@@ -244,7 +244,7 @@ namespace SabreTools.FileTypes.Archives
                     gzipEntryRom.Filename = gz.GetLocalFile(0).Filename;
                     gzipEntryRom.Parent = gamename;
                     gzipEntryRom.Date = (gz.TimeStamp > 0 ? gz.TimeStamp.ToString() : null);
-                    gzstream!.Dispose();
+                    gzstream?.Dispose();
                 }
 
                 // Fill in common details and add to the list
@@ -438,7 +438,7 @@ namespace SabreTools.FileTypes.Archives
             outDir = Path.GetFullPath(outDir);
 
             // If the base file is null, get the hash information
-            baseFile ??= FileTypeTool.GetInfo(stream, _hashTypes, keepReadOpen: true);
+            baseFile ??= FileTypeTool.GetInfo(stream, _hashTypes);
 
             // Get the output file name
             string outfile = Path.Combine(outDir, Utilities.GetDepotPath(baseFile.SHA1, Depth) ?? string.Empty);
