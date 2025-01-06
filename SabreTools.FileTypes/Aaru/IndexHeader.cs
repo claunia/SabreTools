@@ -6,7 +6,7 @@ namespace SabreTools.FileTypes.Aaru
     /// <summary>
     /// Header for the index, followed by entries
     /// </summary>
-    /// <see cref="https://github.com/aaru-dps/Aaru/blob/master/Aaru.Images/AaruFormat/Structs.cs" />
+    /// <see href="https://github.com/aaru-dps/Aaru/blob/master/Aaru.Images/AaruFormat/Structs.cs" />
     public class IndexHeader
     {
         /// <summary>Identifier, <see cref="BlockType.Index" /></summary>

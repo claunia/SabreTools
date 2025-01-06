@@ -7,7 +7,7 @@ namespace SabreTools.FileTypes.Aaru
     /// Checksum block, contains a checksum of all user data sectors
     /// (except for optical discs that is 2352 bytes raw sector if available
     /// </summary>
-    /// <see cref="https://github.com/aaru-dps/Aaru/blob/master/Aaru.Images/AaruFormat/Structs.cs" />
+    /// <see href="https://github.com/aaru-dps/Aaru/blob/master/Aaru.Images/AaruFormat/Structs.cs" />
     public class ChecksumHeader
     {
         /// <summary>Identifier, <see cref="BlockType.ChecksumBlock" /></summary>

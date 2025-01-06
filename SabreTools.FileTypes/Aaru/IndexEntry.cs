@@ -6,7 +6,7 @@ namespace SabreTools.FileTypes.Aaru
     /// <summary>
     /// Index entry
     /// </summary>
-    /// <see cref="https://github.com/aaru-dps/Aaru/blob/master/Aaru.Images/AaruFormat/Structs.cs" />
+    /// <see href="https://github.com/aaru-dps/Aaru/blob/master/Aaru.Images/AaruFormat/Structs.cs" />
     public class IndexEntry
     {
         /// <summary>Type of item pointed by this entry</summary>

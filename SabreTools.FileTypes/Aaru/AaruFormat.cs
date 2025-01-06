@@ -8,8 +8,8 @@ namespace SabreTools.FileTypes.Aaru
 {
     /// <summary>
     /// AaruFormat code is based on the Aaru project
-    /// See https://github.com/aaru-dps/Aaru/tree/master/Aaru.Images/AaruFormat
     /// </summary>
+    /// <see href="https://github.com/aaru-dps/Aaru/tree/master/Aaru.Images/AaruFormat"/> 
     public class AaruFormat : BaseFile
     {
         #region Fields

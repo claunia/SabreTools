@@ -6,7 +6,7 @@ namespace SabreTools.FileTypes.Aaru
     /// <summary>
     /// Checksum entry, followed by checksum data itself
     /// </summary>
-    /// <see cref="https://github.com/aaru-dps/Aaru/blob/master/Aaru.Images/AaruFormat/Structs.cs" />
+    /// <see href="https://github.com/aaru-dps/Aaru/blob/master/Aaru.Images/AaruFormat/Structs.cs" />
     public class ChecksumEntry
     {
         /// <summary>Checksum algorithm</summary>
