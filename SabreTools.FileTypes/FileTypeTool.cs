@@ -149,6 +149,24 @@ namespace SabreTools.FileTypes
         }
 
         /// <summary>
+        /// Copy all missing information from one BaseFile to another
+        /// </summary>
+        private static void CopyInformation(BaseFile from, BaseFile to)
+        {
+            to.Filename ??= from.Filename;
+            to.Parent ??= from.Parent;
+            to.Date ??= from.Date;
+            to.Size ??= from.Size;
+            to.CRC ??= from.CRC;
+            to.MD5 ??= from.MD5;
+            to.SHA1 ??= from.SHA1;
+            to.SHA256 ??= from.SHA256;
+            to.SHA384 ??= from.SHA384;
+            to.SHA512 ??= from.SHA512;
+            to.SpamSum ??= from.SpamSum;
+        }
+
+        /// <summary>
         /// Get the correct base file based on the type and filter options
         /// </summary>
         private static BaseFile? GetBaseFile(Stream inputStream, FileType? fileType, HashType[] hashes)
@@ -162,18 +180,7 @@ namespace SabreTools.FileTypes
                 AaruFormat? aif = AaruFormat.Create(inputStream);
                 if (aif != null)
                 {
-                    aif.Filename = baseFile.Filename;
-                    aif.Parent = baseFile.Parent;
-                    aif.Date = baseFile.Date;
-                    aif.Size = baseFile.Size;
-                    aif.CRC = baseFile.CRC;
-                    aif.MD5 = baseFile.MD5;
-                    aif.SHA1 = baseFile.SHA1;
-                    aif.SHA256 = baseFile.SHA256;
-                    aif.SHA384 = baseFile.SHA384;
-                    aif.SHA512 = baseFile.SHA512;
-                    aif.SpamSum = baseFile.SpamSum;
-
+                    CopyInformation(baseFile, aif);
                     return aif;
                 }
             }
@@ -182,18 +189,7 @@ namespace SabreTools.FileTypes
                 CHDFile? chd = CHDFile.Create(inputStream);
                 if (chd != null)
                 {
-                    chd.Filename = baseFile.Filename;
-                    chd.Parent = baseFile.Parent;
-                    chd.Date = baseFile.Date;
-                    chd.Size = baseFile.Size;
-                    chd.CRC = baseFile.CRC;
-                    chd.MD5 = baseFile.MD5;
-                    chd.SHA1 = baseFile.SHA1;
-                    chd.SHA256 = baseFile.SHA256;
-                    chd.SHA384 = baseFile.SHA384;
-                    chd.SHA512 = baseFile.SHA512;
-                    chd.SpamSum = baseFile.SpamSum;
-
+                    CopyInformation(baseFile, chd);
                     return chd;
                 }
             }
