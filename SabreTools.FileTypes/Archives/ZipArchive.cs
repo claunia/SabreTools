@@ -419,7 +419,7 @@ namespace SabreTools.FileTypes.Archives
                     {
                         zipEntryRom = FileTypeTool.GetInfo(readStream,
                             _hashTypes,
-                            keepReadOpen: false);
+                            keepReadOpen: true);
                     }
 
                     // Fill in common details and add to the list
