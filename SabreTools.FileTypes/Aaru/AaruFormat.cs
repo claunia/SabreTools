@@ -12,6 +12,30 @@ namespace SabreTools.FileTypes.Aaru
     /// </summary>
     public class AaruFormat : BaseFile
     {
+        #region Fields
+
+        /// <summary>
+        /// Internal MD5 hash of the file
+        /// </summary>
+        public byte[]? InternalMD5 { get; set; }
+
+        /// <summary>
+        /// Internal SHA-1 hash of the file
+        /// </summary>
+        public byte[]? InternalSHA1 { get; set; }
+
+        /// <summary>
+        /// Internal SHA-256 hash of the file
+        /// </summary>
+        public byte[]? InternalSHA256 { get; set; }
+
+        /// <summary>
+        /// Internal SpamSum fuzzy hash of the file
+        /// </summary>
+        public byte[]? InternalSpamSum { get; set; }
+
+        #endregion
+
         #region Private instance variables
 
         #region Header
@@ -113,102 +137,100 @@ namespace SabreTools.FileTypes.Aaru
         {
             try
             {
-                AaruFormat aif = new();
+                var aif = new AaruFormat();
 
-#if NET20 || NET35 || NET40
-                using (BinaryReader br = new(stream, Encoding.Default))
-#else
-                using (BinaryReader br = new(stream, Encoding.Default, true))
-#endif
+                aif.Identifier = stream.ReadUInt64();
+                byte[] applicationBytes = stream.ReadBytes(64);
+                aif.Application = Encoding.Unicode.GetString(applicationBytes);
+                aif.ImageMajorVersion = stream.ReadByteValue();
+                aif.ImageMinorVersion = stream.ReadByteValue();
+                aif.ApplicationMajorVersion = stream.ReadByteValue();
+                aif.ApplicationMinorVersion = stream.ReadByteValue();
+                aif.MediaType = (AaruMediaType)stream.ReadUInt32();
+                aif.IndexOffset = stream.ReadUInt64();
+                aif.CreationTime = stream.ReadInt64();
+                aif.LastWrittenTime = stream.ReadInt64();
+
+                // If the offset is bigger than the stream, we can't read it
+                if (aif.IndexOffset > (ulong)stream.Length)
+                    return null;
+
+                // Otherwise, we read in the index header
+                stream.Seek((long)aif.IndexOffset, SeekOrigin.Begin);
+                aif.IndexHeader = IndexHeader.Deserialize(stream);
+                if (aif.IndexHeader.entries == 0)
+                    return null;
+
+                // Get the list of entries
+                aif.IndexEntries = new IndexEntry[aif.IndexHeader.entries];
+                for (ushort index = 0; index < aif.IndexHeader.entries; index++)
                 {
-                    aif.Identifier = br.ReadUInt64();
-                    aif.Application = Encoding.Unicode.GetString(br.ReadBytes(64), 0, 64);
-                    aif.ImageMajorVersion = br.ReadByte();
-                    aif.ImageMinorVersion = br.ReadByte();
-                    aif.ApplicationMajorVersion = br.ReadByte();
-                    aif.ApplicationMinorVersion = br.ReadByte();
-                    aif.MediaType = (AaruMediaType)br.ReadUInt32();
-                    aif.IndexOffset = br.ReadUInt64();
-                    aif.CreationTime = br.ReadInt64();
-                    aif.LastWrittenTime = br.ReadInt64();
-
-                    // If the offset is bigger than the stream, we can't read it
-                    if (aif.IndexOffset > (ulong)stream.Length)
-                        return null;
-
-                    // Otherwise, we read in the index header
-                    stream.Seek((long)aif.IndexOffset, SeekOrigin.Begin);
-                    aif.IndexHeader = IndexHeader.Deserialize(stream);
-                    if (aif.IndexHeader.entries == 0)
-                        return null;
-
-                    // Get the list of entries
-                    aif.IndexEntries = new IndexEntry[aif.IndexHeader.entries];
-                    for (ushort index = 0; index < aif.IndexHeader.entries; index++)
+                    aif.IndexEntries[index] = IndexEntry.Deserialize(stream);
+                    switch (aif.IndexEntries[index].blockType)
                     {
-                        aif.IndexEntries[index] = IndexEntry.Deserialize(stream);
-                        switch (aif.IndexEntries[index].blockType)
-                        {
-                            // We don't do anything with these block types currently
-                            case AaruBlockType.DataBlock:
-                            case AaruBlockType.DeDuplicationTable:
-                            case AaruBlockType.Index:
-                            case AaruBlockType.Index2:
-                            case AaruBlockType.GeometryBlock:
-                            case AaruBlockType.MetadataBlock:
-                            case AaruBlockType.TracksBlock:
-                            case AaruBlockType.CicmBlock:
-                            case AaruBlockType.DataPositionMeasurementBlock:
-                            case AaruBlockType.SnapshotBlock:
-                            case AaruBlockType.ParentBlock:
-                            case AaruBlockType.DumpHardwareBlock:
-                            case AaruBlockType.TapeFileBlock:
-                            case AaruBlockType.TapePartitionBlock:
-                            case AaruBlockType.CompactDiscIndexesBlock:
-                                // No-op
-                                break;
+                        // We don't do anything with these block types currently
+                        case AaruBlockType.DataBlock:
+                        case AaruBlockType.DeDuplicationTable:
+                        case AaruBlockType.Index:
+                        case AaruBlockType.Index2:
+                        case AaruBlockType.GeometryBlock:
+                        case AaruBlockType.MetadataBlock:
+                        case AaruBlockType.TracksBlock:
+                        case AaruBlockType.CicmBlock:
+                        case AaruBlockType.DataPositionMeasurementBlock:
+                        case AaruBlockType.SnapshotBlock:
+                        case AaruBlockType.ParentBlock:
+                        case AaruBlockType.DumpHardwareBlock:
+                        case AaruBlockType.TapeFileBlock:
+                        case AaruBlockType.TapePartitionBlock:
+                        case AaruBlockType.CompactDiscIndexesBlock:
+                            // No-op
+                            break;
 
-                            // Read in all available hashes
-                            case AaruBlockType.ChecksumBlock:
-                                // If the offset is bigger than the stream, we can't read it
-                                if (aif.IndexEntries[index].offset > (ulong)stream.Length)
-                                    return null;
+                        // Read in all available hashes
+                        case AaruBlockType.ChecksumBlock:
+                            // If the offset is bigger than the stream, we can't read it
+                            if (aif.IndexEntries[index].offset > (ulong)stream.Length)
+                                return null;
 
-                                // Otherwise, we read in the block
-                                stream.Seek((long)aif.IndexEntries[index].offset, SeekOrigin.Begin);
-                                ChecksumHeader checksumHeader = ChecksumHeader.Deserialize(stream);
-                                if (checksumHeader.entries == 0)
-                                    return null;
+                            // Otherwise, we read in the block
+                            stream.Seek((long)aif.IndexEntries[index].offset, SeekOrigin.Begin);
+                            ChecksumHeader checksumHeader = ChecksumHeader.Deserialize(stream);
+                            if (checksumHeader.entries == 0)
+                                return null;
 
-                                // Read through each and pick out the ones we care about
-                                for (byte entry = 0; entry < checksumHeader.entries; entry++)
+                            // Read through each and pick out the ones we care about
+                            for (byte entry = 0; entry < checksumHeader.entries; entry++)
+                            {
+                                ChecksumEntry? checksumEntry = ChecksumEntry.Deserialize(stream);
+                                if (checksumEntry == null)
+                                    continue;
+
+                                switch (checksumEntry.type)
                                 {
-                                    ChecksumEntry? checksumEntry = ChecksumEntry.Deserialize(stream);
-                                    if (checksumEntry == null)
-                                        continue;
-
-                                    switch (checksumEntry.type)
-                                    {
-                                        case AaruChecksumAlgorithm.Invalid:
-                                            break;
-                                        case AaruChecksumAlgorithm.Md5:
-                                            aif.MD5 = checksumEntry.checksum;
-                                            break;
-                                        case AaruChecksumAlgorithm.Sha1:
-                                            aif.SHA1 = checksumEntry.checksum;
-                                            break;
-                                        case AaruChecksumAlgorithm.Sha256:
-                                            aif.SHA256 = checksumEntry.checksum;
-                                            break;
-                                        case AaruChecksumAlgorithm.SpamSum:
-                                            aif.SpamSum = checksumEntry.checksum;
-                                            break;
-                                    }
+                                    case AaruChecksumAlgorithm.Invalid:
+                                        break;
+                                    case AaruChecksumAlgorithm.Md5:
+                                        aif.MD5 = checksumEntry.checksum;
+                                        aif.InternalMD5 = checksumEntry.checksum;
+                                        break;
+                                    case AaruChecksumAlgorithm.Sha1:
+                                        aif.SHA1 = checksumEntry.checksum;
+                                        aif.InternalSHA1 = checksumEntry.checksum;
+                                        break;
+                                    case AaruChecksumAlgorithm.Sha256:
+                                        aif.SHA256 = checksumEntry.checksum;
+                                        aif.InternalSHA256 = checksumEntry.checksum;
+                                        break;
+                                    case AaruChecksumAlgorithm.SpamSum:
+                                        aif.SpamSum = checksumEntry.checksum;
+                                        aif.InternalSpamSum = checksumEntry.checksum;
+                                        break;
                                 }
+                            }
 
-                                // Once we got hashes, we return early
-                                return aif;
-                        }
+                            // Once we got hashes, we return early
+                            return aif;
                     }
                 }
 

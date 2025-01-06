@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using System.Text;
+using SabreTools.IO.Extensions;
 
 namespace SabreTools.FileTypes.Aaru
 {
@@ -25,16 +25,9 @@ namespace SabreTools.FileTypes.Aaru
         {
             var indexHeader = new IndexHeader();
 
-#if NET20 || NET35 || NET40
-            using (var br = new BinaryReader(stream, Encoding.Default))
-#else
-            using (var br = new BinaryReader(stream, Encoding.Default, true))
-#endif
-            {
-                indexHeader.identifier = (AaruBlockType)br.ReadUInt32();
-                indexHeader.entries = br.ReadUInt16();
-                indexHeader.crc64 = br.ReadUInt64();
-            }
+            indexHeader.identifier = (AaruBlockType)stream.ReadUInt32();
+            indexHeader.entries = stream.ReadUInt16();
+            indexHeader.crc64 = stream.ReadUInt64();
 
             return indexHeader;
         }

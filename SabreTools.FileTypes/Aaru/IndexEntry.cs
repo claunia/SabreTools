@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using System.Text;
+using SabreTools.IO.Extensions;
 
 namespace SabreTools.FileTypes.Aaru
 {
@@ -23,18 +23,11 @@ namespace SabreTools.FileTypes.Aaru
         /// <returns>Populated IndexHeader, null on failure</returns>
         public static IndexEntry Deserialize(Stream stream)
         {
-            IndexEntry indexEntry = new IndexEntry();
+            var indexEntry = new IndexEntry();
 
-#if NET20 || NET35 || NET40
-            using (var br = new BinaryReader(stream, Encoding.Default))
-#else
-            using (var br = new BinaryReader(stream, Encoding.Default, true))
-#endif
-            {
-                indexEntry.blockType = (AaruBlockType)br.ReadUInt32();
-                indexEntry.dataType = (AaruDataType)br.ReadUInt16();
-                indexEntry.offset = br.ReadUInt64();
-            }
+            indexEntry.blockType = (AaruBlockType)stream.ReadUInt32();
+            indexEntry.dataType = (AaruDataType)stream.ReadUInt16();
+            indexEntry.offset = stream.ReadUInt64();
 
             return indexEntry;
         }

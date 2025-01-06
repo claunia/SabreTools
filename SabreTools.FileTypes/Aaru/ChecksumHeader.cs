@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using System.Text;
+using SabreTools.IO.Extensions;
 
 namespace SabreTools.FileTypes.Aaru
 {
@@ -24,18 +24,11 @@ namespace SabreTools.FileTypes.Aaru
         /// <returns>Populated ChecksumHeader, null on failure</returns>
         public static ChecksumHeader Deserialize(Stream stream)
         {
-            ChecksumHeader checksumHeader = new ChecksumHeader();
+            var checksumHeader = new ChecksumHeader();
 
-#if NET20 || NET35 || NET40
-            using (var br = new BinaryReader(stream, Encoding.Default))
-#else
-            using (var br = new BinaryReader(stream, Encoding.Default, true))
-#endif
-            {
-                checksumHeader.identifier = (AaruBlockType)br.ReadUInt32();
-                checksumHeader.length = br.ReadUInt32();
-                checksumHeader.entries = br.ReadByte();
-            }
+            checksumHeader.identifier = (AaruBlockType)stream.ReadUInt32();
+            checksumHeader.length = stream.ReadUInt32();
+            checksumHeader.entries = stream.ReadByteValue();
 
             return checksumHeader;
         }
