@@ -283,7 +283,6 @@ namespace SabreTools.FileTypes.Archives
                     else
                     {
                         zipEntryRom = FileTypeTool.GetInfo(readStream,
-                            (long)zf.GetLocalFile(i).UncompressedSize,
                             _hashTypes,
                             keepReadOpen: true);
                     }

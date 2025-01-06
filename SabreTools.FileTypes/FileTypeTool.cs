@@ -64,21 +64,10 @@ namespace SabreTools.FileTypes
         /// Retrieve file information for a single stream
         /// </summary>
         /// <param name="input">Stream to get information from</param>
-        /// <param name="size">Size of the input stream</param>
         /// <param name="hashes">Hashes to include in the information</param>
         /// <returns>Populated BaseFile object if success, null on error</returns>
-        public static BaseFile GetInfo(Stream? input, long size, HashType[] hashes)
-            => GetInfo(input, size, hashes, keepReadOpen: false);
-
-        /// <summary>
-        /// Retrieve file information for a single stream
-        /// </summary>
-        /// <param name="input">Stream to get information from</param>
-        /// <param name="hashes">Hashes to include in the information</param>
-        /// <param name="keepReadOpen">Indicates if the underlying read stream should be kept open</param>
-        /// <returns>Populated BaseFile object if success, null on error</returns>
-        public static BaseFile GetInfo(Stream? input, HashType[] hashes, bool keepReadOpen)
-            => GetInfo(input, size: -1, hashes, keepReadOpen);
+        public static BaseFile GetInfo(Stream? input, HashType[] hashes)
+            => GetInfo(input, hashes, keepReadOpen: false);
 
         /// <summary>
         /// Retrieve file information for a single file
@@ -88,7 +77,7 @@ namespace SabreTools.FileTypes
         /// <param name="hashes">Hashes to include in the information</param>
         /// <param name="keepReadOpen">Indicates if the underlying read stream should be kept open</param>
         /// <returns>Populated BaseFile object if success, empty one on error</returns>
-        public static BaseFile GetInfo(Stream? input, long size, HashType[] hashes, bool keepReadOpen)
+        public static BaseFile GetInfo(Stream? input, HashType[] hashes, bool keepReadOpen)
         {
             // If we have no stream
             if (input == null)
@@ -96,20 +85,8 @@ namespace SabreTools.FileTypes
 
             try
             {
-                try
-                {
-                    // If we want to automatically set the size
-                    if (size == -1)
-                        size = input.Length;
-                }
-                catch
-                {
-                    // Don't set the length if the stream doesn't support it
-                }
-
-                // TODO: Replace this with size variant when added
                 // Run the hashing on the input stream
-                var hashDict = HashTool.GetStreamHashes(input, hashes);
+                var hashDict = HashTool.GetStreamHashesAndSize(input, hashes, out long size);
                 if (hashDict == null)
                     return new BaseFile();
 
