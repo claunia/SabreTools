@@ -318,47 +318,47 @@ namespace SabreTools.DatItems
                 int pos = -1;
                 for (int i = 0; i < outfiles.Count; i++)
                 {
+                    // Get the next item
                     DatItem lastrom = outfiles[i];
 
                     // Get the duplicate status
                     dupetype = item.GetDuplicateStatus(lastrom);
+                    if (dupetype == 0x00)
+                        continue;
 
                     // If it's a duplicate, skip adding it to the output but add any missing information
-                    if (dupetype != 0x00)
+                    saveditem = lastrom;
+                    pos = i;
+
+                    // Disks, File, Media, and Roms have more information to fill
+                    if (item is Disk disk && saveditem is Disk savedDisk)
+                        savedDisk.FillMissingInformation(disk);
+                    else if (item is Formats.File fileItem && saveditem is Formats.File savedFile)
+                        savedFile.FillMissingInformation(fileItem);
+                    else if (item is Media media && saveditem is Media savedMedia)
+                        savedMedia.FillMissingInformation(media);
+                    else if (item is Rom romItem && saveditem is Rom savedRom)
+                        savedRom.FillMissingInformation(romItem);
+
+                    saveditem.SetFieldValue<DupeType>(DatItem.DupeTypeKey, dupetype);
+
+                    // If the current system has a lower ID than the previous, set the system accordingly
+                    if (item.GetFieldValue<Source?>(DatItem.SourceKey)?.Index < saveditem.GetFieldValue<Source?>(DatItem.SourceKey)?.Index)
                     {
-                        saveditem = lastrom;
-                        pos = i;
-
-                        // Disks, File, Media, and Roms have more information to fill
-                        if (item is Disk disk && saveditem is Disk savedDisk)
-                            savedDisk.FillMissingInformation(disk);
-                        else if (item is Formats.File fileItem && saveditem is Formats.File savedFile)
-                            savedFile.FillMissingInformation(fileItem);
-                        else if (item is Media media && saveditem is Media savedMedia)
-                            savedMedia.FillMissingInformation(media);
-                        else if (item is Rom romItem && saveditem is Rom savedRom)
-                            savedRom.FillMissingInformation(romItem);
-
-                        saveditem.SetFieldValue<DupeType>(DatItem.DupeTypeKey, dupetype);
-
-                        // If the current system has a lower ID than the previous, set the system accordingly
-                        if (item.GetFieldValue<Source?>(DatItem.SourceKey)?.Index < saveditem.GetFieldValue<Source?>(DatItem.SourceKey)?.Index)
-                        {
-                            item.SetFieldValue<Source?>(DatItem.SourceKey, item.GetFieldValue<Source?>(DatItem.SourceKey)!.Clone() as Source);
-                            saveditem.CopyMachineInformation(item);
-                            saveditem.SetName(item.GetName());
-                        }
-
-                        // If the current machine is a child of the new machine, use the new machine instead
-                        if (saveditem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey) == item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)
-                            || saveditem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey) == item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey))
-                        {
-                            saveditem.CopyMachineInformation(item);
-                            saveditem.SetName(item.GetName());
-                        }
-
-                        break;
+                        item.SetFieldValue<Source?>(DatItem.SourceKey, item.GetFieldValue<Source?>(DatItem.SourceKey)!.Clone() as Source);
+                        saveditem.CopyMachineInformation(item);
+                        saveditem.SetName(item.GetName());
                     }
+
+                    // If the current machine is a child of the new machine, use the new machine instead
+                    if (saveditem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey) == item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)
+                        || saveditem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey) == item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey))
+                    {
+                        saveditem.CopyMachineInformation(item);
+                        saveditem.SetName(item.GetName());
+                    }
+
+                    break;
                 }
 
                 // If no duplicate is found, add it to the list
