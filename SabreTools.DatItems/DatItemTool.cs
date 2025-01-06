@@ -335,7 +335,7 @@ namespace SabreTools.DatItems
                         saveditem = lastrom;
                         pos = i;
 
-                        // Disks, Media, and Roms have more information to fill
+                        // Disks, File, Media, and Roms have more information to fill
                         if (item is Disk disk && saveditem is Disk savedDisk)
                             savedDisk.FillMissingInformation(disk);
                         else if (item is Formats.File fileItem && saveditem is Formats.File savedFile)
