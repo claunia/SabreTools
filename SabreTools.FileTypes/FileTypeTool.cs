@@ -107,6 +107,7 @@ namespace SabreTools.FileTypes
                     // Don't set the length if the stream doesn't support it
                 }
 
+                // TODO: Replace this with size variant when added
                 // Run the hashing on the input stream
                 var hashDict = HashTool.GetStreamHashes(input, hashes);
                 if (hashDict == null)
