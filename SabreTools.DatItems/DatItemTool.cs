@@ -287,10 +287,6 @@ namespace SabreTools.DatItems
             int nodumpCount = 0;
             foreach (DatItem item in infiles)
             {
-                // If we somehow have a null item, skip
-                if (item == null)
-                    continue;
-
                 // If we don't have a Disk, File, Media, or Rom, we skip checking for duplicates
                 if (item is not Disk && item is not Formats.File && item is not Media && item is not Rom)
                     continue;
