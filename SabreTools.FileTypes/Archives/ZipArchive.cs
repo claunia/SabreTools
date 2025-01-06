@@ -554,39 +554,39 @@ namespace SabreTools.FileTypes.Archives
         #region Writing
 
         /// <inheritdoc/>
-        public override bool Write(string inputFile, string outDir, BaseFile? baseFile)
+        public override bool Write(string file, string outDir, BaseFile? baseFile)
         {
             // Check that the input file exists
-            if (!File.Exists(inputFile))
+            if (!File.Exists(file))
             {
-                _logger.Warning($"File '{inputFile}' does not exist!");
+                _logger.Warning($"File '{file}' does not exist!");
                 return false;
             }
 
-            inputFile = Path.GetFullPath(inputFile);
+            file = Path.GetFullPath(file);
 
             // Get the file stream for the file and write out
-            using Stream inputStream = File.Open(inputFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using Stream inputStream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             return Write(inputStream, outDir, baseFile);
         }
 
         /// <inheritdoc/>
-        public override bool Write(Stream? inputStream, string outDir, BaseFile? baseFile)
+        public override bool Write(Stream? stream, string outDir, BaseFile? baseFile)
         {
             bool success = false;
             string tempFile = Path.Combine(outDir, $"tmp{Guid.NewGuid()}");
 
             // If either input is null or empty, return
-            if (inputStream == null || baseFile == null || baseFile.Filename == null)
+            if (stream == null || baseFile == null || baseFile.Filename == null)
                 return success;
 
             // If the stream is not readable, return
-            if (!inputStream.CanRead)
+            if (!stream.CanRead)
                 return success;
 
             // Seek to the beginning of the stream
-            if (inputStream.CanSeek)
-                inputStream.Seek(0, SeekOrigin.Begin);
+            if (stream.CanSeek)
+                stream.Seek(0, SeekOrigin.Begin);
 
             // Get the output archive name from the first rebuild rom
             string archiveFileName = Path.Combine(outDir, TextHelper.RemovePathUnsafeCharacters(baseFile.Parent) + (baseFile.Parent!.EndsWith(".zip") ? string.Empty : ".zip"));
@@ -606,13 +606,13 @@ namespace SabreTools.FileTypes.Archives
                 // If the archive doesn't exist, create it and put the single file
                 if (!File.Exists(archiveFileName))
                 {
-                    if (inputStream.CanSeek)
-                        inputStream.Seek(0, SeekOrigin.Begin);
+                    if (stream.CanSeek)
+                        stream.Seek(0, SeekOrigin.Begin);
 
                     zipReturn = zipFile.ZipFileCreate(tempFile);
 
                     // Open the input file for reading
-                    ulong istreamSize = (ulong)(inputStream.Length);
+                    ulong istreamSize = (ulong)(stream.Length);
 
                     DateTime dt = DateTime.Now;
                     if (_realDates && !string.IsNullOrEmpty(baseFile.Date) && DateTime.TryParse(baseFile.Date!.Replace('\\', '/'), out dt))
@@ -629,7 +629,7 @@ namespace SabreTools.FileTypes.Archives
                     // Copy the input stream to the output
                     byte[] ibuffer = new byte[_bufferSize];
                     int ilen;
-                    while ((ilen = inputStream.Read(ibuffer, 0, _bufferSize)) > 0)
+                    while ((ilen = stream.Read(ibuffer, 0, _bufferSize)) > 0)
                     {
                         writeStream!.Write(ibuffer, 0, ilen);
                         writeStream.Flush();
@@ -686,7 +686,7 @@ namespace SabreTools.FileTypes.Archives
                         if (index < 0)
                         {
                             // Open the input file for reading
-                            ulong istreamSize = (ulong)(inputStream.Length);
+                            ulong istreamSize = (ulong)(stream.Length);
 
                             DateTime dt = DateTime.Now;
                             if (_realDates && !string.IsNullOrEmpty(baseFile.Date) && DateTime.TryParse(baseFile.Date!.Replace('\\', '/'), out dt))
@@ -703,7 +703,7 @@ namespace SabreTools.FileTypes.Archives
                             // Copy the input stream to the output
                             byte[] ibuffer = new byte[_bufferSize];
                             int ilen;
-                            while ((ilen = inputStream.Read(ibuffer, 0, _bufferSize)) > 0)
+                            while ((ilen = stream.Read(ibuffer, 0, _bufferSize)) > 0)
                             {
                                 writeStream!.Write(ibuffer, 0, ilen);
                                 writeStream.Flush();
@@ -761,21 +761,21 @@ namespace SabreTools.FileTypes.Archives
         }
 
         /// <inheritdoc/>
-        public override bool Write(List<string> inputFiles, string outDir, List<BaseFile>? baseFiles)
+        public override bool Write(List<string> files, string outDir, List<BaseFile>? baseFiles)
         {
             bool success = false;
             string tempFile = Path.Combine(outDir, $"tmp{Guid.NewGuid()}");
 
             // If either list of roms is null or empty, return
-            if (inputFiles == null || baseFiles == null || inputFiles.Count == 0 || baseFiles.Count == 0)
+            if (files == null || baseFiles == null || files.Count == 0 || baseFiles.Count == 0)
                 return false;
 
             // If the number of inputs is less than the number of available roms, return
-            if (inputFiles.Count < baseFiles.Count)
+            if (files.Count < baseFiles.Count)
                 return false;
 
             // If one of the files doesn't exist, return
-            foreach (string file in inputFiles)
+            foreach (string file in files)
             {
                 if (!File.Exists(file))
                     return false;
@@ -803,7 +803,7 @@ namespace SabreTools.FileTypes.Archives
 
                     // Map all inputs to index
                     Dictionary<string, int> inputIndexMap = new();
-                    for (int i = 0; i < inputFiles.Count; i++)
+                    for (int i = 0; i < files.Count; i++)
                     {
                         inputIndexMap.Add(baseFiles[i].Filename!.Replace('\\', '/'), i);
                     }
@@ -819,8 +819,8 @@ namespace SabreTools.FileTypes.Archives
                         int index = inputIndexMap[key];
 
                         // Open the input file for reading
-                        Stream freadStream = File.Open(inputFiles[index], FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                        ulong istreamSize = (ulong)(new FileInfo(inputFiles[index]).Length);
+                        Stream freadStream = File.Open(files[index], FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                        ulong istreamSize = (ulong)(new FileInfo(files[index]).Length);
 
                         DateTime dt = DateTime.Now;
                         if (_realDates && !string.IsNullOrEmpty(baseFiles[index].Date) && DateTime.TryParse(baseFiles[index].Date?.Replace('\\', '/'), out dt))
@@ -856,7 +856,7 @@ namespace SabreTools.FileTypes.Archives
 
                     // Map all inputs to index
                     Dictionary<string, int> inputIndexMap = new();
-                    for (int i = 0; i < inputFiles.Count; i++)
+                    for (int i = 0; i < files.Count; i++)
                     {
                         List<string> oldZipFileContents = [];
                         for (int j = 0; j < oldZipFile.LocalFilesCount(); j++)
@@ -901,8 +901,8 @@ namespace SabreTools.FileTypes.Archives
                         if (index < 0)
                         {
                             // Open the input file for reading
-                            Stream freadStream = File.Open(inputFiles[-index - 1], FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                            ulong istreamSize = (ulong)(new FileInfo(inputFiles[-index - 1]).Length);
+                            Stream freadStream = File.Open(files[-index - 1], FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                            ulong istreamSize = (ulong)(new FileInfo(files[-index - 1]).Length);
 
                             DateTime dt = DateTime.Now;
                             if (_realDates && !string.IsNullOrEmpty(baseFiles[-index - 1].Date) && DateTime.TryParse(baseFiles[-index - 1].Date?.Replace('\\', '/'), out dt))

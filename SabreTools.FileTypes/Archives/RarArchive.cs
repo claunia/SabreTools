@@ -292,30 +292,30 @@ namespace SabreTools.FileTypes.Archives
         #region Writing
 
         /// <inheritdoc/>
-        public override bool Write(string inputFile, string outDir, BaseFile? baseFile)
+        public override bool Write(string file, string outDir, BaseFile? baseFile)
         {
             // Check that the input file exists
-            if (!File.Exists(inputFile))
+            if (!File.Exists(file))
             {
-                _logger.Warning($"File '{inputFile}' does not exist!");
+                _logger.Warning($"File '{file}' does not exist!");
                 return false;
             }
 
-            inputFile = Path.GetFullPath(inputFile);
+            file = Path.GetFullPath(file);
 
             // Get the file stream for the file and write out
-            using Stream inputStream = File.Open(inputFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using Stream inputStream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             return Write(inputStream, outDir, baseFile);
         }
 
         /// <inheritdoc/>
-        public override bool Write(Stream? inputStream, string outDir, BaseFile? baseFile)
+        public override bool Write(Stream? stream, string outDir, BaseFile? baseFile)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public override bool Write(List<string> inputFiles, string outDir, List<BaseFile>? roms)
+        public override bool Write(List<string> files, string outDir, List<BaseFile>? roms)
         {
             throw new NotImplementedException();
         }

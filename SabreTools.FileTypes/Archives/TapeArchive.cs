@@ -281,35 +281,35 @@ namespace SabreTools.FileTypes.Archives
         #region Writing
 
         /// <inheritdoc/>
-        public override bool Write(string inputFile, string outDir, BaseFile? baseFile)
+        public override bool Write(string file, string outDir, BaseFile? baseFile)
         {
             // Check that the input file exists
-            if (!File.Exists(inputFile))
+            if (!File.Exists(file))
             {
-                _logger.Warning($"File '{inputFile}' does not exist!");
+                _logger.Warning($"File '{file}' does not exist!");
                 return false;
             }
 
-            inputFile = Path.GetFullPath(inputFile);
+            file = Path.GetFullPath(file);
 
             // Get the file stream for the file and write out
-            using Stream inputStream = File.Open(inputFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using Stream inputStream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             return Write(inputStream, outDir, baseFile);
         }
 
         /// <inheritdoc/>
-        public override bool Write(Stream? inputStream, string outDir, BaseFile? baseFile)
+        public override bool Write(Stream? stream, string outDir, BaseFile? baseFile)
         {
 #if NET462_OR_GREATER || NETCOREAPP
             bool success = false;
             string tempFile = Path.Combine(outDir, $"tmp{Guid.NewGuid()}");
 
             // If either input is null or empty, return
-            if (inputStream == null || baseFile == null || baseFile.Filename == null)
+            if (stream == null || baseFile == null || baseFile.Filename == null)
                 return success;
 
             // If the stream is not readable, return
-            if (!inputStream.CanRead)
+            if (!stream.CanRead)
                 return success;
 
             // Get the output archive name from the first rebuild rom
@@ -334,10 +334,10 @@ namespace SabreTools.FileTypes.Archives
                         usableDate = dt;
 
                     // Copy the input stream to the output
-                    if (inputStream.CanSeek)
-                        inputStream.Seek(0, SeekOrigin.Begin);
+                    if (stream.CanSeek)
+                        stream.Seek(0, SeekOrigin.Begin);
 
-                    tarFile.AddEntry(baseFile.Filename, inputStream, size: baseFile.Size ?? 0, modified: usableDate);
+                    tarFile.AddEntry(baseFile.Filename, stream, size: baseFile.Size ?? 0, modified: usableDate);
                 }
 
                 // Otherwise, sort the input files and write out in the correct order
@@ -392,10 +392,10 @@ namespace SabreTools.FileTypes.Archives
                         if (index < 0)
                         {
                             // Copy the input file to the output
-                            if (inputStream.CanSeek)
-                                inputStream.Seek(0, SeekOrigin.Begin);
+                            if (stream.CanSeek)
+                                stream.Seek(0, SeekOrigin.Begin);
 
-                            tarFile.AddEntry(baseFile.Filename, inputStream, size: baseFile.Size ?? 0, modified: usableDate);
+                            tarFile.AddEntry(baseFile.Filename, stream, size: baseFile.Size ?? 0, modified: usableDate);
                         }
 
                         // Otherwise, copy the file from the old archive
@@ -442,22 +442,22 @@ namespace SabreTools.FileTypes.Archives
         }
 
         /// <inheritdoc/>
-        public override bool Write(List<string> inputFiles, string outDir, List<BaseFile>? baseFiles)
+        public override bool Write(List<string> files, string outDir, List<BaseFile>? baseFiles)
         {
 #if NET462_OR_GREATER || NETCOREAPP
             bool success = false;
             string tempFile = Path.Combine(outDir, $"tmp{Guid.NewGuid()}");
 
             // If either list of roms is null or empty, return
-            if (inputFiles == null || baseFiles == null || inputFiles.Count == 0 || baseFiles.Count == 0)
+            if (files == null || baseFiles == null || files.Count == 0 || baseFiles.Count == 0)
                 return false;
 
             // If the number of inputs is less than the number of available roms, return
-            if (inputFiles.Count < baseFiles.Count)
+            if (files.Count < baseFiles.Count)
                 return false;
 
             // If one of the files doesn't exist, return
-            foreach (string file in inputFiles)
+            foreach (string file in files)
             {
                 if (!File.Exists(file))
                     return false;
@@ -481,7 +481,7 @@ namespace SabreTools.FileTypes.Archives
                 {
                     // Map all inputs to index
                     Dictionary<string, int> inputIndexMap = new();
-                    for (int i = 0; i < inputFiles.Count; i++)
+                    for (int i = 0; i < files.Count; i++)
                     {
                         inputIndexMap.Add(baseFiles[i].Filename!.Replace('\\', '/'), i);
                     }
@@ -503,7 +503,7 @@ namespace SabreTools.FileTypes.Archives
 
                         // Copy the input stream to the output
                         tarFile.AddEntry(baseFiles[index].Filename!,
-                            File.Open(inputFiles[index], FileMode.Open, FileAccess.Read, FileShare.ReadWrite),
+                            File.Open(files[index], FileMode.Open, FileAccess.Read, FileShare.ReadWrite),
                             size: baseFiles[index].Size ?? 0,
                             modified: usableDate);
                     }
@@ -520,7 +520,7 @@ namespace SabreTools.FileTypes.Archives
 
                     // Map all inputs to index
                     var inputIndexMap = new Dictionary<string, int>();
-                    for (int i = 0; i < inputFiles.Count; i++)
+                    for (int i = 0; i < files.Count; i++)
                     {
                         // If the old one contains the new file, then just skip out
                         if (entries.Contains(baseFiles[i].Filename!.Replace('\\', '/')))
@@ -568,7 +568,7 @@ namespace SabreTools.FileTypes.Archives
 
                             // Copy the input file to the output
                             tarFile.AddEntry(baseFiles[-index - 1].Filename!,
-                                File.Open(inputFiles[-index - 1], FileMode.Open, FileAccess.Read, FileShare.ReadWrite),
+                                File.Open(files[-index - 1], FileMode.Open, FileAccess.Read, FileShare.ReadWrite),
                                 size: baseFiles[-index - 1].Size ?? 0,
                                 modified: usableDate);
                         }

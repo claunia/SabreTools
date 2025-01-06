@@ -406,29 +406,29 @@ namespace SabreTools.FileTypes.Archives
         #region Writing
 
         /// <inheritdoc/>
-        public override bool Write(string inputFile, string outDir, BaseFile? baseFile = null)
+        public override bool Write(string file, string outDir, BaseFile? baseFile = null)
         {
             // Check that the input file exists
-            if (!File.Exists(inputFile))
+            if (!File.Exists(file))
             {
-                _logger.Warning($"File '{inputFile}' does not exist!");
+                _logger.Warning($"File '{file}' does not exist!");
                 return false;
             }
 
-            inputFile = Path.GetFullPath(inputFile);
+            file = Path.GetFullPath(file);
 
             // Get the file stream for the file and write out
-            using Stream inputStream = File.Open(inputFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using Stream inputStream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             return Write(inputStream, outDir, baseFile);
         }
 
         /// <inheritdoc/>
-        public override bool Write(Stream? inputStream, string outDir, BaseFile? baseFile = null)
+        public override bool Write(Stream? stream, string outDir, BaseFile? baseFile = null)
         {
             bool success = false;
 
             // If the stream is not readable, return
-            if (inputStream == null || !inputStream.CanRead)
+            if (stream == null || !stream.CanRead)
                 return success;
 
             // Make sure the output directory exists
@@ -438,7 +438,7 @@ namespace SabreTools.FileTypes.Archives
             outDir = Path.GetFullPath(outDir);
 
             // Now get the Rom info for the file so we have hashes and size
-            baseFile = FileTypeTool.GetInfo(inputStream, _hashTypes, keepReadOpen: true);
+            baseFile = FileTypeTool.GetInfo(stream, _hashTypes, keepReadOpen: true);
 
             // Get the output file name
             string outfile = Path.Combine(outDir, Utilities.GetDepotPath(baseFile.SHA1, Depth) ?? string.Empty);
@@ -467,7 +467,7 @@ namespace SabreTools.FileTypes.Archives
                 // Copy the input stream to the output
                 byte[] ibuffer = new byte[_bufferSize];
                 int ilen;
-                while ((ilen = inputStream.Read(ibuffer, 0, _bufferSize)) > 0)
+                while ((ilen = stream.Read(ibuffer, 0, _bufferSize)) > 0)
                 {
                     ds.Write(ibuffer, 0, ilen);
                     ds.Flush();
@@ -490,7 +490,7 @@ namespace SabreTools.FileTypes.Archives
         }
 
         /// <inheritdoc/>
-        public override bool Write(List<string> inputFiles, string outDir, List<BaseFile>? baseFile)
+        public override bool Write(List<string> files, string outDir, List<BaseFile>? baseFile)
         {
             throw new NotImplementedException();
         }

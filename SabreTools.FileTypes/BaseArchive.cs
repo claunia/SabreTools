@@ -108,13 +108,13 @@ namespace SabreTools.FileTypes
         }
 
         /// <inheritdoc/>
-        public abstract bool Write(string inputFile, string outDir, BaseFile? baseFile);
+        public abstract bool Write(string file,  string outDir, BaseFile? baseFile);
 
         /// <inheritdoc/>
-        public abstract bool Write(Stream? inputStream, string outDir, BaseFile? baseFile);
+        public abstract bool Write(Stream? stream, string outDir, BaseFile? baseFile);
 
         /// <inheritdoc/>
-        public abstract bool Write(List<string> inputFiles, string outDir, List<BaseFile>? baseFiles);
+        public abstract bool Write(List<string> files, string outDir, List<BaseFile>? baseFiles);
 
         #endregion
     }
