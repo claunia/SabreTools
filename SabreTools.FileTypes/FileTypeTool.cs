@@ -21,16 +21,16 @@ namespace SabreTools.FileTypes
         /// <param name="hashes">Hashes to include in the information</param>
         /// <returns>Populated BaseFile object if success, empty on error</returns>
         public static BaseFile GetInfo(string input, HashType[] hashes)
-            => GetInfo(input, header: null, hashes);
+            => GetInfo(input, hashes, header: null);
 
         /// <summary>
         /// Retrieve file information for a single file
         /// </summary>
         /// <param name="input">Filename to get information from</param>
-        /// <param name="header">Populated string representing the name of the skipper to use, a blank string to use the first available checker, null otherwise</param>
         /// <param name="hashes">Hashes to include in the information</param>
+        /// <param name="header">Populated string representing the name of the skipper to use, a blank string to use the first available checker, null otherwise</param>
         /// <returns>Populated BaseFile object if success, empty on error</returns>
-        public static BaseFile GetInfo(string input, string? header, HashType[] hashes)
+        public static BaseFile GetInfo(string input, HashType[] hashes, string? header)
         {
             // Add safeguard if file doesn't exist
             if (!File.Exists(input))

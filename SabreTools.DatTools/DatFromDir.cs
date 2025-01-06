@@ -406,7 +406,7 @@ namespace SabreTools.DatTools
         {
             logger.Verbose($"'{Path.GetFileName(item)}' treated like a file");
             var header = datFile.Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey);
-            BaseFile? baseFile = FileTypeTool.GetInfo(item, header, _hashes);
+            BaseFile? baseFile = FileTypeTool.GetInfo(item, _hashes, header);
             DatItem? datItem = DatItemTool.CreateDatItem(baseFile, asFile);
             if (datItem != null)
                 ProcessFileHelper(datFile, item, datItem, basePath, string.Empty);
