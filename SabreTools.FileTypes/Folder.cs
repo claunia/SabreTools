@@ -225,29 +225,23 @@ namespace SabreTools.FileTypes
             if (Filename == null)
                 return null;
 
-            if (_children == null || _children.Count == 0)
-            {
-                _children = [];
-#if NET20 || NET35
-                foreach (string file in Directory.GetFiles(Filename, "*"))
-#else
-                foreach (string file in Directory.EnumerateFiles(Filename, "*", SearchOption.TopDirectoryOnly))
-#endif
-                {
-                    BaseFile? nf = FileTypeTool.GetInfo(file, _hashTypes);
-                    if (nf != null)
-                        _children.Add(nf);
-                }
+            // If we already have children
+            if (_children != null && _children.Count > 0)
+                return _children;
 
-#if NET20 || NET35
-                foreach (string dir in Directory.GetDirectories(Filename, "*"))
-#else
-                foreach (string dir in Directory.EnumerateDirectories(Filename, "*", SearchOption.TopDirectoryOnly))
-#endif
-                {
-                    var fl = new Folder(dir);
-                    _children.Add(fl);
-                }
+            // Build the child item list
+            _children = [];
+            foreach (string file in IOExtensions.SafeEnumerateFiles(Filename, "*", SearchOption.TopDirectoryOnly))
+            {
+                BaseFile? nf = FileTypeTool.GetInfo(file, _hashTypes);
+                if (nf != null)
+                    _children.Add(nf);
+            }
+
+            foreach (string dir in IOExtensions.SafeEnumerateDirectories(Filename, "*", SearchOption.TopDirectoryOnly))
+            {
+                var fl = new Folder(dir);
+                _children.Add(fl);
             }
 
             return _children;
