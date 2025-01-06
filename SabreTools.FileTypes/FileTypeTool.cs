@@ -21,17 +21,7 @@ namespace SabreTools.FileTypes
         /// <param name="hashes">Hashes to include in the information</param>
         /// <returns>Populated BaseFile object if success, empty on error</returns>
         public static BaseFile GetInfo(string input, HashType[] hashes)
-            => GetInfo(input, header: null, hashes, asFiles: 0x00);
-
-        /// <summary>
-        /// Retrieve file information for a single file
-        /// </summary>
-        /// <param name="input">Filename to get information from</param>
-        /// <param name="hashes">Hashes to include in the information</param>
-        /// <param name="asFiles">TreatAsFiles representing special format scanning</param>
-        /// <returns>Populated BaseFile object if success, empty on error</returns>
-        public static BaseFile GetInfo(string input, HashType[] hashes, TreatAsFile asFiles)
-            => GetInfo(input, header: null, hashes, asFiles);
+            => GetInfo(input, header: null, hashes);
 
         /// <summary>
         /// Retrieve file information for a single file
@@ -39,9 +29,8 @@ namespace SabreTools.FileTypes
         /// <param name="input">Filename to get information from</param>
         /// <param name="header">Populated string representing the name of the skipper to use, a blank string to use the first available checker, null otherwise</param>
         /// <param name="hashes">Hashes to include in the information</param>
-        /// <param name="asFiles">TreatAsFiles representing special format scanning</param>
         /// <returns>Populated BaseFile object if success, empty on error</returns>
-        public static BaseFile GetInfo(string input, string? header, HashType[] hashes, TreatAsFile asFiles)
+        public static BaseFile GetInfo(string input, string? header, HashType[] hashes)
         {
             // Add safeguard if file doesn't exist
             if (!File.Exists(input))
@@ -52,7 +41,7 @@ namespace SabreTools.FileTypes
                 // Get input information
                 var fileType = GetFileType(input);
                 Stream inputStream = GetInfoStream(input, header);
-                BaseFile? baseFile = GetBaseFile(inputStream, fileType, hashes, asFiles);
+                BaseFile? baseFile = GetBaseFile(inputStream, fileType, hashes);
 
                 // Dispose of the input stream
                 inputStream.Dispose();
@@ -162,21 +151,54 @@ namespace SabreTools.FileTypes
         /// <summary>
         /// Get the correct base file based on the type and filter options
         /// </summary>
-        private static BaseFile? GetBaseFile(Stream inputStream, FileType? fileType, HashType[] hashes, TreatAsFile asFiles)
+        private static BaseFile? GetBaseFile(Stream inputStream, FileType? fileType, HashType[] hashes)
         {
-#if NET20 || NET35
-            if (fileType == FileType.AaruFormat && (asFiles & TreatAsFile.AaruFormat) == 0)
-                return AaruFormat.Create(inputStream);
-            else if (fileType == FileType.CHD && (asFiles & TreatAsFile.CHD) == 0)
-                return CHDFile.Create(inputStream);
-#else
-            if (fileType == FileType.AaruFormat && !asFiles.HasFlag(TreatAsFile.AaruFormat))
-                return AaruFormat.Create(inputStream);
-            else if (fileType == FileType.CHD && !asFiles.HasFlag(TreatAsFile.CHD))
-                return CHDFile.Create(inputStream);
-#endif
+            // Get external file information
+            BaseFile? baseFile = GetInfo(inputStream, hashes, keepReadOpen: true);
 
-            return GetInfo(inputStream, hashes, keepReadOpen: false);
+            // Get internal hashes, if they exist
+            if (fileType == FileType.AaruFormat)
+            {
+                AaruFormat? aif = AaruFormat.Create(inputStream);
+                if (aif != null)
+                {
+                    aif.Filename = baseFile.Filename;
+                    aif.Parent = baseFile.Parent;
+                    aif.Date = baseFile.Date;
+                    aif.Size = baseFile.Size;
+                    aif.CRC = baseFile.CRC;
+                    aif.MD5 = baseFile.MD5;
+                    aif.SHA1 = baseFile.SHA1;
+                    aif.SHA256 = baseFile.SHA256;
+                    aif.SHA384 = baseFile.SHA384;
+                    aif.SHA512 = baseFile.SHA512;
+                    aif.SpamSum = baseFile.SpamSum;
+
+                    return aif;
+                }
+            }
+            else if (fileType == FileType.CHD)
+            {
+                CHDFile? chd = CHDFile.Create(inputStream);
+                if (chd != null)
+                {
+                    chd.Filename = baseFile.Filename;
+                    chd.Parent = baseFile.Parent;
+                    chd.Date = baseFile.Date;
+                    chd.Size = baseFile.Size;
+                    chd.CRC = baseFile.CRC;
+                    chd.MD5 = baseFile.MD5;
+                    chd.SHA1 = baseFile.SHA1;
+                    chd.SHA256 = baseFile.SHA256;
+                    chd.SHA384 = baseFile.SHA384;
+                    chd.SHA512 = baseFile.SHA512;
+                    chd.SpamSum = baseFile.SpamSum;
+
+                    return chd;
+                }
+            }
+
+            return baseFile;
         }
 
         /// <summary>

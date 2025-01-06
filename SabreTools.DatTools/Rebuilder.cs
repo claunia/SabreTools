@@ -324,7 +324,7 @@ namespace SabreTools.DatTools
             // If the entries list is null, we encountered an error or have a file and should scan externally
             if (entries == null && System.IO.File.Exists(file))
             {
-                BaseFile? internalFileInfo = FileTypeTool.GetInfo(file, hashTypes, asFiles);
+                BaseFile? internalFileInfo = FileTypeTool.GetInfo(file, hashTypes);
 
                 // Create the correct DatItem
                 DatItem? internalDatItem;

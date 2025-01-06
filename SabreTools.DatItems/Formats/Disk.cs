@@ -75,8 +75,17 @@ namespace SabreTools.DatItems.Formats
         public Disk(BaseFile baseFile) : base()
         {
             SetName(baseFile.Filename);
-            SetFieldValue<string?>(Models.Metadata.Disk.MD5Key, baseFile.MD5.ToHexString());
-            SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, baseFile.SHA1.ToHexString());
+
+            if (baseFile is FileTypes.CHD.CHDFile chd)
+            {
+                SetFieldValue<string?>(Models.Metadata.Disk.MD5Key, chd.InternalMD5.ToHexString());
+                SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, chd.InternalSHA1.ToHexString());
+            }
+            else
+            {
+                SetFieldValue<string?>(Models.Metadata.Disk.MD5Key, baseFile.MD5.ToHexString());
+                SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, baseFile.SHA1.ToHexString());
+            }
 
             SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
         }
@@ -132,7 +141,7 @@ namespace SabreTools.DatItems.Formats
         public string GetDuplicateSuffix() => _internal.GetDuplicateSuffix();
 
         #endregion
-    
+
         #region Sorting and Merging
 
         /// <inheritdoc/>

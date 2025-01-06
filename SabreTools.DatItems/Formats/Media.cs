@@ -37,10 +37,21 @@ namespace SabreTools.DatItems.Formats
         public Media(BaseFile baseFile) : base()
         {
             SetName(baseFile.Filename);
-            SetFieldValue<string?>(Models.Metadata.Media.MD5Key, baseFile.MD5.ToHexString());
-            SetFieldValue<string?>(Models.Metadata.Media.SHA1Key, baseFile.SHA1.ToHexString());
-            SetFieldValue<string?>(Models.Metadata.Media.SHA256Key, baseFile.SHA256.ToHexString());
-            SetFieldValue<string?>(Models.Metadata.Media.SpamSumKey, System.Text.Encoding.UTF8.GetString(baseFile.SpamSum ?? []));
+
+            if (baseFile is FileTypes.Aaru.AaruFormat aif)
+            {
+                SetFieldValue<string?>(Models.Metadata.Media.MD5Key, aif.InternalMD5.ToHexString());
+                SetFieldValue<string?>(Models.Metadata.Media.SHA1Key, aif.InternalSHA1.ToHexString());
+                SetFieldValue<string?>(Models.Metadata.Media.SHA256Key, aif.InternalSHA256.ToHexString());
+                SetFieldValue<string?>(Models.Metadata.Media.SpamSumKey, System.Text.Encoding.UTF8.GetString(aif.InternalSpamSum ?? []));
+            }
+            else
+            {
+                SetFieldValue<string?>(Models.Metadata.Media.MD5Key, baseFile.MD5.ToHexString());
+                SetFieldValue<string?>(Models.Metadata.Media.SHA1Key, baseFile.SHA1.ToHexString());
+                SetFieldValue<string?>(Models.Metadata.Media.SHA256Key, baseFile.SHA256.ToHexString());
+                SetFieldValue<string?>(Models.Metadata.Media.SpamSumKey, System.Text.Encoding.UTF8.GetString(baseFile.SpamSum ?? []));
+            }
 
             SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
         }

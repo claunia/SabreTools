@@ -211,19 +211,15 @@ namespace SabreTools.FileTypes.Aaru
                                     case AaruChecksumAlgorithm.Invalid:
                                         break;
                                     case AaruChecksumAlgorithm.Md5:
-                                        aif.MD5 = checksumEntry.checksum;
                                         aif.InternalMD5 = checksumEntry.checksum;
                                         break;
                                     case AaruChecksumAlgorithm.Sha1:
-                                        aif.SHA1 = checksumEntry.checksum;
                                         aif.InternalSHA1 = checksumEntry.checksum;
                                         break;
                                     case AaruChecksumAlgorithm.Sha256:
-                                        aif.SHA256 = checksumEntry.checksum;
                                         aif.InternalSHA256 = checksumEntry.checksum;
                                         break;
                                     case AaruChecksumAlgorithm.SpamSum:
-                                        aif.SpamSum = checksumEntry.checksum;
                                         aif.InternalSpamSum = checksumEntry.checksum;
                                         break;
                                 }

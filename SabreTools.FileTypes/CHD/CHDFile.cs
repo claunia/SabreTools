@@ -54,33 +54,27 @@ namespace SabreTools.FileTypes.CHD
                     HeaderV1 v1 => new CHDFile
                     {
                         _header = header,
-                        MD5 = v1.MD5,
                         InternalMD5 = v1.MD5,
                     },
                     HeaderV2 v2 => new CHDFile
                     {
                         _header = header,
-                        MD5 = v2.MD5,
                         InternalMD5 = v2.MD5,
                     },
                     HeaderV3 v3 => new CHDFile
                     {
                         _header = header,
-                        MD5 = v3.MD5,
                         InternalMD5 = v3.MD5,
-                        SHA1 = v3.SHA1,
                         InternalSHA1 = v3.SHA1,
                     },
                     HeaderV4 v4 => new CHDFile
                     {
                         _header = header,
-                        SHA1 = v4.SHA1,
                         InternalSHA1 = v4.SHA1,
                     },
                     HeaderV5 v5 => new CHDFile
                     {
                         _header = header,
-                        SHA1 = v5.SHA1,
                         InternalSHA1 = v5.SHA1,
                     },
                     _ => null,
