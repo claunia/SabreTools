@@ -353,7 +353,7 @@ namespace SabreTools.DatTools
             {
                 foreach (BaseFile entry in entries)
                 {
-                    DatItem? internalDatItem = DatItem.Create(entry);
+                    DatItem? internalDatItem = DatItemTool.CreateDatItem(entry);
                     if (internalDatItem == null)
                         continue;
 

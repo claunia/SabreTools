@@ -759,11 +759,11 @@ namespace SabreTools.DatFiles
 #endif
 
                 // Sort the list of items to be consistent
-                DatItem.Sort(ref sortedlist, false);
+                DatItemTool.Sort(ref sortedlist, false);
 
                 // If we're merging the roms, do so
                 if (dedupeType == DedupeType.Full || (dedupeType == DedupeType.Game && bucketBy == ItemKey.Machine))
-                    sortedlist = DatItem.Merge(sortedlist);
+                    sortedlist = DatItemTool.Merge(sortedlist);
 
                 // Add the list back to the dictionary
                 Reset(key);
@@ -794,7 +794,7 @@ namespace SabreTools.DatFiles
 
                 // Sort the list of items to be consistent
                 if (sortedlist != null)
-                    DatItem.Sort(ref sortedlist, false);
+                    DatItemTool.Sort(ref sortedlist, false);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else

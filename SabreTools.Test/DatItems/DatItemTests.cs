@@ -20,7 +20,7 @@ namespace SabreTools.Test.DatItems
         public void CreateBaseFileTest(FileType fileType, ItemType? expected)
         {
             var baseFile = CreateBaseFile(fileType);
-            var actual = DatItem.Create(baseFile);
+            var actual = DatItemTool.CreateDatItem(baseFile);
             Assert.Equal(expected, actual?.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>());
         }
     
