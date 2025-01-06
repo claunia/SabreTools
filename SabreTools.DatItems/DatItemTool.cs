@@ -362,7 +362,7 @@ namespace SabreTools.DatItems
                 }
 
                 // If no duplicate is found, add it to the list
-                if (dupetype == 0x00)
+                if (dupetype == 0x00 || pos < 0)
                 {
                     outfiles.Add(item);
                 }
