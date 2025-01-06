@@ -216,7 +216,7 @@ namespace SabreTools.FileTypes.Archives
                 else
                 {
                     var xzStream = new XZStream(File.Open(Filename!, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
-                    xzEntryRom = FileTypeTool.GetInfo(xzStream, _hashTypes);
+                    xzEntryRom = FileTypeTool.GetInfo(xzStream, size: -1, _hashTypes);
                     xzEntryRom.Filename = gamename;
                     xzStream.Dispose();
                 }
@@ -331,8 +331,8 @@ namespace SabreTools.FileTypes.Archives
 
             outDir = Path.GetFullPath(outDir);
 
-            // Now get the Rom info for the file so we have hashes and size
-            baseFile = FileTypeTool.GetInfo(stream, _hashTypes, keepReadOpen: true);
+            // If the base file is null, get the hash information
+            baseFile ??= FileTypeTool.GetInfo(stream, -1, _hashTypes, keepReadOpen: true);
 
             // Get the output file name
             string outfile = Path.Combine(outDir, Core.Tools.Utilities.GetDepotPath(baseFile.SHA1, Depth)!);

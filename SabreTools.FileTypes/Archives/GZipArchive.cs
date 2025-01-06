@@ -240,7 +240,7 @@ namespace SabreTools.FileTypes.Archives
                     var gz = new gZip();
                     ZipReturn ret = gz.ZipFileOpen(Filename);
                     ret = gz.ZipFileOpenReadStream(0, out Stream? gzstream, out ulong streamSize);
-                    gzipEntryRom = FileTypeTool.GetInfo(gzstream, _hashTypes);
+                    gzipEntryRom = FileTypeTool.GetInfo(gzstream, (long)streamSize, _hashTypes);
                     gzipEntryRom.Filename = gz.GetLocalFile(0).Filename;
                     gzipEntryRom.Parent = gamename;
                     gzipEntryRom.Date = (gz.TimeStamp > 0 ? gz.TimeStamp.ToString() : null);
@@ -406,7 +406,7 @@ namespace SabreTools.FileTypes.Archives
         #region Writing
 
         /// <inheritdoc/>
-        public override bool Write(string file, string outDir, BaseFile? baseFile = null)
+        public override bool Write(string file, string outDir, BaseFile? baseFile)
         {
             // Check that the input file exists
             if (!File.Exists(file))
@@ -423,7 +423,7 @@ namespace SabreTools.FileTypes.Archives
         }
 
         /// <inheritdoc/>
-        public override bool Write(Stream? stream, string outDir, BaseFile? baseFile = null)
+        public override bool Write(Stream? stream, string outDir, BaseFile? baseFile)
         {
             bool success = false;
 
@@ -437,8 +437,8 @@ namespace SabreTools.FileTypes.Archives
 
             outDir = Path.GetFullPath(outDir);
 
-            // Now get the Rom info for the file so we have hashes and size
-            baseFile = FileTypeTool.GetInfo(stream, _hashTypes, keepReadOpen: true);
+            // If the base file is null, get the hash information
+            baseFile ??= FileTypeTool.GetInfo(stream, -1, _hashTypes, keepReadOpen: true);
 
             // Get the output file name
             string outfile = Path.Combine(outDir, Utilities.GetDepotPath(baseFile.SHA1, Depth) ?? string.Empty);
@@ -457,7 +457,7 @@ namespace SabreTools.FileTypes.Archives
                 BinaryWriter sw = new(outputStream);
 
                 // Write standard header and TGZ info
-                byte[] data = [.. TorrentGZHeader, .. baseFile.MD5!, .. baseFile.CRC!];
+                byte[] data = [.. TorrentGZHeader, .. baseFile!.MD5!, .. baseFile.CRC!];
                 sw.Write(data);
                 sw.Write((ulong)(baseFile.Size ?? 0)); // Long size (Unsigned, Mirrored)
 

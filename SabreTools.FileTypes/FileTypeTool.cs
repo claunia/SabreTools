@@ -64,15 +64,6 @@ namespace SabreTools.FileTypes
         /// Retrieve file information for a single stream
         /// </summary>
         /// <param name="input">Stream to get information from</param>
-        /// <param name="hashes">Hashes to include in the information</param>
-        /// <returns>Populated BaseFile object if success, null on error</returns>
-        public static BaseFile GetInfo(Stream? input, HashType[] hashes)
-            => GetInfo(input, size: -1, hashes, keepReadOpen: false);
-
-        /// <summary>
-        /// Retrieve file information for a single stream
-        /// </summary>
-        /// <param name="input">Stream to get information from</param>
         /// <param name="size">Size of the input stream</param>
         /// <param name="hashes">Hashes to include in the information</param>
         /// <returns>Populated BaseFile object if success, null on error</returns>
@@ -105,9 +96,16 @@ namespace SabreTools.FileTypes
 
             try
             {
-                // If we want to automatically set the size
-                if (size == -1)
-                    size = input.Length;
+                try
+                {
+                    // If we want to automatically set the size
+                    if (size == -1)
+                        size = input.Length;
+                }
+                catch
+                {
+                    // Don't set the length if the stream doesn't support it
+                }
 
                 // Run the hashing on the input stream
                 var hashDict = HashTool.GetStreamHashes(input, hashes);
