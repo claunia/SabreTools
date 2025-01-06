@@ -1,9 +1,11 @@
+using System;
 using System.IO;
 using SabreTools.FileTypes.Aaru;
 using SabreTools.FileTypes.Archives;
 using SabreTools.FileTypes.CHD;
 using SabreTools.Hashing;
 using SabreTools.IO.Extensions;
+using SabreTools.IO.Logging;
 using SabreTools.Matching;
 using SabreTools.Skippers;
 using static SabreTools.FileTypes.Constants;
@@ -12,6 +14,15 @@ namespace SabreTools.FileTypes
 {
     public static class FileTypeTool
     {
+        #region Logging
+
+        /// <summary>
+        /// Logging object
+        /// </summary>
+        private static readonly Logger _logger = new();
+
+        #endregion
+
         #region File Info
 
         /// <summary>
@@ -52,10 +63,9 @@ namespace SabreTools.FileTypes
 
                 return baseFile;
             }
-            catch
+            catch (Exception ex)
             {
-                // Exceptions are currently not logged
-                // TODO: Log exceptions
+                _logger.Error(ex);
                 return new BaseFile();
             }
         }
@@ -96,10 +106,9 @@ namespace SabreTools.FileTypes
                 input.SeekIfPossible();
                 return baseFile;
             }
-            catch
+            catch (Exception ex)
             {
-                // Exceptions are currently not logged
-                // TODO: Log exceptions
+                _logger.Error(ex);
                 return new BaseFile();
             }
         }
@@ -245,10 +254,9 @@ namespace SabreTools.FileTypes
                 using Stream stream = File.Open(input, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 magic = stream.ReadBytes(8);
             }
-            catch
+            catch (Exception ex)
             {
-                // Exceptions are currently not logged
-                // TODO: Log exceptions
+                _logger.Error(ex);
                 return null;
             }
 
