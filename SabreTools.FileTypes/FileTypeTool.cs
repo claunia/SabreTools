@@ -43,8 +43,10 @@ namespace SabreTools.FileTypes
         /// <returns>Populated BaseFile object if success, empty on error</returns>
         public static BaseFile GetInfo(string input, HashType[] hashes, string? header)
         {
-            // Add safeguard if file doesn't exist
-            if (!File.Exists(input))
+            // Add safeguard if file is invalid
+            if (string.IsNullOrEmpty(input))
+                return new BaseFile();
+            else if (!File.Exists(input))
                 return new BaseFile();
 
             try
