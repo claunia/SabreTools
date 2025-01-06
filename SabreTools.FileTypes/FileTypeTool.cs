@@ -169,15 +169,15 @@ namespace SabreTools.FileTypes
         /// <summary>
         /// Get the correct base file based on the type and filter options
         /// </summary>
-        private static BaseFile? GetBaseFile(Stream inputStream, FileType? fileType, HashType[] hashes)
+        private static BaseFile? GetBaseFile(Stream input, FileType? fileType, HashType[] hashes)
         {
             // Get external file information
-            BaseFile? baseFile = GetInfo(inputStream, hashes, keepReadOpen: true);
+            BaseFile? baseFile = GetInfo(input, hashes, keepReadOpen: true);
 
             // Get internal hashes, if they exist
             if (fileType == FileType.AaruFormat)
             {
-                AaruFormat? aif = AaruFormat.Create(inputStream);
+                AaruFormat? aif = AaruFormat.Create(input);
                 if (aif != null)
                 {
                     CopyInformation(baseFile, aif);
@@ -186,7 +186,7 @@ namespace SabreTools.FileTypes
             }
             else if (fileType == FileType.CHD)
             {
-                CHDFile? chd = CHDFile.Create(inputStream);
+                CHDFile? chd = CHDFile.Create(input);
                 if (chd != null)
                 {
                     CopyInformation(baseFile, chd);
