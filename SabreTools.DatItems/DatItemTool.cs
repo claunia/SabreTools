@@ -272,12 +272,12 @@ namespace SabreTools.DatItems
         /// <summary>
         /// Merge an arbitrary set of DatItems based on the supplied information
         /// </summary>
-        /// <param name="infiles">List of File objects representing the items to be merged</param>
+        /// <param name="items">List of DatItem objects representing the items to be merged</param>
         /// <returns>A List of DatItem objects representing the merged items</returns>
-        public static List<DatItem> Merge(List<DatItem>? infiles)
+        public static List<DatItem> Merge(List<DatItem>? items)
         {
             // Check for null or blank inputs first
-            if (infiles == null || infiles.Count == 0)
+            if (items == null || items.Count == 0)
                 return [];
 
             // Create output list
@@ -285,7 +285,7 @@ namespace SabreTools.DatItems
 
             // Then deduplicate them by checking to see if data matches previous saved roms
             int nodumpCount = 0;
-            foreach (DatItem item in infiles)
+            foreach (DatItem item in items)
             {
                 // If we don't have a Disk, File, Media, or Rom, we skip checking for duplicates
                 if (item is not Disk && item is not Formats.File && item is not Media && item is not Rom)
@@ -365,23 +365,23 @@ namespace SabreTools.DatItems
         /// <summary>
         /// Resolve name duplicates in an arbitrary set of DatItems based on the supplied information
         /// </summary>
-        /// <param name="infiles">List of File objects representing the roms to be merged</param>
-        /// <returns>A List of DatItem objects representing the renamed roms</returns>
-        public static List<DatItem> ResolveNames(List<DatItem> infiles)
+        /// <param name="items">List of DatItem objects representing the items to be merged</param>
+        /// <returns>A List of DatItem objects representing the renamed items</returns>
+        public static List<DatItem> ResolveNames(List<DatItem> items)
         {
             // Create the output list
             List<DatItem> output = [];
 
             // First we want to make sure the list is in alphabetical order
-            Sort(ref infiles, true);
+            Sort(ref items, true);
 
             // Now we want to loop through and check names
             DatItem? lastItem = null;
             string? lastrenamed = null;
             int lastid = 0;
-            for (int i = 0; i < infiles.Count; i++)
+            for (int i = 0; i < items.Count; i++)
             {
-                DatItem datItem = infiles[i];
+                DatItem datItem = items[i];
 
                 // If we have the first item, we automatically add it
                 if (lastItem == null)
@@ -462,21 +462,21 @@ namespace SabreTools.DatItems
         /// <summary>
         /// Resolve name duplicates in an arbitrary set of DatItems based on the supplied information
         /// </summary>
-        /// <param name="infiles">List of File objects representing the roms to be merged</param>
-        /// <returns>A List of DatItem objects representing the renamed roms</returns>
-        public static List<KeyValuePair<long, DatItem>> ResolveNamesDB(List<KeyValuePair<long, DatItem>> infiles)
+        /// <param name="mappings">List of item ID to DatItem mappings representing the items to be merged</param>
+        /// <returns>A List of DatItem objects representing the renamed items</returns>
+        public static List<KeyValuePair<long, DatItem>> ResolveNamesDB(List<KeyValuePair<long, DatItem>> mappings)
         {
             // Create the output dict
             List<KeyValuePair<long, DatItem>> output = [];
 
             // First we want to make sure the list is in alphabetical order
-            Sort(ref infiles, true);
+            Sort(ref mappings, true);
 
             // Now we want to loop through and check names
             DatItem? lastItem = null;
             string? lastrenamed = null;
             int lastid = 0;
-            foreach (var datItem in infiles)
+            foreach (var datItem in mappings)
             {
                 // If we have the first item, we automatically add it
                 if (lastItem == null)
@@ -569,14 +569,14 @@ namespace SabreTools.DatItems
         }
 
         /// <summary>
-        /// Sort a list of File objects by SourceID, Game, and Name (in order)
+        /// Sort a list of DatItem objects by SourceID, Game, and Name (in order)
         /// </summary>
-        /// <param name="roms">List of File objects representing the roms to be sorted</param>
+        /// <param name="items">List of DatItem objects representing the items to be sorted</param>
         /// <param name="norename">True if files are not renamed, false otherwise</param>
         /// <returns>True if it sorted correctly, false otherwise</returns>
-        public static bool Sort(ref List<DatItem> roms, bool norename)
+        public static bool Sort(ref List<DatItem> items, bool norename)
         {
-            roms.Sort(delegate (DatItem x, DatItem y)
+            items.Sort(delegate (DatItem x, DatItem y)
             {
                 try
                 {
@@ -622,14 +622,14 @@ namespace SabreTools.DatItems
         }
 
         /// <summary>
-        /// Sort a list of File objects by SourceID, Game, and Name (in order)
+        /// Sort a list of DatItem objects by SourceID, Game, and Name (in order)
         /// </summary>
-        /// <param name="roms">List of File objects representing the roms to be sorted</param>
+        /// <param name="mappings">List of item ID to DatItem mappings representing the items to be sorted</param>
         /// <param name="norename">True if files are not renamed, false otherwise</param>
         /// <returns>True if it sorted correctly, false otherwise</returns>
-        public static bool Sort(ref List<KeyValuePair<long, DatItem>> roms, bool norename)
+        public static bool Sort(ref List<KeyValuePair<long, DatItem>> mappings, bool norename)
         {
-            roms.Sort(delegate (KeyValuePair<long, DatItem> x, KeyValuePair<long, DatItem> y)
+            mappings.Sort(delegate (KeyValuePair<long, DatItem> x, KeyValuePair<long, DatItem> y)
             {
                 try
                 {
