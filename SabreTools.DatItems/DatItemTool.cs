@@ -36,16 +36,16 @@ namespace SabreTools.DatItems
             {
                 // Disk
 #if NET20 || NET35
-                FileTypes.CHD.CHDFile when (asFile & TreatAsFile.CHD) == 0 => baseFile.ConvertToDisk(),
+                CHDFile when (asFile & TreatAsFile.CHD) == 0 => baseFile.ConvertToDisk(),
 #else
-                FileTypes.CHD.CHDFile when !asFile.HasFlag(TreatAsFile.CHD) => baseFile.ConvertToDisk(),
+                CHDFile when !asFile.HasFlag(TreatAsFile.CHD) => baseFile.ConvertToDisk(),
 #endif
 
                 // Media
 #if NET20 || NET35
-                FileTypes.Aaru.AaruFormat when (asFile & TreatAsFile.AaruFormat) == 0 => baseFile.ConvertToMedia(),
+                AaruFormat when (asFile & TreatAsFile.AaruFormat) == 0 => baseFile.ConvertToMedia(),
 #else
-                FileTypes.Aaru.AaruFormat when !asFile.HasFlag(TreatAsFile.AaruFormat) => baseFile.ConvertToMedia(),
+                AaruFormat when !asFile.HasFlag(TreatAsFile.AaruFormat) => baseFile.ConvertToMedia(),
 #endif
 
                 // Rom
@@ -72,7 +72,7 @@ namespace SabreTools.DatItems
             var disk = new Disk();
 
             disk.SetName(baseFile.Filename);
-            if (baseFile is FileTypes.CHD.CHDFile chd)
+            if (baseFile is CHDFile chd)
             {
                 disk.SetFieldValue<string?>(Models.Metadata.Disk.MD5Key, chd.InternalMD5.ToHexString());
                 disk.SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, chd.InternalSHA1.ToHexString());
@@ -118,7 +118,7 @@ namespace SabreTools.DatItems
             var media = new Media();
 
             media.SetName(baseFile.Filename);
-            if (baseFile is FileTypes.Aaru.AaruFormat aif)
+            if (baseFile is AaruFormat aif)
             {
                 media.SetFieldValue<string?>(Models.Metadata.Media.MD5Key, aif.InternalMD5.ToHexString());
                 media.SetFieldValue<string?>(Models.Metadata.Media.SHA1Key, aif.InternalSHA1.ToHexString());
@@ -171,10 +171,15 @@ namespace SabreTools.DatItems
         /// <returns>BaseFile containing original Disk information</returns>
         public static BaseFile ConvertToBaseFile(this Disk disk)
         {
+            string? machineName = null;
+            var machine = disk.GetFieldValue<Machine>(DatItem.MachineKey);
+            if (machine != null)
+                machineName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+
             return new CHDFile()
             {
                 Filename = disk.GetName(),
-                Parent = disk.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey),
+                Parent = machineName,
                 MD5 = disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key).FromHexString(),
                 InternalMD5 = disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key).FromHexString(),
                 SHA1 = disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key).FromHexString(),
@@ -189,9 +194,14 @@ namespace SabreTools.DatItems
         /// <returns>BaseFile containing original File information</returns>
         public static BaseFile ConvertToBaseFile(this Formats.File file)
         {
+            string? machineName = null;
+            var machine = file.GetFieldValue<Machine>(DatItem.MachineKey);
+            if (machine != null)
+                machineName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+
             return new BaseFile()
             {
-                Parent = file.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey),
+                Parent = machineName,
                 CRC = file.CRC.FromHexString(),
                 MD5 = file.MD5.FromHexString(),
                 SHA1 = file.SHA1.FromHexString(),
@@ -206,10 +216,15 @@ namespace SabreTools.DatItems
         /// <returns>BaseFile containing original Media information</returns>
         public static BaseFile ConvertToBaseFile(this Media media)
         {
+            string? machineName = null;
+            var machine = media.GetFieldValue<Machine>(DatItem.MachineKey);
+            if (machine != null)
+                machineName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+
             return new AaruFormat()
             {
                 Filename = media.GetName(),
-                Parent = media.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey),
+                Parent = machineName,
                 MD5 = media.GetStringFieldValue(Models.Metadata.Media.MD5Key).FromHexString(),
                 InternalMD5 = media.GetStringFieldValue(Models.Metadata.Media.MD5Key).FromHexString(),
                 SHA1 = media.GetStringFieldValue(Models.Metadata.Media.SHA1Key).FromHexString(),
@@ -228,11 +243,16 @@ namespace SabreTools.DatItems
         /// <returns>BaseFile containing original Rom information</returns>
         public static BaseFile ConvertToBaseFile(this Rom rom)
         {
+            string? machineName = null;
+            var machine = rom.GetFieldValue<Machine>(DatItem.MachineKey);
+            if (machine != null)
+                machineName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+
             string? spamSum = rom.GetStringFieldValue(Models.Metadata.Rom.SpamSumKey);
             return new BaseFile()
             {
                 Filename = rom.GetName(),
-                Parent = rom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey),
+                Parent = machineName,
                 Date = rom.GetStringFieldValue(Models.Metadata.Rom.DateKey),
                 Size = NumberHelper.ConvertToInt64(rom.GetStringFieldValue(Models.Metadata.Rom.SizeKey)),
                 CRC = rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey).FromHexString(),
