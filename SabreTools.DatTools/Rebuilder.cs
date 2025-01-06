@@ -157,13 +157,13 @@ namespace SabreTools.DatTools
                 // Otherwise, we rebuild that file to all locations that we need to
                 bool usedInternally;
                 if (items[0].GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>() == ItemType.Disk)
-                    usedInternally = RebuildIndividualFile(datFile, new Disk(fileinfo), foundpath, outDir, date, inverse, outputFormat, isZip: false);
+                    usedInternally = RebuildIndividualFile(datFile, fileinfo.ConvertToDisk(), foundpath, outDir, date, inverse, outputFormat, isZip: false);
                 else if (items[0].GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>() == ItemType.File)
-                    usedInternally = RebuildIndividualFile(datFile, new DatItems.Formats.File(fileinfo), foundpath, outDir, date, inverse, outputFormat, isZip: false);
+                    usedInternally = RebuildIndividualFile(datFile, fileinfo.ConvertToFile(), foundpath, outDir, date, inverse, outputFormat, isZip: false);
                 else if (items[0].GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>() == ItemType.Media)
-                    usedInternally = RebuildIndividualFile(datFile, new Media(fileinfo), foundpath, outDir, date, inverse, outputFormat, isZip: false);
+                    usedInternally = RebuildIndividualFile(datFile, fileinfo.ConvertToMedia(), foundpath, outDir, date, inverse, outputFormat, isZip: false);
                 else
-                    usedInternally = RebuildIndividualFile(datFile, new Rom(fileinfo), foundpath, outDir, date, inverse, outputFormat, isZip: false);
+                    usedInternally = RebuildIndividualFile(datFile, fileinfo.ConvertToRom(), foundpath, outDir, date, inverse, outputFormat, isZip: false);
 
                 // If we are supposed to delete the depot file, do so
                 if (delete && usedInternally)
@@ -335,15 +335,15 @@ namespace SabreTools.DatTools
 #else
                 else if (internalFileInfo is FileTypes.Aaru.AaruFormat && !asFile.HasFlag(TreatAsFile.AaruFormat))
 #endif
-                    internalDatItem = new Media(internalFileInfo);
+                    internalDatItem = internalFileInfo.ConvertToMedia();
 #if NET20 || NET35
                 else if (internalFileInfo is FileTypes.CHD.CHDFile && (asFile & TreatAsFile.CHD) == 0)
 #else
                 else if (internalFileInfo is FileTypes.CHD.CHDFile && !asFile.HasFlag(TreatAsFile.CHD))
 #endif
-                    internalDatItem = new Disk(internalFileInfo);
+                    internalDatItem = internalFileInfo.ConvertToDisk();
                 else
-                    internalDatItem = new Rom(internalFileInfo);
+                    internalDatItem = internalFileInfo.ConvertToRom();
 
                 if (internalDatItem != null)
                     usedExternally = RebuildIndividualFile(datFile, internalDatItem, file, outDir, date, inverse, outputFormat);
@@ -500,7 +500,7 @@ namespace SabreTools.DatTools
                     {
                         // Get the file informations that we will be using
                         HashType[] hashes = [HashType.CRC32, HashType.MD5, HashType.SHA1];
-                        Rom headerless = new(FileTypeTool.GetInfo(transformStream, hashes));
+                        Rom headerless = FileTypeTool.GetInfo(transformStream, hashes).ConvertToRom();
 
                         // If we have duplicates and we're not filtering
                         if (ShouldRebuild(datFile, headerless, transformStream, false, out dupes))
@@ -575,7 +575,7 @@ namespace SabreTools.DatTools
 
                 // Get the item from the current file
                 HashType[] hashes = [HashType.CRC32, HashType.MD5, HashType.SHA1];
-                Rom item = new(FileTypeTool.GetInfo(stream, hashes));
+                Rom item = FileTypeTool.GetInfo(stream, hashes).ConvertToRom();
                 item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, Path.GetFileNameWithoutExtension(item.GetName()));
                 item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Path.GetFileNameWithoutExtension(item.GetName()));
 
@@ -633,7 +633,7 @@ namespace SabreTools.DatTools
 
                 // Get the item from the current file
                 HashType[] hashes = [HashType.CRC32, HashType.MD5, HashType.SHA1];
-                var item = new Rom(FileTypeTool.GetInfo(stream, hashes));
+                Rom item = FileTypeTool.GetInfo(stream, hashes).ConvertToRom();
 
                 // Create a machine for the current item
                 var machine = new Machine();

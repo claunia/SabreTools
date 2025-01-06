@@ -2,8 +2,6 @@
 using Newtonsoft.Json;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
-using SabreTools.FileTypes;
-using SabreTools.IO.Extensions;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -91,52 +89,9 @@ namespace SabreTools.DatItems.Formats
             SetFieldValue<string?>(Models.Metadata.Rom.StatusKey, ItemStatus.None.AsStringValue());
         }
 
-        public Rom(BaseFile baseFile) : base()
-        {
-            SetName(baseFile.Filename);
-            SetFieldValue<string?>(Models.Metadata.Rom.DateKey, baseFile.Date);
-            SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, baseFile.CRC.ToHexString());
-            SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, baseFile.MD5.ToHexString());
-            SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, baseFile.SHA1.ToHexString());
-            SetFieldValue<string?>(Models.Metadata.Rom.SHA256Key, baseFile.SHA256.ToHexString());
-            SetFieldValue<string?>(Models.Metadata.Rom.SHA384Key, baseFile.SHA384.ToHexString());
-            SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key, baseFile.SHA512.ToHexString());
-            SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, baseFile.Size.ToString());
-            if (baseFile.SpamSum != null)
-                SetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey, System.Text.Encoding.UTF8.GetString(baseFile.SpamSum));
-
-            SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
-        }
-
         public Rom(Models.Metadata.Rom item) : base(item)
         {
             SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
-        }
-
-        #endregion
-
-        #region Cloning Methods
-
-        /// <summary>
-        /// Convert Rom object to a BaseFile
-        /// </summary>
-        public BaseFile ConvertToBaseFile()
-        {
-            string? spamSum = GetStringFieldValue(Models.Metadata.Rom.SpamSumKey);
-            return new BaseFile()
-            {
-                Filename = GetName(),
-                Parent = GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey),
-                Date = GetStringFieldValue(Models.Metadata.Rom.DateKey),
-                Size = NumberHelper.ConvertToInt64(GetStringFieldValue(Models.Metadata.Rom.SizeKey)),
-                CRC = GetStringFieldValue(Models.Metadata.Rom.CRCKey).FromHexString(),
-                MD5 = GetStringFieldValue(Models.Metadata.Rom.MD5Key).FromHexString(),
-                SHA1 = GetStringFieldValue(Models.Metadata.Rom.SHA1Key).FromHexString(),
-                SHA256 = GetStringFieldValue(Models.Metadata.Rom.SHA256Key).FromHexString(),
-                SHA384 = GetStringFieldValue(Models.Metadata.Rom.SHA384Key).FromHexString(),
-                SHA512 = GetStringFieldValue(Models.Metadata.Rom.SHA512Key).FromHexString(),
-                SpamSum = spamSum != null ? System.Text.Encoding.UTF8.GetBytes(spamSum) : null,
-            };
         }
 
         #endregion

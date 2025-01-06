@@ -229,7 +229,7 @@ namespace SabreTools.DatTools
             if (baseFile != null && baseFile.Filename != null)
             {
                 // Add the list if it doesn't exist already
-                Rom rom = new(baseFile);
+                Rom rom = baseFile.ConvertToRom();
                 datFile.Items.Add(rom.GetKey(ItemKey.CRC), rom);
                 logger.Verbose($"File added: {Path.GetFileNameWithoutExtension(item)}");
             }

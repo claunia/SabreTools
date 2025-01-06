@@ -1,8 +1,6 @@
 ﻿using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
-using SabreTools.FileTypes;
-using SabreTools.IO.Extensions;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -34,47 +32,9 @@ namespace SabreTools.DatItems.Formats
             SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
         }
 
-        public Media(BaseFile baseFile) : base()
-        {
-            SetName(baseFile.Filename);
-
-            if (baseFile is FileTypes.Aaru.AaruFormat aif)
-            {
-                SetFieldValue<string?>(Models.Metadata.Media.MD5Key, aif.InternalMD5.ToHexString());
-                SetFieldValue<string?>(Models.Metadata.Media.SHA1Key, aif.InternalSHA1.ToHexString());
-                SetFieldValue<string?>(Models.Metadata.Media.SHA256Key, aif.InternalSHA256.ToHexString());
-                SetFieldValue<string?>(Models.Metadata.Media.SpamSumKey, System.Text.Encoding.UTF8.GetString(aif.InternalSpamSum ?? []));
-            }
-            else
-            {
-                SetFieldValue<string?>(Models.Metadata.Media.MD5Key, baseFile.MD5.ToHexString());
-                SetFieldValue<string?>(Models.Metadata.Media.SHA1Key, baseFile.SHA1.ToHexString());
-                SetFieldValue<string?>(Models.Metadata.Media.SHA256Key, baseFile.SHA256.ToHexString());
-                SetFieldValue<string?>(Models.Metadata.Media.SpamSumKey, System.Text.Encoding.UTF8.GetString(baseFile.SpamSum ?? []));
-            }
-
-            SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
-        }
-
         #endregion
 
         #region Cloning Methods
-
-        /// <summary>
-        /// Convert Media object to a BaseFile
-        /// </summary>
-        public BaseFile ConvertToBaseFile()
-        {
-            return new BaseFile()
-            {
-                Filename = GetName(),
-                Parent = GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey),
-                MD5 = GetStringFieldValue(Models.Metadata.Media.MD5Key).FromHexString(),
-                SHA1 = GetStringFieldValue(Models.Metadata.Media.SHA1Key).FromHexString(),
-                SHA256 = GetStringFieldValue(Models.Metadata.Media.SHA256Key).FromHexString(),
-                SpamSum = System.Text.Encoding.UTF8.GetBytes(GetStringFieldValue(Models.Metadata.Media.SpamSumKey) ?? string.Empty),
-            };
-        }
 
         /// <summary>
         /// Convert a media to the closest Rom approximation

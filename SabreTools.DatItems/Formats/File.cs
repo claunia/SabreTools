@@ -2,7 +2,6 @@ using System.Linq;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core.Tools;
-using SabreTools.FileTypes;
 using SabreTools.Hashing;
 using SabreTools.IO.Extensions;
 
@@ -105,21 +104,6 @@ namespace SabreTools.DatItems.Formats
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType);
         }
 
-        /// <summary>
-        /// Create a File object from a BaseFile
-        /// </summary>
-        /// <param name="baseFile"></param>
-        public File(BaseFile baseFile)
-        {
-            _crc = baseFile.CRC;
-            _md5 = baseFile.MD5;
-            _sha1 = baseFile.SHA1;
-            _sha256 = baseFile.SHA256;
-
-            SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType);
-            SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
-        }
-
         #endregion
 
         #region Cloning Methods
@@ -144,21 +128,6 @@ namespace SabreTools.DatItems.Formats
             file.SetFieldValue<Source?>(DatItem.SourceKey, GetFieldValue<Source?>(DatItem.SourceKey));
 
             return file;
-        }
-
-        /// <summary>
-        /// Convert Disk object to a BaseFile
-        /// </summary>
-        public BaseFile ConvertToBaseFile()
-        {
-            return new BaseFile()
-            {
-                Parent = GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey),
-                CRC = this._crc,
-                MD5 = this._md5,
-                SHA1 = this._sha1,
-                SHA256 = this._sha256,
-            };
         }
 
         /// <summary>

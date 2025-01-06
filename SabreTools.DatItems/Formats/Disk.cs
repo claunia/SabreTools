@@ -2,8 +2,6 @@
 using Newtonsoft.Json;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
-using SabreTools.FileTypes;
-using SabreTools.IO.Extensions;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -72,41 +70,9 @@ namespace SabreTools.DatItems.Formats
             SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
         }
 
-        public Disk(BaseFile baseFile) : base()
-        {
-            SetName(baseFile.Filename);
-
-            if (baseFile is FileTypes.CHD.CHDFile chd)
-            {
-                SetFieldValue<string?>(Models.Metadata.Disk.MD5Key, chd.InternalMD5.ToHexString());
-                SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, chd.InternalSHA1.ToHexString());
-            }
-            else
-            {
-                SetFieldValue<string?>(Models.Metadata.Disk.MD5Key, baseFile.MD5.ToHexString());
-                SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, baseFile.SHA1.ToHexString());
-            }
-
-            SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
-        }
-
         #endregion
 
         #region Cloning Methods
-
-        /// <summary>
-        /// Convert Disk object to a BaseFile
-        /// </summary>
-        public BaseFile ConvertToBaseFile()
-        {
-            return new BaseFile()
-            {
-                Filename = GetName(),
-                Parent = GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey),
-                MD5 = GetStringFieldValue(Models.Metadata.Disk.MD5Key).FromHexString(),
-                SHA1 = GetStringFieldValue(Models.Metadata.Disk.SHA1Key).FromHexString(),
-            };
-        }
 
         /// <summary>
         /// Convert a disk to the closest Rom approximation
