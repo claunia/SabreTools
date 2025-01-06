@@ -170,7 +170,6 @@ namespace SabreTools.DatItems
         /// <param name="item">Existing item to copy information from</param>
         /// <remarks>
         /// The cases when Source data is updated:
-        /// - Current source data is missing and the other item has a source
         /// - Current source data has an index higher than the other item
         /// </remarks>
         public void ConditionalUpdateSource(DatItem item)
@@ -178,19 +177,6 @@ namespace SabreTools.DatItems
             // Get the sources for comparison
             Source? selfSource = GetFieldValue<Source?>(DatItem.SourceKey);
             Source? itemSource = item.GetFieldValue<Source?>(DatItem.SourceKey);
-
-            // If both sources are missing, do nothing
-            if (selfSource == null && itemSource == null)
-                return;
-
-            // Use the new source if missing
-            if (selfSource == null && itemSource != null)
-            {
-                SetFieldValue<Source?>(DatItem.SourceKey, itemSource.Clone() as Source);
-                CopyMachineInformation(item);
-                SetName(item.GetName());
-                return;
-            }
 
             // If either source is missing
             if (selfSource == null || itemSource == null)
