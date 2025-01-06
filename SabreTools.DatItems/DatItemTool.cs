@@ -310,8 +310,9 @@ namespace SabreTools.DatItems
                     nodumpCount++;
                     continue;
                 }
+
                 // If it's the first non-nodump rom in the list, don't touch it
-                else if (outfiles.Count == 0 || outfiles.Count == nodumpCount)
+                if (outfiles.Count == 0 || outfiles.Count == nodumpCount)
                 {
                     outfiles.Add(item);
                     continue;
