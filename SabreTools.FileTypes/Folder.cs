@@ -281,14 +281,14 @@ namespace SabreTools.FileTypes
         }
 
         /// <inheritdoc/>
-        public bool Write(Stream? inputStream, string outDir, BaseFile? baseFile)
+        public bool Write(Stream? stream, string outDir, BaseFile? baseFile)
         {
             // If either input is null or empty, return
-            if (inputStream == null || baseFile == null || baseFile.Filename == null)
+            if (stream == null || baseFile == null || baseFile.Filename == null)
                 return false;
 
             // If the stream is not readable, return
-            if (!inputStream.CanRead)
+            if (!stream.CanRead)
                 return false;
 
             // Set internal variables
@@ -323,14 +323,14 @@ namespace SabreTools.FileTypes
                 if (outputStream == null)
                     return false;
 
-                if (inputStream.CanSeek)
-                    inputStream.Seek(0, SeekOrigin.Begin);
+                if (stream.CanSeek)
+                    stream.Seek(0, SeekOrigin.Begin);
 
                 // Copy the input stream to the output
                 int bufferSize = 4096 * 128;
                 byte[] ibuffer = new byte[bufferSize];
                 int ilen;
-                while ((ilen = inputStream.Read(ibuffer, 0, bufferSize)) > 0)
+                while ((ilen = stream.Read(ibuffer, 0, bufferSize)) > 0)
                 {
                     outputStream.Write(ibuffer, 0, ilen);
                     outputStream.Flush();
@@ -360,7 +360,7 @@ namespace SabreTools.FileTypes
         }
 
         /// <inheritdoc/>
-        public bool Write(List<string> inputFiles, string outDir, List<BaseFile>? baseFiles)
+        public bool Write(List<string> files, string outDir, List<BaseFile>? baseFiles)
         {
             throw new NotImplementedException();
         }
