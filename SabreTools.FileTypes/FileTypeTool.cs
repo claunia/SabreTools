@@ -52,25 +52,10 @@ namespace SabreTools.FileTypes
                 // Get input information
                 var fileType = GetFileType(input);
                 Stream inputStream = GetInfoStream(input, header);
-
-                // Get the info in the proper manner
-                BaseFile? baseFile;
-#if NET20 || NET35
-                if (fileType == FileType.AaruFormat && (asFiles & TreatAsFile.AaruFormat) == 0)
-                    baseFile = AaruFormat.Create(inputStream);
-                else if (fileType == FileType.CHD && (asFiles & TreatAsFile.CHD) == 0)
-                    baseFile = CHDFile.Create(inputStream);
-#else
-                if (fileType == FileType.AaruFormat && !asFiles.HasFlag(TreatAsFile.AaruFormat))
-                    baseFile = AaruFormat.Create(inputStream);
-                else if (fileType == FileType.CHD && !asFiles.HasFlag(TreatAsFile.CHD))
-                    baseFile = CHDFile.Create(inputStream);
-#endif
-                else
-                    baseFile = GetInfo(inputStream, hashes: hashes, keepReadOpen: false);
+                BaseFile? baseFile = GetBaseFile(inputStream, fileType, hashes, asFiles);
 
                 // Dispose of the input stream
-                inputStream?.Dispose();
+                inputStream.Dispose();
 
                 // Add unique data from the file
                 baseFile!.Filename = Path.GetFileName(input);
@@ -175,11 +160,28 @@ namespace SabreTools.FileTypes
         }
 
         /// <summary>
+        /// Get the correct base file based on the type and filter options
+        /// </summary>
+        private static BaseFile? GetBaseFile(Stream inputStream, FileType? fileType, HashType[] hashes, TreatAsFile asFiles)
+        {
+#if NET20 || NET35
+            if (fileType == FileType.AaruFormat && (asFiles & TreatAsFile.AaruFormat) == 0)
+                return AaruFormat.Create(inputStream);
+            else if (fileType == FileType.CHD && (asFiles & TreatAsFile.CHD) == 0)
+                return CHDFile.Create(inputStream);
+#else
+            if (fileType == FileType.AaruFormat && !asFiles.HasFlag(TreatAsFile.AaruFormat))
+                return AaruFormat.Create(inputStream);
+            else if (fileType == FileType.CHD && !asFiles.HasFlag(TreatAsFile.CHD))
+                return CHDFile.Create(inputStream);
+#endif
+
+            return GetInfo(inputStream, hashes, keepReadOpen: false);
+        }
+
+        /// <summary>
         /// Get the required stream for info hashing
         /// </summary>
-        /// <param name="input">Filename to get information from</param>
-        /// <param name="header">Populated string representing the name of the skipper to use, a blank string to use the first available checker, null otherwise</param>
-        /// <returns>Open stream representing the file</returns>
         private static Stream GetInfoStream(string input, string? header)
         {
             // Open the file directly
