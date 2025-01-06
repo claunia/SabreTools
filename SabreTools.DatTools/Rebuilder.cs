@@ -188,7 +188,7 @@ namespace SabreTools.DatTools
         /// <param name="delete">True if input files should be deleted, false otherwise</param>
         /// <param name="inverse">True if the DAT should be used as a filter instead of a template, false otherwise</param>
         /// <param name="outputFormat">Output format that files should be written to</param>
-        /// <param name="asFiles">TreatAsFiles representing special format scanning</param>
+        /// <param name="asFile">TreatAsFile representing special format scanning</param>
         /// <returns>True if rebuilding was a success, false otherwise</returns>
         public static bool RebuildGeneric(
             DatFile datFile,
@@ -199,7 +199,7 @@ namespace SabreTools.DatTools
             bool delete = false,
             bool inverse = false,
             OutputFormat outputFormat = OutputFormat.Folder,
-            TreatAsFile asFiles = 0x00)
+            TreatAsFile asFile = 0x00)
         {
             #region Perform setup
 
@@ -239,7 +239,7 @@ namespace SabreTools.DatTools
                 if (System.IO.File.Exists(input))
                 {
                     logger.User($"Checking file: {input}");
-                    bool rebuilt = RebuildGenericHelper(datFile, input, outDir, quickScan, date, inverse, outputFormat, asFiles);
+                    bool rebuilt = RebuildGenericHelper(datFile, input, outDir, quickScan, date, inverse, outputFormat, asFile);
 
                     // If we are supposed to delete the file, do so
                     if (delete && rebuilt)
@@ -257,7 +257,7 @@ namespace SabreTools.DatTools
 #endif
                     {
                         logger.User($"Checking file: {file}");
-                        bool rebuilt = RebuildGenericHelper(datFile, file, outDir, quickScan, date, inverse, outputFormat, asFiles);
+                        bool rebuilt = RebuildGenericHelper(datFile, file, outDir, quickScan, date, inverse, outputFormat, asFile);
 
                         // If we are supposed to delete the file, do so
                         if (delete && rebuilt)
@@ -283,7 +283,7 @@ namespace SabreTools.DatTools
         /// <param name="date">True if the date from the DAT should be used if available, false otherwise</param>
         /// <param name="inverse">True if the DAT should be used as a filter instead of a template, false otherwise</param>
         /// <param name="outputFormat">Output format that files should be written to</param>
-        /// <param name="asFiles">TreatAsFiles representing special format scanning</param>
+        /// <param name="asFile">TreatAsFile representing special format scanning</param>
         /// <returns>True if the file was used to rebuild, false otherwise</returns>
         private static bool RebuildGenericHelper(
             DatFile datFile,
@@ -293,7 +293,7 @@ namespace SabreTools.DatTools
             bool date,
             bool inverse,
             OutputFormat outputFormat,
-            TreatAsFile asFiles)
+            TreatAsFile asFile)
         {
             // If we somehow have a null filename, return
             if (file == null)
@@ -331,15 +331,15 @@ namespace SabreTools.DatTools
                 if (internalFileInfo == null)
                     internalDatItem = null;
 #if NET20 || NET35
-                else if (internalFileInfo is FileTypes.Aaru.AaruFormat && (asFiles & TreatAsFile.AaruFormat) == 0)
+                else if (internalFileInfo is FileTypes.Aaru.AaruFormat && (asFile & TreatAsFile.AaruFormat) == 0)
 #else
-                else if (internalFileInfo is FileTypes.Aaru.AaruFormat && !asFiles.HasFlag(TreatAsFile.AaruFormat))
+                else if (internalFileInfo is FileTypes.Aaru.AaruFormat && !asFile.HasFlag(TreatAsFile.AaruFormat))
 #endif
                     internalDatItem = new Media(internalFileInfo);
 #if NET20 || NET35
-                else if (internalFileInfo is FileTypes.CHD.CHDFile && (asFiles & TreatAsFile.CHD) == 0)
+                else if (internalFileInfo is FileTypes.CHD.CHDFile && (asFile & TreatAsFile.CHD) == 0)
 #else
-                else if (internalFileInfo is FileTypes.CHD.CHDFile && !asFiles.HasFlag(TreatAsFile.CHD))
+                else if (internalFileInfo is FileTypes.CHD.CHDFile && !asFile.HasFlag(TreatAsFile.CHD))
 #endif
                     internalDatItem = new Disk(internalFileInfo);
                 else

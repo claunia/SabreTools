@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using SabreTools.Core;
 using SabreTools.Core.Filter;
 using SabreTools.Core.Tools;
+using SabreTools.DatItems;
 using SabreTools.DatFiles;
 using SabreTools.DatTools;
 using SabreTools.FileTypes;
@@ -1882,7 +1882,7 @@ Some special strings that can be used:
             // Set threading flag, if necessary
 #if NET452_OR_GREATER || NETCOREAPP
             if (features.ContainsKey(ThreadsInt32Value))
-                Globals.MaxThreads = GetInt32(features, ThreadsInt32Value);
+                Core.Globals.MaxThreads = GetInt32(features, ThreadsInt32Value);
 #endif
 
             // Failure conditions
@@ -1996,19 +1996,19 @@ Some special strings that can be used:
         }
 
         /// <summary>
-        /// Get TreatAsFiles from feature list
+        /// Get TreatAsFile from feature list
         /// </summary>
-        protected static TreatAsFile GetTreatAsFiles(Dictionary<string, Feature?> features)
+        protected static TreatAsFile GetTreatAsFile(Dictionary<string, Feature?> features)
         {
-            TreatAsFile asFiles = 0x00;
+            TreatAsFile asFile = 0x00;
             if (GetBoolean(features, AaruFormatsAsFilesValue))
-                asFiles |= TreatAsFile.AaruFormat;
+                asFile |= TreatAsFile.AaruFormat;
             if (GetBoolean(features, ArchivesAsFilesValue))
-                asFiles |= TreatAsFile.Archive;
+                asFile |= TreatAsFile.Archive;
             if (GetBoolean(features, ChdsAsFilesValue))
-                asFiles |= TreatAsFile.CHD;
+                asFile |= TreatAsFile.CHD;
 
-            return asFiles;
+            return asFile;
         }
 
         /// <summary>

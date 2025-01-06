@@ -128,24 +128,24 @@ namespace SabreTools.DatItems
         /// Create a specific type of DatItem to be used based on a BaseFile
         /// </summary>
         /// <param name="baseFile">BaseFile containing information to be created</param>
-        /// <param name="asFiles">TreatAsFiles representing special format scanning</param>
+        /// <param name="asFile">TreatAsFile representing special format scanning</param>
         /// <returns>DatItem of the specific internal type that corresponds to the inputs</returns>
-        public static DatItem? Create(BaseFile? baseFile, TreatAsFile asFiles = 0x00)
+        public static DatItem? Create(BaseFile? baseFile, TreatAsFile asFile = 0x00)
         {
             return baseFile switch
             {
                 // Disk
 #if NET20 || NET35
-                FileTypes.CHD.CHDFile when (asFiles & TreatAsFile.CHD) == 0 => new Disk(baseFile),
+                FileTypes.CHD.CHDFile when (asFile & TreatAsFile.CHD) == 0 => new Disk(baseFile),
 #else
-                FileTypes.CHD.CHDFile when !asFiles.HasFlag(TreatAsFile.CHD) => new Disk(baseFile),
+                FileTypes.CHD.CHDFile when !asFile.HasFlag(TreatAsFile.CHD) => new Disk(baseFile),
 #endif
 
                 // Media
 #if NET20 || NET35
-                FileTypes.Aaru.AaruFormat when (asFiles & TreatAsFile.AaruFormat) == 0 => new Media(baseFile),
+                FileTypes.Aaru.AaruFormat when (asFile & TreatAsFile.AaruFormat) == 0 => new Media(baseFile),
 #else
-                FileTypes.Aaru.AaruFormat when !asFiles.HasFlag(TreatAsFile.AaruFormat) => new Media(baseFile),
+                FileTypes.Aaru.AaruFormat when !asFile.HasFlag(TreatAsFile.AaruFormat) => new Media(baseFile),
 #endif
 
                 // Rom

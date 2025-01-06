@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using SabreTools.DatFiles;
+using SabreTools.DatItems;
 using SabreTools.DatTools;
-using SabreTools.FileTypes;
 using SabreTools.Help;
 
 namespace SabreTools.Features
@@ -60,7 +60,7 @@ namespace SabreTools.Features
             // Get feature flags
             bool addBlankFiles = GetBoolean(features, AddBlankFilesValue);
             bool addFileDates = GetBoolean(features, AddDateValue);
-            TreatAsFile asFiles = GetTreatAsFiles(features);
+            TreatAsFile asFile = GetTreatAsFile(features);
             bool noAutomaticDate = GetBoolean(features, NoAutomaticDateValue);
             var includeInScan = GetIncludeInScan(features);
             var skipFileType = GetSkipFileType(features);
@@ -91,7 +91,7 @@ namespace SabreTools.Features
                     datdata.FillHeaderFromPath(basePath, noAutomaticDate);
 
                     // Now populate from the path
-                    bool success = dfd.PopulateFromDir(datdata, basePath, asFiles);
+                    bool success = dfd.PopulateFromDir(datdata, basePath, asFile);
                     if (success)
                     {
                         // Perform additional processing steps

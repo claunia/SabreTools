@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using SabreTools.DatFiles;
+using SabreTools.DatItems;
 using SabreTools.DatTools;
 using SabreTools.FileTypes;
 using SabreTools.Help;
@@ -59,7 +60,7 @@ namespace SabreTools.Features
                 return false;
 
             // Get feature flags
-            TreatAsFile asFiles = GetTreatAsFiles(features);
+            TreatAsFile asFile = GetTreatAsFile(features);
             bool date = GetBoolean(features, AddDateValue);
             bool delete = GetBoolean(features, DeleteValue);
             bool inverse = GetBoolean(features, InverseValue);
@@ -112,7 +113,7 @@ namespace SabreTools.Features
                     if (inputDepot?.IsActive ?? false)
                         success = Rebuilder.RebuildDepot(datdata, Inputs, Path.Combine(OutputDir!, datdata.Header.GetStringFieldValue(DatHeader.FileNameKey)!), date, delete, inverse, outputFormat);
                     else
-                        success = Rebuilder.RebuildGeneric(datdata, Inputs, Path.Combine(OutputDir!, datdata.Header.GetStringFieldValue(DatHeader.FileNameKey)!), quickScan, date, delete, inverse, outputFormat, asFiles);
+                        success = Rebuilder.RebuildGeneric(datdata, Inputs, Path.Combine(OutputDir!, datdata.Header.GetStringFieldValue(DatHeader.FileNameKey)!), quickScan, date, delete, inverse, outputFormat, asFile);
 
                     // If we have a success and we're updating the DAT, write it out
                     if (success && updateDat)
@@ -155,7 +156,7 @@ namespace SabreTools.Features
                 if (inputDepot?.IsActive ?? false)
                     success = Rebuilder.RebuildDepot(datdata, Inputs, OutputDir!, date, delete, inverse, outputFormat);
                 else
-                    success = Rebuilder.RebuildGeneric(datdata, Inputs, OutputDir!, quickScan, date, delete, inverse, outputFormat, asFiles);
+                    success = Rebuilder.RebuildGeneric(datdata, Inputs, OutputDir!, quickScan, date, delete, inverse, outputFormat, asFile);
 
                 // If we have a success and we're updating the DAT, write it out
                 if (success && updateDat)
