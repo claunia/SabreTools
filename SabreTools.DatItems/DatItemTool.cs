@@ -342,33 +342,6 @@ namespace SabreTools.DatItems
 
                     // Set the duplicate type on the saved item
                     savedItem.SetFieldValue<DupeType>(DatItem.DupeTypeKey, dupetype);
-
-                    // Get the sources for the two items
-                    Source? itemSource = item.GetFieldValue<Source?>(DatItem.SourceKey);
-                    Source? savedItemSource = savedItem.GetFieldValue<Source?>(DatItem.SourceKey);
-
-                    // If the current system has a lower ID than the previous, set the system accordingly
-                    if (itemSource?.Index < savedItemSource?.Index)
-                    {
-                        item.SetFieldValue<Source?>(DatItem.SourceKey, item.GetFieldValue<Source?>(DatItem.SourceKey)!.Clone() as Source);
-                        savedItem.CopyMachineInformation(item);
-                        savedItem.SetName(item.GetName());
-                    }
-
-                    // Get the machines for the two items
-                    Machine? itemMachine = item.GetFieldValue<Machine>(DatItem.MachineKey);
-                    Machine? savedItemMachine = savedItem.GetFieldValue<Machine>(DatItem.MachineKey);
-
-                    // If the current machine is a child of the new machine, use the new machine instead
-                    if (itemMachine != null
-                        && savedItemMachine != null
-                        && (itemMachine.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey) == savedItemMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey)
-                            || itemMachine.GetStringFieldValue(Models.Metadata.Machine.RomOfKey) == savedItemMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey)))
-                    {
-                        savedItem.CopyMachineInformation(item);
-                        savedItem.SetName(item.GetName());
-                    }
-
                     break;
                 }
 

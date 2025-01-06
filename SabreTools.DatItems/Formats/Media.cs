@@ -59,7 +59,12 @@ namespace SabreTools.DatItems.Formats
         /// Fill any missing size and hash information from another Media
         /// </summary>
         /// <param name="other">Media to fill information from</param>
-        public void FillMissingInformation(Media other) => _internal.FillMissingHashes(other?._internal);
+        public void FillMissingInformation(Media other)
+        {
+            _internal.FillMissingHashes(other._internal);
+            ConditionalUpdateSource(other);
+            ConditionalUpdateMachine(other);
+        }
 
         /// <summary>
         /// Get unique duplicate suffix on name collision
