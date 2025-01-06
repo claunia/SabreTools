@@ -285,10 +285,8 @@ namespace SabreTools.DatItems
 
             // Then deduplicate them by checking to see if data matches previous saved roms
             int nodumpCount = 0;
-            for (int f = 0; f < infiles.Count; f++)
+            foreach (DatItem item in infiles)
             {
-                DatItem item = infiles[f];
-
                 // If we somehow have a null item, skip
                 if (item == null)
                     continue;
