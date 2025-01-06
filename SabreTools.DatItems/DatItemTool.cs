@@ -272,11 +272,11 @@ namespace SabreTools.DatItems
         /// <summary>
         /// Merge an arbitrary set of DatItems based on the supplied information
         /// </summary>
-        /// <param name="infiles">List of File objects representing the roms to be merged</param>
-        /// <returns>A List of DatItem objects representing the merged roms</returns>
+        /// <param name="infiles">List of File objects representing the items to be merged</param>
+        /// <returns>A List of DatItem objects representing the merged items</returns>
         public static List<DatItem> Merge(List<DatItem>? infiles)
         {
-            // Check for null or blank roms first
+            // Check for null or blank inputs first
             if (infiles == null || infiles.Count == 0)
                 return [];
 
@@ -305,57 +305,68 @@ namespace SabreTools.DatItems
                     continue;
                 }
 
-                // If it's the first non-nodump rom in the list, don't touch it
+                // If it's the first non-nodump item in the list, don't touch it
                 if (outfiles.Count == 0 || outfiles.Count == nodumpCount)
                 {
                     outfiles.Add(item);
                     continue;
                 }
 
-                // Check if the rom is a duplicate
+                // Check if the item is a duplicate
                 DupeType dupetype = 0x00;
-                DatItem saveditem = new Blank();
+                DatItem savedItem = new Blank();
                 int pos = -1;
                 for (int i = 0; i < outfiles.Count; i++)
                 {
                     // Get the next item
-                    DatItem lastrom = outfiles[i];
+                    DatItem lastItem = outfiles[i];
 
                     // Get the duplicate status
-                    dupetype = item.GetDuplicateStatus(lastrom);
+                    dupetype = item.GetDuplicateStatus(lastItem);
                     if (dupetype == 0x00)
                         continue;
 
                     // If it's a duplicate, skip adding it to the output but add any missing information
-                    saveditem = lastrom;
+                    savedItem = lastItem;
                     pos = i;
 
                     // Disks, File, Media, and Roms have more information to fill
-                    if (item is Disk disk && saveditem is Disk savedDisk)
+                    if (item is Disk disk && savedItem is Disk savedDisk)
                         savedDisk.FillMissingInformation(disk);
-                    else if (item is Formats.File fileItem && saveditem is Formats.File savedFile)
+                    else if (item is Formats.File fileItem && savedItem is Formats.File savedFile)
                         savedFile.FillMissingInformation(fileItem);
-                    else if (item is Media media && saveditem is Media savedMedia)
+                    else if (item is Media media && savedItem is Media savedMedia)
                         savedMedia.FillMissingInformation(media);
-                    else if (item is Rom romItem && saveditem is Rom savedRom)
+                    else if (item is Rom romItem && savedItem is Rom savedRom)
                         savedRom.FillMissingInformation(romItem);
 
-                    saveditem.SetFieldValue<DupeType>(DatItem.DupeTypeKey, dupetype);
+                    // Set the duplicate type on the saved item
+                    savedItem.SetFieldValue<DupeType>(DatItem.DupeTypeKey, dupetype);
+
+                    // Get the sources for the two items
+                    Source? itemSource = item.GetFieldValue<Source?>(DatItem.SourceKey);
+                    Source? savedItemSource = savedItem.GetFieldValue<Source?>(DatItem.SourceKey);
 
                     // If the current system has a lower ID than the previous, set the system accordingly
-                    if (item.GetFieldValue<Source?>(DatItem.SourceKey)?.Index < saveditem.GetFieldValue<Source?>(DatItem.SourceKey)?.Index)
+                    if (itemSource?.Index < savedItemSource?.Index)
                     {
                         item.SetFieldValue<Source?>(DatItem.SourceKey, item.GetFieldValue<Source?>(DatItem.SourceKey)!.Clone() as Source);
-                        saveditem.CopyMachineInformation(item);
-                        saveditem.SetName(item.GetName());
+                        savedItem.CopyMachineInformation(item);
+                        savedItem.SetName(item.GetName());
                     }
 
+                    // Get the machines for the two items
+                    Machine? itemMachine = item.GetFieldValue<Machine>(DatItem.MachineKey);
+                    Machine? savedItemMachine = savedItem.GetFieldValue<Machine>(DatItem.MachineKey);
+
                     // If the current machine is a child of the new machine, use the new machine instead
-                    if (saveditem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey) == item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)
-                        || saveditem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey) == item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey))
+                    if (itemMachine != null
+                        && savedItemMachine != null
+                        && (itemMachine.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey) == savedItemMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey)
+                            || itemMachine.GetStringFieldValue(Models.Metadata.Machine.RomOfKey) == savedItemMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey)))
                     {
-                        saveditem.CopyMachineInformation(item);
-                        saveditem.SetName(item.GetName());
+                        savedItem.CopyMachineInformation(item);
+                        savedItem.SetName(item.GetName());
                     }
 
                     break;
@@ -370,7 +381,7 @@ namespace SabreTools.DatItems
                 else
                 {
                     outfiles.RemoveAt(pos);
-                    outfiles.Insert(pos, saveditem);
+                    outfiles.Insert(pos, savedItem);
                 }
             }
 
