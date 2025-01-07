@@ -51,7 +51,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <typeparam name="T">Enum type that is expected</typeparam>
         /// <returns>Dictionary of string to enum values</returns>
-        internal static Dictionary<string, T> GenerateToEnum<T>()
+        public static Dictionary<string, T> GenerateToEnum<T>()
         {
             try
             {

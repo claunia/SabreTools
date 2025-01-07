@@ -10,7 +10,6 @@
     <ItemGroup>
         <ProjectReference Include="..\SabreTools.Core\SabreTools.Core.csproj" />
         <ProjectReference Include="..\SabreTools.DatFiles\SabreTools.DatFiles.csproj" />
-        <ProjectReference Include="..\SabreTools.DatItems\SabreTools.DatItems.csproj" />
     </ItemGroup>
 
     <ItemGroup>

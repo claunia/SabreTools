@@ -149,5 +149,73 @@ namespace SabreTools.Core
         }
 
         #endregion
+
+        #region Manipulation
+
+        /// <summary>
+        /// Remove a field from the backing item
+        /// </summary>
+        public bool RemoveField(string? fieldName)
+        {
+            // If the item or field name are missing, we can't do anything
+            if (_internal == null || string.IsNullOrEmpty(fieldName))
+                return false;
+
+            // If the key doesn't exist, then it's already removed
+            if (!_internal.ContainsKey(fieldName!))
+                return true;
+
+            // Remove the key
+            _internal.Remove(fieldName!);
+            return true;
+        }
+
+        /// <summary>
+        /// Replace a field from another ModelBackedItem
+        /// </summary>
+        public bool ReplaceField(ModelBackedItem<T>? from, string? fieldName)
+        {
+            // If the items or field name are missing, we can't do anything
+            if (from?._internal == null || _internal == null || string.IsNullOrEmpty(fieldName))
+                return false;
+
+            // If the types of the items are not the same, we can't do anything
+            if (from._internal.GetType() != _internal.GetType())
+                return false;
+
+            // If the key doesn't exist in the source, we can't do anything
+            if (!from._internal.ContainsKey(fieldName!))
+                return false;
+
+            // Set the key
+            _internal[fieldName!] = from._internal[fieldName!];
+            return true;
+        }
+
+        /// <summary>
+        /// Set a field from the backing item
+        /// </summary>
+        public bool SetField(string? fieldName, object value)
+        {
+            // If the item or field name are missing, we can't do anything
+            if (_internal == null || string.IsNullOrEmpty(fieldName))
+                return false;
+
+            // Retrieve the list of valid fields for the item
+            var constants = TypeHelper.GetConstants(_internal.GetType());
+            if (constants == null)
+                return false;
+
+            // Get the value that matches the field name provided
+            string? realField = Array.Find(constants, c => string.Equals(c, fieldName, StringComparison.OrdinalIgnoreCase));
+            if (realField == null)
+                return false;
+
+            // Set the field with the new value
+            _internal[realField] = value;
+            return true;
+        }
+
+        #endregion
     }
 }

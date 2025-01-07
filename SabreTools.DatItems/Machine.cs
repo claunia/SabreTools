@@ -91,33 +91,6 @@ namespace SabreTools.DatItems
         /// <returns>True if the Machine passes the filter, false otherwise</returns>
         public bool PassesFilter(FilterRunner filterRunner) => filterRunner.Run(_internal);
 
-        /// <summary>
-        /// Remove a field from the Machine
-        /// </summary>
-        /// <param name="fieldName">Field to remove</param>
-        /// <returns>True if the removal was successful, false otherwise</returns>
-        public bool RemoveField(string? fieldName)
-            => FieldManipulator.RemoveField(_internal, fieldName);
-
-        /// <summary>
-        /// Replace a field from another Machine
-        /// </summary>
-        /// <param name="other">Machine to replace field from</param>
-        /// <param name="fieldName">Field to replace</param>
-        /// <returns>True if the replacement was successful, false otherwise</returns>
-        public bool ReplaceField(Machine? other, string? fieldName)
-            => FieldManipulator.ReplaceField(other?._internal, _internal, fieldName);
-
-        /// <summary>
-        /// Set a field in the Machine from a mapping string
-        /// </summary>
-        /// <param name="fieldName">Field to set</param>
-        /// <param name="value">String representing the value to set</param>
-        /// <returns>True if the setting was successful, false otherwise</returns>
-        /// <remarks>This only performs minimal validation before setting</remarks>
-        public bool SetField(string? fieldName, string value)
-            => FieldManipulator.SetField(_internal, fieldName, value);
-
         #endregion
     }
 }
