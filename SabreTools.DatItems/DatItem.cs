@@ -559,8 +559,16 @@ namespace SabreTools.DatItems
         /// <returns>True if the items are duplicates, false otherwise</returns>
         public virtual bool Equals(DatItem<T>? other)
         {
+            // If the other value is null
+            if (other == null)
+                return false;
+
+            // Get the types for comparison
+            ItemType selfType = GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>();
+            ItemType otherType = other.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>();
+
             // If we don't have a matched type, return false
-            if (GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>() != other?.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>())
+            if (selfType != otherType)
                 return false;
 
             // Compare the internal models
