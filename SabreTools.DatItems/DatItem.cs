@@ -291,7 +291,8 @@ namespace SabreTools.DatItems
         /// <returns>True if the item passes the filter, false otherwise</returns>
         public bool PassesFilter(FilterRunner filterRunner)
         {
-            if (!GetFieldValue<Machine>(DatItem.MachineKey)!.PassesFilter(filterRunner))
+            var machine = GetFieldValue<Machine>(DatItem.MachineKey);
+            if (machine != null && !machine.PassesFilter(filterRunner))
                 return false;
 
             return filterRunner.Run(_internal);
