@@ -2,13 +2,12 @@ using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using SabreTools.Core.Tools;
-using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.IO;
 using SabreTools.IO.Extensions;
 using SabreTools.IO.Logging;
 
-namespace SabreTools.DatTools
+namespace SabreTools.DatFiles
 {
     /// <summary>
     /// Helper methods for parsing into DatFiles

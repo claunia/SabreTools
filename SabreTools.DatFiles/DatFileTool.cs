@@ -5,12 +5,11 @@ using System.Linq;
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
 #endif
-using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.IO;
 using SabreTools.IO.Logging;
 
-namespace SabreTools.DatTools
+namespace SabreTools.DatFiles
 {
     /// <summary>
     /// Helper methods for updating and converting DatFiles

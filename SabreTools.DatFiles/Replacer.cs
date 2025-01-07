@@ -3,7 +3,7 @@ using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 
-namespace SabreTools.DatTools
+namespace SabreTools.DatFiles
 {
     /// <summary>
     /// Replace fields in DatItems
