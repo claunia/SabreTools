@@ -736,7 +736,7 @@ namespace SabreTools.DatFiles
         /// Merge an arbitrary set of item pairs based on the supplied information
         /// </summary>
         /// <param name="itemMappings">List of pairs representing the items to be merged</param>
-        private List<KeyValuePair<long, DatItem>> Deduplicate(List<KeyValuePair<long, DatItem>> itemMappings)
+        private List<KeyValuePair<long, DatItem>> Merge(List<KeyValuePair<long, DatItem>> itemMappings)
         {
             // Check for null or blank roms first
             if (itemMappings == null || itemMappings.Count == 0)
@@ -769,83 +769,66 @@ namespace SabreTools.DatFiles
                     nodumpCount++;
                     continue;
                 }
+
                 // If it's the first non-nodump rom in the list, don't touch it
-                else if (output.Count == 0 || output.Count == nodumpCount)
+                if (output.Count == nodumpCount)
                 {
                     output.Add(new KeyValuePair<long, DatItem>(itemIndex, datItem));
                     continue;
                 }
 
-                // Check if the rom is a duplicate
-                DupeType dupetype = 0x00;
-                long savedIndex = -1;
-                DatItem saveditem = new Blank();
-                int pos = -1;
-                for (int i = 0; i < output.Count; i++)
-                {
-                    long lastIndex = output[i].Key;
-                    DatItem lastrom = output[i].Value;
-
-                    // Get the sources associated with the items
-                    var savedSource = _sources[_itemToSourceMapping[savedIndex]];
-                    var itemSource = _sources[_itemToSourceMapping[itemIndex]];
-
-                    // Get the duplicate status
-                    dupetype = datItem.GetDuplicateStatus(itemSource, lastrom, savedSource);
-
-                    // If it's a duplicate, skip adding it to the output but add any missing information
-                    if (dupetype != 0x00)
-                    {
-                        savedIndex = lastIndex;
-                        saveditem = lastrom;
-                        pos = i;
-
-                        // Disks, Media, and Roms have more information to fill
-                        if (datItem is Disk disk && saveditem is Disk savedDisk)
-                            savedDisk.FillMissingInformation(disk);
-                        else if (datItem is DatItems.Formats.File fileItem && saveditem is DatItems.Formats.File savedFile)
-                            savedFile.FillMissingInformation(fileItem);
-                        else if (datItem is Media media && saveditem is Media savedMedia)
-                            savedMedia.FillMissingInformation(media);
-                        else if (datItem is Rom romItem && saveditem is Rom savedRom)
-                            savedRom.FillMissingInformation(romItem);
-
-                        saveditem.SetFieldValue<DupeType>(DatItem.DupeTypeKey, dupetype);
-
-                        // Get the machines associated with the items
-                        var savedMachine = _machines[_itemToMachineMapping[savedIndex]];
-                        var itemMachine = _machines[_itemToMachineMapping[itemIndex]];
-
-                        // If the current system has a lower ID than the previous, set the system accordingly
-                        if (itemSource?.Index < savedSource?.Index)
-                        {
-                            _itemToSourceMapping[itemIndex] = _itemToSourceMapping[savedIndex];
-                            _machines[_itemToMachineMapping[savedIndex]] = (itemMachine.Clone() as Machine)!;
-                            saveditem.SetName(datItem.GetName());
-                        }
-
-                        // If the current machine is a child of the new machine, use the new machine instead
-                        if (savedMachine.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey) == itemMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey)
-                            || savedMachine.GetStringFieldValue(Models.Metadata.Machine.RomOfKey) == itemMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey))
-                        {
-                            _machines[_itemToMachineMapping[savedIndex]] = (itemMachine.Clone() as Machine)!;
-                            saveditem.SetName(datItem.GetName());
-                        }
-
-                        break;
-                    }
-                }
-
-                // If no duplicate is found, add it to the list
-                if (dupetype == 0x00)
+                // Find the index of the first duplicate, if one exists
+                int pos = output.FindIndex(lastItem => datItem.GetDuplicateStatus(lastItem.Value) != 0x00);
+                if (pos < 0)
                 {
                     output.Add(new KeyValuePair<long, DatItem>(itemIndex, datItem));
+                    continue;
                 }
-                // Otherwise, if a new rom information is found, add that
+
+                // Get the duplicate item
+                long savedIndex = output[pos].Key;
+                DatItem savedItem = output[pos].Value;
+                DupeType dupetype = datItem.GetDuplicateStatus(savedItem);
+
+                // Disks, Media, and Roms have more information to fill
+                if (datItem is Disk diskItem && savedItem is Disk savedDisk)
+                    savedDisk.FillMissingInformation(diskItem);
+                else if (datItem is DatItems.Formats.File fileItem && savedItem is DatItems.Formats.File savedFile)
+                    savedFile.FillMissingInformation(fileItem);
+                else if (datItem is Media mediaItem && savedItem is Media savedMedia)
+                    savedMedia.FillMissingInformation(mediaItem);
+                else if (datItem is Rom romItem && savedItem is Rom savedRom)
+                    savedRom.FillMissingInformation(romItem);
+
+                savedItem.SetFieldValue<DupeType>(DatItem.DupeTypeKey, dupetype);
+
+                // Get the sources associated with the items
+                var savedSource = _sources[_itemToSourceMapping[savedIndex]];
+                var itemSource = _sources[_itemToSourceMapping[itemIndex]];
+
+                // Get the machines associated with the items
+                var savedMachine = _machines[_itemToMachineMapping[savedIndex]];
+                var itemMachine = _machines[_itemToMachineMapping[itemIndex]];
+
+                // If the current system has a lower ID than the previous, set the system accordingly
+                if (itemSource?.Index < savedSource?.Index)
                 {
-                    output.RemoveAt(pos);
-                    output.Insert(pos, new KeyValuePair<long, DatItem>(savedIndex, saveditem));
+                    _itemToSourceMapping[itemIndex] = _itemToSourceMapping[savedIndex];
+                    _machines[_itemToMachineMapping[savedIndex]] = (itemMachine.Clone() as Machine)!;
+                    savedItem.SetName(datItem.GetName());
                 }
+
+                // If the current machine is a child of the new machine, use the new machine instead
+                if (savedMachine.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey) == itemMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey)
+                    || savedMachine.GetStringFieldValue(Models.Metadata.Machine.RomOfKey) == itemMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey))
+                {
+                    _machines[_itemToMachineMapping[savedIndex]] = (itemMachine.Clone() as Machine)!;
+                    savedItem.SetName(datItem.GetName());
+                }
+
+                // Replace the original item in the list
+                output.RemoveAt(pos);
+                output.Insert(pos, new KeyValuePair<long, DatItem>(savedIndex, savedItem));
             }
 
             return output;
@@ -1072,7 +1055,7 @@ namespace SabreTools.DatFiles
 
                 // If we're merging the roms, do so
                 if (dedupeType == DedupeType.Full || (dedupeType == DedupeType.Game && bucketBy == ItemKey.Machine))
-                    datItems = Deduplicate(datItems);
+                    datItems = Merge(datItems);
 
                 _buckets[bucketKeys[i]] = [.. datItems.Select(kvp => kvp.Key)];
 #if NET40_OR_GREATER || NETCOREAPP

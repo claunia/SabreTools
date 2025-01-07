@@ -103,11 +103,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         /// <param name="other">Rom to fill information from</param>
         public void FillMissingInformation(Rom other)
-        {
-            _internal.FillMissingHashes(other._internal);
-            ConditionalUpdateSource(other);
-            ConditionalUpdateMachine(other);
-        }
+            => _internal.FillMissingHashes(other._internal);
 
         /// <summary>
         /// Get unique duplicate suffix on name collision

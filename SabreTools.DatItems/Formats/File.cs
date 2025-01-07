@@ -207,9 +207,6 @@ namespace SabreTools.DatItems.Formats
 
             if (_sha256.IsNullOrEmpty() && !other._sha256.IsNullOrEmpty())
                 _sha256 = other._sha256;
-
-            ConditionalUpdateSource(other);
-            ConditionalUpdateMachine(other);
         }
 
         /// <summary>

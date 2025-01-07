@@ -99,11 +99,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         /// <param name="other">Disk to fill information from</param>
         public void FillMissingInformation(Disk other)
-        {
-            _internal.FillMissingHashes(other._internal);
-            ConditionalUpdateSource(other);
-            ConditionalUpdateMachine(other);
-        }
+            => _internal.FillMissingHashes(other._internal);
 
         /// <summary>
         /// Get unique duplicate suffix on name collision

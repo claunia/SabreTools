@@ -281,85 +281,93 @@ namespace SabreTools.DatItems
                 return [];
 
             // Create output list
-            List<DatItem> outfiles = [];
+            List<DatItem> output = [];
 
             // Then deduplicate them by checking to see if data matches previous saved roms
             int nodumpCount = 0;
-            foreach (DatItem item in items)
+            foreach (DatItem datItem in items)
             {
                 // If we don't have a Disk, File, Media, or Rom, we skip checking for duplicates
-                if (item is not Disk && item is not Formats.File && item is not Media && item is not Rom)
+                if (datItem is not Disk && datItem is not Formats.File && datItem is not Media && datItem is not Rom)
                     continue;
 
                 // If it's a nodump, add and skip
-                if (item is Rom rom && rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump)
+                if (datItem is Rom rom && rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump)
                 {
-                    outfiles.Add(item);
+                    output.Add(datItem);
                     nodumpCount++;
                     continue;
                 }
-                else if (item is Disk disk && disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump)
+                else if (datItem is Disk disk && disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump)
                 {
-                    outfiles.Add(item);
+                    output.Add(datItem);
                     nodumpCount++;
                     continue;
                 }
 
                 // If it's the first non-nodump item in the list, don't touch it
-                if (outfiles.Count == nodumpCount)
+                if (output.Count == nodumpCount)
                 {
-                    outfiles.Add(item);
+                    output.Add(datItem);
                     continue;
                 }
 
-                // Check if the item is a duplicate
-                DupeType dupetype = 0x00;
-                DatItem savedItem = new Blank();
-                int pos = -1;
-                for (int i = 0; i < outfiles.Count; i++)
+                // Find the index of the first duplicate, if one exists
+                int pos = output.FindIndex(lastItem => datItem.GetDuplicateStatus(lastItem) != 0x00);
+                if (pos < 0)
                 {
-                    // Get the next item
-                    DatItem lastItem = outfiles[i];
-
-                    // Get the duplicate status
-                    dupetype = item.GetDuplicateStatus(lastItem);
-                    if (dupetype == 0x00)
-                        continue;
-
-                    // If it's a duplicate, skip adding it to the output but add any missing information
-                    savedItem = lastItem;
-                    pos = i;
-
-                    // Disks, File, Media, and Roms have more information to fill
-                    if (item is Disk disk && savedItem is Disk savedDisk)
-                        savedDisk.FillMissingInformation(disk);
-                    else if (item is Formats.File fileItem && savedItem is Formats.File savedFile)
-                        savedFile.FillMissingInformation(fileItem);
-                    else if (item is Media media && savedItem is Media savedMedia)
-                        savedMedia.FillMissingInformation(media);
-                    else if (item is Rom romItem && savedItem is Rom savedRom)
-                        savedRom.FillMissingInformation(romItem);
-
-                    // Set the duplicate type on the saved item
-                    savedItem.SetFieldValue<DupeType>(DatItem.DupeTypeKey, dupetype);
-                    break;
+                    output.Add(datItem);
+                    continue;
                 }
 
-                // If no duplicate is found, add it to the list
-                if (dupetype == 0x00 || pos < 0)
+                // Get the duplicate item
+                DatItem savedItem = output[pos];
+                DupeType dupetype = datItem.GetDuplicateStatus(savedItem);
+
+                // Disks, File, Media, and Roms have more information to fill
+                if (datItem is Disk diskItem && savedItem is Disk savedDisk)
+                    savedDisk.FillMissingInformation(diskItem);
+                else if (datItem is Formats.File fileItem && savedItem is Formats.File savedFile)
+                    savedFile.FillMissingInformation(fileItem);
+                else if (datItem is Media mediaItem && savedItem is Media savedMedia)
+                    savedMedia.FillMissingInformation(mediaItem);
+                else if (datItem is Rom romItem && savedItem is Rom savedRom)
+                    savedRom.FillMissingInformation(romItem);
+
+                // Set the duplicate type on the saved item
+                savedItem.SetFieldValue<DupeType>(DatItem.DupeTypeKey, dupetype);
+
+                // Get the sources associated with the items
+                var savedSource = savedItem.GetFieldValue<Source?>(DatItem.SourceKey);
+                var itemSource = datItem.GetFieldValue<Source?>(DatItem.SourceKey);
+
+                // Get the machines associated with the items
+                var savedMachine = savedItem.GetFieldValue<Machine>(DatItem.MachineKey);
+                var itemMachine = datItem.GetFieldValue<Machine>(DatItem.MachineKey);
+
+                // If the current system has a lower ID than the previous, set the system accordingly
+                if (itemSource?.Index < savedSource?.Index)
                 {
-                    outfiles.Add(item);
+                    datItem.SetFieldValue<Source?>(DatItem.SourceKey, savedSource.Clone() as Source);
+                    savedItem.CopyMachineInformation(datItem);
+                    savedItem.SetName(datItem.GetName());
                 }
-                // Otherwise, if a new rom information is found, add that
-                else
+
+                // If the current machine is a child of the new machine, use the new machine instead
+                if (savedMachine?.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey) == itemMachine?.GetStringFieldValue(Models.Metadata.Machine.NameKey)
+                    || savedMachine?.GetStringFieldValue(Models.Metadata.Machine.RomOfKey) == itemMachine?.GetStringFieldValue(Models.Metadata.Machine.NameKey))
                 {
-                    outfiles.RemoveAt(pos);
-                    outfiles.Insert(pos, savedItem);
+                    savedItem.CopyMachineInformation(datItem);
+                    savedItem.SetName(datItem.GetName());
                 }
+
+                // Replace the original item in the list
+                output.RemoveAt(pos);
+                output.Insert(pos, savedItem);
             }
 
             // Then return the result
-            return outfiles;
+            return output;
         }
 
         /// <summary>
