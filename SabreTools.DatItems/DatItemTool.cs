@@ -4,21 +4,11 @@ using SabreTools.FileTypes;
 using SabreTools.FileTypes.Aaru;
 using SabreTools.FileTypes.CHD;
 using SabreTools.IO.Extensions;
-using SabreTools.IO.Logging;
 
 namespace SabreTools.DatItems
 {
     public static class DatItemTool
     {
-        #region Logging
-
-        /// <summary>
-        /// Static logger for static methods
-        /// </summary>
-        private static readonly Logger staticLogger = new();
-
-        #endregion
-
         #region Creation
 
         /// <summary>
