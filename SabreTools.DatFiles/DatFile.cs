@@ -793,7 +793,7 @@ namespace SabreTools.DatFiles
             List<DatItem> output = [];
 
             // First we want to make sure the list is in alphabetical order
-            DatItemTool.Sort(ref items, true);
+            DatFileTool.Sort(ref items, true);
 
             // Now we want to loop through and check names
             DatItem? lastItem = null;
@@ -874,7 +874,7 @@ namespace SabreTools.DatFiles
             }
 
             // One last sort to make sure this is ordered
-            DatItemTool.Sort(ref output, true);
+            DatFileTool.Sort(ref output, true);
 
             return output;
         }
@@ -890,7 +890,7 @@ namespace SabreTools.DatFiles
             List<KeyValuePair<long, DatItem>> output = [];
 
             // First we want to make sure the list is in alphabetical order
-            DatItemTool.SortDB(ref mappings, true);
+            DatFileTool.SortDB(ref mappings, true);
 
             // Now we want to loop through and check names
             DatItem? lastItem = null;
@@ -968,7 +968,7 @@ namespace SabreTools.DatFiles
             }
 
             // One last sort to make sure this is ordered
-            DatItemTool.SortDB(ref output, true);
+            DatFileTool.SortDB(ref output, true);
 
             return output;
         }

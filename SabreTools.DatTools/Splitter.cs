@@ -904,7 +904,7 @@ namespace SabreTools.DatTools
             foreach (var key in datFile.Items.Keys)
 #endif
             {
-                List<DatItem> items = DatItemTool.Merge(datFile.Items[key]);
+                List<DatItem> items = DatFileTool.Merge(datFile.Items[key]);
 
                 // If the rom list is empty or null, just skip it
                 if (items == null || items.Count == 0)
