@@ -345,7 +345,7 @@ namespace SabreTools.DatItems
                 var savedMachine = savedItem.GetFieldValue<Machine>(DatItem.MachineKey);
                 var itemMachine = datItem.GetFieldValue<Machine>(DatItem.MachineKey);
 
-                // If the current system has a lower ID than the previous, set the system accordingly
+                // If the current source has a lower ID than the saved, use the saved source
                 if (itemSource?.Index < savedSource?.Index)
                 {
                     datItem.SetFieldValue<Source?>(DatItem.SourceKey, savedSource.Clone() as Source);
@@ -353,7 +353,7 @@ namespace SabreTools.DatItems
                     savedItem.SetName(datItem.GetName());
                 }
 
-                // If the current machine is a child of the new machine, use the new machine instead
+                // If the saved machine is a child of the current machine, use the current machine instead
                 if (savedMachine?.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey) == itemMachine?.GetStringFieldValue(Models.Metadata.Machine.NameKey)
                     || savedMachine?.GetStringFieldValue(Models.Metadata.Machine.RomOfKey) == itemMachine?.GetStringFieldValue(Models.Metadata.Machine.NameKey))
                 {
