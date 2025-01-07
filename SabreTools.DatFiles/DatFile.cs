@@ -783,6 +783,197 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Resolve name duplicates in an arbitrary set of DatItems based on the supplied information
+        /// </summary>
+        /// <param name="items">List of DatItem objects representing the items to be merged</param>
+        /// <returns>A List of DatItem objects representing the renamed items</returns>
+        protected List<DatItem> ResolveNames(List<DatItem> items)
+        {
+            // Create the output list
+            List<DatItem> output = [];
+
+            // First we want to make sure the list is in alphabetical order
+            DatItemTool.Sort(ref items, true);
+
+            // Now we want to loop through and check names
+            DatItem? lastItem = null;
+            string? lastrenamed = null;
+            int lastid = 0;
+            for (int i = 0; i < items.Count; i++)
+            {
+                DatItem datItem = items[i];
+
+                // If we have the first item, we automatically add it
+                if (lastItem == null)
+                {
+                    output.Add(datItem);
+                    lastItem = datItem;
+                    continue;
+                }
+
+                // Get the last item name, if applicable
+                string lastItemName = lastItem.GetName()
+                    ?? lastItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue()
+                    ?? string.Empty;
+
+                // Get the current item name, if applicable
+                string datItemName = datItem.GetName()
+                    ?? datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue()
+                    ?? string.Empty;
+
+                // If the current item exactly matches the last item, then we don't add it
+#if NET20 || NET35
+                if ((datItem.GetDuplicateStatus(lastItem) & DupeType.All) != 0)
+#else
+                if (datItem.GetDuplicateStatus(lastItem).HasFlag(DupeType.All))
+#endif
+                {
+                    logger.Verbose($"Exact duplicate found for '{datItemName}'");
+                    continue;
+                }
+
+                // If the current name matches the previous name, rename the current item
+                else if (datItemName == lastItemName)
+                {
+                    logger.Verbose($"Name duplicate found for '{datItemName}'");
+
+                    if (datItem is Disk || datItem is DatItems.Formats.File || datItem is Media || datItem is Rom)
+                    {
+                        datItemName += GetDuplicateSuffix(datItem);
+                        lastrenamed ??= datItemName;
+                    }
+
+                    // If we have a conflict with the last renamed item, do the right thing
+                    if (datItemName == lastrenamed)
+                    {
+                        lastrenamed = datItemName;
+                        datItemName += (lastid == 0 ? string.Empty : "_" + lastid);
+                        lastid++;
+                    }
+                    // If we have no conflict, then we want to reset the lastrenamed and id
+                    else
+                    {
+                        lastrenamed = null;
+                        lastid = 0;
+                    }
+
+                    // Set the item name back to the datItem
+                    datItem.SetName(datItemName);
+
+                    output.Add(datItem);
+                }
+
+                // Otherwise, we say that we have a valid named file
+                else
+                {
+                    output.Add(datItem);
+                    lastItem = datItem;
+                    lastrenamed = null;
+                    lastid = 0;
+                }
+            }
+
+            // One last sort to make sure this is ordered
+            DatItemTool.Sort(ref output, true);
+
+            return output;
+        }
+
+        /// <summary>
+        /// Resolve name duplicates in an arbitrary set of DatItems based on the supplied information
+        /// </summary>
+        /// <param name="mappings">List of item ID to DatItem mappings representing the items to be merged</param>
+        /// <returns>A List of DatItem objects representing the renamed items</returns>
+        protected List<KeyValuePair<long, DatItem>> ResolveNamesDB(List<KeyValuePair<long, DatItem>> mappings)
+        {
+            // Create the output dict
+            List<KeyValuePair<long, DatItem>> output = [];
+
+            // First we want to make sure the list is in alphabetical order
+            DatItemTool.SortDB(ref mappings, true);
+
+            // Now we want to loop through and check names
+            DatItem? lastItem = null;
+            string? lastrenamed = null;
+            int lastid = 0;
+            foreach (var datItem in mappings)
+            {
+                // If we have the first item, we automatically add it
+                if (lastItem == null)
+                {
+                    output.Add(datItem);
+                    lastItem = datItem.Value;
+                    continue;
+                }
+
+                // Get the last item name, if applicable
+                string lastItemName = lastItem.GetName()
+                    ?? lastItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue()
+                    ?? string.Empty;
+
+                // Get the current item name, if applicable
+                string datItemName = datItem.Value.GetName()
+                    ?? datItem.Value.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue()
+                    ?? string.Empty;
+
+                // If the current item exactly matches the last item, then we don't add it
+#if NET20 || NET35
+                if ((datItem.Value.GetDuplicateStatus(lastItem) & DupeType.All) != 0)
+#else
+                if (datItem.Value.GetDuplicateStatus(lastItem).HasFlag(DupeType.All))
+#endif
+                {
+                    logger.Verbose($"Exact duplicate found for '{datItemName}'");
+                    continue;
+                }
+
+                // If the current name matches the previous name, rename the current item
+                else if (datItemName == lastItemName)
+                {
+                    logger.Verbose($"Name duplicate found for '{datItemName}'");
+
+                    if (datItem.Value is Disk || datItem.Value is DatItems.Formats.File || datItem.Value is Media || datItem.Value is Rom)
+                    {
+                        datItemName += GetDuplicateSuffix(datItem.Value);
+                        lastrenamed ??= datItemName;
+                    }
+
+                    // If we have a conflict with the last renamed item, do the right thing
+                    if (datItemName == lastrenamed)
+                    {
+                        lastrenamed = datItemName;
+                        datItemName += (lastid == 0 ? string.Empty : "_" + lastid);
+                        lastid++;
+                    }
+                    // If we have no conflict, then we want to reset the lastrenamed and id
+                    else
+                    {
+                        lastrenamed = null;
+                        lastid = 0;
+                    }
+
+                    // Set the item name back to the datItem
+                    datItem.Value.SetName(datItemName);
+                    output.Add(datItem);
+                }
+
+                // Otherwise, we say that we have a valid named file
+                else
+                {
+                    output.Add(datItem);
+                    lastItem = datItem.Value;
+                    lastrenamed = null;
+                    lastid = 0;
+                }
+            }
+
+            // One last sort to make sure this is ordered
+            DatItemTool.SortDB(ref output, true);
+
+            return output;
+        }
+
+        /// <summary>
         /// Get if an item should be ignored on write
         /// </summary>
         /// <param name="datItem">DatItem to check</param>
@@ -850,6 +1041,21 @@ namespace SabreTools.DatFiles
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Get duplicate suffix based on the item type
+        /// </summary>
+        private static string GetDuplicateSuffix(DatItem datItem)
+        {
+            return datItem switch
+            {
+                Disk disk => disk.GetDuplicateSuffix(),
+                DatItems.Formats.File file => file.GetDuplicateSuffix(),
+                Media media => media.GetDuplicateSuffix(),
+                Rom rom => rom.GetDuplicateSuffix(),
+                _ => "_1",
+            };
         }
 
         #endregion

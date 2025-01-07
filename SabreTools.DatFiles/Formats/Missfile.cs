@@ -64,7 +64,7 @@ namespace SabreTools.DatFiles.Formats
                         continue;
 
                     // Resolve the names in the block
-                    datItems = DatItemTool.ResolveNames(datItems);
+                    datItems = ResolveNames(datItems);
 
                     for (int index = 0; index < datItems.Count; index++)
                     {
@@ -124,7 +124,7 @@ namespace SabreTools.DatFiles.Formats
                         continue;
 
                     // Resolve the names in the block
-                    var items = DatItemTool.ResolveNamesDB([.. itemsDict]);
+                    var items = ResolveNamesDB([.. itemsDict]);
 
                     foreach (var kvp in items)
                     {
