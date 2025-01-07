@@ -478,7 +478,7 @@ namespace SabreTools.DatItems
             List<KeyValuePair<long, DatItem>> output = [];
 
             // First we want to make sure the list is in alphabetical order
-            Sort(ref mappings, true);
+            SortDB(ref mappings, true);
 
             // Now we want to loop through and check names
             DatItem? lastItem = null;
@@ -556,7 +556,7 @@ namespace SabreTools.DatItems
             }
 
             // One last sort to make sure this is ordered
-            Sort(ref output, true);
+            SortDB(ref output, true);
 
             return output;
         }
@@ -591,8 +591,8 @@ namespace SabreTools.DatItems
                     var nc = new NaturalComparer();
 
                     // If machine names don't match
-                    string? xMachineName = x.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
-                    string? yMachineName = y.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    string? xMachineName = x.GetFieldValue<Machine>(DatItem.MachineKey)?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    string? yMachineName = y.GetFieldValue<Machine>(DatItem.MachineKey)?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
                     if (xMachineName != yMachineName)
                         return nc.Compare(xMachineName, yMachineName);
 
@@ -635,7 +635,7 @@ namespace SabreTools.DatItems
         /// <param name="mappings">List of item ID to DatItem mappings representing the items to be sorted</param>
         /// <param name="norename">True if files are not renamed, false otherwise</param>
         /// <returns>True if it sorted correctly, false otherwise</returns>
-        public static bool Sort(ref List<KeyValuePair<long, DatItem>> mappings, bool norename)
+        public static bool SortDB(ref List<KeyValuePair<long, DatItem>> mappings, bool norename)
         {
             mappings.Sort(delegate (KeyValuePair<long, DatItem> x, KeyValuePair<long, DatItem> y)
             {
@@ -643,9 +643,11 @@ namespace SabreTools.DatItems
                 {
                     var nc = new NaturalComparer();
 
+                    // TODO: Fix this since DB uses an external map for machines
+
                     // If machine names don't match
-                    string? xMachineName = x.Value.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
-                    string? yMachineName = y.Value.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    string? xMachineName = x.Value.GetFieldValue<Machine>(DatItem.MachineKey)?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    string? yMachineName = y.Value.GetFieldValue<Machine>(DatItem.MachineKey)?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
                     if (xMachineName != yMachineName)
                         return nc.Compare(xMachineName, yMachineName);
 
