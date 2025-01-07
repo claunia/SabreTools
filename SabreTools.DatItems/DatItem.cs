@@ -222,11 +222,11 @@ namespace SabreTools.DatItems
 
             // If the item and machine names match
             if (lastMachineName == selfMachineName && lastItem.GetName() == GetName())
-                output = DupeType.Internal | DupeType.All;
+                output |= DupeType.All;
 
             // Otherwise, hash match is assumed
             else
-                output = DupeType.Internal | DupeType.Hash;
+                output |= DupeType.Hash;
 
             return output;
         }
@@ -271,11 +271,11 @@ namespace SabreTools.DatItems
 
             // If the item and machine names match
             if (lastMachineName == selfMachineName && lastItem.GetName() == GetName())
-                output = DupeType.Internal | DupeType.All;
+                output |= DupeType.All;
 
             // Otherwise, hash match is assumed
             else
-                output = DupeType.Internal | DupeType.Hash;
+                output |= DupeType.Hash;
 
             return output;
         }
