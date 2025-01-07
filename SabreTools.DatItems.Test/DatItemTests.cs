@@ -44,6 +44,31 @@ namespace SabreTools.DatItems.Test
         }
 
         [Fact]
+        public void GetDuplicateStatus_MismatchedHashes_NoDupe()
+        {
+            var machineA = new Machine();
+            machineA.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
+
+            var machineB = new Machine();
+            machineB.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
+
+            var romA = new Rom();
+            romA.SetName("same-name");
+            romA.SetFieldValue(Models.Metadata.Rom.CRCKey, "BEEFDEAD");
+            romA.SetFieldValue<Source?>(DatItem.SourceKey, new Source(0));
+            romA.CopyMachineInformation(machineA);
+
+            var romB = new Rom();
+            romB.SetName("same-name");
+            romB.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            romB.SetFieldValue<Source?>(DatItem.SourceKey, new Source(1));
+            romB.CopyMachineInformation(machineB);
+
+            var actual = romA.GetDuplicateStatus(romB);
+            Assert.Equal((DupeType)0x00, actual);
+        }
+
+        [Fact]
         public void GetDuplicateStatus_DifferentSource_NameMatch_ExternalAll()
         {
             var machineA = new Machine();
