@@ -1,22 +1,50 @@
-using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using Xunit;
 
-namespace SabreTools.Test.DatItems
+namespace SabreTools.DatItems.Test
 {
     public class DatItemTests
     {
+        #region CopyMachineInformation
+
+        // TODO: Implement CopyMachineInformation tests
+
+        #endregion
+
+        #region CompareTo
+
+        // TODO: Implement CompareTo tests
+
+        #endregion
+
+        #region Equals
+
+        // TODO: Implement Equals tests
+
+        #endregion
+
+        #region GetDuplicateStatus
+
         [Fact]
-        public void DuplicateStatusUnequalTest()
+        public void GetDuplicateStatus_NullOther_NoDupe()
         {
-            var rom = new Rom();
-            var disk = new Disk();
-            var actual = rom.GetDuplicateStatus(disk);
+            DatItem item = new Rom();
+            DatItem? lastItem = null;
+            var actual = item.GetDuplicateStatus(lastItem);
             Assert.Equal((DupeType)0x00, actual);
         }
 
         [Fact]
-        public void DuplicateStatusExternalAllTest()
+        public void GetDuplicateStatus_DifferentTypes_NoDupe()
+        {
+            var rom = new Rom();
+            DatItem? lastItem = new Disk();
+            var actual = rom.GetDuplicateStatus(lastItem);
+            Assert.Equal((DupeType)0x00, actual);
+        }
+
+        [Fact]
+        public void GetDuplicateStatus_DifferentSource_NameMatch_ExternalAll()
         {
             var machineA = new Machine();
             machineA.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
@@ -41,7 +69,7 @@ namespace SabreTools.Test.DatItems
         }
 
         [Fact]
-        public void DuplicateStatusExternalHashTest()
+        public void GetDuplicateStatus_DifferentSource_NoNameMatch_ExternalHash()
         {
             var machineA = new Machine();
             machineA.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
@@ -66,7 +94,7 @@ namespace SabreTools.Test.DatItems
         }
 
         [Fact]
-        public void DuplicateStatusInternalAllTest()
+        public void GetDuplicateStatus_SameSource_NameMatch_InternalAll()
         {
             var machineA = new Machine();
             machineA.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
@@ -91,7 +119,7 @@ namespace SabreTools.Test.DatItems
         }
 
         [Fact]
-        public void DuplicateStatusInternalHashTest()
+        public void GetDuplicateStatus_SameSource_NoNameMatch_InternalHash()
         {
             var machineA = new Machine();
             machineA.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
@@ -114,9 +142,49 @@ namespace SabreTools.Test.DatItems
             var actual = romA.GetDuplicateStatus(romB);
             Assert.Equal(DupeType.Internal | DupeType.Hash, actual);
         }
-    
-        // TODO: Add tests for DatItem.Merge
-        // TODO: Add tests for ResolveNames
-        // TODO: Add tests for Sort
+
+        #endregion
+
+        #region GetDuplicateStatusDB
+
+        // TODO: Implement GetDuplicateStatusDB tests
+
+        #endregion
+
+        #region PassesFilter
+
+        // TODO: Implement PassesFilter tests
+
+        #endregion
+
+        #region GetKey
+
+        // TODO: Implement GetKey tests
+
+        #endregion
+
+        #region GetName
+
+        // TODO: Implement GetName tests
+
+        #endregion
+
+        #region SetName
+
+        // TODO: Implement SetName tests
+
+        #endregion
+
+        #region Clone
+
+        // TODO: Implement Clone tests
+
+        #endregion
+
+        #region GetInternalClone
+
+        // TODO: Implement GetInternalClone tests
+
+        #endregion
     }
 }

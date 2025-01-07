@@ -509,11 +509,6 @@ namespace SabreTools.DatItems
                 SetFieldValue(NameKey, name);
         }
 
-        /// <summary>
-        /// Get a clone of the current internal model
-        /// </summary>
-        public T GetInternalClone() => (_internal.Clone() as T)!;
-
         #endregion
 
         #region Cloning Methods
@@ -531,6 +526,11 @@ namespace SabreTools.DatItems
             (clone as DatItem<T>)!._internal = _internal?.Clone() as T ?? Activator.CreateInstance<T>();
             return clone;
         }
+
+        /// <summary>
+        /// Get a clone of the current internal model
+        /// </summary>
+        public T GetInternalClone() => (_internal.Clone() as T)!;
 
         #endregion
 
