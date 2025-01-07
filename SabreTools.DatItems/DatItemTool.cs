@@ -306,7 +306,7 @@ namespace SabreTools.DatItems
                 }
 
                 // If it's the first non-nodump item in the list, don't touch it
-                if (outfiles.Count == 0 || outfiles.Count == nodumpCount)
+                if (outfiles.Count == nodumpCount)
                 {
                     outfiles.Add(item);
                     continue;
