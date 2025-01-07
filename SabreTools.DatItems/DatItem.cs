@@ -234,11 +234,11 @@ namespace SabreTools.DatItems
         /// <summary>
         /// Return the duplicate status of two items
         /// </summary>
-        /// <param name="source">Source associated with this item</param>
+        /// <param name="selfSource">Source associated with this item</param>
         /// <param name="lastItem">DatItem to check against</param>
         /// <param name="lastSource">Source associated with the last item</param>
         /// <returns>The DupeType corresponding to the relationship between the two</returns>
-        public DupeType GetDuplicateStatus(Source? source, DatItem? lastItem, Source? lastSource)
+        public DupeType GetDuplicateStatusDB(Source? selfSource, DatItem? lastItem, Source? lastSource)
         {
             DupeType output = 0x00;
 
@@ -246,33 +246,36 @@ namespace SabreTools.DatItems
             if (!Equals(lastItem))
                 return output;
 
-            // If the duplicate is external already or should be, set it
+            // TODO: Fix this since machines are determined in a different way
+            // Get the machines for comparison
+            var selfMachine = GetFieldValue<Machine>(DatItem.MachineKey);
+            string? selfMachineName = selfMachine?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+            var lastMachine = lastItem.GetFieldValue<Machine>(DatItem.MachineKey);
+            string? lastMachineName = lastMachine?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+
+            // If the duplicate is external already
 #if NET20 || NET35
-            if ((lastItem.GetFieldValue<DupeType>(DatItem.DupeTypeKey) & DupeType.External) != 0
-                || lastSource?.Index != source?.Index)
+            if ((lastItem.GetFieldValue<DupeType>(DatItem.DupeTypeKey) & DupeType.External) != 0)
 #else
-            if (lastItem.GetFieldValue<DupeType>(DatItem.DupeTypeKey).HasFlag(DupeType.External)
-                || lastSource?.Index != source?.Index)
+            if (lastItem.GetFieldValue<DupeType>(DatItem.DupeTypeKey).HasFlag(DupeType.External))
 #endif
-            {
-                var currentMachine = GetFieldValue<Machine>(DatItem.MachineKey);
-                var lastMachine = lastItem?.GetFieldValue<Machine>(DatItem.MachineKey);
-                if (lastMachine?.GetStringFieldValue(Models.Metadata.Machine.NameKey) == currentMachine?.GetStringFieldValue(Models.Metadata.Machine.NameKey) && lastItem?.GetName() == GetName())
-                    output = DupeType.External | DupeType.All;
-                else
-                    output = DupeType.External | DupeType.Hash;
-            }
+                output |= DupeType.External;
+
+            // If the duplicate should be external
+            else if (lastSource?.Index != selfSource?.Index)
+                output |= DupeType.External;
 
             // Otherwise, it's considered an internal dupe
             else
-            {
-                var currentMachine = GetFieldValue<Machine>(DatItem.MachineKey);
-                var lastMachine = lastItem?.GetFieldValue<Machine>(DatItem.MachineKey);
-                if (lastMachine?.GetStringFieldValue(Models.Metadata.Machine.NameKey) == currentMachine?.GetStringFieldValue(Models.Metadata.Machine.NameKey) && lastItem?.GetName() == GetName())
-                    output = DupeType.Internal | DupeType.All;
-                else
-                    output = DupeType.Internal | DupeType.Hash;
-            }
+                output |= DupeType.Internal;
+
+            // If the item and machine names match
+            if (lastMachineName == selfMachineName && lastItem.GetName() == GetName())
+                output = DupeType.Internal | DupeType.All;
+
+            // Otherwise, hash match is assumed
+            else
+                output = DupeType.Internal | DupeType.Hash;
 
             return output;
         }
