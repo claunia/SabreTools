@@ -131,7 +131,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Logging object
         /// </summary>
-        private readonly Logger logger;
+        private readonly Logger _logger;
 
         #endregion
 
@@ -165,7 +165,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         public ItemDictionaryDB()
         {
-            logger = new Logger(this);
+            _logger = new Logger(this);
         }
 
         #region Accessors
@@ -1237,7 +1237,7 @@ namespace SabreTools.DatFiles
             }
             catch (Exception ex) when (!throwOnError)
             {
-                logger.Warning(ex.ToString());
+                _logger.Warning(ex.ToString());
             }
         }
 

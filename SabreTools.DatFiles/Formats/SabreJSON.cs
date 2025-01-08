@@ -74,7 +74,7 @@ namespace SabreTools.DatFiles.Formats
             }
             catch (Exception ex) when (!throwOnError)
             {
-                logger.Warning($"Exception found while parsing '{filename}': {ex}");
+                _logger.Warning($"Exception found while parsing '{filename}': {ex}");
             }
 
             jtr.Close();
@@ -365,13 +365,13 @@ namespace SabreTools.DatFiles.Formats
         {
             try
             {
-                logger.User($"Writing to '{outfile}'...");
+                _logger.User($"Writing to '{outfile}'...");
                 FileStream fs = System.IO.File.Create(outfile);
 
                 // If we get back null for some reason, just log and return
                 if (fs == null)
                 {
-                    logger.Warning($"File '{outfile}' could not be created for writing! Please check to see if the file is writable");
+                    _logger.Warning($"File '{outfile}' could not be created for writing! Please check to see if the file is writable");
                     return false;
                 }
 
@@ -428,13 +428,13 @@ namespace SabreTools.DatFiles.Formats
                 // Write the file footer out
                 WriteFooter(jtw);
 
-                logger.User($"'{outfile}' written!{Environment.NewLine}");
+                _logger.User($"'{outfile}' written!{Environment.NewLine}");
                 jtw.Close();
                 fs.Dispose();
             }
             catch (Exception ex) when (!throwOnError)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 return false;
             }
 
@@ -446,13 +446,13 @@ namespace SabreTools.DatFiles.Formats
         {
             try
             {
-                logger.User($"Writing to '{outfile}'...");
+                _logger.User($"Writing to '{outfile}'...");
                 FileStream fs = System.IO.File.Create(outfile);
 
                 // If we get back null for some reason, just log and return
                 if (fs == null)
                 {
-                    logger.Warning($"File '{outfile}' could not be created for writing! Please check to see if the file is writable");
+                    _logger.Warning($"File '{outfile}' could not be created for writing! Please check to see if the file is writable");
                     return false;
                 }
 
@@ -509,13 +509,13 @@ namespace SabreTools.DatFiles.Formats
                 // Write the file footer out
                 WriteFooter(jtw);
 
-                logger.User($"'{outfile}' written!{Environment.NewLine}");
+                _logger.User($"'{outfile}' written!{Environment.NewLine}");
                 jtw.Close();
                 fs.Dispose();
             }
             catch (Exception ex) when (!throwOnError)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 return false;
             }
 

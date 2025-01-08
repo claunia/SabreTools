@@ -26,7 +26,7 @@ namespace SabreTools.DatTools
         /// <summary>
         /// Logging object
         /// </summary>
-        private static readonly Logger logger = new();
+        private static readonly Logger _staticLogger = new();
 
         #endregion
 
@@ -55,7 +55,7 @@ namespace SabreTools.DatTools
             // If the DAT is not populated and inverse is not set, inform the user and quit
             if (datFile.Items.DatStatistics.TotalCount == 0 && !inverse)
             {
-                logger.User("No entries were found to rebuild, exiting...");
+                _staticLogger.User("No entries were found to rebuild, exiting...");
                 return false;
             }
 
@@ -89,7 +89,7 @@ namespace SabreTools.DatTools
                 // Add to the list if the input is a directory
                 if (Directory.Exists(input))
                 {
-                    logger.Verbose($"Adding depot: {input}");
+                    _staticLogger.Verbose($"Adding depot: {input}");
                     lock (directories)
                     {
                         directories.Add(input);
@@ -116,7 +116,7 @@ namespace SabreTools.DatTools
                 if (hash.Length != Constants.SHA1Length)
                     continue;
 
-                logger.User($"Checking hash '{hash}'");
+                _staticLogger.User($"Checking hash '{hash}'");
 
                 // Get the extension path for the hash
                 string? subpath = Utilities.GetDepotPath(hash, datFile.Header.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.Depth ?? 0);
@@ -206,7 +206,7 @@ namespace SabreTools.DatTools
             // If the DAT is not populated and inverse is not set, inform the user and quit
             if (datFile.Items.DatStatistics.TotalCount == 0 && !inverse)
             {
-                logger.User("No entries were found to rebuild, exiting...");
+                _staticLogger.User("No entries were found to rebuild, exiting...");
                 return false;
             }
 
@@ -238,7 +238,7 @@ namespace SabreTools.DatTools
                 // If the input is a file
                 if (System.IO.File.Exists(input))
                 {
-                    logger.User($"Checking file: {input}");
+                    _staticLogger.User($"Checking file: {input}");
                     bool rebuilt = RebuildGenericHelper(datFile, input, outDir, quickScan, date, inverse, outputFormat, asFile);
 
                     // If we are supposed to delete the file, do so
@@ -249,14 +249,14 @@ namespace SabreTools.DatTools
                 // If the input is a directory
                 else if (Directory.Exists(input))
                 {
-                    logger.Verbose($"Checking directory: {input}");
+                    _staticLogger.Verbose($"Checking directory: {input}");
 #if NET20 || NET35
                     foreach (string file in Directory.GetFiles(input, "*"))
 #else
                     foreach (string file in Directory.EnumerateFiles(input, "*", SearchOption.AllDirectories))
 #endif
                     {
-                        logger.User($"Checking file: {file}");
+                        _staticLogger.User($"Checking file: {file}");
                         bool rebuilt = RebuildGenericHelper(datFile, file, outDir, quickScan, date, inverse, outputFormat, asFile);
 
                         // If we are supposed to delete the file, do so
@@ -443,7 +443,7 @@ namespace SabreTools.DatTools
                     fileStream.Seek(0, SeekOrigin.Begin);
                 }
 
-                logger.User($"{(inverse ? "No matches" : $"{dupes.Count} Matches")} found for '{Path.GetFileName(datItem.GetName() ?? datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue())}', rebuilding accordingly...");
+                _staticLogger.User($"{(inverse ? "No matches" : $"{dupes.Count} Matches")} found for '{Path.GetFileName(datItem.GetName() ?? datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue())}', rebuilding accordingly...");
                 rebuilt = true;
 
                 // Special case for partial packing mode
@@ -506,7 +506,7 @@ namespace SabreTools.DatTools
                         if (ShouldRebuild(datFile, headerless, transformStream, false, out dupes))
                         //if (ShouldRebuildDB(datFile, headerless, transformStream, false, out dupes))
                         {
-                            logger.User($"Headerless matches found for '{Path.GetFileName(datItem.GetName() ?? datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue())}', rebuilding accordingly...");
+                            _staticLogger.User($"Headerless matches found for '{Path.GetFileName(datItem.GetName() ?? datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue())}', rebuilding accordingly...");
                             rebuilt = true;
 
                             // Now loop through the list and rebuild accordingly
@@ -677,7 +677,7 @@ namespace SabreTools.DatTools
             BaseFile? tgzRom = tgz.GetTorrentGZFileInfo();
             if (isZip == false && tgzRom != null && (outputFormat == OutputFormat.TorrentGzip || outputFormat == OutputFormat.TorrentGzipRomba))
             {
-                logger.User($"Matches found for '{Path.GetFileName(datItem.GetName() ?? string.Empty)}', rebuilding accordingly...");
+                _staticLogger.User($"Matches found for '{Path.GetFileName(datItem.GetName() ?? string.Empty)}', rebuilding accordingly...");
 
                 // Get the proper output path
                 string sha1 = (datItem as Rom)!.GetStringFieldValue(Models.Metadata.Rom.SHA1Key) ?? string.Empty;
@@ -723,7 +723,7 @@ namespace SabreTools.DatTools
             BaseFile? txzRom = txz.GetTorrentXZFileInfo();
             if (isZip == false && txzRom != null && (outputFormat == OutputFormat.TorrentXZ || outputFormat == OutputFormat.TorrentXZRomba))
             {
-                logger.User($"Matches found for '{Path.GetFileName(datItem.GetName() ?? string.Empty)}', rebuilding accordingly...");
+                _staticLogger.User($"Matches found for '{Path.GetFileName(datItem.GetName() ?? string.Empty)}', rebuilding accordingly...");
 
                 // Get the proper output path
                 string sha1 = (datItem as Rom)!.GetStringFieldValue(Models.Metadata.Rom.SHA1Key) ?? string.Empty;

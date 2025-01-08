@@ -46,7 +46,7 @@ namespace SabreTools.DatTools
         /// <summary>
         /// Logging object
         /// </summary>
-        private static readonly Logger logger = new();
+        private static readonly Logger _staticLogger = new();
 
         #endregion
 
@@ -78,7 +78,7 @@ namespace SabreTools.DatTools
             // Process the input
             if (Directory.Exists(basePath))
             {
-                logger.Verbose($"Folder found: {basePath}");
+                _staticLogger.Verbose($"Folder found: {basePath}");
 
                 // Get a list of all files to process
 #if NET20 || NET35
@@ -104,13 +104,13 @@ namespace SabreTools.DatTools
 #endif
 
                 // Process the files in the main folder or any subfolder
-                logger.User(totalSize, currentSize);
+                _staticLogger.User(totalSize, currentSize);
                 foreach (string item in files)
                 {
                     currentSize += new FileInfo(item).Length;
 
                     CheckFileForHashes(datFile, item, basePath, asFile);
-                    logger.User(totalSize, currentSize, item);
+                    _staticLogger.User(totalSize, currentSize, item);
                 }
 
                 // Now find all folders that are empty, if we are supposed to
@@ -119,14 +119,14 @@ namespace SabreTools.DatTools
             }
             else if (System.IO.File.Exists(basePath))
             {
-                logger.Verbose($"File found: {basePath}");
+                _staticLogger.Verbose($"File found: {basePath}");
 
                 totalSize = new FileInfo(basePath).Length;
-                logger.User(totalSize, currentSize);
+                _staticLogger.User(totalSize, currentSize);
 
                 string? parentPath = Path.GetDirectoryName(Path.GetDirectoryName(basePath));
                 CheckFileForHashes(datFile, basePath, parentPath, asFile);
-                logger.User(totalSize, totalSize, basePath);
+                _staticLogger.User(totalSize, totalSize, basePath);
             }
 
             watch.Stop();
@@ -231,11 +231,11 @@ namespace SabreTools.DatTools
                 // Add the list if it doesn't exist already
                 Rom rom = baseFile.ConvertToRom();
                 datFile.Items.Add(rom.GetKey(ItemKey.CRC), rom);
-                logger.Verbose($"File added: {Path.GetFileNameWithoutExtension(item)}");
+                _staticLogger.Verbose($"File added: {Path.GetFileNameWithoutExtension(item)}");
             }
             else
             {
-                logger.Verbose($"File not added: {Path.GetFileNameWithoutExtension(item)}");
+                _staticLogger.Verbose($"File not added: {Path.GetFileNameWithoutExtension(item)}");
                 return true;
             }
 
@@ -378,7 +378,7 @@ namespace SabreTools.DatTools
                 gamename = gamename.Trim(Path.DirectorySeparatorChar);
                 romname = romname.Trim(Path.DirectorySeparatorChar);
 
-                logger.Verbose($"Adding blank empty folder: {gamename}");
+                _staticLogger.Verbose($"Adding blank empty folder: {gamename}");
 
                 var blankMachine = new Machine();
                 blankMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, gamename);
@@ -404,7 +404,7 @@ namespace SabreTools.DatTools
         /// <param name="asFile">TreatAsFile representing CHD and Archive scanning</param>
         private void ProcessFile(DatFile datFile, string item, string? basePath, TreatAsFile asFile)
         {
-            logger.Verbose($"'{Path.GetFileName(item)}' treated like a file");
+            _staticLogger.Verbose($"'{Path.GetFileName(item)}' treated like a file");
             var header = datFile.Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey);
             BaseFile? baseFile = FileTypeTool.GetInfo(item, _hashes, header);
             DatItem? datItem = DatItemTool.CreateDatItem(baseFile, asFile);
@@ -443,11 +443,11 @@ namespace SabreTools.DatTools
                 string key = datItem.GetKey(ItemKey.CRC);
                 datFile.Items.Add(key, datItem);
 
-                logger.Verbose($"File added: {datItem.GetName() ?? string.Empty}");
+                _staticLogger.Verbose($"File added: {datItem.GetName() ?? string.Empty}");
             }
             catch (IOException ex)
             {
-                logger.Error(ex);
+                _staticLogger.Error(ex);
                 return;
             }
         }

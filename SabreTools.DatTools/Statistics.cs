@@ -25,7 +25,7 @@ namespace SabreTools.DatTools
         /// <summary>
         /// Logging object
         /// </summary>
-        private static readonly Logger logger = new();
+        private static readonly Logger _staticLogger = new();
 
         #endregion
 
@@ -145,7 +145,7 @@ namespace SabreTools.DatTools
             // If there's no output format, set the default
             if (statDatFormat == StatReportFormat.None)
             {
-                logger.Verbose("No report format defined, defaulting to textfile");
+                _staticLogger.Verbose("No report format defined, defaulting to textfile");
                 statDatFormat = StatReportFormat.Textfile;
             }
 
@@ -179,7 +179,7 @@ namespace SabreTools.DatTools
                     }
                     catch (Exception ex) when (!throwOnError)
                     {
-                        logger.Error(ex, $"Report '{outfile}' could not be written out");
+                        _staticLogger.Error(ex, $"Report '{outfile}' could not be written out");
                     }
 #if NET40_OR_GREATER || NETCOREAPP
                 });
@@ -189,7 +189,7 @@ namespace SabreTools.DatTools
             }
             catch (Exception ex) when (!throwOnError)
             {
-                logger.Error(ex);
+                _staticLogger.Error(ex);
                 return false;
             }
             finally

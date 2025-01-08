@@ -95,7 +95,7 @@ namespace SabreTools.DatItems
         /// Static logger for static methods
         /// </summary>
         [JsonIgnore, XmlIgnore]
-        protected static readonly Logger staticLogger = new();
+        protected static readonly Logger _staticLogger = new();
 
         #endregion
 

@@ -82,7 +82,7 @@ namespace SabreTools.DatTools
         /// <summary>
         /// Logging object
         /// </summary>
-        private readonly Logger logger = new();
+        private readonly Logger _logger = new();
 
         #endregion
 
@@ -157,7 +157,7 @@ namespace SabreTools.DatTools
             }
             catch (Exception ex) when (!throwOnError)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 return false;
             }
             finally

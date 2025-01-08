@@ -53,7 +53,7 @@ namespace SabreTools.Features
             SplittingMode splittingMode = GetSplittingMode(features);
             if (splittingMode == SplittingMode.None)
             {
-                logger.Error("No valid splitting mode found!");
+                _logger.Error("No valid splitting mode found!");
                 return false;
             }
 
@@ -130,7 +130,7 @@ namespace SabreTools.Features
                 if (splittingMode.HasFlag(SplittingMode.Level))
 #endif
                 {
-                    logger.Warning("This feature is not implemented: level-split");
+                    _logger.Warning("This feature is not implemented: level-split");
                     DatTools.Splitter.SplitByLevel(
                         internalDat,
                         OutputDir!,
@@ -164,7 +164,7 @@ namespace SabreTools.Features
                 if (splittingMode.HasFlag(SplittingMode.TotalSize))
 #endif
                 {
-                    logger.Warning("This feature is not implemented: level-split");
+                    _logger.Warning("This feature is not implemented: level-split");
                     List<DatFile> sizedDats = DatTools.Splitter.SplitByTotalSize(internalDat, GetInt64(features, ChunkSizeInt64Value));
 
                     var watch = new InternalStopwatch("Outputting total-size-split DATs");

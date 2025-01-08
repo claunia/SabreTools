@@ -39,7 +39,7 @@ namespace SabreTools.Reports.Formats
                 FileStream fs = File.Create(outfile ?? string.Empty);
                 if (fs == null)
                 {
-                    logger.Warning($"File '{outfile}' could not be created for writing! Please check to see if the file is writable");
+                    _logger.Warning($"File '{outfile}' could not be created for writing! Please check to see if the file is writable");
                     return false;
                 }
 
@@ -88,7 +88,7 @@ namespace SabreTools.Reports.Formats
             }
             catch (Exception ex) when (!throwOnError)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 return false;
             }
             finally

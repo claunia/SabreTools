@@ -169,7 +169,7 @@ namespace SabreTools.Features
                 {
                     // Create a new base DatFile
                     DatFile datFile = DatFile.Create(Header);
-                    logger.User($"Processing '{Path.GetFileName(inputPath.CurrentPath)}'");
+                    _logger.User($"Processing '{Path.GetFileName(inputPath.CurrentPath)}'");
 
                     // Check the current format
                     DatFormat currentFormat = datFile.Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey);

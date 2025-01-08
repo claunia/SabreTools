@@ -19,7 +19,7 @@ namespace SabreTools.FileTypes
         /// <summary>
         /// Logging object
         /// </summary>
-        private static readonly Logger _logger = new();
+        private static readonly Logger _staticLogger = new();
 
         #endregion
 
@@ -67,7 +67,7 @@ namespace SabreTools.FileTypes
             }
             catch (Exception ex)
             {
-                _logger.Error(ex);
+                _staticLogger.Error(ex);
                 return new BaseFile();
             }
         }
@@ -110,7 +110,7 @@ namespace SabreTools.FileTypes
             }
             catch (Exception ex)
             {
-                _logger.Error(ex);
+                _staticLogger.Error(ex);
                 return new BaseFile();
             }
         }
@@ -258,7 +258,7 @@ namespace SabreTools.FileTypes
             }
             catch (Exception ex)
             {
-                _logger.Error(ex);
+                _staticLogger.Error(ex);
                 return null;
             }
 

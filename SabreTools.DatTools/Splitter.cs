@@ -27,7 +27,7 @@ namespace SabreTools.DatTools
         /// <summary>
         /// Logging object
         /// </summary>
-        private static readonly Logger logger = new();
+        private static readonly Logger _staticLogger = new();
 
         #endregion
 
@@ -784,7 +784,7 @@ namespace SabreTools.DatTools
                 var items = datFile.Items[machine];
                 if (items == null || items.Count == 0)
                 {
-                    logger.Error($"{machine} contains no items and will be skipped");
+                    _staticLogger.Error($"{machine} contains no items and will be skipped");
                     continue;
                 }
 
@@ -797,7 +797,7 @@ namespace SabreTools.DatTools
                         // TODO: Should there be more than just a log if a single item is larger than the chunksize?
                         machineSize += rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) ?? 0;
                         if ((rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) ?? 0) > chunkSize)
-                            logger.Error($"{rom.GetName() ?? string.Empty} in {machine} is larger than {chunkSize}");
+                            _staticLogger.Error($"{rom.GetName() ?? string.Empty} in {machine} is larger than {chunkSize}");
                     }
                 }
 
@@ -805,7 +805,7 @@ namespace SabreTools.DatTools
                 // TODO: Should this eventually try to split the machine here?
                 if (machineSize > chunkSize)
                 {
-                    logger.Error($"{machine} is larger than {chunkSize} and will be skipped");
+                    _staticLogger.Error($"{machine} is larger than {chunkSize} and will be skipped");
                     continue;
                 }
 

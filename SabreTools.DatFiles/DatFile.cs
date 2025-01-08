@@ -47,7 +47,7 @@ namespace SabreTools.DatFiles
         /// Logging object
         /// </summary>
         [JsonIgnore, XmlIgnore]
-        protected Logger logger;
+        protected Logger _logger;
 
         #endregion
 
@@ -59,7 +59,7 @@ namespace SabreTools.DatFiles
         /// <param name="datFile">DatFile to get the values from</param>
         public DatFile(DatFile? datFile)
         {
-            logger = new Logger(this);
+            _logger = new Logger(this);
             if (datFile != null)
             {
                 Header = datFile.Header;
@@ -656,7 +656,7 @@ namespace SabreTools.DatFiles
             if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) == null
                 && rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey) == "null")
             {
-                logger.Verbose($"Empty folder found: {machine.GetStringFieldValue(Models.Metadata.Machine.NameKey)}");
+                _logger.Verbose($"Empty folder found: {machine.GetStringFieldValue(Models.Metadata.Machine.NameKey)}");
 
                 rom.SetName(rom.GetName() == "null" ? "-" : rom.GetName());
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, Constants.SizeZero.ToString());
@@ -700,7 +700,7 @@ namespace SabreTools.DatFiles
             if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) == null
                 && rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey) == "null")
             {
-                logger.Verbose($"Empty folder found: {machineObj.GetStringFieldValue(Models.Metadata.Machine.NameKey)}");
+                _logger.Verbose($"Empty folder found: {machineObj.GetStringFieldValue(Models.Metadata.Machine.NameKey)}");
 
                 rom.SetName(rom.GetName() == "null" ? "-" : rom.GetName());
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, Constants.SizeZero.ToString());
@@ -828,14 +828,14 @@ namespace SabreTools.DatFiles
                 if (datItem.GetDuplicateStatus(lastItem).HasFlag(DupeType.All))
 #endif
                 {
-                    logger.Verbose($"Exact duplicate found for '{datItemName}'");
+                    _logger.Verbose($"Exact duplicate found for '{datItemName}'");
                     continue;
                 }
 
                 // If the current name matches the previous name, rename the current item
                 else if (datItemName == lastItemName)
                 {
-                    logger.Verbose($"Name duplicate found for '{datItemName}'");
+                    _logger.Verbose($"Name duplicate found for '{datItemName}'");
 
                     if (datItem is Disk || datItem is DatItems.Formats.File || datItem is Media || datItem is Rom)
                     {
@@ -923,14 +923,14 @@ namespace SabreTools.DatFiles
                 if (datItem.Value.GetDuplicateStatus(lastItem).HasFlag(DupeType.All))
 #endif
                 {
-                    logger.Verbose($"Exact duplicate found for '{datItemName}'");
+                    _logger.Verbose($"Exact duplicate found for '{datItemName}'");
                     continue;
                 }
 
                 // If the current name matches the previous name, rename the current item
                 else if (datItemName == lastItemName)
                 {
-                    logger.Verbose($"Name duplicate found for '{datItemName}'");
+                    _logger.Verbose($"Name duplicate found for '{datItemName}'");
 
                     if (datItem.Value is Disk || datItem.Value is DatItems.Formats.File || datItem.Value is Media || datItem.Value is Rom)
                     {
@@ -984,7 +984,7 @@ namespace SabreTools.DatFiles
             // If this is invoked with a null DatItem, we ignore
             if (datItem == null)
             {
-                logger?.Verbose($"Item was skipped because it was null");
+                _logger?.Verbose($"Item was skipped because it was null");
                 return true;
             }
 
@@ -992,7 +992,7 @@ namespace SabreTools.DatFiles
             if (datItem.GetBoolFieldValue(DatItem.RemoveKey) == true)
             {
                 string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
-                logger?.Verbose($"Item '{itemString}' was skipped because it was marked for removal");
+                _logger?.Verbose($"Item '{itemString}' was skipped because it was marked for removal");
                 return true;
             }
 
@@ -1000,7 +1000,7 @@ namespace SabreTools.DatFiles
             if (datItem is Blank)
             {
                 string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
-                logger?.Verbose($"Item '{itemString}' was skipped because it was of type 'Blank'");
+                _logger?.Verbose($"Item '{itemString}' was skipped because it was of type 'Blank'");
                 return true;
             }
 
@@ -1012,7 +1012,7 @@ namespace SabreTools.DatFiles
                 if (size == 0 || size == null)
                 {
                     string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
-                    logger?.Verbose($"Item '{itemString}' was skipped because it had an invalid size");
+                    _logger?.Verbose($"Item '{itemString}' was skipped because it had an invalid size");
                     return true;
                 }
             }
@@ -1023,7 +1023,7 @@ namespace SabreTools.DatFiles
             if (!Array.Exists(GetSupportedTypes(), t => t == itemType))
             {
                 string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
-                logger?.Verbose($"Item '{itemString}' was skipped because it was not supported in {datFormat}");
+                _logger?.Verbose($"Item '{itemString}' was skipped because it was not supported in {datFormat}");
                 return true;
             }
 
@@ -1033,9 +1033,9 @@ namespace SabreTools.DatFiles
             {
                 string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
 #if NET20 || NET35
-                logger?.Verbose($"Item '{itemString}' was skipped because it was missing required fields for {datFormat}: {string.Join(", ", [.. missingFields])}");
+                _logger?.Verbose($"Item '{itemString}' was skipped because it was missing required fields for {datFormat}: {string.Join(", ", [.. missingFields])}");
 #else
-                logger?.Verbose($"Item '{itemString}' was skipped because it was missing required fields for {datFormat}: {string.Join(", ", missingFields)}");
+                _logger?.Verbose($"Item '{itemString}' was skipped because it was missing required fields for {datFormat}: {string.Join(", ", missingFields)}");
 #endif
                 return true;
             }

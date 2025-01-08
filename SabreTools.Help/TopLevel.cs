@@ -24,7 +24,7 @@ namespace SabreTools.Help
         /// <summary>
         /// Logging object
         /// </summary>
-        private readonly Logger logger;
+        private readonly Logger _logger;
 
         #endregion
 
@@ -35,7 +35,7 @@ namespace SabreTools.Help
         /// </summary>
         public TopLevel()
         {
-            logger = new Logger(this);
+            _logger = new Logger(this);
         }
 
         #endregion
@@ -72,7 +72,7 @@ namespace SabreTools.Help
                 // Everything else isn't a file
                 else
                 {
-                    logger.Error($"Invalid input detected: {args[i]}");
+                    _logger.Error($"Invalid input detected: {args[i]}");
                     help.OutputIndividualFeature(Name);
                     LoggerImpl.Close();
                     return false;

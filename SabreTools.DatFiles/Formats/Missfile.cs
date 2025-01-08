@@ -39,13 +39,13 @@ namespace SabreTools.DatFiles.Formats
         {
             try
             {
-                logger.User($"Writing to '{outfile}'...");
+                _logger.User($"Writing to '{outfile}'...");
                 FileStream fs = File.Create(outfile);
 
                 // If we get back null for some reason, just log and return
                 if (fs == null)
                 {
-                    logger.Warning($"File '{outfile}' could not be created for writing! Please check to see if the file is writable");
+                    _logger.Warning($"File '{outfile}' could not be created for writing! Please check to see if the file is writable");
                     return false;
                 }
 
@@ -82,13 +82,13 @@ namespace SabreTools.DatFiles.Formats
                     }
                 }
 
-                logger.User($"'{outfile}' written!{Environment.NewLine}");
+                _logger.User($"'{outfile}' written!{Environment.NewLine}");
                 sw.Dispose();
                 fs.Dispose();
             }
             catch (Exception ex) when (!throwOnError)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 return false;
             }
 
@@ -100,13 +100,13 @@ namespace SabreTools.DatFiles.Formats
         {
             try
             {
-                logger.User($"Writing to '{outfile}'...");
+                _logger.User($"Writing to '{outfile}'...");
                 FileStream fs = File.Create(outfile);
 
                 // If we get back null for some reason, just log and return
                 if (fs == null)
                 {
-                    logger.Warning($"File '{outfile}' could not be created for writing! Please check to see if the file is writable");
+                    _logger.Warning($"File '{outfile}' could not be created for writing! Please check to see if the file is writable");
                     return false;
                 }
 
@@ -146,13 +146,13 @@ namespace SabreTools.DatFiles.Formats
                     }
                 }
 
-                logger.User($"'{outfile}' written!{Environment.NewLine}");
+                _logger.User($"'{outfile}' written!{Environment.NewLine}");
                 sw.Dispose();
                 fs.Dispose();
             }
             catch (Exception ex) when (!throwOnError)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 return false;
             }
 

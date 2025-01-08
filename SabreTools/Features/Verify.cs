@@ -90,7 +90,7 @@ namespace SabreTools.Features
                     else
                     {
                         // Loop through and add the inputs to check against
-                        logger.User("Processing files:\n");
+                        _logger.User("Processing files:\n");
                         foreach (string input in Inputs)
                         {
                             dfd.PopulateFromDir(datdata, input, asFile);
@@ -144,7 +144,7 @@ namespace SabreTools.Features
                 else
                 {
                     // Loop through and add the inputs to check against
-                    logger.User("Processing files:\n");
+                    _logger.User("Processing files:\n");
                     foreach (string input in Inputs)
                     {
                         dfd.PopulateFromDir(datdata, input, asFile);

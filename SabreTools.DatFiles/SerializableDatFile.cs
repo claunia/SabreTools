@@ -34,7 +34,7 @@ namespace SabreTools.DatFiles
             catch (Exception ex) when (!throwOnError)
             {
                 string message = $"'{filename}' - An error occurred during parsing";
-                logger.Error(ex, message);
+                _logger.Error(ex, message);
             }
         }
 
@@ -43,24 +43,24 @@ namespace SabreTools.DatFiles
         {
             try
             {
-                logger.User($"Writing to '{outfile}'...");
+                _logger.User($"Writing to '{outfile}'...");
 
                 // Serialize the input file in two steps
                 var internalFormat = ConvertMetadata(ignoreblanks);
                 var specificFormat = Activator.CreateInstance<TModelSerializer>().Deserialize(internalFormat);
                 if (!Activator.CreateInstance<TFileSerializer>().Serialize(specificFormat, outfile))
                 {
-                    logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
+                    _logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
                     return false;
                 }
             }
             catch (Exception ex) when (!throwOnError)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 return false;
             }
 
-            logger.User($"'{outfile}' written!{Environment.NewLine}");
+            _logger.User($"'{outfile}' written!{Environment.NewLine}");
             return true;
         }
 
@@ -69,24 +69,24 @@ namespace SabreTools.DatFiles
         {
             try
             {
-                logger.User($"Writing to '{outfile}'...");
+                _logger.User($"Writing to '{outfile}'...");
 
                 // Serialize the input file in two steps
                 var internalFormat = ConvertMetadataDB(ignoreblanks);
                 var specificFormat = Activator.CreateInstance<TModelSerializer>().Deserialize(internalFormat);
                 if (!Activator.CreateInstance<TFileSerializer>().Serialize(specificFormat, outfile))
                 {
-                    logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
+                    _logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
                     return false;
                 }
             }
             catch (Exception ex) when (!throwOnError)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 return false;
             }
 
-            logger.User($"'{outfile}' written!{Environment.NewLine}");
+            _logger.User($"'{outfile}' written!{Environment.NewLine}");
             return true;
         }
     }

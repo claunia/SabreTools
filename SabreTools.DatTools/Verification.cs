@@ -22,7 +22,7 @@ namespace SabreTools.DatTools
         /// <summary>
         /// Logging object
         /// </summary>
-        private static readonly Logger logger = new();
+        private static readonly Logger _staticLogger = new();
 
         #endregion
         
@@ -45,7 +45,7 @@ namespace SabreTools.DatTools
                 // Add to the list if the input is a directory
                 if (Directory.Exists(input))
                 {
-                    logger.Verbose($"Adding depot: {input}");
+                    _staticLogger.Verbose($"Adding depot: {input}");
                     directories.Add(input);
                 }
             }
@@ -65,7 +65,7 @@ namespace SabreTools.DatTools
                 if (hash.Length != Constants.SHA1Length)
                     continue;
 
-                logger.User($"Checking hash '{hash}'");
+                _staticLogger.User($"Checking hash '{hash}'");
 
                 // Get the extension path for the hash
                 string? subpath = Utilities.GetDepotPath(hash, datFile.Header.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.Depth ?? 0);
@@ -130,7 +130,7 @@ namespace SabreTools.DatTools
                 // Add to the list if the input is a directory
                 if (Directory.Exists(input))
                 {
-                    logger.Verbose($"Adding depot: {input}");
+                    _staticLogger.Verbose($"Adding depot: {input}");
                     directories.Add(input);
                 }
             }
@@ -150,7 +150,7 @@ namespace SabreTools.DatTools
                 if (hash.Length != Constants.SHA1Length)
                     continue;
 
-                logger.User($"Checking hash '{hash}'");
+                _staticLogger.User($"Checking hash '{hash}'");
 
                 // Get the extension path for the hash
                 string? subpath = Utilities.GetDepotPath(hash, datFile.Header.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.Depth ?? 0);

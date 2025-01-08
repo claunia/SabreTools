@@ -21,7 +21,7 @@ namespace SabreTools.DatTools
         /// <summary>
         /// Logging object
         /// </summary>
-        private static readonly Logger logger = new();
+        private static readonly Logger _staticLogger = new();
 
         #endregion
 
@@ -46,7 +46,7 @@ namespace SabreTools.DatTools
             // If we have nothing writable, abort
             if (!HasWritable(datFile))
             {
-                logger.User("There were no items to write out!");
+                _staticLogger.User("There were no items to write out!");
                 return false;
             }
 
@@ -58,7 +58,7 @@ namespace SabreTools.DatTools
             // If the DAT has no output format, default to XML
             if (datFile.Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey) == 0)
             {
-                logger.Verbose("No DAT format defined, defaulting to XML");
+                _staticLogger.Verbose("No DAT format defined, defaulting to XML");
                 datFile.Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, DatFormat.Logiqx);
             }
 
@@ -70,7 +70,7 @@ namespace SabreTools.DatTools
             datFile.ItemsDB.BucketBy(ItemKey.Machine, DedupeType.None);
 
             // Output the number of items we're going to be writing
-            logger.User($"A total of {datFile.Items.DatStatistics.TotalCount - datFile.Items.DatStatistics.RemovedCount} items will be written out to '{datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)}'");
+            _staticLogger.User($"A total of {datFile.Items.DatStatistics.TotalCount - datFile.Items.DatStatistics.RemovedCount} items will be written out to '{datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)}'");
             //logger.User($"A total of {datFile.ItemsDB.DatStatistics.TotalCount - datFile.ItemsDB.DatStatistics.RemovedCount} items will be written out to '{datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)}'");
 
             // Get the outfile names
@@ -94,7 +94,7 @@ namespace SabreTools.DatTools
                     }
                     catch (Exception ex) when (!throwOnError)
                     {
-                        logger.Error(ex, $"Datfile '{outfile}' could not be written out");
+                        _staticLogger.Error(ex, $"Datfile '{outfile}' could not be written out");
                     }
 #if NET40_OR_GREATER || NETCOREAPP
                 });
@@ -104,7 +104,7 @@ namespace SabreTools.DatTools
             }
             catch (Exception ex) when (!throwOnError)
             {
-                logger.Error(ex);
+                _staticLogger.Error(ex);
                 return false;
             }
             finally

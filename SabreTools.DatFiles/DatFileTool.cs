@@ -24,7 +24,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Logging object
         /// </summary>
-        private static readonly Logger logger = new();
+        private static readonly Logger _staticLogger = new();
 
         #endregion
 
@@ -1426,7 +1426,7 @@ namespace SabreTools.DatFiles
 #endif
             {
                 var input = inputs[i];
-                logger.User($"Adding DAT: {input.CurrentPath}");
+                _staticLogger.User($"Adding DAT: {input.CurrentPath}");
                 datFiles[i] = DatFile.Create(datFile.Header.CloneFiltering());
                 Parser.ParseInto(datFiles[i], input, i, keep: true);
 #if NET40_OR_GREATER || NETCOREAPP

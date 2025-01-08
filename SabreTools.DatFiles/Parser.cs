@@ -19,7 +19,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Logging object
         /// </summary>
-        private static readonly Logger logger = new();
+        private static readonly Logger _staticLogger = new();
 
         #endregion
 
@@ -117,7 +117,7 @@ namespace SabreTools.DatFiles
             }
             catch (Exception ex) when (!throwOnError)
             {
-                logger.Error(ex, $"Error with file '{currentPath}'");
+                _staticLogger.Error(ex, $"Error with file '{currentPath}'");
             }
 
             watch.Stop();

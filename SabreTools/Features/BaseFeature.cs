@@ -19,7 +19,7 @@ namespace SabreTools.Features
         /// <summary>
         /// Logging object
         /// </summary>
-        protected Logger logger = new();
+        protected Logger _logger = new();
 
         #endregion
 
@@ -2176,7 +2176,7 @@ Some special strings that can be used:
                 DatFormat dftemp = GetDatFormat(ot);
                 if (dftemp == 0x00)
                 {
-                    logger.Error($"{ot} is not a recognized DAT format");
+                    _logger.Error($"{ot} is not a recognized DAT format");
                     return null;
                 }
 

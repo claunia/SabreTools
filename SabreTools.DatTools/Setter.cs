@@ -38,7 +38,7 @@ namespace SabreTools.DatTools
         /// <summary>
         /// Logging object
         /// </summary>
-        private readonly Logger logger = new();
+        private readonly Logger _logger = new();
 
         #endregion
 
@@ -72,7 +72,7 @@ namespace SabreTools.DatTools
                 string value = values[i];
 
                 if (!SetSetter(field, value))
-                    logger.Warning($"The value {value} did not match any known field names. Please check the wiki for more details on supported field names.");
+                    _logger.Warning($"The value {value} did not match any known field names. Please check the wiki for more details on supported field names.");
             }
 
             watch.Stop();
@@ -97,7 +97,7 @@ namespace SabreTools.DatTools
                 string value = mapping.Value;
 
                 if (!SetSetter(field, value))
-                    logger.Warning($"The value {value} did not match any known field names. Please check the wiki for more details on supported field names.");
+                    _logger.Warning($"The value {value} did not match any known field names. Please check the wiki for more details on supported field names.");
             }
 
             watch.Stop();

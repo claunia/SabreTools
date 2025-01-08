@@ -22,7 +22,7 @@ namespace SabreTools.DatTools
         /// <summary>
         /// Logging object
         /// </summary>
-        private static readonly Logger logger = new();
+        private static readonly Logger _staticLogger = new();
 
         #endregion
 
@@ -82,7 +82,7 @@ namespace SabreTools.DatTools
             }
             catch (Exception ex) when (!throwOnError)
             {
-                logger.Error(ex);
+                _staticLogger.Error(ex);
                 return false;
             }
             finally
@@ -99,7 +99,7 @@ namespace SabreTools.DatTools
         /// <param name="datFile">Current DatFile object to run operations on</param>
         internal static void CreateDeviceNonMergedSets(DatFile datFile)
         {
-            logger.User("Creating device non-merged sets from the DAT");
+            _staticLogger.User("Creating device non-merged sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
             datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
@@ -122,7 +122,7 @@ namespace SabreTools.DatTools
         /// <param name="datFile">Current DatFile object to run operations on</param>
         internal static void CreateFullyMergedSets(DatFile datFile)
         {
-            logger.User("Creating fully merged sets from the DAT");
+            _staticLogger.User("Creating fully merged sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
             datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
@@ -149,7 +149,7 @@ namespace SabreTools.DatTools
         /// <param name="datFile">Current DatFile object to run operations on</param>
         internal static void CreateFullyNonMergedSets(DatFile datFile)
         {
-            logger.User("Creating fully non-merged sets from the DAT");
+            _staticLogger.User("Creating fully non-merged sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
             datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
@@ -178,7 +178,7 @@ namespace SabreTools.DatTools
         /// <param name="datFile">Current DatFile object to run operations on</param>
         internal static void CreateMergedSets(DatFile datFile)
         {
-            logger.User("Creating merged sets from the DAT");
+            _staticLogger.User("Creating merged sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
             datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
@@ -205,7 +205,7 @@ namespace SabreTools.DatTools
         /// <param name="datFile">Current DatFile object to run operations on</param>
         internal static void CreateNonMergedSets(DatFile datFile)
         {
-            logger.User("Creating non-merged sets from the DAT");
+            _staticLogger.User("Creating non-merged sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
             datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
@@ -232,7 +232,7 @@ namespace SabreTools.DatTools
         /// <param name="datFile">Current DatFile object to run operations on</param>
         internal static void CreateSplitSets(DatFile datFile)
         {
-            logger.User("Creating split sets from the DAT");
+            _staticLogger.User("Creating split sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
             datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);

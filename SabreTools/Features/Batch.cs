@@ -74,7 +74,7 @@ Reset the internal state:           reset();";
             // If the file doesn't exist, warn but continue
             if (!File.Exists(path))
             {
-                logger.User($"{path} does not exist. Skipping...");
+                _logger.User($"{path} does not exist. Skipping...");
                 return;
             }
 
@@ -102,8 +102,8 @@ Reset the internal state:           reset();";
                     var command = BatchCommand.Create(line);
                     if (command == null)
                     {
-                        logger.User($"Could not process {path} due to the following line: {line}");
-                        logger.User($"Please see the help text for more details about possible commands");
+                        _logger.User($"Could not process {path} due to the following line: {line}");
+                        _logger.User($"Please see the help text for more details about possible commands");
                         break;
                     }
 
@@ -111,19 +111,19 @@ Reset the internal state:           reset();";
                     (bool valid, string? error) = command.ValidateArguments();
                     if (!valid)
                     {
-                        logger.User(error ?? string.Empty);
-                        logger.User($"Usage: {command.Usage()}");
+                        _logger.User(error ?? string.Empty);
+                        _logger.User($"Usage: {command.Usage()}");
                         break;
                     }
 
                     // Now run the command
-                    logger.User($"Attempting to invoke {command.Name} with {(command.Arguments.Length == 0 ? "no arguments" : "the following argument(s): " + string.Join(", ", command.Arguments))}");
+                    _logger.User($"Attempting to invoke {command.Name} with {(command.Arguments.Length == 0 ? "no arguments" : "the following argument(s): " + string.Join(", ", command.Arguments))}");
                     command.Process(batchState);
                 }
             }
             catch (Exception ex)
             {
-                logger.Error(ex, $"There was an exception processing {path}");
+                _logger.Error(ex, $"There was an exception processing {path}");
             }
         }
 

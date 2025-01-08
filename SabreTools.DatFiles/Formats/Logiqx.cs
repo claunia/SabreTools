@@ -348,7 +348,7 @@ namespace SabreTools.DatFiles.Formats
         {
             try
             {
-                logger.User($"Writing to '{outfile}'...");
+                _logger.User($"Writing to '{outfile}'...");
 
                 // Serialize the input file
                 var metadata = ConvertMetadata(ignoreblanks);
@@ -364,17 +364,17 @@ namespace SabreTools.DatFiles.Formats
 
                 if (!success)
                 {
-                    logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
+                    _logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
                     return false;
                 }
             }
             catch (Exception ex) when (!throwOnError)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 return false;
             }
 
-            logger.User($"'{outfile}' written!{Environment.NewLine}");
+            _logger.User($"'{outfile}' written!{Environment.NewLine}");
             return true;
         }
     }

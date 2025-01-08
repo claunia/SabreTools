@@ -209,7 +209,7 @@ namespace SabreTools.DatFiles.Formats
             catch (Exception ex) when (!throwOnError)
             {
                 string message = $"'{filename}' - An error occurred during parsing";
-                logger.Error(ex, message);
+                _logger.Error(ex, message);
             }
         }
 

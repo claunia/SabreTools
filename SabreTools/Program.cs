@@ -22,7 +22,7 @@ namespace SabreTools
         /// <summary>
         /// Logging object
         /// </summary>
-        private static readonly Logger logger = new();
+        private static readonly Logger _staticLogger = new();
 
         #endregion
 
@@ -74,12 +74,12 @@ namespace SabreTools
             // TODO: Re-evaluate feature flags with this change in mind
             featureName = featureName.TrimStart('-');
             if (args[0].StartsWith("-"))
-                logger.User($"Feature flags no longer require leading '-' characters");
+                _staticLogger.User($"Feature flags no longer require leading '-' characters");
 
             // Verify that the flag is valid
             if (!_help.TopLevelFlag(featureName))
             {
-                logger.User($"'{featureName}' is not valid feature flag");
+                _staticLogger.User($"'{featureName}' is not valid feature flag");
                 _help.OutputIndividualFeature(featureName);
                 LoggerImpl.Close();
                 return;
@@ -154,7 +154,7 @@ namespace SabreTools
             // If the feature failed, output help
             if (!success)
             {
-                logger.Error("An error occurred during processing!");
+                _staticLogger.Error("An error occurred during processing!");
                 _help.OutputIndividualFeature(featureName);
             }
 
@@ -226,7 +226,7 @@ namespace SabreTools
         {
             if (inputs.Count == 0)
             {
-                logger.Error("This feature requires at least one input");
+                _staticLogger.Error("This feature requires at least one input");
                 _help?.OutputIndividualFeature(feature.Name);
                 Environment.Exit(0);
             }

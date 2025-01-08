@@ -34,7 +34,7 @@ namespace SabreTools.DatTools
         /// <summary>
         /// Logging object
         /// </summary>
-        protected Logger logger;
+        protected Logger _logger;
 
         #endregion
 
@@ -45,7 +45,7 @@ namespace SabreTools.DatTools
         /// </summary>
         public Remover()
         {
-            logger = new Logger(this);
+            _logger = new Logger(this);
         }
 
         #endregion
@@ -75,7 +75,7 @@ namespace SabreTools.DatTools
             {
                 bool removerSet = SetRemover(field);
                 if (!removerSet)
-                    logger.Warning($"The value {field} did not match any known field names. Please check the wiki for more details on supported field names.");
+                    _logger.Warning($"The value {field} did not match any known field names. Please check the wiki for more details on supported field names.");
             }
 
             watch.Stop();

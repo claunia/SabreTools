@@ -23,7 +23,7 @@ namespace SabreTools.DatTools
         /// <summary>
         /// Logging object
         /// </summary>
-        private readonly Logger logger;
+        private readonly Logger _logger;
 
         #endregion
 
@@ -34,7 +34,7 @@ namespace SabreTools.DatTools
         /// </summary>
         public ExtraIni()
         {
-            logger = new Logger(this);
+            _logger = new Logger(this);
         }
 
         #endregion
@@ -58,7 +58,7 @@ namespace SabreTools.DatTools
                 // If we don't even have a possible field and file combination
                 if (!input.Contains(":"))
                 {
-                    logger.Warning($"'{input}` is not a valid INI extras string. Valid INI extras strings are of the form 'key:value'. Please refer to README.1ST or the help feature for more details.");
+                    _logger.Warning($"'{input}` is not a valid INI extras string. Valid INI extras strings are of the form 'key:value'. Please refer to README.1ST or the help feature for more details.");
                     return;
                 }
 
@@ -130,7 +130,7 @@ namespace SabreTools.DatTools
             }
             catch (Exception ex) when (!throwOnError)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 return false;
             }
             finally
@@ -192,7 +192,7 @@ namespace SabreTools.DatTools
             }
             catch (Exception ex) when (!throwOnError)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 return false;
             }
             finally

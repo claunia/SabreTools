@@ -26,7 +26,7 @@ namespace SabreTools.Features
             if (!base.ProcessFeatures(features))
                 return false;
 
-            logger.User($"SabreTools version: {Globals.Version}");
+            _logger.User($"SabreTools version: {Globals.Version}");
             return true;
         }
     }
