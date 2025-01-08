@@ -129,7 +129,11 @@ namespace SabreTools.DatItems
         /// <param name="item">Existing item to copy information from</param>
         public void CopyMachineInformation(DatItem item)
         {
-            var machine = item.GetFieldValue<Machine>(DatItem.MachineKey);
+            // If there is no machine
+            if (!item._internal.ContainsKey(DatItem.MachineKey))
+                return;
+
+            var machine = item.GetFieldValue<Machine?>(DatItem.MachineKey);
             CopyMachineInformation(machine);
         }
 
