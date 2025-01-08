@@ -5,6 +5,28 @@ namespace SabreTools.DatItems.Test
 {
     public class DatItemTests
     {
+        #region Private Testing Classes
+
+        /// <summary>
+        /// Testing implementation of Models.Metadata.DatItem
+        /// </summary>
+        private class TestDatItemModel : Models.Metadata.DatItem
+        {
+            public const string NameKey = "__NAME__";
+        }
+
+        /// <summary>
+        /// Testing implementation of DatItem
+        /// </summary>
+        private class TestDatItem : DatItem<TestDatItemModel>
+        {
+            protected override string? NameKey => TestDatItemModel.NameKey;
+
+            protected override ItemType ItemType => ItemType.Blank;
+        }
+
+        #endregion
+
         #region CopyMachineInformation
 
         [Fact]
@@ -186,7 +208,61 @@ namespace SabreTools.DatItems.Test
 
         #region Equals
 
-        // TODO: Implement Equals tests
+        [Fact]
+        public void Equals_Null_False()
+        {
+            DatItem self = new TestDatItem();
+            DatItem? other = null;
+
+            bool actual = self.Equals(other);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void Equals_MismatchedType_False()
+        {
+            DatItem self = new TestDatItem();
+            DatItem? other = new Rom();
+
+            bool actual = self.Equals(other);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void Equals_DefaultInternal_True()
+        {
+            DatItem self = new TestDatItem();
+            DatItem? other = new TestDatItem();
+
+            bool actual = self.Equals(other);
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public void Equals_MismatchedInternal_False()
+        {
+            DatItem self = new TestDatItem();
+            self.SetName("self");
+
+            DatItem? other = new TestDatItem();
+            other.SetName("other");
+
+            bool actual = self.Equals(other);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void Equals_EqualInternal_True()
+        {
+            DatItem self = new TestDatItem();
+            self.SetName("name");
+
+            DatItem? other = new TestDatItem();
+            other.SetName("name");
+
+            bool actual = self.Equals(other);
+            Assert.True(actual);
+        }
 
         #endregion
 

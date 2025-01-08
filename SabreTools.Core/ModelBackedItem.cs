@@ -8,7 +8,20 @@ namespace SabreTools.Core
     /// <summary>
     /// Represents an item that's backed by a DictionaryBase item
     /// </summary>
-    public abstract class ModelBackedItem<T> where T : Models.Metadata.DictionaryBase
+    public abstract class ModelBackedItem : IEquatable<ModelBackedItem>
+    {
+        #region Comparision Methods
+
+        /// <inheritdoc/>
+        public abstract bool Equals(ModelBackedItem? other);
+
+        #endregion
+    }
+
+    /// <summary>
+    /// Represents an item that's backed by a DictionaryBase item
+    /// </summary>
+    public abstract class ModelBackedItem<T> : ModelBackedItem, IEquatable<ModelBackedItem<T>> where T : Models.Metadata.DictionaryBase
     {
         /// <summary>
         /// Internal model wrapped by this DatItem
@@ -147,6 +160,13 @@ namespace SabreTools.Core
             _internal[fieldName] = value;
             return true;
         }
+
+        #endregion
+
+        #region Comparision Methods
+
+        /// <inheritdoc/>
+        public abstract bool Equals(ModelBackedItem<T>? other);
 
         #endregion
 

@@ -181,8 +181,16 @@ namespace SabreTools.DatItems
         /// <returns>True if the items are duplicates, false otherwise</returns>
         public virtual bool Equals(DatItem? other)
         {
+            // If the other item is null
+            if (other == null)
+                return false;
+
+            // Get the types for comparison
+            ItemType selfType = GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>();
+            ItemType otherType = other.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>();
+
             // If we don't have a matched type, return false
-            if (GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>() != other?.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>())
+            if (selfType != otherType)
                 return false;
 
             // Compare the internal models
@@ -562,6 +570,36 @@ namespace SabreTools.DatItems
             // If `otherName` is null, Compare will return > 0
             // If `selfName` is null, Compare will return < 0
             return string.Compare(selfName, otherName, StringComparison.Ordinal);
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(ModelBackedItem? other)
+        {
+            // If other is null
+            if (other == null)
+                return false;
+
+            // If the type is mismatched
+            if (other is not DatItem<T> otherItem)
+                return false;
+
+            // Compare internal models
+            return _internal.Equals(otherItem);
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(ModelBackedItem<Models.Metadata.DatItem>? other)
+        {
+            // If other is null
+            if (other == null)
+                return false;
+
+            // If the type is mismatched
+            if (other is not DatItem<T> otherItem)
+                return false;
+
+            // Compare internal models
+            return _internal.Equals(otherItem);
         }
 
         /// <summary>

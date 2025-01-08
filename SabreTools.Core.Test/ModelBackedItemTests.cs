@@ -18,7 +18,142 @@ namespace SabreTools.Core.Test
         /// <summary>
         /// Testing implementation of ModelBackedItem
         /// </summary>
-        private class TestModelBackedItem : ModelBackedItem<TestDictionaryBase> { }
+        private class TestModelBackedItem : ModelBackedItem<TestDictionaryBase>
+        {
+            #region Comparision Methods
+
+            /// <inheritdoc/>
+            public override bool Equals(ModelBackedItem? other)
+            {
+                // If other is null
+                if (other == null)
+                    return false;
+
+                // If the type is mismatched
+                if (other is not TestModelBackedItem otherItem)
+                    return false;
+
+                // Compare internal models
+                return _internal.EqualTo(otherItem._internal);
+            }
+
+            /// <inheritdoc/>
+            public override bool Equals(ModelBackedItem<TestDictionaryBase>? other)
+            {
+                // If other is null
+                if (other == null)
+                    return false;
+
+                // If the type is mismatched
+                if (other is not TestModelBackedItem otherItem)
+                    return false;
+
+                // Compare internal models
+                return _internal.EqualTo(otherItem._internal);
+            }
+
+            #endregion
+        }
+
+        /// <summary>
+        /// Alternate testing implementation of ModelBackedItem
+        /// </summary>
+        private class TestModelAltBackedItem : ModelBackedItem<TestDictionaryBase>
+        {
+            #region Comparision Methods
+
+            /// <inheritdoc/>
+            public override bool Equals(ModelBackedItem? other)
+            {
+                // If other is null
+                if (other == null)
+                    return false;
+
+                // If the type is mismatched
+                if (other is not TestModelAltBackedItem otherItem)
+                    return false;
+
+                // Compare internal models
+                return _internal.EqualTo(otherItem._internal);
+            }
+
+            /// <inheritdoc/>
+            public override bool Equals(ModelBackedItem<TestDictionaryBase>? other)
+            {
+                // If other is null
+                if (other == null)
+                    return false;
+
+                // If the type is mismatched
+                if (other is not TestModelAltBackedItem otherItem)
+                    return false;
+
+                // Compare internal models
+                return _internal.EqualTo(otherItem._internal);
+            }
+
+            #endregion
+        }
+
+        #endregion
+
+        #region Equals
+
+        [Fact]
+        public void Equals_NullOther_False()
+        {
+            ModelBackedItem self = new TestModelBackedItem();
+            ModelBackedItem? other = null;
+
+            bool actual = self.Equals(other);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void Equals_MismatchedType_False()
+        {
+            ModelBackedItem self = new TestModelBackedItem();
+            ModelBackedItem? other = new TestModelAltBackedItem();
+
+            bool actual = self.Equals(other);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void Equals_MismatchedTypeAlt_False()
+        {
+            ModelBackedItem self = new TestModelAltBackedItem();
+            ModelBackedItem? other = new TestModelBackedItem();
+
+            bool actual = self.Equals(other);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void Equals_DifferentModels_False()
+        {
+            ModelBackedItem<TestDictionaryBase> self = new TestModelBackedItem();
+            self.SetFieldValue(TestDictionaryBase.NameKey, "self");
+
+            ModelBackedItem<TestDictionaryBase>? other = new TestModelBackedItem();
+            other.SetFieldValue(TestDictionaryBase.NameKey, "other");
+
+            bool actual = self.Equals(other);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void Equals_EqualModels_True()
+        {
+            ModelBackedItem<TestDictionaryBase> self = new TestModelBackedItem();
+            self.SetFieldValue(TestDictionaryBase.NameKey, "name");
+
+            ModelBackedItem<TestDictionaryBase>? other = new TestModelBackedItem();
+            other.SetFieldValue(TestDictionaryBase.NameKey, "name");
+
+            bool actual = self.Equals(other);
+            Assert.True(actual);
+        }
 
         #endregion
 

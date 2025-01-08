@@ -163,6 +163,11 @@ namespace SabreTools.Core
                             return false;
                         break;
 
+                    case (ModelBackedItem selfMbi, ModelBackedItem otherMbi):
+                        if (!selfMbi.Equals(otherMbi))
+                            return false;
+                        break;
+
                     case (DictionaryBase selfDb, DictionaryBase otherDb):
                         if (!selfDb.Equals(otherDb))
                             return false;
