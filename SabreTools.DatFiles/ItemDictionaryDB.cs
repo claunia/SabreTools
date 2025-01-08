@@ -1174,7 +1174,7 @@ namespace SabreTools.DatFiles
                 BucketBy(GetBestAvailable(), DedupeType.None);
 
             // Now that we have the sorted type, we get the proper key
-            return datItem.GetKey(_bucketedBy, null);
+            return datItem.GetKeyDB(_bucketedBy, null);
         }
 
         /// <summary>
@@ -1191,7 +1191,7 @@ namespace SabreTools.DatFiles
 
             // Now that we have the sorted type, we get the proper key
             var source = GetSourceForItem(datItem.Key);
-            return datItem.Value.GetKey(_bucketedBy, source.Value);
+            return datItem.Value.GetKeyDB(_bucketedBy, source.Value);
         }
 
         #endregion

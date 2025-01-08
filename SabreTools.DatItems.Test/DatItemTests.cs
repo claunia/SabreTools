@@ -575,6 +575,8 @@ namespace SabreTools.DatItems.Test
         #region PassesFilter
 
         // TODO: Implement PassesFilter tests
+        // Does this need a test? Filter functionality
+        // is already covered pretty thoroughly...
 
         #endregion
 
