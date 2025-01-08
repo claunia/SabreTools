@@ -1,6 +1,5 @@
 using System.Xml.Serialization;
 using Newtonsoft.Json;
-using SabreTools.Core;
 using SabreTools.Core.Tools;
 
 // TODO: Add item mappings for all fields
@@ -149,36 +148,6 @@ namespace SabreTools.DatItems.Formats
         #endregion
 
         #region Comparision Methods
-
-        /// <inheritdoc/>
-        public override bool Equals(ModelBackedItem? other)
-        {
-            // If other is null
-            if (other == null)
-                return false;
-
-            // If the type is mismatched
-            if (other is not DatItem otherItem)
-                return false;
-
-            // Compare internal models
-            return Equals(otherItem);
-        }
-
-        /// <inheritdoc/>
-        public override bool Equals(ModelBackedItem<Models.Metadata.DatItem>? other)
-        {
-            // If other is null
-            if (other == null)
-                return false;
-
-            // If the type is mismatched
-            if (other is not DatItem otherItem)
-                return false;
-
-            // Compare internal models
-            return Equals(otherItem);
-        }
 
         /// <inheritdoc/>
         public override bool Equals(DatItem? other)
