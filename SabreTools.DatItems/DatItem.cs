@@ -157,14 +157,18 @@ namespace SabreTools.DatItems
         /// <inheritdoc/>
         public int CompareTo(DatItem? other)
         {
+            // If the other item doesn't exist
+            if (other == null)
+                return 1;
+
             try
             {
-                if (GetName() == other?.GetName())
-                    return Equals(other) ? 0 : 1;
+                if (GetName() == other.GetName())
+                    return Equals(other) ? 0 : (other.ItemType - ItemType);
 
-                // If `other?.GetName()` is null, Compare will return > 0
+                // If `other.GetName()` is null, Compare will return > 0
                 // If `this.GetName()` is null, Compare will return < 0
-                return string.Compare(GetName(), other?.GetName(), StringComparison.Ordinal);
+                return string.Compare(GetName(), other.GetName(), StringComparison.Ordinal);
             }
             catch
             {
@@ -545,14 +549,18 @@ namespace SabreTools.DatItems
         /// <inheritdoc/>
         public int CompareTo(DatItem<T>? other)
         {
+            // If the other item doesn't exist
+            if (other == null)
+                return 1;
+
             try
             {
-                if (GetName() == other?.GetName())
-                    return Equals(other) ? 0 : 1;
+                if (GetName() == other.GetName())
+                    return Equals(other) ? 0 : (other.ItemType - ItemType);
 
                 // If `other?.GetName()` is null, Compare will return > 0
                 // If `this.GetName()` is null, Compare will return < 0
-                return string.Compare(GetName(), other?.GetName(), StringComparison.Ordinal);
+                return string.Compare(GetName(), other.GetName(), StringComparison.Ordinal);
             }
             catch
             {
