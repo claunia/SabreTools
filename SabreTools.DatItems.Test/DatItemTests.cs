@@ -820,13 +820,79 @@ namespace SabreTools.DatItems.Test
 
         #region GetName
 
-        // TODO: Implement GetName tests
+        [Fact]
+        public void GetName_NoNameKey_Null()
+        {
+            DatItem item = new TestDatItem(nameKey: null);
+            item.SetFieldValue(TestDatItemModel.NameKey, "name");
+
+            string? actual = item.GetName();
+            Assert.Null(actual);
+        }
+
+        [Fact]
+        public void GetName_EmptyNameKey_Null()
+        {
+            DatItem item = new TestDatItem(nameKey: string.Empty);
+            item.SetFieldValue(TestDatItemModel.NameKey, "name");
+
+            string? actual = item.GetName();
+            Assert.Null(actual);
+        }
+
+        [Fact]
+        public void GetName_NameKeyNotExists_Null()
+        {
+            DatItem item = new TestDatItem(nameKey: "INVALID");
+            item.SetFieldValue(TestDatItemModel.NameKey, "name");
+
+            string? actual = item.GetName();
+            Assert.Null(actual);
+        }
+
+        [Fact]
+        public void GetName_NameKeyExists_Filled()
+        {
+            DatItem item = new TestDatItem(nameKey: TestDatItemModel.NameKey);
+            item.SetFieldValue(TestDatItemModel.NameKey, "name");
+
+            string? actual = item.GetName();
+            Assert.Equal("name", actual);
+        }
 
         #endregion
 
         #region SetName
 
-        // TODO: Implement SetName tests
+        [Fact]
+        public void SetName_NoNameKey_Null()
+        {
+            DatItem item = new TestDatItem(nameKey: null);
+            item.SetName("name");
+
+            string? actual = item.GetName();
+            Assert.Null(actual);
+        }
+
+        [Fact]
+        public void SetName_EmptyNameKey_Null()
+        {
+            DatItem item = new TestDatItem(nameKey: string.Empty);
+            item.SetName("name");
+
+            string? actual = item.GetName();
+            Assert.Null(actual);
+        }
+
+        [Fact]
+        public void SetName_NameKeyNonEmpty_Filled()
+        {
+            DatItem item = new TestDatItem(nameKey: TestDatItemModel.NameKey);
+            item.SetName("name");
+
+            string? actual = item.GetName();
+            Assert.Equal("name", actual);
+        }
 
         #endregion
 

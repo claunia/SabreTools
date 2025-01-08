@@ -518,7 +518,7 @@ namespace SabreTools.DatItems
         /// <inheritdoc/>
         public override string? GetName()
         {
-            if (NameKey != null)
+            if (!string.IsNullOrEmpty(NameKey))
                 return GetStringFieldValue(NameKey);
 
             return null;
@@ -527,7 +527,7 @@ namespace SabreTools.DatItems
         /// <inheritdoc/>
         public override void SetName(string? name)
         {
-            if (NameKey != null)
+            if (!string.IsNullOrEmpty(NameKey))
                 SetFieldValue(NameKey, name);
         }
 
