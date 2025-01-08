@@ -177,6 +177,56 @@ namespace SabreTools.DatItems.Formats
             return key;
         }
 
+        /// <inheritdoc/>
+        public override string GetKeyDB(ItemKey bucketedBy, Source? source, bool lower = true, bool norename = true)
+        {
+            // Set the output key as the default blank string
+            string? key;
+
+            // Now determine what the key should be based on the bucketedBy value
+            switch (bucketedBy)
+            {
+                case ItemKey.CRC:
+                    key = GetStringFieldValue(Models.Metadata.Rom.CRCKey);
+                    break;
+
+                case ItemKey.MD5:
+                    key = GetStringFieldValue(Models.Metadata.Rom.MD5Key);
+                    break;
+
+                case ItemKey.SHA1:
+                    key = GetStringFieldValue(Models.Metadata.Rom.SHA1Key);
+                    break;
+
+                case ItemKey.SHA256:
+                    key = GetStringFieldValue(Models.Metadata.Rom.SHA256Key);
+                    break;
+
+                case ItemKey.SHA384:
+                    key = GetStringFieldValue(Models.Metadata.Rom.SHA384Key);
+                    break;
+
+                case ItemKey.SHA512:
+                    key = GetStringFieldValue(Models.Metadata.Rom.SHA512Key);
+                    break;
+
+                case ItemKey.SpamSum:
+                    key = GetStringFieldValue(Models.Metadata.Rom.SpamSumKey);
+                    break;
+
+                // Let the base handle generic stuff
+                default:
+                    return base.GetKeyDB(bucketedBy, source, lower, norename);
+            }
+
+            // Double and triple check the key for corner cases
+            key ??= string.Empty;
+            if (lower)
+                key = key.ToLowerInvariant();
+
+            return key;
+        }
+
         #endregion
     }
 }

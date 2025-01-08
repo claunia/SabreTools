@@ -21,9 +21,14 @@ namespace SabreTools.DatItems.Test
         /// </summary>
         private class TestDatItem : DatItem<TestDatItemModel>
         {
-            protected override string? NameKey => TestDatItemModel.NameKey;
+            protected override string? NameKey => _nameKey;
+            private readonly string? _nameKey;
 
             protected override ItemType ItemType => ItemType.Blank;
+
+            public TestDatItem() => _nameKey = TestDatItemModel.NameKey;
+
+            public TestDatItem(string? nameKey) => _nameKey = nameKey;
         }
 
         #endregion
@@ -429,7 +434,7 @@ namespace SabreTools.DatItems.Test
 
         #endregion
 
-        // TODO: Change when Machine matching gets fixed
+        // TODO: Change when Machine retrieval gets fixed
         #region GetDuplicateStatusDB
 
         [Fact]
@@ -694,6 +699,120 @@ namespace SabreTools.DatItems.Test
             datItem.SetFieldValue(Models.Metadata.Rom.SpamSumKey, "BASE64");
 
             string actual = datItem.GetKey(bucketedBy, lower, norename);
+            Assert.Equal(expected, actual);
+        }
+
+        #endregion
+
+        // TODO: Change when Machine retrieval gets fixed
+        #region GetKeyDB
+
+        [Theory]
+        [InlineData(ItemKey.NULL, false, false, "")]
+        [InlineData(ItemKey.NULL, false, true, "")]
+        [InlineData(ItemKey.NULL, true, false, "")]
+        [InlineData(ItemKey.NULL, true, true, "")]
+        [InlineData(ItemKey.Machine, false, false, "0000000000-Machine")]
+        [InlineData(ItemKey.Machine, false, true, "Machine")]
+        [InlineData(ItemKey.Machine, true, false, "0000000000-machine")]
+        [InlineData(ItemKey.Machine, true, true, "machine")]
+        [InlineData(ItemKey.CRC, false, false, "00000000")]
+        [InlineData(ItemKey.CRC, false, true, "00000000")]
+        [InlineData(ItemKey.CRC, true, false, "00000000")]
+        [InlineData(ItemKey.CRC, true, true, "00000000")]
+        [InlineData(ItemKey.MD5, false, false, "d41d8cd98f00b204e9800998ecf8427e")]
+        [InlineData(ItemKey.MD5, false, true, "d41d8cd98f00b204e9800998ecf8427e")]
+        [InlineData(ItemKey.MD5, true, false, "d41d8cd98f00b204e9800998ecf8427e")]
+        [InlineData(ItemKey.MD5, true, true, "d41d8cd98f00b204e9800998ecf8427e")]
+        [InlineData(ItemKey.SHA1, false, false, "da39a3ee5e6b4b0d3255bfef95601890afd80709")]
+        [InlineData(ItemKey.SHA1, false, true, "da39a3ee5e6b4b0d3255bfef95601890afd80709")]
+        [InlineData(ItemKey.SHA1, true, false, "da39a3ee5e6b4b0d3255bfef95601890afd80709")]
+        [InlineData(ItemKey.SHA1, true, true, "da39a3ee5e6b4b0d3255bfef95601890afd80709")]
+        [InlineData(ItemKey.SHA256, false, false, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")]
+        [InlineData(ItemKey.SHA256, false, true, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")]
+        [InlineData(ItemKey.SHA256, true, false, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")]
+        [InlineData(ItemKey.SHA256, true, true, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")]
+        [InlineData(ItemKey.SHA384, false, false, "38b060a751ac96384cd9327eb1b1e36a21fdb71114be07434c0cc7bf63f6e1da274edebfe76f65fbd51ad2f14898b95b")]
+        [InlineData(ItemKey.SHA384, false, true, "38b060a751ac96384cd9327eb1b1e36a21fdb71114be07434c0cc7bf63f6e1da274edebfe76f65fbd51ad2f14898b95b")]
+        [InlineData(ItemKey.SHA384, true, false, "38b060a751ac96384cd9327eb1b1e36a21fdb71114be07434c0cc7bf63f6e1da274edebfe76f65fbd51ad2f14898b95b")]
+        [InlineData(ItemKey.SHA384, true, true, "38b060a751ac96384cd9327eb1b1e36a21fdb71114be07434c0cc7bf63f6e1da274edebfe76f65fbd51ad2f14898b95b")]
+        [InlineData(ItemKey.SHA512, false, false, "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e")]
+        [InlineData(ItemKey.SHA512, false, true, "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e")]
+        [InlineData(ItemKey.SHA512, true, false, "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e")]
+        [InlineData(ItemKey.SHA512, true, true, "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e")]
+        [InlineData(ItemKey.SpamSum, false, false, "3::")]
+        [InlineData(ItemKey.SpamSum, false, true, "3::")]
+        [InlineData(ItemKey.SpamSum, true, false, "3::")]
+        [InlineData(ItemKey.SpamSum, true, true, "3::")]
+        public void GetKeyDB_DefaultImplementation(ItemKey bucketedBy, bool lower, bool norename, string expected)
+        {
+            Source source = new Source(0);
+
+            Machine machine = new Machine();
+            machine.SetFieldValue(Models.Metadata.Machine.NameKey, "Machine");
+
+            DatItem datItem = new Blank();
+            datItem.SetFieldValue(DatItem.MachineKey, machine);
+
+            string actual = datItem.GetKeyDB(bucketedBy, source, lower, norename);
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(ItemKey.NULL, false, false, "")]
+        [InlineData(ItemKey.NULL, false, true, "")]
+        [InlineData(ItemKey.NULL, true, false, "")]
+        [InlineData(ItemKey.NULL, true, true, "")]
+        [InlineData(ItemKey.Machine, false, false, "0000000000-Machine")]
+        [InlineData(ItemKey.Machine, false, true, "Machine")]
+        [InlineData(ItemKey.Machine, true, false, "0000000000-machine")]
+        [InlineData(ItemKey.Machine, true, true, "machine")]
+        [InlineData(ItemKey.CRC, false, false, "DEADBEEF")]
+        [InlineData(ItemKey.CRC, false, true, "DEADBEEF")]
+        [InlineData(ItemKey.CRC, true, false, "deadbeef")]
+        [InlineData(ItemKey.CRC, true, true, "deadbeef")]
+        [InlineData(ItemKey.MD5, false, false, "DEADBEEF")]
+        [InlineData(ItemKey.MD5, false, true, "DEADBEEF")]
+        [InlineData(ItemKey.MD5, true, false, "deadbeef")]
+        [InlineData(ItemKey.MD5, true, true, "deadbeef")]
+        [InlineData(ItemKey.SHA1, false, false, "DEADBEEF")]
+        [InlineData(ItemKey.SHA1, false, true, "DEADBEEF")]
+        [InlineData(ItemKey.SHA1, true, false, "deadbeef")]
+        [InlineData(ItemKey.SHA1, true, true, "deadbeef")]
+        [InlineData(ItemKey.SHA256, false, false, "DEADBEEF")]
+        [InlineData(ItemKey.SHA256, false, true, "DEADBEEF")]
+        [InlineData(ItemKey.SHA256, true, false, "deadbeef")]
+        [InlineData(ItemKey.SHA256, true, true, "deadbeef")]
+        [InlineData(ItemKey.SHA384, false, false, "DEADBEEF")]
+        [InlineData(ItemKey.SHA384, false, true, "DEADBEEF")]
+        [InlineData(ItemKey.SHA384, true, false, "deadbeef")]
+        [InlineData(ItemKey.SHA384, true, true, "deadbeef")]
+        [InlineData(ItemKey.SHA512, false, false, "DEADBEEF")]
+        [InlineData(ItemKey.SHA512, false, true, "DEADBEEF")]
+        [InlineData(ItemKey.SHA512, true, false, "deadbeef")]
+        [InlineData(ItemKey.SHA512, true, true, "deadbeef")]
+        [InlineData(ItemKey.SpamSum, false, false, "BASE64")]
+        [InlineData(ItemKey.SpamSum, false, true, "BASE64")]
+        [InlineData(ItemKey.SpamSum, true, false, "base64")]
+        [InlineData(ItemKey.SpamSum, true, true, "base64")]
+        public void GetKeyDB_CustomImplementation(ItemKey bucketedBy, bool lower, bool norename, string expected)
+        {
+            Source source = new Source(0);
+
+            Machine machine = new Machine();
+            machine.SetFieldValue(Models.Metadata.Machine.NameKey, "Machine");
+
+            DatItem datItem = new Rom();
+            datItem.SetFieldValue(DatItem.MachineKey, machine);
+            datItem.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            datItem.SetFieldValue(Models.Metadata.Rom.MD5Key, "DEADBEEF");
+            datItem.SetFieldValue(Models.Metadata.Rom.SHA1Key, "DEADBEEF");
+            datItem.SetFieldValue(Models.Metadata.Rom.SHA256Key, "DEADBEEF");
+            datItem.SetFieldValue(Models.Metadata.Rom.SHA384Key, "DEADBEEF");
+            datItem.SetFieldValue(Models.Metadata.Rom.SHA512Key, "DEADBEEF");
+            datItem.SetFieldValue(Models.Metadata.Rom.SpamSumKey, "BASE64");
+
+            string actual = datItem.GetKeyDB(bucketedBy, source, lower, norename);
             Assert.Equal(expected, actual);
         }
 

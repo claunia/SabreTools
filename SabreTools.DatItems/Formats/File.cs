@@ -359,6 +359,44 @@ namespace SabreTools.DatItems.Formats
             return key;
         }
 
+        /// <inheritdoc/>
+        public override string GetKeyDB(ItemKey bucketedBy, Source? source, bool lower = true, bool norename = true)
+        {
+            // Set the output key as the default blank string
+            string? key;
+
+            // Now determine what the key should be based on the bucketedBy value
+            switch (bucketedBy)
+            {
+                case ItemKey.CRC:
+                    key = CRC;
+                    break;
+
+                case ItemKey.MD5:
+                    key = MD5;
+                    break;
+
+                case ItemKey.SHA1:
+                    key = SHA1;
+                    break;
+
+                case ItemKey.SHA256:
+                    key = SHA256;
+                    break;
+
+                // Let the base handle generic stuff
+                default:
+                    return base.GetKeyDB(bucketedBy, source, lower, norename);
+            }
+
+            // Double and triple check the key for corner cases
+            key ??= string.Empty;
+            if (lower)
+                key = key.ToLowerInvariant();
+
+            return key;
+        }
+
         #endregion
     }
 }

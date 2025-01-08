@@ -434,9 +434,6 @@ namespace SabreTools.DatItems
                     }
 
                     key = $"{sourceString}{machineString}";
-                    if (lower)
-                        key = key.ToLowerInvariant();
-
                     break;
 
                 case ItemKey.MD5:
@@ -466,6 +463,8 @@ namespace SabreTools.DatItems
 
             // Double and triple check the key for corner cases
             key ??= string.Empty;
+            if (lower)
+                key = key.ToLowerInvariant();
 
             return key;
         }
