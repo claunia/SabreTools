@@ -81,11 +81,24 @@ namespace SabreTools.DatItems.Formats
         public Rom ConvertToRom()
         {
             var rom = new Rom(_internal.ConvertToRom()!);
-            rom.GetFieldValue<DataArea?>(Rom.DataAreaKey)?.SetName(GetFieldValue<DiskArea?>(Disk.DiskAreaKey)?.GetName());
+
+            // Create a DataArea if there was an existing DiskArea
+            var diskArea = GetFieldValue<DiskArea?>(Disk.DiskAreaKey);
+            if (diskArea != null)
+            {
+                var dataArea = new DataArea();
+
+                string? diskAreaName = diskArea.GetStringFieldValue(Models.Metadata.DiskArea.NameKey);
+                dataArea.SetFieldValue(Models.Metadata.DataArea.NameKey, diskAreaName);
+
+                rom.SetFieldValue<DataArea?>(Rom.DataAreaKey, dataArea);
+            }
+
             rom.SetFieldValue<DupeType>(DatItem.DupeTypeKey, GetFieldValue<DupeType>(DatItem.DupeTypeKey));
-            rom.SetFieldValue<Machine>(DatItem.MachineKey, GetFieldValue<Machine>(DatItem.MachineKey)!.Clone() as Machine ?? new Machine());
+            rom.SetFieldValue<Machine>(DatItem.MachineKey, GetFieldValue<Machine>(DatItem.MachineKey)?.Clone() as Machine);
+            rom.SetFieldValue<Part>(Rom.PartKey, GetFieldValue<Part>(Disk.PartKey)?.Clone() as Part);
             rom.SetFieldValue<bool?>(DatItem.RemoveKey, GetBoolFieldValue(DatItem.RemoveKey));
-            rom.SetFieldValue<Source?>(DatItem.SourceKey, GetFieldValue<Source?>(DatItem.SourceKey));
+            rom.SetFieldValue<Source?>(DatItem.SourceKey, GetFieldValue<Source?>(DatItem.SourceKey)?.Clone() as Source);
 
             return rom;
         }

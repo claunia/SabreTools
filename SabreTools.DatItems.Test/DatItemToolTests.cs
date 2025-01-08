@@ -117,7 +117,7 @@ namespace SabreTools.DatItems.Test
                 SHA256 = sha256.FromHexString(),
             };
 
-            Formats.File actual = baseFile.ConvertToFile();
+            File actual = baseFile.ConvertToFile();
 
             Assert.Equal(crc, actual.CRC);
             Assert.Equal(md5, actual.MD5);
@@ -269,7 +269,7 @@ namespace SabreTools.DatItems.Test
             string sha1 = TextHelper.NormalizeSHA1("1234abcd")!;
             string sha256 = TextHelper.NormalizeSHA256("1234abcd")!;
 
-            Formats.File file = new Formats.File
+            File file = new File
             {
                 CRC = crc,
                 MD5 = md5,
