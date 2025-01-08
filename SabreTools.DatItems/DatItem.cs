@@ -169,7 +169,7 @@ namespace SabreTools.DatItems
 
                 // If the names are equal
                 if (selfName == otherName)
-                    return Equals(other) ? 0 : (other.ItemType - ItemType);
+                    return Equals(other) ? 0 : 1;
 
                 // If `otherName` is null, Compare will return > 0
                 // If `selfName` is null, Compare will return < 0
@@ -566,7 +566,7 @@ namespace SabreTools.DatItems
 
                 // If the names are equal
                 if (selfName == otherName)
-                    return Equals(other) ? 0 : (other.ItemType - ItemType);
+                    return Equals(other) ? 0 : 1;
 
                 // If `otherName` is null, Compare will return > 0
                 // If `selfName` is null, Compare will return < 0
