@@ -898,13 +898,31 @@ namespace SabreTools.DatItems.Test
 
         #region Clone
 
-        // TODO: Implement Clone tests
+        [Fact]
+        public void CloneTest()
+        {
+            DatItem item = new Sample();
+            item.SetName("name");
+
+            object clone = item.Clone();
+            Sample? actual = clone as Sample;
+            Assert.NotNull(actual);
+            Assert.Equal("name", actual.GetName());
+        }
 
         #endregion
 
         #region GetInternalClone
 
-        // TODO: Implement GetInternalClone tests
+        [Fact]
+        public void GetInternalCloneTest()
+        {
+            DatItem<TestDatItemModel> item = new TestDatItem();
+            item.SetName("name");
+
+            TestDatItemModel actual = item.GetInternalClone();
+            Assert.Equal("name", actual[TestDatItemModel.NameKey]);
+        }
 
         #endregion
     }

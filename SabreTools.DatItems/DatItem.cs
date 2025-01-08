@@ -539,6 +539,10 @@ namespace SabreTools.DatItems
         /// Clone the DatItem
         /// </summary>
         /// <returns>Clone of the DatItem</returns>
+        /// <remarks>
+        /// Throws an exception if there is a DatItem implementation
+        /// that is not a part of this library.
+        /// </remarks>
         public override object Clone()
         {
             var concrete = Array.Find(Assembly.GetExecutingAssembly().GetTypes(),
