@@ -171,6 +171,8 @@ namespace SabreTools.DatItems.Formats
 
             // Double and triple check the key for corner cases
             key ??= string.Empty;
+            if (lower)
+                key = key.ToLowerInvariant();
 
             return key;
         }
