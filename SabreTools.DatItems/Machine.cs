@@ -11,7 +11,7 @@ namespace SabreTools.DatItems
     /// Represents the information specific to a set/game/machine
     /// </summary>
     [JsonObject("machine"), XmlRoot("machine")]
-    public sealed class Machine : ModelBackedItem<Models.Metadata.Machine>, ICloneable
+    public sealed class Machine : ModelBackedItem<Models.Metadata.Machine>, ICloneable, IEquatable<Machine>
     {
         #region Constants
 
@@ -57,15 +57,6 @@ namespace SabreTools.DatItems
 
         #endregion
 
-        #region Accessors
-
-        /// <summary>
-        /// Get a clone of the current internal model
-        /// </summary>
-        public Models.Metadata.Machine GetInternalClone() => (_internal.Clone() as Models.Metadata.Machine)!;
-
-        #endregion
-
         #region Cloning methods
 
         /// <summary>
@@ -76,9 +67,14 @@ namespace SabreTools.DatItems
         {
             return new Machine()
             {
-                _internal = this._internal.Clone() as Models.Metadata.Machine ?? [],
+                _internal = _internal.Clone() as Models.Metadata.Machine ?? [],
             };
         }
+
+        /// <summary>
+        /// Get a clone of the current internal model
+        /// </summary>
+        public Models.Metadata.Machine GetInternalClone() => (_internal.Clone() as Models.Metadata.Machine)!;
 
         #endregion
 
@@ -112,6 +108,17 @@ namespace SabreTools.DatItems
 
             // Compare internal models
             return _internal.EqualTo(otherItem._internal);
+        }
+
+        /// <inheritdoc/>
+        public bool Equals(Machine? other)
+        {
+            // If other is null
+            if (other == null)
+                return false;
+
+            // Compare internal models
+            return _internal.EqualTo(other._internal);
         }
 
         #endregion
