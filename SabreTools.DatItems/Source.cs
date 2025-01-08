@@ -10,12 +10,12 @@ namespace SabreTools.DatItems
         /// <summary>
         /// Source index
         /// </summary>
-        public int Index { get; }
+        public readonly int Index;
 
         /// <summary>
         /// Source name
         /// </summary>
-        public string? Name { get; }
+        public readonly string? Name;
 
         /// <summary>
         /// Constructor
@@ -33,10 +33,7 @@ namespace SabreTools.DatItems
         /// <summary>
         /// Clone the current object
         /// </summary>
-        public object Clone()
-        {
-            return new Source(Index, Name);
-        }
+        public object Clone() => new Source(Index, Name);
 
         #endregion
     }
