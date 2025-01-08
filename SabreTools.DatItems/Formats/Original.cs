@@ -1,9 +1,6 @@
 ﻿using System.Xml.Serialization;
 using Newtonsoft.Json;
 
-/// <summary>
-/// This holds all of the auxiliary types needed for proper parsing
-/// </summary>
 namespace SabreTools.DatItems.Formats
 {
     /// <summary>
