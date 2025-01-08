@@ -54,12 +54,12 @@ namespace SabreTools.DatTools
             string newExtBString = string.Join(",", newExtB);
 
             // Set all of the appropriate outputs for each of the subsets
-            DatFile extADat = DatFile.Create(datFile.Header.CloneStandard());
+            DatFile extADat = DatFileTool.CreateDatFile(datFile.Header.CloneStandard());
             extADat.Header.SetFieldValue<string?>(DatHeader.FileNameKey, extADat.Header.GetStringFieldValue(DatHeader.FileNameKey) + $" ({newExtAString})");
             extADat.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, extADat.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $" ({newExtAString})");
             extADat.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, extADat.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" ({newExtAString})");
 
-            DatFile extBDat = DatFile.Create(datFile.Header.CloneStandard());
+            DatFile extBDat = DatFileTool.CreateDatFile(datFile.Header.CloneStandard());
             extBDat.Header.SetFieldValue<string?>(DatHeader.FileNameKey, extBDat.Header.GetStringFieldValue(DatHeader.FileNameKey) + $" ({newExtBString})");
             extBDat.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, extBDat.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $" ({newExtBString})");
             extBDat.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, extBDat.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" ({newExtBString})");
@@ -131,12 +131,12 @@ namespace SabreTools.DatTools
             string newExtBString = string.Join(",", newExtB);
 
             // Set all of the appropriate outputs for each of the subsets
-            DatFile extADat = DatFile.Create(datFile.Header.CloneStandard());
+            DatFile extADat = DatFileTool.CreateDatFile(datFile.Header.CloneStandard());
             extADat.Header.SetFieldValue<string?>(DatHeader.FileNameKey, extADat.Header.GetStringFieldValue(DatHeader.FileNameKey) + $" ({newExtAString})");
             extADat.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, extADat.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $" ({newExtAString})");
             extADat.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, extADat.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" ({newExtAString})");
 
-            DatFile extBDat = DatFile.Create(datFile.Header.CloneStandard());
+            DatFile extBDat = DatFileTool.CreateDatFile(datFile.Header.CloneStandard());
             extBDat.Header.SetFieldValue<string?>(DatHeader.FileNameKey, extBDat.Header.GetStringFieldValue(DatHeader.FileNameKey) + $" ({newExtBString})");
             extBDat.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, extBDat.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $" ({newExtBString})");
             extBDat.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, extBDat.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" ({newExtBString})");
@@ -232,7 +232,7 @@ namespace SabreTools.DatTools
             Dictionary<string, DatFile> fieldDats = [];
             foreach (var kvp in mappings)
             {
-                fieldDats[kvp.Key] = DatFile.Create(datFile.Header.CloneStandard());
+                fieldDats[kvp.Key] = DatFileTool.CreateDatFile(datFile.Header.CloneStandard());
                 fieldDats[kvp.Key].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[kvp.Key].Header.GetStringFieldValue(DatHeader.FileNameKey) + kvp.Value);
                 fieldDats[kvp.Key].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[kvp.Key].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + kvp.Value);
                 fieldDats[kvp.Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[kvp.Key].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + kvp.Value);
@@ -343,7 +343,7 @@ namespace SabreTools.DatTools
             Dictionary<string, DatFile> fieldDats = [];
             foreach (var kvp in mappings)
             {
-                fieldDats[kvp.Key] = DatFile.Create(datFile.Header.CloneStandard());
+                fieldDats[kvp.Key] = DatFileTool.CreateDatFile(datFile.Header.CloneStandard());
                 fieldDats[kvp.Key].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[kvp.Key].Header.GetStringFieldValue(DatHeader.FileNameKey) + kvp.Value);
                 fieldDats[kvp.Key].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[kvp.Key].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + kvp.Value);
                 fieldDats[kvp.Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[kvp.Key].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + kvp.Value);
@@ -480,7 +480,7 @@ namespace SabreTools.DatTools
             datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, lower: false, norename: true);
 
             // Create a temporary DAT to add things to
-            DatFile tempDat = DatFile.Create(datFile.Header);
+            DatFile tempDat = DatFileTool.CreateDatFile(datFile.Header);
             tempDat.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, null);
 
             // Sort the input keys
@@ -500,7 +500,7 @@ namespace SabreTools.DatTools
                 if (tempDat.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) != null && tempDat.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) != Path.GetDirectoryName(key))
                 {
                     // Reset the DAT for the next items
-                    tempDat = DatFile.Create(datFile.Header);
+                    tempDat = DatFileTool.CreateDatFile(datFile.Header);
                     tempDat.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, null);
                 }
 
@@ -603,12 +603,12 @@ namespace SabreTools.DatTools
             // Create each of the respective output DATs
             InternalStopwatch watch = new($"Splitting DAT by size");
 
-            DatFile lessThan = DatFile.Create(datFile.Header.CloneStandard());
+            DatFile lessThan = DatFileTool.CreateDatFile(datFile.Header.CloneStandard());
             lessThan.Header.SetFieldValue<string?>(DatHeader.FileNameKey, lessThan.Header.GetStringFieldValue(DatHeader.FileNameKey) + $" (less than {radix})");
             lessThan.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, lessThan.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $" (less than {radix})");
             lessThan.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, lessThan.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" (less than {radix})");
 
-            DatFile greaterThan = DatFile.Create(datFile.Header.CloneStandard());
+            DatFile greaterThan = DatFileTool.CreateDatFile(datFile.Header.CloneStandard());
             greaterThan.Header.SetFieldValue<string?>(DatHeader.FileNameKey, greaterThan.Header.GetStringFieldValue(DatHeader.FileNameKey) + $" (equal-greater than {radix})");
             greaterThan.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, greaterThan.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $" (equal-greater than {radix})");
             greaterThan.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, greaterThan.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" (equal-greater than {radix})");
@@ -669,12 +669,12 @@ namespace SabreTools.DatTools
             // Create each of the respective output DATs
             var watch = new InternalStopwatch($"Splitting DAT by size");
 
-            DatFile lessThan = DatFile.Create(datFile.Header.CloneStandard());
+            DatFile lessThan = DatFileTool.CreateDatFile(datFile.Header.CloneStandard());
             lessThan.Header.SetFieldValue<string?>(DatHeader.FileNameKey, lessThan.Header.GetStringFieldValue(DatHeader.FileNameKey) + $" (less than {radix})");
             lessThan.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, lessThan.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $" (less than {radix})");
             lessThan.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, lessThan.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" (less than {radix})");
 
-            DatFile greaterThan = DatFile.Create(datFile.Header.CloneStandard());
+            DatFile greaterThan = DatFileTool.CreateDatFile(datFile.Header.CloneStandard());
             greaterThan.Header.SetFieldValue<string?>(DatHeader.FileNameKey, greaterThan.Header.GetStringFieldValue(DatHeader.FileNameKey) + $" (equal-greater than {radix})");
             greaterThan.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, greaterThan.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $" (equal-greater than {radix})");
             greaterThan.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, greaterThan.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" (equal-greater than {radix})");
@@ -772,7 +772,7 @@ namespace SabreTools.DatTools
             // Initialize everything
             long currentSize = 0;
             long currentIndex = 0;
-            DatFile currentDat = DatFile.Create(datFile.Header.CloneStandard());
+            DatFile currentDat = DatFileTool.CreateDatFile(datFile.Header.CloneStandard());
             currentDat.Header.SetFieldValue<string?>(DatHeader.FileNameKey, currentDat.Header.GetStringFieldValue(DatHeader.FileNameKey) + $"_{currentIndex}");
             currentDat.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, currentDat.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $"_{currentIndex}");
             currentDat.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, currentDat.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $"_{currentIndex}");
@@ -815,7 +815,7 @@ namespace SabreTools.DatTools
                     datFiles.Add(currentDat);
                     currentSize = 0;
                     currentIndex++;
-                    currentDat = DatFile.Create(datFile.Header.CloneStandard());
+                    currentDat = DatFileTool.CreateDatFile(datFile.Header.CloneStandard());
                     currentDat.Header.SetFieldValue<string?>(DatHeader.FileNameKey, currentDat.Header.GetStringFieldValue(DatHeader.FileNameKey) + $"_{currentIndex}");
                     currentDat.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, currentDat.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $"_{currentIndex}");
                     currentDat.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, currentDat.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $"_{currentIndex}");
@@ -859,7 +859,7 @@ namespace SabreTools.DatTools
             // Setup all of the DatFiles
             foreach (ItemType itemType in outputTypes)
             {
-                typeDats[itemType] = DatFile.Create(datFile.Header.CloneStandard());
+                typeDats[itemType] = DatFileTool.CreateDatFile(datFile.Header.CloneStandard());
                 typeDats[itemType].Header.SetFieldValue<string?>(DatHeader.FileNameKey, typeDats[itemType].Header.GetStringFieldValue(DatHeader.FileNameKey) + $" ({itemType})");
                 typeDats[itemType].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, typeDats[itemType].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $" ({itemType})");
                 typeDats[itemType].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, typeDats[itemType].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" ({itemType})");

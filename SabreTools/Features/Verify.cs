@@ -62,7 +62,7 @@ namespace SabreTools.Features
                 foreach (ParentablePath datfile in datfilePaths)
                 {
                     // Parse in from the file
-                    DatFile datdata = DatFile.Create();
+                    DatFile datdata = DatFileTool.CreateDatFile();
                     Parser.ParseInto(datdata, datfile, int.MaxValue, keep: true);
 
                     // Perform additional processing steps
@@ -111,7 +111,7 @@ namespace SabreTools.Features
                 var watch = new InternalStopwatch("Populating internal DAT");
 
                 // Add all of the input DATs into one huge internal DAT
-                DatFile datdata = DatFile.Create();
+                DatFile datdata = DatFileTool.CreateDatFile();
                 foreach (ParentablePath datfile in datfilePaths)
                 {
                     Parser.ParseInto(datdata, datfile, int.MaxValue, keep: true);

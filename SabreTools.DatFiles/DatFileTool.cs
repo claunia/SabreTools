@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 #endif
 using SabreTools.Core.Tools;
+using SabreTools.DatFiles.Formats;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using SabreTools.IO;
@@ -25,6 +26,65 @@ namespace SabreTools.DatFiles
         /// Logging object
         /// </summary>
         private static readonly Logger _staticLogger = new();
+
+        #endregion
+
+        #region Creation
+
+        /// <summary>
+        /// Create a specific type of DatFile to be used based on a format and a base DAT
+        /// </summary>
+        /// <param name="datFormat">Format of the DAT to be created</param>
+        /// <param name="baseDat">DatFile containing the information to use in specific operations</param>
+        /// <param name="quotes">For relevant types, assume the usage of quotes</param>
+        /// <returns>DatFile of the specific internal type that corresponds to the inputs</returns>
+        public static DatFile CreateDatFile(DatFormat? datFormat = null, DatFile? baseDat = null, bool quotes = true)
+        {
+            return datFormat switch
+            {
+                DatFormat.ArchiveDotOrg => new ArchiveDotOrg(baseDat),
+                DatFormat.AttractMode => new AttractMode(baseDat),
+                DatFormat.ClrMamePro => new ClrMamePro(baseDat, quotes),
+                DatFormat.CSV => new CommaSeparatedValue(baseDat),
+                DatFormat.DOSCenter => new DosCenter(baseDat),
+                DatFormat.EverdriveSMDB => new EverdriveSMDB(baseDat),
+                DatFormat.Listrom => new Listrom(baseDat),
+                DatFormat.Listxml => new Listxml(baseDat),
+                DatFormat.Logiqx => new Logiqx(baseDat, false),
+                DatFormat.LogiqxDeprecated => new Logiqx(baseDat, true),
+                DatFormat.MissFile => new Missfile(baseDat),
+                DatFormat.OfflineList => new OfflineList(baseDat),
+                DatFormat.OpenMSX => new OpenMSX(baseDat),
+                DatFormat.RedumpMD5 => new Md5File(baseDat),
+                DatFormat.RedumpSFV => new SfvFile(baseDat),
+                DatFormat.RedumpSHA1 => new Sha1File(baseDat),
+                DatFormat.RedumpSHA256 => new Sha256File(baseDat),
+                DatFormat.RedumpSHA384 => new Sha384File(baseDat),
+                DatFormat.RedumpSHA512 => new Sha512File(baseDat),
+                DatFormat.RedumpSpamSum => new SpamSumFile(baseDat),
+                DatFormat.RomCenter => new RomCenter(baseDat),
+                DatFormat.SabreJSON => new SabreJSON(baseDat),
+                DatFormat.SabreXML => new SabreXML(baseDat),
+                DatFormat.SoftwareList => new Formats.SoftwareList(baseDat),
+                DatFormat.SSV => new SemicolonSeparatedValue(baseDat),
+                DatFormat.TSV => new TabSeparatedValue(baseDat),
+
+                // We use new-style Logiqx as a backup for generic DatFile
+                _ => new Logiqx(baseDat, false),
+            };
+        }
+
+        /// <summary>
+        /// Create a new DatFile from an existing DatHeader
+        /// </summary>
+        /// <param name="datHeader">DatHeader to get the values from</param>
+        public static DatFile CreateDatFile(DatHeader datHeader)
+        {
+            DatFormat format = datHeader.GetFieldValue<DatFormat>(DatHeader.DatFormatKey);
+            DatFile datFile = CreateDatFile(format);
+            datFile.SetHeader(datHeader);
+            return datFile;
+        }
 
         #endregion
 
@@ -734,7 +794,7 @@ namespace SabreTools.DatFiles
             for (int j = 0; j < datHeaders.Count; j++)
 #endif
             {
-                DatFile diffData = DatFile.Create(datHeaders[j]);
+                DatFile diffData = DatFileTool.CreateDatFile(datHeaders[j]);
                 diffData.ResetDictionary();
                 FillWithSourceIndex(datFile, diffData, j);
                 //FillWithSourceIndexDB(datFile, diffData, j);
@@ -783,7 +843,7 @@ namespace SabreTools.DatFiles
                 datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, "datFile.All DATs");
 
             string post = " (Duplicates)";
-            DatFile dupeData = DatFile.Create(datFile.Header);
+            DatFile dupeData = DatFileTool.CreateDatFile(datFile.Header);
             dupeData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, dupeData.Header.GetStringFieldValue(DatHeader.FileNameKey) + post);
             dupeData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, dupeData.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + post);
             dupeData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, dupeData.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + post);
@@ -861,7 +921,7 @@ namespace SabreTools.DatFiles
                 datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, "datFile.All DATs");
 
             string post = " (Duplicates)";
-            DatFile dupeData = DatFile.Create(datFile.Header);
+            DatFile dupeData = DatFileTool.CreateDatFile(datFile.Header);
             dupeData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, dupeData.Header.GetStringFieldValue(DatHeader.FileNameKey) + post);
             dupeData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, dupeData.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + post);
             dupeData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, dupeData.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + post);
@@ -999,7 +1059,7 @@ namespace SabreTools.DatFiles
 #endif
             {
                 string innerpost = $" ({j} - {inputs[j].GetNormalizedFileName(true)} Only)";
-                DatFile diffData = DatFile.Create(datFile.Header);
+                DatFile diffData = DatFileTool.CreateDatFile(datFile.Header);
                 diffData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, diffData.Header.GetStringFieldValue(DatHeader.FileNameKey) + innerpost);
                 diffData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, diffData.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + innerpost);
                 diffData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, diffData.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + innerpost);
@@ -1092,7 +1152,7 @@ namespace SabreTools.DatFiles
 #endif
             {
                 string innerpost = $" ({j} - {inputs[j].GetNormalizedFileName(true)} Only)";
-                DatFile diffData = DatFile.Create(datFile.Header);
+                DatFile diffData = DatFileTool.CreateDatFile(datFile.Header);
                 diffData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, diffData.Header.GetStringFieldValue(DatHeader.FileNameKey) + innerpost);
                 diffData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, diffData.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + innerpost);
                 diffData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, diffData.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + innerpost);
@@ -1218,7 +1278,7 @@ namespace SabreTools.DatFiles
                 datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, "All DATs");
 
             string post = " (No Duplicates)";
-            DatFile outerDiffData = DatFile.Create(datFile.Header);
+            DatFile outerDiffData = DatFileTool.CreateDatFile(datFile.Header);
             outerDiffData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, outerDiffData.Header.GetStringFieldValue(DatHeader.FileNameKey) + post);
             outerDiffData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, outerDiffData.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + post);
             outerDiffData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, outerDiffData.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + post);
@@ -1294,7 +1354,7 @@ namespace SabreTools.DatFiles
                 datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, "All DATs");
 
             string post = " (No Duplicates)";
-            DatFile outerDiffData = DatFile.Create(datFile.Header);
+            DatFile outerDiffData = DatFileTool.CreateDatFile(datFile.Header);
             outerDiffData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, outerDiffData.Header.GetStringFieldValue(DatHeader.FileNameKey) + post);
             outerDiffData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, outerDiffData.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + post);
             outerDiffData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, outerDiffData.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + post);
@@ -1427,7 +1487,7 @@ namespace SabreTools.DatFiles
             {
                 var input = inputs[i];
                 _staticLogger.User($"Adding DAT: {input.CurrentPath}");
-                datFiles[i] = DatFile.Create(datFile.Header.CloneFiltering());
+                datFiles[i] = DatFileTool.CreateDatFile(datFile.Header.CloneFiltering());
                 Parser.ParseInto(datFiles[i], input, i, keep: true);
 #if NET40_OR_GREATER || NETCOREAPP
             });

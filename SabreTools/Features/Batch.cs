@@ -901,7 +901,7 @@ Reset the internal state:           reset();";
         /// </summary>
         private class BatchState
         {
-            public DatFile DatFile { get; set; } = DatFile.Create();
+            public DatFile DatFile { get; set; } = DatFileTool.CreateDatFile();
             public int Index { get; set; } = 0;
             public string? OutputDirectory { get; set; } = null;
 
@@ -911,7 +911,7 @@ Reset the internal state:           reset();";
             public void Reset()
             {
                 Index = 0;
-                DatFile = DatFile.Create();
+                DatFile = DatFileTool.CreateDatFile();
                 OutputDirectory = null;
             }
         }

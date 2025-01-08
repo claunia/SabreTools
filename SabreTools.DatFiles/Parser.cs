@@ -33,9 +33,9 @@ namespace SabreTools.DatFiles
         {
             // Null filenames are invalid
             if (filename == null)
-                return DatFile.Create();
+                return DatFileTool.CreateDatFile();
 
-            DatFile datFile = DatFile.Create();
+            DatFile datFile = DatFileTool.CreateDatFile();
             ParseInto(datFile, new ParentablePath(filename), statsOnly: statsOnly, throwOnError: throwOnError);
             return datFile;
         }
@@ -112,7 +112,7 @@ namespace SabreTools.DatFiles
             // Now parse the correct type of DAT
             try
             {
-                var parsingDatFile = DatFile.Create(currentPathFormat, datFile, quotes);
+                var parsingDatFile = DatFileTool.CreateDatFile(currentPathFormat, datFile, quotes);
                 parsingDatFile?.ParseFile(currentPath, indexId, keep, statsOnly: statsOnly, throwOnError: throwOnError);
             }
             catch (Exception ex) when (!throwOnError)

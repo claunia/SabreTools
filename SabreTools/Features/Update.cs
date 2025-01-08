@@ -168,7 +168,7 @@ namespace SabreTools.Features
 #endif
                 {
                     // Create a new base DatFile
-                    DatFile datFile = DatFile.Create(Header);
+                    DatFile datFile = DatFileTool.CreateDatFile(Header);
                     _logger.User($"Processing '{Path.GetFileName(inputPath.CurrentPath)}'");
 
                     // Check the current format
@@ -228,7 +228,7 @@ namespace SabreTools.Features
             }
 
             // Create a DAT to capture inputs
-            DatFile userInputDat = DatFile.Create(Header);
+            DatFile userInputDat = DatFileTool.CreateDatFile(Header);
 
             // Populate using the correct set
             List<DatHeader> datHeaders;
@@ -391,7 +391,7 @@ namespace SabreTools.Features
 #endif
                 {
                     // Parse the path to a new DatFile
-                    DatFile repDat = DatFile.Create(Header);
+                    DatFile repDat = DatFileTool.CreateDatFile(Header);
                     Parser.ParseInto(repDat, inputPath, indexId: 1, keep: true);
 
                     // Perform additional processing steps
@@ -432,7 +432,7 @@ namespace SabreTools.Features
 #endif
                 {
                     // Parse the path to a new DatFile
-                    DatFile repDat = DatFile.Create(Header);
+                    DatFile repDat = DatFileTool.CreateDatFile(Header);
                     Parser.ParseInto(repDat, inputPath, indexId: 1, keep: true);
 
                     // Perform additional processing steps
