@@ -33,21 +33,6 @@ namespace SabreTools.DatItems.Test
 
         #endregion
 
-        private static readonly FilterRunner _filterRunner;
-
-        static DatItemTests()
-        {
-            FilterObject[] filters =
-            [
-                new FilterObject("header.author", "auth", Operation.Equals),
-                new FilterObject("machine.description", "desc", Operation.Equals),
-                new FilterObject("item.name", "name", Operation.Equals),
-                new FilterObject("rom.crc", "crc", Operation.Equals),
-            ];
-
-            _filterRunner = new FilterRunner(filters);
-        }
-
         #region CopyMachineInformation
 
         [Fact]
