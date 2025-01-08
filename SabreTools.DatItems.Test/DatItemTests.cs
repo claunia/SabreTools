@@ -413,9 +413,162 @@ namespace SabreTools.DatItems.Test
 
         #endregion
 
+        // TODO: Change when Machine matching gets fixed
         #region GetDuplicateStatusDB
 
-        // TODO: Implement GetDuplicateStatusDB tests
+        [Fact]
+        public void GetDuplicateStatusDB_NullOther_NoDupe()
+        {
+            Source? selfSource = null;
+            Source? lastSource = null;
+
+            DatItem item = new Rom();
+            DatItem? lastItem = null;
+            var actual = item.GetDuplicateStatusDB(selfSource, lastItem, lastSource);
+            Assert.Equal((DupeType)0x00, actual);
+        }
+
+        [Fact]
+        public void GetDuplicateStatusDB_DifferentTypes_NoDupe()
+        {
+            Source? selfSource = null;
+            Source? lastSource = null;
+
+            var rom = new Rom();
+            DatItem? lastItem = new Disk();
+            var actual = rom.GetDuplicateStatusDB(selfSource, lastItem, lastSource);
+            Assert.Equal((DupeType)0x00, actual);
+        }
+
+        [Fact]
+        public void GetDuplicateStatusDB_MismatchedHashes_NoDupe()
+        {
+            Source? sourceA = new Source(0);
+            Source? sourceB = new Source(1);
+
+            Machine? machineA = new Machine();
+            machineA.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
+
+            Machine? machineB = new Machine();
+            machineB.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
+
+            var romA = new Rom();
+            romA.SetName("same-name");
+            romA.SetFieldValue(Models.Metadata.Rom.CRCKey, "BEEFDEAD");
+            romA.CopyMachineInformation(machineA);
+
+            var romB = new Rom();
+            romB.SetName("same-name");
+            romB.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            romB.CopyMachineInformation(machineB);
+
+            var actual = romA.GetDuplicateStatusDB(sourceA, romB, sourceB);
+            Assert.Equal((DupeType)0x00, actual);
+        }
+
+        [Fact]
+        public void GetDuplicateStatusDB_DifferentSource_NameMatch_ExternalAll()
+        {
+            Source? sourceA = new Source(0);
+            Source? sourceB = new Source(1);
+
+            Machine? machineA = new Machine();
+            machineA.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
+
+            Machine? machineB = new Machine();
+            machineB.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
+
+            var romA = new Rom();
+            romA.SetName("same-name");
+            romA.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            romA.CopyMachineInformation(machineA);
+
+            var romB = new Rom();
+            romB.SetName("same-name");
+            romB.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            romB.CopyMachineInformation(machineB);
+
+            var actual = romA.GetDuplicateStatusDB(sourceA, romB, sourceB);
+            Assert.Equal(DupeType.External | DupeType.All, actual);
+        }
+
+        [Fact]
+        public void GetDuplicateStatusDB_DifferentSource_NoNameMatch_ExternalHash()
+        {
+            Source? sourceA = new Source(0);
+            Source? sourceB = new Source(1);
+
+            Machine? machineA = new Machine();
+            machineA.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
+
+            Machine? machineB = new Machine();
+            machineB.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "not-name-same");
+
+            var romA = new Rom();
+            romA.SetName("same-name");
+            romA.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            romA.CopyMachineInformation(machineA);
+
+            var romB = new Rom();
+            romB.SetName("same-name");
+            romB.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            romB.CopyMachineInformation(machineB);
+
+            var actual = romA.GetDuplicateStatusDB(sourceA, romB, sourceB);
+            Assert.Equal(DupeType.External | DupeType.Hash, actual);
+        }
+
+        [Fact]
+        public void GetDuplicateStatusDB_SameSource_NameMatch_InternalAll()
+        {
+            Source? sourceA = new Source(0);
+            Source? sourceB = new Source(0);
+
+            Machine? machineA = new Machine();
+            machineA.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
+
+            Machine? machineB = new Machine();
+            machineB.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
+
+            var romA = new Rom();
+            romA.SetName("same-name");
+            romA.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            romA.CopyMachineInformation(machineA);
+
+            var romB = new Rom();
+            romB.SetName("same-name");
+            romB.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            romB.CopyMachineInformation(machineB);
+
+            var actual = romA.GetDuplicateStatusDB(sourceA, romB, sourceB);
+            Assert.Equal(DupeType.Internal | DupeType.All, actual);
+        }
+
+        [Fact]
+        public void GetDuplicateStatusDB_SameSource_NoNameMatch_InternalHash()
+        {
+            Source? sourceA = new Source(0);
+            Source? sourceB = new Source(0);
+
+            Machine? machineA = new Machine();
+            machineA.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
+
+            Machine? machineB = new Machine();
+            machineB.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "not-name-same");
+
+            var romA = new Rom();
+            romA.SetName("same-name");
+            romA.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            romA.CopyMachineInformation(machineA);
+
+            var romB = new Rom();
+            romB.SetName("same-name");
+            romB.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            romB.CopyMachineInformation(machineB);
+
+            var actual = romA.GetDuplicateStatusDB(sourceA, romB, sourceB);
+            Assert.Equal(DupeType.Internal | DupeType.Hash, actual);
+        }
 
         #endregion
 
