@@ -161,24 +161,17 @@ namespace SabreTools.DatItems
             if (other == null)
                 return 1;
 
-            try
-            {
-                // Get the names to avoid changing values
-                string? selfName = GetName();
-                string? otherName = other.GetName();
+            // Get the names to avoid changing values
+            string? selfName = GetName();
+            string? otherName = other.GetName();
 
-                // If the names are equal
-                if (selfName == otherName)
-                    return Equals(other) ? 0 : 1;
+            // If the names are equal
+            if (selfName == otherName)
+                return Equals(other) ? 0 : 1;
 
-                // If `otherName` is null, Compare will return > 0
-                // If `selfName` is null, Compare will return < 0
-                return string.Compare(selfName, otherName, StringComparison.Ordinal);
-            }
-            catch
-            {
-                return 1;
-            }
+            // If `otherName` is null, Compare will return > 0
+            // If `selfName` is null, Compare will return < 0
+            return string.Compare(selfName, otherName, StringComparison.Ordinal);
         }
 
         /// <summary>
@@ -558,24 +551,17 @@ namespace SabreTools.DatItems
             if (other == null)
                 return 1;
 
-            try
-            {
-                // Get the names to avoid changing values
-                string? selfName = GetName();
-                string? otherName = other.GetName();
+            // Get the names to avoid changing values
+            string? selfName = GetName();
+            string? otherName = other.GetName();
 
-                // If the names are equal
-                if (selfName == otherName)
-                    return Equals(other) ? 0 : 1;
+            // If the names are equal
+            if (selfName == otherName)
+                return Equals(other) ? 0 : 1;
 
-                // If `otherName` is null, Compare will return > 0
-                // If `selfName` is null, Compare will return < 0
-                return string.Compare(selfName, otherName, StringComparison.Ordinal);
-            }
-            catch
-            {
-                return 1;
-            }
+            // If `otherName` is null, Compare will return > 0
+            // If `selfName` is null, Compare will return < 0
+            return string.Compare(selfName, otherName, StringComparison.Ordinal);
         }
 
         /// <summary>
