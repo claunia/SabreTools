@@ -304,7 +304,7 @@ namespace SabreTools.DatItems
         /// Runs a filter and determines if it passes or not
         /// </summary>
         /// <param name="filterRunner">Filter runner to use for checking</param>
-        /// <returns>True if the item passes the filter, false otherwise</returns>
+        /// <returns>True if the item and its machine passes the filter, false otherwise</returns>
         public bool PassesFilter(FilterRunner filterRunner)
         {
             var machine = GetFieldValue<Machine>(DatItem.MachineKey);
@@ -313,6 +313,14 @@ namespace SabreTools.DatItems
 
             return filterRunner.Run(_internal);
         }
+
+        /// <summary>
+        /// Runs a filter and determines if it passes or not
+        /// </summary>
+        /// <param name="filterRunner">Filter runner to use for checking</param>
+        /// <returns>True if the item passes the filter, false otherwise</returns>
+        public bool PassesFilterDB(FilterRunner filterRunner)
+            => filterRunner.Run(_internal);
 
         #endregion
 

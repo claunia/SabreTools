@@ -1489,7 +1489,7 @@ namespace SabreTools.DatFiles
             List<long> newItems = [];
             foreach (var item in items)
             {
-                if (item.Value.PassesFilter(filterRunner))
+                if (item.Value.PassesFilterDB(filterRunner))
                     newItems.Add(item.Key);
             }
 
