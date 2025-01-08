@@ -1,3 +1,4 @@
+using SabreTools.Core.Filter;
 using SabreTools.DatItems.Formats;
 using Xunit;
 
@@ -26,6 +27,21 @@ namespace SabreTools.DatItems.Test
         }
 
         #endregion
+
+        private static readonly FilterRunner _filterRunner;
+
+        static DatItemTests()
+        {
+            FilterObject[] filters =
+            [
+                new FilterObject("header.author", "auth", Operation.Equals),
+                new FilterObject("machine.description", "desc", Operation.Equals),
+                new FilterObject("item.name", "name", Operation.Equals),
+                new FilterObject("rom.crc", "crc", Operation.Equals),
+            ];
+
+            _filterRunner = new FilterRunner(filters);
+        }
 
         #region CopyMachineInformation
 
@@ -569,14 +585,6 @@ namespace SabreTools.DatItems.Test
             var actual = romA.GetDuplicateStatusDB(sourceA, romB, sourceB);
             Assert.Equal(DupeType.Internal | DupeType.Hash, actual);
         }
-
-        #endregion
-
-        #region PassesFilter
-
-        // TODO: Implement PassesFilter tests
-        // Does this need a test? Filter functionality
-        // is already covered pretty thoroughly...
 
         #endregion
 
