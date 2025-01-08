@@ -120,6 +120,18 @@ namespace SabreTools.DatItems.Formats
         /// <returns>String representing the suffix</returns>
         public string GetDuplicateSuffix() => _internal.GetDuplicateSuffix();
 
+        /// <summary>
+        /// Returns if the Rom contains any hashes
+        /// </summary>
+        /// <returns>True if any hash exists, false otherwise</returns>
+        public bool HasHashes() => _internal.HasHashes();
+
+        /// <summary>
+        /// Returns if all of the hashes are set to their 0-byte values
+        /// </summary>
+        /// <returns>True if any hash matches the 0-byte value, false otherwise</returns>
+        public bool HasZeroHash() => _internal.HasZeroHash();
+
         #endregion
 
         #region Sorting and Merging

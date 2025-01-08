@@ -1,7 +1,7 @@
+using System;
 using System.Linq;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
-using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.Hashing;
 using SabreTools.IO.Extensions;
@@ -138,14 +138,17 @@ namespace SabreTools.DatItems.Formats
         public Rom ConvertToRom()
         {
             var rom = new Rom();
+
             rom.SetName($"{Id}.{Extension}");
+            rom.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, Size);
             rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, CRC);
-            rom.SetFieldValue<DupeType>(DatItem.DupeTypeKey, GetFieldValue<DupeType>(DatItem.DupeTypeKey));
-            rom.SetFieldValue<Machine>(DatItem.MachineKey, GetFieldValue<Machine>(DatItem.MachineKey)!.Clone() as Machine ?? new Machine());
             rom.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, MD5);
-            rom.SetFieldValue<bool?>(DatItem.RemoveKey, GetBoolFieldValue(DatItem.RemoveKey));
             rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, SHA1);
             rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA256Key, SHA256);
+
+            rom.SetFieldValue<DupeType>(DatItem.DupeTypeKey, GetFieldValue<DupeType>(DatItem.DupeTypeKey));
+            rom.SetFieldValue<Machine>(DatItem.MachineKey, GetFieldValue<Machine>(DatItem.MachineKey)?.Clone() as Machine);
+            rom.SetFieldValue<bool?>(DatItem.RemoveKey, GetBoolFieldValue(DatItem.RemoveKey));
             rom.SetFieldValue<Source?>(DatItem.SourceKey, GetFieldValue<Source?>(DatItem.SourceKey));
 
             return rom;
@@ -154,36 +157,6 @@ namespace SabreTools.DatItems.Formats
         #endregion
 
         #region Comparision Methods
-
-        /// <inheritdoc/>
-        public override bool Equals(ModelBackedItem? other)
-        {
-            // If other is null
-            if (other == null)
-                return false;
-
-            // If the type is mismatched
-            if (other is not DatItem otherItem)
-                return false;
-
-            // Compare internal models
-            return Equals(otherItem);
-        }
-
-        /// <inheritdoc/>
-        public override bool Equals(ModelBackedItem<Models.Metadata.DatItem>? other)
-        {
-            // If other is null
-            if (other == null)
-                return false;
-
-            // If the type is mismatched
-            if (other is not DatItem otherItem)
-                return false;
-
-            // Compare internal models
-            return Equals(otherItem);
-        }
 
         /// <inheritdoc/>
         public override bool Equals(DatItem? other)
@@ -276,10 +249,12 @@ namespace SabreTools.DatItems.Formats
         /// <returns>True if any hash matches the 0-byte value, false otherwise</returns>
         public bool HasZeroHash()
         {
-            return (_crc != null && _crc.SequenceEqual(ZeroHash.CRC32Arr))
-                || (_md5 != null && _md5.SequenceEqual(ZeroHash.MD5Arr))
-                || (_sha1 != null && _sha1.SequenceEqual(ZeroHash.SHA1Arr))
-                || (_sha256 != null && _sha256.SequenceEqual(ZeroHash.SHA256Arr));
+            bool crcNull = string.IsNullOrEmpty(CRC) || string.Equals(CRC, ZeroHash.CRC32Str, StringComparison.OrdinalIgnoreCase);
+            bool md5Null = string.IsNullOrEmpty(MD5) || string.Equals(MD5, ZeroHash.MD5Str, StringComparison.OrdinalIgnoreCase);
+            bool sha1Null = string.IsNullOrEmpty(SHA1) || string.Equals(SHA1, ZeroHash.SHA1Str, StringComparison.OrdinalIgnoreCase);
+            bool sha256Null = string.IsNullOrEmpty(SHA256) || string.Equals(SHA256, ZeroHash.SHA256Str, StringComparison.OrdinalIgnoreCase);
+
+            return crcNull && md5Null && sha1Null && sha256Null;
         }
 
         /// <summary>

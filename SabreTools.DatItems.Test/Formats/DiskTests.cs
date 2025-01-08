@@ -1,4 +1,5 @@
 using SabreTools.DatItems.Formats;
+using SabreTools.Hashing;
 using Xunit;
 
 namespace SabreTools.DatItems.Test.Formats
@@ -46,6 +47,10 @@ namespace SabreTools.DatItems.Test.Formats
             Assert.Equal("XXXXXX", actual.GetStringFieldValue(Models.Metadata.Rom.MD5Key));
             Assert.Equal("XXXXXX", actual.GetStringFieldValue(Models.Metadata.Rom.SHA1Key));
             Assert.Equal(DupeType.All | DupeType.External, actual.GetFieldValue<DupeType>(DatItem.DupeTypeKey));
+
+            DataArea? actualDataArea = actual.GetFieldValue<DataArea?>(Rom.DataAreaKey);
+            Assert.NotNull(actualDataArea);
+            Assert.Equal("XXXXXX", actualDataArea.GetStringFieldValue(Models.Metadata.DataArea.NameKey));
 
             Machine? actualMachine = actual.GetFieldValue<Machine?>(DatItem.MachineKey);
             Assert.NotNull(actualMachine);
@@ -126,6 +131,107 @@ namespace SabreTools.DatItems.Test.Formats
 
             string actual = self.GetDuplicateSuffix();
             Assert.Equal($"_{hash}", actual);
+        }
+
+        #endregion
+
+        #region HasHashes
+
+        [Fact]
+        public void HasHashes_NoHash_False()
+        {
+            Disk self = new Disk();
+            bool actual = self.HasHashes();
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void HasHashes_MD5_True()
+        {
+            Disk self = new Disk();
+            self.SetFieldValue(Models.Metadata.Disk.MD5Key, "XXXXXX");
+            self.SetFieldValue(Models.Metadata.Disk.SHA1Key, string.Empty);
+
+            bool actual = self.HasHashes();
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public void HasHashes_SHA1_True()
+        {
+            Disk self = new Disk();
+            self.SetFieldValue(Models.Metadata.Disk.MD5Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Disk.SHA1Key, "XXXXXX");
+
+            bool actual = self.HasHashes();
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public void HasHashes_All_True()
+        {
+            Disk self = new Disk();
+            self.SetFieldValue(Models.Metadata.Disk.MD5Key, "XXXXXX");
+            self.SetFieldValue(Models.Metadata.Disk.SHA1Key, "XXXXXX");
+
+            bool actual = self.HasHashes();
+            Assert.True(actual);
+        }
+
+        #endregion
+
+        #region HasZeroHash
+
+        [Fact]
+        public void HasZeroHash_NoHash_True()
+        {
+            Disk self = new Disk();
+            bool actual = self.HasZeroHash();
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public void HasZeroHash_NonZeroHash_False()
+        {
+            Disk self = new Disk();
+            self.SetFieldValue(Models.Metadata.Disk.MD5Key, "DEADBEEF");
+            self.SetFieldValue(Models.Metadata.Disk.SHA1Key, "DEADBEEF");
+
+            bool actual = self.HasZeroHash();
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void HasZeroHash_ZeroMD5_True()
+        {
+            Disk self = new Disk();
+            self.SetFieldValue(Models.Metadata.Disk.MD5Key, ZeroHash.MD5Str);
+            self.SetFieldValue(Models.Metadata.Disk.SHA1Key, string.Empty);
+
+            bool actual = self.HasZeroHash();
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public void HasZeroHash_ZeroSHA1_True()
+        {
+            Disk self = new Disk();
+            self.SetFieldValue(Models.Metadata.Disk.MD5Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Disk.SHA1Key, ZeroHash.SHA1Str);
+
+            bool actual = self.HasZeroHash();
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public void HasZeroHash_ZeroAll_True()
+        {
+            Disk self = new Disk();
+            self.SetFieldValue(Models.Metadata.Disk.MD5Key, ZeroHash.MD5Str);
+            self.SetFieldValue(Models.Metadata.Disk.SHA1Key, ZeroHash.SHA1Str);
+
+            bool actual = self.HasZeroHash();
+            Assert.True(actual);
         }
 
         #endregion
