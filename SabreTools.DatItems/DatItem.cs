@@ -189,6 +189,21 @@ namespace SabreTools.DatItems
             return _internal.Equals(otherItem);
         }
 
+        /// <inheritdoc/>
+        public override bool Equals(ModelBackedItem<Models.Metadata.DatItem>? other)
+        {
+            // If other is null
+            if (other == null)
+                return false;
+
+            // If the type is mismatched
+            if (other is not DatItem otherItem)
+                return false;
+
+            // Compare internal models
+            return _internal.Equals(otherItem);
+        }
+
         /// <summary>
         /// Determine if an item is a duplicate using partial matching logic
         /// </summary>
@@ -595,21 +610,6 @@ namespace SabreTools.DatItems
             // If `otherName` is null, Compare will return > 0
             // If `selfName` is null, Compare will return < 0
             return string.Compare(selfName, otherName, StringComparison.Ordinal);
-        }
-
-        /// <inheritdoc/>
-        public override bool Equals(ModelBackedItem<Models.Metadata.DatItem>? other)
-        {
-            // If other is null
-            if (other == null)
-                return false;
-
-            // If the type is mismatched
-            if (other is not DatItem<T> otherItem)
-                return false;
-
-            // Compare internal models
-            return _internal.Equals(otherItem);
         }
 
         /// <summary>
