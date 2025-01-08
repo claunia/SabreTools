@@ -29,6 +29,8 @@ namespace SabreTools.Test.DatTools
         [InlineData("test-smdb.txt", DatFormat.EverdriveSMDB, 1)]
         //[InlineData(null, DatFormat.SabreJSON, 0)] // TODO: Create good-enough test file for this
         [InlineData("test-sfv.sfv", DatFormat.RedumpSFV, 1)]
+        //[InlineData("test-md2.md2", DatFormat.RedumpMD2, 1)] // TODO: Create good-enough test file for this
+        //[InlineData("test-md4.md4", DatFormat.RedumpMD4, 1)] // TODO: Create good-enough test file for this
         [InlineData("test-md5.md5", DatFormat.RedumpMD5, 1)]
         [InlineData("test-sha1.sha1", DatFormat.RedumpSHA1, 1)]
         [InlineData("test-sha256.sha256", DatFormat.RedumpSHA256, 1)]

@@ -2305,6 +2305,8 @@ Some special strings that can be used:
                 "json" or "sj" or "sabrejson" => DatFormat.SabreJSON,
                 "lr" or "listrom" => DatFormat.Listrom,
                 "lx" or "listxml" => DatFormat.Listxml,
+                "md2" => DatFormat.RedumpMD2,
+                "md4" => DatFormat.RedumpMD4,
                 "md5" => DatFormat.RedumpMD5,
                 "miss" or "missfile" => DatFormat.MissFile,
                 "msx" or "openmsx" => DatFormat.OpenMSX,

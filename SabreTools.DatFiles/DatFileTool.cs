@@ -55,6 +55,8 @@ namespace SabreTools.DatFiles
                 DatFormat.MissFile => new Missfile(baseDat),
                 DatFormat.OfflineList => new OfflineList(baseDat),
                 DatFormat.OpenMSX => new OpenMSX(baseDat),
+                DatFormat.RedumpMD2 => new Md2File(baseDat),
+                DatFormat.RedumpMD4 => new Md4File(baseDat),
                 DatFormat.RedumpMD5 => new Md5File(baseDat),
                 DatFormat.RedumpSFV => new SfvFile(baseDat),
                 DatFormat.RedumpSHA1 => new Sha1File(baseDat),

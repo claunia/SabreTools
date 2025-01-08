@@ -148,6 +148,10 @@ namespace SabreTools.DatFiles
                     return DatFormat.CSV;
                 case "json":
                     return DatFormat.SabreJSON;
+                case "md2":
+                    return DatFormat.RedumpMD2;
+                case "md4":
+                    return DatFormat.RedumpMD4;
                 case "md5":
                     return DatFormat.RedumpMD5;
                 case "sfv":

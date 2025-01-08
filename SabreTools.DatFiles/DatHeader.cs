@@ -523,6 +523,36 @@ namespace SabreTools.DatFiles
 
             #endregion
 
+            #region .md2
+
+            // Redump MD2
+#if NET20 || NET35
+            if ((datFormat & DatFormat.RedumpMD2) != 0)
+#else
+            if (datFormat.HasFlag(DatFormat.RedumpMD2))
+#endif
+            {
+                outfileNames.Add(DatFormat.RedumpMD2, CreateOutFileNamesHelper(outDir, ".md2", overwrite));
+                usedExtensions.Add(".md2");
+            };
+
+            #endregion
+
+            #region .md4
+
+            // Redump MD4
+#if NET20 || NET35
+            if ((datFormat & DatFormat.RedumpMD4) != 0)
+#else
+            if (datFormat.HasFlag(DatFormat.RedumpMD4))
+#endif
+            {
+                outfileNames.Add(DatFormat.RedumpMD4, CreateOutFileNamesHelper(outDir, ".md4", overwrite));
+                usedExtensions.Add(".md4");
+            };
+
+            #endregion
+
             #region .md5
 
             // Redump MD5

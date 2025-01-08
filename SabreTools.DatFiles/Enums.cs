@@ -7,7 +7,7 @@ namespace SabreTools.DatFiles
     /// DAT output formats
     /// </summary>
     [Flags]
-    public enum DatFormat
+    public enum DatFormat : ulong
     {
         #region XML Formats
 
@@ -124,39 +124,49 @@ namespace SabreTools.DatFiles
         RedumpSFV = 1 << 19,
 
         /// <summary>
+        /// MD2 hash list
+        /// </summary>
+        RedumpMD2 = 1 << 20,
+
+        /// <summary>
+        /// MD4 hash list
+        /// </summary>
+        RedumpMD4 = 1 << 21,
+
+        /// <summary>
         /// MD5 hash list
         /// </summary>
-        RedumpMD5 = 1 << 20,
+        RedumpMD5 = 1 << 22,
 
         /// <summary>
         /// SHA-1 hash list
         /// </summary>
-        RedumpSHA1 = 1 << 21,
+        RedumpSHA1 = 1 << 23,
 
         /// <summary>
         /// SHA-256 hash list
         /// </summary>
-        RedumpSHA256 = 1 << 22,
+        RedumpSHA256 = 1 << 24,
 
         /// <summary>
         /// SHA-384 hash list
         /// </summary>
-        RedumpSHA384 = 1 << 23,
+        RedumpSHA384 = 1 << 25,
 
         /// <summary>
         /// SHA-512 hash list
         /// </summary>
-        RedumpSHA512 = 1 << 24,
+        RedumpSHA512 = 1 << 26,
 
         /// <summary>
         /// SpamSum hash list
         /// </summary>
-        RedumpSpamSum = 1 << 25,
+        RedumpSpamSum = 1 << 27,
 
         #endregion
 
         // Specialty combinations
-        ALL = Int32.MaxValue,
+        ALL = ulong.MaxValue,
     }
 
     /// <summary>
