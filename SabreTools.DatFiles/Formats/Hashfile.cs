@@ -232,6 +232,36 @@ namespace SabreTools.DatFiles.Formats
     }
 
     /// <summary>
+    /// Represents an MD2 hashfile
+    /// </summary>
+    internal sealed class Md2File : Hashfile
+    {
+        /// <summary>
+        /// Constructor designed for casting a base DatFile
+        /// </summary>
+        /// <param name="datFile">Parent DatFile to copy from</param>
+        public Md2File(DatFile? datFile) : base(datFile)
+        {
+            _hash = HashType.MD2;
+        }
+    }
+
+    /// <summary>
+    /// Represents an MD4 hashfile
+    /// </summary>
+    internal sealed class Md4File : Hashfile
+    {
+        /// <summary>
+        /// Constructor designed for casting a base DatFile
+        /// </summary>
+        /// <param name="datFile">Parent DatFile to copy from</param>
+        public Md4File(DatFile? datFile) : base(datFile)
+        {
+            _hash = HashType.MD4;
+        }
+    }
+
+    /// <summary>
     /// Represents an MD5 hashfile
     /// </summary>
     internal sealed class Md5File : Hashfile
