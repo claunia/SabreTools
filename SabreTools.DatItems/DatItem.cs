@@ -163,12 +163,17 @@ namespace SabreTools.DatItems
 
             try
             {
-                if (GetName() == other.GetName())
+                // Get the names to avoid changing values
+                string? selfName = GetName();
+                string? otherName = other.GetName();
+
+                // If the names are equal
+                if (selfName == otherName)
                     return Equals(other) ? 0 : (other.ItemType - ItemType);
 
-                // If `other.GetName()` is null, Compare will return > 0
-                // If `this.GetName()` is null, Compare will return < 0
-                return string.Compare(GetName(), other.GetName(), StringComparison.Ordinal);
+                // If `otherName` is null, Compare will return > 0
+                // If `selfName` is null, Compare will return < 0
+                return string.Compare(selfName, otherName, StringComparison.Ordinal);
             }
             catch
             {
@@ -555,12 +560,17 @@ namespace SabreTools.DatItems
 
             try
             {
-                if (GetName() == other.GetName())
+                // Get the names to avoid changing values
+                string? selfName = GetName();
+                string? otherName = other.GetName();
+
+                // If the names are equal
+                if (selfName == otherName)
                     return Equals(other) ? 0 : (other.ItemType - ItemType);
 
-                // If `other?.GetName()` is null, Compare will return > 0
-                // If `this.GetName()` is null, Compare will return < 0
-                return string.Compare(GetName(), other.GetName(), StringComparison.Ordinal);
+                // If `otherName` is null, Compare will return > 0
+                // If `selfName` is null, Compare will return < 0
+                return string.Compare(selfName, otherName, StringComparison.Ordinal);
             }
             catch
             {
