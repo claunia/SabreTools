@@ -88,7 +88,7 @@ namespace SabreTools.DatItems.Formats
             // Otherwise, treat it as a Blank
             Blank? newOther = other as Blank;
 
-            // If the archive information matches
+            // If the machine information matches
             return GetFieldValue<Machine>(DatItem.MachineKey) == newOther!.GetFieldValue<Machine>(DatItem.MachineKey);
         }
 

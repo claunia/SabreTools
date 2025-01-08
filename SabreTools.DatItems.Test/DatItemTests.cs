@@ -1,4 +1,3 @@
-using SabreTools.Core.Filter;
 using SabreTools.DatItems.Formats;
 using Xunit;
 
