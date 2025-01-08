@@ -43,6 +43,7 @@ namespace SabreTools.DatItems.Formats
         public Rom ConvertToRom()
         {
             var rom = new Rom(_internal.ConvertToRom()!);
+
             rom.SetFieldValue<DupeType>(DatItem.DupeTypeKey, GetFieldValue<DupeType>(DatItem.DupeTypeKey));
             rom.SetFieldValue<Machine>(DatItem.MachineKey, GetFieldValue<Machine>(DatItem.MachineKey));
             rom.SetFieldValue<bool?>(DatItem.RemoveKey, GetBoolFieldValue(DatItem.RemoveKey));
