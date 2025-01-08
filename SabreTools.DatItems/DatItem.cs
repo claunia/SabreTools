@@ -162,7 +162,9 @@ namespace SabreTools.DatItems
                 if (GetName() == other?.GetName())
                     return Equals(other) ? 0 : 1;
 
-                return string.Compare(GetName(), other?.GetName());
+                // If `other?.GetName()` is null, Compare will return > 0
+                // If `this.GetName()` is null, Compare will return < 0
+                return string.Compare(GetName(), other?.GetName(), StringComparison.Ordinal);
             }
             catch
             {
@@ -548,7 +550,9 @@ namespace SabreTools.DatItems
                 if (GetName() == other?.GetName())
                     return Equals(other) ? 0 : 1;
 
-                return string.Compare(GetName(), other?.GetName());
+                // If `other?.GetName()` is null, Compare will return > 0
+                // If `this.GetName()` is null, Compare will return < 0
+                return string.Compare(GetName(), other?.GetName(), StringComparison.Ordinal);
             }
             catch
             {
