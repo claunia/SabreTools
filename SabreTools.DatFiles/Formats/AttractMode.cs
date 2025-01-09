@@ -8,21 +8,18 @@ namespace SabreTools.DatFiles.Formats
     /// </summary>
     internal sealed class AttractMode : SerializableDatFile<Models.AttractMode.MetadataFile, Serialization.Deserializers.AttractMode, Serialization.Serializers.AttractMode, Serialization.CrossModel.AttractMode>
     {
+        /// <inheritdoc/>
+        public override ItemType[] SupportedTypes
+            => [
+                ItemType.Rom,
+            ];
+
         /// <summary>
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
         public AttractMode(DatFile? datFile) : base(datFile)
         {
-        }
-
-        /// <inheritdoc/>
-        protected override ItemType[] GetSupportedTypes()
-        {
-            return
-            [
-                ItemType.Rom
-            ];
         }
 
         /// <inheritdoc/>

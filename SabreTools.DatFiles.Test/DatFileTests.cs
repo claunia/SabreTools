@@ -2,6 +2,12 @@ namespace SabreTools.DatFiles.Test
 {
     public class DatFileTests
     {
+        #region SupportedTypes
+
+        // TODO: Write SupportedTypes tests
+
+        #endregion
+
         #region Constructor
 
         // TODO: Write Constructor tests
@@ -95,12 +101,6 @@ namespace SabreTools.DatFiles.Test
         #region ProcessNullifiedItemDB
 
         // TODO: Write ProcessNullifiedItemDB tests
-
-        #endregion
-
-        #region GetSupportedTypes
-
-        // TODO: Write GetSupportedTypes tests
 
         #endregion
 

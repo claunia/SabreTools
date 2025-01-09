@@ -13,6 +13,24 @@ namespace SabreTools.DatFiles.Formats
     {
         #region Fields
 
+        /// <inheritdoc/>
+        public override ItemType[] SupportedTypes
+            => [
+                ItemType.Archive,
+                ItemType.BiosSet,
+                ItemType.Chip,
+                ItemType.DipSwitch,
+                ItemType.Disk,
+                ItemType.Display,
+                ItemType.Driver,
+                ItemType.Input,
+                ItemType.Media,
+                ItemType.Release,
+                ItemType.Rom,
+                ItemType.Sample,
+                ItemType.Sound,
+            ];
+
         /// <summary>
         /// Get whether to assume quote usage on read and write or not
         /// </summary>
@@ -47,27 +65,6 @@ namespace SabreTools.DatFiles.Formats
                 string message = $"'{filename}' - An error occurred during parsing";
                 _logger.Error(ex, message);
             }
-        }
-
-        /// <inheritdoc/>
-        protected override ItemType[] GetSupportedTypes()
-        {
-            return
-            [
-                ItemType.Archive,
-                ItemType.BiosSet,
-                ItemType.Chip,
-                ItemType.DipSwitch,
-                ItemType.Disk,
-                ItemType.Display,
-                ItemType.Driver,
-                ItemType.Input,
-                ItemType.Media,
-                ItemType.Release,
-                ItemType.Rom,
-                ItemType.Sample,
-                ItemType.Sound,
-            ];
         }
 
         /// <inheritdoc/>

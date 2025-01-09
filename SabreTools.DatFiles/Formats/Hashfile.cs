@@ -11,8 +11,20 @@ namespace SabreTools.DatFiles.Formats
     /// </summary>
     internal abstract class Hashfile : SerializableDatFile<Models.Hashfile.Hashfile, Serialization.Deserializers.Hashfile, Serialization.Serializers.Hashfile, Serialization.CrossModel.Hashfile>
     {
+        #region Fields
+
+        /// <inheritdoc/>
+        public override ItemType[] SupportedTypes
+            => [
+                ItemType.Disk,
+                ItemType.Media,
+                ItemType.Rom,
+            ];
+
         // Private instance variables specific to Hashfile DATs
         protected HashType _hash;
+
+        #endregion
 
         /// <summary>
         /// Constructor designed for casting a base DatFile
@@ -39,17 +51,6 @@ namespace SabreTools.DatFiles.Formats
                 string message = $"'{filename}' - An error occurred during parsing";
                 _logger.Error(ex, message);
             }
-        }
-
-        /// <inheritdoc/>
-        protected override ItemType[] GetSupportedTypes()
-        {
-            return
-            [
-                ItemType.Disk,
-                ItemType.Media,
-                ItemType.Rom
-            ];
         }
 
         /// <inheritdoc/>

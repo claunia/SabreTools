@@ -9,21 +9,18 @@ namespace SabreTools.DatFiles.Formats
     /// </summary>
     internal sealed class EverdriveSMDB : SerializableDatFile<Models.EverdriveSMDB.MetadataFile, Serialization.Deserializers.EverdriveSMDB, Serialization.Serializers.EverdriveSMDB, Serialization.CrossModel.EverdriveSMDB>
     {
+        /// <inheritdoc/>
+        public override ItemType[] SupportedTypes
+            => [
+                ItemType.Rom,
+            ];
+
         /// <summary>
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
         public EverdriveSMDB(DatFile? datFile) : base(datFile)
         {
-        }
-
-        /// <inheritdoc/>
-        protected override ItemType[] GetSupportedTypes()
-        {
-            return
-            [
-                ItemType.Rom
-            ];
         }
 
         /// <inheritdoc/>

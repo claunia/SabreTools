@@ -9,6 +9,8 @@ namespace SabreTools.DatFiles.Formats
     /// </summary>
     internal sealed class OpenMSX : SerializableDatFile<Models.OpenMSX.SoftwareDb, Serialization.Deserializers.OpenMSX, Serialization.Serializers.OpenMSX, Serialization.CrossModel.OpenMSX>
     {
+        #region Constants
+
         /// <summary>
         /// DTD for original openMSX DATs
         /// </summary>
@@ -40,21 +42,24 @@ The softwaredb.xml file contains information about rom mapper types
 
 ]]>";
 
+        #endregion
+
+        #region Fields
+
+        /// <inheritdoc/>
+        public override ItemType[] SupportedTypes
+            => [
+                ItemType.Rom,
+            ];
+
+        #endregion
+
         /// <summary>
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
         public OpenMSX(DatFile? datFile) : base(datFile)
         {
-        }
-
-        /// <inheritdoc/>
-        protected override ItemType[] GetSupportedTypes()
-        {
-            return
-            [
-                ItemType.Rom
-            ];
         }
 
         /// <inheritdoc/>

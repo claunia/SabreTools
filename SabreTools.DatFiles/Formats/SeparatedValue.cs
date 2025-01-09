@@ -10,8 +10,22 @@ namespace SabreTools.DatFiles.Formats
     /// </summary>
     internal abstract class SeparatedValue : SerializableDatFile<Models.SeparatedValue.MetadataFile, Serialization.Deserializers.SeparatedValue, Serialization.Serializers.SeparatedValue, Serialization.CrossModel.SeparatedValue>
     {
-        // Private instance variables specific to Hashfile DATs
+        #region Fields
+
+        /// <inheritdoc/>
+        public override ItemType[] SupportedTypes
+            => [
+                ItemType.Disk,
+                ItemType.Media,
+                ItemType.Rom,
+            ];
+
+        /// <summary>
+        /// Represents the delimiter between fields
+        /// </summary>
         protected char _delim;
+
+        #endregion
 
         /// <summary>
         /// Constructor designed for casting a base DatFile
@@ -38,17 +52,6 @@ namespace SabreTools.DatFiles.Formats
                 string message = $"'{filename}' - An error occurred during parsing";
                 _logger.Error(ex, message);
             }
-        }
-
-        /// <inheritdoc/>
-        protected override ItemType[] GetSupportedTypes()
-        {
-            return
-            [
-                ItemType.Disk,
-                ItemType.Media,
-                ItemType.Rom
-            ];
         }
 
         /// <inheritdoc/>

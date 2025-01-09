@@ -11,6 +11,8 @@ namespace SabreTools.DatFiles.Formats
     /// </summary>
     internal sealed class Listxml : SerializableDatFile<Models.Listxml.Mame, Serialization.Deserializers.Listxml, Serialization.Serializers.Listxml, Serialization.CrossModel.Listxml>
     {
+        #region Constants
+
         /// <summary>
         /// DTD for original MAME XML DATs
         /// </summary>
@@ -177,6 +179,37 @@ namespace SabreTools.DatFiles.Formats
 ]>
 ";
 
+        #endregion
+
+        #region Fields
+
+        /// <inheritdoc/>
+        public override ItemType[] SupportedTypes
+            => [
+                ItemType.Adjuster,
+                ItemType.BiosSet,
+                ItemType.Chip,
+                ItemType.Condition,
+                ItemType.Configuration,
+                ItemType.Device,
+                ItemType.DeviceRef,
+                ItemType.DipSwitch,
+                ItemType.Disk,
+                ItemType.Display,
+                ItemType.Driver,
+                ItemType.Feature,
+                ItemType.Input,
+                ItemType.Port,
+                ItemType.RamOption,
+                ItemType.Rom,
+                ItemType.Sample,
+                ItemType.Slot,
+                ItemType.SoftwareList,
+                ItemType.Sound,
+            ];
+
+        #endregion
+
         /// <summary>
         /// Constructor designed for casting a base DatFile
         /// </summary>
@@ -211,34 +244,6 @@ namespace SabreTools.DatFiles.Formats
                 string message = $"'{filename}' - An error occurred during parsing";
                 _logger.Error(ex, message);
             }
-        }
-
-        /// <inheritdoc/>
-        protected override ItemType[] GetSupportedTypes()
-        {
-            return
-            [
-                ItemType.Adjuster,
-                ItemType.BiosSet,
-                ItemType.Chip,
-                ItemType.Condition,
-                ItemType.Configuration,
-                ItemType.Device,
-                ItemType.DeviceRef,
-                ItemType.DipSwitch,
-                ItemType.Disk,
-                ItemType.Display,
-                ItemType.Driver,
-                ItemType.Feature,
-                ItemType.Input,
-                ItemType.Port,
-                ItemType.RamOption,
-                ItemType.Rom,
-                ItemType.Sample,
-                ItemType.Slot,
-                ItemType.SoftwareList,
-                ItemType.Sound,
-            ];
         }
 
         /// <inheritdoc/>

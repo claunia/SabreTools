@@ -38,6 +38,11 @@ namespace SabreTools.DatFiles
         [JsonProperty("items"), XmlElement("items")]
         public ItemDictionaryDB ItemsDB { get; private set; } = new ItemDictionaryDB();
 
+        /// <summary>
+        /// List of supported types for writing
+        /// </summary>
+        public abstract ItemType[] SupportedTypes { get; }
+
         #endregion
 
         #region Logging
@@ -697,16 +702,6 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Get supported types for write
-        /// </summary>
-        /// <returns>List of supported types for writing</returns>
-        /// TODO: Make this into a property instead of a method
-        protected virtual ItemType[] GetSupportedTypes()
-        {
-            return Enum.GetValues(typeof(ItemType)) as ItemType[] ?? [];
-        }
-
-        /// <summary>
         /// Return list of required fields missing from a DatItem
         /// </summary>
         /// <returns>List of missing required fields, null or empty if none were found</returns>
@@ -727,7 +722,7 @@ namespace SabreTools.DatFiles
             foreach (DatItem datItem in datItems)
             {
                 ItemType itemType = datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>();
-                if (Array.Exists(GetSupportedTypes(), t => t == itemType))
+                if (Array.Exists(SupportedTypes, t => t == itemType))
                     return true;
             }
 
@@ -749,7 +744,7 @@ namespace SabreTools.DatFiles
             foreach (var datItem in datItems)
             {
                 ItemType itemType = datItem.Value.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>();
-                if (Array.Exists(GetSupportedTypes(), t => t == itemType))
+                if (Array.Exists(SupportedTypes, t => t == itemType))
                     return true;
             }
 
@@ -990,7 +985,7 @@ namespace SabreTools.DatFiles
             // If we have an item type not in the list of supported values
             string datFormat = Header?.GetFieldValue<DatFormat>(DatHeader.DatFormatKey).ToString() ?? "Unknown Format";
             ItemType itemType = datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>();
-            if (!Array.Exists(GetSupportedTypes(), t => t == itemType))
+            if (!Array.Exists(SupportedTypes, t => t == itemType))
             {
                 string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
                 _logger?.Verbose($"Item '{itemString}' was skipped because it was not supported in {datFormat}");

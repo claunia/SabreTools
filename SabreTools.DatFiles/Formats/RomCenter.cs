@@ -9,21 +9,18 @@ namespace SabreTools.DatFiles.Formats
     /// </summary>
     internal sealed class RomCenter : SerializableDatFile<Models.RomCenter.MetadataFile, Serialization.Deserializers.RomCenter, Serialization.Serializers.RomCenter, Serialization.CrossModel.RomCenter>
     {
+        /// <inheritdoc/>
+        public override ItemType[] SupportedTypes
+            => [
+                ItemType.Rom,
+            ];
+
         /// <summary>
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
         public RomCenter(DatFile? datFile) : base(datFile)
         {
-        }
-
-        /// <inheritdoc/>
-        protected override ItemType[] GetSupportedTypes()
-        {
-            return
-            [
-                ItemType.Rom
-            ];
         }
 
         /// <inheritdoc/>

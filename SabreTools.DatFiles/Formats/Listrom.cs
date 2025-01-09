@@ -9,22 +9,19 @@ namespace SabreTools.DatFiles.Formats
     /// </summary>
     internal sealed class Listrom : SerializableDatFile<Models.Listrom.MetadataFile, Serialization.Deserializers.Listrom, Serialization.Serializers.Listrom, Serialization.CrossModel.Listrom>
     {
+        /// <inheritdoc/>
+        public override ItemType[] SupportedTypes
+            => [
+                ItemType.Disk,
+                ItemType.Rom,
+            ];
+
         /// <summary>
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
         public Listrom(DatFile? datFile) : base(datFile)
         {
-        }
-
-        /// <inheritdoc/>
-        protected override ItemType[] GetSupportedTypes()
-        {
-            return
-            [
-                ItemType.Disk,
-                ItemType.Rom
-            ];
         }
 
         /// <inheritdoc/>

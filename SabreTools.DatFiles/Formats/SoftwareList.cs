@@ -10,6 +10,8 @@ namespace SabreTools.DatFiles.Formats
     /// </summary>
     internal sealed class SoftwareList : SerializableDatFile<Models.SoftwareList.SoftwareList, Serialization.Deserializers.SoftwareList, Serialization.Serializers.SoftwareList, Serialization.CrossModel.SoftwareList>
     {
+        #region Constants
+
         /// <summary>
         /// DTD for original MAME Software List DATs
         /// </summary>
@@ -71,19 +73,13 @@ namespace SabreTools.DatFiles.Formats
 					<!ATTLIST dipvalue default (yes|no) ""no"">
 ";
 
-        /// <summary>
-        /// Constructor designed for casting a base DatFile
-        /// </summary>
-        /// <param name="datFile">Parent DatFile to copy from</param>
-        public SoftwareList(DatFile? datFile) : base(datFile)
-        {
-        }
+        #endregion
+
+        #region Fields
 
         /// <inheritdoc/>
-        protected override ItemType[] GetSupportedTypes()
-        {
-            return
-            [
+        public override ItemType[] SupportedTypes
+            => [
                 ItemType.DipSwitch,
                 ItemType.Disk,
                 ItemType.Info,
@@ -91,6 +87,15 @@ namespace SabreTools.DatFiles.Formats
                 ItemType.Rom,
                 ItemType.SharedFeat,
             ];
+
+        #endregion
+
+        /// <summary>
+        /// Constructor designed for casting a base DatFile
+        /// </summary>
+        /// <param name="datFile">Parent DatFile to copy from</param>
+        public SoftwareList(DatFile? datFile) : base(datFile)
+        {
         }
 
         /// <inheritdoc/>

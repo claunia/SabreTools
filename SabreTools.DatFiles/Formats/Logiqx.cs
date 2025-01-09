@@ -11,8 +11,7 @@ namespace SabreTools.DatFiles.Formats
     /// </summary>
     internal sealed class Logiqx : SerializableDatFile<Models.Logiqx.Datafile, Serialization.Deserializers.Logiqx, Serialization.Serializers.Logiqx, Serialization.CrossModel.Logiqx>
     {
-        // Private instance variables specific to Logiqx DATs
-        private readonly bool _deprecated;
+        #region Constants
 
         /// <summary>
         /// DTD for original Logiqx DATs
@@ -220,21 +219,13 @@ namespace SabreTools.DatFiles.Formats
 </xs:schema>
 ";
 
-        /// <summary>
-        /// Constructor designed for casting a base DatFile
-        /// </summary>
-        /// <param name="datFile">Parent DatFile to copy from</param>
-        /// <param name="deprecated">True if the output uses "game", false if the output uses "machine"</param>
-        public Logiqx(DatFile? datFile, bool deprecated) : base(datFile)
-        {
-            _deprecated = deprecated;
-        }
+        #endregion
+
+        #region Fields
 
         /// <inheritdoc/>
-        protected override ItemType[] GetSupportedTypes()
-        {
-            return
-            [
+        public override ItemType[] SupportedTypes
+            => [
                 ItemType.Archive,
                 ItemType.BiosSet,
                 ItemType.Disk,
@@ -243,6 +234,22 @@ namespace SabreTools.DatFiles.Formats
                 ItemType.Rom,
                 ItemType.Sample,
             ];
+
+        /// <summary>
+        /// Indicates if game should be used instead of machine
+        /// </summary>
+        private readonly bool _deprecated;
+
+        #endregion
+
+        /// <summary>
+        /// Constructor designed for casting a base DatFile
+        /// </summary>
+        /// <param name="datFile">Parent DatFile to copy from</param>
+        /// <param name="deprecated">True if the output uses "game", false if the output uses "machine"</param>
+        public Logiqx(DatFile? datFile, bool deprecated) : base(datFile)
+        {
+            _deprecated = deprecated;
         }
 
         /// <inheritdoc/>

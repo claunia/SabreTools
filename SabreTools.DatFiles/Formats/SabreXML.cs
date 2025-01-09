@@ -14,6 +14,10 @@ namespace SabreTools.DatFiles.Formats
     /// </summary>
     internal class SabreXML : DatFile
     {
+        /// <inheritdoc/>
+        public override ItemType[] SupportedTypes
+            => Enum.GetValues(typeof(ItemType)) as ItemType[] ?? [];
+
         /// <summary>
         /// Constructor designed for casting a base DatFile
         /// </summary>
