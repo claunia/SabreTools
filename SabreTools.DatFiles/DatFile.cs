@@ -470,28 +470,6 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Get if a machine contains any writable items
-        /// </summary>
-        /// <param name="datItems">DatItems to check</param>
-        /// <returns>True if the machine contains at least one writable item, false otherwise</returns>
-        /// <remarks>Empty machines are kept with this</remarks>
-        protected bool ContainsWritableDB(Dictionary<long, DatItem>? datItems)
-        {
-            // Empty machines are considered writable
-            if (datItems == null || datItems.Count == 0)
-                return true;
-
-            foreach (var datItem in datItems)
-            {
-                ItemType itemType = datItem.Value.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>();
-                if (Array.Exists(SupportedTypes, t => t == itemType))
-                    return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
         /// Resolve name duplicates in an arbitrary set of DatItems based on the supplied information
         /// </summary>
         /// <param name="items">List of DatItem objects representing the items to be merged</param>

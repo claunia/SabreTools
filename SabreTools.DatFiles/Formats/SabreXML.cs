@@ -308,7 +308,7 @@ namespace SabreTools.DatFiles.Formats
                 {
                     // If this machine doesn't contain any writable items, skip
                     var itemsDict = ItemsDB.GetItemsForBucket(key, filter: true);
-                    if (itemsDict == null || !ContainsWritableDB(itemsDict))
+                    if (itemsDict == null || !ContainsWritable([.. itemsDict.Values]))
                         continue;
 
                     // Resolve the names in the block

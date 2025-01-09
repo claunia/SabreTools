@@ -244,12 +244,6 @@ namespace SabreTools.DatFiles.Test
 
         #endregion
 
-        #region ContainsWritableDB
-
-        // TODO: Write ContainsWritableDB tests
-
-        #endregion
-
         #region ResolveNames
 
         // TODO: Write ResolveNames tests
