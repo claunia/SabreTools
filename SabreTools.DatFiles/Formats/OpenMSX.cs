@@ -63,7 +63,7 @@ The softwaredb.xml file contains information about rom mapper types
         }
 
         /// <inheritdoc/>
-        protected override List<string>? GetMissingRequiredFields(DatItem datItem)
+        protected internal override List<string>? GetMissingRequiredFields(DatItem datItem)
         {
             List<string> missingFields = [];
 

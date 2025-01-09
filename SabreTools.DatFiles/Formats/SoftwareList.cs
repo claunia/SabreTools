@@ -99,7 +99,7 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <inheritdoc/>
-        protected override List<string>? GetMissingRequiredFields(DatItem datItem)
+        protected internal override List<string>? GetMissingRequiredFields(DatItem datItem)
         {
             List<string> missingFields = [];
 

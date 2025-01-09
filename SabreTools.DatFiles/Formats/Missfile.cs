@@ -31,7 +31,7 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <inheritdoc/>
-        protected override List<string>? GetMissingRequiredFields(DatItem datItem)
+        protected internal override List<string>? GetMissingRequiredFields(DatItem datItem)
         {
             // TODO: Check required fields
             return null;

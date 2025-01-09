@@ -211,7 +211,7 @@ namespace SabreTools.DatFiles
             post = FormatPrefixPostfix(item, machine, post);
 
             // Get the name to update
-            string? name = (useRomName == true
+            string? name = (useRomName
                 ? item.GetName()
                 : machine?.GetStringFieldValue(Models.Metadata.Machine.NameKey)) ?? string.Empty;
 
@@ -223,6 +223,16 @@ namespace SabreTools.DatFiles
                 {
                     // We can only write out if there's a SHA-1
                     string? sha1 = disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key);
+                    if (!string.IsNullOrEmpty(sha1))
+                    {
+                        name = Utilities.GetDepotPath(sha1, outputDepot.Depth)?.Replace('\\', '/');
+                        item.SetName($"{pre}{name}{post}");
+                    }
+                }
+                else if (item is DatItems.Formats.File file)
+                {
+                    // We can only write out if there's a SHA-1
+                    string? sha1 = file.SHA1;
                     if (!string.IsNullOrEmpty(sha1))
                     {
                         name = Utilities.GetDepotPath(sha1, outputDepot.Depth)?.Replace('\\', '/');
@@ -319,6 +329,8 @@ namespace SabreTools.DatFiles
             }
             else if (item is DatItems.Formats.File file)
             {
+                name = $"{file.Id}.{file.Extension}";
+                size = file.Size.ToString() ?? string.Empty;
                 crc = file.CRC ?? string.Empty;
                 md5 = file.MD5 ?? string.Empty;
                 sha1 = file.SHA1 ?? string.Empty;
