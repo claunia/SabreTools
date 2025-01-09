@@ -1278,7 +1278,7 @@ namespace SabreTools.DatFiles.Test
             }
 
             datFile.ProcessItemName(item, machine, forceRemoveQuotes, forceRomName);
-            string? actual = item.GetName();
+            string? actual = item.GetName()?.Replace('\\', '/');
             Assert.Equal(expected, actual);
         }
 
