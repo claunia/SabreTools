@@ -82,7 +82,7 @@ namespace SabreTools.DatFiles
             // If the description is defined but not the name, set the name from the description
             if (string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(description))
             {
-                Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, description);
+                Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, description + (bare ? string.Empty : $" ({date})"));
             }
 
             // If the name is defined but not the description, set the description from the name
@@ -99,7 +99,7 @@ namespace SabreTools.DatFiles
                 Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, splitpath[splitpath.Length - 1]);
                 Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, splitpath[splitpath.Length - 1] + (bare ? string.Empty : $" ({date})"));
 #else
-                Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, splitpath[^1]);
+                Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, splitpath[^1] + (bare ? string.Empty : $" ({date})"));
                 Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, splitpath[^1] + (bare ? string.Empty : $" ({date})"));
 #endif
             }
