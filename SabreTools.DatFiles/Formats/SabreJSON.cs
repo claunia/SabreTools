@@ -356,7 +356,7 @@ namespace SabreTools.DatFiles.Formats
                 datItem.CopyMachineInformation(machine);
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
+                ParseAddHelperDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -475,7 +475,7 @@ namespace SabreTools.DatFiles.Formats
                 {
                     // If this machine doesn't contain any writable items, skip
                     var itemsDict = ItemsDB.GetItemsForBucket(key, filter: true);
-                    if (itemsDict == null || !ContainsWritable(itemsDict))
+                    if (itemsDict == null || !ContainsWritableDB(itemsDict))
                         continue;
 
                     // Resolve the names in the block
@@ -495,7 +495,7 @@ namespace SabreTools.DatFiles.Formats
                             WriteStartGame(jtw, kvp.Value);
 
                         // Check for a "null" item
-                        var datItem = ProcessNullifiedItem(kvp);
+                        var datItem = ProcessNullifiedItemDB(kvp);
 
                         // Write out the item if we're not ignoring
                         if (!ShouldIgnore(datItem.Value, ignoreblanks))

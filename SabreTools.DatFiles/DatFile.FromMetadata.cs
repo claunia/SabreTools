@@ -405,7 +405,7 @@ namespace SabreTools.DatFiles
                 }
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
+                ParseAddHelperDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -431,7 +431,7 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
+                ParseAddHelperDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -462,7 +462,7 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.BiosSet.DefaultKey, datItem.GetBoolFieldValue(Models.Metadata.BiosSet.DefaultKey).FromYesNo());
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
+                ParseAddHelperDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -495,7 +495,7 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.Chip.ChipTypeKey, datItem.GetStringFieldValue(Models.Metadata.Chip.ChipTypeKey).AsEnumValue<ChipType>().AsStringValue());
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
+                ParseAddHelperDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -583,7 +583,7 @@ namespace SabreTools.DatFiles
                 }
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
+                ParseAddHelperDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -637,7 +637,7 @@ namespace SabreTools.DatFiles
                 }
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
+                ParseAddHelperDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -663,7 +663,7 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
+                ParseAddHelperDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -755,7 +755,7 @@ namespace SabreTools.DatFiles
                 }
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
+                ParseAddHelperDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -796,7 +796,7 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, TextHelper.NormalizeSHA1(datItem.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)));
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
+                ParseAddHelperDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -851,7 +851,7 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.Display.WidthKey, datItem.GetInt64FieldValue(Models.Metadata.Display.WidthKey).ToString());
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
+                ParseAddHelperDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -902,7 +902,7 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.Driver.UnofficialKey, datItem.GetBoolFieldValue(Models.Metadata.Driver.UnofficialKey).FromYesNo());
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
+                ParseAddHelperDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -990,7 +990,7 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key, TextHelper.NormalizeSHA512(datItem.GetStringFieldValue(Models.Metadata.Rom.SHA512Key)));
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
+                ParseAddHelperDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1025,7 +1025,7 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.Feature.FeatureTypeKey, datItem.GetStringFieldValue(Models.Metadata.Feature.FeatureTypeKey).AsEnumValue<FeatureType>().AsStringValue());
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
+                ParseAddHelperDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1051,7 +1051,7 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
+                ParseAddHelperDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1125,7 +1125,7 @@ namespace SabreTools.DatFiles
                 }
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
+                ParseAddHelperDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1160,7 +1160,7 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.Media.SHA256Key, TextHelper.NormalizeSHA256(datItem.GetStringFieldValue(Models.Metadata.Media.SHA256Key)));
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
+                ParseAddHelperDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1246,7 +1246,7 @@ namespace SabreTools.DatFiles
                                 romItem.SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key, TextHelper.NormalizeSHA512(romItem.GetStringFieldValue(Models.Metadata.Rom.SHA512Key)));
 
                             ParseAddHelper(romItem, statsOnly);
-                            ParseAddHelper(romItem, machineIndex, sourceIndex, statsOnly);
+                            ParseAddHelperDB(romItem, machineIndex, sourceIndex, statsOnly);
                         }
                     }
                 }
@@ -1284,7 +1284,7 @@ namespace SabreTools.DatFiles
                                 diskItem.SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, TextHelper.NormalizeSHA1(diskItem.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)));
 
                             ParseAddHelper(diskItem, statsOnly);
-                            ParseAddHelper(diskItem, machineIndex, sourceIndex, statsOnly);
+                            ParseAddHelperDB(diskItem, machineIndex, sourceIndex, statsOnly);
                         }
                     }
                 }
@@ -1365,7 +1365,7 @@ namespace SabreTools.DatFiles
                         }
 
                         ParseAddHelper(dipSwitchItem, statsOnly);
-                        ParseAddHelper(dipSwitchItem, machineIndex, sourceIndex, statsOnly);
+                        ParseAddHelperDB(dipSwitchItem, machineIndex, sourceIndex, statsOnly);
                     }
                 }
 
@@ -1388,7 +1388,7 @@ namespace SabreTools.DatFiles
                             partFeatureItem.SetFieldValue<string?>(Models.Metadata.Feature.FeatureTypeKey, partFeatureItem.GetStringFieldValue(Models.Metadata.Feature.FeatureTypeKey).AsEnumValue<FeatureType>().AsStringValue());
 
                         ParseAddHelper(partFeatureItem, statsOnly);
-                        ParseAddHelper(partFeatureItem, machineIndex, sourceIndex, statsOnly);
+                        ParseAddHelperDB(partFeatureItem, machineIndex, sourceIndex, statsOnly);
                     }
                 }
             }
@@ -1431,7 +1431,7 @@ namespace SabreTools.DatFiles
                 }
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
+                ParseAddHelperDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1462,7 +1462,7 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.RamOption.DefaultKey, datItem.GetBoolFieldValue(Models.Metadata.RamOption.DefaultKey).FromYesNo());
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
+                ParseAddHelperDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1493,7 +1493,7 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.Release.DefaultKey, datItem.GetBoolFieldValue(Models.Metadata.Release.DefaultKey).FromYesNo());
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
+                ParseAddHelperDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1554,7 +1554,7 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key, TextHelper.NormalizeSHA512(datItem.GetStringFieldValue(Models.Metadata.Rom.SHA512Key)));
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
+                ParseAddHelperDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1580,7 +1580,7 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
+                ParseAddHelperDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1606,7 +1606,7 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
+                ParseAddHelperDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1652,7 +1652,7 @@ namespace SabreTools.DatFiles
                 }
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
+                ParseAddHelperDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1683,7 +1683,7 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.SoftwareList.StatusKey, datItem.GetStringFieldValue(Models.Metadata.SoftwareList.StatusKey).AsEnumValue<SoftwareListStatus>().AsStringValue());
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
+                ParseAddHelperDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1714,7 +1714,7 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.Sound.ChannelsKey, datItem.GetInt64FieldValue(Models.Metadata.Sound.ChannelsKey).ToString());
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
+                ParseAddHelperDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1755,7 +1755,7 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.Display.WidthKey, datItem.GetInt64FieldValue(Models.Metadata.Video.WidthKey).ToString());
 
                 ParseAddHelper(datItem, statsOnly);
-                ParseAddHelper(datItem, machineIndex, sourceIndex, statsOnly);
+                ParseAddHelperDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 

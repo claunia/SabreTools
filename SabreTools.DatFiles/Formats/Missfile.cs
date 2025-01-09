@@ -119,7 +119,7 @@ namespace SabreTools.DatFiles.Formats
                 {
                     // If this machine doesn't contain any writable items, skip
                     var itemsDict = ItemsDB.GetItemsForBucket(key, filter: true);
-                    if (itemsDict == null || !ContainsWritable(itemsDict))
+                    if (itemsDict == null || !ContainsWritableDB(itemsDict))
                         continue;
 
                     // Resolve the names in the block
@@ -128,7 +128,7 @@ namespace SabreTools.DatFiles.Formats
                     foreach (var kvp in items)
                     {
                         // Check for a "null" item
-                        var datItem = ProcessNullifiedItem(kvp);
+                        var datItem = ProcessNullifiedItemDB(kvp);
 
                         // Get the machine for the item
                         var machine = ItemsDB.GetMachineForItem(datItem.Key);

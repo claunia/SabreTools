@@ -172,7 +172,7 @@ namespace SabreTools.DatFiles
         /// <param name="sourceIndex">Index of the source to map the DatItem to</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <returns>The key for the item</returns>
-        protected long ParseAddHelper(DatItem item, long machineIndex, long sourceIndex, bool statsOnly)
+        protected long ParseAddHelperDB(DatItem item, long machineIndex, long sourceIndex, bool statsOnly)
             => ItemsDB.AddItem(item, machineIndex, sourceIndex, statsOnly);
 
         #endregion
@@ -637,7 +637,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="item">DatItem to check for "null" status</param>
         /// <returns>Cleaned DatItem</returns>
-        protected KeyValuePair<long, DatItem> ProcessNullifiedItem(KeyValuePair<long, DatItem> item)
+        protected KeyValuePair<long, DatItem> ProcessNullifiedItemDB(KeyValuePair<long, DatItem> item)
         {
             // If we don't have a Rom, we can ignore it
             if (item.Value is not Rom rom)
@@ -719,7 +719,7 @@ namespace SabreTools.DatFiles
         /// <param name="datItems">DatItems to check</param>
         /// <returns>True if the machine contains at least one writable item, false otherwise</returns>
         /// <remarks>Empty machines are kept with this</remarks>
-        protected bool ContainsWritable(Dictionary<long, DatItem>? datItems)
+        protected bool ContainsWritableDB(Dictionary<long, DatItem>? datItems)
         {
             // Empty machines are considered writable
             if (datItems == null || datItems.Count == 0)
