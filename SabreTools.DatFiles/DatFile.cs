@@ -196,7 +196,7 @@ namespace SabreTools.DatFiles
         /// <param name="item">DatItem to update</param>
         /// <param name="forceRemoveQuotes">True if the Quotes flag should be ignored, false otherwise</param>
         /// <param name="forceRomName">True if the UseRomName should be always on, false otherwise</param>
-        protected void ProcessItemName(DatItem item, Machine? machine, bool forceRemoveQuotes, bool forceRomName)
+        protected internal void ProcessItemName(DatItem item, Machine? machine, bool forceRemoveQuotes, bool forceRomName)
         {
             // Get the relevant processing values
             bool quotes = forceRemoveQuotes ? false : Header.GetBoolFieldValue(DatHeader.QuotesKey) ?? false;
@@ -290,7 +290,7 @@ namespace SabreTools.DatFiles
         /// <param name="machine">Machine to get information from</param>
         /// <param name="fix">Prefix or postfix pattern to populate</param>
         /// <returns>Sanitized string representing the postfix or prefix</returns>
-        protected static string FormatPrefixPostfix(DatItem item, Machine? machine, string fix)
+        protected internal static string FormatPrefixPostfix(DatItem item, Machine? machine, string fix)
         {
             // Initialize strings
             string? type = item.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
@@ -372,7 +372,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="item">DatItem to check for "null" status</param>
         /// <returns>Cleaned DatItem</returns>
-        protected DatItem ProcessNullifiedItem(DatItem item)
+        protected internal DatItem ProcessNullifiedItem(DatItem item)
         {
             // If we don't have a Rom, we can ignore it
             if (item is not Rom rom)
@@ -416,7 +416,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <returns>List of missing required fields, null or empty if none were found</returns>
         /// TODO: Can this be made into a thin wrapper around a RequiredFields Dictionary property?
-        protected virtual List<string>? GetMissingRequiredFields(DatItem datItem) => null;
+        protected internal virtual List<string>? GetMissingRequiredFields(DatItem datItem) => null;
 
         /// <summary>
         /// Get if a machine contains any writable items
@@ -424,7 +424,7 @@ namespace SabreTools.DatFiles
         /// <param name="datItems">DatItems to check</param>
         /// <returns>True if the machine contains at least one writable item, false otherwise</returns>
         /// <remarks>Empty machines are kept with this</remarks>
-        protected bool ContainsWritable(List<DatItem> datItems)
+        protected internal bool ContainsWritable(List<DatItem> datItems)
         {
             // Empty machines are considered writable
             if (datItems == null || datItems.Count == 0)
@@ -445,7 +445,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="items">List of DatItem objects representing the items to be merged</param>
         /// <returns>A List of DatItem objects representing the renamed items</returns>
-        protected List<DatItem> ResolveNames(List<DatItem> items)
+        protected internal List<DatItem> ResolveNames(List<DatItem> items)
         {
             // Create the output list
             List<DatItem> output = [];
@@ -540,7 +540,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="mappings">List of item ID to DatItem mappings representing the items to be merged</param>
         /// <returns>A List of DatItem objects representing the renamed items</returns>
-        protected List<KeyValuePair<long, DatItem>> ResolveNamesDB(List<KeyValuePair<long, DatItem>> mappings)
+        protected internal List<KeyValuePair<long, DatItem>> ResolveNamesDB(List<KeyValuePair<long, DatItem>> mappings)
         {
             // Create the output dict
             List<KeyValuePair<long, DatItem>> output = [];
@@ -633,7 +633,7 @@ namespace SabreTools.DatFiles
         /// <param name="datItem">DatItem to check</param>
         /// <param name="ignoreBlanks">True if blank roms should be skipped on output, false otherwise</param>
         /// <returns>True if the item should be skipped on write, false otherwise</returns>
-        protected bool ShouldIgnore(DatItem? datItem, bool ignoreBlanks)
+        protected internal bool ShouldIgnore(DatItem? datItem, bool ignoreBlanks)
         {
             // If this is invoked with a null DatItem, we ignore
             if (datItem == null)
