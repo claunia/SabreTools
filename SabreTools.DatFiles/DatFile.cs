@@ -191,17 +191,203 @@ namespace SabreTools.DatFiles
         public abstract bool WriteToFileDB(string outfile, bool ignoreblanks = false, bool throwOnError = false);
 
         /// <summary>
+        /// Process an item and correctly set the item name
+        /// </summary>
+        /// <param name="item">DatItem to update</param>
+        /// <param name="forceRemoveQuotes">True if the Quotes flag should be ignored, false otherwise</param>
+        /// <param name="forceRomName">True if the UseRomName should be always on (default), false otherwise</param>
+        protected void ProcessItemName(DatItem item, bool forceRemoveQuotes, bool forceRomName = true)
+        {
+            // Get the relevant processing values
+            bool quotes = forceRemoveQuotes ? false : Header.GetBoolFieldValue(DatHeader.QuotesKey) ?? false;
+            bool useRomName = forceRomName ? true : Header.GetBoolFieldValue(DatHeader.UseRomNameKey) ?? false;
+
+            // Get the machine
+            var machine = item.GetFieldValue<Machine>(DatItem.MachineKey);
+            if (machine == null)
+                return;
+
+            // Get the name to update
+            string? name = (useRomName
+                ? item.GetName()
+                : machine.GetStringFieldValue(Models.Metadata.Machine.NameKey)) ?? string.Empty;
+
+            // Create the proper Prefix and Postfix
+            string pre = CreatePrefix(item, machine, quotes);
+            string post = CreatePostfix(item, machine, quotes);
+
+            // If we're in Depot mode, take care of that instead
+            var outputDepot = Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey);
+            if (outputDepot?.IsActive == true)
+            {
+                if (item is Disk disk)
+                {
+                    // We can only write out if there's a SHA-1
+                    string? sha1 = disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key);
+                    if (!string.IsNullOrEmpty(sha1))
+                    {
+                        name = Utilities.GetDepotPath(sha1, outputDepot.Depth)?.Replace('\\', '/');
+                        item.SetName($"{pre}{name}{post}");
+                    }
+                }
+                else if (item is Media media)
+                {
+                    // We can only write out if there's a SHA-1
+                    string? sha1 = media.GetStringFieldValue(Models.Metadata.Media.SHA1Key);
+                    if (!string.IsNullOrEmpty(sha1))
+                    {
+                        name = Utilities.GetDepotPath(sha1, outputDepot.Depth)?.Replace('\\', '/');
+                        item.SetName($"{pre}{name}{post}");
+                    }
+                }
+                else if (item is Rom rom)
+                {
+                    // We can only write out if there's a SHA-1
+                    string? sha1 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key);
+                    if (!string.IsNullOrEmpty(sha1))
+                    {
+                        name = Utilities.GetDepotPath(sha1, outputDepot.Depth)?.Replace('\\', '/');
+                        item.SetName($"{pre}{name}{post}");
+                    }
+                }
+
+                return;
+            }
+
+            string? replaceExtension = Header.GetStringFieldValue(DatHeader.ReplaceExtensionKey);
+            bool? removeExtension = Header.GetBoolFieldValue(DatHeader.RemoveExtensionKey);
+            if (!string.IsNullOrEmpty(replaceExtension) || removeExtension == true)
+            {
+                if (removeExtension == true)
+                    Header.SetFieldValue<string?>(DatHeader.ReplaceExtensionKey, string.Empty);
+
+                string? dir = Path.GetDirectoryName(name);
+                if (dir != null)
+                {
+                    dir = dir.TrimStart(Path.DirectorySeparatorChar);
+                    name = Path.Combine(dir, Path.GetFileNameWithoutExtension(name) + replaceExtension);
+                }
+            }
+
+            string? addExtension = Header.GetStringFieldValue(DatHeader.AddExtensionKey);
+            if (!string.IsNullOrEmpty(addExtension))
+                name += addExtension;
+
+            if (useRomName && Header.GetBoolFieldValue(DatHeader.GameNameKey) == true)
+                name = Path.Combine(machine.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty, name);
+
+            // Now assign back the formatted name
+            name = $"{pre}{name}{post}";
+            if (useRomName == true)
+                item.SetName(name);
+            else
+                machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, name);
+        }
+
+        /// <summary>
+        /// Process an item and correctly set the item name
+        /// </summary>
+        /// <param name="item">DatItem to update</param>
+        /// <param name="forceRemoveQuotes">True if the Quotes flag should be ignored, false otherwise</param>
+        /// <param name="forceRomName">True if the UseRomName should be always on (default), false otherwise</param>
+        protected void ProcessItemNameDB(KeyValuePair<long, DatItem> item, bool forceRemoveQuotes, bool forceRomName = true)
+        {
+            // Get the relevant processing values
+            bool quotes = forceRemoveQuotes ? false : Header.GetBoolFieldValue(DatHeader.QuotesKey) ?? false;
+            bool useRomName = forceRomName ? true : Header.GetBoolFieldValue(DatHeader.UseRomNameKey) ?? false;
+
+            // Get machine for the item
+            var machine = ItemsDB.GetMachineForItem(item.Key);
+
+            // Get the name to update
+            string? name = (useRomName == true
+                ? item.Value.GetName()
+                : machine.Value!.GetStringFieldValue(Models.Metadata.Machine.NameKey)) ?? string.Empty;
+
+            // Create the proper Prefix and Postfix
+            string pre = CreatePrefix(item.Value, machine.Value, quotes);
+            string post = CreatePostfix(item.Value, machine.Value, quotes);
+
+            // If we're in Depot mode, take care of that instead
+            var outputDepot = Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey);
+            if (outputDepot?.IsActive == true)
+            {
+                if (item.Value is Disk disk)
+                {
+                    // We can only write out if there's a SHA-1
+                    string? sha1 = disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key);
+                    if (!string.IsNullOrEmpty(sha1))
+                    {
+                        name = Utilities.GetDepotPath(sha1, outputDepot.Depth)?.Replace('\\', '/');
+                        item.Value.SetName($"{pre}{name}{post}");
+                    }
+                }
+                else if (item.Value is Media media)
+                {
+                    // We can only write out if there's a SHA-1
+                    string? sha1 = media.GetStringFieldValue(Models.Metadata.Media.SHA1Key);
+                    if (!string.IsNullOrEmpty(sha1))
+                    {
+                        name = Utilities.GetDepotPath(sha1, outputDepot.Depth)?.Replace('\\', '/');
+                        item.Value.SetName($"{pre}{name}{post}");
+                    }
+                }
+                else if (item.Value is Rom rom)
+                {
+                    // We can only write out if there's a SHA-1
+                    string? sha1 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key);
+                    if (!string.IsNullOrEmpty(sha1))
+                    {
+                        name = Utilities.GetDepotPath(sha1, outputDepot.Depth)?.Replace('\\', '/');
+                        item.Value.SetName($"{pre}{name}{post}");
+                    }
+                }
+
+                return;
+            }
+
+            string? replaceExtension = Header.GetStringFieldValue(DatHeader.ReplaceExtensionKey);
+            bool? removeExtension = Header.GetBoolFieldValue(DatHeader.RemoveExtensionKey);
+            if (!string.IsNullOrEmpty(replaceExtension) || removeExtension == true)
+            {
+                if (removeExtension == true)
+                    Header.SetFieldValue<string?>(DatHeader.ReplaceExtensionKey, string.Empty);
+
+                string? dir = Path.GetDirectoryName(name);
+                if (dir != null)
+                {
+                    dir = dir.TrimStart(Path.DirectorySeparatorChar);
+                    name = Path.Combine(dir, Path.GetFileNameWithoutExtension(name) + replaceExtension);
+                }
+            }
+
+            string? addExtension = Header.GetStringFieldValue(DatHeader.AddExtensionKey);
+            if (!string.IsNullOrEmpty(addExtension))
+                name += addExtension;
+
+            if (useRomName && Header.GetBoolFieldValue(DatHeader.GameNameKey) == true)
+                name = Path.Combine(machine.Value!.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty, name);
+
+            // Now assign back the formatted name
+            name = $"{pre}{name}{post}";
+            if (useRomName)
+                item.Value.SetName(name);
+            else if (machine.Value != null)
+                machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, name);
+        }
+
+        /// <summary>
         /// Create a prefix from inputs
         /// </summary>
         /// <param name="item">DatItem to create a prefix/postfix for</param>
         /// <param name="machine">Machine to get information from</param>
-        /// <param name="quotes">True to quote names, false or null otherwise</param>
+        /// <param name="quotes">True to quote names, false otherwise</param>
         /// <returns>Sanitized string representing the postfix or prefix</returns>
-        private string CreatePrefix(DatItem item, Machine? machine, bool? quotes)
+        protected string CreatePrefix(DatItem item, Machine? machine, bool quotes)
         {
             // Create the prefix pattern
             string? prefixString = Header.GetStringFieldValue(DatHeader.PrefixKey);
-            string fix = prefixString + (quotes == true ? "\"" : string.Empty);
+            string fix = prefixString + (quotes ? "\"" : string.Empty);
 
             // Format and return the pattern
             return FormatPrefixPostfix(item, machine, fix);
@@ -212,13 +398,13 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="item">DatItem to create a prefix/postfix for</param>
         /// <param name="machine">Machine to get information from</param>
-        /// <param name="quotes">True to quote names, false or null otherwise</param>
+        /// <param name="quotes">True to quote names, false otherwise</param>
         /// <returns>Sanitized string representing the postfix or prefix</returns>
-        private string CreatePostfix(DatItem item, Machine? machine, bool? quotes)
+        protected string CreatePostfix(DatItem item, Machine? machine, bool quotes)
         {
             // Create the prefix pattern
             string? postfixString = Header.GetStringFieldValue(DatHeader.PostfixKey);
-            string fix = (quotes == true ? "\"" : string.Empty) + postfixString;
+            string fix = (quotes ? "\"" : string.Empty) + postfixString;
 
             // Format and return the pattern
             return FormatPrefixPostfix(item, machine, fix);
@@ -231,7 +417,7 @@ namespace SabreTools.DatFiles
         /// <param name="machine">Machine to get information from</param>
         /// <param name="fix">Prefix or postfix pattern to populate</param>
         /// <returns>Sanitized string representing the postfix or prefix</returns>
-        internal static string FormatPrefixPostfix(DatItem item, Machine? machine, string fix)
+        protected static string FormatPrefixPostfix(DatItem item, Machine? machine, string fix)
         {
             // Initialize strings
             string? type = item.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
@@ -306,208 +492,6 @@ namespace SabreTools.DatFiles
                 .Replace("%spamsum%", spamsum);
 
             return fix;
-        }
-
-        /// <summary>
-        /// Process an item and correctly set the item name
-        /// </summary>
-        /// <param name="item">DatItem to update</param>
-        /// <param name="forceRemoveQuotes">True if the Quotes flag should be ignored, false otherwise</param>
-        /// <param name="forceRomName">True if the UseRomName should be always on (default), false otherwise</param>
-        protected void ProcessItemName(DatItem item, bool forceRemoveQuotes, bool forceRomName = true)
-        {
-            // Get the relevant processing values
-            bool? quotes = Header.GetBoolFieldValue(DatHeader.QuotesKey);
-            bool? useRomNameBackup = Header.GetBoolFieldValue(DatHeader.UseRomNameKey);
-            if (forceRemoveQuotes)
-                quotes = false;
-            if (forceRomName)
-                Header.SetFieldValue<bool>(DatHeader.UseRomNameKey, true);
-
-            // Get the machine
-            var machine = item.GetFieldValue<Machine>(DatItem.MachineKey);
-            if (machine == null)
-                return;
-
-            // Get the name to update
-            string? name = (Header.GetBoolFieldValue(DatHeader.UseRomNameKey) == true
-                ? item.GetName()
-                : machine.GetStringFieldValue(Models.Metadata.Machine.NameKey)) ?? string.Empty;
-
-            // Create the proper Prefix and Postfix
-            string pre = CreatePrefix(item, machine, quotes);
-            string post = CreatePostfix(item, machine, quotes);
-
-            // If we're in Depot mode, take care of that instead
-            var outputDepot = Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey);
-            if (outputDepot?.IsActive == true)
-            {
-                if (item is Disk disk)
-                {
-                    // We can only write out if there's a SHA-1
-                    string? sha1 = disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key);
-                    if (!string.IsNullOrEmpty(sha1))
-                    {
-                        name = Utilities.GetDepotPath(sha1, outputDepot.Depth)?.Replace('\\', '/');
-                        item.SetName($"{pre}{name}{post}");
-                    }
-                }
-                else if (item is Media media)
-                {
-                    // We can only write out if there's a SHA-1
-                    string? sha1 = media.GetStringFieldValue(Models.Metadata.Media.SHA1Key);
-                    if (!string.IsNullOrEmpty(sha1))
-                    {
-                        name = Utilities.GetDepotPath(sha1, outputDepot.Depth)?.Replace('\\', '/');
-                        item.SetName($"{pre}{name}{post}");
-                    }
-                }
-                else if (item is Rom rom)
-                {
-                    // We can only write out if there's a SHA-1
-                    string? sha1 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key);
-                    if (!string.IsNullOrEmpty(sha1))
-                    {
-                        name = Utilities.GetDepotPath(sha1, outputDepot.Depth)?.Replace('\\', '/');
-                        item.SetName($"{pre}{name}{post}");
-                    }
-                }
-
-                return;
-            }
-
-            string? replaceExtension = Header.GetStringFieldValue(DatHeader.ReplaceExtensionKey);
-            bool? removeExtension = Header.GetBoolFieldValue(DatHeader.RemoveExtensionKey);
-            if (!string.IsNullOrEmpty(replaceExtension) || removeExtension == true)
-            {
-                if (removeExtension == true)
-                    Header.SetFieldValue<string?>(DatHeader.ReplaceExtensionKey, string.Empty);
-
-                string? dir = Path.GetDirectoryName(name);
-                if (dir != null)
-                {
-                    dir = dir.TrimStart(Path.DirectorySeparatorChar);
-                    name = Path.Combine(dir, Path.GetFileNameWithoutExtension(name) + replaceExtension);
-                }
-            }
-
-            string? addExtension = Header.GetStringFieldValue(DatHeader.AddExtensionKey);
-            if (!string.IsNullOrEmpty(addExtension))
-                name += addExtension;
-
-            if (Header.GetBoolFieldValue(DatHeader.UseRomNameKey) == true && Header.GetBoolFieldValue(DatHeader.GameNameKey) == true)
-                name = Path.Combine(machine.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty, name);
-
-            // Now assign back the formatted name
-            name = $"{pre}{name}{post}";
-            if (Header.GetBoolFieldValue(DatHeader.UseRomNameKey) == true)
-                item.SetName(name);
-            else
-                machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, name);
-
-            // Restore all relevant values
-            if (forceRomName)
-                Header.SetFieldValue<bool?>(DatHeader.UseRomNameKey, useRomNameBackup);
-        }
-
-        /// <summary>
-        /// Process an item and correctly set the item name
-        /// </summary>
-        /// <param name="item">DatItem to update</param>
-        /// <param name="forceRemoveQuotes">True if the Quotes flag should be ignored, false otherwise</param>
-        /// <param name="forceRomName">True if the UseRomName should be always on (default), false otherwise</param>
-        protected void ProcessItemNameDB(KeyValuePair<long, DatItem> item, bool forceRemoveQuotes, bool forceRomName = true)
-        {
-            // Get the relevant processing values
-            bool? quotes = Header.GetBoolFieldValue(DatHeader.QuotesKey);
-            bool? useRomNameBackup = Header.GetBoolFieldValue(DatHeader.UseRomNameKey);
-            if (forceRemoveQuotes)
-                quotes = false;
-            if (forceRomName)
-                Header.SetFieldValue<bool>(DatHeader.UseRomNameKey, true);
-
-            // Get machine for the item
-            var machine = ItemsDB.GetMachineForItem(item.Key);
-
-            // Get the name to update
-            string? name = (Header.GetBoolFieldValue(DatHeader.UseRomNameKey) == true
-                ? item.Value.GetName()
-                : machine.Value!.GetStringFieldValue(Models.Metadata.Machine.NameKey)) ?? string.Empty;
-
-            // Create the proper Prefix and Postfix
-            string pre = CreatePrefix(item.Value, machine.Value, quotes);
-            string post = CreatePostfix(item.Value, machine.Value, quotes);
-
-            // If we're in Depot mode, take care of that instead
-            var outputDepot = Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey);
-            if (outputDepot?.IsActive == true)
-            {
-                if (item.Value is Disk disk)
-                {
-                    // We can only write out if there's a SHA-1
-                    string? sha1 = disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key);
-                    if (!string.IsNullOrEmpty(sha1))
-                    {
-                        name = Utilities.GetDepotPath(sha1, outputDepot.Depth)?.Replace('\\', '/');
-                        item.Value.SetName($"{pre}{name}{post}");
-                    }
-                }
-                else if (item.Value is Media media)
-                {
-                    // We can only write out if there's a SHA-1
-                    string? sha1 = media.GetStringFieldValue(Models.Metadata.Media.SHA1Key);
-                    if (!string.IsNullOrEmpty(sha1))
-                    {
-                        name = Utilities.GetDepotPath(sha1, outputDepot.Depth)?.Replace('\\', '/');
-                        item.Value.SetName($"{pre}{name}{post}");
-                    }
-                }
-                else if (item.Value is Rom rom)
-                {
-                    // We can only write out if there's a SHA-1
-                    string? sha1 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key);
-                    if (!string.IsNullOrEmpty(sha1))
-                    {
-                        name = Utilities.GetDepotPath(sha1, outputDepot.Depth)?.Replace('\\', '/');
-                        item.Value.SetName($"{pre}{name}{post}");
-                    }
-                }
-
-                return;
-            }
-
-            string? replaceExtension = Header.GetStringFieldValue(DatHeader.ReplaceExtensionKey);
-            bool? removeExtension = Header.GetBoolFieldValue(DatHeader.RemoveExtensionKey);
-            if (!string.IsNullOrEmpty(replaceExtension) || removeExtension == true)
-            {
-                if (removeExtension == true)
-                    Header.SetFieldValue<string?>(DatHeader.ReplaceExtensionKey, string.Empty);
-
-                string? dir = Path.GetDirectoryName(name);
-                if (dir != null)
-                {
-                    dir = dir.TrimStart(Path.DirectorySeparatorChar);
-                    name = Path.Combine(dir, Path.GetFileNameWithoutExtension(name) + replaceExtension);
-                }
-            }
-
-            string? addExtension = Header.GetStringFieldValue(DatHeader.AddExtensionKey);
-            if (!string.IsNullOrEmpty(addExtension))
-                name += addExtension;
-
-            if (Header.GetBoolFieldValue(DatHeader.UseRomNameKey) == true && Header.GetBoolFieldValue(DatHeader.GameNameKey) == true)
-                name = Path.Combine(machine.Value!.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty, name);
-
-            // Now assign back the formatted name
-            name = $"{pre}{name}{post}";
-            if (Header.GetBoolFieldValue(DatHeader.UseRomNameKey) == true)
-                item.Value.SetName(name);
-            else if (machine.Value != null)
-                machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, name);
-
-            // Restore all relevant values
-            if (forceRomName)
-                Header.SetFieldValue<bool?>(DatHeader.UseRomNameKey, useRomNameBackup);
         }
 
         /// <summary>
