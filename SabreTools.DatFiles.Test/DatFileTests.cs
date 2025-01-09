@@ -139,11 +139,5 @@ namespace SabreTools.DatFiles.Test
         // TODO: Write ShouldIgnore tests
 
         #endregion
-
-        #region GetDuplicateSuffix
-
-        // TODO: Write GetDuplicateSuffix tests
-
-        #endregion
     }
 }
