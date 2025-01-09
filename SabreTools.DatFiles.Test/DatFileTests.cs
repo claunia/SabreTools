@@ -32,18 +32,6 @@ namespace SabreTools.DatFiles.Test
 
         #endregion
 
-        #region ParseAddHelper
-
-        // TODO: Write ParseAddHelper tests
-
-        #endregion
-
-        #region ParseAddHelperDB
-
-        // TODO: Write ParseAddHelperDB tests
-
-        #endregion
-
         #region CreatePrefixPostfix
 
         // TODO: Write CreatePrefixPostfix tests

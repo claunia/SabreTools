@@ -359,8 +359,8 @@ namespace SabreTools.DatFiles.Formats
             {
                 datItem.CopyMachineInformation(machine);
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
-                ParseAddHelper(datItem, statsOnly);
-                ParseAddHelperDB(datItem, machineIndex, sourceIndex, statsOnly);
+                Items.AddItem(datItem, statsOnly);
+                ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 

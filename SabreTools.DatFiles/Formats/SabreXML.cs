@@ -181,8 +181,8 @@ namespace SabreTools.DatFiles.Formats
                         {
                             item.CopyMachineInformation(machine);
                             item.SetFieldValue<Source?>(DatItem.SourceKey, source);
-                            ParseAddHelper(item, statsOnly);
-                            ParseAddHelperDB(item, machineIndex, sourceIndex, statsOnly);
+                            Items.AddItem(item, statsOnly);
+                            ItemsDB.AddItem(item, machineIndex, sourceIndex, statsOnly);
                         }
                         xtr.Skip();
                         break;
