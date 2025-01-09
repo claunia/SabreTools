@@ -220,9 +220,9 @@ namespace SabreTools.DatFiles.Test
 
         #endregion
 
-        #region ProcessItemNameDB
+        #region FormatPrefixPostfix
 
-        // TODO: Write ProcessItemNameDB tests
+        // TODO: Write FormatPrefixPostfix tests
 
         #endregion
 

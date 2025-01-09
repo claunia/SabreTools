@@ -202,14 +202,18 @@ namespace SabreTools.DatFiles
             bool quotes = forceRemoveQuotes ? false : Header.GetBoolFieldValue(DatHeader.QuotesKey) ?? false;
             bool useRomName = forceRomName ? true : Header.GetBoolFieldValue(DatHeader.UseRomNameKey) ?? false;
 
+            // Create the full Prefix
+            string pre = Header.GetStringFieldValue(DatHeader.PrefixKey) + (quotes ? "\"" : string.Empty);
+            pre = FormatPrefixPostfix(item, machine, pre);
+
+            // Create the full Postfix
+            string post = (quotes ? "\"" : string.Empty) + Header.GetStringFieldValue(DatHeader.PostfixKey);
+            post = FormatPrefixPostfix(item, machine, post);
+
             // Get the name to update
             string? name = (useRomName == true
                 ? item.GetName()
                 : machine?.GetStringFieldValue(Models.Metadata.Machine.NameKey)) ?? string.Empty;
-
-            // Create the proper Prefix and Postfix
-            string pre = CreatePrefix(item, machine, quotes);
-            string post = CreatePostfix(item, machine, quotes);
 
             // If we're in Depot mode, take care of that instead
             var outputDepot = Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey);
@@ -277,40 +281,6 @@ namespace SabreTools.DatFiles
                 item.SetName(name);
             else if (machine != null)
                 machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, name);
-        }
-
-        /// <summary>
-        /// Create a prefix from inputs
-        /// </summary>
-        /// <param name="item">DatItem to create a prefix/postfix for</param>
-        /// <param name="machine">Machine to get information from</param>
-        /// <param name="quotes">True to quote names, false otherwise</param>
-        /// <returns>Sanitized string representing the postfix or prefix</returns>
-        protected string CreatePrefix(DatItem item, Machine? machine, bool quotes)
-        {
-            // Create the prefix pattern
-            string? prefixString = Header.GetStringFieldValue(DatHeader.PrefixKey);
-            string fix = prefixString + (quotes ? "\"" : string.Empty);
-
-            // Format and return the pattern
-            return FormatPrefixPostfix(item, machine, fix);
-        }
-
-        /// <summary>
-        /// Create a postfix from inputs
-        /// </summary>
-        /// <param name="item">DatItem to create a prefix/postfix for</param>
-        /// <param name="machine">Machine to get information from</param>
-        /// <param name="quotes">True to quote names, false otherwise</param>
-        /// <returns>Sanitized string representing the postfix or prefix</returns>
-        protected string CreatePostfix(DatItem item, Machine? machine, bool quotes)
-        {
-            // Create the prefix pattern
-            string? postfixString = Header.GetStringFieldValue(DatHeader.PostfixKey);
-            string fix = (quotes ? "\"" : string.Empty) + postfixString;
-
-            // Format and return the pattern
-            return FormatPrefixPostfix(item, machine, fix);
         }
 
         /// <summary>
