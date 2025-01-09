@@ -191,55 +191,55 @@ namespace SabreTools.DatFiles
         public abstract bool WriteToFileDB(string outfile, bool ignoreblanks = false, bool throwOnError = false);
 
         /// <summary>
-        /// Create a prefix or postfix from inputs
-        /// </summary>
-        /// <param name="item">DatItem to create a prefix/postfix for</param>
-        /// <param name="prefix">True for prefix, false for postfix</param>
-        /// <returns>Sanitized string representing the postfix or prefix</returns>
-        protected string CreatePrefixPostfix(DatItem item, bool prefix)
-        {
-            // Get machine for the item
-            var machine = item.GetFieldValue<Machine>(DatItem.MachineKey);
-            if (machine == null)
-                return string.Empty;
-
-            // Apply the prefix and postfix
-            return CreatePrefixPostfixImpl(item, machine, prefix);
-        }
-
-        /// <summary>
-        /// Create a prefix or postfix from inputs
-        /// </summary>
-        /// <param name="item">DatItem to create a prefix/postfix for</param>
-        /// <param name="prefix">True for prefix, false for postfix</param>
-        /// <returns>Sanitized string representing the postfix or prefix</returns>
-        protected string CreatePrefixPostfixDB(KeyValuePair<long, DatItem> item, bool prefix)
-        {
-            // Get machine for the item
-            var machine = ItemsDB.GetMachineForItem(item.Key);
-            if (machine.Value == null)
-                return string.Empty;
-
-            // Apply the prefix and postfix
-            return CreatePrefixPostfixImpl(item.Value, machine.Value, prefix);
-        }
-
-        /// <summary>
-        /// Create a prefix or postfix from inputs
+        /// Create a prefix from inputs
         /// </summary>
         /// <param name="item">DatItem to create a prefix/postfix for</param>
         /// <param name="machine">Machine to get information from</param>
-        /// <param name="prefix">True for prefix, false for postfix</param>
+        /// <param name="quotes">True to quote names, false or null otherwise</param>
         /// <returns>Sanitized string representing the postfix or prefix</returns>
-        private string CreatePrefixPostfixImpl(DatItem item, Machine machine, bool prefix)
+        private string CreatePrefix(DatItem item, Machine? machine, bool? quotes)
+        {
+            // Create the prefix pattern
+            string? prefixString = Header.GetStringFieldValue(DatHeader.PrefixKey);
+            string fix = prefixString + (quotes == true ? "\"" : string.Empty);
+
+            // Format and return the pattern
+            return FormatPrefixPostfix(item, machine, fix);
+        }
+
+        /// <summary>
+        /// Create a postfix from inputs
+        /// </summary>
+        /// <param name="item">DatItem to create a prefix/postfix for</param>
+        /// <param name="machine">Machine to get information from</param>
+        /// <param name="quotes">True to quote names, false or null otherwise</param>
+        /// <returns>Sanitized string representing the postfix or prefix</returns>
+        private string CreatePostfix(DatItem item, Machine? machine, bool? quotes)
+        {
+            // Create the prefix pattern
+            string? postfixString = Header.GetStringFieldValue(DatHeader.PostfixKey);
+            string fix = (quotes == true ? "\"" : string.Empty) + postfixString;
+
+            // Format and return the pattern
+            return FormatPrefixPostfix(item, machine, fix);
+        }
+
+        /// <summary>
+        /// Format a prefix or postfix string
+        /// </summary>
+        /// <param name="item">DatItem to create a prefix/postfix for</param>
+        /// <param name="machine">Machine to get information from</param>
+        /// <param name="fix">Prefix or postfix pattern to populate</param>
+        /// <returns>Sanitized string representing the postfix or prefix</returns>
+        internal static string FormatPrefixPostfix(DatItem item, Machine? machine, string fix)
         {
             // Initialize strings
             string? type = item.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
-            string fix,
-                game = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty,
-                manufacturer = machine.GetStringFieldValue(Models.Metadata.Machine.ManufacturerKey) ?? string.Empty,
-                publisher = machine.GetStringFieldValue(Models.Metadata.Machine.PublisherKey) ?? string.Empty,
-                category = machine.GetStringFieldValue(Models.Metadata.Machine.CategoryKey) ?? string.Empty,
+            string
+                game = machine?.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty,
+                manufacturer = machine?.GetStringFieldValue(Models.Metadata.Machine.ManufacturerKey) ?? string.Empty,
+                publisher = machine?.GetStringFieldValue(Models.Metadata.Machine.PublisherKey) ?? string.Empty,
+                category = machine?.GetStringFieldValue(Models.Metadata.Machine.CategoryKey) ?? string.Empty,
                 name = item.GetName() ?? type.AsEnumValue<ItemType>().AsStringValue() ?? string.Empty,
                 crc = string.Empty,
                 md2 = string.Empty,
@@ -252,28 +252,18 @@ namespace SabreTools.DatFiles
                 size = string.Empty,
                 spamsum = string.Empty;
 
-            // Check for quotes
-            bool? quotes = Header.GetBoolFieldValue(DatHeader.QuotesKey);
-
-            // If we have a prefix
-            if (prefix)
-            {
-                string? prefixString = Header.GetStringFieldValue(DatHeader.PrefixKey);
-                fix = prefixString + (quotes == true ? "\"" : string.Empty);
-            }
-
-            // If we have a postfix
-            else
-            {
-                string? postfixString = Header.GetStringFieldValue(DatHeader.PostfixKey);
-                fix = (quotes == true ? "\"" : string.Empty) + postfixString;
-            }
-
             // Ensure we have the proper values for replacement
             if (item is Disk disk)
             {
                 md5 = disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key) ?? string.Empty;
                 sha1 = disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key) ?? string.Empty;
+            }
+            else if (item is DatItems.Formats.File file)
+            {
+                crc = file.CRC ?? string.Empty;
+                md5 = file.MD5 ?? string.Empty;
+                sha1 = file.SHA1 ?? string.Empty;
+                sha256 = file.SHA256 ?? string.Empty;
             }
             else if (item is Media media)
             {
@@ -326,11 +316,11 @@ namespace SabreTools.DatFiles
         /// <param name="forceRomName">True if the UseRomName should be always on (default), false otherwise</param>
         protected void ProcessItemName(DatItem item, bool forceRemoveQuotes, bool forceRomName = true)
         {
-            // Backup relevant values and set new ones accordingly
-            bool? quotesBackup = Header.GetBoolFieldValue(DatHeader.QuotesKey);
+            // Get the relevant processing values
+            bool? quotes = Header.GetBoolFieldValue(DatHeader.QuotesKey);
             bool? useRomNameBackup = Header.GetBoolFieldValue(DatHeader.UseRomNameKey);
             if (forceRemoveQuotes)
-                Header.SetFieldValue<bool>(DatHeader.QuotesKey, false);
+                quotes = false;
             if (forceRomName)
                 Header.SetFieldValue<bool>(DatHeader.UseRomNameKey, true);
 
@@ -345,8 +335,8 @@ namespace SabreTools.DatFiles
                 : machine.GetStringFieldValue(Models.Metadata.Machine.NameKey)) ?? string.Empty;
 
             // Create the proper Prefix and Postfix
-            string pre = CreatePrefixPostfix(item, true);
-            string post = CreatePrefixPostfix(item, false);
+            string pre = CreatePrefix(item, machine, quotes);
+            string post = CreatePostfix(item, machine, quotes);
 
             // If we're in Depot mode, take care of that instead
             var outputDepot = Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey);
@@ -416,9 +406,6 @@ namespace SabreTools.DatFiles
                 machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, name);
 
             // Restore all relevant values
-            if (forceRemoveQuotes)
-                Header.SetFieldValue<bool?>(DatHeader.QuotesKey, quotesBackup);
-
             if (forceRomName)
                 Header.SetFieldValue<bool?>(DatHeader.UseRomNameKey, useRomNameBackup);
         }
@@ -431,11 +418,11 @@ namespace SabreTools.DatFiles
         /// <param name="forceRomName">True if the UseRomName should be always on (default), false otherwise</param>
         protected void ProcessItemNameDB(KeyValuePair<long, DatItem> item, bool forceRemoveQuotes, bool forceRomName = true)
         {
-            // Backup relevant values and set new ones accordingly
-            bool? quotesBackup = Header.GetBoolFieldValue(DatHeader.QuotesKey);
+            // Get the relevant processing values
+            bool? quotes = Header.GetBoolFieldValue(DatHeader.QuotesKey);
             bool? useRomNameBackup = Header.GetBoolFieldValue(DatHeader.UseRomNameKey);
             if (forceRemoveQuotes)
-                Header.SetFieldValue<bool>(DatHeader.QuotesKey, false);
+                quotes = false;
             if (forceRomName)
                 Header.SetFieldValue<bool>(DatHeader.UseRomNameKey, true);
 
@@ -448,8 +435,8 @@ namespace SabreTools.DatFiles
                 : machine.Value!.GetStringFieldValue(Models.Metadata.Machine.NameKey)) ?? string.Empty;
 
             // Create the proper Prefix and Postfix
-            string pre = CreatePrefixPostfixDB(item, true);
-            string post = CreatePrefixPostfixDB(item, false);
+            string pre = CreatePrefix(item.Value, machine.Value, quotes);
+            string post = CreatePostfix(item.Value, machine.Value, quotes);
 
             // If we're in Depot mode, take care of that instead
             var outputDepot = Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey);
@@ -519,9 +506,6 @@ namespace SabreTools.DatFiles
                 machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, name);
 
             // Restore all relevant values
-            if (forceRemoveQuotes)
-                Header.SetFieldValue<bool?>(DatHeader.QuotesKey, quotesBackup);
-
             if (forceRomName)
                 Header.SetFieldValue<bool?>(DatHeader.UseRomNameKey, useRomNameBackup);
         }

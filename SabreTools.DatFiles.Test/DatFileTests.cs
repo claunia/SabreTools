@@ -214,15 +214,9 @@ namespace SabreTools.DatFiles.Test
 
         #endregion
 
-        #region CreatePrefixPostfix
+        #region FormatPrefixPostfix
 
-        // TODO: Write CreatePrefixPostfix tests
-
-        #endregion
-
-        #region CreatePrefixPostfixDB
-
-        // TODO: Write CreatePrefixPostfixDB tests
+        // TODO: Write FormatPrefixPostfix tests
 
         #endregion
 
