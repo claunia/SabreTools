@@ -1,10 +1,51 @@
+using System.Collections.Generic;
+using SabreTools.DatItems;
+using SabreTools.DatItems.Formats;
+using Xunit;
+
 namespace SabreTools.DatFiles.Test
 {
     public class DatFileTests
     {
         #region Constructor
 
-        // TODO: Write Constructor tests
+        [Fact]
+        public void Constructor_Null()
+        {
+            DatFile? datFile = null;
+            DatFile created = new Formats.Logiqx(datFile, deprecated: false);
+
+            Assert.NotNull(created.Header);
+            Assert.NotNull(created.Items);
+            Assert.Empty(created.Items);
+            Assert.NotNull(created.ItemsDB);
+            Assert.Empty(created.ItemsDB.GetItems());
+        }
+
+        [Fact]
+        public void Constructor_NonNull()
+        {
+            DatFile? datFile = new Formats.Logiqx(datFile: null, deprecated: false);
+            datFile.Header.SetFieldValue(Models.Metadata.Header.NameKey, "name");
+            datFile.Items.Add("key", new Rom());
+            datFile.ItemsDB.AddItem(new Rom(), 0, 0, false);
+
+            DatFile created = new Formats.Logiqx(datFile, deprecated: false);
+
+            Assert.NotNull(created.Header);
+
+            Assert.NotNull(created.Items);
+            KeyValuePair<string, List<DatItem>?> itemsKvp = Assert.Single(created.Items);
+            Assert.Equal("key", itemsKvp.Key);
+            Assert.NotNull(itemsKvp.Value);
+            DatItem datItem = Assert.Single(itemsKvp.Value);
+            Assert.True(datItem is Rom);
+
+            Assert.NotNull(created.ItemsDB);
+            KeyValuePair<long, DatItem> dbKvp = Assert.Single(created.ItemsDB.GetItems());
+            Assert.Equal(0, dbKvp.Key);
+            Assert.True(dbKvp.Value is Rom);
+        }
 
         #endregion
 

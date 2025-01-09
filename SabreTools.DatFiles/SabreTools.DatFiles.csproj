@@ -23,6 +23,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <InternalsVisibleTo Include="SabreTools.DatFiles.Test" />
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\SabreTools.Core\SabreTools.Core.csproj" />
         <ProjectReference Include="..\SabreTools.DatItems\SabreTools.DatItems.csproj" />
     </ItemGroup>
