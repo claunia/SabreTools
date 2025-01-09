@@ -198,6 +198,8 @@ namespace SabreTools.DatItems.Test
             string filename = "XXXXXX";
             string date = "XXXXXX";
             string crc = TextHelper.NormalizeCRC32("1234abcd")!;
+            string md2 = TextHelper.NormalizeMD2("1234abcd")!;
+            string md4 = TextHelper.NormalizeMD4("1234abcd")!;
             string md5 = TextHelper.NormalizeMD5("1234abcd")!;
             string sha1 = TextHelper.NormalizeSHA1("1234abcd")!;
             string sha256 = TextHelper.NormalizeSHA256("1234abcd")!;
@@ -210,6 +212,8 @@ namespace SabreTools.DatItems.Test
                 Filename = filename,
                 Date = date,
                 CRC = crc.FromHexString(),
+                MD2 = md2.FromHexString(),
+                MD4 = md4.FromHexString(),
                 MD5 = md5.FromHexString(),
                 SHA1 = sha1.FromHexString(),
                 SHA256 = sha256.FromHexString(),
@@ -224,6 +228,8 @@ namespace SabreTools.DatItems.Test
             Assert.Equal(filename, actual.GetStringFieldValue(Models.Metadata.Rom.NameKey));
             Assert.Equal(date, actual.GetStringFieldValue(Models.Metadata.Rom.DateKey));
             Assert.Equal(crc, actual.GetStringFieldValue(Models.Metadata.Rom.CRCKey));
+            Assert.Equal(md2, actual.GetStringFieldValue(Models.Metadata.Rom.MD2Key));
+            Assert.Equal(md4, actual.GetStringFieldValue(Models.Metadata.Rom.MD4Key));
             Assert.Equal(md5, actual.GetStringFieldValue(Models.Metadata.Rom.MD5Key));
             Assert.Equal(sha1, actual.GetStringFieldValue(Models.Metadata.Rom.SHA1Key));
             Assert.Equal(sha256, actual.GetStringFieldValue(Models.Metadata.Rom.SHA256Key));
@@ -324,6 +330,8 @@ namespace SabreTools.DatItems.Test
             string filename = "XXXXXX";
             string date = "XXXXXX";
             string crc = TextHelper.NormalizeCRC32("1234abcd")!;
+            string md2 = TextHelper.NormalizeMD2("1234abcd")!;
+            string md4 = TextHelper.NormalizeMD4("1234abcd")!;
             string md5 = TextHelper.NormalizeMD5("1234abcd")!;
             string sha1 = TextHelper.NormalizeSHA1("1234abcd")!;
             string sha256 = TextHelper.NormalizeSHA256("1234abcd")!;
@@ -336,6 +344,8 @@ namespace SabreTools.DatItems.Test
             rom.SetFieldValue<string?>(Models.Metadata.Rom.NameKey, filename);
             rom.SetFieldValue<string?>(Models.Metadata.Rom.DateKey, date);
             rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, crc);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.MD2Key, md2);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.MD4Key, md4);
             rom.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, md5);
             rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, sha1);
             rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA256Key, sha256);
@@ -349,6 +359,8 @@ namespace SabreTools.DatItems.Test
             Assert.Equal(filename, actual.Filename);
             Assert.Equal(date, actual.Date);
             Assert.Equal(crc, actual.CRC.ToHexString());
+            Assert.Equal(md2, actual.MD2.ToHexString());
+            Assert.Equal(md4, actual.MD4.ToHexString());
             Assert.Equal(md5, actual.MD5.ToHexString());
             Assert.Equal(sha1, actual.SHA1.ToHexString());
             Assert.Equal(sha256, actual.SHA256.ToHexString());

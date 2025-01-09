@@ -396,6 +396,14 @@ namespace SabreTools.DatItems
                     key = $"{sourceString}{machineString}";
                     break;
 
+                // case ItemKey.MD2:
+                //     key = ZeroHash.GetString(HashType.MD2);
+                //     break;
+
+                // case ItemKey.MD4:
+                //     key = ZeroHash.GetString(HashType.MD4);
+                //     break;
+
                 case ItemKey.MD5:
                     key = ZeroHash.MD5Str;
                     break;
@@ -465,6 +473,14 @@ namespace SabreTools.DatItems
 
                     key = $"{sourceString}{machineString}";
                     break;
+
+                // case ItemKey.MD2:
+                //     key = ZeroHash.GetString(HashType.MD2);
+                //     break;
+
+                // case ItemKey.MD4:
+                //     key = ZeroHash.GetString(HashType.MD4);
+                //     break;
 
                 case ItemKey.MD5:
                     key = ZeroHash.MD5Str;

@@ -35,6 +35,54 @@ namespace SabreTools.Core.Test.Tools
 
         #endregion
 
+        #region NormalizeMD2
+
+        [Theory]
+        [InlineData(null, null)]
+        [InlineData("", "")]
+        [InlineData("-", "")]
+        [InlineData("_", "")]
+        [InlineData("0x", "")]
+        [InlineData("1234", "00000000000000000000000000001234")]
+        [InlineData("0x1234", "00000000000000000000000000001234")]
+        [InlineData("1234ABCD1234ABCD1234ABCD1234ABCDE", "")]
+        [InlineData("0x1234ABCD1234ABCD1234ABCD1234ABCDE", "")]
+        [InlineData("1234ABCD1234ABCD1234ABCD1234ABCD", "1234abcd1234abcd1234abcd1234abcd")]
+        [InlineData("0x1234ABCD1234ABCD1234ABCD1234ABCD", "1234abcd1234abcd1234abcd1234abcd")]
+        [InlineData("abcdefghabcdefghabcdefghabcdefgh", "")]
+        [InlineData("0xabcdefghabcdefghabcdefghabcdefgh", "")]
+        public void NormalizeMD2Test(string? hash, string? expected)
+        {
+            string? actual = TextHelper.NormalizeMD2(hash);
+            Assert.Equal(expected, actual);
+        }
+
+        #endregion
+
+        #region NormalizeMD4
+
+        [Theory]
+        [InlineData(null, null)]
+        [InlineData("", "")]
+        [InlineData("-", "")]
+        [InlineData("_", "")]
+        [InlineData("0x", "")]
+        [InlineData("1234", "00000000000000000000000000001234")]
+        [InlineData("0x1234", "00000000000000000000000000001234")]
+        [InlineData("1234ABCD1234ABCD1234ABCD1234ABCDE", "")]
+        [InlineData("0x1234ABCD1234ABCD1234ABCD1234ABCDE", "")]
+        [InlineData("1234ABCD1234ABCD1234ABCD1234ABCD", "1234abcd1234abcd1234abcd1234abcd")]
+        [InlineData("0x1234ABCD1234ABCD1234ABCD1234ABCD", "1234abcd1234abcd1234abcd1234abcd")]
+        [InlineData("abcdefghabcdefghabcdefghabcdefgh", "")]
+        [InlineData("0xabcdefghabcdefghabcdefghabcdefgh", "")]
+        public void NormalizeMD4Test(string? hash, string? expected)
+        {
+            string? actual = TextHelper.NormalizeMD4(hash);
+            Assert.Equal(expected, actual);
+        }
+
+        #endregion
+
         #region NormalizeMD5
 
         [Theory]

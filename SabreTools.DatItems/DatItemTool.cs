@@ -137,6 +137,8 @@ namespace SabreTools.DatItems
             rom.SetName(baseFile.Filename);
             rom.SetFieldValue<string?>(Models.Metadata.Rom.DateKey, baseFile.Date);
             rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, baseFile.CRC.ToHexString());
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.MD2Key, baseFile.MD2.ToHexString());
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.MD4Key, baseFile.MD4.ToHexString());
             rom.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, baseFile.MD5.ToHexString());
             rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, baseFile.SHA1.ToHexString());
             rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA256Key, baseFile.SHA256.ToHexString());
@@ -243,6 +245,8 @@ namespace SabreTools.DatItems
                 Date = rom.GetStringFieldValue(Models.Metadata.Rom.DateKey),
                 Size = NumberHelper.ConvertToInt64(rom.GetStringFieldValue(Models.Metadata.Rom.SizeKey)),
                 CRC = rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey).FromHexString(),
+                MD2 = rom.GetStringFieldValue(Models.Metadata.Rom.MD2Key).FromHexString(),
+                MD4 = rom.GetStringFieldValue(Models.Metadata.Rom.MD4Key).FromHexString(),
                 MD5 = rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key).FromHexString(),
                 SHA1 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key).FromHexString(),
                 SHA256 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key).FromHexString(),

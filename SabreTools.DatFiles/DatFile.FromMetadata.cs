@@ -978,6 +978,10 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, datItem.GetInt64FieldValue(Models.Metadata.Rom.SizeKey).ToString());
                 if (datItem.GetStringFieldValue(Models.Metadata.Rom.CRCKey) != null)
                     datItem.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, TextHelper.NormalizeCRC32(datItem.GetStringFieldValue(Models.Metadata.Rom.CRCKey)));
+                if (datItem.GetStringFieldValue(Models.Metadata.Rom.MD2Key) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Rom.MD2Key, TextHelper.NormalizeMD2(datItem.GetStringFieldValue(Models.Metadata.Rom.MD2Key)));
+                if (datItem.GetStringFieldValue(Models.Metadata.Rom.MD4Key) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Rom.MD4Key, TextHelper.NormalizeMD5(datItem.GetStringFieldValue(Models.Metadata.Rom.MD4Key)));
                 if (datItem.GetStringFieldValue(Models.Metadata.Rom.MD5Key) != null)
                     datItem.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, TextHelper.NormalizeMD5(datItem.GetStringFieldValue(Models.Metadata.Rom.MD5Key)));
                 if (datItem.GetStringFieldValue(Models.Metadata.Rom.SHA1Key) != null)
@@ -1234,6 +1238,10 @@ namespace SabreTools.DatFiles
                                 romItem.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, romItem.GetInt64FieldValue(Models.Metadata.Rom.SizeKey).ToString());
                             if (romItem.GetStringFieldValue(Models.Metadata.Rom.CRCKey) != null)
                                 romItem.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, TextHelper.NormalizeCRC32(romItem.GetStringFieldValue(Models.Metadata.Rom.CRCKey)));
+                            if (romItem.GetStringFieldValue(Models.Metadata.Rom.MD2Key) != null)
+                                romItem.SetFieldValue<string?>(Models.Metadata.Rom.MD2Key, TextHelper.NormalizeMD2(romItem.GetStringFieldValue(Models.Metadata.Rom.MD2Key)));
+                            if (romItem.GetStringFieldValue(Models.Metadata.Rom.MD4Key) != null)
+                                romItem.SetFieldValue<string?>(Models.Metadata.Rom.MD4Key, TextHelper.NormalizeMD4(romItem.GetStringFieldValue(Models.Metadata.Rom.MD4Key)));
                             if (romItem.GetStringFieldValue(Models.Metadata.Rom.MD5Key) != null)
                                 romItem.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, TextHelper.NormalizeMD5(romItem.GetStringFieldValue(Models.Metadata.Rom.MD5Key)));
                             if (romItem.GetStringFieldValue(Models.Metadata.Rom.SHA1Key) != null)
@@ -1542,6 +1550,10 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, datItem.GetInt64FieldValue(Models.Metadata.Rom.SizeKey).ToString());
                 if (datItem.GetStringFieldValue(Models.Metadata.Rom.CRCKey) != null)
                     datItem.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, TextHelper.NormalizeCRC32(datItem.GetStringFieldValue(Models.Metadata.Rom.CRCKey)));
+                if (datItem.GetStringFieldValue(Models.Metadata.Rom.MD2Key) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Rom.MD2Key, TextHelper.NormalizeMD2(datItem.GetStringFieldValue(Models.Metadata.Rom.MD2Key)));
+                if (datItem.GetStringFieldValue(Models.Metadata.Rom.MD4Key) != null)
+                    datItem.SetFieldValue<string?>(Models.Metadata.Rom.MD4Key, TextHelper.NormalizeMD4(datItem.GetStringFieldValue(Models.Metadata.Rom.MD4Key)));
                 if (datItem.GetStringFieldValue(Models.Metadata.Rom.MD5Key) != null)
                     datItem.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, TextHelper.NormalizeMD5(datItem.GetStringFieldValue(Models.Metadata.Rom.MD5Key)));
                 if (datItem.GetStringFieldValue(Models.Metadata.Rom.SHA1Key) != null)

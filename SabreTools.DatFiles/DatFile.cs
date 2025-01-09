@@ -219,6 +219,8 @@ namespace SabreTools.DatFiles
                 category = machine.GetStringFieldValue(Models.Metadata.Machine.CategoryKey) ?? string.Empty,
                 name = item.GetName() ?? type.AsEnumValue<ItemType>().AsStringValue() ?? string.Empty,
                 crc = string.Empty,
+                md2 = string.Empty,
+                md4 = string.Empty,
                 md5 = string.Empty,
                 sha1 = string.Empty,
                 sha256 = string.Empty,
@@ -260,6 +262,8 @@ namespace SabreTools.DatFiles
             else if (item is Rom rom)
             {
                 crc = rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey) ?? string.Empty;
+                md2 = rom.GetStringFieldValue(Models.Metadata.Rom.MD2Key) ?? string.Empty;
+                md4 = rom.GetStringFieldValue(Models.Metadata.Rom.MD4Key) ?? string.Empty;
                 md5 = rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key) ?? string.Empty;
                 sha1 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key) ?? string.Empty;
                 sha256 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key) ?? string.Empty;
@@ -278,6 +282,8 @@ namespace SabreTools.DatFiles
                 .Replace("%publisher%", publisher)
                 .Replace("%category%", category)
                 .Replace("%crc%", crc)
+                .Replace("%md2%", md2)
+                .Replace("%md4%", md4)
                 .Replace("%md5%", md5)
                 .Replace("%sha1%", sha1)
                 .Replace("%sha256%", sha256)
@@ -311,6 +317,8 @@ namespace SabreTools.DatFiles
                 category = machine.Value.GetStringFieldValue(Models.Metadata.Machine.CategoryKey) ?? string.Empty,
                 name = item.Value.GetName() ?? type.AsEnumValue<ItemType>().AsStringValue() ?? string.Empty,
                 crc = string.Empty,
+                md2 = string.Empty,
+                md4 = string.Empty,
                 md5 = string.Empty,
                 sha1 = string.Empty,
                 sha256 = string.Empty,
@@ -352,6 +360,8 @@ namespace SabreTools.DatFiles
             else if (item.Value is Rom rom)
             {
                 crc = rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey) ?? string.Empty;
+                md2 = rom.GetStringFieldValue(Models.Metadata.Rom.MD2Key) ?? string.Empty;
+                md4 = rom.GetStringFieldValue(Models.Metadata.Rom.MD4Key) ?? string.Empty;
                 md5 = rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key) ?? string.Empty;
                 sha1 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key) ?? string.Empty;
                 sha256 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key) ?? string.Empty;
@@ -370,6 +380,8 @@ namespace SabreTools.DatFiles
                 .Replace("%publisher%", publisher)
                 .Replace("%category%", category)
                 .Replace("%crc%", crc)
+                .Replace("%md2%", md2)
+                .Replace("%md4%", md4)
                 .Replace("%md5%", md5)
                 .Replace("%sha1%", sha1)
                 .Replace("%sha256%", sha256)
@@ -615,6 +627,10 @@ namespace SabreTools.DatFiles
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, Constants.SizeZero.ToString());
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey,
                     rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey) == "null" ? ZeroHash.CRC32Str : null);
+                rom.SetFieldValue<string?>(Models.Metadata.Rom.MD2Key,
+                    rom.GetStringFieldValue(Models.Metadata.Rom.MD2Key) == "null" ? ZeroHash.GetString(HashType.MD2) : null);
+                rom.SetFieldValue<string?>(Models.Metadata.Rom.MD4Key,
+                    rom.GetStringFieldValue(Models.Metadata.Rom.MD4Key) == "null" ? ZeroHash.GetString(HashType.MD4) : null);
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key,
                     rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key) == "null" ? ZeroHash.MD5Str : null);
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key,
@@ -659,6 +675,10 @@ namespace SabreTools.DatFiles
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, Constants.SizeZero.ToString());
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey,
                     rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey) == "null" ? ZeroHash.CRC32Str : null);
+                rom.SetFieldValue<string?>(Models.Metadata.Rom.MD2Key,
+                    rom.GetStringFieldValue(Models.Metadata.Rom.MD2Key) == "null" ? ZeroHash.GetString(HashType.MD2) : null);
+                rom.SetFieldValue<string?>(Models.Metadata.Rom.MD4Key,
+                    rom.GetStringFieldValue(Models.Metadata.Rom.MD4Key) == "null" ? ZeroHash.GetString(HashType.MD4) : null);
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key,
                     rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key) == "null" ? ZeroHash.MD5Str : null);
                 rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key,

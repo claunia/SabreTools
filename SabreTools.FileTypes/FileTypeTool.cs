@@ -96,6 +96,8 @@ namespace SabreTools.FileTypes
                 {
                     Size = size,
                     CRC = hashDict.ContainsKey(HashType.CRC32) ? hashDict[HashType.CRC32].FromHexString() : null,
+                    MD2 = hashDict.ContainsKey(HashType.MD2) ? hashDict[HashType.MD2].FromHexString() : null,
+                    MD4 = hashDict.ContainsKey(HashType.MD4) ? hashDict[HashType.MD4].FromHexString() : null,
                     MD5 = hashDict.ContainsKey(HashType.MD5) ? hashDict[HashType.MD5].FromHexString() : null,
                     SHA1 = hashDict.ContainsKey(HashType.SHA1) ? hashDict[HashType.SHA1].FromHexString() : null,
                     SHA256 = hashDict.ContainsKey(HashType.SHA256) ? hashDict[HashType.SHA256].FromHexString() : null,
@@ -125,6 +127,8 @@ namespace SabreTools.FileTypes
             to.Date ??= from.Date;
             to.Size ??= from.Size;
             to.CRC ??= from.CRC;
+            to.MD2 ??= from.MD2;
+            to.MD4 ??= from.MD4;
             to.MD5 ??= from.MD5;
             to.SHA1 ??= from.SHA1;
             to.SHA256 ??= from.SHA256;

@@ -162,6 +162,18 @@ namespace SabreTools.DatFiles
                     rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, newItem.GetStringFieldValue(Models.Metadata.Rom.CRCKey));
             }
 
+            if (datItemFields.Contains(Models.Metadata.Rom.MD2Key))
+            {
+                if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.MD2Key)) && !string.IsNullOrEmpty(newItem.GetStringFieldValue(Models.Metadata.Rom.MD2Key)))
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.MD2Key, newItem.GetStringFieldValue(Models.Metadata.Rom.MD2Key));
+            }
+
+            if (datItemFields.Contains(Models.Metadata.Rom.MD4Key))
+            {
+                if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.MD4Key)) && !string.IsNullOrEmpty(newItem.GetStringFieldValue(Models.Metadata.Rom.MD4Key)))
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.MD4Key, newItem.GetStringFieldValue(Models.Metadata.Rom.MD4Key));
+            }
+
             if (datItemFields.Contains(Models.Metadata.Rom.MD5Key))
             {
                 if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key)) && !string.IsNullOrEmpty(newItem.GetStringFieldValue(Models.Metadata.Rom.MD5Key)))

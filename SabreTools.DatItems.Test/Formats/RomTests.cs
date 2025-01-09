@@ -17,6 +17,8 @@ namespace SabreTools.DatItems.Test.Formats
             self.FillMissingInformation(other);
 
             Assert.Null(self.GetStringFieldValue(Models.Metadata.Rom.CRCKey));
+            Assert.Null(self.GetStringFieldValue(Models.Metadata.Rom.MD2Key));
+            Assert.Null(self.GetStringFieldValue(Models.Metadata.Rom.MD4Key));
             Assert.Null(self.GetStringFieldValue(Models.Metadata.Rom.MD5Key));
             Assert.Null(self.GetStringFieldValue(Models.Metadata.Rom.SHA1Key));
             Assert.Null(self.GetStringFieldValue(Models.Metadata.Rom.SHA256Key));
@@ -32,6 +34,8 @@ namespace SabreTools.DatItems.Test.Formats
 
             Rom other = new Rom();
             other.SetFieldValue(Models.Metadata.Rom.CRCKey, "XXXXXX");
+            other.SetFieldValue(Models.Metadata.Rom.MD2Key, "XXXXXX");
+            other.SetFieldValue(Models.Metadata.Rom.MD4Key, "XXXXXX");
             other.SetFieldValue(Models.Metadata.Rom.MD5Key, "XXXXXX");
             other.SetFieldValue(Models.Metadata.Rom.SHA1Key, "XXXXXX");
             other.SetFieldValue(Models.Metadata.Rom.SHA256Key, "XXXXXX");
@@ -42,6 +46,8 @@ namespace SabreTools.DatItems.Test.Formats
             self.FillMissingInformation(other);
 
             Assert.Equal("XXXXXX", self.GetStringFieldValue(Models.Metadata.Rom.CRCKey));
+            Assert.Equal("XXXXXX", self.GetStringFieldValue(Models.Metadata.Rom.MD2Key));
+            Assert.Equal("XXXXXX", self.GetStringFieldValue(Models.Metadata.Rom.MD4Key));
             Assert.Equal("XXXXXX", self.GetStringFieldValue(Models.Metadata.Rom.MD5Key));
             Assert.Equal("XXXXXX", self.GetStringFieldValue(Models.Metadata.Rom.SHA1Key));
             Assert.Equal("XXXXXX", self.GetStringFieldValue(Models.Metadata.Rom.SHA256Key));
@@ -68,6 +74,28 @@ namespace SabreTools.DatItems.Test.Formats
             string hash = "XXXXXX";
             Rom self = new Rom();
             self.SetFieldValue(Models.Metadata.Rom.CRCKey, hash);
+
+            string actual = self.GetDuplicateSuffix();
+            Assert.Equal($"_{hash}", actual);
+        }
+
+        [Fact]
+        public void GetDuplicateSuffix_MD2()
+        {
+            string hash = "XXXXXX";
+            Rom self = new Rom();
+            self.SetFieldValue(Models.Metadata.Rom.MD2Key, hash);
+
+            string actual = self.GetDuplicateSuffix();
+            Assert.Equal($"_{hash}", actual);
+        }
+        
+        [Fact]
+        public void GetDuplicateSuffix_MD4()
+        {
+            string hash = "XXXXXX";
+            Rom self = new Rom();
+            self.SetFieldValue(Models.Metadata.Rom.MD4Key, hash);
 
             string actual = self.GetDuplicateSuffix();
             Assert.Equal($"_{hash}", actual);
@@ -156,6 +184,44 @@ namespace SabreTools.DatItems.Test.Formats
         {
             Rom self = new Rom();
             self.SetFieldValue(Models.Metadata.Rom.CRCKey, "XXXXXX");
+            self.SetFieldValue(Models.Metadata.Rom.MD2Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD4Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD5Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.SHA1Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.SHA256Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.SHA384Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.SHA512Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.SpamSumKey, string.Empty);
+
+            bool actual = self.HasHashes();
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public void HasHashes_MD2_True()
+        {
+            Rom self = new Rom();
+            self.SetFieldValue(Models.Metadata.Rom.CRCKey, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD2Key, "XXXXXX");
+            self.SetFieldValue(Models.Metadata.Rom.MD4Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD5Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.SHA1Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.SHA256Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.SHA384Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.SHA512Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.SpamSumKey, string.Empty);
+
+            bool actual = self.HasHashes();
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public void HasHashes_MD4_True()
+        {
+            Rom self = new Rom();
+            self.SetFieldValue(Models.Metadata.Rom.CRCKey, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD2Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD4Key, "XXXXXX");
             self.SetFieldValue(Models.Metadata.Rom.MD5Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.SHA1Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.SHA256Key, string.Empty);
@@ -172,6 +238,8 @@ namespace SabreTools.DatItems.Test.Formats
         {
             Rom self = new Rom();
             self.SetFieldValue(Models.Metadata.Rom.CRCKey, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD2Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD4Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.MD5Key, "XXXXXX");
             self.SetFieldValue(Models.Metadata.Rom.SHA1Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.SHA256Key, string.Empty);
@@ -188,6 +256,8 @@ namespace SabreTools.DatItems.Test.Formats
         {
             Rom self = new Rom();
             self.SetFieldValue(Models.Metadata.Rom.CRCKey, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD2Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD4Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.MD5Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.SHA1Key, "XXXXXX");
             self.SetFieldValue(Models.Metadata.Rom.SHA256Key, string.Empty);
@@ -204,6 +274,8 @@ namespace SabreTools.DatItems.Test.Formats
         {
             Rom self = new Rom();
             self.SetFieldValue(Models.Metadata.Rom.CRCKey, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD2Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD4Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.MD5Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.SHA1Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.SHA256Key, "XXXXXX");
@@ -220,6 +292,8 @@ namespace SabreTools.DatItems.Test.Formats
         {
             Rom self = new Rom();
             self.SetFieldValue(Models.Metadata.Rom.CRCKey, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD2Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD4Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.MD5Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.SHA1Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.SHA256Key, string.Empty);
@@ -236,6 +310,8 @@ namespace SabreTools.DatItems.Test.Formats
         {
             Rom self = new Rom();
             self.SetFieldValue(Models.Metadata.Rom.CRCKey, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD2Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD4Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.MD5Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.SHA1Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.SHA256Key, string.Empty);
@@ -252,6 +328,8 @@ namespace SabreTools.DatItems.Test.Formats
         {
             Rom self = new Rom();
             self.SetFieldValue(Models.Metadata.Rom.CRCKey, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD2Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD4Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.MD5Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.SHA1Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.SHA256Key, string.Empty);
@@ -268,6 +346,8 @@ namespace SabreTools.DatItems.Test.Formats
         {
             Rom self = new Rom();
             self.SetFieldValue(Models.Metadata.Rom.CRCKey, "XXXXXX");
+            self.SetFieldValue(Models.Metadata.Rom.MD2Key, "XXXXXX");
+            self.SetFieldValue(Models.Metadata.Rom.MD4Key, "XXXXXX");
             self.SetFieldValue(Models.Metadata.Rom.MD5Key, "XXXXXX");
             self.SetFieldValue(Models.Metadata.Rom.SHA1Key, "XXXXXX");
             self.SetFieldValue(Models.Metadata.Rom.SHA256Key, "XXXXXX");
@@ -324,10 +404,48 @@ namespace SabreTools.DatItems.Test.Formats
         }
 
         [Fact]
+        public void HasZeroHash_ZeroMD2_True()
+        {
+            Rom self = new Rom();
+            self.SetFieldValue(Models.Metadata.Rom.CRCKey, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD2Key, ZeroHash.GetString(HashType.MD2));
+            self.SetFieldValue(Models.Metadata.Rom.MD4Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD5Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.SHA1Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.SHA256Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.SHA384Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.SHA512Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.SpamSumKey, string.Empty);
+
+            bool actual = self.HasZeroHash();
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public void HasZeroHash_ZeroMD4_True()
+        {
+            Rom self = new Rom();
+            self.SetFieldValue(Models.Metadata.Rom.CRCKey, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD2Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD4Key, ZeroHash.GetString(HashType.MD4));
+            self.SetFieldValue(Models.Metadata.Rom.MD5Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.SHA1Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.SHA256Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.SHA384Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.SHA512Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.SpamSumKey, string.Empty);
+
+            bool actual = self.HasZeroHash();
+            Assert.True(actual);
+        }
+
+        [Fact]
         public void HasZeroHash_ZeroMD5_True()
         {
             Rom self = new Rom();
             self.SetFieldValue(Models.Metadata.Rom.CRCKey, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD2Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD4Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.MD5Key, ZeroHash.MD5Str);
             self.SetFieldValue(Models.Metadata.Rom.SHA1Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.SHA256Key, string.Empty);
@@ -344,6 +462,8 @@ namespace SabreTools.DatItems.Test.Formats
         {
             Rom self = new Rom();
             self.SetFieldValue(Models.Metadata.Rom.CRCKey, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD2Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD4Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.MD5Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.SHA1Key, ZeroHash.SHA1Str);
             self.SetFieldValue(Models.Metadata.Rom.SHA256Key, string.Empty);
@@ -360,6 +480,8 @@ namespace SabreTools.DatItems.Test.Formats
         {
             Rom self = new Rom();
             self.SetFieldValue(Models.Metadata.Rom.CRCKey, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD2Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD4Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.MD5Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.SHA1Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.SHA256Key, ZeroHash.SHA256Str);
@@ -376,6 +498,8 @@ namespace SabreTools.DatItems.Test.Formats
         {
             Rom self = new Rom();
             self.SetFieldValue(Models.Metadata.Rom.CRCKey, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD2Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD4Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.MD5Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.SHA1Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.SHA256Key, string.Empty);
@@ -392,6 +516,8 @@ namespace SabreTools.DatItems.Test.Formats
         {
             Rom self = new Rom();
             self.SetFieldValue(Models.Metadata.Rom.CRCKey, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD2Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD4Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.MD5Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.SHA1Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.SHA256Key, string.Empty);
@@ -408,6 +534,8 @@ namespace SabreTools.DatItems.Test.Formats
         {
             Rom self = new Rom();
             self.SetFieldValue(Models.Metadata.Rom.CRCKey, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD2Key, string.Empty);
+            self.SetFieldValue(Models.Metadata.Rom.MD4Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.MD5Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.SHA1Key, string.Empty);
             self.SetFieldValue(Models.Metadata.Rom.SHA256Key, string.Empty);
@@ -424,6 +552,8 @@ namespace SabreTools.DatItems.Test.Formats
         {
             Rom self = new Rom();
             self.SetFieldValue(Models.Metadata.Rom.CRCKey, ZeroHash.CRC32Str);
+            self.SetFieldValue(Models.Metadata.Rom.MD2Key, ZeroHash.GetString(HashType.MD2));
+            self.SetFieldValue(Models.Metadata.Rom.MD4Key, ZeroHash.GetString(HashType.MD4));
             self.SetFieldValue(Models.Metadata.Rom.MD5Key, ZeroHash.MD5Str);
             self.SetFieldValue(Models.Metadata.Rom.SHA1Key, ZeroHash.SHA1Str);
             self.SetFieldValue(Models.Metadata.Rom.SHA256Key, ZeroHash.SHA256Str);
@@ -483,6 +613,8 @@ namespace SabreTools.DatItems.Test.Formats
 
             DatItem datItem = new Rom();
             datItem.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            datItem.SetFieldValue(Models.Metadata.Rom.MD2Key, "DEADBEEF");
+            datItem.SetFieldValue(Models.Metadata.Rom.MD4Key, "DEADBEEF");
             datItem.SetFieldValue(Models.Metadata.Rom.MD5Key, "DEADBEEF");
             datItem.SetFieldValue(Models.Metadata.Rom.SHA1Key, "DEADBEEF");
             datItem.SetFieldValue(Models.Metadata.Rom.SHA256Key, "DEADBEEF");
@@ -547,6 +679,8 @@ namespace SabreTools.DatItems.Test.Formats
 
             DatItem datItem = new Rom();
             datItem.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            datItem.SetFieldValue(Models.Metadata.Rom.MD2Key, "DEADBEEF");
+            datItem.SetFieldValue(Models.Metadata.Rom.MD4Key, "DEADBEEF");
             datItem.SetFieldValue(Models.Metadata.Rom.MD5Key, "DEADBEEF");
             datItem.SetFieldValue(Models.Metadata.Rom.SHA1Key, "DEADBEEF");
             datItem.SetFieldValue(Models.Metadata.Rom.SHA256Key, "DEADBEEF");

@@ -232,6 +232,8 @@ namespace SabreTools.DatFiles
                 {
                     rom.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, Constants.SizeZero.ToString());
                     rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, ZeroHash.CRC32Str);
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.MD2Key, null); // ZeroHash.GetString(HashType.MD2)
+                    rom.SetFieldValue<string?>(Models.Metadata.Rom.MD4Key, null); // ZeroHash.GetString(HashType.MD4)
                     rom.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, ZeroHash.MD5Str);
                     rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, ZeroHash.SHA1Str);
                     rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA256Key, null); // ZeroHash.SHA256Str;
@@ -666,6 +668,14 @@ namespace SabreTools.DatFiles
             // If all items are supposed to have a MD5, we bucket by that
             else if (diskCount + mediaCount + romCount - nodumpCount == DatStatistics.GetHashCount(HashType.MD5))
                 return ItemKey.MD5;
+
+            // // If all items are supposed to have a MD4, we bucket by that
+            // else if (diskCount + mediaCount + romCount - nodumpCount == DatStatistics.GetHashCount(HashType.MD4))
+            //     return ItemKey.MD4;
+
+            // // If all items are supposed to have a MD2, we bucket by that
+            // else if (diskCount + mediaCount + romCount - nodumpCount == DatStatistics.GetHashCount(HashType.MD2))
+            //     return ItemKey.MD2;
 
             // Otherwise, we bucket by CRC
             else

@@ -471,7 +471,7 @@ namespace SabreTools.Features
                     new List<string>() { "-hs", "--hash" },
                     "Split DAT(s) or folder by best-available hashes",
                     ParameterType.Flag,
-                    longDescription: "For a DAT, or set of DATs, allow for splitting based on the best available hash for each file within. The order of preference for the outputted DATs is as follows: Nodump, SHA-512, SHA-384, SHA-256, SHA-1, MD5, CRC (or worse).");
+                    longDescription: "For a DAT, or set of DATs, allow for splitting based on the best available hash for each file within. The order of preference for the outputted DATs is as follows: Nodump, SHA-512, SHA-384, SHA-256, SHA-1, MD5, MD4, MD2, CRC (or worse).");
             }
         }
 
@@ -500,6 +500,34 @@ namespace SabreTools.Features
                     "Include CRC32 in output",
                     ParameterType.Flag,
                     longDescription: "This enables CRC32 calculation for each of the files. Adding this flag overrides the default hashing behavior of including CRC32, MD5, and SHA-1 hashes.");
+            }
+        }
+
+        internal const string IncludeMd2Value = "include-md2";
+        internal static Feature IncludeMd2Flag
+        {
+            get
+            {
+                return new Feature(
+                    IncludeMd2Value,
+                    new List<string>() { "-md2", "--include-md2" },
+                    "Include MD2 in output",
+                    ParameterType.Flag,
+                    longDescription: "This enables MD2 calculation for each of the files. Adding this flag overrides the default hashing behavior of including CRC32, MD5, and SHA-1 hashes.");
+            }
+        }
+
+        internal const string IncludeMd4Value = "include-md4";
+        internal static Feature IncludeMd4Flag
+        {
+            get
+            {
+                return new Feature(
+                    IncludeMd4Value,
+                    new List<string>() { "-md4", "--include-md4" },
+                    "Include MD4 in output",
+                    ParameterType.Flag,
+                    longDescription: "This enables MD4 calculation for each of the files. Adding this flag overrides the default hashing behavior of including CRC32, MD5, and SHA-1 hashes.");
             }
         }
 
@@ -1312,6 +1340,8 @@ Possible values are:
     lr, listrom      - MAME Listrom
     lx, listxml      - MAME Listxml
     miss, missfile   - GoodTools Missfile
+    md2              - MD2
+    md4              - MD4
     md5              - MD5
     msx, openmsx     - openMSX Software List
     ol, offlinelist  - OfflineList XML
@@ -1634,6 +1664,8 @@ Some special strings that can be used:
 - %publisher% - Replaced with game Publisher
 - %category% - Replaced with game Category
 - %crc% - Replaced with the CRC
+- %md2% - Replaced with the MD2
+- %md4% - Replaced with the MD4
 - %md5% - Replaced with the MD5
 - %sha1% - Replaced with the SHA-1
 - %sha256% - Replaced with the SHA-256
@@ -1662,6 +1694,8 @@ Some special strings that can be used:
 - %publisher% - Replaced with game Publisher
 - %category% - Replaced with game Category
 - %crc% - Replaced with the CRC
+- %md2% - Replaced with the MD2
+- %md4% - Replaced with the MD4
 - %md5% - Replaced with the MD5
 - %sha1% - Replaced with the SHA-1
 - %sha256% - Replaced with the SHA-256
@@ -1903,6 +1937,10 @@ Some special strings that can be used:
 
             if (GetBoolean(features, IncludeCrcValue))
                 includeInScan.Add(HashType.CRC32);
+            if (GetBoolean(features, IncludeMd2Value))
+                includeInScan.Add(HashType.MD2);
+            if (GetBoolean(features, IncludeMd4Value))
+                includeInScan.Add(HashType.MD4);
             if (GetBoolean(features, IncludeMd5Value))
                 includeInScan.Add(HashType.MD5);
             if (GetBoolean(features, IncludeSha1Value))

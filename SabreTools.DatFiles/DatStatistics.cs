@@ -145,6 +145,8 @@ namespace SabreTools.DatFiles
                         {
                             TotalSize += rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) ?? 0;
                             AddHashCount(HashType.CRC32, string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey)) ? 0 : 1);
+                            AddHashCount(HashType.MD2, string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.MD2Key)) ? 0 : 1);
+                            AddHashCount(HashType.MD4, string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.MD4Key)) ? 0 : 1);
                             AddHashCount(HashType.MD5, string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key)) ? 0 : 1);
                             AddHashCount(HashType.SHA1, string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key)) ? 0 : 1);
                             AddHashCount(HashType.SHA256, string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key)) ? 0 : 1);
@@ -345,6 +347,8 @@ namespace SabreTools.DatFiles
                         {
                             TotalSize -= rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) ?? 0;
                             RemoveHashCount(HashType.CRC32, string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey)) ? 0 : 1);
+                            RemoveHashCount(HashType.MD2, string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.MD2Key)) ? 0 : 1);
+                            RemoveHashCount(HashType.MD4, string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.MD4Key)) ? 0 : 1);
                             RemoveHashCount(HashType.MD5, string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key)) ? 0 : 1);
                             RemoveHashCount(HashType.SHA1, string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key)) ? 0 : 1);
                             RemoveHashCount(HashType.SHA256, string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key)) ? 0 : 1);

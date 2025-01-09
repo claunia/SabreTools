@@ -34,6 +34,20 @@ namespace SabreTools.Core.Tools
             => NormalizeHashData(hash, Constants.CRCLength);
 
         /// <summary>
+        /// Normalize a MD2 string and pad to the correct size
+        /// </summary>
+        /// <remarks>MD2 is the same length as MD5</remarks>
+        public static string? NormalizeMD2(string? hash)
+            => NormalizeHashData(hash, Constants.MD5Length);
+
+        /// <summary>
+        /// Normalize a MD4 string and pad to the correct size
+        /// </summary>
+        /// <remarks>MD4 is the same length as MD5</remarks>
+        public static string? NormalizeMD4(string? hash)
+            => NormalizeHashData(hash, Constants.MD5Length);
+
+        /// <summary>
         /// Normalize a MD5 string and pad to the correct size
         /// </summary>
         public static string? NormalizeMD5(string? hash)

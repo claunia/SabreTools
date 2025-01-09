@@ -675,6 +675,8 @@ namespace SabreTools.DatItems.Test
             datItem.SetFieldValue(DatItem.SourceKey, new Source(0));
             datItem.SetFieldValue(DatItem.MachineKey, machine);
             datItem.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            datItem.SetFieldValue(Models.Metadata.Rom.MD2Key, "DEADBEEF");
+            datItem.SetFieldValue(Models.Metadata.Rom.MD4Key, "DEADBEEF");
             datItem.SetFieldValue(Models.Metadata.Rom.MD5Key, "DEADBEEF");
             datItem.SetFieldValue(Models.Metadata.Rom.SHA1Key, "DEADBEEF");
             datItem.SetFieldValue(Models.Metadata.Rom.SHA256Key, "DEADBEEF");
@@ -789,6 +791,8 @@ namespace SabreTools.DatItems.Test
             DatItem datItem = new Rom();
             datItem.SetFieldValue(DatItem.MachineKey, machine);
             datItem.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            datItem.SetFieldValue(Models.Metadata.Rom.MD2Key, "DEADBEEF");
+            datItem.SetFieldValue(Models.Metadata.Rom.MD4Key, "DEADBEEF");
             datItem.SetFieldValue(Models.Metadata.Rom.MD5Key, "DEADBEEF");
             datItem.SetFieldValue(Models.Metadata.Rom.SHA1Key, "DEADBEEF");
             datItem.SetFieldValue(Models.Metadata.Rom.SHA256Key, "DEADBEEF");

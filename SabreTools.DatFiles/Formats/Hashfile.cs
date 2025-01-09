@@ -88,6 +88,30 @@ namespace SabreTools.DatFiles.Formats
                             break;
                     }
                     break;
+                case HashType.MD2:
+                    switch (datItem)
+                    {
+                        case Rom rom:
+                            if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.MD2Key)))
+                                missingFields.Add(Models.Metadata.Rom.MD2Key);
+                            break;
+                        default:
+                            missingFields.Add(Models.Metadata.Rom.MD2Key);
+                            break;
+                    }
+                    break;
+                case HashType.MD4:
+                    switch (datItem)
+                    {
+                        case Rom rom:
+                            if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.MD4Key)))
+                                missingFields.Add(Models.Metadata.Rom.MD4Key);
+                            break;
+                        default:
+                            missingFields.Add(Models.Metadata.Rom.MD4Key);
+                            break;
+                    }
+                    break;
                 case HashType.MD5:
                     switch (datItem)
                     {

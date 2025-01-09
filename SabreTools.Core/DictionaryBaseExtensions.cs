@@ -319,7 +319,8 @@ namespace SabreTools.Core
             string? otherSha1 = other.ReadString(Disk.SHA1Key);
             bool conditionalSha1 = Tools.Utilities.ConditionalHashEquals(selfSha1, otherSha1);
 
-            return conditionalMd5 && conditionalSha1;
+            return conditionalMd5
+                && conditionalSha1;
         }
 
         /// <summary>
@@ -352,7 +353,10 @@ namespace SabreTools.Core
             string? otherSpamSum = other.ReadString(Media.SpamSumKey);
             bool conditionalSpamSum = Tools.Utilities.ConditionalHashEquals(selfSpamSum, otherSpamSum);
 
-            return conditionalMd5 && conditionalSha1 && conditionalSha256 && conditionalSpamSum;
+            return conditionalMd5
+                && conditionalSha1
+                && conditionalSha256
+                && conditionalSpamSum;
         }
 
         /// <summary>
@@ -372,6 +376,14 @@ namespace SabreTools.Core
             string? selfCrc = self.ReadString(Rom.CRCKey);
             string? otherCrc = other.ReadString(Rom.CRCKey);
             bool conditionalCrc = Tools.Utilities.ConditionalHashEquals(selfCrc, otherCrc);
+
+            string? selfMd2 = self.ReadString(Rom.MD2Key);
+            string? otherMd2 = other.ReadString(Rom.MD2Key);
+            bool conditionalMd2 = Tools.Utilities.ConditionalHashEquals(selfMd2, otherMd2);
+
+            string? selfMd4 = self.ReadString(Rom.MD4Key);
+            string? otherMd4 = other.ReadString(Rom.MD4Key);
+            bool conditionalMd4 = Tools.Utilities.ConditionalHashEquals(selfMd4, otherMd4);
 
             string? selfMd5 = self.ReadString(Rom.MD5Key);
             string? otherMd5 = other.ReadString(Rom.MD5Key);
@@ -397,7 +409,15 @@ namespace SabreTools.Core
             string? otherSpamSum = other.ReadString(Rom.SpamSumKey);
             bool conditionalSpamSum = Tools.Utilities.ConditionalHashEquals(selfSpamSum, otherSpamSum);
 
-            return conditionalCrc && conditionalMd5 && conditionalSha1 && conditionalSha256 && conditionalSha384 && conditionalSha512 && conditionalSpamSum;
+            return conditionalCrc
+                && conditionalMd2
+                && conditionalMd4
+                && conditionalMd5
+                && conditionalSha1
+                && conditionalSha256
+                && conditionalSha384
+                && conditionalSha512
+                && conditionalSpamSum;
         }
 
         /// <summary>
@@ -439,7 +459,8 @@ namespace SabreTools.Core
             bool sha1Null = string.IsNullOrEmpty(self.ReadString(Disk.SHA1Key));
             sha1Null ^= string.IsNullOrEmpty(other.ReadString(Disk.SHA1Key));
 
-            return !md5Null || !sha1Null;
+            return !md5Null
+                || !sha1Null;
         }
 
         /// <summary>
@@ -459,7 +480,10 @@ namespace SabreTools.Core
             bool spamsumNull = string.IsNullOrEmpty(self.ReadString(Media.SpamSumKey));
             spamsumNull ^= string.IsNullOrEmpty(other.ReadString(Media.SpamSumKey));
 
-            return !md5Null || !sha1Null || !sha256Null || !spamsumNull;
+            return !md5Null
+                || !sha1Null
+                || !sha256Null
+                || !spamsumNull;
         }
 
         /// <summary>
@@ -469,6 +493,12 @@ namespace SabreTools.Core
         {
             bool crcNull = string.IsNullOrEmpty(self.ReadString(Rom.CRCKey));
             crcNull ^= string.IsNullOrEmpty(other.ReadString(Rom.CRCKey));
+
+            bool md2Null = string.IsNullOrEmpty(self.ReadString(Rom.MD2Key));
+            md2Null ^= string.IsNullOrEmpty(other.ReadString(Rom.MD2Key));
+
+            bool md4Null = string.IsNullOrEmpty(self.ReadString(Rom.MD4Key));
+            md4Null ^= string.IsNullOrEmpty(other.ReadString(Rom.MD4Key));
 
             bool md5Null = string.IsNullOrEmpty(self.ReadString(Rom.MD5Key));
             md5Null ^= string.IsNullOrEmpty(other.ReadString(Rom.MD5Key));
@@ -488,7 +518,15 @@ namespace SabreTools.Core
             bool spamsumNull = string.IsNullOrEmpty(self.ReadString(Rom.SpamSumKey));
             spamsumNull ^= string.IsNullOrEmpty(other.ReadString(Rom.SpamSumKey));
 
-            return !crcNull || !md5Null || !sha1Null || !sha256Null || !sha384Null || !sha512Null || !spamsumNull;
+            return !crcNull
+                || !md2Null
+                || !md4Null
+                || !md5Null
+                || !sha1Null
+                || !sha256Null
+                || !sha384Null
+                || !sha512Null
+                || !spamsumNull;
         }
 
         /// <summary>
@@ -499,7 +537,8 @@ namespace SabreTools.Core
             bool md5Null = string.IsNullOrEmpty(disk.ReadString(Disk.MD5Key));
             bool sha1Null = string.IsNullOrEmpty(disk.ReadString(Disk.SHA1Key));
 
-            return !md5Null || !sha1Null;
+            return !md5Null
+                || !sha1Null;
         }
 
         /// <summary>
@@ -512,7 +551,10 @@ namespace SabreTools.Core
             bool sha256Null = string.IsNullOrEmpty(media.ReadString(Media.SHA256Key));
             bool spamsumNull = string.IsNullOrEmpty(media.ReadString(Media.SpamSumKey));
 
-            return !md5Null || !sha1Null || !sha256Null || !spamsumNull;
+            return !md5Null
+                || !sha1Null
+                || !sha256Null
+                || !spamsumNull;
         }
 
         /// <summary>
@@ -521,6 +563,8 @@ namespace SabreTools.Core
         private static bool HasHashes(this Rom rom)
         {
             bool crcNull = string.IsNullOrEmpty(rom.ReadString(Rom.CRCKey));
+            bool md2Null = string.IsNullOrEmpty(rom.ReadString(Rom.MD2Key));
+            bool md4Null = string.IsNullOrEmpty(rom.ReadString(Rom.MD4Key));
             bool md5Null = string.IsNullOrEmpty(rom.ReadString(Rom.MD5Key));
             bool sha1Null = string.IsNullOrEmpty(rom.ReadString(Rom.SHA1Key));
             bool sha256Null = string.IsNullOrEmpty(rom.ReadString(Rom.SHA256Key));
@@ -528,7 +572,15 @@ namespace SabreTools.Core
             bool sha512Null = string.IsNullOrEmpty(rom.ReadString(Rom.SHA512Key));
             bool spamsumNull = string.IsNullOrEmpty(rom.ReadString(Rom.SpamSumKey));
 
-            return !crcNull || !md5Null || !sha1Null || !sha256Null || !sha384Null || !sha512Null || !spamsumNull;
+            return !crcNull
+                || !md2Null
+                || !md4Null
+                || !md5Null
+                || !sha1Null
+                || !sha256Null
+                || !sha384Null
+                || !sha512Null
+                || !spamsumNull;
         }
 
         /// <summary>
@@ -542,7 +594,8 @@ namespace SabreTools.Core
             string? sha1 = disk.ReadString(Disk.SHA1Key);
             bool sha1Null = string.IsNullOrEmpty(sha1) || string.Equals(sha1, ZeroHash.SHA1Str, StringComparison.OrdinalIgnoreCase);
 
-            return md5Null && sha1Null;
+            return md5Null
+                && sha1Null;
         }
 
         /// <summary>
@@ -562,7 +615,10 @@ namespace SabreTools.Core
             string? spamsum = media.ReadString(Media.SpamSumKey);
             bool spamsumNull = string.IsNullOrEmpty(spamsum) || string.Equals(spamsum, ZeroHash.SpamSumStr, StringComparison.OrdinalIgnoreCase);
 
-            return md5Null && sha1Null && sha256Null && spamsumNull;
+            return md5Null
+                && sha1Null
+                && sha256Null
+                && spamsumNull;
         }
 
         /// <summary>
@@ -572,6 +628,12 @@ namespace SabreTools.Core
         {
             string? crc = rom.ReadString(Rom.CRCKey);
             bool crcNull = string.IsNullOrEmpty(crc) || string.Equals(crc, ZeroHash.CRC32Str, StringComparison.OrdinalIgnoreCase);
+
+            string? md2 = rom.ReadString(Rom.MD2Key);
+            bool md2Null = string.IsNullOrEmpty(md2) || string.Equals(md2, ZeroHash.GetString(HashType.MD2), StringComparison.OrdinalIgnoreCase);
+
+            string? md4 = rom.ReadString(Rom.MD4Key);
+            bool md4Null = string.IsNullOrEmpty(md4) || string.Equals(md4, ZeroHash.GetString(HashType.MD4), StringComparison.OrdinalIgnoreCase);
 
             string? md5 = rom.ReadString(Rom.MD5Key);
             bool md5Null = string.IsNullOrEmpty(md5) || string.Equals(md5, ZeroHash.MD5Str, StringComparison.OrdinalIgnoreCase);
@@ -591,7 +653,15 @@ namespace SabreTools.Core
             string? spamsum = rom.ReadString(Rom.SpamSumKey);
             bool spamsumNull = string.IsNullOrEmpty(spamsum) || string.Equals(spamsum, ZeroHash.SpamSumStr, StringComparison.OrdinalIgnoreCase);
 
-            return crcNull && md5Null && sha1Null && sha256Null && sha384Null && sha512Null && spamsumNull;
+            return crcNull
+                && md2Null
+                && md4Null
+                && md5Null
+                && sha1Null
+                && sha256Null
+                && sha384Null
+                && sha512Null
+                && spamsumNull;
         }
 
         #endregion
@@ -685,6 +755,16 @@ namespace SabreTools.Core
             string? otherCrc = other.ReadString(Rom.CRCKey);
             if (string.IsNullOrEmpty(selfCrc) && !string.IsNullOrEmpty(otherCrc))
                 self[Rom.CRCKey] = otherCrc;
+
+            string? selfMd2 = self.ReadString(Rom.MD2Key);
+            string? otherMd2 = other.ReadString(Rom.MD2Key);
+            if (string.IsNullOrEmpty(selfMd2) && !string.IsNullOrEmpty(otherMd2))
+                self[Rom.MD2Key] = otherMd2;
+
+            string? selfMd4 = self.ReadString(Rom.MD4Key);
+            string? otherMd4 = other.ReadString(Rom.MD4Key);
+            if (string.IsNullOrEmpty(selfMd4) && !string.IsNullOrEmpty(otherMd4))
+                self[Rom.MD4Key] = otherMd4;
 
             string? selfMd5 = self.ReadString(Rom.MD5Key);
             string? otherMd5 = other.ReadString(Rom.MD5Key);
@@ -786,6 +866,14 @@ namespace SabreTools.Core
             string? crc = self.ReadString(Rom.CRCKey);
             if (!string.IsNullOrEmpty(crc))
                 return $"_{crc}";
+
+            string? md2 = self.ReadString(Rom.MD2Key);
+            if (!string.IsNullOrEmpty(md2))
+                return $"_{md2}";
+
+            string? md4 = self.ReadString(Rom.MD4Key);
+            if (!string.IsNullOrEmpty(md4))
+                return $"_{md4}";
 
             string? md5 = self.ReadString(Rom.MD5Key);
             if (!string.IsNullOrEmpty(md5))

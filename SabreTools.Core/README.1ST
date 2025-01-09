@@ -185,6 +185,16 @@ Features and Options:
 		  overrides the default hashing behavior of including CRC32, MD5, and
 		  SHA-1 hashes.
 
+	  -md2, --include-md2		 Include MD2 in output
+		  This enables MD2 calculation for each of the files. Adding this flag
+		  overrides the default hashing behavior of including CRC32, MD5, and
+		  SHA-1 hashes.
+
+	  -md4, --include-md4		 Include MD4 in output
+		  This enables MD4 calculation for each of the files. Adding this flag
+		  overrides the default hashing behavior of including CRC32, MD5, and
+		  SHA-1 hashes.
+
 	  -md5, --include-md5		 Include MD5 in output
 		  This enables MD5 calculation for each of the files. Adding this flag
 		  overrides the default hashing behavior of including CRC32, MD5, and
@@ -248,6 +258,8 @@ Features and Options:
 		  lr, listrom		- MAME Listrom
 		  lx, listxml		- MAME Listxml
 		  miss, missfile	- GoodTools Missfile
+		  md2				- MD2
+		  md4				- MD4
 		  md5				- MD5
 		  msx, openmsx		- openMSX Software List
 		  ol, offlinelist	- OfflineList XML
@@ -559,6 +571,8 @@ Features and Options:
 		  lr, listrom		- MAME Listrom
 		  lx, listxml		- MAME Listxml
 		  miss, missfile	- GoodTools Missfile
+		  md2				- MD2
+		  md4				- MD4
 		  md5				- MD5
 		  msx, openmsx		- openMSX Software List
 		  ol, offlinelist	- OfflineList XML
@@ -610,7 +624,7 @@ Features and Options:
 		  For a DAT, or set of DATs, allow for splitting based on the best
 		  available hash for each file within. The order of preference for the
 		  outputted DATs is as follows: Nodump, SHA-512, SHA-384, SHA-256,
-		  SHA-1, MD5, CRC (or worse).
+		  SHA-1, MD5, MD4, MD2, CRC (or worse).
 
 	  -ls, --level				Split a SuperDAT or folder by lowest available level
 		  For a DAT, or set of DATs, allow for splitting based on the lowest
@@ -724,6 +738,8 @@ Features and Options:
 		  lr, listrom		- MAME Listrom
 		  lx, listxml		- MAME Listxml
 		  miss, missfile	- GoodTools Missfile
+		  md2				- MD2
+		  md4				- MD4
 		  md5				- MD5
 		  msx, openmsx		- openMSX Software List
 		  ol, offlinelist	- OfflineList XML
@@ -755,6 +771,8 @@ Features and Options:
 			  - %publisher% - Replaced with game Publisher
 			  - %category% - Replaced with game Category
 			  - %crc% - Replaced with the CRC
+			  - %md2% - Replaced with the MD2
+			  - %md4% - Replaced with the MD4
 			  - %md5% - Replaced with the MD5
 			  - %sha1% - Replaced with the SHA-1
 			  - %sha256% - Replaced with the SHA-256

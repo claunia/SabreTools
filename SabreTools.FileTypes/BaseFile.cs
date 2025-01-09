@@ -30,6 +30,16 @@
         public byte[]? CRC { get; set; }
 
         /// <summary>
+        /// MD2 hash of the file
+        /// </summary>
+        public byte[]? MD2 { get; set; }
+
+        /// <summary>
+        /// MD4 hash of the file
+        /// </summary>
+        public byte[]? MD4 { get; set; }
+
+        /// <summary>
         /// MD5 hash of the file
         /// </summary>
         public byte[]? MD5 { get; set; }
