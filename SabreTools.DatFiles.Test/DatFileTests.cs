@@ -34,6 +34,7 @@ namespace SabreTools.DatFiles.Test
             DatFile created = new Formats.Logiqx(datFile, deprecated: false);
 
             Assert.NotNull(created.Header);
+            Assert.Equal("name", created.Header.GetStringFieldValue(Models.Metadata.Header.NameKey));
 
             Assert.NotNull(created.Items);
             KeyValuePair<string, List<DatItem>?> itemsKvp = Assert.Single(created.Items);
@@ -197,7 +198,19 @@ namespace SabreTools.DatFiles.Test
 
         #region SetHeader
 
-        // TODO: Write SetHeader tests
+        [Fact]
+        public void SetHeaderTest()
+        {
+            DatHeader datHeader = new DatHeader();
+            datHeader.SetFieldValue(Models.Metadata.Header.NameKey, "name");
+
+            DatFile? datFile = new Formats.Logiqx(datFile: null, deprecated: false);
+            datFile.Header.SetFieldValue(Models.Metadata.Header.NameKey, "notname");
+
+            datFile.SetHeader(datHeader);
+            Assert.NotNull(datFile.Header);
+            Assert.Equal("name", datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey));
+        }
 
         #endregion
 
