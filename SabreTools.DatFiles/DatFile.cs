@@ -203,24 +203,39 @@ namespace SabreTools.DatFiles
             if (machine == null)
                 return string.Empty;
 
+            // Apply the prefix and postfix
+            return CreatePrefixPostfixImpl(item, machine, prefix);
+        }
+
+        /// <summary>
+        /// Create a prefix or postfix from inputs
+        /// </summary>
+        /// <param name="item">DatItem to create a prefix/postfix for</param>
+        /// <param name="prefix">True for prefix, false for postfix</param>
+        /// <returns>Sanitized string representing the postfix or prefix</returns>
+        protected string CreatePrefixPostfixDB(KeyValuePair<long, DatItem> item, bool prefix)
+        {
+            // Get machine for the item
+            var machine = ItemsDB.GetMachineForItem(item.Key);
+            if (machine.Value == null)
+                return string.Empty;
+
+            // Apply the prefix and postfix
+            return CreatePrefixPostfixImpl(item.Value, machine.Value, prefix);
+        }
+
+        /// <summary>
+        /// Create a prefix or postfix from inputs
+        /// </summary>
+        /// <param name="item">DatItem to create a prefix/postfix for</param>
+        /// <param name="machine">Machine to get information from</param>
+        /// <param name="prefix">True for prefix, false for postfix</param>
+        /// <returns>Sanitized string representing the postfix or prefix</returns>
+        private string CreatePrefixPostfixImpl(DatItem item, Machine machine, bool prefix)
+        {
             // Initialize strings
             string? type = item.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
-            string fix,
-                game = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty,
-                manufacturer = machine.GetStringFieldValue(Models.Metadata.Machine.ManufacturerKey) ?? string.Empty,
-                publisher = machine.GetStringFieldValue(Models.Metadata.Machine.PublisherKey) ?? string.Empty,
-                category = machine.GetStringFieldValue(Models.Metadata.Machine.CategoryKey) ?? string.Empty,
-                name = item.GetName() ?? type.AsEnumValue<ItemType>().AsStringValue() ?? string.Empty,
-                crc = string.Empty,
-                md2 = string.Empty,
-                md4 = string.Empty,
-                md5 = string.Empty,
-                sha1 = string.Empty,
-                sha256 = string.Empty,
-                sha384 = string.Empty,
-                sha512 = string.Empty,
-                size = string.Empty,
-                spamsum = string.Empty;
+            string fix, game = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty, manufacturer = machine.Value.GetStringFieldValue(Models.Metadata.Machine.ManufacturerKey) ?? string.Empty, publisher = machine.Value.GetStringFieldValue(Models.Metadata.Machine.PublisherKey) ?? string.Empty, category = machine.Value.GetStringFieldValue(Models.Metadata.Machine.CategoryKey) ?? string.Empty, name = item.Value.GetName() ?? type.AsEnumValue<ItemType>().AsStringValue() ?? string.Empty, crc = string.Empty, md2 = string.Empty, md4 = string.Empty, md5 = string.Empty, sha1 = string.Empty, sha256 = string.Empty, sha384 = string.Empty, sha512 = string.Empty, size = string.Empty, spamsum = string.Empty;
 
             // Check for quotes
             bool? quotes = Header.GetBoolFieldValue(DatHeader.QuotesKey);
@@ -253,104 +268,6 @@ namespace SabreTools.DatFiles
                 spamsum = media.GetStringFieldValue(Models.Metadata.Media.SpamSumKey) ?? string.Empty;
             }
             else if (item is Rom rom)
-            {
-                crc = rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey) ?? string.Empty;
-                md2 = rom.GetStringFieldValue(Models.Metadata.Rom.MD2Key) ?? string.Empty;
-                md4 = rom.GetStringFieldValue(Models.Metadata.Rom.MD4Key) ?? string.Empty;
-                md5 = rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key) ?? string.Empty;
-                sha1 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key) ?? string.Empty;
-                sha256 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key) ?? string.Empty;
-                sha384 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA384Key) ?? string.Empty;
-                sha512 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA512Key) ?? string.Empty;
-                size = rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey).ToString() ?? string.Empty;
-                spamsum = rom.GetStringFieldValue(Models.Metadata.Rom.SpamSumKey) ?? string.Empty;
-            }
-
-            // Now do bulk replacement where possible
-            fix = fix
-                .Replace("%game%", game)
-                .Replace("%machine%", game)
-                .Replace("%name%", name)
-                .Replace("%manufacturer%", manufacturer)
-                .Replace("%publisher%", publisher)
-                .Replace("%category%", category)
-                .Replace("%crc%", crc)
-                .Replace("%md2%", md2)
-                .Replace("%md4%", md4)
-                .Replace("%md5%", md5)
-                .Replace("%sha1%", sha1)
-                .Replace("%sha256%", sha256)
-                .Replace("%sha384%", sha384)
-                .Replace("%sha512%", sha512)
-                .Replace("%size%", size)
-                .Replace("%spamsum%", spamsum);
-
-            return fix;
-        }
-
-        /// <summary>
-        /// Create a prefix or postfix from inputs
-        /// </summary>
-        /// <param name="item">DatItem to create a prefix/postfix for</param>
-        /// <param name="prefix">True for prefix, false for postfix</param>
-        /// <returns>Sanitized string representing the postfix or prefix</returns>
-        protected string CreatePrefixPostfixDB(KeyValuePair<long, DatItem> item, bool prefix)
-        {
-            // Get machine for the item
-            var machine = ItemsDB.GetMachineForItem(item.Key);
-            if (machine.Value == null)
-                return string.Empty;
-
-            // Initialize strings
-            string? type = item.Value.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
-            string fix,
-                game = machine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty,
-                manufacturer = machine.Value.GetStringFieldValue(Models.Metadata.Machine.ManufacturerKey) ?? string.Empty,
-                publisher = machine.Value.GetStringFieldValue(Models.Metadata.Machine.PublisherKey) ?? string.Empty,
-                category = machine.Value.GetStringFieldValue(Models.Metadata.Machine.CategoryKey) ?? string.Empty,
-                name = item.Value.GetName() ?? type.AsEnumValue<ItemType>().AsStringValue() ?? string.Empty,
-                crc = string.Empty,
-                md2 = string.Empty,
-                md4 = string.Empty,
-                md5 = string.Empty,
-                sha1 = string.Empty,
-                sha256 = string.Empty,
-                sha384 = string.Empty,
-                sha512 = string.Empty,
-                size = string.Empty,
-                spamsum = string.Empty;
-
-            // Check for quotes
-            bool? quotes = Header.GetBoolFieldValue(DatHeader.QuotesKey);
-
-            // If we have a prefix
-            if (prefix)
-            {
-                string? prefixString = Header.GetStringFieldValue(DatHeader.PrefixKey);
-                fix = prefixString + (quotes == true ? "\"" : string.Empty);
-            }
-
-            // If we have a postfix
-            else
-            {
-                string? postfixString = Header.GetStringFieldValue(DatHeader.PostfixKey);
-                fix = (quotes == true ? "\"" : string.Empty) + postfixString;
-            }
-
-            // Ensure we have the proper values for replacement
-            if (item.Value is Disk disk)
-            {
-                md5 = disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key) ?? string.Empty;
-                sha1 = disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key) ?? string.Empty;
-            }
-            else if (item.Value is Media media)
-            {
-                md5 = media.GetStringFieldValue(Models.Metadata.Media.MD5Key) ?? string.Empty;
-                sha1 = media.GetStringFieldValue(Models.Metadata.Media.SHA1Key) ?? string.Empty;
-                sha256 = media.GetStringFieldValue(Models.Metadata.Media.SHA256Key) ?? string.Empty;
-                spamsum = media.GetStringFieldValue(Models.Metadata.Media.SpamSumKey) ?? string.Empty;
-            }
-            else if (item.Value is Rom rom)
             {
                 crc = rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey) ?? string.Empty;
                 md2 = rom.GetStringFieldValue(Models.Metadata.Rom.MD2Key) ?? string.Empty;
