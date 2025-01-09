@@ -2,12 +2,6 @@ namespace SabreTools.DatFiles.Test
 {
     public class DatFileTests
     {
-        #region SupportedTypes
-
-        // TODO: Write SupportedTypes tests
-
-        #endregion
-
         #region Constructor
 
         // TODO: Write Constructor tests
@@ -38,12 +32,6 @@ namespace SabreTools.DatFiles.Test
 
         #endregion
 
-        #region ParseFile
-
-        // TODO: Write ParseFile tests
-
-        #endregion
-
         #region ParseAddHelper
 
         // TODO: Write ParseAddHelper tests
@@ -53,18 +41,6 @@ namespace SabreTools.DatFiles.Test
         #region ParseAddHelperDB
 
         // TODO: Write ParseAddHelperDB tests
-
-        #endregion
-
-        #region WriteToFile
-
-        // TODO: Write WriteToFile tests
-
-        #endregion
-
-        #region WriteToFileDB
-
-        // TODO: Write WriteToFileDB tests
 
         #endregion
 
