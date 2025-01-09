@@ -667,7 +667,7 @@ namespace SabreTools.DatFiles
             // If this is invoked with a null DatItem, we ignore
             if (datItem == null)
             {
-                _logger?.Verbose($"Item was skipped because it was null");
+                _logger.Verbose($"Item was skipped because it was null");
                 return true;
             }
 
@@ -675,7 +675,7 @@ namespace SabreTools.DatFiles
             if (datItem.GetBoolFieldValue(DatItem.RemoveKey) == true)
             {
                 string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
-                _logger?.Verbose($"Item '{itemString}' was skipped because it was marked for removal");
+                _logger.Verbose($"Item '{itemString}' was skipped because it was marked for removal");
                 return true;
             }
 
@@ -683,7 +683,7 @@ namespace SabreTools.DatFiles
             if (datItem is Blank)
             {
                 string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
-                _logger?.Verbose($"Item '{itemString}' was skipped because it was of type 'Blank'");
+                _logger.Verbose($"Item '{itemString}' was skipped because it was of type 'Blank'");
                 return true;
             }
 
@@ -695,18 +695,17 @@ namespace SabreTools.DatFiles
                 if (size == 0 || size == null)
                 {
                     string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
-                    _logger?.Verbose($"Item '{itemString}' was skipped because it had an invalid size");
+                    _logger.Verbose($"Item '{itemString}' was skipped because it had an invalid size");
                     return true;
                 }
             }
 
             // If we have an item type not in the list of supported values
-            string datFormat = Header?.GetFieldValue<DatFormat>(DatHeader.DatFormatKey).ToString() ?? "Unknown Format";
             ItemType itemType = datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>();
             if (!Array.Exists(SupportedTypes, t => t == itemType))
             {
                 string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
-                _logger?.Verbose($"Item '{itemString}' was skipped because it was not supported in {datFormat}");
+                _logger.Verbose($"Item '{itemString}' was skipped because it was not supported for output");
                 return true;
             }
 
@@ -716,9 +715,9 @@ namespace SabreTools.DatFiles
             {
                 string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
 #if NET20 || NET35
-                _logger?.Verbose($"Item '{itemString}' was skipped because it was missing required fields for {datFormat}: {string.Join(", ", [.. missingFields])}");
+                _logger.Verbose($"Item '{itemString}' was skipped because it was missing required fields: {string.Join(", ", [.. missingFields])}");
 #else
-                _logger?.Verbose($"Item '{itemString}' was skipped because it was missing required fields for {datFormat}: {string.Join(", ", missingFields)}");
+                _logger.Verbose($"Item '{itemString}' was skipped because it was missing required fields: {string.Join(", ", missingFields)}");
 #endif
                 return true;
             }
