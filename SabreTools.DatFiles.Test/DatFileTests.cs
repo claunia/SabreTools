@@ -1419,13 +1419,96 @@ namespace SabreTools.DatFiles.Test
 
         #region ProcessNullifiedItem
 
-        // TODO: Write ProcessNullifiedItem tests
+        [Fact]
+        public void ProcessNullifiedItem_NonRom()
+        {
+            DatItem item = new Sample();
 
-        #endregion
+            DatItem actual = DatFile.ProcessNullifiedItem(item);
+            Sample? sample = actual as Sample;
+            Assert.NotNull(sample);
+            Assert.Null(sample.GetInt64FieldValue(Models.Metadata.Rom.SizeKey));
+            Assert.Null(sample.GetStringFieldValue(Models.Metadata.Rom.CRCKey));
+            Assert.Null(sample.GetStringFieldValue(Models.Metadata.Rom.MD2Key));
+            Assert.Null(sample.GetStringFieldValue(Models.Metadata.Rom.MD4Key));
+            Assert.Null(sample.GetStringFieldValue(Models.Metadata.Rom.MD5Key));
+            Assert.Null(sample.GetStringFieldValue(Models.Metadata.Rom.SHA1Key));
+            Assert.Null(sample.GetStringFieldValue(Models.Metadata.Rom.SHA256Key));
+            Assert.Null(sample.GetStringFieldValue(Models.Metadata.Rom.SHA384Key));
+            Assert.Null(sample.GetStringFieldValue(Models.Metadata.Rom.SHA512Key));
+            Assert.Null(sample.GetStringFieldValue(Models.Metadata.Rom.SpamSumKey));
+        }
 
-        #region GetMissingRequiredFields
+        [Fact]
+        public void ProcessNullifiedItem_SizeNonNull()
+        {
+            DatItem item = new Rom();
+            item.SetFieldValue(Models.Metadata.Rom.SizeKey, 12345);
 
-        // TODO: Write GetMissingRequiredFields tests
+            DatItem actual = DatFile.ProcessNullifiedItem(item);
+            Rom? rom = actual as Rom;
+            Assert.NotNull(rom);
+            Assert.Equal(12345, rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey));
+            Assert.Null(rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey));
+            Assert.Null(rom.GetStringFieldValue(Models.Metadata.Rom.MD2Key));
+            Assert.Null(rom.GetStringFieldValue(Models.Metadata.Rom.MD4Key));
+            Assert.Null(rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key));
+            Assert.Null(rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key));
+            Assert.Null(rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key));
+            Assert.Null(rom.GetStringFieldValue(Models.Metadata.Rom.SHA384Key));
+            Assert.Null(rom.GetStringFieldValue(Models.Metadata.Rom.SHA512Key));
+            Assert.Null(rom.GetStringFieldValue(Models.Metadata.Rom.SpamSumKey));
+        }
+
+        [Fact]
+        public void ProcessNullifiedItem_CrcNonNull()
+        {
+            DatItem item = new Rom();
+            item.SetFieldValue(Models.Metadata.Rom.CRCKey, ZeroHash.CRC32Str);
+
+            DatItem actual = DatFile.ProcessNullifiedItem(item);
+            Rom? rom = actual as Rom;
+            Assert.NotNull(rom);
+            Assert.Null(rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey));
+            Assert.Equal(ZeroHash.CRC32Str, rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey));
+            Assert.Null(rom.GetStringFieldValue(Models.Metadata.Rom.MD2Key));
+            Assert.Null(rom.GetStringFieldValue(Models.Metadata.Rom.MD4Key));
+            Assert.Null(rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key));
+            Assert.Null(rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key));
+            Assert.Null(rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key));
+            Assert.Null(rom.GetStringFieldValue(Models.Metadata.Rom.SHA384Key));
+            Assert.Null(rom.GetStringFieldValue(Models.Metadata.Rom.SHA512Key));
+            Assert.Null(rom.GetStringFieldValue(Models.Metadata.Rom.SpamSumKey));
+        }
+
+        [Fact]
+        public void ProcessNullifiedItem_AllNull()
+        {
+            DatItem item = new Rom();
+            item.SetFieldValue(Models.Metadata.Rom.CRCKey, "null");
+            item.SetFieldValue(Models.Metadata.Rom.MD2Key, "null");
+            item.SetFieldValue(Models.Metadata.Rom.MD4Key, "null");
+            item.SetFieldValue(Models.Metadata.Rom.MD5Key, "null");
+            item.SetFieldValue(Models.Metadata.Rom.SHA1Key, "null");
+            item.SetFieldValue(Models.Metadata.Rom.SHA256Key, "null");
+            item.SetFieldValue(Models.Metadata.Rom.SHA384Key, "null");
+            item.SetFieldValue(Models.Metadata.Rom.SHA512Key, "null");
+            item.SetFieldValue(Models.Metadata.Rom.SpamSumKey, "null");
+
+            DatItem actual = DatFile.ProcessNullifiedItem(item);
+            Rom? rom = actual as Rom;
+            Assert.NotNull(rom);
+            Assert.Equal(0, rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey));
+            Assert.Equal(ZeroHash.CRC32Str, rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey));
+            Assert.Equal(ZeroHash.GetString(HashType.MD2), rom.GetStringFieldValue(Models.Metadata.Rom.MD2Key));
+            Assert.Equal(ZeroHash.GetString(HashType.MD4), rom.GetStringFieldValue(Models.Metadata.Rom.MD4Key));
+            Assert.Equal(ZeroHash.MD5Str, rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key));
+            Assert.Equal(ZeroHash.SHA1Str, rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key));
+            Assert.Equal(ZeroHash.SHA256Str, rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key));
+            Assert.Equal(ZeroHash.SHA384Str, rom.GetStringFieldValue(Models.Metadata.Rom.SHA384Key));
+            Assert.Equal(ZeroHash.SHA512Str, rom.GetStringFieldValue(Models.Metadata.Rom.SHA512Key));
+            Assert.Equal(ZeroHash.SpamSumStr, rom.GetStringFieldValue(Models.Metadata.Rom.SpamSumKey));
+        }
 
         #endregion
 

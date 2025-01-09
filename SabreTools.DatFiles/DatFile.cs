@@ -383,8 +383,8 @@ namespace SabreTools.DatFiles
         /// Process any DatItems that are "null", usually created from directory population
         /// </summary>
         /// <param name="item">DatItem to check for "null" status</param>
-        /// <returns>Cleaned DatItem</returns>
-        protected internal DatItem ProcessNullifiedItem(DatItem item)
+        /// <returns>Cleaned DatItem, if possible</returns>
+        protected internal static DatItem ProcessNullifiedItem(DatItem item)
         {
             // If we don't have a Rom, we can ignore it
             if (item is not Rom rom)
