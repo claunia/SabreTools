@@ -87,13 +87,13 @@ namespace SabreTools.DatFiles
             // If the description is defined but not the name, set the name from the description
             if (string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(description))
             {
-                Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, description + (bare ? string.Empty : $" ({date})"));
+                name = description + (bare ? string.Empty : $" ({date})");
             }
 
             // If the name is defined but not the description, set the description from the name
             else if (!string.IsNullOrEmpty(name) && string.IsNullOrEmpty(description))
             {
-                Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, name + (bare ? string.Empty : $" ({date})"));
+                description = name + (bare ? string.Empty : $" ({date})");
             }
 
             // If neither the name or description are defined, set them from the automatic values
@@ -101,13 +101,21 @@ namespace SabreTools.DatFiles
             {
                 string[] splitpath = path.TrimEnd(Path.DirectorySeparatorChar).Split(Path.DirectorySeparatorChar);
 #if NETFRAMEWORK
-                Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, splitpath[splitpath.Length - 1]);
-                Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, splitpath[splitpath.Length - 1] + (bare ? string.Empty : $" ({date})"));
+                name = splitpath[splitpath.Length - 1];
+                description = splitpath[splitpath.Length - 1] + (bare ? string.Empty : $" ({date})");
 #else
-                Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, splitpath[^1] + (bare ? string.Empty : $" ({date})"));
-                Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, splitpath[^1] + (bare ? string.Empty : $" ({date})"));
+                name = splitpath[^1] + (bare ? string.Empty : $" ({date})");
+                description = splitpath[^1] + (bare ? string.Empty : $" ({date})");
 #endif
             }
+
+            // Trim both fields
+            name = name?.Trim();
+            description = description?.Trim();
+
+            // Set the fields back
+            Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, name);
+            Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, description);
         }
 
         #endregion

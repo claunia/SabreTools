@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using Xunit;
@@ -51,7 +52,125 @@ namespace SabreTools.DatFiles.Test
 
         #region FillHeaderFromPath
 
-        // TODO: Write FillHeaderFromPath tests
+        [Fact]
+        public void FillHeaderFromPath_NoNameNoDesc_NotBare()
+        {
+            DatFile datFile = new Formats.Logiqx(datFile: null, deprecated: false);
+            datFile.Header.SetFieldValue(Models.Metadata.Header.NameKey, string.Empty);
+            datFile.Header.SetFieldValue(Models.Metadata.Header.DescriptionKey, string.Empty);
+            datFile.Header.SetFieldValue(Models.Metadata.Header.DateKey, "1980-01-01");
+
+            string path = Path.Combine("Fake", "Path", "Filename");
+            datFile.FillHeaderFromPath(path, false);
+
+            Assert.Equal("Filename (1980-01-01)", datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey));
+            Assert.Equal("Filename (1980-01-01)", datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey));
+        }
+
+        [Fact]
+        public void FillHeaderFromPath_NoNameNoDesc_Bare()
+        {
+            DatFile datFile = new Formats.Logiqx(datFile: null, deprecated: false);
+            datFile.Header.SetFieldValue(Models.Metadata.Header.NameKey, string.Empty);
+            datFile.Header.SetFieldValue(Models.Metadata.Header.DescriptionKey, string.Empty);
+            datFile.Header.SetFieldValue(Models.Metadata.Header.DateKey, "1980-01-01");
+
+            string path = Path.Combine("Fake", "Path", "Filename");
+            datFile.FillHeaderFromPath(path, true);
+
+            Assert.Equal("Filename", datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey));
+            Assert.Equal("Filename", datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey));
+        }
+
+        [Fact]
+        public void FillHeaderFromPath_NoNameDesc_NotBare()
+        {
+            DatFile datFile = new Formats.Logiqx(datFile: null, deprecated: false);
+            datFile.Header.SetFieldValue(Models.Metadata.Header.NameKey, string.Empty);
+            datFile.Header.SetFieldValue(Models.Metadata.Header.DescriptionKey, "Description");
+            datFile.Header.SetFieldValue(Models.Metadata.Header.DateKey, "1980-01-01");
+
+            string path = Path.Combine("Fake", "Path", "Filename");
+            datFile.FillHeaderFromPath(path, false);
+
+            Assert.Equal("Description (1980-01-01)", datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey));
+            Assert.Equal("Description", datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey));
+        }
+
+        [Fact]
+        public void FillHeaderFromPath_NoNameDesc_Bare()
+        {
+            DatFile datFile = new Formats.Logiqx(datFile: null, deprecated: false);
+            datFile.Header.SetFieldValue(Models.Metadata.Header.NameKey, string.Empty);
+            datFile.Header.SetFieldValue(Models.Metadata.Header.DescriptionKey, "Description");
+            datFile.Header.SetFieldValue(Models.Metadata.Header.DateKey, "1980-01-01");
+
+            string path = Path.Combine("Fake", "Path", "Filename");
+            datFile.FillHeaderFromPath(path, true);
+
+            Assert.Equal("Description", datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey));
+            Assert.Equal("Description", datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey));
+        }
+
+        [Fact]
+        public void FillHeaderFromPath_NameNoDesc_NotBare()
+        {
+            DatFile datFile = new Formats.Logiqx(datFile: null, deprecated: false);
+            datFile.Header.SetFieldValue(Models.Metadata.Header.NameKey, "Name");
+            datFile.Header.SetFieldValue(Models.Metadata.Header.DescriptionKey, string.Empty);
+            datFile.Header.SetFieldValue(Models.Metadata.Header.DateKey, "1980-01-01");
+
+            string path = Path.Combine("Fake", "Path", "Filename");
+            datFile.FillHeaderFromPath(path, false);
+
+            Assert.Equal("Name", datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey));
+            Assert.Equal("Name (1980-01-01)", datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey));
+        }
+
+        [Fact]
+        public void FillHeaderFromPath_NameNoDesc_Bare()
+        {
+            DatFile datFile = new Formats.Logiqx(datFile: null, deprecated: false);
+            datFile.Header.SetFieldValue(Models.Metadata.Header.NameKey, "Name");
+            datFile.Header.SetFieldValue(Models.Metadata.Header.DescriptionKey, string.Empty);
+            datFile.Header.SetFieldValue(Models.Metadata.Header.DateKey, "1980-01-01");
+
+            string path = Path.Combine("Fake", "Path", "Filename");
+            datFile.FillHeaderFromPath(path, true);
+
+            Assert.Equal("Name", datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey));
+            Assert.Equal("Name", datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey));
+        }
+
+        [Fact]
+        public void FillHeaderFromPath_NameDesc_NotBare()
+        {
+            DatFile datFile = new Formats.Logiqx(datFile: null, deprecated: false);
+            datFile.Header.SetFieldValue(Models.Metadata.Header.NameKey, "Name");
+            datFile.Header.SetFieldValue(Models.Metadata.Header.DescriptionKey, "Description");
+            datFile.Header.SetFieldValue(Models.Metadata.Header.DateKey, "1980-01-01");
+
+            string path = Path.Combine("Fake", "Path", "Filename");
+            datFile.FillHeaderFromPath(path, false);
+
+            Assert.Equal("Name", datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey));
+            Assert.Equal("Description", datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey));
+        }
+
+        [Fact]
+        public void FillHeaderFromPath_NameDesc_Bare()
+        {
+            DatFile datFile = new Formats.Logiqx(datFile: null, deprecated: false);
+            datFile.Header.SetFieldValue(Models.Metadata.Header.NameKey, "Name ");
+            datFile.Header.SetFieldValue(Models.Metadata.Header.DescriptionKey, "Description ");
+            datFile.Header.SetFieldValue(Models.Metadata.Header.DateKey, "1980-01-01");
+
+            string path = Path.Combine("Fake", "Path", "Filename");
+            datFile.FillHeaderFromPath(path, true);
+
+            Assert.Equal("Name", datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey));
+            Assert.Equal("Description", datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey));
+        }
 
         #endregion
 
