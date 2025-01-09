@@ -61,7 +61,7 @@ namespace SabreTools.DatFiles
             _logger = new Logger(this);
             if (datFile != null)
             {
-                Header = datFile.Header;
+                Header = (DatHeader)datFile.Header.Clone();
                 Items = datFile.Items;
                 ItemsDB = datFile.ItemsDB;
             }
@@ -124,7 +124,7 @@ namespace SabreTools.DatFiles
         /// <param name="datHeader">Replacement header to be used</param>
         public void SetHeader(DatHeader datHeader)
         {
-            Header = (DatHeader)datHeader.Clone();;
+            Header = (DatHeader)datHeader.Clone();
         }
 
         #endregion
@@ -680,6 +680,7 @@ namespace SabreTools.DatFiles
         /// Get supported types for write
         /// </summary>
         /// <returns>List of supported types for writing</returns>
+        /// TODO: Make this into a property instead of a method
         protected virtual ItemType[] GetSupportedTypes()
         {
             return Enum.GetValues(typeof(ItemType)) as ItemType[] ?? [];
