@@ -503,7 +503,7 @@ namespace SabreTools.DatFiles.Formats
 
                         // Write out the item if we're not ignoring
                         if (!ShouldIgnore(datItem.Value, ignoreblanks))
-                            WriteDatItem(jtw, datItem.Value);
+                            WriteDatItemDB(jtw, datItem);
 
                         // Set the new data to compare against
                         lastgame = machine.Value!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
@@ -594,6 +594,30 @@ namespace SabreTools.DatFiles.Formats
         {
             // Pre-process the item name
             ProcessItemName(datItem, true);
+
+            // Build the state
+            jtw.WriteStartObject();
+
+            // Write the DatItem
+            jtw.WritePropertyName("datitem");
+            JsonSerializer js = new() { ContractResolver = new BaseFirstContractResolver(), Formatting = Formatting.Indented };
+            js.Serialize(jtw, datItem);
+
+            // End item
+            jtw.WriteEndObject();
+
+            jtw.Flush();
+        }
+
+        /// <summary>
+        /// Write out DatItem using the supplied JsonTextWriter
+        /// </summary>
+        /// <param name="jtw">JsonTextWriter to output to</param>
+        /// <param name="datItem">DatItem object to be output</param>
+        private void WriteDatItemDB(JsonTextWriter jtw, KeyValuePair<long, DatItem> datItem)
+        {
+            // Pre-process the item name
+            ProcessItemNameDB(datItem, true);
 
             // Build the state
             jtw.WriteStartObject();

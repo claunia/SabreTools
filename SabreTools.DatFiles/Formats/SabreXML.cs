@@ -332,7 +332,7 @@ namespace SabreTools.DatFiles.Formats
 
                         // Write out the item if we're not ignoring
                         if (!ShouldIgnore(datItem.Value, ignoreblanks))
-                            WriteDatItem(xtw, datItem.Value);
+                            WriteDatItemDB(xtw, datItem);
 
                         // Set the new data to compare against
                         lastgame = machine.Value!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
@@ -423,6 +423,25 @@ namespace SabreTools.DatFiles.Formats
         {
             // Pre-process the item name
             ProcessItemName(datItem, true);
+
+            // Write the DatItem
+            XmlSerializer xs = new(typeof(DatItem));
+            XmlSerializerNamespaces ns = new();
+            ns.Add("", "");
+            xs.Serialize(xtw, datItem, ns);
+
+            xtw.Flush();
+        }
+
+        /// <summary>
+        /// Write out DatItem using the supplied StreamWriter
+        /// </summary>
+        /// <param name="xtw">XmlTextWriter to output to</param>
+        /// <param name="datItem">DatItem object to be output</param>
+        private void WriteDatItemDB(XmlTextWriter xtw, KeyValuePair<long, DatItem> datItem)
+        {
+            // Pre-process the item name
+            ProcessItemNameDB(datItem, true);
 
             // Write the DatItem
             XmlSerializer xs = new(typeof(DatItem));
