@@ -112,8 +112,8 @@ namespace SabreTools.DatFiles
             // Now parse the correct type of DAT
             try
             {
-                var parsingDatFile = DatFileTool.CreateDatFile(currentPathFormat, datFile, quotes);
-                parsingDatFile?.ParseFile(currentPath, indexId, keep, statsOnly: statsOnly, throwOnError: throwOnError);
+                DatFile parsingDatFile = DatFileTool.CreateDatFile(currentPathFormat, datFile, quotes);
+                parsingDatFile.ParseFile(currentPath, indexId, keep, statsOnly: statsOnly, throwOnError: throwOnError);
             }
             catch (Exception ex) when (!throwOnError)
             {
