@@ -214,12 +214,6 @@ namespace SabreTools.DatFiles.Test
 
         #endregion
 
-        #region ExecuteFilters
-
-        // TODO: Write ExecuteFilters tests
-
-        #endregion
-
         #region CreatePrefixPostfix
 
         // TODO: Write CreatePrefixPostfix tests
