@@ -235,7 +235,22 @@ namespace SabreTools.DatFiles
         {
             // Initialize strings
             string? type = item.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
-            string fix, game = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty, manufacturer = machine.Value.GetStringFieldValue(Models.Metadata.Machine.ManufacturerKey) ?? string.Empty, publisher = machine.Value.GetStringFieldValue(Models.Metadata.Machine.PublisherKey) ?? string.Empty, category = machine.Value.GetStringFieldValue(Models.Metadata.Machine.CategoryKey) ?? string.Empty, name = item.Value.GetName() ?? type.AsEnumValue<ItemType>().AsStringValue() ?? string.Empty, crc = string.Empty, md2 = string.Empty, md4 = string.Empty, md5 = string.Empty, sha1 = string.Empty, sha256 = string.Empty, sha384 = string.Empty, sha512 = string.Empty, size = string.Empty, spamsum = string.Empty;
+            string fix,
+                game = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty,
+                manufacturer = machine.GetStringFieldValue(Models.Metadata.Machine.ManufacturerKey) ?? string.Empty,
+                publisher = machine.GetStringFieldValue(Models.Metadata.Machine.PublisherKey) ?? string.Empty,
+                category = machine.GetStringFieldValue(Models.Metadata.Machine.CategoryKey) ?? string.Empty,
+                name = item.GetName() ?? type.AsEnumValue<ItemType>().AsStringValue() ?? string.Empty,
+                crc = string.Empty,
+                md2 = string.Empty,
+                md4 = string.Empty,
+                md5 = string.Empty,
+                sha1 = string.Empty,
+                sha256 = string.Empty,
+                sha384 = string.Empty,
+                sha512 = string.Empty,
+                size = string.Empty,
+                spamsum = string.Empty;
 
             // Check for quotes
             bool? quotes = Header.GetBoolFieldValue(DatHeader.QuotesKey);
