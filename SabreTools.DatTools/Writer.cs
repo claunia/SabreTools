@@ -90,7 +90,7 @@ namespace SabreTools.DatTools
                     string outfile = outfiles[datFormat];
                     try
                     {
-                        DatFile writingDatFile = DatFileTool.CreateDatFile(currentPathFormat, datFile, quotes);
+                        DatFile writingDatFile = DatFileTool.CreateDatFile(datFormat, datFile, quotes);
                         writingDatFile.WriteToFile(outfile, ignoreblanks, throwOnError);
                     }
                     catch (Exception ex) when (!throwOnError)
