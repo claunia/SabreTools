@@ -176,7 +176,22 @@ namespace SabreTools.DatFiles.Test
 
         #region ResetDictionary
 
-        // TODO: Write ResetDictionary tests
+        [Fact]
+        public void ResetDictionaryTest()
+        {
+            DatFile datFile = new Formats.Logiqx(datFile: null, deprecated: false);
+            datFile.Header.SetFieldValue(Models.Metadata.Header.NameKey, "name");
+            datFile.Items.Add("key", new Rom());
+            datFile.ItemsDB.AddItem(new Rom(), 0, 0, false);
+
+            datFile.ResetDictionary();
+
+            Assert.NotNull(datFile.Header);
+            Assert.NotNull(datFile.Items);
+            Assert.Empty(datFile.Items);
+            Assert.NotNull(datFile.ItemsDB);
+            Assert.Empty(datFile.ItemsDB.GetItems());
+        }
 
         #endregion
 
