@@ -132,7 +132,7 @@ namespace SabreTools.DatFiles.Formats
                     foreach (var kvp in items)
                     {
                         // Check for a "null" item
-                        var datItem = ProcessNullifiedItemDB(kvp);
+                        var datItem = new KeyValuePair<long, DatItem>(kvp.Key, ProcessNullifiedItem(kvp.Value));
 
                         // Get the machine for the item
                         var machine = ItemsDB.GetMachineForItem(datItem.Key);

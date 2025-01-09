@@ -499,7 +499,7 @@ namespace SabreTools.DatFiles.Formats
                             WriteStartGame(jtw, kvp.Value);
 
                         // Check for a "null" item
-                        var datItem = ProcessNullifiedItemDB(kvp);
+                        var datItem = new KeyValuePair<long, DatItem>(kvp.Key, ProcessNullifiedItem(kvp.Value));
 
                         // Write out the item if we're not ignoring
                         if (!ShouldIgnore(datItem.Value, ignoreblanks))

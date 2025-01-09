@@ -560,7 +560,7 @@ namespace SabreTools.DatFiles
                 foreach (var kvp in items)
                 {
                     // Check for a "null" item
-                    var item = ProcessNullifiedItemDB(kvp);
+                    var item = new KeyValuePair<long, DatItem>(kvp.Key, ProcessNullifiedItem(kvp.Value));
 
                     // Skip if we're ignoring the item
                     if (ShouldIgnore(item.Value, ignoreblanks))

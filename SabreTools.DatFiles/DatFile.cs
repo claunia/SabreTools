@@ -207,8 +207,41 @@ namespace SabreTools.DatFiles
             if (machine == null)
                 return;
 
+            // Process the item name with common rules
+            ProcessItemNameImpl(item, machine, quotes, useRomName);
+        }
+
+        /// <summary>
+        /// Process an item and correctly set the item name
+        /// </summary>
+        /// <param name="item">DatItem to update</param>
+        /// <param name="forceRemoveQuotes">True if the Quotes flag should be ignored, false otherwise</param>
+        /// <param name="forceRomName">True if the UseRomName should be always on (default), false otherwise</param>
+        protected void ProcessItemNameDB(KeyValuePair<long, DatItem> item, bool forceRemoveQuotes, bool forceRomName = true)
+        {
+            // Get the relevant processing values
+            bool quotes = forceRemoveQuotes ? false : Header.GetBoolFieldValue(DatHeader.QuotesKey) ?? false;
+            bool useRomName = forceRomName ? true : Header.GetBoolFieldValue(DatHeader.UseRomNameKey) ?? false;
+
+            // Get machine for the item
+            var machine = ItemsDB.GetMachineForItem(item.Key);
+            if (machine.Value == null)
+                return;
+
+            // Process the item name with common rules
+            ProcessItemNameImpl(item.Value, machine.Value, quotes, useRomName);
+        }
+
+        /// <summary>
+        /// Process an item and correctly set the item name
+        /// </summary>
+        /// <param name="item">DatItem to update</param>
+        /// <param name="forceRemoveQuotes">True if the Quotes flag should be ignored, false otherwise</param>
+        /// <param name="forceRomName">True if the UseRomName should be always on (default), false otherwise</param>
+        private void ProcessItemNameImpl(DatItem item, Machine machine, bool quotes, bool useRomName)
+        {
             // Get the name to update
-            string? name = (useRomName
+            string? name = (useRomName == true
                 ? item.GetName()
                 : machine.GetStringFieldValue(Models.Metadata.Machine.NameKey)) ?? string.Empty;
 
@@ -278,102 +311,10 @@ namespace SabreTools.DatFiles
 
             // Now assign back the formatted name
             name = $"{pre}{name}{post}";
-            if (useRomName == true)
-                item.SetName(name);
-            else
-                machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, name);
-        }
-
-        /// <summary>
-        /// Process an item and correctly set the item name
-        /// </summary>
-        /// <param name="item">DatItem to update</param>
-        /// <param name="forceRemoveQuotes">True if the Quotes flag should be ignored, false otherwise</param>
-        /// <param name="forceRomName">True if the UseRomName should be always on (default), false otherwise</param>
-        protected void ProcessItemNameDB(KeyValuePair<long, DatItem> item, bool forceRemoveQuotes, bool forceRomName = true)
-        {
-            // Get the relevant processing values
-            bool quotes = forceRemoveQuotes ? false : Header.GetBoolFieldValue(DatHeader.QuotesKey) ?? false;
-            bool useRomName = forceRomName ? true : Header.GetBoolFieldValue(DatHeader.UseRomNameKey) ?? false;
-
-            // Get machine for the item
-            var machine = ItemsDB.GetMachineForItem(item.Key);
-
-            // Get the name to update
-            string? name = (useRomName == true
-                ? item.Value.GetName()
-                : machine.Value!.GetStringFieldValue(Models.Metadata.Machine.NameKey)) ?? string.Empty;
-
-            // Create the proper Prefix and Postfix
-            string pre = CreatePrefix(item.Value, machine.Value, quotes);
-            string post = CreatePostfix(item.Value, machine.Value, quotes);
-
-            // If we're in Depot mode, take care of that instead
-            var outputDepot = Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey);
-            if (outputDepot?.IsActive == true)
-            {
-                if (item.Value is Disk disk)
-                {
-                    // We can only write out if there's a SHA-1
-                    string? sha1 = disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key);
-                    if (!string.IsNullOrEmpty(sha1))
-                    {
-                        name = Utilities.GetDepotPath(sha1, outputDepot.Depth)?.Replace('\\', '/');
-                        item.Value.SetName($"{pre}{name}{post}");
-                    }
-                }
-                else if (item.Value is Media media)
-                {
-                    // We can only write out if there's a SHA-1
-                    string? sha1 = media.GetStringFieldValue(Models.Metadata.Media.SHA1Key);
-                    if (!string.IsNullOrEmpty(sha1))
-                    {
-                        name = Utilities.GetDepotPath(sha1, outputDepot.Depth)?.Replace('\\', '/');
-                        item.Value.SetName($"{pre}{name}{post}");
-                    }
-                }
-                else if (item.Value is Rom rom)
-                {
-                    // We can only write out if there's a SHA-1
-                    string? sha1 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key);
-                    if (!string.IsNullOrEmpty(sha1))
-                    {
-                        name = Utilities.GetDepotPath(sha1, outputDepot.Depth)?.Replace('\\', '/');
-                        item.Value.SetName($"{pre}{name}{post}");
-                    }
-                }
-
-                return;
-            }
-
-            string? replaceExtension = Header.GetStringFieldValue(DatHeader.ReplaceExtensionKey);
-            bool? removeExtension = Header.GetBoolFieldValue(DatHeader.RemoveExtensionKey);
-            if (!string.IsNullOrEmpty(replaceExtension) || removeExtension == true)
-            {
-                if (removeExtension == true)
-                    Header.SetFieldValue<string?>(DatHeader.ReplaceExtensionKey, string.Empty);
-
-                string? dir = Path.GetDirectoryName(name);
-                if (dir != null)
-                {
-                    dir = dir.TrimStart(Path.DirectorySeparatorChar);
-                    name = Path.Combine(dir, Path.GetFileNameWithoutExtension(name) + replaceExtension);
-                }
-            }
-
-            string? addExtension = Header.GetStringFieldValue(DatHeader.AddExtensionKey);
-            if (!string.IsNullOrEmpty(addExtension))
-                name += addExtension;
-
-            if (useRomName && Header.GetBoolFieldValue(DatHeader.GameNameKey) == true)
-                name = Path.Combine(machine.Value!.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty, name);
-
-            // Now assign back the formatted name
-            name = $"{pre}{name}{post}";
             if (useRomName)
-                item.Value.SetName(name);
-            else if (machine.Value != null)
-                machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, name);
+                item.SetName(name);
+            else if (machine != null)
+                machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, name);
         }
 
         /// <summary>
@@ -505,32 +446,6 @@ namespace SabreTools.DatFiles
             if (item is not Rom rom)
                 return item;
 
-            // Process the possibly nullified item
-            return ProcessNullifiedItemImpl(rom);
-        }
-
-        /// <summary>
-        /// Process any DatItems that are "null", usually created from directory population
-        /// </summary>
-        /// <param name="item">DatItem to check for "null" status</param>
-        /// <returns>Cleaned DatItem</returns>
-        protected KeyValuePair<long, DatItem> ProcessNullifiedItemDB(KeyValuePair<long, DatItem> item)
-        {
-            // If we don't have a Rom, we can ignore it
-            if (item.Value is not Rom rom)
-                return item;
-
-            // Process the possibly nullified item
-            return new KeyValuePair<long, DatItem>(item.Key, ProcessNullifiedItemImpl(rom));
-        }
-
-        /// <summary>
-        /// Process any DatItems that are "null", usually created from directory population
-        /// </summary>
-        /// <param name="rom">Rom to check for "null" status</param>
-        /// <returns>Cleaned DatItem</returns>
-        private DatItem ProcessNullifiedItemImpl(Rom rom)
-        {
             // If the item has a size
             if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) != null)
                 return rom;

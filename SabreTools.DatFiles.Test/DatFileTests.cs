@@ -232,12 +232,6 @@ namespace SabreTools.DatFiles.Test
 
         #endregion
 
-        #region ProcessNullifiedItemDB
-
-        // TODO: Write ProcessNullifiedItemDB tests
-
-        #endregion
-
         #region GetMissingRequiredFields
 
         // TODO: Write GetMissingRequiredFields tests
