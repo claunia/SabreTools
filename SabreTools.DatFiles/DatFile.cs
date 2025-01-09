@@ -537,13 +537,8 @@ namespace SabreTools.DatFiles
             if (item is not Rom rom)
                 return item;
 
-            // Get machine for the item
-            var machine = item.GetFieldValue<Machine>(DatItem.MachineKey);
-            if (machine == null)
-                return item;
-
             // Process the possibly nullified item
-            return ProcessNullifiedItemImpl(rom, machine);
+            return ProcessNullifiedItemImpl(rom);
         }
 
         /// <summary>
@@ -557,51 +552,46 @@ namespace SabreTools.DatFiles
             if (item.Value is not Rom rom)
                 return item;
 
-            // Get machine for the item
-            var machine = ItemsDB.GetMachineForItem(item.Key);
-            if (machine.Value == null)
-                return item;
-
             // Process the possibly nullified item
-            return new KeyValuePair<long, DatItem>(item.Key, ProcessNullifiedItemImpl(rom, machine.Value));
+            return new KeyValuePair<long, DatItem>(item.Key, ProcessNullifiedItemImpl(rom));
         }
 
         /// <summary>
         /// Process any DatItems that are "null", usually created from directory population
         /// </summary>
         /// <param name="rom">Rom to check for "null" status</param>
-        /// <param name="machine">Machine for logging</param>
         /// <returns>Cleaned DatItem</returns>
-        /// TODO: Investigate what the machine name is really being used for
-        private DatItem ProcessNullifiedItemImpl(Rom rom, Machine machine)
+        private DatItem ProcessNullifiedItemImpl(Rom rom)
         {
-            // If the Rom has "null" characteristics, ensure all fields
-            if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) == null
-                && rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey) == "null")
-            {
-                _logger.Verbose($"Empty folder found: {machine.GetStringFieldValue(Models.Metadata.Machine.NameKey)}");
+            // If the item has a size
+            if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) != null)
+                return rom;
 
-                rom.SetName(rom.GetName() == "null" ? "-" : rom.GetName());
-                rom.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, Constants.SizeZero.ToString());
-                rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey,
-                    rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey) == "null" ? ZeroHash.CRC32Str : null);
-                rom.SetFieldValue<string?>(Models.Metadata.Rom.MD2Key,
-                    rom.GetStringFieldValue(Models.Metadata.Rom.MD2Key) == "null" ? ZeroHash.GetString(HashType.MD2) : null);
-                rom.SetFieldValue<string?>(Models.Metadata.Rom.MD4Key,
-                    rom.GetStringFieldValue(Models.Metadata.Rom.MD4Key) == "null" ? ZeroHash.GetString(HashType.MD4) : null);
-                rom.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key,
-                    rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key) == "null" ? ZeroHash.MD5Str : null);
-                rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key,
-                    rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key) == "null" ? ZeroHash.SHA1Str : null);
-                rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA256Key,
-                    rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key) == "null" ? ZeroHash.SHA256Str : null);
-                rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA384Key,
-                    rom.GetStringFieldValue(Models.Metadata.Rom.SHA384Key) == "null" ? ZeroHash.SHA384Str : null);
-                rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key,
-                    rom.GetStringFieldValue(Models.Metadata.Rom.SHA512Key) == "null" ? ZeroHash.SHA512Str : null);
-                rom.SetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey,
-                    rom.GetStringFieldValue(Models.Metadata.Rom.SpamSumKey) == "null" ? ZeroHash.SpamSumStr : null);
-            }
+            // If the item CRC isn't "null"
+            if (rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey) != "null")
+                return rom;
+
+            // If the Rom has "null" characteristics, ensure all fields
+            rom.SetName(rom.GetName() == "null" ? "-" : rom.GetName());
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, Constants.SizeZero.ToString());
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey,
+                rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey) == "null" ? ZeroHash.CRC32Str : null);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.MD2Key,
+                rom.GetStringFieldValue(Models.Metadata.Rom.MD2Key) == "null" ? ZeroHash.GetString(HashType.MD2) : null);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.MD4Key,
+                rom.GetStringFieldValue(Models.Metadata.Rom.MD4Key) == "null" ? ZeroHash.GetString(HashType.MD4) : null);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key,
+                rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key) == "null" ? ZeroHash.MD5Str : null);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key,
+                rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key) == "null" ? ZeroHash.SHA1Str : null);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA256Key,
+                rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key) == "null" ? ZeroHash.SHA256Str : null);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA384Key,
+                rom.GetStringFieldValue(Models.Metadata.Rom.SHA384Key) == "null" ? ZeroHash.SHA384Str : null);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key,
+                rom.GetStringFieldValue(Models.Metadata.Rom.SHA512Key) == "null" ? ZeroHash.SHA512Str : null);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey,
+                rom.GetStringFieldValue(Models.Metadata.Rom.SpamSumKey) == "null" ? ZeroHash.SpamSumStr : null);
 
             return rom;
         }
