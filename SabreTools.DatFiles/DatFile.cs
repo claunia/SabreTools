@@ -195,55 +195,17 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="item">DatItem to update</param>
         /// <param name="forceRemoveQuotes">True if the Quotes flag should be ignored, false otherwise</param>
-        /// <param name="forceRomName">True if the UseRomName should be always on (default), false otherwise</param>
-        protected void ProcessItemName(DatItem item, bool forceRemoveQuotes, bool forceRomName = true)
+        /// <param name="forceRomName">True if the UseRomName should be always on, false otherwise</param>
+        protected void ProcessItemName(DatItem item, Machine? machine, bool forceRemoveQuotes, bool forceRomName)
         {
             // Get the relevant processing values
             bool quotes = forceRemoveQuotes ? false : Header.GetBoolFieldValue(DatHeader.QuotesKey) ?? false;
             bool useRomName = forceRomName ? true : Header.GetBoolFieldValue(DatHeader.UseRomNameKey) ?? false;
 
-            // Get the machine
-            var machine = item.GetFieldValue<Machine>(DatItem.MachineKey);
-            if (machine == null)
-                return;
-
-            // Process the item name with common rules
-            ProcessItemNameImpl(item, machine, quotes, useRomName);
-        }
-
-        /// <summary>
-        /// Process an item and correctly set the item name
-        /// </summary>
-        /// <param name="item">DatItem to update</param>
-        /// <param name="forceRemoveQuotes">True if the Quotes flag should be ignored, false otherwise</param>
-        /// <param name="forceRomName">True if the UseRomName should be always on (default), false otherwise</param>
-        protected void ProcessItemNameDB(KeyValuePair<long, DatItem> item, bool forceRemoveQuotes, bool forceRomName = true)
-        {
-            // Get the relevant processing values
-            bool quotes = forceRemoveQuotes ? false : Header.GetBoolFieldValue(DatHeader.QuotesKey) ?? false;
-            bool useRomName = forceRomName ? true : Header.GetBoolFieldValue(DatHeader.UseRomNameKey) ?? false;
-
-            // Get machine for the item
-            var machine = ItemsDB.GetMachineForItem(item.Key);
-            if (machine.Value == null)
-                return;
-
-            // Process the item name with common rules
-            ProcessItemNameImpl(item.Value, machine.Value, quotes, useRomName);
-        }
-
-        /// <summary>
-        /// Process an item and correctly set the item name
-        /// </summary>
-        /// <param name="item">DatItem to update</param>
-        /// <param name="forceRemoveQuotes">True if the Quotes flag should be ignored, false otherwise</param>
-        /// <param name="forceRomName">True if the UseRomName should be always on (default), false otherwise</param>
-        private void ProcessItemNameImpl(DatItem item, Machine machine, bool quotes, bool useRomName)
-        {
             // Get the name to update
             string? name = (useRomName == true
                 ? item.GetName()
-                : machine.GetStringFieldValue(Models.Metadata.Machine.NameKey)) ?? string.Empty;
+                : machine?.GetStringFieldValue(Models.Metadata.Machine.NameKey)) ?? string.Empty;
 
             // Create the proper Prefix and Postfix
             string pre = CreatePrefix(item, machine, quotes);
@@ -307,7 +269,7 @@ namespace SabreTools.DatFiles
                 name += addExtension;
 
             if (useRomName && Header.GetBoolFieldValue(DatHeader.GameNameKey) == true)
-                name = Path.Combine(machine.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty, name);
+                name = Path.Combine(machine?.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty, name);
 
             // Now assign back the formatted name
             name = $"{pre}{name}{post}";

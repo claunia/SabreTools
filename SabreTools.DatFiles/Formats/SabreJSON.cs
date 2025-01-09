@@ -592,8 +592,11 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="datItem">DatItem object to be output</param>
         private void WriteDatItem(JsonTextWriter jtw, DatItem datItem)
         {
+            // Get the machine for the item
+            var machine = datItem.GetFieldValue<Machine>(DatItem.MachineKey);
+
             // Pre-process the item name
-            ProcessItemName(datItem, true);
+            ProcessItemName(datItem, machine, forceRemoveQuotes: true, forceRomName: false);
 
             // Build the state
             jtw.WriteStartObject();
@@ -616,8 +619,11 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="datItem">DatItem object to be output</param>
         private void WriteDatItemDB(JsonTextWriter jtw, KeyValuePair<long, DatItem> datItem)
         {
+            // Get the machine for the item
+            var machine = ItemsDB.GetMachineForItem(datItem.Key);
+
             // Pre-process the item name
-            ProcessItemNameDB(datItem, true);
+            ProcessItemName(datItem.Value, machine.Value, forceRemoveQuotes: true, forceRomName: false);
 
             // Build the state
             jtw.WriteStartObject();

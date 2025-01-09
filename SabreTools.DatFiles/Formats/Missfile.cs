@@ -170,8 +170,11 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="lastgame">The name of the last game to be output</param>
         private void WriteDatItem(StreamWriter sw, DatItem datItem, string? lastgame)
         {
+            // Get the machine for the item
+            var machine = datItem.GetFieldValue<Machine>(DatItem.MachineKey);
+
             // Process the item name
-            ProcessItemName(datItem, false, forceRomName: false);
+            ProcessItemName(datItem, machine, false, forceRomName: false);
 
             // Romba mode automatically uses item name
             if (Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.IsActive == true || Header.GetBoolFieldValue(DatHeader.UseRomNameKey) == true)
@@ -194,7 +197,7 @@ namespace SabreTools.DatFiles.Formats
             var machine = ItemsDB.GetMachineForItem(datItem.Key);
 
             // Process the item name
-            ProcessItemNameDB(datItem, false, forceRomName: false);
+            ProcessItemName(datItem.Value, machine.Value, forceRemoveQuotes: false, forceRomName: false);
 
             // Romba mode automatically uses item name
             if (Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.IsActive == true
