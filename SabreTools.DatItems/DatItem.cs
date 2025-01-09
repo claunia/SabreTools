@@ -357,6 +357,12 @@ namespace SabreTools.DatItems
         #region Sorting and Merging
 
         /// <summary>
+        /// Get unique duplicate suffix on name collision
+        /// </summary>
+        /// <returns>String representing the suffix</returns>
+        public virtual string GetDuplicateSuffix() => _internal.GetDuplicateSuffix();
+
+        /// <summary>
         /// Get the dictionary key that should be used for a given item and bucketing type
         /// </summary>
         /// <param name="bucketedBy">ItemKey value representing what key to get</param>

@@ -106,12 +106,6 @@ namespace SabreTools.DatItems.Formats
             => _internal.FillMissingHashes(other._internal);
 
         /// <summary>
-        /// Get unique duplicate suffix on name collision
-        /// </summary>
-        /// <returns>String representing the suffix</returns>
-        public string GetDuplicateSuffix() => _internal.GetDuplicateSuffix();
-
-        /// <summary>
         /// Returns if the Rom contains any hashes
         /// </summary>
         /// <returns>True if any hash exists, false otherwise</returns>

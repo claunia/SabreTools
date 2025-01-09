@@ -216,7 +216,7 @@ namespace SabreTools.DatItems.Formats
         /// Get unique duplicate suffix on name collision
         /// </summary>
         /// <returns>String representing the suffix</returns>
-        public string GetDuplicateSuffix()
+        public override string GetDuplicateSuffix()
         {
             if (!_crc.IsNullOrEmpty())
                 return $"_{CRC}";

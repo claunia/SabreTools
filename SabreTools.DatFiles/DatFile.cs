@@ -811,11 +811,9 @@ namespace SabreTools.DatFiles
                 {
                     _logger.Verbose($"Name duplicate found for '{datItemName}'");
 
-                    if (datItem is Disk || datItem is DatItems.Formats.File || datItem is Media || datItem is Rom)
-                    {
-                        datItemName += GetDuplicateSuffix(datItem);
-                        lastrenamed ??= datItemName;
-                    }
+                    // Get the duplicate suffix
+                    datItemName += datItem.GetDuplicateSuffix();
+                    lastrenamed ??= datItemName;
 
                     // If we have a conflict with the last renamed item, do the right thing
                     if (datItemName == lastrenamed)
@@ -906,11 +904,9 @@ namespace SabreTools.DatFiles
                 {
                     _logger.Verbose($"Name duplicate found for '{datItemName}'");
 
-                    if (datItem.Value is Disk || datItem.Value is DatItems.Formats.File || datItem.Value is Media || datItem.Value is Rom)
-                    {
-                        datItemName += GetDuplicateSuffix(datItem.Value);
-                        lastrenamed ??= datItemName;
-                    }
+                    // Get the duplicate suffix
+                    datItemName += datItem.Value.GetDuplicateSuffix();
+                    lastrenamed ??= datItemName;
 
                     // If we have a conflict with the last renamed item, do the right thing
                     if (datItemName == lastrenamed)
@@ -1015,21 +1011,6 @@ namespace SabreTools.DatFiles
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Get duplicate suffix based on the item type
-        /// </summary>
-        private static string GetDuplicateSuffix(DatItem datItem)
-        {
-            return datItem switch
-            {
-                Disk disk => disk.GetDuplicateSuffix(),
-                DatItems.Formats.File file => file.GetDuplicateSuffix(),
-                Media media => media.GetDuplicateSuffix(),
-                Rom rom => rom.GetDuplicateSuffix(),
-                _ => "_1",
-            };
         }
 
         #endregion
