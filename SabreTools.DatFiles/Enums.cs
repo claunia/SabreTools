@@ -180,6 +180,8 @@ namespace SabreTools.DatFiles
         // Force only deduping with certain types
         Game,
         CRC,
+        MD2,
+        MD4,
         MD5,
         SHA1,
         SHA256,

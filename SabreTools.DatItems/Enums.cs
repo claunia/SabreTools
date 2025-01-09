@@ -310,8 +310,8 @@ namespace SabreTools.DatItems
         Machine,
 
         CRC,
-        // MD2,
-        // MD4,
+        MD2,
+        MD4,
         MD5,
         SHA1,
         SHA256,

@@ -669,13 +669,13 @@ namespace SabreTools.DatFiles
             else if (diskCount + mediaCount + romCount - nodumpCount == DatStatistics.GetHashCount(HashType.MD5))
                 return ItemKey.MD5;
 
-            // // If all items are supposed to have a MD4, we bucket by that
-            // else if (diskCount + mediaCount + romCount - nodumpCount == DatStatistics.GetHashCount(HashType.MD4))
-            //     return ItemKey.MD4;
+            // If all items are supposed to have a MD4, we bucket by that
+            else if (diskCount + mediaCount + romCount - nodumpCount == DatStatistics.GetHashCount(HashType.MD4))
+                return ItemKey.MD4;
 
-            // // If all items are supposed to have a MD2, we bucket by that
-            // else if (diskCount + mediaCount + romCount - nodumpCount == DatStatistics.GetHashCount(HashType.MD2))
-            //     return ItemKey.MD2;
+            // If all items are supposed to have a MD2, we bucket by that
+            else if (diskCount + mediaCount + romCount - nodumpCount == DatStatistics.GetHashCount(HashType.MD2))
+                return ItemKey.MD2;
 
             // Otherwise, we bucket by CRC
             else

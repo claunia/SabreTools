@@ -867,13 +867,13 @@ namespace SabreTools.DatFiles
             else if (diskCount + mediaCount + romCount - nodumpCount == DatStatistics.GetHashCount(HashType.MD5))
                 return ItemKey.MD5;
 
-            // // If all items are supposed to have a MD4, we bucket by that
-            // else if (diskCount + mediaCount + romCount - nodumpCount == DatStatistics.GetHashCount(HashType.MD4))
-            //     return ItemKey.MD4;
+            // If all items are supposed to have a MD4, we bucket by that
+            else if (diskCount + mediaCount + romCount - nodumpCount == DatStatistics.GetHashCount(HashType.MD4))
+                return ItemKey.MD4;
 
-            // // If all items are supposed to have a MD2, we bucket by that
-            // else if (diskCount + mediaCount + romCount - nodumpCount == DatStatistics.GetHashCount(HashType.MD2))
-            //     return ItemKey.MD2;
+            // If all items are supposed to have a MD2, we bucket by that
+            else if (diskCount + mediaCount + romCount - nodumpCount == DatStatistics.GetHashCount(HashType.MD2))
+                return ItemKey.MD2;
 
             // Otherwise, we bucket by CRC
             else
@@ -927,8 +927,8 @@ namespace SabreTools.DatFiles
                 Disk disk => bucketBy switch
                 {
                     ItemKey.CRC => ZeroHash.CRC32Str,
-                    // ItemKey.MD2 => ZeroHash.GetString(HashType.MD2),
-                    // ItemKey.MD4 => ZeroHash.GetString(HashType.MD4),
+                    ItemKey.MD2 => ZeroHash.GetString(HashType.MD2),
+                    ItemKey.MD4 => ZeroHash.GetString(HashType.MD4),
                     ItemKey.MD5 => disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key) ?? string.Empty,
                     ItemKey.SHA1 => disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key) ?? string.Empty,
                     ItemKey.SHA256 => ZeroHash.SHA256Str,
@@ -940,8 +940,8 @@ namespace SabreTools.DatFiles
                 Media media => bucketBy switch
                 {
                     ItemKey.CRC => ZeroHash.CRC32Str,
-                    // ItemKey.MD2 => ZeroHash.GetString(HashType.MD2),
-                    // ItemKey.MD4 => ZeroHash.GetString(HashType.MD4),
+                    ItemKey.MD2 => ZeroHash.GetString(HashType.MD2),
+                    ItemKey.MD4 => ZeroHash.GetString(HashType.MD4),
                     ItemKey.MD5 => media.GetStringFieldValue(Models.Metadata.Media.MD5Key) ?? string.Empty,
                     ItemKey.SHA1 => media.GetStringFieldValue(Models.Metadata.Media.SHA1Key) ?? string.Empty,
                     ItemKey.SHA256 => media.GetStringFieldValue(Models.Metadata.Media.SHA256Key) ?? string.Empty,
@@ -953,8 +953,8 @@ namespace SabreTools.DatFiles
                 Rom rom => bucketBy switch
                 {
                     ItemKey.CRC => rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey) ?? string.Empty,
-                    // ItemKey.MD2 => rom.GetStringFieldValue(Models.Metadata.Rom.MD2Key) ?? string.Empty,
-                    // ItemKey.MD4 => rom.GetStringFieldValue(Models.Metadata.Rom.MD4Key) ?? string.Empty,
+                    ItemKey.MD2 => rom.GetStringFieldValue(Models.Metadata.Rom.MD2Key) ?? string.Empty,
+                    ItemKey.MD4 => rom.GetStringFieldValue(Models.Metadata.Rom.MD4Key) ?? string.Empty,
                     ItemKey.MD5 => rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key) ?? string.Empty,
                     ItemKey.SHA1 => rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key) ?? string.Empty,
                     ItemKey.SHA256 => rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key) ?? string.Empty,
@@ -966,8 +966,8 @@ namespace SabreTools.DatFiles
                 _ => bucketBy switch
                 {
                     ItemKey.CRC => ZeroHash.CRC32Str,
-                    // ItemKey.MD2 => ZeroHash.GetString(HashType.MD2),
-                    // ItemKey.MD4 => ZeroHash.GetString(HashType.MD4),
+                    ItemKey.MD2 => ZeroHash.GetString(HashType.MD2),
+                    ItemKey.MD4 => ZeroHash.GetString(HashType.MD4),
                     ItemKey.MD5 => ZeroHash.MD5Str,
                     ItemKey.SHA1 => ZeroHash.SHA1Str,
                     ItemKey.SHA256 => ZeroHash.SHA256Str,

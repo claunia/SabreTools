@@ -140,13 +140,13 @@ namespace SabreTools.DatItems.Formats
                     key = GetStringFieldValue(Models.Metadata.Rom.CRCKey);
                     break;
 
-                // case ItemKey.MD2:
-                //     key = GetStringFieldValue(Models.Metadata.Rom.MD2Key);
-                //     break;
+                case ItemKey.MD2:
+                    key = GetStringFieldValue(Models.Metadata.Rom.MD2Key);
+                    break;
 
-                // case ItemKey.MD4:
-                //     key = GetStringFieldValue(Models.Metadata.Rom.MD4Key);
-                //     break;
+                case ItemKey.MD4:
+                    key = GetStringFieldValue(Models.Metadata.Rom.MD4Key);
+                    break;
 
                 case ItemKey.MD5:
                     key = GetStringFieldValue(Models.Metadata.Rom.MD5Key);
@@ -198,13 +198,13 @@ namespace SabreTools.DatItems.Formats
                     key = GetStringFieldValue(Models.Metadata.Rom.CRCKey);
                     break;
 
-                // case ItemKey.MD2:
-                //     key = GetStringFieldValue(Models.Metadata.Rom.MD2Key);
-                //     break;
+                case ItemKey.MD2:
+                    key = GetStringFieldValue(Models.Metadata.Rom.MD2Key);
+                    break;
 
-                // case ItemKey.MD4:
-                //     key = GetStringFieldValue(Models.Metadata.Rom.MD4Key);
-                //     break;
+                case ItemKey.MD4:
+                    key = GetStringFieldValue(Models.Metadata.Rom.MD4Key);
+                    break;
 
                 case ItemKey.MD5:
                     key = GetStringFieldValue(Models.Metadata.Rom.MD5Key);
