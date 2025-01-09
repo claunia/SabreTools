@@ -41,7 +41,7 @@ namespace SabreTools.Test.DatFiles
             var actual = datHeader.CreateOutFileNames(outDir, overwrite: true);
 
             // Check the result
-            Assert.Equal(26, actual.Count);
+            Assert.Equal(28, actual.Count);
         }
     }
 }
