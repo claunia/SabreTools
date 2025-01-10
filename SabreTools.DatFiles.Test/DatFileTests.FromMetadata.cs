@@ -37,6 +37,90 @@ namespace SabreTools.DatFiles.Test
         [Fact]
         public void ConvertFromMetadata_FilledHeader()
         {
+            Models.Metadata.Header? header = CreateHeader();
+            Models.Metadata.Machine[]? machines = null;
+            Models.Metadata.MetadataFile? item = new Models.Metadata.MetadataFile
+            {
+                [Models.Metadata.MetadataFile.HeaderKey] = header,
+                [Models.Metadata.MetadataFile.MachineKey] = machines,
+            };
+
+            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+            datFile.ConvertFromMetadata(item, "filename", indexId: 0, keep: true, statsOnly: false);
+
+            ValidateHeader(datFile.Header);
+        }
+
+        [Fact]
+        public void ConvertFromMetadata_FilledMachine()
+        {
+            Models.Metadata.Header? header = null;
+            Models.Metadata.Machine machine = CreateMachine();
+            Models.Metadata.Machine[]? machines = [machine];
+            Models.Metadata.MetadataFile? item = new Models.Metadata.MetadataFile
+            {
+                [Models.Metadata.MetadataFile.HeaderKey] = header,
+                [Models.Metadata.MetadataFile.MachineKey] = machines,
+            };
+
+            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+            datFile.ConvertFromMetadata(item, "filename", indexId: 0, keep: true, statsOnly: false);
+
+            DatItems.Machine actualMachine = Assert.Single(datFile.ItemsDB.GetMachines()).Value;
+            ValidateMachine(actualMachine);
+
+            // Aggregate for easier validation
+            DatItems.DatItem[] datItems = datFile.Items
+                .SelectMany(kvp => kvp.Value ?? [])
+                .ToArray();
+
+            Adjuster? adjuster = Array.Find(datItems, item => item is Adjuster) as Adjuster;
+            ValidateAdjuster(adjuster);
+
+            Archive? archive = Array.Find(datItems, item => item is Archive) as Archive;
+            ValidateArchive(archive);
+
+            BiosSet? biosSet = Array.Find(datItems, item => item is BiosSet) as BiosSet;
+            ValidateBiosSet(biosSet);
+
+            Chip? chip = Array.Find(datItems, item => item is Chip) as Chip;
+            ValidateChip(chip);
+
+            Configuration? configuration = Array.Find(datItems, item => item is Configuration) as Configuration;
+            ValidateConfiguration(configuration);
+
+            Device? device = Array.Find(datItems, item => item is Device) as Device;
+            ValidateDevice(device);
+
+            DeviceRef? deviceRef = Array.Find(datItems, item => item is DeviceRef) as DeviceRef;
+            ValidateDeviceRef(deviceRef);
+
+            DipSwitch? dipSwitch = Array.Find(datItems, item => item is DipSwitch) as DipSwitch;
+            ValidateDipSwitch(dipSwitch);
+
+            Disk? disk = Array.Find(datItems, item => item is Disk) as Disk;
+            ValidateDisk(disk);
+
+            Display? display = Array.Find(datItems, item => item is Display) as Display;
+            ValidateDisplay(display);
+
+            Driver? driver = Array.Find(datItems, item => item is Driver) as Driver;
+            ValidateDriver(driver);
+
+            // All other Rom fields are tested separately
+            Rom? dumpRom = Array.Find(datItems, item => item is Rom rom && rom.GetStringFieldValue(Models.Metadata.Rom.OpenMSXMediaType) != null) as Rom;
+            Assert.NotNull(dumpRom);
+            Assert.Equal("rom", dumpRom.GetStringFieldValue(Models.Metadata.Rom.OpenMSXMediaType));
+
+            // TODO: Validate all fields
+        }
+
+        #endregion
+
+        #region Helpers
+
+        private static Models.Metadata.Header? CreateHeader()
+        {
             Models.OfflineList.CanOpen canOpen = new Models.OfflineList.CanOpen
             {
                 Extension = ["ext"],
@@ -50,7 +134,7 @@ namespace SabreTools.DatFiles.Test
 
             Models.OfflineList.Search search = new Models.OfflineList.Search();
 
-            Models.Metadata.Header? header = new Models.Metadata.Header
+            return new Models.Metadata.Header
             {
                 [Models.Metadata.Header.AuthorKey] = "author",
                 [Models.Metadata.Header.BiosModeKey] = "merged",
@@ -97,70 +181,10 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.Header.UrlKey] = "url",
                 [Models.Metadata.Header.VersionKey] = "version",
             };
-
-            Models.Metadata.Machine[]? machines = null;
-
-            Models.Metadata.MetadataFile? item = new Models.Metadata.MetadataFile
-            {
-                [Models.Metadata.MetadataFile.HeaderKey] = header,
-                [Models.Metadata.MetadataFile.MachineKey] = machines,
-            };
-
-            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
-            datFile.ConvertFromMetadata(item, "filename", indexId: 0, keep: true, statsOnly: false);
-
-            DatHeader datHeader = datFile.Header;
-            Assert.Equal("author", datHeader.GetStringFieldValue(Models.Metadata.Header.AuthorKey));
-            Assert.Equal("merged", datHeader.GetStringFieldValue(Models.Metadata.Header.BiosModeKey));
-            Assert.Equal("build", datHeader.GetStringFieldValue(Models.Metadata.Header.BuildKey));
-            Assert.Equal("ext", datHeader.GetStringFieldValue(Models.Metadata.Header.CanOpenKey));
-            Assert.Equal("category", datHeader.GetStringFieldValue(Models.Metadata.Header.CategoryKey));
-            Assert.Equal("comment", datHeader.GetStringFieldValue(Models.Metadata.Header.CommentKey));
-            Assert.Equal("date", datHeader.GetStringFieldValue(Models.Metadata.Header.DateKey));
-            Assert.Equal("datversion", datHeader.GetStringFieldValue(Models.Metadata.Header.DatVersionKey));
-            Assert.True(datHeader.GetBoolFieldValue(Models.Metadata.Header.DebugKey));
-            Assert.Equal("description", datHeader.GetStringFieldValue(Models.Metadata.Header.DescriptionKey));
-            Assert.Equal("email", datHeader.GetStringFieldValue(Models.Metadata.Header.EmailKey));
-            Assert.Equal("emulatorversion", datHeader.GetStringFieldValue(Models.Metadata.Header.EmulatorVersionKey));
-            Assert.Equal("merged", datHeader.GetStringFieldValue(Models.Metadata.Header.ForceMergingKey));
-            Assert.Equal("required", datHeader.GetStringFieldValue(Models.Metadata.Header.ForceNodumpKey));
-            Assert.Equal("zip", datHeader.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey));
-            Assert.True(datHeader.GetBoolFieldValue(Models.Metadata.Header.ForceZippingKey));
-            Assert.Equal("header", datHeader.GetStringFieldValue(Models.Metadata.Header.HeaderKey));
-            Assert.Equal("homepage", datHeader.GetStringFieldValue(Models.Metadata.Header.HomepageKey));
-            Assert.Equal("id", datHeader.GetStringFieldValue(Models.Metadata.Header.IdKey));
-            Assert.NotNull(datHeader.GetStringFieldValue(Models.Metadata.Header.ImagesKey));
-            Assert.Equal("imfolder", datHeader.GetStringFieldValue(Models.Metadata.Header.ImFolderKey));
-            Assert.NotNull(datHeader.GetStringFieldValue(Models.Metadata.Header.InfosKey));
-            Assert.True(datHeader.GetBoolFieldValue(Models.Metadata.Header.LockBiosModeKey));
-            Assert.True(datHeader.GetBoolFieldValue(Models.Metadata.Header.LockRomModeKey));
-            Assert.True(datHeader.GetBoolFieldValue(Models.Metadata.Header.LockSampleModeKey));
-            Assert.Equal("mameconfig", datHeader.GetStringFieldValue(Models.Metadata.Header.MameConfigKey));
-            Assert.Equal("name", datHeader.GetStringFieldValue(Models.Metadata.Header.NameKey));
-            Assert.NotNull(datHeader.GetStringFieldValue(Models.Metadata.Header.NewDatKey));
-            Assert.Equal("notes", datHeader.GetStringFieldValue(Models.Metadata.Header.NotesKey));
-            Assert.Equal("plugin", datHeader.GetStringFieldValue(Models.Metadata.Header.PluginKey));
-            Assert.Equal("refname", datHeader.GetStringFieldValue(Models.Metadata.Header.RefNameKey));
-            Assert.Equal("merged", datHeader.GetStringFieldValue(Models.Metadata.Header.RomModeKey));
-            Assert.Equal("romtitle", datHeader.GetStringFieldValue(Models.Metadata.Header.RomTitleKey));
-            Assert.Equal("rootdir", datHeader.GetStringFieldValue(Models.Metadata.Header.RootDirKey));
-            Assert.Equal("merged", datHeader.GetStringFieldValue(Models.Metadata.Header.SampleModeKey));
-            Assert.Equal("schemalocation", datHeader.GetStringFieldValue(Models.Metadata.Header.SchemaLocationKey));
-            Assert.Equal("screenshotsheight", datHeader.GetStringFieldValue(Models.Metadata.Header.ScreenshotsHeightKey));
-            Assert.Equal("screenshotsWidth", datHeader.GetStringFieldValue(Models.Metadata.Header.ScreenshotsWidthKey));
-            Assert.NotNull(datHeader.GetStringFieldValue(Models.Metadata.Header.SearchKey));
-            Assert.Equal("system", datHeader.GetStringFieldValue(Models.Metadata.Header.SystemKey));
-            Assert.Equal("timestamp", datHeader.GetStringFieldValue(Models.Metadata.Header.TimestampKey));
-            Assert.Equal("type", datHeader.GetStringFieldValue(Models.Metadata.Header.TypeKey));
-            Assert.Equal("url", datHeader.GetStringFieldValue(Models.Metadata.Header.UrlKey));
-            Assert.Equal("version", datHeader.GetStringFieldValue(Models.Metadata.Header.VersionKey));
         }
 
-        [Fact]
-        public void ConvertFromMetadata_FilledMachine()
+        private static Models.Metadata.Machine CreateMachine()
         {
-            Models.Metadata.Header? header = null;
-
             // Used by multiple items
             Models.Metadata.Condition condition = new Models.Metadata.Condition
             {
@@ -325,8 +349,25 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.Driver.UnofficialKey] = "yes",
             };
 
-            // TODO: Build a machine with one of every item
-            Models.Metadata.Machine machine = new Models.Metadata.Machine
+            Models.Metadata.Original original = new Models.Metadata.Original
+            {
+                [Models.Metadata.Original.ContentKey] = "content",
+                [Models.Metadata.Original.ValueKey] = true,
+            };
+
+            Models.Metadata.Dump dump = new Models.Metadata.Dump
+            {
+                [Models.Metadata.Dump.OriginalKey] = original,
+
+                // The following are searched for in order
+                // For the purposes of this test, only RomKey will be populated
+                // The only difference is what OpenMSXSubType value is applied
+                [Models.Metadata.Dump.RomKey] = new Models.Metadata.Rom(),
+                [Models.Metadata.Dump.MegaRomKey] = null,
+                [Models.Metadata.Dump.SCCPlusCartKey] = null,
+            };
+
+            return new Models.Metadata.Machine
             {
                 [Models.Metadata.Machine.AdjusterKey] = new Models.Metadata.Adjuster[] { adjuster },
                 [Models.Metadata.Machine.ArchiveKey] = new Models.Metadata.Archive[] { archive },
@@ -352,7 +393,7 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.Machine.DisplayKey] = new Models.Metadata.Display[] { display },
                 [Models.Metadata.Machine.DisplayTypeKey] = "displaytype",
                 [Models.Metadata.Machine.DriverKey] = driver,
-                [Models.Metadata.Machine.DumpKey] = "REPLACE", // Type array
+                [Models.Metadata.Machine.DumpKey] = new Models.Metadata.Dump[] { dump },
                 [Models.Metadata.Machine.DuplicateIDKey] = "duplicateid",
                 [Models.Metadata.Machine.EmulatorKey] = "emulator",
                 [Models.Metadata.Machine.ExtraKey] = "extra",
@@ -406,269 +447,341 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.Machine.VideoKey] = "REPLACE", // Type array
                 [Models.Metadata.Machine.YearKey] = "year",
             };
+        }
 
-            Models.Metadata.Machine[]? machines = [machine];
+        private static void ValidateHeader(DatHeader datHeader)
+        {
+            Assert.Equal("author", datHeader.GetStringFieldValue(Models.Metadata.Header.AuthorKey));
+            Assert.Equal("merged", datHeader.GetStringFieldValue(Models.Metadata.Header.BiosModeKey));
+            Assert.Equal("build", datHeader.GetStringFieldValue(Models.Metadata.Header.BuildKey));
+            Assert.Equal("ext", datHeader.GetStringFieldValue(Models.Metadata.Header.CanOpenKey));
+            Assert.Equal("category", datHeader.GetStringFieldValue(Models.Metadata.Header.CategoryKey));
+            Assert.Equal("comment", datHeader.GetStringFieldValue(Models.Metadata.Header.CommentKey));
+            Assert.Equal("date", datHeader.GetStringFieldValue(Models.Metadata.Header.DateKey));
+            Assert.Equal("datversion", datHeader.GetStringFieldValue(Models.Metadata.Header.DatVersionKey));
+            Assert.True(datHeader.GetBoolFieldValue(Models.Metadata.Header.DebugKey));
+            Assert.Equal("description", datHeader.GetStringFieldValue(Models.Metadata.Header.DescriptionKey));
+            Assert.Equal("email", datHeader.GetStringFieldValue(Models.Metadata.Header.EmailKey));
+            Assert.Equal("emulatorversion", datHeader.GetStringFieldValue(Models.Metadata.Header.EmulatorVersionKey));
+            Assert.Equal("merged", datHeader.GetStringFieldValue(Models.Metadata.Header.ForceMergingKey));
+            Assert.Equal("required", datHeader.GetStringFieldValue(Models.Metadata.Header.ForceNodumpKey));
+            Assert.Equal("zip", datHeader.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey));
+            Assert.True(datHeader.GetBoolFieldValue(Models.Metadata.Header.ForceZippingKey));
+            Assert.Equal("header", datHeader.GetStringFieldValue(Models.Metadata.Header.HeaderKey));
+            Assert.Equal("homepage", datHeader.GetStringFieldValue(Models.Metadata.Header.HomepageKey));
+            Assert.Equal("id", datHeader.GetStringFieldValue(Models.Metadata.Header.IdKey));
+            Assert.NotNull(datHeader.GetStringFieldValue(Models.Metadata.Header.ImagesKey));
+            Assert.Equal("imfolder", datHeader.GetStringFieldValue(Models.Metadata.Header.ImFolderKey));
+            Assert.NotNull(datHeader.GetStringFieldValue(Models.Metadata.Header.InfosKey));
+            Assert.True(datHeader.GetBoolFieldValue(Models.Metadata.Header.LockBiosModeKey));
+            Assert.True(datHeader.GetBoolFieldValue(Models.Metadata.Header.LockRomModeKey));
+            Assert.True(datHeader.GetBoolFieldValue(Models.Metadata.Header.LockSampleModeKey));
+            Assert.Equal("mameconfig", datHeader.GetStringFieldValue(Models.Metadata.Header.MameConfigKey));
+            Assert.Equal("name", datHeader.GetStringFieldValue(Models.Metadata.Header.NameKey));
+            Assert.NotNull(datHeader.GetStringFieldValue(Models.Metadata.Header.NewDatKey));
+            Assert.Equal("notes", datHeader.GetStringFieldValue(Models.Metadata.Header.NotesKey));
+            Assert.Equal("plugin", datHeader.GetStringFieldValue(Models.Metadata.Header.PluginKey));
+            Assert.Equal("refname", datHeader.GetStringFieldValue(Models.Metadata.Header.RefNameKey));
+            Assert.Equal("merged", datHeader.GetStringFieldValue(Models.Metadata.Header.RomModeKey));
+            Assert.Equal("romtitle", datHeader.GetStringFieldValue(Models.Metadata.Header.RomTitleKey));
+            Assert.Equal("rootdir", datHeader.GetStringFieldValue(Models.Metadata.Header.RootDirKey));
+            Assert.Equal("merged", datHeader.GetStringFieldValue(Models.Metadata.Header.SampleModeKey));
+            Assert.Equal("schemalocation", datHeader.GetStringFieldValue(Models.Metadata.Header.SchemaLocationKey));
+            Assert.Equal("screenshotsheight", datHeader.GetStringFieldValue(Models.Metadata.Header.ScreenshotsHeightKey));
+            Assert.Equal("screenshotsWidth", datHeader.GetStringFieldValue(Models.Metadata.Header.ScreenshotsWidthKey));
+            Assert.NotNull(datHeader.GetStringFieldValue(Models.Metadata.Header.SearchKey));
+            Assert.Equal("system", datHeader.GetStringFieldValue(Models.Metadata.Header.SystemKey));
+            Assert.Equal("timestamp", datHeader.GetStringFieldValue(Models.Metadata.Header.TimestampKey));
+            Assert.Equal("type", datHeader.GetStringFieldValue(Models.Metadata.Header.TypeKey));
+            Assert.Equal("url", datHeader.GetStringFieldValue(Models.Metadata.Header.UrlKey));
+            Assert.Equal("version", datHeader.GetStringFieldValue(Models.Metadata.Header.VersionKey));
+        }
 
-            Models.Metadata.MetadataFile? item = new Models.Metadata.MetadataFile
-            {
-                [Models.Metadata.MetadataFile.HeaderKey] = header,
-                [Models.Metadata.MetadataFile.MachineKey] = machines,
-            };
-
-            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
-            datFile.ConvertFromMetadata(item, "filename", indexId: 0, keep: true, statsOnly: false);
-
-            DatItems.Machine actualMachine = Assert.Single(datFile.ItemsDB.GetMachines()).Value;
-
-            Assert.Equal("board", actualMachine.GetStringFieldValue(Models.Metadata.Machine.BoardKey));
-            Assert.Equal("buttons", actualMachine.GetStringFieldValue(Models.Metadata.Machine.ButtonsKey));
-            Assert.Equal("category", actualMachine.GetStringFieldValue(Models.Metadata.Machine.CategoryKey));
-            Assert.Equal("cloneof", actualMachine.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey));
-            Assert.Equal("cloneofid", actualMachine.GetStringFieldValue(Models.Metadata.Machine.CloneOfIdKey));
-            Assert.Equal("comment", actualMachine.GetStringFieldValue(Models.Metadata.Machine.CommentKey));
-            Assert.Equal("company", actualMachine.GetStringFieldValue(Models.Metadata.Machine.CompanyKey));
-            Assert.Equal("control", actualMachine.GetStringFieldValue(Models.Metadata.Machine.ControlKey));
-            Assert.Equal("country", actualMachine.GetStringFieldValue(Models.Metadata.Machine.CountryKey));
-            Assert.Equal("description", actualMachine.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey));
-            Assert.Equal("dirname", actualMachine.GetStringFieldValue(Models.Metadata.Machine.DirNameKey));
-            Assert.Equal("displaycount", actualMachine.GetStringFieldValue(Models.Metadata.Machine.DisplayCountKey));
-            Assert.Equal("displaytype", actualMachine.GetStringFieldValue(Models.Metadata.Machine.DisplayTypeKey));
+        private static void ValidateMachine(DatItems.Machine machine)
+        {
+            Assert.Equal("board", machine.GetStringFieldValue(Models.Metadata.Machine.BoardKey));
+            Assert.Equal("buttons", machine.GetStringFieldValue(Models.Metadata.Machine.ButtonsKey));
+            Assert.Equal("category", machine.GetStringFieldValue(Models.Metadata.Machine.CategoryKey));
+            Assert.Equal("cloneof", machine.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey));
+            Assert.Equal("cloneofid", machine.GetStringFieldValue(Models.Metadata.Machine.CloneOfIdKey));
+            Assert.Equal("comment", machine.GetStringFieldValue(Models.Metadata.Machine.CommentKey));
+            Assert.Equal("company", machine.GetStringFieldValue(Models.Metadata.Machine.CompanyKey));
+            Assert.Equal("control", machine.GetStringFieldValue(Models.Metadata.Machine.ControlKey));
+            Assert.Equal("country", machine.GetStringFieldValue(Models.Metadata.Machine.CountryKey));
+            Assert.Equal("description", machine.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey));
+            Assert.Equal("dirname", machine.GetStringFieldValue(Models.Metadata.Machine.DirNameKey));
+            Assert.Equal("displaycount", machine.GetStringFieldValue(Models.Metadata.Machine.DisplayCountKey));
+            Assert.Equal("displaytype", machine.GetStringFieldValue(Models.Metadata.Machine.DisplayTypeKey));
             // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.DumpKey)); // Type array
-            Assert.Equal("duplicateid", actualMachine.GetStringFieldValue(Models.Metadata.Machine.DuplicateIDKey));
-            Assert.Equal("emulator", actualMachine.GetStringFieldValue(Models.Metadata.Machine.EmulatorKey));
-            Assert.Equal("extra", actualMachine.GetStringFieldValue(Models.Metadata.Machine.ExtraKey));
-            Assert.Equal("favorite", actualMachine.GetStringFieldValue(Models.Metadata.Machine.FavoriteKey));
+            Assert.Equal("duplicateid", machine.GetStringFieldValue(Models.Metadata.Machine.DuplicateIDKey));
+            Assert.Equal("emulator", machine.GetStringFieldValue(Models.Metadata.Machine.EmulatorKey));
+            Assert.Equal("extra", machine.GetStringFieldValue(Models.Metadata.Machine.ExtraKey));
+            Assert.Equal("favorite", machine.GetStringFieldValue(Models.Metadata.Machine.FavoriteKey));
             // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.FeatureKey)); // Type array
-            Assert.Equal("genmsxid", actualMachine.GetStringFieldValue(Models.Metadata.Machine.GenMSXIDKey));
-            Assert.Equal("history", actualMachine.GetStringFieldValue(Models.Metadata.Machine.HistoryKey));
-            Assert.Equal("id", actualMachine.GetStringFieldValue(Models.Metadata.Machine.IdKey));
-            Assert.Equal(ZeroHash.CRC32Str, actualMachine.GetStringFieldValue(Models.Metadata.Machine.Im1CRCKey));
-            Assert.Equal(ZeroHash.CRC32Str, actualMachine.GetStringFieldValue(Models.Metadata.Machine.Im2CRCKey));
-            Assert.Equal("imagenumber", actualMachine.GetStringFieldValue(Models.Metadata.Machine.ImageNumberKey));
+            Assert.Equal("genmsxid", machine.GetStringFieldValue(Models.Metadata.Machine.GenMSXIDKey));
+            Assert.Equal("history", machine.GetStringFieldValue(Models.Metadata.Machine.HistoryKey));
+            Assert.Equal("id", machine.GetStringFieldValue(Models.Metadata.Machine.IdKey));
+            Assert.Equal(ZeroHash.CRC32Str, machine.GetStringFieldValue(Models.Metadata.Machine.Im1CRCKey));
+            Assert.Equal(ZeroHash.CRC32Str, machine.GetStringFieldValue(Models.Metadata.Machine.Im2CRCKey));
+            Assert.Equal("imagenumber", machine.GetStringFieldValue(Models.Metadata.Machine.ImageNumberKey));
             // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.InfoKey)); // Type array
             // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.InputKey)); // Type
-            Assert.Equal("yes", actualMachine.GetStringFieldValue(Models.Metadata.Machine.IsBiosKey));
-            Assert.Equal("yes", actualMachine.GetStringFieldValue(Models.Metadata.Machine.IsDeviceKey));
-            Assert.Equal("yes", actualMachine.GetStringFieldValue(Models.Metadata.Machine.IsMechanicalKey));
-            Assert.Equal("language", actualMachine.GetStringFieldValue(Models.Metadata.Machine.LanguageKey));
-            Assert.Equal("location", actualMachine.GetStringFieldValue(Models.Metadata.Machine.LocationKey));
-            Assert.Equal("manufacturer", actualMachine.GetStringFieldValue(Models.Metadata.Machine.ManufacturerKey));
+            Assert.Equal("yes", machine.GetStringFieldValue(Models.Metadata.Machine.IsBiosKey));
+            Assert.Equal("yes", machine.GetStringFieldValue(Models.Metadata.Machine.IsDeviceKey));
+            Assert.Equal("yes", machine.GetStringFieldValue(Models.Metadata.Machine.IsMechanicalKey));
+            Assert.Equal("language", machine.GetStringFieldValue(Models.Metadata.Machine.LanguageKey));
+            Assert.Equal("location", machine.GetStringFieldValue(Models.Metadata.Machine.LocationKey));
+            Assert.Equal("manufacturer", machine.GetStringFieldValue(Models.Metadata.Machine.ManufacturerKey));
             // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.MediaKey)); // Type array
-            Assert.Equal("name", actualMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
-            Assert.Equal("notes", actualMachine.GetStringFieldValue(Models.Metadata.Machine.NotesKey));
+            Assert.Equal("name", machine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("notes", machine.GetStringFieldValue(Models.Metadata.Machine.NotesKey));
             // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.PartKey)); // Type array
-            Assert.Equal("playedcount", actualMachine.GetStringFieldValue(Models.Metadata.Machine.PlayedCountKey));
-            Assert.Equal("playedtime", actualMachine.GetStringFieldValue(Models.Metadata.Machine.PlayedTimeKey));
-            Assert.Equal("players", actualMachine.GetStringFieldValue(Models.Metadata.Machine.PlayersKey));
+            Assert.Equal("playedcount", machine.GetStringFieldValue(Models.Metadata.Machine.PlayedCountKey));
+            Assert.Equal("playedtime", machine.GetStringFieldValue(Models.Metadata.Machine.PlayedTimeKey));
+            Assert.Equal("players", machine.GetStringFieldValue(Models.Metadata.Machine.PlayersKey));
             // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.PortKey)); // Type array
-            Assert.Equal("publisher", actualMachine.GetStringFieldValue(Models.Metadata.Machine.PublisherKey));
+            Assert.Equal("publisher", machine.GetStringFieldValue(Models.Metadata.Machine.PublisherKey));
             // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.RamOptionKey)); // Type array
-            Assert.Equal("rebuildto", actualMachine.GetStringFieldValue(Models.Metadata.Machine.RebuildToKey));
+            Assert.Equal("rebuildto", machine.GetStringFieldValue(Models.Metadata.Machine.RebuildToKey));
             // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.ReleaseKey)); // Type array
-            Assert.Equal("releasenumber", actualMachine.GetStringFieldValue(Models.Metadata.Machine.ReleaseNumberKey));
+            Assert.Equal("releasenumber", machine.GetStringFieldValue(Models.Metadata.Machine.ReleaseNumberKey));
             // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.RomKey)); // Type array
-            Assert.Equal("romof", actualMachine.GetStringFieldValue(Models.Metadata.Machine.RomOfKey));
-            Assert.Equal("rotation", actualMachine.GetStringFieldValue(Models.Metadata.Machine.RotationKey));
-            Assert.Equal("yes", actualMachine.GetStringFieldValue(Models.Metadata.Machine.RunnableKey));
+            Assert.Equal("romof", machine.GetStringFieldValue(Models.Metadata.Machine.RomOfKey));
+            Assert.Equal("rotation", machine.GetStringFieldValue(Models.Metadata.Machine.RotationKey));
+            Assert.Equal("yes", machine.GetStringFieldValue(Models.Metadata.Machine.RunnableKey));
             // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.SampleKey)); // Type array
-            Assert.Equal("sampleof", actualMachine.GetStringFieldValue(Models.Metadata.Machine.SampleOfKey));
-            Assert.Equal("savetype", actualMachine.GetStringFieldValue(Models.Metadata.Machine.SaveTypeKey));
+            Assert.Equal("sampleof", machine.GetStringFieldValue(Models.Metadata.Machine.SampleOfKey));
+            Assert.Equal("savetype", machine.GetStringFieldValue(Models.Metadata.Machine.SaveTypeKey));
             // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.SharedFeatKey)); // Type array
             // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.SlotKey)); // Type array
             // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.SoftwareListKey)); // Type array
             // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.SoundKey)); // Type
-            Assert.Equal("sourcefile", actualMachine.GetStringFieldValue(Models.Metadata.Machine.SourceFileKey));
-            Assert.Equal("sourcerom", actualMachine.GetStringFieldValue(Models.Metadata.Machine.SourceRomKey));
-            Assert.Equal("status", actualMachine.GetStringFieldValue(Models.Metadata.Machine.StatusKey));
-            Assert.Equal("yes", actualMachine.GetStringFieldValue(Models.Metadata.Machine.SupportedKey));
-            Assert.Equal("system", actualMachine.GetStringFieldValue(Models.Metadata.Machine.SystemKey));
-            Assert.Equal("tags", actualMachine.GetStringFieldValue(Models.Metadata.Machine.TagsKey));
+            Assert.Equal("sourcefile", machine.GetStringFieldValue(Models.Metadata.Machine.SourceFileKey));
+            Assert.Equal("sourcerom", machine.GetStringFieldValue(Models.Metadata.Machine.SourceRomKey));
+            Assert.Equal("status", machine.GetStringFieldValue(Models.Metadata.Machine.StatusKey));
+            Assert.Equal("yes", machine.GetStringFieldValue(Models.Metadata.Machine.SupportedKey));
+            Assert.Equal("system", machine.GetStringFieldValue(Models.Metadata.Machine.SystemKey));
+            Assert.Equal("tags", machine.GetStringFieldValue(Models.Metadata.Machine.TagsKey));
             // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.TruripKey)); // Type
             // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.VideoKey)); // Type
-            Assert.Equal("year", actualMachine.GetStringFieldValue(Models.Metadata.Machine.YearKey));
+            Assert.Equal("year", machine.GetStringFieldValue(Models.Metadata.Machine.YearKey));
+        }
 
-            // Aggregate for easier validation
-            DatItems.DatItem[] datItems = datFile.Items
-                .SelectMany(kvp => kvp.Value ?? [])
-                .ToArray();
+        private static void ValidateAdjuster(Adjuster? adjuster)
+        {
+            Assert.NotNull(adjuster);
+            Assert.True(adjuster.GetBoolFieldValue(Models.Metadata.Adjuster.DefaultKey));
+            Assert.Equal("name", adjuster.GetStringFieldValue(Models.Metadata.Adjuster.NameKey));
 
-            Adjuster? actualAdjuster = Array.Find(datItems, item => item is Adjuster) as Adjuster;
-            Assert.NotNull(actualAdjuster);
-            Assert.True(actualAdjuster.GetBoolFieldValue(Models.Metadata.Adjuster.DefaultKey));
-            Assert.Equal("name", actualAdjuster.GetStringFieldValue(Models.Metadata.Adjuster.NameKey));
+            Condition? condition = adjuster.GetFieldValue<Condition>(Models.Metadata.Adjuster.ConditionKey);
+            ValidateCondition(condition);
+        }
 
-            Condition? actualAdjusterCondition = actualAdjuster.GetFieldValue<Condition>(Models.Metadata.Adjuster.ConditionKey);
-            Assert.NotNull(actualAdjusterCondition);
-            Assert.Equal("value", actualAdjusterCondition.GetStringFieldValue(Models.Metadata.Condition.ValueKey));
-            Assert.Equal("mask", actualAdjusterCondition.GetStringFieldValue(Models.Metadata.Condition.MaskKey));
-            Assert.Equal("eq", actualAdjusterCondition.GetStringFieldValue(Models.Metadata.Condition.RelationKey));
-            Assert.Equal("tag", actualAdjusterCondition.GetStringFieldValue(Models.Metadata.Condition.TagKey));
+        private static void ValidateArchive(Archive? archive)
+        {
+            Assert.NotNull(archive);
+            Assert.Equal("name", archive.GetStringFieldValue(Models.Metadata.Archive.NameKey));
+        }
 
-            Archive? actualArchive = Array.Find(datItems, item => item is Archive) as Archive;
-            Assert.NotNull(actualArchive);
-            Assert.Equal("name", actualArchive.GetStringFieldValue(Models.Metadata.Archive.NameKey));
+        private static void ValidateBiosSet(BiosSet? biosSet)
+        {
+            Assert.NotNull(biosSet);
+            Assert.True(biosSet.GetBoolFieldValue(Models.Metadata.BiosSet.DefaultKey));
+            Assert.Equal("description", biosSet.GetStringFieldValue(Models.Metadata.BiosSet.DescriptionKey));
+            Assert.Equal("name", biosSet.GetStringFieldValue(Models.Metadata.BiosSet.NameKey));
+        }
 
-            BiosSet? actualBiosSet = Array.Find(datItems, item => item is BiosSet) as BiosSet;
-            Assert.NotNull(actualBiosSet);
-            Assert.True(actualBiosSet.GetBoolFieldValue(Models.Metadata.BiosSet.DefaultKey));
-            Assert.Equal("description", actualBiosSet.GetStringFieldValue(Models.Metadata.BiosSet.DescriptionKey));
-            Assert.Equal("name", actualBiosSet.GetStringFieldValue(Models.Metadata.BiosSet.NameKey));
+        private static void ValidateChip(Chip? chip)
+        {
+            Assert.NotNull(chip);
+            Assert.Equal(12345, chip.GetInt64FieldValue(Models.Metadata.Chip.ClockKey));
+            Assert.Equal("flags", chip.GetStringFieldValue(Models.Metadata.Chip.FlagsKey));
+            Assert.Equal("name", chip.GetStringFieldValue(Models.Metadata.Chip.NameKey));
+            Assert.True(chip.GetBoolFieldValue(Models.Metadata.Chip.SoundOnlyKey));
+            Assert.Equal("tag", chip.GetStringFieldValue(Models.Metadata.Chip.TagKey));
+            Assert.Equal("cpu", chip.GetStringFieldValue(Models.Metadata.Chip.ChipTypeKey));
+        }
 
-            Chip? actualChip = Array.Find(datItems, item => item is Chip) as Chip;
-            Assert.NotNull(actualChip);
-            Assert.Equal(12345, actualChip.GetInt64FieldValue(Models.Metadata.Chip.ClockKey));
-            Assert.Equal("flags", actualChip.GetStringFieldValue(Models.Metadata.Chip.FlagsKey));
-            Assert.Equal("name", actualChip.GetStringFieldValue(Models.Metadata.Chip.NameKey));
-            Assert.True(actualChip.GetBoolFieldValue(Models.Metadata.Chip.SoundOnlyKey));
-            Assert.Equal("tag", actualChip.GetStringFieldValue(Models.Metadata.Chip.TagKey));
-            Assert.Equal("cpu", actualChip.GetStringFieldValue(Models.Metadata.Chip.ChipTypeKey));
+        private static void ValidateCondition(Condition? condition)
+        {
+            Assert.NotNull(condition);
+            Assert.Equal("value", condition.GetStringFieldValue(Models.Metadata.Condition.ValueKey));
+            Assert.Equal("mask", condition.GetStringFieldValue(Models.Metadata.Condition.MaskKey));
+            Assert.Equal("eq", condition.GetStringFieldValue(Models.Metadata.Condition.RelationKey));
+            Assert.Equal("tag", condition.GetStringFieldValue(Models.Metadata.Condition.TagKey));
+        }
 
-            Configuration? actualConfiguration = Array.Find(datItems, item => item is Configuration) as Configuration;
-            Assert.NotNull(actualConfiguration);
-            Assert.Equal("mask", actualConfiguration.GetStringFieldValue(Models.Metadata.Configuration.MaskKey));
-            Assert.Equal("name", actualConfiguration.GetStringFieldValue(Models.Metadata.Configuration.NameKey));
-            Assert.Equal("tag", actualConfiguration.GetStringFieldValue(Models.Metadata.Configuration.TagKey));
+        private static void ValidateConfiguration(Configuration? configuration)
+        {
+            Assert.NotNull(configuration);
+            Assert.Equal("mask", configuration.GetStringFieldValue(Models.Metadata.Configuration.MaskKey));
+            Assert.Equal("name", configuration.GetStringFieldValue(Models.Metadata.Configuration.NameKey));
+            Assert.Equal("tag", configuration.GetStringFieldValue(Models.Metadata.Configuration.TagKey));
 
-            Condition? actualConfigurationCondition = actualConfiguration.GetFieldValue<Condition>(Models.Metadata.Configuration.ConditionKey);
-            Assert.NotNull(actualConfigurationCondition);
-            Assert.Equal("value", actualConfigurationCondition.GetStringFieldValue(Models.Metadata.Condition.ValueKey));
-            Assert.Equal("mask", actualConfigurationCondition.GetStringFieldValue(Models.Metadata.Condition.MaskKey));
-            Assert.Equal("eq", actualConfigurationCondition.GetStringFieldValue(Models.Metadata.Condition.RelationKey));
-            Assert.Equal("tag", actualConfigurationCondition.GetStringFieldValue(Models.Metadata.Condition.TagKey));
+            Condition? condition = configuration.GetFieldValue<Condition>(Models.Metadata.Configuration.ConditionKey);
+            ValidateCondition(condition);
 
-            ConfLocation[]? actualConfigurationConfLocations = actualConfiguration.GetFieldValue<ConfLocation[]>(Models.Metadata.Configuration.ConfLocationKey);
-            Assert.NotNull(actualConfigurationConfLocations);
-            ConfLocation? actualConfigurationConfLocation = Assert.Single(actualConfigurationConfLocations);
-            Assert.NotNull(actualConfigurationConfLocation);
-            Assert.True(actualConfigurationConfLocation.GetBoolFieldValue(Models.Metadata.ConfLocation.InvertedKey));
-            Assert.Equal("name", actualConfigurationConfLocation.GetStringFieldValue(Models.Metadata.ConfLocation.NameKey));
-            Assert.Equal("number", actualConfigurationConfLocation.GetStringFieldValue(Models.Metadata.ConfLocation.NumberKey));
+            ConfLocation[]? confLocations = configuration.GetFieldValue<ConfLocation[]>(Models.Metadata.Configuration.ConfLocationKey);
+            Assert.NotNull(confLocations);
+            ConfLocation? confLocation = Assert.Single(confLocations);
+            ValidateConfLocation(confLocation);
 
-            ConfSetting[]? actualConfigurationConfSettings = actualConfiguration.GetFieldValue<ConfSetting[]>(Models.Metadata.Configuration.ConfSettingKey);
-            Assert.NotNull(actualConfigurationConfSettings);
-            ConfSetting? actualConfigurationConfSetting = Assert.Single(actualConfigurationConfSettings);
-            Assert.NotNull(actualConfigurationConfSetting);
-            Assert.True(actualConfigurationConfSetting.GetBoolFieldValue(Models.Metadata.ConfSetting.DefaultKey));
-            Assert.Equal("name", actualConfigurationConfSetting.GetStringFieldValue(Models.Metadata.ConfSetting.NameKey));
-            Assert.Equal("value", actualConfigurationConfSetting.GetStringFieldValue(Models.Metadata.ConfSetting.ValueKey));
+            ConfSetting[]? confSettings = configuration.GetFieldValue<ConfSetting[]>(Models.Metadata.Configuration.ConfSettingKey);
+            Assert.NotNull(confSettings);
+            ConfSetting? confSetting = Assert.Single(confSettings);
+            ValidateConfSetting(confSetting);
+        }
 
-            Condition? actualConfigurationConfSettingCondition = actualConfigurationConfSetting.GetFieldValue<Condition>(Models.Metadata.ConfSetting.ConditionKey);
-            Assert.NotNull(actualConfigurationConfSettingCondition);
-            Assert.Equal("value", actualConfigurationConfSettingCondition.GetStringFieldValue(Models.Metadata.Condition.ValueKey));
-            Assert.Equal("mask", actualConfigurationConfSettingCondition.GetStringFieldValue(Models.Metadata.Condition.MaskKey));
-            Assert.Equal("eq", actualConfigurationConfSettingCondition.GetStringFieldValue(Models.Metadata.Condition.RelationKey));
-            Assert.Equal("tag", actualConfigurationConfSettingCondition.GetStringFieldValue(Models.Metadata.Condition.TagKey));
+        private static void ValidateConfLocation(ConfLocation? confLocation)
+        {
+            Assert.NotNull(confLocation);
+            Assert.True(confLocation.GetBoolFieldValue(Models.Metadata.ConfLocation.InvertedKey));
+            Assert.Equal("name", confLocation.GetStringFieldValue(Models.Metadata.ConfLocation.NameKey));
+            Assert.Equal("number", confLocation.GetStringFieldValue(Models.Metadata.ConfLocation.NumberKey));
+        }
 
-            Device? actualDevice = Array.Find(datItems, item => item is Device) as Device;
-            Assert.NotNull(actualDevice);
-            Assert.Equal("fixedimage", actualDevice.GetStringFieldValue(Models.Metadata.Device.FixedImageKey));
-            Assert.Equal("interface", actualDevice.GetStringFieldValue(Models.Metadata.Device.InterfaceKey));
-            Assert.Equal(1, actualDevice.GetInt64FieldValue(Models.Metadata.Device.MandatoryKey));
-            Assert.Equal("tag", actualDevice.GetStringFieldValue(Models.Metadata.Device.TagKey));
-            Assert.Equal("punchtape", actualDevice.GetStringFieldValue(Models.Metadata.Device.DeviceTypeKey));
+        private static void ValidateConfSetting(ConfSetting? confSetting)
+        {
+            Assert.NotNull(confSetting);
+            Assert.True(confSetting.GetBoolFieldValue(Models.Metadata.ConfSetting.DefaultKey));
+            Assert.Equal("name", confSetting.GetStringFieldValue(Models.Metadata.ConfSetting.NameKey));
+            Assert.Equal("value", confSetting.GetStringFieldValue(Models.Metadata.ConfSetting.ValueKey));
 
-            Extension[]? actualDeviceExtensions = actualDevice.GetFieldValue<Extension[]>(Models.Metadata.Device.ExtensionKey);
-            Assert.NotNull(actualDeviceExtensions);
-            Extension? actualDeviceExtension = Assert.Single(actualDeviceExtensions);
-            Assert.NotNull(actualDeviceExtension);
-            Assert.Equal("name", actualDeviceExtension.GetStringFieldValue(Models.Metadata.Extension.NameKey));
+            Condition? condition = confSetting.GetFieldValue<Condition>(Models.Metadata.ConfSetting.ConditionKey);
+            ValidateCondition(condition);
+        }
 
-            Instance? actualDeviceInstance = actualDevice.GetFieldValue<Instance>(Models.Metadata.Device.InstanceKey);
-            Assert.NotNull(actualDeviceInstance);
-            Assert.Equal("briefname", actualDeviceInstance.GetStringFieldValue(Models.Metadata.Instance.BriefNameKey));
-            Assert.Equal("name", actualDeviceInstance.GetStringFieldValue(Models.Metadata.Instance.NameKey));
+        private static void ValidateDevice(Device? device)
+        {
+            Assert.NotNull(device);
+            Assert.Equal("fixedimage", device.GetStringFieldValue(Models.Metadata.Device.FixedImageKey));
+            Assert.Equal("interface", device.GetStringFieldValue(Models.Metadata.Device.InterfaceKey));
+            Assert.Equal(1, device.GetInt64FieldValue(Models.Metadata.Device.MandatoryKey));
+            Assert.Equal("tag", device.GetStringFieldValue(Models.Metadata.Device.TagKey));
+            Assert.Equal("punchtape", device.GetStringFieldValue(Models.Metadata.Device.DeviceTypeKey));
 
-            DeviceRef? actualDeviceRef = Array.Find(datItems, item => item is DeviceRef) as DeviceRef;
-            Assert.NotNull(actualDeviceRef);
-            Assert.Equal("name", actualDeviceRef.GetStringFieldValue(Models.Metadata.DeviceRef.NameKey));
+            Extension[]? extensions = device.GetFieldValue<Extension[]>(Models.Metadata.Device.ExtensionKey);
+            Assert.NotNull(extensions);
+            Extension? extension = Assert.Single(extensions);
+            ValidateExtension(extension);
 
-            DipSwitch? actualDipSwitch = Array.Find(datItems, item => item is DipSwitch) as DipSwitch;
-            Assert.NotNull(actualDipSwitch);
-            Assert.True(actualDipSwitch.GetBoolFieldValue(Models.Metadata.DipSwitch.DefaultKey));
-            Assert.Equal("mask", actualDipSwitch.GetStringFieldValue(Models.Metadata.DipSwitch.MaskKey));
-            Assert.Equal("name", actualDipSwitch.GetStringFieldValue(Models.Metadata.DipSwitch.NameKey));
-            Assert.Equal("tag", actualDipSwitch.GetStringFieldValue(Models.Metadata.DipSwitch.TagKey));
+            Instance? instance = device.GetFieldValue<Instance>(Models.Metadata.Device.InstanceKey);
+            ValidateInstance(instance);
+        }
 
-            Condition? actualDipSwitchCondition = actualDipSwitch.GetFieldValue<Condition>(Models.Metadata.DipSwitch.ConditionKey);
-            Assert.NotNull(actualDipSwitchCondition);
-            Assert.Equal("value", actualDipSwitchCondition.GetStringFieldValue(Models.Metadata.Condition.ValueKey));
-            Assert.Equal("mask", actualDipSwitchCondition.GetStringFieldValue(Models.Metadata.Condition.MaskKey));
-            Assert.Equal("eq", actualDipSwitchCondition.GetStringFieldValue(Models.Metadata.Condition.RelationKey));
-            Assert.Equal("tag", actualDipSwitchCondition.GetStringFieldValue(Models.Metadata.Condition.TagKey));
+        private static void ValidateDeviceRef(DeviceRef? deviceRef)
+        {
+            Assert.NotNull(deviceRef);
+            Assert.Equal("name", deviceRef.GetStringFieldValue(Models.Metadata.DeviceRef.NameKey));
+        }
 
-            DipLocation[]? actualDipSwitchDipLocations = actualDipSwitch.GetFieldValue<DipLocation[]>(Models.Metadata.DipSwitch.DipLocationKey);
-            Assert.NotNull(actualDipSwitchDipLocations);
-            DipLocation? actualDipSwitchDipLocation = Assert.Single(actualDipSwitchDipLocations);
-            Assert.NotNull(actualDipSwitchDipLocation);
-            Assert.True(actualDipSwitchDipLocation.GetBoolFieldValue(Models.Metadata.DipLocation.InvertedKey));
-            Assert.Equal("name", actualDipSwitchDipLocation.GetStringFieldValue(Models.Metadata.DipLocation.NameKey));
-            Assert.Equal("number", actualDipSwitchDipLocation.GetStringFieldValue(Models.Metadata.DipLocation.NumberKey));
+        private static void ValidateDipLocation(DipLocation? dipLocation)
+        {
+            Assert.NotNull(dipLocation);
+            Assert.True(dipLocation.GetBoolFieldValue(Models.Metadata.DipLocation.InvertedKey));
+            Assert.Equal("name", dipLocation.GetStringFieldValue(Models.Metadata.DipLocation.NameKey));
+            Assert.Equal("number", dipLocation.GetStringFieldValue(Models.Metadata.DipLocation.NumberKey));
+        }
 
-            DipValue[]? actualDipSwitchDipValues = actualDipSwitch.GetFieldValue<DipValue[]>(Models.Metadata.DipSwitch.DipValueKey);
-            Assert.NotNull(actualDipSwitchDipValues);
-            DipValue? actualDipSwitchDipValue = Assert.Single(actualDipSwitchDipValues);
-            Assert.NotNull(actualDipSwitchDipValue);
-            Assert.True(actualDipSwitchDipValue.GetBoolFieldValue(Models.Metadata.DipValue.DefaultKey));
-            Assert.Equal("name", actualDipSwitchDipValue.GetStringFieldValue(Models.Metadata.DipValue.NameKey));
-            Assert.Equal("value", actualDipSwitchDipValue.GetStringFieldValue(Models.Metadata.DipValue.ValueKey));
+        private static void ValidateDipSwitch(DipSwitch? dipSwitch)
+        {
+            Assert.NotNull(dipSwitch);
+            Assert.True(dipSwitch.GetBoolFieldValue(Models.Metadata.DipSwitch.DefaultKey));
+            Assert.Equal("mask", dipSwitch.GetStringFieldValue(Models.Metadata.DipSwitch.MaskKey));
+            Assert.Equal("name", dipSwitch.GetStringFieldValue(Models.Metadata.DipSwitch.NameKey));
+            Assert.Equal("tag", dipSwitch.GetStringFieldValue(Models.Metadata.DipSwitch.TagKey));
 
-            Condition? actualDipSwitchDipValueCondition = actualDipSwitchDipValue.GetFieldValue<Condition>(Models.Metadata.DipValue.ConditionKey);
-            Assert.NotNull(actualDipSwitchDipValueCondition);
-            Assert.Equal("value", actualDipSwitchDipValueCondition.GetStringFieldValue(Models.Metadata.Condition.ValueKey));
-            Assert.Equal("mask", actualDipSwitchDipValueCondition.GetStringFieldValue(Models.Metadata.Condition.MaskKey));
-            Assert.Equal("eq", actualDipSwitchDipValueCondition.GetStringFieldValue(Models.Metadata.Condition.RelationKey));
-            Assert.Equal("tag", actualDipSwitchDipValueCondition.GetStringFieldValue(Models.Metadata.Condition.TagKey));
+            Condition? condition = dipSwitch.GetFieldValue<Condition>(Models.Metadata.DipSwitch.ConditionKey);
+            ValidateCondition(condition);
 
-            string[]? actualDipSwitchEntries = actualDipSwitch.GetStringArrayFieldValue(Models.Metadata.DipSwitch.EntryKey);
-            Assert.NotNull(actualDipSwitchEntries);
-            string actualDipSwitchEntry = Assert.Single(actualDipSwitchEntries);
-            Assert.Equal("entry", actualDipSwitchEntry);
+            DipLocation[]? dipLocations = dipSwitch.GetFieldValue<DipLocation[]>(Models.Metadata.DipSwitch.DipLocationKey);
+            Assert.NotNull(dipLocations);
+            DipLocation? dipLocation = Assert.Single(dipLocations);
+            ValidateDipLocation(dipLocation);
 
-            Disk? actualDisk = Array.Find(datItems, item => item is Disk) as Disk;
-            Assert.NotNull(actualDisk);
-            Assert.Equal("flags", actualDisk.GetStringFieldValue(Models.Metadata.Disk.FlagsKey));
-            Assert.Equal("index", actualDisk.GetStringFieldValue(Models.Metadata.Disk.IndexKey));
-            Assert.Equal(ZeroHash.MD5Str, actualDisk.GetStringFieldValue(Models.Metadata.Disk.MD5Key));
-            Assert.Equal("merge", actualDisk.GetStringFieldValue(Models.Metadata.Disk.MergeKey));
-            Assert.Equal("name", actualDisk.GetStringFieldValue(Models.Metadata.Disk.NameKey));
-            Assert.True(actualDisk.GetBoolFieldValue(Models.Metadata.Disk.OptionalKey));
-            Assert.Equal("region", actualDisk.GetStringFieldValue(Models.Metadata.Disk.RegionKey));
-            Assert.Equal(ZeroHash.SHA1Str, actualDisk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key));
-            Assert.True(actualDisk.GetBoolFieldValue(Models.Metadata.Disk.WritableKey));
+            DipValue[]? dipValues = dipSwitch.GetFieldValue<DipValue[]>(Models.Metadata.DipSwitch.DipValueKey);
+            Assert.NotNull(dipValues);
+            DipValue? dipValue = Assert.Single(dipValues);
+            ValidateDipValue(dipValue);
 
-            Display? actualDisplay = Array.Find(datItems, item => item is Display) as Display;
-            Assert.NotNull(actualDisplay);
-            Assert.True(actualDisplay.GetBoolFieldValue(Models.Metadata.Display.FlipXKey));
-            Assert.Equal(12345, actualDisplay.GetInt64FieldValue(Models.Metadata.Display.HBEndKey));
-            Assert.Equal(12345, actualDisplay.GetInt64FieldValue(Models.Metadata.Display.HBStartKey));
-            Assert.Equal(12345, actualDisplay.GetInt64FieldValue(Models.Metadata.Display.HeightKey));
-            Assert.Equal(12345, actualDisplay.GetInt64FieldValue(Models.Metadata.Display.HTotalKey));
-            Assert.Equal(12345, actualDisplay.GetInt64FieldValue(Models.Metadata.Display.PixClockKey));
-            Assert.Equal(12345, actualDisplay.GetInt64FieldValue(Models.Metadata.Display.RefreshKey));
-            Assert.Equal(90, actualDisplay.GetInt64FieldValue(Models.Metadata.Display.RotateKey));
-            Assert.Equal("tag", actualDisplay.GetStringFieldValue(Models.Metadata.Display.TagKey));
-            Assert.Equal("vector", actualDisplay.GetStringFieldValue(Models.Metadata.Display.DisplayTypeKey));
-            Assert.Equal(12345, actualDisplay.GetInt64FieldValue(Models.Metadata.Display.VBEndKey));
-            Assert.Equal(12345, actualDisplay.GetInt64FieldValue(Models.Metadata.Display.VBStartKey));
-            Assert.Equal(12345, actualDisplay.GetInt64FieldValue(Models.Metadata.Display.VTotalKey));
-            Assert.Equal(12345, actualDisplay.GetInt64FieldValue(Models.Metadata.Display.WidthKey));
+            string[]? entries = dipSwitch.GetStringArrayFieldValue(Models.Metadata.DipSwitch.EntryKey);
+            Assert.NotNull(entries);
+            string entry = Assert.Single(entries);
+            Assert.Equal("entry", entry);
+        }
 
-            Driver? actualDriver = Array.Find(datItems, item => item is Driver) as Driver;
-            Assert.NotNull(actualDriver);
-            Assert.Equal("plain", actualDriver.GetStringFieldValue(Models.Metadata.Driver.BlitKey));
-            Assert.Equal("good", actualDriver.GetStringFieldValue(Models.Metadata.Driver.CocktailKey));
-            Assert.Equal("good", actualDriver.GetStringFieldValue(Models.Metadata.Driver.ColorKey));
-            Assert.Equal("good", actualDriver.GetStringFieldValue(Models.Metadata.Driver.EmulationKey));
-            Assert.True(actualDriver.GetBoolFieldValue(Models.Metadata.Driver.IncompleteKey));
-            Assert.True(actualDriver.GetBoolFieldValue(Models.Metadata.Driver.NoSoundHardwareKey));
-            Assert.Equal("pallettesize", actualDriver.GetStringFieldValue(Models.Metadata.Driver.PaletteSizeKey));
-            Assert.True(actualDriver.GetBoolFieldValue(Models.Metadata.Driver.RequiresArtworkKey));
-            Assert.Equal("supported", actualDriver.GetStringFieldValue(Models.Metadata.Driver.SaveStateKey));
-            Assert.Equal("good", actualDriver.GetStringFieldValue(Models.Metadata.Driver.SoundKey));
-            Assert.Equal("good", actualDriver.GetStringFieldValue(Models.Metadata.Driver.StatusKey));
-            Assert.True(actualDriver.GetBoolFieldValue(Models.Metadata.Driver.UnofficialKey));
+        private static void ValidateDipValue(DipValue? dipValue)
+        {
+            Assert.NotNull(dipValue);
+            Assert.True(dipValue.GetBoolFieldValue(Models.Metadata.DipValue.DefaultKey));
+            Assert.Equal("name", dipValue.GetStringFieldValue(Models.Metadata.DipValue.NameKey));
+            Assert.Equal("value", dipValue.GetStringFieldValue(Models.Metadata.DipValue.ValueKey));
 
-            // TODO: Validate all fields
+            Condition? condition = dipValue.GetFieldValue<Condition>(Models.Metadata.DipValue.ConditionKey);
+            ValidateCondition(condition);
+        }
+
+        private static void ValidateDisk(Disk? disk)
+        {
+            Assert.NotNull(disk);
+            Assert.Equal("flags", disk.GetStringFieldValue(Models.Metadata.Disk.FlagsKey));
+            Assert.Equal("index", disk.GetStringFieldValue(Models.Metadata.Disk.IndexKey));
+            Assert.Equal(ZeroHash.MD5Str, disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key));
+            Assert.Equal("merge", disk.GetStringFieldValue(Models.Metadata.Disk.MergeKey));
+            Assert.Equal("name", disk.GetStringFieldValue(Models.Metadata.Disk.NameKey));
+            Assert.True(disk.GetBoolFieldValue(Models.Metadata.Disk.OptionalKey));
+            Assert.Equal("region", disk.GetStringFieldValue(Models.Metadata.Disk.RegionKey));
+            Assert.Equal(ZeroHash.SHA1Str, disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key));
+            Assert.True(disk.GetBoolFieldValue(Models.Metadata.Disk.WritableKey));
+        }
+
+        private static void ValidateDisplay(Display? display)
+        {
+            Assert.NotNull(display);
+            Assert.True(display.GetBoolFieldValue(Models.Metadata.Display.FlipXKey));
+            Assert.Equal(12345, display.GetInt64FieldValue(Models.Metadata.Display.HBEndKey));
+            Assert.Equal(12345, display.GetInt64FieldValue(Models.Metadata.Display.HBStartKey));
+            Assert.Equal(12345, display.GetInt64FieldValue(Models.Metadata.Display.HeightKey));
+            Assert.Equal(12345, display.GetInt64FieldValue(Models.Metadata.Display.HTotalKey));
+            Assert.Equal(12345, display.GetInt64FieldValue(Models.Metadata.Display.PixClockKey));
+            Assert.Equal(12345, display.GetInt64FieldValue(Models.Metadata.Display.RefreshKey));
+            Assert.Equal(90, display.GetInt64FieldValue(Models.Metadata.Display.RotateKey));
+            Assert.Equal("tag", display.GetStringFieldValue(Models.Metadata.Display.TagKey));
+            Assert.Equal("vector", display.GetStringFieldValue(Models.Metadata.Display.DisplayTypeKey));
+            Assert.Equal(12345, display.GetInt64FieldValue(Models.Metadata.Display.VBEndKey));
+            Assert.Equal(12345, display.GetInt64FieldValue(Models.Metadata.Display.VBStartKey));
+            Assert.Equal(12345, display.GetInt64FieldValue(Models.Metadata.Display.VTotalKey));
+            Assert.Equal(12345, display.GetInt64FieldValue(Models.Metadata.Display.WidthKey));
+        }
+
+        private static void ValidateDriver(Driver? driver)
+        {
+            Assert.NotNull(driver);
+            Assert.Equal("plain", driver.GetStringFieldValue(Models.Metadata.Driver.BlitKey));
+            Assert.Equal("good", driver.GetStringFieldValue(Models.Metadata.Driver.CocktailKey));
+            Assert.Equal("good", driver.GetStringFieldValue(Models.Metadata.Driver.ColorKey));
+            Assert.Equal("good", driver.GetStringFieldValue(Models.Metadata.Driver.EmulationKey));
+            Assert.True(driver.GetBoolFieldValue(Models.Metadata.Driver.IncompleteKey));
+            Assert.True(driver.GetBoolFieldValue(Models.Metadata.Driver.NoSoundHardwareKey));
+            Assert.Equal("pallettesize", driver.GetStringFieldValue(Models.Metadata.Driver.PaletteSizeKey));
+            Assert.True(driver.GetBoolFieldValue(Models.Metadata.Driver.RequiresArtworkKey));
+            Assert.Equal("supported", driver.GetStringFieldValue(Models.Metadata.Driver.SaveStateKey));
+            Assert.Equal("good", driver.GetStringFieldValue(Models.Metadata.Driver.SoundKey));
+            Assert.Equal("good", driver.GetStringFieldValue(Models.Metadata.Driver.StatusKey));
+            Assert.True(driver.GetBoolFieldValue(Models.Metadata.Driver.UnofficialKey));
+        }
+
+        private static void ValidateExtension(Extension? extension)
+        {
+            Assert.NotNull(extension);
+            Assert.Equal("name", extension.GetStringFieldValue(Models.Metadata.Extension.NameKey));
+        }
+
+        private static void ValidateInstance(Instance? instance)
+        {
+            Assert.NotNull(instance);
+            Assert.Equal("briefname", instance.GetStringFieldValue(Models.Metadata.Instance.BriefNameKey));
+            Assert.Equal("name", instance.GetStringFieldValue(Models.Metadata.Instance.NameKey));
         }
 
         #endregion
