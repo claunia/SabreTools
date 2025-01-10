@@ -741,7 +741,7 @@ namespace SabreTools.DatFiles
                         if (subItem.GetBoolFieldValue(Models.Metadata.DipValue.DefaultKey) != null)
                             subItem.SetFieldValue<string?>(Models.Metadata.DipValue.DefaultKey, subItem.GetBoolFieldValue(Models.Metadata.DipValue.DefaultKey).FromYesNo());
 
-                        var subCondition = item.Read<Models.Metadata.Condition>(Models.Metadata.DipValue.ConditionKey);
+                        var subCondition = subItem.GetFieldValue<Models.Metadata.Condition>(Models.Metadata.DipValue.ConditionKey);
                         if (subCondition != null)
                         {
                             var subSubItem = new DatItems.Formats.Condition(subCondition);

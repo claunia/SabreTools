@@ -249,6 +249,33 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.DeviceRef.NameKey] = "name",
             };
 
+            Models.Metadata.DipLocation dipLocation = new Models.Metadata.DipLocation
+            {
+                [Models.Metadata.DipLocation.InvertedKey] = "yes",
+                [Models.Metadata.DipLocation.NameKey] = "name",
+                [Models.Metadata.DipLocation.NumberKey] = "number",
+            };
+
+            Models.Metadata.DipValue dipValue = new Models.Metadata.DipValue
+            {
+                [Models.Metadata.DipValue.ConditionKey] = condition,
+                [Models.Metadata.DipValue.DefaultKey] = "yes",
+                [Models.Metadata.DipValue.NameKey] = "name",
+                [Models.Metadata.DipValue.ValueKey] = "value",
+            };
+
+            Models.Metadata.DipSwitch dipSwitch = new Models.Metadata.DipSwitch
+            {
+                [Models.Metadata.DipSwitch.ConditionKey] = condition,
+                [Models.Metadata.DipSwitch.DefaultKey] = "yes",
+                [Models.Metadata.DipSwitch.DipLocationKey] = new Models.Metadata.DipLocation[] { dipLocation },
+                [Models.Metadata.DipSwitch.DipValueKey] = new Models.Metadata.DipValue[] { dipValue },
+                [Models.Metadata.DipSwitch.EntryKey] = new string[] { "entry" },
+                [Models.Metadata.DipSwitch.MaskKey] = "mask",
+                [Models.Metadata.DipSwitch.NameKey] = "name",
+                [Models.Metadata.DipSwitch.TagKey] = "tag",
+            };
+
             // TODO: Build a machine with one of every item
             Models.Metadata.Machine machine = new Models.Metadata.Machine
             {
@@ -269,7 +296,7 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.Machine.DescriptionKey] = "description",
                 [Models.Metadata.Machine.DeviceKey] = new Models.Metadata.Device[] { device },
                 [Models.Metadata.Machine.DeviceRefKey] = new Models.Metadata.DeviceRef[] { deviceRef },
-                [Models.Metadata.Machine.DipSwitchKey] = "REPLACE", // Type array
+                [Models.Metadata.Machine.DipSwitchKey] = new Models.Metadata.DipSwitch[] { dipSwitch },
                 [Models.Metadata.Machine.DirNameKey] = "dirname",
                 [Models.Metadata.Machine.DiskKey] = "REPLACE", // Type array
                 [Models.Metadata.Machine.DisplayCountKey] = "displaycount",
@@ -354,7 +381,6 @@ namespace SabreTools.DatFiles.Test
             Assert.Equal("control", actualMachine.GetStringFieldValue(Models.Metadata.Machine.ControlKey));
             Assert.Equal("country", actualMachine.GetStringFieldValue(Models.Metadata.Machine.CountryKey));
             Assert.Equal("description", actualMachine.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey));
-            // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.DipSwitchKey)); // Type array
             Assert.Equal("dirname", actualMachine.GetStringFieldValue(Models.Metadata.Machine.DirNameKey));
             // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.DiskKey)); // Type array
             Assert.Equal("displaycount", actualMachine.GetStringFieldValue(Models.Metadata.Machine.DisplayCountKey));
@@ -509,6 +535,48 @@ namespace SabreTools.DatFiles.Test
             DatItems.Formats.DeviceRef? actualDeviceRef = Array.Find(datItems, item => item is DatItems.Formats.DeviceRef) as DatItems.Formats.DeviceRef;
             Assert.NotNull(actualDeviceRef);
             Assert.Equal("name", actualDeviceRef.GetStringFieldValue(Models.Metadata.DeviceRef.NameKey));
+
+            DatItems.Formats.DipSwitch? actualDipSwitch = Array.Find(datItems, item => item is DatItems.Formats.DipSwitch) as DatItems.Formats.DipSwitch;
+            Assert.NotNull(actualDipSwitch);
+            Assert.True(actualDipSwitch.GetBoolFieldValue(Models.Metadata.DipSwitch.DefaultKey));
+            Assert.Equal("mask", actualDipSwitch.GetStringFieldValue(Models.Metadata.DipSwitch.MaskKey));
+            Assert.Equal("name", actualDipSwitch.GetStringFieldValue(Models.Metadata.DipSwitch.NameKey));
+            Assert.Equal("tag", actualDipSwitch.GetStringFieldValue(Models.Metadata.DipSwitch.TagKey));
+
+            DatItems.Formats.Condition? actualDipSwitchCondition = actualDipSwitch.GetFieldValue<DatItems.Formats.Condition>(Models.Metadata.DipSwitch.ConditionKey);
+            Assert.NotNull(actualDipSwitchCondition);
+            Assert.Equal("value", actualDipSwitchCondition.GetStringFieldValue(Models.Metadata.Condition.ValueKey));
+            Assert.Equal("mask", actualDipSwitchCondition.GetStringFieldValue(Models.Metadata.Condition.MaskKey));
+            Assert.Equal("eq", actualDipSwitchCondition.GetStringFieldValue(Models.Metadata.Condition.RelationKey));
+            Assert.Equal("tag", actualDipSwitchCondition.GetStringFieldValue(Models.Metadata.Condition.TagKey));
+
+            DatItems.Formats.DipLocation[]? actualDipSwitchDipLocations = actualDipSwitch.GetFieldValue<DatItems.Formats.DipLocation[]>(Models.Metadata.DipSwitch.DipLocationKey);
+            Assert.NotNull(actualDipSwitchDipLocations);
+            DatItems.Formats.DipLocation? actualDipSwitchDipLocation = Assert.Single(actualDipSwitchDipLocations);
+            Assert.NotNull(actualDipSwitchDipLocation);
+            Assert.True(actualDipSwitchDipLocation.GetBoolFieldValue(Models.Metadata.DipLocation.InvertedKey));
+            Assert.Equal("name", actualDipSwitchDipLocation.GetStringFieldValue(Models.Metadata.DipLocation.NameKey));
+            Assert.Equal("number", actualDipSwitchDipLocation.GetStringFieldValue(Models.Metadata.DipLocation.NumberKey));
+
+            DatItems.Formats.DipValue[]? actualDipSwitchDipValues = actualDipSwitch.GetFieldValue<DatItems.Formats.DipValue[]>(Models.Metadata.DipSwitch.DipValueKey);
+            Assert.NotNull(actualDipSwitchDipValues);
+            DatItems.Formats.DipValue? actualDipSwitchDipValue = Assert.Single(actualDipSwitchDipValues);
+            Assert.NotNull(actualDipSwitchDipValue);
+            Assert.True(actualDipSwitchDipValue.GetBoolFieldValue(Models.Metadata.DipValue.DefaultKey));
+            Assert.Equal("name", actualDipSwitchDipValue.GetStringFieldValue(Models.Metadata.DipValue.NameKey));
+            Assert.Equal("value", actualDipSwitchDipValue.GetStringFieldValue(Models.Metadata.DipValue.ValueKey));
+
+            DatItems.Formats.Condition? actualDipSwitchDipValueCondition = actualDipSwitchDipValue.GetFieldValue<DatItems.Formats.Condition>(Models.Metadata.DipValue.ConditionKey);
+            Assert.NotNull(actualDipSwitchDipValueCondition);
+            Assert.Equal("value", actualDipSwitchDipValueCondition.GetStringFieldValue(Models.Metadata.Condition.ValueKey));
+            Assert.Equal("mask", actualDipSwitchDipValueCondition.GetStringFieldValue(Models.Metadata.Condition.MaskKey));
+            Assert.Equal("eq", actualDipSwitchDipValueCondition.GetStringFieldValue(Models.Metadata.Condition.RelationKey));
+            Assert.Equal("tag", actualDipSwitchDipValueCondition.GetStringFieldValue(Models.Metadata.Condition.TagKey));
+
+            string[]? actualDipSwitchEntries = actualDipSwitch.GetStringArrayFieldValue(Models.Metadata.DipSwitch.EntryKey);
+            Assert.NotNull(actualDipSwitchEntries);
+            string actualDipSwitchEntry = Assert.Single(actualDipSwitchEntries);
+            Assert.Equal("entry", actualDipSwitchEntry);
 
             // TODO: Validate all fields
         }
