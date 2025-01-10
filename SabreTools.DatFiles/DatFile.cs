@@ -427,7 +427,6 @@ namespace SabreTools.DatFiles
         /// Return list of required fields missing from a DatItem
         /// </summary>
         /// <returns>List of missing required fields, null or empty if none were found</returns>
-        /// TODO: Can this be made into a thin wrapper around a RequiredFields Dictionary property?
         protected internal virtual List<string>? GetMissingRequiredFields(DatItem datItem) => null;
 
         /// <summary>
