@@ -112,6 +112,18 @@ namespace SabreTools.DatFiles.Test
             Assert.NotNull(dumpRom);
             Assert.Equal("rom", dumpRom.GetStringFieldValue(Models.Metadata.Rom.OpenMSXMediaType));
 
+            Feature? feature = Array.Find(datItems, item => item is Feature) as Feature;
+            ValidateFeature(feature);
+
+            Info? info = Array.Find(datItems, item => item is Info) as Info;
+            ValidateInfo(info);
+
+            Input? input = Array.Find(datItems, item => item is Input) as Input;
+            ValidateInput(input);
+
+            Media? media = Array.Find(datItems, item => item is Media) as Media;
+            ValidateMedia(media);
+
             // TODO: Validate all fields
         }
 
@@ -367,6 +379,56 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.Dump.SCCPlusCartKey] = null,
             };
 
+            Models.Metadata.Feature feature = new Models.Metadata.Feature
+            {
+                [Models.Metadata.Feature.NameKey] = "name",
+                [Models.Metadata.Feature.OverallKey] = "imperfect",
+                [Models.Metadata.Feature.StatusKey] = "imperfect",
+                [Models.Metadata.Feature.FeatureTypeKey] = "protection",
+                [Models.Metadata.Feature.ValueKey] = "value",
+            };
+
+            Models.Metadata.Info info = new Models.Metadata.Info
+            {
+                [Models.Metadata.Info.NameKey] = "name",
+                [Models.Metadata.Info.ValueKey] = "value",
+            };
+
+            Models.Metadata.Control control = new Models.Metadata.Control
+            {
+                [Models.Metadata.Control.ButtonsKey] = 12345,
+                [Models.Metadata.Control.KeyDeltaKey] = 12345,
+                [Models.Metadata.Control.MaximumKey] = 12345,
+                [Models.Metadata.Control.MinimumKey] = 12345,
+                [Models.Metadata.Control.PlayerKey] = 12345,
+                [Models.Metadata.Control.ReqButtonsKey] = 12345,
+                [Models.Metadata.Control.ReverseKey] = "yes",
+                [Models.Metadata.Control.SensitivityKey] = 12345,
+                [Models.Metadata.Control.ControlTypeKey] = "lightgun",
+                [Models.Metadata.Control.WaysKey] = "ways",
+                [Models.Metadata.Control.Ways2Key] = "ways2",
+                [Models.Metadata.Control.Ways3Key] = "ways3",
+            };
+
+            Models.Metadata.Input input = new Models.Metadata.Input
+            {
+                [Models.Metadata.Input.ButtonsKey] = 12345,
+                [Models.Metadata.Input.CoinsKey] = 12345,
+                [Models.Metadata.Input.ControlKey] = new Models.Metadata.Control[] { control },
+                [Models.Metadata.Input.PlayersKey] = 12345,
+                [Models.Metadata.Input.ServiceKey] = "yes",
+                [Models.Metadata.Input.TiltKey] = "yes",
+            };
+
+            Models.Metadata.Media media = new Models.Metadata.Media
+            {
+                [Models.Metadata.Media.MD5Key] = ZeroHash.MD5Str,
+                [Models.Metadata.Media.NameKey] = "name",
+                [Models.Metadata.Media.SHA1Key] = ZeroHash.SHA1Str,
+                [Models.Metadata.Media.SHA256Key] = ZeroHash.SHA256Str,
+                [Models.Metadata.Media.SpamSumKey] = ZeroHash.SpamSumStr,
+            };
+
             return new Models.Metadata.Machine
             {
                 [Models.Metadata.Machine.AdjusterKey] = new Models.Metadata.Adjuster[] { adjuster },
@@ -398,22 +460,22 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.Machine.EmulatorKey] = "emulator",
                 [Models.Metadata.Machine.ExtraKey] = "extra",
                 [Models.Metadata.Machine.FavoriteKey] = "favorite",
-                [Models.Metadata.Machine.FeatureKey] = "REPLACE", // Type array
+                [Models.Metadata.Machine.FeatureKey] = new Models.Metadata.Feature[] { feature },
                 [Models.Metadata.Machine.GenMSXIDKey] = "genmsxid",
                 [Models.Metadata.Machine.HistoryKey] = "history",
                 [Models.Metadata.Machine.IdKey] = "id",
                 [Models.Metadata.Machine.Im1CRCKey] = ZeroHash.CRC32Str,
                 [Models.Metadata.Machine.Im2CRCKey] = ZeroHash.CRC32Str,
                 [Models.Metadata.Machine.ImageNumberKey] = "imagenumber",
-                [Models.Metadata.Machine.InfoKey] = "REPLACE", // Type array
-                [Models.Metadata.Machine.InputKey] = "REPLACE", // Type
+                [Models.Metadata.Machine.InfoKey] = new Models.Metadata.Info[] { info },
+                [Models.Metadata.Machine.InputKey] = input,
                 [Models.Metadata.Machine.IsBiosKey] = "yes",
                 [Models.Metadata.Machine.IsDeviceKey] = "yes",
                 [Models.Metadata.Machine.IsMechanicalKey] = "yes",
                 [Models.Metadata.Machine.LanguageKey] = "language",
                 [Models.Metadata.Machine.LocationKey] = "location",
                 [Models.Metadata.Machine.ManufacturerKey] = "manufacturer",
-                [Models.Metadata.Machine.MediaKey] = "REPLACE", // Type array
+                [Models.Metadata.Machine.MediaKey] = new Models.Metadata.Media[] { media },
                 [Models.Metadata.Machine.NameKey] = "name",
                 [Models.Metadata.Machine.NotesKey] = "notes",
                 [Models.Metadata.Machine.PartKey] = "REPLACE", // Type array
@@ -512,50 +574,35 @@ namespace SabreTools.DatFiles.Test
             Assert.Equal("dirname", machine.GetStringFieldValue(Models.Metadata.Machine.DirNameKey));
             Assert.Equal("displaycount", machine.GetStringFieldValue(Models.Metadata.Machine.DisplayCountKey));
             Assert.Equal("displaytype", machine.GetStringFieldValue(Models.Metadata.Machine.DisplayTypeKey));
-            // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.DumpKey)); // Type array
             Assert.Equal("duplicateid", machine.GetStringFieldValue(Models.Metadata.Machine.DuplicateIDKey));
             Assert.Equal("emulator", machine.GetStringFieldValue(Models.Metadata.Machine.EmulatorKey));
             Assert.Equal("extra", machine.GetStringFieldValue(Models.Metadata.Machine.ExtraKey));
             Assert.Equal("favorite", machine.GetStringFieldValue(Models.Metadata.Machine.FavoriteKey));
-            // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.FeatureKey)); // Type array
             Assert.Equal("genmsxid", machine.GetStringFieldValue(Models.Metadata.Machine.GenMSXIDKey));
             Assert.Equal("history", machine.GetStringFieldValue(Models.Metadata.Machine.HistoryKey));
             Assert.Equal("id", machine.GetStringFieldValue(Models.Metadata.Machine.IdKey));
             Assert.Equal(ZeroHash.CRC32Str, machine.GetStringFieldValue(Models.Metadata.Machine.Im1CRCKey));
             Assert.Equal(ZeroHash.CRC32Str, machine.GetStringFieldValue(Models.Metadata.Machine.Im2CRCKey));
             Assert.Equal("imagenumber", machine.GetStringFieldValue(Models.Metadata.Machine.ImageNumberKey));
-            // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.InfoKey)); // Type array
-            // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.InputKey)); // Type
             Assert.Equal("yes", machine.GetStringFieldValue(Models.Metadata.Machine.IsBiosKey));
             Assert.Equal("yes", machine.GetStringFieldValue(Models.Metadata.Machine.IsDeviceKey));
             Assert.Equal("yes", machine.GetStringFieldValue(Models.Metadata.Machine.IsMechanicalKey));
             Assert.Equal("language", machine.GetStringFieldValue(Models.Metadata.Machine.LanguageKey));
             Assert.Equal("location", machine.GetStringFieldValue(Models.Metadata.Machine.LocationKey));
             Assert.Equal("manufacturer", machine.GetStringFieldValue(Models.Metadata.Machine.ManufacturerKey));
-            // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.MediaKey)); // Type array
             Assert.Equal("name", machine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
             Assert.Equal("notes", machine.GetStringFieldValue(Models.Metadata.Machine.NotesKey));
-            // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.PartKey)); // Type array
             Assert.Equal("playedcount", machine.GetStringFieldValue(Models.Metadata.Machine.PlayedCountKey));
             Assert.Equal("playedtime", machine.GetStringFieldValue(Models.Metadata.Machine.PlayedTimeKey));
             Assert.Equal("players", machine.GetStringFieldValue(Models.Metadata.Machine.PlayersKey));
-            // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.PortKey)); // Type array
             Assert.Equal("publisher", machine.GetStringFieldValue(Models.Metadata.Machine.PublisherKey));
-            // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.RamOptionKey)); // Type array
             Assert.Equal("rebuildto", machine.GetStringFieldValue(Models.Metadata.Machine.RebuildToKey));
-            // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.ReleaseKey)); // Type array
             Assert.Equal("releasenumber", machine.GetStringFieldValue(Models.Metadata.Machine.ReleaseNumberKey));
-            // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.RomKey)); // Type array
             Assert.Equal("romof", machine.GetStringFieldValue(Models.Metadata.Machine.RomOfKey));
             Assert.Equal("rotation", machine.GetStringFieldValue(Models.Metadata.Machine.RotationKey));
             Assert.Equal("yes", machine.GetStringFieldValue(Models.Metadata.Machine.RunnableKey));
-            // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.SampleKey)); // Type array
             Assert.Equal("sampleof", machine.GetStringFieldValue(Models.Metadata.Machine.SampleOfKey));
             Assert.Equal("savetype", machine.GetStringFieldValue(Models.Metadata.Machine.SaveTypeKey));
-            // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.SharedFeatKey)); // Type array
-            // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.SlotKey)); // Type array
-            // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.SoftwareListKey)); // Type array
-            // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.SoundKey)); // Type
             Assert.Equal("sourcefile", machine.GetStringFieldValue(Models.Metadata.Machine.SourceFileKey));
             Assert.Equal("sourcerom", machine.GetStringFieldValue(Models.Metadata.Machine.SourceRomKey));
             Assert.Equal("status", machine.GetStringFieldValue(Models.Metadata.Machine.StatusKey));
@@ -563,7 +610,6 @@ namespace SabreTools.DatFiles.Test
             Assert.Equal("system", machine.GetStringFieldValue(Models.Metadata.Machine.SystemKey));
             Assert.Equal("tags", machine.GetStringFieldValue(Models.Metadata.Machine.TagsKey));
             // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.TruripKey)); // Type
-            // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.VideoKey)); // Type
             Assert.Equal("year", machine.GetStringFieldValue(Models.Metadata.Machine.YearKey));
         }
 
@@ -649,6 +695,23 @@ namespace SabreTools.DatFiles.Test
 
             Condition? condition = confSetting.GetFieldValue<Condition>(Models.Metadata.ConfSetting.ConditionKey);
             ValidateCondition(condition);
+        }
+
+        private static void ValidateControl(Control? control)
+        {
+            Assert.NotNull(control);
+            Assert.Equal(12345, control.GetInt64FieldValue(Models.Metadata.Control.ButtonsKey));
+            Assert.Equal(12345, control.GetInt64FieldValue(Models.Metadata.Control.KeyDeltaKey));
+            Assert.Equal(12345, control.GetInt64FieldValue(Models.Metadata.Control.MaximumKey));
+            Assert.Equal(12345, control.GetInt64FieldValue(Models.Metadata.Control.MinimumKey));
+            Assert.Equal(12345, control.GetInt64FieldValue(Models.Metadata.Control.PlayerKey));
+            Assert.Equal(12345, control.GetInt64FieldValue(Models.Metadata.Control.ReqButtonsKey));
+            Assert.True(control.GetBoolFieldValue(Models.Metadata.Control.ReverseKey));
+            Assert.Equal(12345, control.GetInt64FieldValue(Models.Metadata.Control.SensitivityKey));
+            Assert.Equal("lightgun", control.GetStringFieldValue(Models.Metadata.Control.ControlTypeKey));
+            Assert.Equal("ways", control.GetStringFieldValue(Models.Metadata.Control.WaysKey));
+            Assert.Equal("ways2", control.GetStringFieldValue(Models.Metadata.Control.Ways2Key));
+            Assert.Equal("ways3", control.GetStringFieldValue(Models.Metadata.Control.Ways3Key));
         }
 
         private static void ValidateDevice(Device? device)
@@ -777,11 +840,53 @@ namespace SabreTools.DatFiles.Test
             Assert.Equal("name", extension.GetStringFieldValue(Models.Metadata.Extension.NameKey));
         }
 
+        private static void ValidateFeature(Feature? feature)
+        {
+            Assert.NotNull(feature);
+            Assert.Equal("name", feature.GetStringFieldValue(Models.Metadata.Feature.NameKey));
+            Assert.Equal("imperfect", feature.GetStringFieldValue(Models.Metadata.Feature.OverallKey));
+            Assert.Equal("imperfect", feature.GetStringFieldValue(Models.Metadata.Feature.StatusKey));
+            Assert.Equal("protection", feature.GetStringFieldValue(Models.Metadata.Feature.FeatureTypeKey));
+            Assert.Equal("value", feature.GetStringFieldValue(Models.Metadata.Feature.ValueKey));
+        }
+
+        private static void ValidateInfo(Info? info)
+        {
+            Assert.NotNull(info);
+            Assert.Equal("name", info.GetStringFieldValue(Models.Metadata.Info.NameKey));
+            Assert.Equal("value", info.GetStringFieldValue(Models.Metadata.Info.ValueKey));
+        }
+
+        private static void ValidateInput(Input? input)
+        {
+            Assert.NotNull(input);
+            Assert.Equal(12345, input.GetInt64FieldValue(Models.Metadata.Input.ButtonsKey));
+            Assert.Equal(12345, input.GetInt64FieldValue(Models.Metadata.Input.CoinsKey));
+            Assert.Equal(12345, input.GetInt64FieldValue(Models.Metadata.Input.PlayersKey));
+            Assert.True(input.GetBoolFieldValue(Models.Metadata.Input.ServiceKey));
+            Assert.True(input.GetBoolFieldValue(Models.Metadata.Input.TiltKey));
+
+            Control[]? controls = input.GetFieldValue<Control[]>(Models.Metadata.Input.ControlKey);
+            Assert.NotNull(controls);
+            Control? control = Assert.Single(controls);
+            ValidateControl(control);
+        }
+
         private static void ValidateInstance(Instance? instance)
         {
             Assert.NotNull(instance);
             Assert.Equal("briefname", instance.GetStringFieldValue(Models.Metadata.Instance.BriefNameKey));
             Assert.Equal("name", instance.GetStringFieldValue(Models.Metadata.Instance.NameKey));
+        }
+
+        private static void ValidateMedia(Media? media)
+        {
+            Assert.NotNull(media);
+            Assert.Equal(ZeroHash.MD5Str, media.GetStringFieldValue(Models.Metadata.Media.MD5Key));
+            Assert.Equal("name", media.GetStringFieldValue(Models.Metadata.Media.NameKey));
+            Assert.Equal(ZeroHash.SHA1Str, media.GetStringFieldValue(Models.Metadata.Media.SHA1Key));
+            Assert.Equal(ZeroHash.SHA256Str, media.GetStringFieldValue(Models.Metadata.Media.SHA256Key));
+            Assert.Equal(ZeroHash.SpamSumStr, media.GetStringFieldValue(Models.Metadata.Media.SpamSumKey));
         }
 
         #endregion
