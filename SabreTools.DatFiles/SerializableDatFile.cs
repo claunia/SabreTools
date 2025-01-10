@@ -29,7 +29,7 @@ namespace SabreTools.DatFiles
                 var internalFormat = Activator.CreateInstance<TModelSerializer>().Serialize(specificFormat);
 
                 // Convert to the internal format
-                ConvertMetadata(internalFormat, filename, indexId, keep, statsOnly);
+                ConvertFromMetadata(internalFormat, filename, indexId, keep, statsOnly);
             }
             catch (Exception ex) when (!throwOnError)
             {
@@ -46,7 +46,7 @@ namespace SabreTools.DatFiles
                 _logger.User($"Writing to '{outfile}'...");
 
                 // Serialize the input file in two steps
-                var internalFormat = ConvertMetadata(ignoreblanks);
+                var internalFormat = ConvertToMetadata(ignoreblanks);
                 var specificFormat = Activator.CreateInstance<TModelSerializer>().Deserialize(internalFormat);
                 if (!Activator.CreateInstance<TFileSerializer>().Serialize(specificFormat, outfile))
                 {
@@ -72,7 +72,7 @@ namespace SabreTools.DatFiles
                 _logger.User($"Writing to '{outfile}'...");
 
                 // Serialize the input file in two steps
-                var internalFormat = ConvertMetadataDB(ignoreblanks);
+                var internalFormat = ConvertToMetadataDB(ignoreblanks);
                 var specificFormat = Activator.CreateInstance<TModelSerializer>().Deserialize(internalFormat);
                 if (!Activator.CreateInstance<TFileSerializer>().Serialize(specificFormat, outfile))
                 {

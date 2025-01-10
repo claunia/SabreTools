@@ -358,7 +358,7 @@ namespace SabreTools.DatFiles.Formats
                 _logger.User($"Writing to '{outfile}'...");
 
                 // Serialize the input file
-                var metadata = ConvertMetadata(ignoreblanks);
+                var metadata = ConvertToMetadata(ignoreblanks);
                 var datafile = new Serialization.CrossModel.Logiqx().Deserialize(metadata, _deprecated);
 
                 // TODO: Reenable doctype writing

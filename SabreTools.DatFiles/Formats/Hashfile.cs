@@ -44,7 +44,7 @@ namespace SabreTools.DatFiles.Formats
                 var metadata = new Serialization.CrossModel.Hashfile().Serialize(hashfile);
 
                 // Convert to the internal format
-                ConvertMetadata(metadata, filename, indexId, keep, statsOnly);
+                ConvertFromMetadata(metadata, filename, indexId, keep, statsOnly);
             }
             catch (Exception ex) when (!throwOnError)
             {
@@ -222,7 +222,7 @@ namespace SabreTools.DatFiles.Formats
                 _logger.User($"Writing to '{outfile}'...");
 
                 // Serialize the input file
-                var metadata = ConvertMetadata(ignoreblanks);
+                var metadata = ConvertToMetadata(ignoreblanks);
                 var hashfile = new Serialization.CrossModel.Hashfile().Deserialize(metadata, _hash);
                 if (!(Serialization.Serializers.Hashfile.SerializeFile(hashfile, outfile, _hash)))
                 {

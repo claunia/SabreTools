@@ -237,7 +237,7 @@ namespace SabreTools.DatFiles.Formats
                 }
 
                 // Convert to the internal format
-                ConvertMetadata(metadata, filename, indexId, keep, statsOnly);
+                ConvertFromMetadata(metadata, filename, indexId, keep, statsOnly);
             }
             catch (Exception ex) when (!throwOnError)
             {
