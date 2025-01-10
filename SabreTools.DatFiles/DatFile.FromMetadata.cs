@@ -890,7 +890,7 @@ namespace SabreTools.DatFiles
                 if (datItem.GetStringFieldValue(Models.Metadata.Driver.EmulationKey) != null)
                     datItem.SetFieldValue<string?>(Models.Metadata.Driver.EmulationKey, datItem.GetStringFieldValue(Models.Metadata.Driver.EmulationKey).AsEnumValue<SupportStatus>().AsStringValue());
                 if (datItem.GetBoolFieldValue(Models.Metadata.Driver.IncompleteKey) != null)
-                    datItem.SetFieldValue<string?>(Models.Metadata.Driver.IncompleteKey, datItem.GetBoolFieldValue(Models.Metadata.Driver.EmulationKey).FromYesNo());
+                    datItem.SetFieldValue<string?>(Models.Metadata.Driver.IncompleteKey, datItem.GetBoolFieldValue(Models.Metadata.Driver.IncompleteKey).FromYesNo());
                 if (datItem.GetBoolFieldValue(Models.Metadata.Driver.NoSoundHardwareKey) != null)
                     datItem.SetFieldValue<string?>(Models.Metadata.Driver.NoSoundHardwareKey, datItem.GetBoolFieldValue(Models.Metadata.Driver.NoSoundHardwareKey).FromYesNo());
                 if (datItem.GetInt64FieldValue(Models.Metadata.Driver.PaletteSizeKey) != null)
@@ -898,7 +898,7 @@ namespace SabreTools.DatFiles
                 if (datItem.GetBoolFieldValue(Models.Metadata.Driver.RequiresArtworkKey) != null)
                     datItem.SetFieldValue<string?>(Models.Metadata.Driver.RequiresArtworkKey, datItem.GetBoolFieldValue(Models.Metadata.Driver.RequiresArtworkKey).FromYesNo());
                 if (datItem.GetStringFieldValue(Models.Metadata.Driver.SaveStateKey) != null)
-                    datItem.SetFieldValue<string?>(Models.Metadata.Driver.SaveStateKey, datItem.GetStringFieldValue(Models.Metadata.Driver.SaveStateKey).AsEnumValue<SupportStatus>().AsStringValue());
+                    datItem.SetFieldValue<string?>(Models.Metadata.Driver.SaveStateKey, datItem.GetStringFieldValue(Models.Metadata.Driver.SaveStateKey).AsEnumValue<Supported>().AsStringValue(useSecond: true));
                 if (datItem.GetStringFieldValue(Models.Metadata.Driver.SoundKey) != null)
                     datItem.SetFieldValue<string?>(Models.Metadata.Driver.SoundKey, datItem.GetStringFieldValue(Models.Metadata.Driver.SoundKey).AsEnumValue<SupportStatus>().AsStringValue());
                 if (datItem.GetStringFieldValue(Models.Metadata.Driver.StatusKey) != null)
