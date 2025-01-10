@@ -459,6 +459,10 @@ namespace SabreTools.DatFiles
         /// <returns>A List of DatItem objects representing the renamed items</returns>
         protected internal List<DatItem> ResolveNames(List<DatItem> items)
         {
+            // Ignore empty lists
+            if (items.Count == 0)
+                return [];
+
             // Create the output list
             List<DatItem> output = [];
 
@@ -554,6 +558,10 @@ namespace SabreTools.DatFiles
         /// <returns>A List of DatItem objects representing the renamed items</returns>
         protected internal List<KeyValuePair<long, DatItem>> ResolveNamesDB(List<KeyValuePair<long, DatItem>> mappings)
         {
+            // Ignore empty lists
+            if (mappings.Count == 0)
+                return [];
+
             // Create the output dict
             List<KeyValuePair<long, DatItem>> output = [];
 
