@@ -7,7 +7,7 @@ using Xunit;
 
 namespace SabreTools.DatFiles.Test
 {
-    public class DatFileTests
+    public partial class DatFileTests
     {
         #region Constructor
 
