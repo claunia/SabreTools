@@ -1570,13 +1570,100 @@ namespace SabreTools.DatFiles.Test
 
         #region ShouldIgnore
 
-        // TODO: Write ShouldIgnore tests
-        // - Null item
-        // - Remove key set
-        // - Is Blank type
-        // - Ignore blanks flag + Rom with null or 0 size
-        // - Unsupported type
-        // - Missing required field
+        [Fact]
+        public void ShouldIgnore_NullItem_True()
+        {
+            DatItem? datItem = null;
+            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+
+            bool actual = datFile.ShouldIgnore(datItem, ignoreBlanks: true);
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public void ShouldIgnore_RemoveSet_True()
+        {
+            DatItem? datItem = new Rom();
+            datItem.SetFieldValue(DatItem.RemoveKey, true);
+            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+
+            bool actual = datFile.ShouldIgnore(datItem, ignoreBlanks: true);
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public void ShouldIgnore_Blank_True()
+        {
+            DatItem? datItem = new Blank();
+            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+
+            bool actual = datFile.ShouldIgnore(datItem, ignoreBlanks: true);
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public void ShouldIgnore_IgnoreBlanksZeroRom_True()
+        {
+            DatItem? datItem = new Rom();
+            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+
+            bool actual = datFile.ShouldIgnore(datItem, ignoreBlanks: true);
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public void ShouldIgnore_NoIgnoreBlanksZeroRom_False()
+        {
+            DatItem? datItem = new Rom();
+            datItem.SetFieldValue(Models.Metadata.Rom.NameKey, "name");
+            datItem.SetFieldValue(Models.Metadata.Rom.SizeKey, 12345);
+            datItem.SetFieldValue(Models.Metadata.Rom.CRCKey, "crc");
+            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+
+            bool actual = datFile.ShouldIgnore(datItem, ignoreBlanks: false);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void ShouldIgnore_UnsupportedType_True()
+        {
+            DatItem? datItem = new SoftwareList();
+            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+
+            bool actual = datFile.ShouldIgnore(datItem, ignoreBlanks: true);
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public void ShouldIgnore_MissingRequired_True()
+        {
+            DatItem? datItem = new Rom();
+            datItem.SetFieldValue(Models.Metadata.Rom.NameKey, "name");
+            datItem.SetFieldValue(Models.Metadata.Rom.SizeKey, 12345);
+            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+
+            bool actual = datFile.ShouldIgnore(datItem, ignoreBlanks: true);
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public void ShouldIgnore_AllVerified_False()
+        {
+            DatItem? datItem = new Rom();
+            datItem.SetFieldValue(Models.Metadata.Rom.NameKey, "name");
+            datItem.SetFieldValue(Models.Metadata.Rom.SizeKey, 12345);
+            datItem.SetFieldValue(Models.Metadata.Rom.CRCKey, "crc");
+            datItem.SetFieldValue(Models.Metadata.Rom.MD5Key, "crc");
+            datItem.SetFieldValue(Models.Metadata.Rom.SHA1Key, "crc");
+            datItem.SetFieldValue(Models.Metadata.Rom.SHA256Key, "crc");
+            datItem.SetFieldValue(Models.Metadata.Rom.SHA384Key, "crc");
+            datItem.SetFieldValue(Models.Metadata.Rom.SHA512Key, "crc");
+            datItem.SetFieldValue(Models.Metadata.Rom.SpamSumKey, "crc");
+            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+
+            bool actual = datFile.ShouldIgnore(datItem, ignoreBlanks: true);
+            Assert.False(actual);
+        }
 
         #endregion
     }
