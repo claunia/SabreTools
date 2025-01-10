@@ -222,6 +222,34 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.Configuration.TagKey] = "tag",
             };
 
+            Models.Metadata.Extension extension = new Models.Metadata.Extension
+            {
+                [Models.Metadata.Extension.NameKey] = "name",
+            };
+
+            Models.Metadata.Instance instance = new Models.Metadata.Instance
+            {
+                [Models.Metadata.Instance.BriefNameKey] = "briefname",
+                [Models.Metadata.Instance.NameKey] = "name",
+            };
+
+            Models.Metadata.Device device = new Models.Metadata.Device
+            {
+                [Models.Metadata.Device.ExtensionKey] = new Models.Metadata.Extension[] { extension },
+                [Models.Metadata.Device.FixedImageKey] = "fixedimage",
+                [Models.Metadata.Device.InstanceKey] = instance,
+                [Models.Metadata.Device.InterfaceKey] = "interface",
+                [Models.Metadata.Device.MandatoryKey] = 1,
+                [Models.Metadata.Device.TagKey] = "tag",
+                [Models.Metadata.Device.DeviceTypeKey] = "punchtape",
+            };
+
+            Models.Metadata.DeviceRef deviceRef = new Models.Metadata.DeviceRef
+            {
+                [Models.Metadata.DeviceRef.NameKey] = "name",
+            };
+
+            // TODO: Build a machine with one of every item
             Models.Metadata.Machine machine = new Models.Metadata.Machine
             {
                 [Models.Metadata.Machine.AdjusterKey] = new Models.Metadata.Adjuster[] { adjuster },
@@ -239,8 +267,8 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.Machine.ControlKey] = "control",
                 [Models.Metadata.Machine.CountryKey] = "country",
                 [Models.Metadata.Machine.DescriptionKey] = "description",
-                [Models.Metadata.Machine.DeviceKey] = "REPLACE", // Type array
-                [Models.Metadata.Machine.DeviceRefKey] = "REPLACE", // Type array
+                [Models.Metadata.Machine.DeviceKey] = new Models.Metadata.Device[] { device },
+                [Models.Metadata.Machine.DeviceRefKey] = new Models.Metadata.DeviceRef[] { deviceRef },
                 [Models.Metadata.Machine.DipSwitchKey] = "REPLACE", // Type array
                 [Models.Metadata.Machine.DirNameKey] = "dirname",
                 [Models.Metadata.Machine.DiskKey] = "REPLACE", // Type array
@@ -305,8 +333,6 @@ namespace SabreTools.DatFiles.Test
 
             Models.Metadata.Machine[]? machines = [machine];
 
-            // TODO: Build a machine with one of every item
-
             Models.Metadata.MetadataFile? item = new Models.Metadata.MetadataFile
             {
                 [Models.Metadata.MetadataFile.HeaderKey] = header,
@@ -328,8 +354,6 @@ namespace SabreTools.DatFiles.Test
             Assert.Equal("control", actualMachine.GetStringFieldValue(Models.Metadata.Machine.ControlKey));
             Assert.Equal("country", actualMachine.GetStringFieldValue(Models.Metadata.Machine.CountryKey));
             Assert.Equal("description", actualMachine.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey));
-            // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.DeviceKey)); // Type array
-            // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.DeviceRefKey)); // Type array
             // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.DipSwitchKey)); // Type array
             Assert.Equal("dirname", actualMachine.GetStringFieldValue(Models.Metadata.Machine.DirNameKey));
             // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.DiskKey)); // Type array
@@ -462,6 +486,29 @@ namespace SabreTools.DatFiles.Test
             Assert.Equal("mask", actualConfigurationConfSettingCondition.GetStringFieldValue(Models.Metadata.Condition.MaskKey));
             Assert.Equal("eq", actualConfigurationConfSettingCondition.GetStringFieldValue(Models.Metadata.Condition.RelationKey));
             Assert.Equal("tag", actualConfigurationConfSettingCondition.GetStringFieldValue(Models.Metadata.Condition.TagKey));
+
+            DatItems.Formats.Device? actualDevice = Array.Find(datItems, item => item is DatItems.Formats.Device) as DatItems.Formats.Device;
+            Assert.NotNull(actualDevice);
+            Assert.Equal("fixedimage", actualDevice.GetStringFieldValue(Models.Metadata.Device.FixedImageKey));
+            Assert.Equal("interface", actualDevice.GetStringFieldValue(Models.Metadata.Device.InterfaceKey));
+            Assert.Equal(1, actualDevice.GetInt64FieldValue(Models.Metadata.Device.MandatoryKey));
+            Assert.Equal("tag", actualDevice.GetStringFieldValue(Models.Metadata.Device.TagKey));
+            Assert.Equal("punchtape", actualDevice.GetStringFieldValue(Models.Metadata.Device.DeviceTypeKey));
+
+            DatItems.Formats.Extension[]? actualDeviceExtensions = actualDevice.GetFieldValue<DatItems.Formats.Extension[]>(Models.Metadata.Device.ExtensionKey);
+            Assert.NotNull(actualDeviceExtensions);
+            DatItems.Formats.Extension? actualDeviceExtension = Assert.Single(actualDeviceExtensions);
+            Assert.NotNull(actualDeviceExtension);
+            Assert.Equal("name", actualDeviceExtension.GetStringFieldValue(Models.Metadata.Extension.NameKey));
+
+            DatItems.Formats.Instance? actualDeviceInstance = actualDevice.GetFieldValue<DatItems.Formats.Instance>(Models.Metadata.Device.InstanceKey);
+            Assert.NotNull(actualDeviceInstance);
+            Assert.Equal("briefname", actualDeviceInstance.GetStringFieldValue(Models.Metadata.Instance.BriefNameKey));
+            Assert.Equal("name", actualDeviceInstance.GetStringFieldValue(Models.Metadata.Instance.NameKey));
+
+            DatItems.Formats.DeviceRef? actualDeviceRef = Array.Find(datItems, item => item is DatItems.Formats.DeviceRef) as DatItems.Formats.DeviceRef;
+            Assert.NotNull(actualDeviceRef);
+            Assert.Equal("name", actualDeviceRef.GetStringFieldValue(Models.Metadata.DeviceRef.NameKey));
 
             // TODO: Validate all fields
         }
