@@ -187,6 +187,41 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.BiosSet.NameKey] = "name",
             };
 
+            Models.Metadata.Chip chip = new Models.Metadata.Chip
+            {
+                [Models.Metadata.Chip.ClockKey] = 12345,
+                [Models.Metadata.Chip.FlagsKey] = "flags",
+                [Models.Metadata.Chip.NameKey] = "name",
+                [Models.Metadata.Chip.SoundOnlyKey] = "yes",
+                [Models.Metadata.Chip.TagKey] = "tag",
+                [Models.Metadata.Chip.ChipTypeKey] = "cpu",
+            };
+
+            Models.Metadata.ConfLocation confLocation = new Models.Metadata.ConfLocation
+            {
+                [Models.Metadata.ConfLocation.InvertedKey] = "yes",
+                [Models.Metadata.ConfLocation.NameKey] = "name",
+                [Models.Metadata.ConfLocation.NumberKey] = "number",
+            };
+
+            Models.Metadata.ConfSetting confSetting = new Models.Metadata.ConfSetting
+            {
+                [Models.Metadata.ConfSetting.ConditionKey] = condition,
+                [Models.Metadata.ConfSetting.DefaultKey] = "yes",
+                [Models.Metadata.ConfSetting.NameKey] = "name",
+                [Models.Metadata.ConfSetting.ValueKey] = "value",
+            };
+
+            Models.Metadata.Configuration configuration = new Models.Metadata.Configuration
+            {
+                [Models.Metadata.Configuration.ConditionKey] = condition,
+                [Models.Metadata.Configuration.ConfLocationKey] = new Models.Metadata.ConfLocation[] { confLocation },
+                [Models.Metadata.Configuration.ConfSettingKey] = new Models.Metadata.ConfSetting[] { confSetting },
+                [Models.Metadata.Configuration.MaskKey] = "mask",
+                [Models.Metadata.Configuration.NameKey] = "name",
+                [Models.Metadata.Configuration.TagKey] = "tag",
+            };
+
             Models.Metadata.Machine machine = new Models.Metadata.Machine
             {
                 [Models.Metadata.Machine.AdjusterKey] = new Models.Metadata.Adjuster[] { adjuster },
@@ -195,12 +230,12 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.Machine.BoardKey] = "board",
                 [Models.Metadata.Machine.ButtonsKey] = "buttons",
                 [Models.Metadata.Machine.CategoryKey] = "category",
-                [Models.Metadata.Machine.ChipKey] = "REPLACE", // Type array
+                [Models.Metadata.Machine.ChipKey] = new Models.Metadata.Chip[] { chip },
                 [Models.Metadata.Machine.CloneOfKey] = "cloneof",
                 [Models.Metadata.Machine.CloneOfIdKey] = "cloneofid",
                 [Models.Metadata.Machine.CommentKey] = "comment",
                 [Models.Metadata.Machine.CompanyKey] = "company",
-                [Models.Metadata.Machine.ConfigurationKey] = "REPLACE", // Type array
+                [Models.Metadata.Machine.ConfigurationKey] = new Models.Metadata.Configuration[] { configuration },
                 [Models.Metadata.Machine.ControlKey] = "control",
                 [Models.Metadata.Machine.CountryKey] = "country",
                 [Models.Metadata.Machine.DescriptionKey] = "description",
@@ -286,12 +321,10 @@ namespace SabreTools.DatFiles.Test
             Assert.Equal("board", actualMachine.GetStringFieldValue(Models.Metadata.Machine.BoardKey));
             Assert.Equal("buttons", actualMachine.GetStringFieldValue(Models.Metadata.Machine.ButtonsKey));
             Assert.Equal("category", actualMachine.GetStringFieldValue(Models.Metadata.Machine.CategoryKey));
-            // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.ChipKey)); // Type array
             Assert.Equal("cloneof", actualMachine.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey));
             Assert.Equal("cloneofid", actualMachine.GetStringFieldValue(Models.Metadata.Machine.CloneOfIdKey));
             Assert.Equal("comment", actualMachine.GetStringFieldValue(Models.Metadata.Machine.CommentKey));
             Assert.Equal("company", actualMachine.GetStringFieldValue(Models.Metadata.Machine.CompanyKey));
-            // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.ConfigurationKey)); // Type array
             Assert.Equal("control", actualMachine.GetStringFieldValue(Models.Metadata.Machine.ControlKey));
             Assert.Equal("country", actualMachine.GetStringFieldValue(Models.Metadata.Machine.CountryKey));
             Assert.Equal("description", actualMachine.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey));
@@ -384,6 +417,51 @@ namespace SabreTools.DatFiles.Test
             Assert.True(actualBiosSet.GetBoolFieldValue(Models.Metadata.BiosSet.DefaultKey));
             Assert.Equal("description", actualBiosSet.GetStringFieldValue(Models.Metadata.BiosSet.DescriptionKey));
             Assert.Equal("name", actualBiosSet.GetStringFieldValue(Models.Metadata.BiosSet.NameKey));
+
+            DatItems.Formats.Chip? actualChip = Array.Find(datItems, item => item is DatItems.Formats.Chip) as DatItems.Formats.Chip;
+            Assert.NotNull(actualChip);
+            Assert.Equal(12345, actualChip.GetInt64FieldValue(Models.Metadata.Chip.ClockKey));
+            Assert.Equal("flags", actualChip.GetStringFieldValue(Models.Metadata.Chip.FlagsKey));
+            Assert.Equal("name", actualChip.GetStringFieldValue(Models.Metadata.Chip.NameKey));
+            Assert.True(actualChip.GetBoolFieldValue(Models.Metadata.Chip.SoundOnlyKey));
+            Assert.Equal("tag", actualChip.GetStringFieldValue(Models.Metadata.Chip.TagKey));
+            Assert.Equal("cpu", actualChip.GetStringFieldValue(Models.Metadata.Chip.ChipTypeKey));
+
+            DatItems.Formats.Configuration? actualConfiguration = Array.Find(datItems, item => item is DatItems.Formats.Configuration) as DatItems.Formats.Configuration;
+            Assert.NotNull(actualConfiguration);
+            Assert.Equal("mask", actualConfiguration.GetStringFieldValue(Models.Metadata.Configuration.MaskKey));
+            Assert.Equal("name", actualConfiguration.GetStringFieldValue(Models.Metadata.Configuration.NameKey));
+            Assert.Equal("tag", actualConfiguration.GetStringFieldValue(Models.Metadata.Configuration.TagKey));
+
+            DatItems.Formats.Condition? actualConfigurationCondition = actualConfiguration.GetFieldValue<DatItems.Formats.Condition>(Models.Metadata.Configuration.ConditionKey);
+            Assert.NotNull(actualConfigurationCondition);
+            Assert.Equal("value", actualConfigurationCondition.GetStringFieldValue(Models.Metadata.Condition.ValueKey));
+            Assert.Equal("mask", actualConfigurationCondition.GetStringFieldValue(Models.Metadata.Condition.MaskKey));
+            Assert.Equal("eq", actualConfigurationCondition.GetStringFieldValue(Models.Metadata.Condition.RelationKey));
+            Assert.Equal("tag", actualConfigurationCondition.GetStringFieldValue(Models.Metadata.Condition.TagKey));
+
+            DatItems.Formats.ConfLocation[]? actualConfigurationConfLocations = actualConfiguration.GetFieldValue<DatItems.Formats.ConfLocation[]>(Models.Metadata.Configuration.ConfLocationKey);
+            Assert.NotNull(actualConfigurationConfLocations);
+            DatItems.Formats.ConfLocation? actualConfigurationConfLocation = Assert.Single(actualConfigurationConfLocations);
+            Assert.NotNull(actualConfigurationConfLocation);
+            Assert.True(actualConfigurationConfLocation.GetBoolFieldValue(Models.Metadata.ConfLocation.InvertedKey));
+            Assert.Equal("name", actualConfigurationConfLocation.GetStringFieldValue(Models.Metadata.ConfLocation.NameKey));
+            Assert.Equal("number", actualConfigurationConfLocation.GetStringFieldValue(Models.Metadata.ConfLocation.NumberKey));
+
+            DatItems.Formats.ConfSetting[]? actualConfigurationConfSettings = actualConfiguration.GetFieldValue<DatItems.Formats.ConfSetting[]>(Models.Metadata.Configuration.ConfSettingKey);
+            Assert.NotNull(actualConfigurationConfSettings);
+            DatItems.Formats.ConfSetting? actualConfigurationConfSetting = Assert.Single(actualConfigurationConfSettings);
+            Assert.NotNull(actualConfigurationConfSetting);
+            Assert.True(actualConfigurationConfSetting.GetBoolFieldValue(Models.Metadata.ConfSetting.DefaultKey));
+            Assert.Equal("name", actualConfigurationConfSetting.GetStringFieldValue(Models.Metadata.ConfSetting.NameKey));
+            Assert.Equal("value", actualConfigurationConfSetting.GetStringFieldValue(Models.Metadata.ConfSetting.ValueKey));
+
+            DatItems.Formats.Condition? actualConfigurationConfSettingCondition = actualConfigurationConfSetting.GetFieldValue<DatItems.Formats.Condition>(Models.Metadata.ConfSetting.ConditionKey);
+            Assert.NotNull(actualConfigurationConfSettingCondition);
+            Assert.Equal("value", actualConfigurationConfSettingCondition.GetStringFieldValue(Models.Metadata.Condition.ValueKey));
+            Assert.Equal("mask", actualConfigurationConfSettingCondition.GetStringFieldValue(Models.Metadata.Condition.MaskKey));
+            Assert.Equal("eq", actualConfigurationConfSettingCondition.GetStringFieldValue(Models.Metadata.Condition.RelationKey));
+            Assert.Equal("tag", actualConfigurationConfSettingCondition.GetStringFieldValue(Models.Metadata.Condition.TagKey));
 
             // TODO: Validate all fields
         }
