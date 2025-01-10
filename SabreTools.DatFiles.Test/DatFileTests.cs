@@ -1549,18 +1549,34 @@ namespace SabreTools.DatFiles.Test
         #region ResolveNames
 
         // TODO: Write ResolveNames tests
+        // - Empty list
+        // - Single item
+        // - 2 items, non-duplicate
+        // - 2 items, DupeType.All
+        // - 2 items, matching names
 
         #endregion
 
         #region ResolveNamesDB
 
         // TODO: Write ResolveNamesDB tests
+        // - Empty list
+        // - Single item
+        // - 2 items, non-duplicate
+        // - 2 items, DupeType.All
+        // - 2 items, matching names
 
         #endregion
 
         #region ShouldIgnore
 
         // TODO: Write ShouldIgnore tests
+        // - Null item
+        // - Remove key set
+        // - Is Blank type
+        // - Ignore blanks flag + Rom with null or 0 size
+        // - Unsupported type
+        // - Missing required field
 
         #endregion
     }
