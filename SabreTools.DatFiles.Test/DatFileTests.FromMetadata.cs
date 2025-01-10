@@ -95,10 +95,10 @@ namespace SabreTools.DatFiles.Test
             DeviceRef? deviceRef = Array.Find(datItems, item => item is DeviceRef) as DeviceRef;
             ValidateDeviceRef(deviceRef);
 
-            DipSwitch? dipSwitch = Array.Find(datItems, item => item is DipSwitch) as DipSwitch;
+            DipSwitch? dipSwitch = Array.Find(datItems, item => item is DipSwitch dipSwitch && !dipSwitch.PartSpecified) as DipSwitch;
             ValidateDipSwitch(dipSwitch);
 
-            Disk? disk = Array.Find(datItems, item => item is Disk) as Disk;
+            Disk? disk = Array.Find(datItems, item => item is Disk disk && !disk.DiskAreaSpecified && !disk.PartSpecified) as Disk;
             ValidateDisk(disk);
 
             Display? display = Array.Find(datItems, item => item is Display) as Display;
@@ -107,7 +107,7 @@ namespace SabreTools.DatFiles.Test
             Driver? driver = Array.Find(datItems, item => item is Driver) as Driver;
             ValidateDriver(driver);
 
-            // All other Rom fields are tested separately
+            // All other fields are tested separately
             Rom? dumpRom = Array.Find(datItems, item => item is Rom rom && rom.GetStringFieldValue(Models.Metadata.Rom.OpenMSXMediaType) != null) as Rom;
             Assert.NotNull(dumpRom);
             Assert.Equal("rom", dumpRom.GetStringFieldValue(Models.Metadata.Rom.OpenMSXMediaType));
@@ -123,6 +123,34 @@ namespace SabreTools.DatFiles.Test
 
             Media? media = Array.Find(datItems, item => item is Media) as Media;
             ValidateMedia(media);
+
+            // All other fields are tested separately
+            DipSwitch? partDipSwitch = Array.Find(datItems, item => item is DipSwitch dipSwitch && dipSwitch.PartSpecified) as DipSwitch;
+            Assert.NotNull(partDipSwitch);
+            Part? dipSwitchPart = partDipSwitch.GetFieldValue<Part>(DipSwitch.PartKey);
+            ValidatePart(dipSwitchPart);
+
+            // All other fields are tested separately
+            Disk? partDisk = Array.Find(datItems, item => item is Disk disk && disk.DiskAreaSpecified && disk.PartSpecified) as Disk;
+            Assert.NotNull(partDisk);
+            DiskArea? diskDiskArea = partDisk.GetFieldValue<DiskArea>(Disk.DiskAreaKey);
+            ValidateDiskArea(diskDiskArea);
+            Part? diskPart = partDisk.GetFieldValue<Part>(Disk.PartKey);
+            ValidatePart(diskPart);
+
+            PartFeature? partFeature = Array.Find(datItems, item => item is PartFeature) as PartFeature;
+            ValidatePartFeature(partFeature);
+
+            // All other fields are tested separately
+            Rom? partRom = Array.Find(datItems, item => item is Rom rom && rom.DataAreaSpecified && rom.PartSpecified) as Rom;
+            Assert.NotNull(partRom);
+            DataArea? romDataArea = partRom.GetFieldValue<DataArea>(Rom.DataAreaKey);
+            ValidateDataArea(romDataArea);
+            Part? romPart = partRom.GetFieldValue<Part>(Rom.PartKey);
+            ValidatePart(romPart);
+
+            Port? port = Array.Find(datItems, item => item is Port) as Port;
+            ValidatePort(port);
 
             // TODO: Validate all fields
         }
@@ -429,6 +457,42 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.Media.SpamSumKey] = ZeroHash.SpamSumStr,
             };
 
+            Models.Metadata.DataArea dataArea = new Models.Metadata.DataArea
+            {
+                [Models.Metadata.DataArea.EndiannessKey] = "big",
+                [Models.Metadata.DataArea.NameKey] = "name",
+                [Models.Metadata.DataArea.RomKey] = new Models.Metadata.Rom[] { new Models.Metadata.Rom() },
+                [Models.Metadata.DataArea.SizeKey] = 12345,
+                [Models.Metadata.DataArea.WidthKey] = 64,
+            };
+
+            Models.Metadata.DiskArea diskArea = new Models.Metadata.DiskArea
+            {
+                [Models.Metadata.DiskArea.DiskKey] = new Models.Metadata.Disk[] { new Models.Metadata.Disk() },
+                [Models.Metadata.DiskArea.NameKey] = "name",
+            };
+
+            Models.Metadata.Part part = new Models.Metadata.Part
+            {
+                [Models.Metadata.Part.DataAreaKey] = new Models.Metadata.DataArea[] { dataArea },
+                [Models.Metadata.Part.DiskAreaKey] = new Models.Metadata.DiskArea[] { diskArea },
+                [Models.Metadata.Part.DipSwitchKey] = new Models.Metadata.DipSwitch[] { new Models.Metadata.DipSwitch() },
+                [Models.Metadata.Part.FeatureKey] = new Models.Metadata.Feature[] { feature },
+                [Models.Metadata.Part.InterfaceKey] = "interface",
+                [Models.Metadata.Part.NameKey] = "name",
+            };
+
+            Models.Metadata.Analog analog = new Models.Metadata.Analog
+            {
+                [Models.Metadata.Analog.MaskKey] = "mask",
+            };
+
+            Models.Metadata.Port port = new Models.Metadata.Port
+            {
+                [Models.Metadata.Port.AnalogKey] = new Models.Metadata.Analog[] { analog },
+                [Models.Metadata.Port.TagKey] = "tag",
+            };
+
             return new Models.Metadata.Machine
             {
                 [Models.Metadata.Machine.AdjusterKey] = new Models.Metadata.Adjuster[] { adjuster },
@@ -478,11 +542,11 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.Machine.MediaKey] = new Models.Metadata.Media[] { media },
                 [Models.Metadata.Machine.NameKey] = "name",
                 [Models.Metadata.Machine.NotesKey] = "notes",
-                [Models.Metadata.Machine.PartKey] = "REPLACE", // Type array
+                [Models.Metadata.Machine.PartKey] = new Models.Metadata.Part[] { part },
                 [Models.Metadata.Machine.PlayedCountKey] = "playedcount",
                 [Models.Metadata.Machine.PlayedTimeKey] = "playedtime",
                 [Models.Metadata.Machine.PlayersKey] = "players",
-                [Models.Metadata.Machine.PortKey] = "REPLACE", // Type array
+                [Models.Metadata.Machine.PortKey] = new Models.Metadata.Port[] { port },
                 [Models.Metadata.Machine.PublisherKey] = "publisher",
                 [Models.Metadata.Machine.RamOptionKey] = "REPLACE", // Type array
                 [Models.Metadata.Machine.RebuildToKey] = "rebuildto",
@@ -623,6 +687,12 @@ namespace SabreTools.DatFiles.Test
             ValidateCondition(condition);
         }
 
+        private static void ValidateAnalog(Analog? analog)
+        {
+            Assert.NotNull(analog);
+            Assert.Equal("mask", analog.GetStringFieldValue(Models.Metadata.Analog.MaskKey));
+        }
+
         private static void ValidateArchive(Archive? archive)
         {
             Assert.NotNull(archive);
@@ -714,6 +784,15 @@ namespace SabreTools.DatFiles.Test
             Assert.Equal("ways3", control.GetStringFieldValue(Models.Metadata.Control.Ways3Key));
         }
 
+        private static void ValidateDataArea(DataArea? dataArea)
+        {
+            Assert.NotNull(dataArea);
+            Assert.Equal("big", dataArea.GetStringFieldValue(Models.Metadata.DataArea.EndiannessKey));
+            Assert.Equal("name", dataArea.GetStringFieldValue(Models.Metadata.DataArea.NameKey));
+            Assert.Equal(12345, dataArea.GetInt64FieldValue(Models.Metadata.DataArea.SizeKey));
+            Assert.Equal(64, dataArea.GetInt64FieldValue(Models.Metadata.DataArea.WidthKey));
+        }
+
         private static void ValidateDevice(Device? device)
         {
             Assert.NotNull(device);
@@ -796,6 +875,12 @@ namespace SabreTools.DatFiles.Test
             Assert.Equal("region", disk.GetStringFieldValue(Models.Metadata.Disk.RegionKey));
             Assert.Equal(ZeroHash.SHA1Str, disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key));
             Assert.True(disk.GetBoolFieldValue(Models.Metadata.Disk.WritableKey));
+        }
+
+        private static void ValidateDiskArea(DiskArea? diskArea)
+        {
+            Assert.NotNull(diskArea);
+            Assert.Equal("name", diskArea.GetStringFieldValue(Models.Metadata.DiskArea.NameKey));
         }
 
         private static void ValidateDisplay(Display? display)
@@ -887,6 +972,37 @@ namespace SabreTools.DatFiles.Test
             Assert.Equal(ZeroHash.SHA1Str, media.GetStringFieldValue(Models.Metadata.Media.SHA1Key));
             Assert.Equal(ZeroHash.SHA256Str, media.GetStringFieldValue(Models.Metadata.Media.SHA256Key));
             Assert.Equal(ZeroHash.SpamSumStr, media.GetStringFieldValue(Models.Metadata.Media.SpamSumKey));
+        }
+
+        private static void ValidatePart(Part? part)
+        {
+            Assert.NotNull(part);
+            Assert.Equal("interface", part.GetStringFieldValue(Models.Metadata.Part.InterfaceKey));
+            Assert.Equal("name", part.GetStringFieldValue(Models.Metadata.Part.NameKey));
+        }
+
+        private static void ValidatePartFeature(PartFeature? partFeature)
+        {
+            Assert.NotNull(partFeature);
+            Assert.Equal("name", partFeature.GetStringFieldValue(Models.Metadata.Feature.NameKey));
+            Assert.Equal("imperfect", partFeature.GetStringFieldValue(Models.Metadata.Feature.OverallKey));
+            Assert.Equal("imperfect", partFeature.GetStringFieldValue(Models.Metadata.Feature.StatusKey));
+            Assert.Equal("protection", partFeature.GetStringFieldValue(Models.Metadata.Feature.FeatureTypeKey));
+            Assert.Equal("value", partFeature.GetStringFieldValue(Models.Metadata.Feature.ValueKey));
+
+            Part? part = partFeature.GetFieldValue<Part>(PartFeature.PartKey);
+            ValidatePart(part);
+        }
+
+        private static void ValidatePort(Port? port)
+        {
+            Assert.NotNull(port);
+            Assert.Equal("tag", port.GetStringFieldValue(Models.Metadata.Port.TagKey));
+
+            Analog[]? dipValues = port.GetFieldValue<Analog[]>(Models.Metadata.Port.AnalogKey);
+            Assert.NotNull(dipValues);
+            Analog? dipValue = Assert.Single(dipValues);
+            ValidateAnalog(dipValue);
         }
 
         #endregion
