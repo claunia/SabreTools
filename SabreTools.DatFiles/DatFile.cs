@@ -454,27 +454,27 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Resolve name duplicates in an arbitrary set of DatItems based on the supplied information
         /// </summary>
-        /// <param name="items">List of DatItem objects representing the items to be merged</param>
+        /// <param name="datItems">List of DatItem objects representing the items to be merged</param>
         /// <returns>A List of DatItem objects representing the renamed items</returns>
-        protected internal List<DatItem> ResolveNames(List<DatItem> items)
+        protected internal List<DatItem> ResolveNames(List<DatItem> datItems)
         {
             // Ignore empty lists
-            if (items.Count == 0)
+            if (datItems.Count == 0)
                 return [];
 
             // Create the output list
             List<DatItem> output = [];
 
             // First we want to make sure the list is in alphabetical order
-            DatFileTool.Sort(ref items, true);
+            DatFileTool.Sort(ref datItems, true);
 
             // Now we want to loop through and check names
             DatItem? lastItem = null;
             string? lastrenamed = null;
             int lastid = 0;
-            for (int i = 0; i < items.Count; i++)
+            for (int i = 0; i < datItems.Count; i++)
             {
-                DatItem datItem = items[i];
+                DatItem datItem = datItems[i];
 
                 // If we have the first item, we automatically add it
                 if (lastItem == null)

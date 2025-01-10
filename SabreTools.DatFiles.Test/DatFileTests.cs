@@ -1548,23 +1548,336 @@ namespace SabreTools.DatFiles.Test
 
         #region ResolveNames
 
-        // TODO: Write ResolveNames tests
-        // - Empty list
-        // - Single item
-        // - 2 items, non-duplicate
-        // - 2 items, DupeType.All
-        // - 2 items, matching names
+        [Fact]
+        public void ResolveNames_EmptyList_Empty()
+        {
+            List<DatItem> datItems = [];
+
+            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+
+            List<DatItem> actual = datFile.ResolveNames(datItems);
+            Assert.Empty(actual);
+        }
+
+        [Fact]
+        public void ResolveNames_SingleItem_Single()
+        {
+            Machine machine = new Machine();
+            machine.SetFieldValue(Models.Metadata.Machine.NameKey, "machine");
+
+            Source source = new Source(0);
+
+            Rom romA = new Rom();
+            romA.SetName("name");
+            romA.SetFieldValue(Models.Metadata.Rom.SizeKey, 12345);
+            romA.SetFieldValue(Models.Metadata.Rom.CRCKey, "crc");
+            romA.SetFieldValue(DatItem.MachineKey, (Machine)machine.Clone());
+            romA.SetFieldValue(DatItem.SourceKey, (Source)source.Clone());
+
+            List<DatItem> datItems = [romA];
+
+            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+
+            List<DatItem> actual = datFile.ResolveNames(datItems);
+            DatItem actualItemA = Assert.Single(actual);
+            Rom? actualRomA = actualItemA as Rom;
+            Assert.NotNull(actualRomA);
+            Assert.Equal("name", actualRomA.GetName());
+            Assert.Equal(12345, actualRomA.GetInt64FieldValue(Models.Metadata.Rom.SizeKey));
+            Assert.Equal("crc", actualRomA.GetStringFieldValue(Models.Metadata.Rom.CRCKey));
+        }
+
+        [Fact]
+        public void ResolveNames_NonDuplicate_AllUntouched()
+        {
+            Machine machine = new Machine();
+            machine.SetFieldValue(Models.Metadata.Machine.NameKey, "machine");
+
+            Source source = new Source(0);
+
+            Rom romA = new Rom();
+            romA.SetName("romA");
+            romA.SetFieldValue(Models.Metadata.Rom.SizeKey, 12345);
+            romA.SetFieldValue(Models.Metadata.Rom.CRCKey, "crc");
+            romA.SetFieldValue(DatItem.MachineKey, (Machine)machine.Clone());
+            romA.SetFieldValue(DatItem.SourceKey, (Source)source.Clone());
+
+            Rom romB = new Rom();
+            romB.SetName("romB");
+            romB.SetFieldValue(Models.Metadata.Rom.SizeKey, 23456);
+            romB.SetFieldValue(Models.Metadata.Rom.CRCKey, "crc2");
+            romB.SetFieldValue(DatItem.MachineKey, (Machine)machine.Clone());
+            romB.SetFieldValue(DatItem.SourceKey, (Source)source.Clone());
+
+            List<DatItem> datItems = [romA, romB];
+
+            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+
+            List<DatItem> actual = datFile.ResolveNames(datItems);
+            Assert.Equal(2, actual.Count);
+
+            Rom? actualRomA = actual[0] as Rom;
+            Assert.NotNull(actualRomA);
+            Assert.Equal("romA", actualRomA.GetName());
+            Assert.Equal(12345, actualRomA.GetInt64FieldValue(Models.Metadata.Rom.SizeKey));
+            Assert.Equal("crc", actualRomA.GetStringFieldValue(Models.Metadata.Rom.CRCKey));
+
+            Rom? actualRomB = actual[1] as Rom;
+            Assert.NotNull(actualRomB);
+            Assert.Equal("romB", actualRomB.GetName());
+            Assert.Equal(23456, actualRomB.GetInt64FieldValue(Models.Metadata.Rom.SizeKey));
+            Assert.Equal("crc2", actualRomB.GetStringFieldValue(Models.Metadata.Rom.CRCKey));
+        }
+
+        [Fact]
+        public void ResolveNames_AllDuplicate_Single()
+        {
+            Machine machine = new Machine();
+            machine.SetFieldValue(Models.Metadata.Machine.NameKey, "machine");
+
+            Source source = new Source(0);
+
+            Rom romA = new Rom();
+            romA.SetName("rom");
+            romA.SetFieldValue(Models.Metadata.Rom.SizeKey, 12345);
+            romA.SetFieldValue(Models.Metadata.Rom.CRCKey, "crc");
+            romA.SetFieldValue(DatItem.MachineKey, (Machine)machine.Clone());
+            romA.SetFieldValue(DatItem.SourceKey, (Source)source.Clone());
+
+            Rom romB = new Rom();
+            romB.SetName("rom");
+            romB.SetFieldValue(Models.Metadata.Rom.SizeKey, 12345);
+            romB.SetFieldValue(Models.Metadata.Rom.CRCKey, "crc");
+            romB.SetFieldValue(DatItem.MachineKey, (Machine)machine.Clone());
+            romB.SetFieldValue(DatItem.SourceKey, (Source)source.Clone());
+
+            List<DatItem> datItems = [romA, romB];
+
+            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+
+            List<DatItem> actual = datFile.ResolveNames(datItems);
+            DatItem actualItemA = Assert.Single(actual);
+            Rom? actualRomA = actualItemA as Rom;
+            Assert.NotNull(actualRomA);
+            Assert.Equal("rom", actualRomA.GetName());
+            Assert.Equal(12345, actualRomA.GetInt64FieldValue(Models.Metadata.Rom.SizeKey));
+            Assert.Equal("crc", actualRomA.GetStringFieldValue(Models.Metadata.Rom.CRCKey));
+        }
+
+        [Fact]
+        public void ResolveNames_NameMatch_SingleRenamed()
+        {
+            Machine machine = new Machine();
+            machine.SetFieldValue(Models.Metadata.Machine.NameKey, "machine");
+
+            Source source = new Source(0);
+
+            Rom romA = new Rom();
+            romA.SetName("rom");
+            romA.SetFieldValue(Models.Metadata.Rom.SizeKey, 12345);
+            romA.SetFieldValue(Models.Metadata.Rom.CRCKey, "crc");
+            romA.SetFieldValue(DatItem.MachineKey, (Machine)machine.Clone());
+            romA.SetFieldValue(DatItem.SourceKey, (Source)source.Clone());
+
+            Rom romB = new Rom();
+            romB.SetName("rom");
+            romB.SetFieldValue(Models.Metadata.Rom.SizeKey, 23456);
+            romB.SetFieldValue(Models.Metadata.Rom.CRCKey, "crc2");
+            romB.SetFieldValue(DatItem.MachineKey, (Machine)machine.Clone());
+            romB.SetFieldValue(DatItem.SourceKey, (Source)source.Clone());
+
+            List<DatItem> datItems = [romA, romB];
+
+            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+
+            List<DatItem> actual = datFile.ResolveNames(datItems);
+            Assert.Equal(2, actual.Count);
+
+            Rom? actualRomA = actual[0] as Rom;
+            Assert.NotNull(actualRomA);
+            Assert.Equal("rom", actualRomA.GetName());
+            Assert.Equal(12345, actualRomA.GetInt64FieldValue(Models.Metadata.Rom.SizeKey));
+            Assert.Equal("crc", actualRomA.GetStringFieldValue(Models.Metadata.Rom.CRCKey));
+
+            Rom? actualRomB = actual[1] as Rom;
+            Assert.NotNull(actualRomB);
+            Assert.Equal("rom_crc2", actualRomB.GetName());
+            Assert.Equal(23456, actualRomB.GetInt64FieldValue(Models.Metadata.Rom.SizeKey));
+            Assert.Equal("crc2", actualRomB.GetStringFieldValue(Models.Metadata.Rom.CRCKey));
+        }
 
         #endregion
 
         #region ResolveNamesDB
 
-        // TODO: Write ResolveNamesDB tests
-        // - Empty list
-        // - Single item
-        // - 2 items, non-duplicate
-        // - 2 items, DupeType.All
-        // - 2 items, matching names
+        [Fact]
+        public void ResolveNamesDB_EmptyList_Empty()
+        {
+            List<KeyValuePair<long, DatItem>> mappings = [];
+
+            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+
+            List<KeyValuePair<long, DatItem>> actual = datFile.ResolveNamesDB(mappings);
+            Assert.Empty(actual);
+        }
+
+        [Fact]
+        public void ResolveNamesDB_SingleItem_Single()
+        {
+            Machine machine = new Machine();
+            machine.SetFieldValue(Models.Metadata.Machine.NameKey, "machine");
+
+            Source source = new Source(0);
+
+            Rom romA = new Rom();
+            romA.SetName("name");
+            romA.SetFieldValue(Models.Metadata.Rom.SizeKey, 12345);
+            romA.SetFieldValue(Models.Metadata.Rom.CRCKey, "crc");
+            romA.SetFieldValue(DatItem.MachineKey, (Machine)machine.Clone());
+            romA.SetFieldValue(DatItem.SourceKey, (Source)source.Clone());
+
+            List<KeyValuePair<long, DatItem>> mappings =
+            [
+                new KeyValuePair<long, DatItem>(0, romA),
+            ];
+            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+
+            List<KeyValuePair<long, DatItem>> actual = datFile.ResolveNamesDB(mappings);
+            KeyValuePair<long, DatItem> actualItemA = Assert.Single(actual);
+            Rom? actualRomA = actualItemA.Value as Rom;
+            Assert.NotNull(actualRomA);
+            Assert.Equal("name", actualRomA.GetName());
+            Assert.Equal(12345, actualRomA.GetInt64FieldValue(Models.Metadata.Rom.SizeKey));
+            Assert.Equal("crc", actualRomA.GetStringFieldValue(Models.Metadata.Rom.CRCKey));
+        }
+
+        [Fact]
+        public void ResolveNamesDB_NonDuplicate_AllUntouched()
+        {
+            Machine machine = new Machine();
+            machine.SetFieldValue(Models.Metadata.Machine.NameKey, "machine");
+
+            Source source = new Source(0);
+
+            Rom romA = new Rom();
+            romA.SetName("romA");
+            romA.SetFieldValue(Models.Metadata.Rom.SizeKey, 12345);
+            romA.SetFieldValue(Models.Metadata.Rom.CRCKey, "crc");
+            romA.SetFieldValue(DatItem.MachineKey, (Machine)machine.Clone());
+            romA.SetFieldValue(DatItem.SourceKey, (Source)source.Clone());
+
+            Rom romB = new Rom();
+            romB.SetName("romB");
+            romB.SetFieldValue(Models.Metadata.Rom.SizeKey, 23456);
+            romB.SetFieldValue(Models.Metadata.Rom.CRCKey, "crc2");
+            romB.SetFieldValue(DatItem.MachineKey, (Machine)machine.Clone());
+            romB.SetFieldValue(DatItem.SourceKey, (Source)source.Clone());
+
+            List<KeyValuePair<long, DatItem>> mappings =
+            [
+                new KeyValuePair<long, DatItem>(0, romA),
+                new KeyValuePair<long, DatItem>(1, romB),
+            ];
+            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+
+            List<KeyValuePair<long, DatItem>> actual = datFile.ResolveNamesDB(mappings);
+            Assert.Equal(2, actual.Count);
+
+            Rom? actualRomA = actual[0].Value as Rom;
+            Assert.NotNull(actualRomA);
+            Assert.Equal("romA", actualRomA.GetName());
+            Assert.Equal(12345, actualRomA.GetInt64FieldValue(Models.Metadata.Rom.SizeKey));
+            Assert.Equal("crc", actualRomA.GetStringFieldValue(Models.Metadata.Rom.CRCKey));
+
+            Rom? actualRomB = actual[1].Value as Rom;
+            Assert.NotNull(actualRomB);
+            Assert.Equal("romB", actualRomB.GetName());
+            Assert.Equal(23456, actualRomB.GetInt64FieldValue(Models.Metadata.Rom.SizeKey));
+            Assert.Equal("crc2", actualRomB.GetStringFieldValue(Models.Metadata.Rom.CRCKey));
+        }
+
+        [Fact]
+        public void ResolveNamesDB_AllDuplicate_Single()
+        {
+            Machine machine = new Machine();
+            machine.SetFieldValue(Models.Metadata.Machine.NameKey, "machine");
+
+            Source source = new Source(0);
+
+            Rom romA = new Rom();
+            romA.SetName("rom");
+            romA.SetFieldValue(Models.Metadata.Rom.SizeKey, 12345);
+            romA.SetFieldValue(Models.Metadata.Rom.CRCKey, "crc");
+            romA.SetFieldValue(DatItem.MachineKey, (Machine)machine.Clone());
+            romA.SetFieldValue(DatItem.SourceKey, (Source)source.Clone());
+
+            Rom romB = new Rom();
+            romB.SetName("rom");
+            romB.SetFieldValue(Models.Metadata.Rom.SizeKey, 12345);
+            romB.SetFieldValue(Models.Metadata.Rom.CRCKey, "crc");
+            romB.SetFieldValue(DatItem.MachineKey, (Machine)machine.Clone());
+            romB.SetFieldValue(DatItem.SourceKey, (Source)source.Clone());
+
+            List<KeyValuePair<long, DatItem>> mappings =
+            [
+                new KeyValuePair<long, DatItem>(0, romA),
+                new KeyValuePair<long, DatItem>(1, romB),
+            ];
+            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+
+            List<KeyValuePair<long, DatItem>> actual = datFile.ResolveNamesDB(mappings);
+            KeyValuePair<long, DatItem> actualItemA = Assert.Single(actual);
+            Rom? actualRomA = actualItemA.Value as Rom;
+            Assert.NotNull(actualRomA);
+            Assert.Equal("rom", actualRomA.GetName());
+            Assert.Equal(12345, actualRomA.GetInt64FieldValue(Models.Metadata.Rom.SizeKey));
+            Assert.Equal("crc", actualRomA.GetStringFieldValue(Models.Metadata.Rom.CRCKey));
+        }
+
+        [Fact]
+        public void ResolveNamesDB_NameMatch_SingleRenamed()
+        {
+            Machine machine = new Machine();
+            machine.SetFieldValue(Models.Metadata.Machine.NameKey, "machine");
+
+            Source source = new Source(0);
+
+            Rom romA = new Rom();
+            romA.SetName("rom");
+            romA.SetFieldValue(Models.Metadata.Rom.SizeKey, 12345);
+            romA.SetFieldValue(Models.Metadata.Rom.CRCKey, "crc");
+            romA.SetFieldValue(DatItem.MachineKey, (Machine)machine.Clone());
+            romA.SetFieldValue(DatItem.SourceKey, (Source)source.Clone());
+
+            Rom romB = new Rom();
+            romB.SetName("rom");
+            romB.SetFieldValue(Models.Metadata.Rom.SizeKey, 23456);
+            romB.SetFieldValue(Models.Metadata.Rom.CRCKey, "crc2");
+            romB.SetFieldValue(DatItem.MachineKey, (Machine)machine.Clone());
+            romB.SetFieldValue(DatItem.SourceKey, (Source)source.Clone());
+
+            List<KeyValuePair<long, DatItem>> mappings =
+            [
+                new KeyValuePair<long, DatItem>(0, romA),
+                new KeyValuePair<long, DatItem>(1, romB),
+            ];
+            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+
+            List<KeyValuePair<long, DatItem>> actual = datFile.ResolveNamesDB(mappings);
+            Assert.Equal(2, actual.Count);
+
+            Rom? actualRomA = actual[0].Value as Rom;
+            Assert.NotNull(actualRomA);
+            Assert.Equal("rom", actualRomA.GetName());
+            Assert.Equal(12345, actualRomA.GetInt64FieldValue(Models.Metadata.Rom.SizeKey));
+            Assert.Equal("crc", actualRomA.GetStringFieldValue(Models.Metadata.Rom.CRCKey));
+
+            Rom? actualRomB = actual[1].Value as Rom;
+            Assert.NotNull(actualRomB);
+            Assert.Equal("rom_crc2", actualRomB.GetName());
+            Assert.Equal(23456, actualRomB.GetInt64FieldValue(Models.Metadata.Rom.SizeKey));
+            Assert.Equal("crc2", actualRomB.GetStringFieldValue(Models.Metadata.Rom.CRCKey));
+        }
 
         #endregion
 
