@@ -1514,7 +1514,35 @@ namespace SabreTools.DatFiles.Test
 
         #region ContainsWritable
 
-        // TODO: Write ContainsWritable tests
+        [Fact]
+        public void ContainsWritable_Empty_True()
+        {
+            List<DatItem> datItems = [];
+            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+
+            bool actual = datFile.ContainsWritable(datItems);
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public void ContainsWritable_NoWritable_False()
+        {
+            List<DatItem> datItems = [new Blank()];
+            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+
+            bool actual = datFile.ContainsWritable(datItems);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void ContainsWritable_Writable_True()
+        {
+            List<DatItem> datItems = [new Rom()];
+            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+
+            bool actual = datFile.ContainsWritable(datItems);
+            Assert.True(actual);
+        }
 
         #endregion
 

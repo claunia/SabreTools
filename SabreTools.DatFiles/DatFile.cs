@@ -431,15 +431,15 @@ namespace SabreTools.DatFiles
         protected internal virtual List<string>? GetMissingRequiredFields(DatItem datItem) => null;
 
         /// <summary>
-        /// Get if a machine contains any writable items
+        /// Get if a list contains any writable items
         /// </summary>
         /// <param name="datItems">DatItems to check</param>
-        /// <returns>True if the machine contains at least one writable item, false otherwise</returns>
-        /// <remarks>Empty machines are kept with this</remarks>
+        /// <returns>True if the list contains at least one writable item, false otherwise</returns>
+        /// <remarks>Empty list are kept with this</remarks>
         protected internal bool ContainsWritable(List<DatItem> datItems)
         {
-            // Empty machines are considered writable
-            if (datItems == null || datItems.Count == 0)
+            // Empty list are considered writable
+            if (datItems.Count == 0)
                 return true;
 
             foreach (DatItem datItem in datItems)
