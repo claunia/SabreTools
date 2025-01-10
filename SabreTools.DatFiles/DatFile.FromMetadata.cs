@@ -61,8 +61,7 @@ namespace SabreTools.DatFiles
             if (item.ContainsKey(Models.Metadata.Header.ImagesKey))
             {
                 var images = item.Read<Models.OfflineList.Images>(Models.Metadata.Header.ImagesKey);
-                if (images != null)
-                    Header.SetFieldValue<Models.OfflineList.Images?>(Models.Metadata.Header.ImagesKey, images);
+                Header.SetFieldValue<Models.OfflineList.Images?>(Models.Metadata.Header.ImagesKey, images);
             }
             if (item.ContainsKey(Models.Metadata.Header.InfosKey))
             {
@@ -72,14 +71,12 @@ namespace SabreTools.DatFiles
             if (item.ContainsKey(Models.Metadata.Header.NewDatKey))
             {
                 var newDat = item.Read<Models.OfflineList.NewDat>(Models.Metadata.Header.NewDatKey);
-                if (newDat != null)
-                    Header.SetFieldValue<Models.OfflineList.NewDat?>(Models.Metadata.Header.NewDatKey, newDat);
+                Header.SetFieldValue<Models.OfflineList.NewDat?>(Models.Metadata.Header.NewDatKey, newDat);
             }
             if (item.ContainsKey(Models.Metadata.Header.SearchKey))
             {
                 var search = item.Read<Models.OfflineList.Search>(Models.Metadata.Header.SearchKey);
-                if (search != null)
-                    Header.SetFieldValue<Models.OfflineList.Search?>(Models.Metadata.Header.SearchKey, search);
+                Header.SetFieldValue<Models.OfflineList.Search?>(Models.Metadata.Header.SearchKey, search);
             }
 
             // Selectively set all possible fields -- TODO: Figure out how to make this less manual
@@ -111,6 +108,8 @@ namespace SabreTools.DatFiles
                 Header.SetFieldValue<string?>(Models.Metadata.Header.ForceNodumpKey, header.GetStringFieldValue(Models.Metadata.Header.ForceNodumpKey).AsEnumValue<NodumpFlag>().AsStringValue());
             if (Header.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>() == PackingFlag.None)
                 Header.SetFieldValue<string?>(Models.Metadata.Header.ForcePackingKey, header.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>().AsStringValue());
+            if (Header.GetBoolFieldValue(Models.Metadata.Header.ForceZippingKey) == null)
+                Header.SetFieldValue<bool?>(Models.Metadata.Header.ForceZippingKey, header.GetBoolFieldValue(Models.Metadata.Header.ForceZippingKey));
             if (Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey) == null)
                 Header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, header.GetStringFieldValue(Models.Metadata.Header.HeaderKey));
             if (Header.GetStringFieldValue(Models.Metadata.Header.HomepageKey) == null)
@@ -129,6 +128,8 @@ namespace SabreTools.DatFiles
                 Header.SetFieldValue<string?>(Models.Metadata.Header.MameConfigKey, header.GetStringFieldValue(Models.Metadata.Header.MameConfigKey));
             if (Header.GetStringFieldValue(Models.Metadata.Header.NameKey) == null)
                 Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, header.GetStringFieldValue(Models.Metadata.Header.NameKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.NotesKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.NotesKey, header.GetStringFieldValue(Models.Metadata.Header.NotesKey));
             if (Header.GetStringFieldValue(Models.Metadata.Header.PluginKey) == null)
                 Header.SetFieldValue<string?>(Models.Metadata.Header.PluginKey, header.GetStringFieldValue(Models.Metadata.Header.PluginKey));
             if (Header.GetStringFieldValue(Models.Metadata.Header.RefNameKey) == null)
@@ -141,12 +142,16 @@ namespace SabreTools.DatFiles
                 Header.SetFieldValue<string?>(Models.Metadata.Header.RootDirKey, header.GetStringFieldValue(Models.Metadata.Header.RootDirKey));
             if (Header.GetStringFieldValue(Models.Metadata.Header.SampleModeKey).AsEnumValue<MergingFlag>() == MergingFlag.None)
                 Header.SetFieldValue<string?>(Models.Metadata.Header.SampleModeKey, header.GetStringFieldValue(Models.Metadata.Header.SampleModeKey).AsEnumValue<MergingFlag>().AsStringValue());
+            if (Header.GetStringFieldValue(Models.Metadata.Header.SchemaLocationKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.SchemaLocationKey, header.GetStringFieldValue(Models.Metadata.Header.SchemaLocationKey));
             if (Header.GetStringFieldValue(Models.Metadata.Header.ScreenshotsHeightKey) == null)
                 Header.SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsHeightKey, header.GetStringFieldValue(Models.Metadata.Header.ScreenshotsHeightKey));
             if (Header.GetStringFieldValue(Models.Metadata.Header.ScreenshotsWidthKey) == null)
                 Header.SetFieldValue<string?>(Models.Metadata.Header.ScreenshotsWidthKey, header.GetStringFieldValue(Models.Metadata.Header.ScreenshotsWidthKey));
             if (Header.GetStringFieldValue(Models.Metadata.Header.SystemKey) == null)
                 Header.SetFieldValue<string?>(Models.Metadata.Header.SystemKey, header.GetStringFieldValue(Models.Metadata.Header.SystemKey));
+            if (Header.GetStringFieldValue(Models.Metadata.Header.TimestampKey) == null)
+                Header.SetFieldValue<string?>(Models.Metadata.Header.TimestampKey, header.GetStringFieldValue(Models.Metadata.Header.TimestampKey));
             if (Header.GetStringFieldValue(Models.Metadata.Header.TypeKey) == null)
                 Header.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, header.GetStringFieldValue(Models.Metadata.Header.TypeKey));
             if (Header.GetStringFieldValue(Models.Metadata.Header.UrlKey) == null)
@@ -196,7 +201,7 @@ namespace SabreTools.DatFiles
                 return;
 
             // Create an internal machine
-            var machine = new DatItems.Machine(item);
+            var machine = new Machine(item);
 
             // Process flag values
             if (machine.GetStringFieldValue(Models.Metadata.Machine.Im1CRCKey) != null)
