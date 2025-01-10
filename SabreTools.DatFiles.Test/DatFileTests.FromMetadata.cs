@@ -158,11 +158,17 @@ namespace SabreTools.DatFiles.Test
             Release? release = Array.Find(datItems, item => item is Release) as Release;
             ValidateRelease(release);
 
-            Rom? rom = Array.Find(datItems, item => item is Rom rom && !rom.DataAreaSpecified && !rom.PartSpecified &&  rom.GetStringFieldValue(Models.Metadata.Rom.OpenMSXMediaType) == null) as Rom;
+            Rom? rom = Array.Find(datItems, item => item is Rom rom && !rom.DataAreaSpecified && !rom.PartSpecified && rom.GetStringFieldValue(Models.Metadata.Rom.OpenMSXMediaType) == null) as Rom;
             ValidateRom(rom);
 
             Sample? sample = Array.Find(datItems, item => item is Sample) as Sample;
             ValidateSample(sample);
+
+            SharedFeat? sharedFeat = Array.Find(datItems, item => item is SharedFeat) as SharedFeat;
+            ValidateSharedFeat(sharedFeat);
+
+            Slot? slot = Array.Find(datItems, item => item is Slot) as Slot;
+            ValidateSlot(slot);
 
             // TODO: Validate all fields
         }
@@ -622,6 +628,25 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.Sample.NameKey] = "name",
             };
 
+            Models.Metadata.SharedFeat sharedFeat = new Models.Metadata.SharedFeat
+            {
+                [Models.Metadata.SharedFeat.NameKey] = "name",
+                [Models.Metadata.SharedFeat.ValueKey] = "value",
+            };
+
+            Models.Metadata.SlotOption slotOption = new Models.Metadata.SlotOption
+            {
+                [Models.Metadata.SlotOption.DefaultKey] = "yes",
+                [Models.Metadata.SlotOption.DevNameKey] = "devname",
+                [Models.Metadata.SlotOption.NameKey] = "name",
+            };
+
+            Models.Metadata.Slot slot = new Models.Metadata.Slot
+            {
+                [Models.Metadata.Slot.NameKey] = "name",
+                [Models.Metadata.Slot.SlotOptionKey] = new Models.Metadata.SlotOption[] { slotOption },
+            };
+
             return new Models.Metadata.Machine
             {
                 [Models.Metadata.Machine.AdjusterKey] = new Models.Metadata.Adjuster[] { adjuster },
@@ -688,8 +713,8 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.Machine.SampleKey] = new Models.Metadata.Sample[] { sample },
                 [Models.Metadata.Machine.SampleOfKey] = "sampleof",
                 [Models.Metadata.Machine.SaveTypeKey] = "savetype",
-                [Models.Metadata.Machine.SharedFeatKey] = "REPLACE", // Type array
-                [Models.Metadata.Machine.SlotKey] = "REPLACE", // Type array
+                [Models.Metadata.Machine.SharedFeatKey] = new Models.Metadata.SharedFeat[] { sharedFeat },
+                [Models.Metadata.Machine.SlotKey] = new Models.Metadata.Slot[] { slot },
                 [Models.Metadata.Machine.SoftwareListKey] = "REPLACE", // Type array
                 [Models.Metadata.Machine.SoundKey] = "REPLACE", // Type
                 [Models.Metadata.Machine.SourceFileKey] = "sourcefile",
@@ -1253,6 +1278,32 @@ namespace SabreTools.DatFiles.Test
         {
             Assert.NotNull(sample);
             Assert.Equal("name", sample.GetStringFieldValue(Models.Metadata.Sample.NameKey));
+        }
+
+        private static void ValidateSharedFeat(SharedFeat? sharedFeat)
+        {
+            Assert.NotNull(sharedFeat);
+            Assert.Equal("name", sharedFeat.GetStringFieldValue(Models.Metadata.SharedFeat.NameKey));
+            Assert.Equal("value", sharedFeat.GetStringFieldValue(Models.Metadata.SharedFeat.ValueKey));
+        }
+
+        private static void ValidateSlot(Slot? slot)
+        {
+            Assert.NotNull(slot);
+            Assert.Equal("name", slot.GetStringFieldValue(Models.Metadata.Slot.NameKey));
+
+            SlotOption[]? slotOptions = slot.GetFieldValue<SlotOption[]>(Models.Metadata.Slot.SlotOptionKey);
+            Assert.NotNull(slotOptions);
+            SlotOption? slotOption = Assert.Single(slotOptions);
+            ValidateSlotOption(slotOption);
+        }
+
+        private static void ValidateSlotOption(SlotOption? slotOption)
+        {
+            Assert.NotNull(slotOption);
+            Assert.True(slotOption.GetBoolFieldValue(Models.Metadata.SlotOption.DefaultKey));
+            Assert.Equal("devname", slotOption.GetStringFieldValue(Models.Metadata.SlotOption.DevNameKey));
+            Assert.Equal("name", slotOption.GetStringFieldValue(Models.Metadata.SlotOption.NameKey));
         }
 
         #endregion
