@@ -73,6 +73,23 @@ namespace SabreTools.DatFiles
             if (ItemsDB == null || (machineFieldNames.Count == 0 && itemFieldNames.Count == 0))
                 return;
 
+            // Handle machine removals
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(ItemsDB.GetMachines(), Core.Globals.ParallelOptions, kvp =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(ItemsDB.GetMachines(), kvp =>
+#else
+            foreach (var kvp in ItemsDB.GetMachines())
+#endif
+            {
+                RemoveFields(kvp.Value, machineFieldNames);
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
+
+            // Handle item removals
 #if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(ItemsDB.SortedKeys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
@@ -91,7 +108,7 @@ namespace SabreTools.DatFiles
 
                 foreach (var item in items.Values)
                 {
-                    RemoveFields(item, machineFieldNames, itemFieldNames);
+                    RemoveFields(item, [], itemFieldNames);
                 }
 #if NET40_OR_GREATER || NETCOREAPP
             });
