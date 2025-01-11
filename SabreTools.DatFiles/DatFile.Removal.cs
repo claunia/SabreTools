@@ -18,7 +18,7 @@ namespace SabreTools.DatFiles
         public void RemoveHeaderFields(List<string> headerFieldNames)
         {
             // If we have an invalid input, return
-            if (Header == null || headerFieldNames.Count == 0)
+            if (headerFieldNames.Count == 0)
                 return;
 
             foreach (var fieldName in headerFieldNames)
@@ -34,7 +34,7 @@ namespace SabreTools.DatFiles
         public void RemoveItemFields(List<string> machineFieldNames, Dictionary<string, List<string>> itemFieldNames)
         {
             // If we have an invalid input, return
-            if (Items == null || (machineFieldNames.Count == 0 && itemFieldNames.Count == 0))
+            if (machineFieldNames.Count == 0 && itemFieldNames.Count == 0)
                 return;
 
 #if NET452_OR_GREATER || NETCOREAPP
@@ -70,7 +70,7 @@ namespace SabreTools.DatFiles
         public void RemoveItemFieldsDB(List<string> machineFieldNames, Dictionary<string, List<string>> itemFieldNames)
         {
             // If we have an invalid input, return
-            if (ItemsDB == null || (machineFieldNames.Count == 0 && itemFieldNames.Count == 0))
+            if (machineFieldNames.Count == 0 && itemFieldNames.Count == 0)
                 return;
 
             // Handle machine removals

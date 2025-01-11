@@ -5,7 +5,6 @@ namespace SabreTools.DatFiles.Test
         #region RemoveHeaderFields
 
         // TODO: Write RemoveHeaderFields tests
-        // - Null header
         // - Empty list
         // - Full list
 
@@ -14,7 +13,6 @@ namespace SabreTools.DatFiles.Test
         #region RemoveItemFields
 
         // TODO: Write RemoveItemFields tests
-        // - Null item dict
         // - Both lists empty
         // - Machine only
         // - Item only
@@ -25,7 +23,6 @@ namespace SabreTools.DatFiles.Test
         #region RemoveItemFieldsDB
 
         // TODO: Write RemoveItemFieldsDB tests
-        // - Null item dict
         // - Both lists empty
         // - Machine only
         // - Item only
