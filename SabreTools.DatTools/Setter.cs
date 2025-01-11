@@ -134,7 +134,7 @@ namespace SabreTools.DatTools
         public void SetFields(DatHeader datHeader)
         {
             // If we have an invalid input, return
-            if (datHeader == null || HeaderFieldMappings.Count == 0)
+            if (HeaderFieldMappings.Count == 0)
                 return;
 
             foreach (var kvp in HeaderFieldMappings)

@@ -87,7 +87,7 @@ namespace SabreTools.DatTools
         public bool ApplyExtras(DatFile datFile, bool throwOnError = false)
         {
             // If we have no extras, don't attempt to apply and just return true
-            if (Items == null || Items.Count == 0)
+            if (Items.Count == 0)
                 return true;
 
             var watch = new InternalStopwatch("Applying extra mappings to DAT");
@@ -150,7 +150,7 @@ namespace SabreTools.DatTools
         public bool ApplyExtrasDB(DatFile datFile, bool throwOnError = false)
         {
             // If we have no extras, don't attempt to apply and just return true
-            if (Items == null || Items.Count == 0)
+            if (Items.Count == 0)
                 return true;
 
             var watch = new InternalStopwatch("Applying extra mappings to DAT");

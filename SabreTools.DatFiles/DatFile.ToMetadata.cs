@@ -15,7 +15,7 @@ namespace SabreTools.DatFiles
         public Models.Metadata.MetadataFile? ConvertToMetadata(bool ignoreblanks = false)
         {
             // If we don't have items, we can't do anything
-            if (Items == null || Items.Count == 0)
+            if (Items.Count == 0)
                 return null;
 
             // Create an object to hold the data
@@ -40,7 +40,7 @@ namespace SabreTools.DatFiles
         public Models.Metadata.MetadataFile? ConvertToMetadataDB(bool ignoreblanks = false)
         {
             // If we don't have items, we can't do anything
-            if (ItemsDB == null)
+            if (ItemsDB.GetItems().Count == 0)
                 return null;
 
             // Create an object to hold the data
@@ -64,10 +64,6 @@ namespace SabreTools.DatFiles
         /// </summary>
         private Models.Metadata.Header? ConvertHeader()
         {
-            // If the header is invalid, we can't do anything
-            if (Header == null)
-                return null;
-
             // Create an internal header
             var header = Header.GetInternalClone();
 
