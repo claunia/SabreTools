@@ -160,44 +160,28 @@ namespace SabreTools.DatTools
         /// <summary>
         /// Apply removals to the item dictionary
         /// </summary>
-        /// TODO: Does this need to be multi-threaded?
         public void RemoveItemFields(ItemDictionary? itemDictionary)
         {
             // If we have an invalid input, return
             if (itemDictionary == null || (MachineFieldNames.Count == 0 && ItemFieldNames.Count == 0))
                 return;
 
-#if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(itemDictionary.Keys, Core.Globals.ParallelOptions, key =>
-#elif NET40_OR_GREATER
-            Parallel.ForEach(itemDictionary.Keys, key =>
-#else
             foreach (var key in itemDictionary.Keys)
-#endif
             {
                 List<DatItem>? items = itemDictionary[key];
                 if (items == null)
-#if NET40_OR_GREATER || NETCOREAPP
-                    return;
-#else
                     continue;
-#endif
 
                 for (int j = 0; j < items.Count; j++)
                 {
                     RemoveFields(items[j]);
                 }
-#if NET40_OR_GREATER || NETCOREAPP
-            });
-#else
             }
-#endif
         }
 
         /// <summary>
         /// Apply removals to the item dictionary
         /// </summary>
-        /// TODO: Does this need to be multi-threaded?
         public void RemoveItemFieldsDB(ItemDictionaryDB? itemDictionary)
         {
             // If we have an invalid input, return
@@ -205,47 +189,23 @@ namespace SabreTools.DatTools
                 return;
 
             // Handle machine removals
-#if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(itemDictionary.GetMachines(), Core.Globals.ParallelOptions, kvp =>
-#elif NET40_OR_GREATER
-            Parallel.ForEach(itemDictionary.GetMachines(), kvp =>
-#else
             foreach (var kvp in itemDictionary.GetMachines())
-#endif
             {
                 RemoveFields(kvp.Value);
-#if NET40_OR_GREATER || NETCOREAPP
-            });
-#else
             }
-#endif
 
             // Handle item removals
-#if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(ItemsDB.SortedKeys, Core.Globals.ParallelOptions, key =>
-#elif NET40_OR_GREATER
-            Parallel.ForEach(ItemsDB.SortedKeys, key =>
-#else
             foreach (var key in itemDictionary.SortedKeys)
-#endif
             {
                 var items = itemDictionary.GetItemsForBucket(key);
                 if (items == null)
-#if NET40_OR_GREATER || NETCOREAPP
-                    return;
-#else
                     continue;
-#endif
 
                 foreach (var item in items.Values)
                 {
                     RemoveFields(item);
                 }
-#if NET40_OR_GREATER || NETCOREAPP
-            });
-#else
             }
-#endif
         }
 
         /// <summary>
