@@ -130,7 +130,9 @@ namespace SabreTools.DatTools
         public void ApplyRemovals(DatFile datFile)
         {
             InternalStopwatch watch = new("Applying removals to DAT");
-            datFile.ApplyRemovals(HeaderFieldNames, MachineFieldNames, ItemFieldNames);
+            datFile.RemoveHeaderFields(HeaderFieldNames);
+            datFile.RemoveItemFields(MachineFieldNames, ItemFieldNames);
+            datFile.RemoveItemFieldsDB(MachineFieldNames, ItemFieldNames);
             watch.Stop();
         }
 

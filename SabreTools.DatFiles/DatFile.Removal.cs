@@ -13,27 +13,29 @@ namespace SabreTools.DatFiles
         #region Removal
 
         /// <summary>
-        /// Remove fields indicated by the three input lists
+        /// Remove header fields with given values
         /// </summary>
-        public void ApplyRemovals(List<string> headerFieldNames, List<string> machineFieldNames, Dictionary<string, List<string>> itemFieldNames)
+        public void RemoveHeaderFields(List<string> headerFieldNames)
         {
-            // Remove DatHeader fields
-            if (headerFieldNames.Count > 0)
-                RemoveHeaderFields(headerFieldNames);
+            // If we have an invalid input, return
+            if (Header == null || headerFieldNames.Count == 0)
+                return;
 
-            // Remove DatItem and Machine fields
-            if (machineFieldNames.Count > 0 || itemFieldNames.Count > 0)
+            foreach (var fieldName in headerFieldNames)
             {
-                ApplyRemovalsItemDictionary(machineFieldNames, itemFieldNames);
-                ApplyRemovalsItemDictionaryDB(machineFieldNames, itemFieldNames);
+                Header.RemoveField(fieldName);
             }
         }
 
         /// <summary>
         /// Apply removals to the item dictionary
         /// </summary>
-        private void ApplyRemovalsItemDictionary(List<string> machineFieldNames, Dictionary<string, List<string>> itemFieldNames)
+        public void RemoveItemFields(List<string> machineFieldNames, Dictionary<string, List<string>> itemFieldNames)
         {
+            // If we have an invalid input, return
+            if (Items == null || (machineFieldNames.Count == 0 && itemFieldNames.Count == 0))
+                return;
+
 #if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(Items.Keys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
@@ -64,8 +66,12 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Apply removals to the item dictionary
         /// </summary>
-        private void ApplyRemovalsItemDictionaryDB(List<string> machineFieldNames, Dictionary<string, List<string>> itemFieldNames)
+        public void RemoveItemFieldsDB(List<string> machineFieldNames, Dictionary<string, List<string>> itemFieldNames)
         {
+            // If we have an invalid input, return
+            if (ItemsDB == null || (machineFieldNames.Count == 0 && itemFieldNames.Count == 0))
+                return;
+
 #if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(ItemsDB.SortedKeys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
@@ -94,22 +100,7 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Remove fields with given values
-        /// </summary>
-        private void RemoveHeaderFields(List<string> headerFieldNames)
-        {
-            // If we have an invalid input, return
-            if (Header == null || headerFieldNames.Count == 0)
-                return;
-
-            foreach (var fieldName in headerFieldNames)
-            {
-                Header.RemoveField(fieldName);
-            }
-        }
-
-        /// <summary>
-        /// Remove fields with given values
+        /// Remove machine fields with given values
         /// </summary>
         private static void RemoveFields(Machine? machine, List<string> machineFieldNames)
         {
