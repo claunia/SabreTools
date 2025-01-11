@@ -16,7 +16,7 @@ namespace SabreTools.DatFiles
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        public void ConvertFromMetadata(Models.Metadata.MetadataFile? item, string filename, int indexId, bool keep, bool statsOnly)
+        internal void ConvertFromMetadata(Models.Metadata.MetadataFile? item, string filename, int indexId, bool keep, bool statsOnly)
         {
             // If the metadata file is invalid, we can't do anything
             if (item == null || item.Count == 0)

@@ -12,7 +12,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Convert metadata information
         /// </summary>
-        public Models.Metadata.MetadataFile? ConvertToMetadata(bool ignoreblanks = false)
+        internal Models.Metadata.MetadataFile? ConvertToMetadata(bool ignoreblanks = false)
         {
             // If we don't have items, we can't do anything
             if (Items.Count == 0)
@@ -37,7 +37,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Convert metadata information
         /// </summary>
-        public Models.Metadata.MetadataFile? ConvertToMetadataDB(bool ignoreblanks = false)
+        internal Models.Metadata.MetadataFile? ConvertToMetadataDB(bool ignoreblanks = false)
         {
             // If we don't have items, we can't do anything
             if (ItemsDB.GetItems().Count == 0)
