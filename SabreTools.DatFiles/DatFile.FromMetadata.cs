@@ -435,6 +435,7 @@ namespace SabreTools.DatFiles
                 var datItem = new DatItems.Formats.Archive(item);
                 datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
+
                 Items.AddItem(datItem, statsOnly);
                 ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
             }
@@ -667,6 +668,7 @@ namespace SabreTools.DatFiles
                 var datItem = new DatItems.Formats.DeviceRef(item);
                 datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
+
                 Items.AddItem(datItem, statsOnly);
                 ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
             }
@@ -1059,6 +1061,7 @@ namespace SabreTools.DatFiles
                 var datItem = new DatItems.Formats.Info(item);
                 datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
+
                 Items.AddItem(datItem, statsOnly);
                 ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
             }
@@ -1596,6 +1599,7 @@ namespace SabreTools.DatFiles
                 var datItem = new DatItems.Formats.Sample(item);
                 datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
+
                 Items.AddItem(datItem, statsOnly);
                 ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
             }
@@ -1622,6 +1626,7 @@ namespace SabreTools.DatFiles
                 var datItem = new DatItems.Formats.SharedFeat(item);
                 datItem.SetFieldValue<Source?>(DatItems.DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
+
                 Items.AddItem(datItem, statsOnly);
                 ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
             }
