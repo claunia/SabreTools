@@ -23,7 +23,8 @@ namespace SabreTools.DatFiles
 
             foreach (var fieldName in headerFieldNames)
             {
-                Header.RemoveField(fieldName);
+                bool removed = Header.RemoveField(fieldName);
+                _logger.Verbose($"Header field {fieldName} {(removed ? "removed" : "could not be removed")}");
             }
         }
 
