@@ -15,13 +15,13 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Remove header fields with given values
         /// </summary>
-        public void RemoveHeaderFields(List<string> headerFieldNames)
+        public void RemoveHeaderFields(List<string> fields)
         {
             // If we have an invalid input, return
-            if (headerFieldNames.Count == 0)
+            if (fields.Count == 0)
                 return;
 
-            foreach (var fieldName in headerFieldNames)
+            foreach (var fieldName in fields)
             {
                 bool removed = Header.RemoveField(fieldName);
                 _logger.Verbose($"Header field {fieldName} {(removed ? "removed" : "could not be removed")}");
@@ -31,10 +31,10 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Apply removals to the item dictionary
         /// </summary>
-        public void RemoveItemFields(List<string> machineFieldNames, Dictionary<string, List<string>> itemFieldNames)
+        public void RemoveItemFields(List<string> machineFields, Dictionary<string, List<string>> itemFields)
         {
             // If we have an invalid input, return
-            if (machineFieldNames.Count == 0 && itemFieldNames.Count == 0)
+            if (machineFields.Count == 0 && itemFields.Count == 0)
                 return;
 
 #if NET452_OR_GREATER || NETCOREAPP
@@ -55,7 +55,7 @@ namespace SabreTools.DatFiles
 
                 for (int j = 0; j < items.Count; j++)
                 {
-                    RemoveFields(items[j], machineFieldNames, itemFieldNames);
+                    RemoveFields(items[j], machineFields, itemFields);
                 }
 #if NET40_OR_GREATER || NETCOREAPP
             });
@@ -67,10 +67,10 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Apply removals to the item dictionary
         /// </summary>
-        public void RemoveItemFieldsDB(List<string> machineFieldNames, Dictionary<string, List<string>> itemFieldNames)
+        public void RemoveItemFieldsDB(List<string> machineFields, Dictionary<string, List<string>> itemFields)
         {
             // If we have an invalid input, return
-            if (machineFieldNames.Count == 0 && itemFieldNames.Count == 0)
+            if (machineFields.Count == 0 && itemFields.Count == 0)
                 return;
 
             // Handle machine removals
@@ -82,7 +82,7 @@ namespace SabreTools.DatFiles
             foreach (var kvp in ItemsDB.GetMachines())
 #endif
             {
-                RemoveFields(kvp.Value, machineFieldNames);
+                RemoveFields(kvp.Value, machineFields);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
@@ -108,7 +108,7 @@ namespace SabreTools.DatFiles
 
                 foreach (var item in items.Values)
                 {
-                    RemoveFields(item, [], itemFieldNames);
+                    RemoveFields(item, [], itemFields);
                 }
 #if NET40_OR_GREATER || NETCOREAPP
             });
@@ -120,13 +120,13 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Remove machine fields with given values
         /// </summary>
-        private static void RemoveFields(Machine? machine, List<string> machineFieldNames)
+        private static void RemoveFields(Machine? machine, List<string> fields)
         {
             // If we have an invalid input, return
-            if (machine == null || machineFieldNames.Count == 0)
+            if (machine == null || fields.Count == 0)
                 return;
 
-            foreach (var fieldName in machineFieldNames)
+            foreach (var fieldName in fields)
             {
                 machine.RemoveField(fieldName);
             }
@@ -136,7 +136,7 @@ namespace SabreTools.DatFiles
         /// Remove fields with given values
         /// </summary>
         /// <param name="datItem">DatItem to remove fields from</param>
-        private static void RemoveFields(DatItem? datItem, List<string> machineFieldNames, Dictionary<string, List<string>> itemFieldNames)
+        private static void RemoveFields(DatItem? datItem, List<string> machineFields, Dictionary<string, List<string>> itemFields)
         {
             if (datItem == null)
                 return;
@@ -145,27 +145,27 @@ namespace SabreTools.DatFiles
 
             // Handle Machine fields
             var machine = datItem.GetFieldValue<Machine>(DatItem.MachineKey);
-            if (machineFieldNames.Count > 0 && machine != null)
-                RemoveFields(machine, machineFieldNames);
+            if (machineFields.Count > 0 && machine != null)
+                RemoveFields(machine, machineFields);
 
             // If there are no field names, return
-            if (itemFieldNames == null || itemFieldNames.Count == 0)
+            if (itemFields == null || itemFields.Count == 0)
                 return;
 
             // If there are no field names for this type or generic, return
             string? itemType = datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue();
-            if (itemType == null || (!itemFieldNames.ContainsKey(itemType) && !itemFieldNames.ContainsKey("item")))
+            if (itemType == null || (!itemFields.ContainsKey(itemType) && !itemFields.ContainsKey("item")))
                 return;
 
             // Get the combined list of fields to remove
-            var fieldNames = new HashSet<string>();
-            if (itemFieldNames.ContainsKey(itemType))
-                fieldNames.UnionWith(itemFieldNames[itemType]);
-            if (itemFieldNames.ContainsKey("item"))
-                fieldNames.UnionWith(itemFieldNames["item"]);
+            var fields = new HashSet<string>();
+            if (itemFields.ContainsKey(itemType))
+                fields.UnionWith(itemFields[itemType]);
+            if (itemFields.ContainsKey("item"))
+                fields.UnionWith(itemFields["item"]);
 
             // If the field specifically contains Name, set it separately
-            if (fieldNames.Contains(Models.Metadata.Rom.NameKey))
+            if (fields.Contains(Models.Metadata.Rom.NameKey))
                 datItem.SetName(null);
 
             #endregion
@@ -173,7 +173,7 @@ namespace SabreTools.DatFiles
             #region Item-Specific
 
             // Handle unnested removals first
-            foreach (var datItemField in fieldNames)
+            foreach (var datItemField in fields)
             {
                 datItem.RemoveField(datItemField);
             }
@@ -181,18 +181,18 @@ namespace SabreTools.DatFiles
             // Handle nested removals
             switch (datItem)
             {
-                case Adjuster adjuster: RemoveFields(adjuster, itemFieldNames); break;
-                case Configuration configuration: RemoveFields(configuration, itemFieldNames); break;
-                case ConfSetting confSetting: RemoveFields(confSetting, itemFieldNames); break;
-                case Device device: RemoveFields(device, itemFieldNames); break;
-                case DipSwitch dipSwitch: RemoveFields(dipSwitch, itemFieldNames); break;
-                case DipValue dipValue: RemoveFields(dipValue, itemFieldNames); break;
-                case Disk disk: RemoveFields(disk, itemFieldNames); break;
-                case Input input: RemoveFields(input, itemFieldNames); break;
-                case Part part: RemoveFields(part, itemFieldNames); break;
-                case Port port: RemoveFields(port, itemFieldNames); break;
-                case Rom rom: RemoveFields(rom, itemFieldNames); break;
-                case Slot slot: RemoveFields(slot, itemFieldNames); break;
+                case Adjuster adjuster: RemoveFields(adjuster, itemFields); break;
+                case Configuration configuration: RemoveFields(configuration, itemFields); break;
+                case ConfSetting confSetting: RemoveFields(confSetting, itemFields); break;
+                case Device device: RemoveFields(device, itemFields); break;
+                case DipSwitch dipSwitch: RemoveFields(dipSwitch, itemFields); break;
+                case DipValue dipValue: RemoveFields(dipValue, itemFields); break;
+                case Disk disk: RemoveFields(disk, itemFields); break;
+                case Input input: RemoveFields(input, itemFields); break;
+                case Part part: RemoveFields(part, itemFields); break;
+                case Port port: RemoveFields(port, itemFields); break;
+                case Rom rom: RemoveFields(rom, itemFields); break;
+                case Slot slot: RemoveFields(slot, itemFields); break;
             }
 
             #endregion
@@ -202,12 +202,12 @@ namespace SabreTools.DatFiles
         /// Remove fields with given values
         /// </summary>
         /// <param name="adjuster">Adjuster to remove fields from</param>
-        private static void RemoveFields(Adjuster adjuster, Dictionary<string, List<string>> itemFieldNames)
+        private static void RemoveFields(Adjuster adjuster, Dictionary<string, List<string>> fields)
         {
             var conditions = adjuster.GetFieldValue<Condition[]?>(Models.Metadata.Adjuster.ConditionKey) ?? [];
             foreach (Condition subCondition in conditions)
             {
-                RemoveFields(subCondition, [], itemFieldNames);
+                RemoveFields(subCondition, [], fields);
             }
         }
 
@@ -215,24 +215,24 @@ namespace SabreTools.DatFiles
         /// Remove fields with given values
         /// </summary>
         /// <param name="configuration">Configuration to remove fields from</param>
-        private static void RemoveFields(Configuration configuration, Dictionary<string, List<string>> itemFieldNames)
+        private static void RemoveFields(Configuration configuration, Dictionary<string, List<string>> fields)
         {
             var conditions = configuration.GetFieldValue<Condition[]?>(Models.Metadata.Configuration.ConditionKey) ?? [];
             foreach (Condition subCondition in conditions)
             {
-                RemoveFields(subCondition, [], itemFieldNames);
+                RemoveFields(subCondition, [], fields);
             }
 
             var locations = configuration.GetFieldValue<ConfLocation[]?>(Models.Metadata.Configuration.ConfLocationKey) ?? [];
             foreach (ConfLocation subLocation in locations)
             {
-                RemoveFields(subLocation, [], itemFieldNames);
+                RemoveFields(subLocation, [], fields);
             }
 
             var settings = configuration.GetFieldValue<ConfSetting[]?>(Models.Metadata.Configuration.ConfSettingKey) ?? [];
             foreach (ConfSetting subSetting in settings)
             {
-                RemoveFields(subSetting as DatItem, [], itemFieldNames);
+                RemoveFields(subSetting as DatItem, [], fields);
             }
         }
 
@@ -240,12 +240,12 @@ namespace SabreTools.DatFiles
         /// Remove fields with given values
         /// </summary>
         /// <param name="confsetting">ConfSetting to remove fields from</param>
-        private static void RemoveFields(ConfSetting confsetting, Dictionary<string, List<string>> itemFieldNames)
+        private static void RemoveFields(ConfSetting confsetting, Dictionary<string, List<string>> fields)
         {
             var conditions = confsetting.GetFieldValue<Condition[]?>(Models.Metadata.ConfSetting.ConditionKey) ?? [];
             foreach (Condition subCondition in conditions)
             {
-                RemoveFields(subCondition, [], itemFieldNames);
+                RemoveFields(subCondition, [], fields);
             }
         }
 
@@ -253,18 +253,18 @@ namespace SabreTools.DatFiles
         /// Remove fields with given values
         /// </summary>
         /// <param name="device">Device to remove fields from</param>
-        private static void RemoveFields(Device device, Dictionary<string, List<string>> itemFieldNames)
+        private static void RemoveFields(Device device, Dictionary<string, List<string>> fields)
         {
             var extensions = device.GetFieldValue<Extension[]?>(Models.Metadata.Device.ExtensionKey) ?? [];
             foreach (Extension subExtension in extensions)
             {
-                RemoveFields(subExtension, [], itemFieldNames);
+                RemoveFields(subExtension, [], fields);
             }
 
             var instances = device.GetFieldValue<Instance[]?>(Models.Metadata.Device.InstanceKey) ?? [];
             foreach (Instance subInstance in instances)
             {
-                RemoveFields(subInstance, [], itemFieldNames);
+                RemoveFields(subInstance, [], fields);
             }
         }
 
@@ -272,41 +272,41 @@ namespace SabreTools.DatFiles
         /// Remove fields with given values
         /// </summary>
         /// <param name="dipSwitch">DipSwitch to remove fields from</param>
-        private static void RemoveFields(DipSwitch dipSwitch, Dictionary<string, List<string>> itemFieldNames)
+        private static void RemoveFields(DipSwitch dipSwitch, Dictionary<string, List<string>> fields)
         {
             var conditions = dipSwitch.GetFieldValue<Condition[]?>(Models.Metadata.DipSwitch.ConditionKey) ?? [];
             foreach (Condition subCondition in conditions)
             {
-                RemoveFields(subCondition, [], itemFieldNames);
+                RemoveFields(subCondition, [], fields);
             }
 
             var locations = dipSwitch.GetFieldValue<DipLocation[]?>(Models.Metadata.DipSwitch.DipLocationKey) ?? [];
             foreach (DipLocation subLocation in locations)
             {
-                RemoveFields(subLocation, [], itemFieldNames);
+                RemoveFields(subLocation, [], fields);
             }
 
             var dipValues = dipSwitch.GetFieldValue<DipValue[]?>(Models.Metadata.DipSwitch.DipValueKey) ?? [];
             foreach (DipValue subValue in dipValues)
             {
-                RemoveFields(subValue as DatItem, [], itemFieldNames);
+                RemoveFields(subValue as DatItem, [], fields);
             }
 
             var part = dipSwitch.GetFieldValue<Part?>(DipSwitch.PartKey);
             if (part != null)
-                RemoveFields(part as DatItem, [], itemFieldNames);
+                RemoveFields(part as DatItem, [], fields);
         }
 
         /// <summary>
         /// Remove fields with given values
         /// </summary>
         /// <param name="dipValue">DipValue to remove fields from</param>
-        private static void RemoveFields(DipValue dipValue, Dictionary<string, List<string>> itemFieldNames)
+        private static void RemoveFields(DipValue dipValue, Dictionary<string, List<string>> fields)
         {
             var conditions = dipValue.GetFieldValue<Condition[]?>(Models.Metadata.DipValue.ConditionKey) ?? [];
             foreach (Condition subCondition in conditions)
             {
-                RemoveFields(subCondition, [], itemFieldNames);
+                RemoveFields(subCondition, [], fields);
             }
         }
 
@@ -314,27 +314,27 @@ namespace SabreTools.DatFiles
         /// Remove fields with given values
         /// </summary>
         /// <param name="disk">Disk to remove fields from</param>
-        private static void RemoveFields(Disk disk, Dictionary<string, List<string>> itemFieldNames)
+        private static void RemoveFields(Disk disk, Dictionary<string, List<string>> fields)
         {
             var diskArea = disk.GetFieldValue<DiskArea?>(Disk.DiskAreaKey);
             if (diskArea != null)
-                RemoveFields(diskArea as DatItem, [], itemFieldNames);
+                RemoveFields(diskArea as DatItem, [], fields);
 
             var part = disk.GetFieldValue<Part?>(Disk.PartKey);
             if (part != null)
-                RemoveFields(part as DatItem, [], itemFieldNames);
+                RemoveFields(part as DatItem, [], fields);
         }
 
         /// <summary>
         /// Remove fields with given values
         /// </summary>
         /// <param name="input">Input to remove fields from</param>
-        private static void RemoveFields(Input input, Dictionary<string, List<string>> itemFieldNames)
+        private static void RemoveFields(Input input, Dictionary<string, List<string>> fields)
         {
             var controls = input.GetFieldValue<Control[]?>(Models.Metadata.Input.ControlKey) ?? [];
             foreach (Control subControl in controls)
             {
-                RemoveFields(subControl, [], itemFieldNames);
+                RemoveFields(subControl, [], fields);
             }
         }
 
@@ -342,12 +342,12 @@ namespace SabreTools.DatFiles
         /// Remove fields with given values
         /// </summary>
         /// <param name="part">Part to remove fields from</param>
-        private static void RemoveFields(Part part, Dictionary<string, List<string>> itemFieldNames)
+        private static void RemoveFields(Part part, Dictionary<string, List<string>> fields)
         {
             var features = part.GetFieldValue<PartFeature[]?>(Models.Metadata.Part.FeatureKey) ?? [];
             foreach (PartFeature subPartFeature in features)
             {
-                RemoveFields(subPartFeature, [], itemFieldNames);
+                RemoveFields(subPartFeature, [], fields);
             }
         }
 
@@ -355,12 +355,12 @@ namespace SabreTools.DatFiles
         /// Remove fields with given values
         /// </summary>
         /// <param name="port">Port to remove fields from</param>
-        private static void RemoveFields(Port port, Dictionary<string, List<string>> itemFieldNames)
+        private static void RemoveFields(Port port, Dictionary<string, List<string>> fields)
         {
             var analogs = port.GetFieldValue<Analog[]?>(Models.Metadata.Port.AnalogKey) ?? [];
             foreach (Analog subAnalog in analogs)
             {
-                RemoveFields(subAnalog, [], itemFieldNames);
+                RemoveFields(subAnalog, [], fields);
             }
         }
 
@@ -368,27 +368,27 @@ namespace SabreTools.DatFiles
         /// Remove fields with given values
         /// </summary>
         /// <param name="rom">Rom to remove fields from</param>
-        private static void RemoveFields(Rom rom, Dictionary<string, List<string>> itemFieldNames)
+        private static void RemoveFields(Rom rom, Dictionary<string, List<string>> fields)
         {
             var dataArea = rom.GetFieldValue<DataArea?>(Rom.DataAreaKey);
             if (dataArea != null)
-                RemoveFields(dataArea as DatItem, [], itemFieldNames);
+                RemoveFields(dataArea as DatItem, [], fields);
 
             var part = rom.GetFieldValue<Part?>(Rom.PartKey);
             if (part != null)
-                RemoveFields(part as DatItem, [], itemFieldNames);
+                RemoveFields(part as DatItem, [], fields);
         }
 
         /// <summary>
         /// Remove fields with given values
         /// </summary>
         /// <param name="slot">Slot to remove fields from</param>
-        private static void RemoveFields(Slot slot, Dictionary<string, List<string>> itemFieldNames)
+        private static void RemoveFields(Slot slot, Dictionary<string, List<string>> fields)
         {
             var slotOptions = slot.GetFieldValue<SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey) ?? [];
             foreach (SlotOption subSlotOption in slotOptions)
             {
-                RemoveFields(subSlotOption, [], itemFieldNames);
+                RemoveFields(subSlotOption, [], fields);
             }
         }
 
