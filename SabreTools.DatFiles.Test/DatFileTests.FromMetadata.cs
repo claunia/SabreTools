@@ -101,16 +101,16 @@ namespace SabreTools.DatFiles.Test
             Disk? disk = Array.Find(datItems, item => item is Disk disk && !disk.DiskAreaSpecified && !disk.PartSpecified) as Disk;
             ValidateDisk(disk);
 
-            Display? display = Array.Find(datItems, item => item is Display) as Display;
+            Display? display = Array.Find(datItems, item => item is Display display && display.GetInt64FieldValue(Models.Metadata.Video.AspectXKey) == null) as Display;
             ValidateDisplay(display);
 
             Driver? driver = Array.Find(datItems, item => item is Driver) as Driver;
             ValidateDriver(driver);
 
             // All other fields are tested separately
-            Rom? dumpRom = Array.Find(datItems, item => item is Rom rom && rom.GetStringFieldValue(Models.Metadata.Rom.OpenMSXMediaType) != null) as Rom;
-            Assert.NotNull(dumpRom);
-            Assert.Equal("rom", dumpRom.GetStringFieldValue(Models.Metadata.Rom.OpenMSXMediaType));
+            Rom? dump = Array.Find(datItems, item => item is Rom rom && rom.GetStringFieldValue(Models.Metadata.Rom.OpenMSXMediaType) != null) as Rom;
+            Assert.NotNull(dump);
+            Assert.Equal("rom", dump.GetStringFieldValue(Models.Metadata.Rom.OpenMSXMediaType));
 
             Feature? feature = Array.Find(datItems, item => item is Feature) as Feature;
             ValidateFeature(feature);
@@ -170,14 +170,21 @@ namespace SabreTools.DatFiles.Test
             Slot? slot = Array.Find(datItems, item => item is Slot) as Slot;
             ValidateSlot(slot);
 
-            // TODO: Validate all fields
+            SoftwareList? softwareList = Array.Find(datItems, item => item is SoftwareList) as SoftwareList;
+            ValidateSoftwareList(softwareList);
+
+            Sound? sound = Array.Find(datItems, item => item is Sound) as Sound;
+            ValidateSound(sound);
+
+            Display? video = Array.Find(datItems, item => item is Display display && display.GetInt64FieldValue(Models.Metadata.Video.AspectXKey) != null) as Display;
+            ValidateVideo(video);
         }
 
         #endregion
 
-        #region Helpers
+        #region Creation Helpers
 
-        private static Models.Metadata.Header? CreateHeader()
+        private static Models.Metadata.Header CreateHeader()
         {
             Models.OfflineList.CanOpen canOpen = new Models.OfflineList.CanOpen
             {
@@ -243,35 +250,127 @@ namespace SabreTools.DatFiles.Test
 
         private static Models.Metadata.Machine CreateMachine()
         {
-            // Used by multiple items
-            Models.Metadata.Condition condition = new Models.Metadata.Condition
+            return new Models.Metadata.Machine
             {
-                [Models.Metadata.Condition.ValueKey] = "value",
-                [Models.Metadata.Condition.MaskKey] = "mask",
-                [Models.Metadata.Condition.RelationKey] = "eq",
-                [Models.Metadata.Condition.TagKey] = "tag",
+                [Models.Metadata.Machine.AdjusterKey] = new Models.Metadata.Adjuster[] { CreateAdjuster() },
+                [Models.Metadata.Machine.ArchiveKey] = new Models.Metadata.Archive[] { CreateArchive() },
+                [Models.Metadata.Machine.BiosSetKey] = new Models.Metadata.BiosSet[] { CreateBiosSet() },
+                [Models.Metadata.Machine.BoardKey] = "board",
+                [Models.Metadata.Machine.ButtonsKey] = "buttons",
+                [Models.Metadata.Machine.CategoryKey] = "category",
+                [Models.Metadata.Machine.ChipKey] = new Models.Metadata.Chip[] { CreateChip() },
+                [Models.Metadata.Machine.CloneOfKey] = "cloneof",
+                [Models.Metadata.Machine.CloneOfIdKey] = "cloneofid",
+                [Models.Metadata.Machine.CommentKey] = "comment",
+                [Models.Metadata.Machine.CompanyKey] = "company",
+                [Models.Metadata.Machine.ConfigurationKey] = new Models.Metadata.Configuration[] { CreateConfiguration() },
+                [Models.Metadata.Machine.ControlKey] = "control",
+                [Models.Metadata.Machine.CountryKey] = "country",
+                [Models.Metadata.Machine.DescriptionKey] = "description",
+                [Models.Metadata.Machine.DeviceKey] = new Models.Metadata.Device[] { CreateDevice() },
+                [Models.Metadata.Machine.DeviceRefKey] = new Models.Metadata.DeviceRef[] { CreateDeviceRef() },
+                [Models.Metadata.Machine.DipSwitchKey] = new Models.Metadata.DipSwitch[] { CreateDipSwitch() },
+                [Models.Metadata.Machine.DirNameKey] = "dirname",
+                [Models.Metadata.Machine.DiskKey] = new Models.Metadata.Disk[] { CreateDisk() },
+                [Models.Metadata.Machine.DisplayCountKey] = "displaycount",
+                [Models.Metadata.Machine.DisplayKey] = new Models.Metadata.Display[] { CreateDisplay() },
+                [Models.Metadata.Machine.DisplayTypeKey] = "displaytype",
+                [Models.Metadata.Machine.DriverKey] = CreateDriver(),
+                [Models.Metadata.Machine.DumpKey] = new Models.Metadata.Dump[] { CreateDump() },
+                [Models.Metadata.Machine.DuplicateIDKey] = "duplicateid",
+                [Models.Metadata.Machine.EmulatorKey] = "emulator",
+                [Models.Metadata.Machine.ExtraKey] = "extra",
+                [Models.Metadata.Machine.FavoriteKey] = "favorite",
+                [Models.Metadata.Machine.FeatureKey] = new Models.Metadata.Feature[] { CreateFeature() },
+                [Models.Metadata.Machine.GenMSXIDKey] = "genmsxid",
+                [Models.Metadata.Machine.HistoryKey] = "history",
+                [Models.Metadata.Machine.IdKey] = "id",
+                [Models.Metadata.Machine.Im1CRCKey] = ZeroHash.CRC32Str,
+                [Models.Metadata.Machine.Im2CRCKey] = ZeroHash.CRC32Str,
+                [Models.Metadata.Machine.ImageNumberKey] = "imagenumber",
+                [Models.Metadata.Machine.InfoKey] = new Models.Metadata.Info[] { CreateInfo() },
+                [Models.Metadata.Machine.InputKey] = CreateInput(),
+                [Models.Metadata.Machine.IsBiosKey] = "yes",
+                [Models.Metadata.Machine.IsDeviceKey] = "yes",
+                [Models.Metadata.Machine.IsMechanicalKey] = "yes",
+                [Models.Metadata.Machine.LanguageKey] = "language",
+                [Models.Metadata.Machine.LocationKey] = "location",
+                [Models.Metadata.Machine.ManufacturerKey] = "manufacturer",
+                [Models.Metadata.Machine.MediaKey] = new Models.Metadata.Media[] { CreateMedia() },
+                [Models.Metadata.Machine.NameKey] = "name",
+                [Models.Metadata.Machine.NotesKey] = "notes",
+                [Models.Metadata.Machine.PartKey] = new Models.Metadata.Part[] { CreatePart() },
+                [Models.Metadata.Machine.PlayedCountKey] = "playedcount",
+                [Models.Metadata.Machine.PlayedTimeKey] = "playedtime",
+                [Models.Metadata.Machine.PlayersKey] = "players",
+                [Models.Metadata.Machine.PortKey] = new Models.Metadata.Port[] { CreatePort() },
+                [Models.Metadata.Machine.PublisherKey] = "publisher",
+                [Models.Metadata.Machine.RamOptionKey] = new Models.Metadata.RamOption[] { CreateRamOption() },
+                [Models.Metadata.Machine.RebuildToKey] = "rebuildto",
+                [Models.Metadata.Machine.ReleaseKey] = new Models.Metadata.Release[] { CreateRelease() },
+                [Models.Metadata.Machine.ReleaseNumberKey] = "releasenumber",
+                [Models.Metadata.Machine.RomKey] = new Models.Metadata.Rom[] { CreateRom() },
+                [Models.Metadata.Machine.RomOfKey] = "romof",
+                [Models.Metadata.Machine.RotationKey] = "rotation",
+                [Models.Metadata.Machine.RunnableKey] = "yes",
+                [Models.Metadata.Machine.SampleKey] = new Models.Metadata.Sample[] { CreateSample() },
+                [Models.Metadata.Machine.SampleOfKey] = "sampleof",
+                [Models.Metadata.Machine.SaveTypeKey] = "savetype",
+                [Models.Metadata.Machine.SharedFeatKey] = new Models.Metadata.SharedFeat[] { CreateSharedFeat() },
+                [Models.Metadata.Machine.SlotKey] = new Models.Metadata.Slot[] { CreateSlot() },
+                [Models.Metadata.Machine.SoftwareListKey] = new Models.Metadata.SoftwareList[] { CreateSoftwareList() },
+                [Models.Metadata.Machine.SoundKey] = CreateSound(),
+                [Models.Metadata.Machine.SourceFileKey] = "sourcefile",
+                [Models.Metadata.Machine.SourceRomKey] = "sourcerom",
+                [Models.Metadata.Machine.StatusKey] = "status",
+                [Models.Metadata.Machine.SupportedKey] = "yes",
+                [Models.Metadata.Machine.SystemKey] = "system",
+                [Models.Metadata.Machine.TagsKey] = "tags",
+                [Models.Metadata.Machine.TruripKey] = CreateTrurip(),
+                [Models.Metadata.Machine.VideoKey] = new Models.Metadata.Video[] { CreateVideo() },
+                [Models.Metadata.Machine.YearKey] = "year",
             };
+        }
 
-            Models.Metadata.Adjuster adjuster = new Models.Metadata.Adjuster
+        private static Models.Metadata.Adjuster CreateAdjuster()
+        {
+            return new Models.Metadata.Adjuster
             {
-                [Models.Metadata.Adjuster.ConditionKey] = condition,
+                [Models.Metadata.Adjuster.ConditionKey] = CreateCondition(),
                 [Models.Metadata.Adjuster.DefaultKey] = true,
                 [Models.Metadata.Adjuster.NameKey] = "name",
             };
+        }
 
-            Models.Metadata.Archive archive = new Models.Metadata.Archive
+        private static Models.Metadata.Analog CreateAnalog()
+        {
+            return new Models.Metadata.Analog
+            {
+                [Models.Metadata.Analog.MaskKey] = "mask",
+            };
+        }
+
+        private static Models.Metadata.Archive CreateArchive()
+        {
+            return new Models.Metadata.Archive
             {
                 [Models.Metadata.Archive.NameKey] = "name",
             };
+        }
 
-            Models.Metadata.BiosSet biosSet = new Models.Metadata.BiosSet
+        private static Models.Metadata.BiosSet CreateBiosSet()
+        {
+            return new Models.Metadata.BiosSet
             {
                 [Models.Metadata.BiosSet.DefaultKey] = true,
                 [Models.Metadata.BiosSet.DescriptionKey] = "description",
                 [Models.Metadata.BiosSet.NameKey] = "name",
             };
+        }
 
-            Models.Metadata.Chip chip = new Models.Metadata.Chip
+        private static Models.Metadata.Chip CreateChip()
+        {
+            return new Models.Metadata.Chip
             {
                 [Models.Metadata.Chip.ClockKey] = 12345,
                 [Models.Metadata.Chip.FlagsKey] = "flags",
@@ -280,87 +379,145 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.Chip.TagKey] = "tag",
                 [Models.Metadata.Chip.ChipTypeKey] = "cpu",
             };
+        }
 
-            Models.Metadata.ConfLocation confLocation = new Models.Metadata.ConfLocation
+        private static Models.Metadata.Configuration CreateConfiguration()
+        {
+            return new Models.Metadata.Configuration
+            {
+                [Models.Metadata.Configuration.ConditionKey] = CreateCondition(),
+                [Models.Metadata.Configuration.ConfLocationKey] = new Models.Metadata.ConfLocation[] { CreateConfLocation() },
+                [Models.Metadata.Configuration.ConfSettingKey] = new Models.Metadata.ConfSetting[] { CreateConfSetting() },
+                [Models.Metadata.Configuration.MaskKey] = "mask",
+                [Models.Metadata.Configuration.NameKey] = "name",
+                [Models.Metadata.Configuration.TagKey] = "tag",
+            };
+        }
+
+        private static Models.Metadata.Condition CreateCondition()
+        {
+            return new Models.Metadata.Condition
+            {
+                [Models.Metadata.Condition.ValueKey] = "value",
+                [Models.Metadata.Condition.MaskKey] = "mask",
+                [Models.Metadata.Condition.RelationKey] = "eq",
+                [Models.Metadata.Condition.TagKey] = "tag",
+            };
+        }
+
+        private static Models.Metadata.ConfLocation CreateConfLocation()
+        {
+            return new Models.Metadata.ConfLocation
             {
                 [Models.Metadata.ConfLocation.InvertedKey] = "yes",
                 [Models.Metadata.ConfLocation.NameKey] = "name",
                 [Models.Metadata.ConfLocation.NumberKey] = "number",
             };
+        }
 
-            Models.Metadata.ConfSetting confSetting = new Models.Metadata.ConfSetting
+        private static Models.Metadata.ConfSetting CreateConfSetting()
+        {
+            return new Models.Metadata.ConfSetting
             {
-                [Models.Metadata.ConfSetting.ConditionKey] = condition,
+                [Models.Metadata.ConfSetting.ConditionKey] = CreateCondition(),
                 [Models.Metadata.ConfSetting.DefaultKey] = "yes",
                 [Models.Metadata.ConfSetting.NameKey] = "name",
                 [Models.Metadata.ConfSetting.ValueKey] = "value",
             };
+        }
 
-            Models.Metadata.Configuration configuration = new Models.Metadata.Configuration
+        private static Models.Metadata.Control CreateControl()
+        {
+            return new Models.Metadata.Control
             {
-                [Models.Metadata.Configuration.ConditionKey] = condition,
-                [Models.Metadata.Configuration.ConfLocationKey] = new Models.Metadata.ConfLocation[] { confLocation },
-                [Models.Metadata.Configuration.ConfSettingKey] = new Models.Metadata.ConfSetting[] { confSetting },
-                [Models.Metadata.Configuration.MaskKey] = "mask",
-                [Models.Metadata.Configuration.NameKey] = "name",
-                [Models.Metadata.Configuration.TagKey] = "tag",
+                [Models.Metadata.Control.ButtonsKey] = 12345,
+                [Models.Metadata.Control.KeyDeltaKey] = 12345,
+                [Models.Metadata.Control.MaximumKey] = 12345,
+                [Models.Metadata.Control.MinimumKey] = 12345,
+                [Models.Metadata.Control.PlayerKey] = 12345,
+                [Models.Metadata.Control.ReqButtonsKey] = 12345,
+                [Models.Metadata.Control.ReverseKey] = "yes",
+                [Models.Metadata.Control.SensitivityKey] = 12345,
+                [Models.Metadata.Control.ControlTypeKey] = "lightgun",
+                [Models.Metadata.Control.WaysKey] = "ways",
+                [Models.Metadata.Control.Ways2Key] = "ways2",
+                [Models.Metadata.Control.Ways3Key] = "ways3",
             };
+        }
 
-            Models.Metadata.Extension extension = new Models.Metadata.Extension
+        private static Models.Metadata.Device CreateDevice()
+        {
+            return new Models.Metadata.Device
             {
-                [Models.Metadata.Extension.NameKey] = "name",
-            };
-
-            Models.Metadata.Instance instance = new Models.Metadata.Instance
-            {
-                [Models.Metadata.Instance.BriefNameKey] = "briefname",
-                [Models.Metadata.Instance.NameKey] = "name",
-            };
-
-            Models.Metadata.Device device = new Models.Metadata.Device
-            {
-                [Models.Metadata.Device.ExtensionKey] = new Models.Metadata.Extension[] { extension },
+                [Models.Metadata.Device.ExtensionKey] = new Models.Metadata.Extension[] { CreateExtension() },
                 [Models.Metadata.Device.FixedImageKey] = "fixedimage",
-                [Models.Metadata.Device.InstanceKey] = instance,
+                [Models.Metadata.Device.InstanceKey] = CreateInstance(),
                 [Models.Metadata.Device.InterfaceKey] = "interface",
                 [Models.Metadata.Device.MandatoryKey] = 1,
                 [Models.Metadata.Device.TagKey] = "tag",
                 [Models.Metadata.Device.DeviceTypeKey] = "punchtape",
             };
+        }
 
-            Models.Metadata.DeviceRef deviceRef = new Models.Metadata.DeviceRef
+        private static Models.Metadata.DeviceRef CreateDeviceRef()
+        {
+            return new Models.Metadata.DeviceRef
             {
                 [Models.Metadata.DeviceRef.NameKey] = "name",
             };
+        }
 
-            Models.Metadata.DipLocation dipLocation = new Models.Metadata.DipLocation
+        private static Models.Metadata.DipLocation CreateDipLocation()
+        {
+            return new Models.Metadata.DipLocation
             {
                 [Models.Metadata.DipLocation.InvertedKey] = "yes",
                 [Models.Metadata.DipLocation.NameKey] = "name",
                 [Models.Metadata.DipLocation.NumberKey] = "number",
             };
+        }
 
-            Models.Metadata.DipValue dipValue = new Models.Metadata.DipValue
+        private static Models.Metadata.DipSwitch CreateDipSwitch()
+        {
+            return new Models.Metadata.DipSwitch
             {
-                [Models.Metadata.DipValue.ConditionKey] = condition,
-                [Models.Metadata.DipValue.DefaultKey] = "yes",
-                [Models.Metadata.DipValue.NameKey] = "name",
-                [Models.Metadata.DipValue.ValueKey] = "value",
-            };
-
-            Models.Metadata.DipSwitch dipSwitch = new Models.Metadata.DipSwitch
-            {
-                [Models.Metadata.DipSwitch.ConditionKey] = condition,
+                [Models.Metadata.DipSwitch.ConditionKey] = CreateCondition(),
                 [Models.Metadata.DipSwitch.DefaultKey] = "yes",
-                [Models.Metadata.DipSwitch.DipLocationKey] = new Models.Metadata.DipLocation[] { dipLocation },
-                [Models.Metadata.DipSwitch.DipValueKey] = new Models.Metadata.DipValue[] { dipValue },
+                [Models.Metadata.DipSwitch.DipLocationKey] = new Models.Metadata.DipLocation[] { CreateDipLocation() },
+                [Models.Metadata.DipSwitch.DipValueKey] = new Models.Metadata.DipValue[] { CreateDipValue() },
                 [Models.Metadata.DipSwitch.EntryKey] = new string[] { "entry" },
                 [Models.Metadata.DipSwitch.MaskKey] = "mask",
                 [Models.Metadata.DipSwitch.NameKey] = "name",
                 [Models.Metadata.DipSwitch.TagKey] = "tag",
             };
+        }
 
-            Models.Metadata.Disk disk = new Models.Metadata.Disk
+        private static Models.Metadata.DipValue CreateDipValue()
+        {
+            return new Models.Metadata.DipValue
+            {
+                [Models.Metadata.DipValue.ConditionKey] = CreateCondition(),
+                [Models.Metadata.DipValue.DefaultKey] = "yes",
+                [Models.Metadata.DipValue.NameKey] = "name",
+                [Models.Metadata.DipValue.ValueKey] = "value",
+            };
+        }
+
+        private static Models.Metadata.DataArea CreateDataArea()
+        {
+            return new Models.Metadata.DataArea
+            {
+                [Models.Metadata.DataArea.EndiannessKey] = "big",
+                [Models.Metadata.DataArea.NameKey] = "name",
+                [Models.Metadata.DataArea.RomKey] = new Models.Metadata.Rom[] { new Models.Metadata.Rom() },
+                [Models.Metadata.DataArea.SizeKey] = 12345,
+                [Models.Metadata.DataArea.WidthKey] = 64,
+            };
+        }
+
+        private static Models.Metadata.Disk CreateDisk()
+        {
+            return new Models.Metadata.Disk
             {
                 [Models.Metadata.Disk.FlagsKey] = "flags",
                 [Models.Metadata.Disk.IndexKey] = "index",
@@ -372,8 +529,20 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.Disk.SHA1Key] = ZeroHash.SHA1Str,
                 [Models.Metadata.Disk.WritableKey] = "yes",
             };
+        }
 
-            Models.Metadata.Display display = new Models.Metadata.Display
+        private static Models.Metadata.DiskArea CreateDiskArea()
+        {
+            return new Models.Metadata.DiskArea
+            {
+                [Models.Metadata.DiskArea.DiskKey] = new Models.Metadata.Disk[] { new Models.Metadata.Disk() },
+                [Models.Metadata.DiskArea.NameKey] = "name",
+            };
+        }
+
+        private static Models.Metadata.Display CreateDisplay()
+        {
+            return new Models.Metadata.Display
             {
                 [Models.Metadata.Display.FlipXKey] = "yes",
                 [Models.Metadata.Display.HBEndKey] = 12345,
@@ -390,8 +559,11 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.Display.VTotalKey] = 12345,
                 [Models.Metadata.Display.WidthKey] = 12345,
             };
+        }
 
-            Models.Metadata.Driver driver = new Models.Metadata.Driver
+        private static Models.Metadata.Driver CreateDriver()
+        {
+            return new Models.Metadata.Driver
             {
                 [Models.Metadata.Driver.BlitKey] = "plain",
                 [Models.Metadata.Driver.CocktailKey] = "good",
@@ -406,16 +578,13 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.Driver.StatusKey] = "good",
                 [Models.Metadata.Driver.UnofficialKey] = "yes",
             };
+        }
 
-            Models.Metadata.Original original = new Models.Metadata.Original
+        private static Models.Metadata.Dump CreateDump()
+        {
+            return new Models.Metadata.Dump
             {
-                [Models.Metadata.Original.ContentKey] = "content",
-                [Models.Metadata.Original.ValueKey] = true,
-            };
-
-            Models.Metadata.Dump dump = new Models.Metadata.Dump
-            {
-                [Models.Metadata.Dump.OriginalKey] = original,
+                [Models.Metadata.Dump.OriginalKey] = CreateOriginal(),
 
                 // The following are searched for in order
                 // For the purposes of this test, only RomKey will be populated
@@ -424,8 +593,19 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.Dump.MegaRomKey] = null,
                 [Models.Metadata.Dump.SCCPlusCartKey] = null,
             };
+        }
 
-            Models.Metadata.Feature feature = new Models.Metadata.Feature
+        private static Models.Metadata.Extension CreateExtension()
+        {
+            return new Models.Metadata.Extension
+            {
+                [Models.Metadata.Extension.NameKey] = "name",
+            };
+        }
+
+        private static Models.Metadata.Feature CreateFeature()
+        {
+            return new Models.Metadata.Feature
             {
                 [Models.Metadata.Feature.NameKey] = "name",
                 [Models.Metadata.Feature.OverallKey] = "imperfect",
@@ -433,40 +613,42 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.Feature.FeatureTypeKey] = "protection",
                 [Models.Metadata.Feature.ValueKey] = "value",
             };
+        }
 
-            Models.Metadata.Info info = new Models.Metadata.Info
+        private static Models.Metadata.Info CreateInfo()
+        {
+            return new Models.Metadata.Info
             {
                 [Models.Metadata.Info.NameKey] = "name",
                 [Models.Metadata.Info.ValueKey] = "value",
             };
+        }
 
-            Models.Metadata.Control control = new Models.Metadata.Control
-            {
-                [Models.Metadata.Control.ButtonsKey] = 12345,
-                [Models.Metadata.Control.KeyDeltaKey] = 12345,
-                [Models.Metadata.Control.MaximumKey] = 12345,
-                [Models.Metadata.Control.MinimumKey] = 12345,
-                [Models.Metadata.Control.PlayerKey] = 12345,
-                [Models.Metadata.Control.ReqButtonsKey] = 12345,
-                [Models.Metadata.Control.ReverseKey] = "yes",
-                [Models.Metadata.Control.SensitivityKey] = 12345,
-                [Models.Metadata.Control.ControlTypeKey] = "lightgun",
-                [Models.Metadata.Control.WaysKey] = "ways",
-                [Models.Metadata.Control.Ways2Key] = "ways2",
-                [Models.Metadata.Control.Ways3Key] = "ways3",
-            };
-
-            Models.Metadata.Input input = new Models.Metadata.Input
+        private static Models.Metadata.Input CreateInput()
+        {
+            return new Models.Metadata.Input
             {
                 [Models.Metadata.Input.ButtonsKey] = 12345,
                 [Models.Metadata.Input.CoinsKey] = 12345,
-                [Models.Metadata.Input.ControlKey] = new Models.Metadata.Control[] { control },
+                [Models.Metadata.Input.ControlKey] = new Models.Metadata.Control[] { CreateControl() },
                 [Models.Metadata.Input.PlayersKey] = 12345,
                 [Models.Metadata.Input.ServiceKey] = "yes",
                 [Models.Metadata.Input.TiltKey] = "yes",
             };
+        }
 
-            Models.Metadata.Media media = new Models.Metadata.Media
+        private static Models.Metadata.Instance CreateInstance()
+        {
+            return new Models.Metadata.Instance
+            {
+                [Models.Metadata.Instance.BriefNameKey] = "briefname",
+                [Models.Metadata.Instance.NameKey] = "name",
+            };
+        }
+
+        private static Models.Metadata.Media CreateMedia()
+        {
+            return new Models.Metadata.Media
             {
                 [Models.Metadata.Media.MD5Key] = ZeroHash.MD5Str,
                 [Models.Metadata.Media.NameKey] = "name",
@@ -474,51 +656,52 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.Media.SHA256Key] = ZeroHash.SHA256Str,
                 [Models.Metadata.Media.SpamSumKey] = ZeroHash.SpamSumStr,
             };
+        }
 
-            Models.Metadata.DataArea dataArea = new Models.Metadata.DataArea
+        private static Models.Metadata.Original CreateOriginal()
+        {
+            return new Models.Metadata.Original
             {
-                [Models.Metadata.DataArea.EndiannessKey] = "big",
-                [Models.Metadata.DataArea.NameKey] = "name",
-                [Models.Metadata.DataArea.RomKey] = new Models.Metadata.Rom[] { new Models.Metadata.Rom() },
-                [Models.Metadata.DataArea.SizeKey] = 12345,
-                [Models.Metadata.DataArea.WidthKey] = 64,
+                [Models.Metadata.Original.ContentKey] = "content",
+                [Models.Metadata.Original.ValueKey] = true,
             };
+        }
 
-            Models.Metadata.DiskArea diskArea = new Models.Metadata.DiskArea
+        private static Models.Metadata.Part CreatePart()
+        {
+            return new Models.Metadata.Part
             {
-                [Models.Metadata.DiskArea.DiskKey] = new Models.Metadata.Disk[] { new Models.Metadata.Disk() },
-                [Models.Metadata.DiskArea.NameKey] = "name",
-            };
-
-            Models.Metadata.Part part = new Models.Metadata.Part
-            {
-                [Models.Metadata.Part.DataAreaKey] = new Models.Metadata.DataArea[] { dataArea },
-                [Models.Metadata.Part.DiskAreaKey] = new Models.Metadata.DiskArea[] { diskArea },
+                [Models.Metadata.Part.DataAreaKey] = new Models.Metadata.DataArea[] { CreateDataArea() },
+                [Models.Metadata.Part.DiskAreaKey] = new Models.Metadata.DiskArea[] { CreateDiskArea() },
                 [Models.Metadata.Part.DipSwitchKey] = new Models.Metadata.DipSwitch[] { new Models.Metadata.DipSwitch() },
-                [Models.Metadata.Part.FeatureKey] = new Models.Metadata.Feature[] { feature },
+                [Models.Metadata.Part.FeatureKey] = new Models.Metadata.Feature[] { CreateFeature() },
                 [Models.Metadata.Part.InterfaceKey] = "interface",
                 [Models.Metadata.Part.NameKey] = "name",
             };
+        }
 
-            Models.Metadata.Analog analog = new Models.Metadata.Analog
+        private static Models.Metadata.Port CreatePort()
+        {
+            return new Models.Metadata.Port
             {
-                [Models.Metadata.Analog.MaskKey] = "mask",
-            };
-
-            Models.Metadata.Port port = new Models.Metadata.Port
-            {
-                [Models.Metadata.Port.AnalogKey] = new Models.Metadata.Analog[] { analog },
+                [Models.Metadata.Port.AnalogKey] = new Models.Metadata.Analog[] { CreateAnalog() },
                 [Models.Metadata.Port.TagKey] = "tag",
             };
+        }
 
-            Models.Metadata.RamOption ramOption = new Models.Metadata.RamOption
+        private static Models.Metadata.RamOption CreateRamOption()
+        {
+            return new Models.Metadata.RamOption
             {
                 [Models.Metadata.RamOption.ContentKey] = "content",
                 [Models.Metadata.RamOption.DefaultKey] = "yes",
                 [Models.Metadata.RamOption.NameKey] = "name",
             };
+        }
 
-            Models.Metadata.Release release = new Models.Metadata.Release
+        private static Models.Metadata.Release CreateRelease()
+        {
+            return new Models.Metadata.Release
             {
                 [Models.Metadata.Release.DateKey] = "date",
                 [Models.Metadata.Release.DefaultKey] = "yes",
@@ -526,8 +709,11 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.Release.NameKey] = "name",
                 [Models.Metadata.Release.RegionKey] = "region",
             };
+        }
 
-            Models.Metadata.Rom rom = new Models.Metadata.Rom
+        private static Models.Metadata.Rom CreateRom()
+        {
+            return new Models.Metadata.Rom
             {
                 [Models.Metadata.Rom.AlbumKey] = "album",
                 [Models.Metadata.Rom.AltRomnameKey] = "alt_romname",
@@ -622,112 +808,121 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.Rom.xxHash364Key] = ZeroHash.GetString(HashType.XxHash3),
                 [Models.Metadata.Rom.xxHash3128Key] = ZeroHash.GetString(HashType.XxHash128),
             };
+        }
 
-            Models.Metadata.Sample sample = new Models.Metadata.Sample
+        private static Models.Metadata.Sample CreateSample()
+        {
+            return new Models.Metadata.Sample
             {
                 [Models.Metadata.Sample.NameKey] = "name",
             };
+        }
 
-            Models.Metadata.SharedFeat sharedFeat = new Models.Metadata.SharedFeat
+        private static Models.Metadata.SharedFeat CreateSharedFeat()
+        {
+            return new Models.Metadata.SharedFeat
             {
                 [Models.Metadata.SharedFeat.NameKey] = "name",
                 [Models.Metadata.SharedFeat.ValueKey] = "value",
             };
+        }
 
-            Models.Metadata.SlotOption slotOption = new Models.Metadata.SlotOption
+        private static Models.Metadata.Slot CreateSlot()
+        {
+            return new Models.Metadata.Slot
+            {
+                [Models.Metadata.Slot.NameKey] = "name",
+                [Models.Metadata.Slot.SlotOptionKey] = new Models.Metadata.SlotOption[] { CreateSlotOption() },
+            };
+        }
+
+        private static Models.Metadata.SlotOption CreateSlotOption()
+        {
+            return new Models.Metadata.SlotOption
             {
                 [Models.Metadata.SlotOption.DefaultKey] = "yes",
                 [Models.Metadata.SlotOption.DevNameKey] = "devname",
                 [Models.Metadata.SlotOption.NameKey] = "name",
             };
+        }
 
-            Models.Metadata.Slot slot = new Models.Metadata.Slot
+        private static Models.Metadata.Software CreateSoftware()
+        {
+            return new Models.Metadata.Software
             {
-                [Models.Metadata.Slot.NameKey] = "name",
-                [Models.Metadata.Slot.SlotOptionKey] = new Models.Metadata.SlotOption[] { slotOption },
-            };
-
-            return new Models.Metadata.Machine
-            {
-                [Models.Metadata.Machine.AdjusterKey] = new Models.Metadata.Adjuster[] { adjuster },
-                [Models.Metadata.Machine.ArchiveKey] = new Models.Metadata.Archive[] { archive },
-                [Models.Metadata.Machine.BiosSetKey] = new Models.Metadata.BiosSet[] { biosSet },
-                [Models.Metadata.Machine.BoardKey] = "board",
-                [Models.Metadata.Machine.ButtonsKey] = "buttons",
-                [Models.Metadata.Machine.CategoryKey] = "category",
-                [Models.Metadata.Machine.ChipKey] = new Models.Metadata.Chip[] { chip },
-                [Models.Metadata.Machine.CloneOfKey] = "cloneof",
-                [Models.Metadata.Machine.CloneOfIdKey] = "cloneofid",
-                [Models.Metadata.Machine.CommentKey] = "comment",
-                [Models.Metadata.Machine.CompanyKey] = "company",
-                [Models.Metadata.Machine.ConfigurationKey] = new Models.Metadata.Configuration[] { configuration },
-                [Models.Metadata.Machine.ControlKey] = "control",
-                [Models.Metadata.Machine.CountryKey] = "country",
-                [Models.Metadata.Machine.DescriptionKey] = "description",
-                [Models.Metadata.Machine.DeviceKey] = new Models.Metadata.Device[] { device },
-                [Models.Metadata.Machine.DeviceRefKey] = new Models.Metadata.DeviceRef[] { deviceRef },
-                [Models.Metadata.Machine.DipSwitchKey] = new Models.Metadata.DipSwitch[] { dipSwitch },
-                [Models.Metadata.Machine.DirNameKey] = "dirname",
-                [Models.Metadata.Machine.DiskKey] = new Models.Metadata.Disk[] { disk },
-                [Models.Metadata.Machine.DisplayCountKey] = "displaycount",
-                [Models.Metadata.Machine.DisplayKey] = new Models.Metadata.Display[] { display },
-                [Models.Metadata.Machine.DisplayTypeKey] = "displaytype",
-                [Models.Metadata.Machine.DriverKey] = driver,
-                [Models.Metadata.Machine.DumpKey] = new Models.Metadata.Dump[] { dump },
-                [Models.Metadata.Machine.DuplicateIDKey] = "duplicateid",
-                [Models.Metadata.Machine.EmulatorKey] = "emulator",
-                [Models.Metadata.Machine.ExtraKey] = "extra",
-                [Models.Metadata.Machine.FavoriteKey] = "favorite",
-                [Models.Metadata.Machine.FeatureKey] = new Models.Metadata.Feature[] { feature },
-                [Models.Metadata.Machine.GenMSXIDKey] = "genmsxid",
-                [Models.Metadata.Machine.HistoryKey] = "history",
-                [Models.Metadata.Machine.IdKey] = "id",
-                [Models.Metadata.Machine.Im1CRCKey] = ZeroHash.CRC32Str,
-                [Models.Metadata.Machine.Im2CRCKey] = ZeroHash.CRC32Str,
-                [Models.Metadata.Machine.ImageNumberKey] = "imagenumber",
-                [Models.Metadata.Machine.InfoKey] = new Models.Metadata.Info[] { info },
-                [Models.Metadata.Machine.InputKey] = input,
-                [Models.Metadata.Machine.IsBiosKey] = "yes",
-                [Models.Metadata.Machine.IsDeviceKey] = "yes",
-                [Models.Metadata.Machine.IsMechanicalKey] = "yes",
-                [Models.Metadata.Machine.LanguageKey] = "language",
-                [Models.Metadata.Machine.LocationKey] = "location",
-                [Models.Metadata.Machine.ManufacturerKey] = "manufacturer",
-                [Models.Metadata.Machine.MediaKey] = new Models.Metadata.Media[] { media },
-                [Models.Metadata.Machine.NameKey] = "name",
-                [Models.Metadata.Machine.NotesKey] = "notes",
-                [Models.Metadata.Machine.PartKey] = new Models.Metadata.Part[] { part },
-                [Models.Metadata.Machine.PlayedCountKey] = "playedcount",
-                [Models.Metadata.Machine.PlayedTimeKey] = "playedtime",
-                [Models.Metadata.Machine.PlayersKey] = "players",
-                [Models.Metadata.Machine.PortKey] = new Models.Metadata.Port[] { port },
-                [Models.Metadata.Machine.PublisherKey] = "publisher",
-                [Models.Metadata.Machine.RamOptionKey] = new Models.Metadata.RamOption[] { ramOption },
-                [Models.Metadata.Machine.RebuildToKey] = "rebuildto",
-                [Models.Metadata.Machine.ReleaseKey] = new Models.Metadata.Release[] { release },
-                [Models.Metadata.Machine.ReleaseNumberKey] = "releasenumber",
-                [Models.Metadata.Machine.RomKey] = new Models.Metadata.Rom[] { rom },
-                [Models.Metadata.Machine.RomOfKey] = "romof",
-                [Models.Metadata.Machine.RotationKey] = "rotation",
-                [Models.Metadata.Machine.RunnableKey] = "yes",
-                [Models.Metadata.Machine.SampleKey] = new Models.Metadata.Sample[] { sample },
-                [Models.Metadata.Machine.SampleOfKey] = "sampleof",
-                [Models.Metadata.Machine.SaveTypeKey] = "savetype",
-                [Models.Metadata.Machine.SharedFeatKey] = new Models.Metadata.SharedFeat[] { sharedFeat },
-                [Models.Metadata.Machine.SlotKey] = new Models.Metadata.Slot[] { slot },
-                [Models.Metadata.Machine.SoftwareListKey] = "REPLACE", // Type array
-                [Models.Metadata.Machine.SoundKey] = "REPLACE", // Type
-                [Models.Metadata.Machine.SourceFileKey] = "sourcefile",
-                [Models.Metadata.Machine.SourceRomKey] = "sourcerom",
-                [Models.Metadata.Machine.StatusKey] = "status",
-                [Models.Metadata.Machine.SupportedKey] = "yes",
-                [Models.Metadata.Machine.SystemKey] = "system",
-                [Models.Metadata.Machine.TagsKey] = "tags",
-                [Models.Metadata.Machine.TruripKey] = "REPLACE", // Type
-                [Models.Metadata.Machine.VideoKey] = "REPLACE", // Type array
-                [Models.Metadata.Machine.YearKey] = "year",
+                [Models.Metadata.Software.CloneOfKey] = "cloneof",
+                [Models.Metadata.Software.DescriptionKey] = "description",
+                [Models.Metadata.Software.InfoKey] = new Models.Metadata.Info[] { CreateInfo() },
+                [Models.Metadata.Software.NameKey] = "name",
+                [Models.Metadata.Software.NotesKey] = "notes",
+                [Models.Metadata.Software.PartKey] = new Models.Metadata.Part[] { CreatePart() },
+                [Models.Metadata.Software.PublisherKey] = "publisher",
+                [Models.Metadata.Software.SharedFeatKey] = new Models.Metadata.SharedFeat[] { CreateSharedFeat() },
+                [Models.Metadata.Software.SupportedKey] = "yes",
+                [Models.Metadata.Software.YearKey] = "year",
             };
         }
+
+        private static Models.Metadata.SoftwareList CreateSoftwareList()
+        {
+            return new Models.Metadata.SoftwareList
+            {
+                [Models.Metadata.SoftwareList.DescriptionKey] = "description",
+                [Models.Metadata.SoftwareList.FilterKey] = "filter",
+                [Models.Metadata.SoftwareList.NameKey] = "name",
+                [Models.Metadata.SoftwareList.NotesKey] = "notes",
+                [Models.Metadata.SoftwareList.SoftwareKey] = new Models.Metadata.Software[] { CreateSoftware() },
+                [Models.Metadata.SoftwareList.StatusKey] = "original",
+                [Models.Metadata.SoftwareList.TagKey] = "tag",
+            };
+        }
+
+        private static Models.Metadata.Sound CreateSound()
+        {
+            return new Models.Metadata.Sound
+            {
+                [Models.Metadata.Sound.ChannelsKey] = 12345,
+            };
+        }
+
+        private static Models.Logiqx.Trurip CreateTrurip()
+        {
+            return new Models.Logiqx.Trurip
+            {
+                TitleID = "titleid",
+                Publisher = "publisher",
+                Developer = "developer",
+                Year = "year",
+                Genre = "genre",
+                Subgenre = "subgenre",
+                Ratings = "ratings",
+                Score = "score",
+                Players = "players",
+                Enabled = "enabled",
+                CRC = "true",
+                Source = "source",
+                CloneOf = "cloneof",
+                RelatedTo = "relatedto",
+            };
+        }
+
+        private static Models.Metadata.Video CreateVideo()
+        {
+            return new Models.Metadata.Video
+            {
+                [Models.Metadata.Video.AspectXKey] = 12345,
+                [Models.Metadata.Video.AspectYKey] = 12345,
+                [Models.Metadata.Video.HeightKey] = 12345,
+                [Models.Metadata.Video.OrientationKey] = "vertical",
+                [Models.Metadata.Video.RefreshKey] = 12345,
+                [Models.Metadata.Video.ScreenKey] = "vector",
+                [Models.Metadata.Video.WidthKey] = 12345,
+            };
+        }
+
+        #endregion
+
+        #region Validation Helpers
 
         private static void ValidateHeader(DatHeader datHeader)
         {
@@ -827,8 +1022,10 @@ namespace SabreTools.DatFiles.Test
             Assert.Equal("yes", machine.GetStringFieldValue(Models.Metadata.Machine.SupportedKey));
             Assert.Equal("system", machine.GetStringFieldValue(Models.Metadata.Machine.SystemKey));
             Assert.Equal("tags", machine.GetStringFieldValue(Models.Metadata.Machine.TagsKey));
-            // Assert.Equal("REPLACE", actualMachine.GetStringFieldValue(Models.Metadata.Machine.TruripKey)); // Type
             Assert.Equal("year", machine.GetStringFieldValue(Models.Metadata.Machine.YearKey));
+
+            DatItems.Trurip? trurip = machine.GetFieldValue<DatItems.Trurip>(Models.Metadata.Machine.TruripKey);
+            ValidateTrurip(trurip);
         }
 
         private static void ValidateAdjuster(Adjuster? adjuster)
@@ -1304,6 +1501,56 @@ namespace SabreTools.DatFiles.Test
             Assert.True(slotOption.GetBoolFieldValue(Models.Metadata.SlotOption.DefaultKey));
             Assert.Equal("devname", slotOption.GetStringFieldValue(Models.Metadata.SlotOption.DevNameKey));
             Assert.Equal("name", slotOption.GetStringFieldValue(Models.Metadata.SlotOption.NameKey));
+        }
+
+        private static void ValidateSoftwareList(SoftwareList? softwareList)
+        {
+            Assert.NotNull(softwareList);
+            Assert.Equal("description", softwareList.GetStringFieldValue(Models.Metadata.SoftwareList.DescriptionKey));
+            Assert.Equal("filter", softwareList.GetStringFieldValue(Models.Metadata.SoftwareList.FilterKey));
+            Assert.Equal("name", softwareList.GetStringFieldValue(Models.Metadata.SoftwareList.NameKey));
+            Assert.Equal("notes", softwareList.GetStringFieldValue(Models.Metadata.SoftwareList.NotesKey));
+            // TODO: Figure out why Models.Metadata.SoftwareList.SoftwareKey doesn't get processed
+            Assert.Equal("original", softwareList.GetStringFieldValue(Models.Metadata.SoftwareList.StatusKey));
+            Assert.Equal("tag", softwareList.GetStringFieldValue(Models.Metadata.SoftwareList.TagKey));
+        }
+
+        private static void ValidateSound(Sound? sound)
+        {
+            Assert.NotNull(sound);
+            Assert.Equal(12345, sound.GetInt64FieldValue(Models.Metadata.Sound.ChannelsKey));
+        }
+
+        // TODO: Figure out why so many fields are omitted
+        private static void ValidateTrurip(DatItems.Trurip? trurip)
+        {
+            Assert.NotNull(trurip);
+            Assert.Equal("titleid", trurip.TitleID);
+            //Assert.Equal("publisher", trurip.Publisher); // Omitted from conversion
+            Assert.Equal("developer", trurip.Developer);
+            // Assert.Equal("year", trurip.Year); // Omitted from conversion
+            Assert.Equal("genre", trurip.Genre);
+            Assert.Equal("subgenre", trurip.Subgenre);
+            Assert.Equal("ratings", trurip.Ratings);
+            Assert.Equal("score", trurip.Score);
+            // Assert.Equal("players", trurip.Players); // Omitted from conversion
+            Assert.Equal("enabled", trurip.Enabled);
+            Assert.True(trurip.Crc);
+            // Assert.Equal("source", trurip.Source); // Omitted from conversion
+            // Assert.Equal("cloneof", trurip.CloneOf); // Omitted from conversion
+            Assert.Equal("relatedto", trurip.RelatedTo);
+        }
+
+        private static void ValidateVideo(Display? display)
+        {
+            Assert.NotNull(display);
+            Assert.Equal(12345, display.GetInt64FieldValue(Models.Metadata.Video.AspectXKey));
+            Assert.Equal(12345, display.GetInt64FieldValue(Models.Metadata.Video.AspectYKey));
+            Assert.Equal("vector", display.GetStringFieldValue(Models.Metadata.Display.DisplayTypeKey));
+            Assert.Equal(12345, display.GetInt64FieldValue(Models.Metadata.Display.HeightKey));
+            Assert.Equal(12345, display.GetInt64FieldValue(Models.Metadata.Display.RefreshKey));
+            Assert.Equal(12345, display.GetInt64FieldValue(Models.Metadata.Display.WidthKey));
+            Assert.Equal(90, display.GetInt64FieldValue(Models.Metadata.Display.RotateKey));
         }
 
         #endregion
