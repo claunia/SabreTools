@@ -33,6 +33,7 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public ConfSetting() : base() { }
+
         public ConfSetting(Models.Metadata.ConfSetting item) : base(item)
         {
             // Process flag values
@@ -43,6 +44,23 @@ namespace SabreTools.DatItems.Formats
             var condition = GetFieldValue<Models.Metadata.Condition>(Models.Metadata.ConfSetting.ConditionKey);
             if (condition != null)
                 SetFieldValue<Condition?>(Models.Metadata.ConfSetting.ConditionKey, new Condition(condition));
+        }
+
+        #endregion
+
+        #region Cloning Methods
+
+        /// <inheritdoc/>
+        public override Models.Metadata.ConfSetting GetInternalClone()
+        {
+            var confSettingItem = base.GetInternalClone();
+
+            // Handle subitems
+            var condition = GetFieldValue<Condition>(Models.Metadata.ConfSetting.ConditionKey);
+            if (condition != null)
+                confSettingItem[Models.Metadata.ConfSetting.ConditionKey] = condition.GetInternalClone();
+
+            return confSettingItem;
         }
 
         #endregion

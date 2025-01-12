@@ -23,6 +23,7 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public BiosSet() : base() { }
+
         public BiosSet(Models.Metadata.BiosSet item) : base(item)
         {
             // Process flag values

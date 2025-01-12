@@ -34,6 +34,7 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public Slot() : base() { }
+
         public Slot(Models.Metadata.Slot item) : base(item)
         {
             // Handle subitems
@@ -43,6 +44,25 @@ namespace SabreTools.DatItems.Formats
                 SlotOption[] slotOptionItems = Array.ConvertAll(slotOptions, slotOption => new SlotOption(slotOption));
                 SetFieldValue<SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey, slotOptionItems);
             }
+        }
+
+        #endregion
+
+        #region Cloning Methods
+
+        /// <inheritdoc/>
+        public override Models.Metadata.Slot GetInternalClone()
+        {
+            var slotItem = base.GetInternalClone();
+
+            var slotOptions = GetFieldValue<SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey);
+            if (slotOptions != null)
+            {
+                Models.Metadata.SlotOption[] slotOptionItems = Array.ConvertAll(slotOptions, slotOption => slotOption.GetInternalClone());
+                slotItem[Models.Metadata.Slot.SlotOptionKey] = slotOptionItems;
+            }
+
+            return slotItem;
         }
 
         #endregion

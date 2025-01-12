@@ -32,6 +32,7 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public PartFeature() : base() { }
+
         public PartFeature(Models.Metadata.Feature item) : base(item)
         {
             // Process flag values

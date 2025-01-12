@@ -23,6 +23,7 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public DipLocation() : base() { }
+
         public DipLocation(Models.Metadata.DipLocation item) : base(item)
         {
             // Process flag values

@@ -22,6 +22,7 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public SharedFeat() : base() { }
+
         public SharedFeat(Models.Metadata.SharedFeat item) : base(item) { }
 
         #endregion

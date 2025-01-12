@@ -22,6 +22,7 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public Info() : base() { }
+
         public Info(Models.Metadata.Info item) : base(item) { }
 
         #endregion

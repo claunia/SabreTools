@@ -23,6 +23,7 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public Feature() : base() { }
+
         public Feature(Models.Metadata.Feature item) : base(item)
         {
             // Process flag values

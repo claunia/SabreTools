@@ -33,6 +33,7 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public Part() : base() { }
+
         public Part(Models.Metadata.Part item) : base(item) { }
 
         #endregion

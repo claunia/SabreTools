@@ -24,6 +24,7 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public DataArea() : base() { }
+
         public DataArea(Models.Metadata.DataArea item) : base(item)
         {
             // Process flag values

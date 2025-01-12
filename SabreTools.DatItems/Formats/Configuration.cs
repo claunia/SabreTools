@@ -54,6 +54,7 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public Configuration() : base() { }
+
         public Configuration(Models.Metadata.Configuration item) : base(item)
         {
             // Handle subitems
@@ -74,6 +75,36 @@ namespace SabreTools.DatItems.Formats
                 ConfSetting[] confSettingItems = Array.ConvertAll(confSettings, confSetting => new ConfSetting(confSetting));
                 SetFieldValue<ConfSetting[]?>(Models.Metadata.Configuration.ConfSettingKey, confSettingItems);
             }
+        }
+
+        #endregion
+
+        #region Cloning Methods
+
+        /// <inheritdoc/>
+        public override Models.Metadata.Configuration GetInternalClone()
+        {
+            var configurationItem = base.GetInternalClone();
+
+            var condition = GetFieldValue<Condition?>(Models.Metadata.Configuration.ConditionKey);
+            if (condition != null)
+                configurationItem[Models.Metadata.Configuration.ConditionKey] = condition.GetInternalClone();
+
+            var confLocations = GetFieldValue<ConfLocation[]?>(Models.Metadata.Configuration.ConfLocationKey);
+            if (confLocations != null)
+            {
+                Models.Metadata.ConfLocation[] confLocationItems = Array.ConvertAll(confLocations, confLocation => confLocation.GetInternalClone());
+                configurationItem[Models.Metadata.Configuration.ConfLocationKey] = confLocationItems;
+            }
+
+            var confSettings = GetFieldValue<ConfSetting[]?>(Models.Metadata.Configuration.ConfSettingKey);
+            if (confSettings != null)
+            {
+                Models.Metadata.ConfSetting[] confSettingItems = Array.ConvertAll(confSettings, confSetting => confSetting.GetInternalClone());
+                configurationItem[Models.Metadata.Configuration.ConfSettingKey] = confSettingItems;
+            }
+
+            return configurationItem;
         }
 
         #endregion

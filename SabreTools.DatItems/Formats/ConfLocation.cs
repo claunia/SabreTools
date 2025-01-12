@@ -23,6 +23,7 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public ConfLocation() : base() { }
+
         public ConfLocation(Models.Metadata.ConfLocation item) : base(item)
         {
             // Process flag values

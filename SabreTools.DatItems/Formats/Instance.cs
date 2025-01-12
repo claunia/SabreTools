@@ -22,6 +22,7 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public Instance() : base() { }
+
         public Instance(Models.Metadata.Instance item) : base(item) { }
 
         #endregion

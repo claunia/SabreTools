@@ -22,6 +22,7 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public Sound() : base() { }
+
         public Sound(Models.Metadata.Sound item) : base(item)
         {
             // Process flag values

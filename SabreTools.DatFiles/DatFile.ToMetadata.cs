@@ -23,7 +23,7 @@ namespace SabreTools.DatFiles
             var metadataFile = new Models.Metadata.MetadataFile();
 
             // Convert and assign the header
-            var header = ConvertHeader();
+            var header = Header.GetInternalClone();
             if (header != null)
                 metadataFile[Models.Metadata.MetadataFile.HeaderKey] = header;
 
@@ -48,7 +48,7 @@ namespace SabreTools.DatFiles
             var metadataFile = new Models.Metadata.MetadataFile();
 
             // Convert and assign the header
-            var header = ConvertHeader();
+            var header = Header.GetInternalClone();
             if (header != null)
                 metadataFile[Models.Metadata.MetadataFile.HeaderKey] = header;
 
@@ -58,37 +58,6 @@ namespace SabreTools.DatFiles
                 metadataFile[Models.Metadata.MetadataFile.MachineKey] = machines;
 
             return metadataFile;
-        }
-
-        /// <summary>
-        /// Convert header information
-        /// </summary>
-        private Models.Metadata.Header? ConvertHeader()
-        {
-            // Create an internal header
-            var header = Header.GetInternalClone();
-
-            // Remove fields with default values
-            if (header.ReadString(Models.Metadata.Header.ForceMergingKey).AsEnumValue<MergingFlag>() == MergingFlag.None)
-                header.Remove(Models.Metadata.Header.ForceMergingKey);
-            if (header.ReadString(Models.Metadata.Header.ForceNodumpKey).AsEnumValue<NodumpFlag>() == NodumpFlag.None)
-                header.Remove(Models.Metadata.Header.ForceNodumpKey);
-            if (header.ReadString(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>() == PackingFlag.None)
-                header.Remove(Models.Metadata.Header.ForcePackingKey);
-
-            // Convert subheader values
-            if (Header.CanOpenSpecified)
-                header[Models.Metadata.Header.CanOpenKey] = new Models.OfflineList.CanOpen { Extension = Header.GetStringArrayFieldValue(Models.Metadata.Header.CanOpenKey) };
-            if (Header.ImagesSpecified)
-                header[Models.Metadata.Header.ImagesKey] = Header.GetFieldValue<Models.OfflineList.Images>(Models.Metadata.Header.ImagesKey);
-            if (Header.InfosSpecified)
-                header[Models.Metadata.Header.InfosKey] = Header.GetFieldValue<Models.OfflineList.Infos>(Models.Metadata.Header.InfosKey);
-            if (Header.NewDatSpecified)
-                header[Models.Metadata.Header.NewDatKey] = Header.GetFieldValue<Models.OfflineList.NewDat>(Models.Metadata.Header.NewDatKey);
-            if (Header.SearchSpecified)
-                header[Models.Metadata.Header.SearchKey] = Header.GetFieldValue<Models.OfflineList.Search>(Models.Metadata.Header.SearchKey);
-
-            return header;
         }
 
         /// <summary>
@@ -146,7 +115,7 @@ namespace SabreTools.DatFiles
                     switch (item)
                     {
                         case DatItems.Formats.Adjuster adjuster:
-                            var adjusterItem = ProcessItem(adjuster);
+                            var adjusterItem = adjuster.GetInternalClone();
                             EnsureMachineKey<Models.Metadata.Adjuster?>(machine, Models.Metadata.Machine.AdjusterKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.AdjusterKey, adjusterItem);
                             break;
@@ -166,12 +135,12 @@ namespace SabreTools.DatFiles
                             AppendToMachineKey(machine, Models.Metadata.Machine.ChipKey, chipItem);
                             break;
                         case DatItems.Formats.Configuration configuration:
-                            var configurationItem = ProcessItem(configuration);
+                            var configurationItem = configuration.GetInternalClone();
                             EnsureMachineKey<Models.Metadata.Configuration?>(machine, Models.Metadata.Machine.ConfigurationKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.ConfigurationKey, configurationItem);
                             break;
                         case DatItems.Formats.Device device:
-                            var deviceItem = ProcessItem(device);
+                            var deviceItem = device.GetInternalClone();
                             EnsureMachineKey<Models.Metadata.Device?>(machine, Models.Metadata.Machine.DeviceKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.DeviceKey, deviceItem);
                             break;
@@ -181,7 +150,7 @@ namespace SabreTools.DatFiles
                             AppendToMachineKey(machine, Models.Metadata.Machine.DeviceRefKey, deviceRefItem);
                             break;
                         case DatItems.Formats.DipSwitch dipSwitch:
-                            var dipSwitchItem = ProcessItem(dipSwitch);
+                            var dipSwitchItem = dipSwitch.GetInternalClone();
                             EnsureMachineKey<Models.Metadata.DipSwitch?>(machine, Models.Metadata.Machine.DipSwitchKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.DipSwitchKey, dipSwitchItem);
 
@@ -238,7 +207,7 @@ namespace SabreTools.DatFiles
                             AppendToMachineKey(machine, Models.Metadata.Machine.InfoKey, infoItem);
                             break;
                         case DatItems.Formats.Input input:
-                            var inputItem = ProcessItem(input);
+                            var inputItem = input.GetInternalClone();
                             EnsureMachineKey<Models.Metadata.Input?>(machine, Models.Metadata.Machine.InputKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.InputKey, inputItem);
                             break;
@@ -262,7 +231,7 @@ namespace SabreTools.DatFiles
                             }
                             break;
                         case DatItems.Formats.Port port:
-                            var portItem = ProcessItem(port);
+                            var portItem = port.GetInternalClone();
                             EnsureMachineKey<Models.Metadata.Port?>(machine, Models.Metadata.Machine.PortKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.PortKey, portItem);
                             break;
@@ -309,7 +278,7 @@ namespace SabreTools.DatFiles
                             AppendToMachineKey(machine, Models.Metadata.Machine.SharedFeatKey, sharedFeatItem);
                             break;
                         case DatItems.Formats.Slot slot:
-                            var slotItem = ProcessItem(slot);
+                            var slotItem = slot.GetInternalClone();
                             EnsureMachineKey<Models.Metadata.Slot?>(machine, Models.Metadata.Machine.SlotKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.SlotKey, slotItem);
                             break;
@@ -566,7 +535,7 @@ namespace SabreTools.DatFiles
                     switch (item.Value)
                     {
                         case DatItems.Formats.Adjuster adjuster:
-                            var adjusterItem = ProcessItem(adjuster);
+                            var adjusterItem = adjuster.GetInternalClone();
                             EnsureMachineKey<Models.Metadata.Adjuster?>(machine, Models.Metadata.Machine.AdjusterKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.AdjusterKey, adjusterItem);
                             break;
@@ -586,12 +555,12 @@ namespace SabreTools.DatFiles
                             AppendToMachineKey(machine, Models.Metadata.Machine.ChipKey, chipItem);
                             break;
                         case DatItems.Formats.Configuration configuration:
-                            var configurationItem = ProcessItem(configuration);
+                            var configurationItem = configuration.GetInternalClone();
                             EnsureMachineKey<Models.Metadata.Configuration?>(machine, Models.Metadata.Machine.ConfigurationKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.ConfigurationKey, configurationItem);
                             break;
                         case DatItems.Formats.Device device:
-                            var deviceItem = ProcessItem(device);
+                            var deviceItem = device.GetInternalClone();
                             EnsureMachineKey<Models.Metadata.Device?>(machine, Models.Metadata.Machine.DeviceKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.DeviceKey, deviceItem);
                             break;
@@ -601,7 +570,7 @@ namespace SabreTools.DatFiles
                             AppendToMachineKey(machine, Models.Metadata.Machine.DeviceRefKey, deviceRefItem);
                             break;
                         case DatItems.Formats.DipSwitch dipSwitch:
-                            var dipSwitchItem = ProcessItem(dipSwitch);
+                            var dipSwitchItem = dipSwitch.GetInternalClone();
                             EnsureMachineKey<Models.Metadata.DipSwitch?>(machine, Models.Metadata.Machine.DipSwitchKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.DipSwitchKey, dipSwitchItem);
 
@@ -658,7 +627,7 @@ namespace SabreTools.DatFiles
                             AppendToMachineKey(machine, Models.Metadata.Machine.InfoKey, infoItem);
                             break;
                         case DatItems.Formats.Input input:
-                            var inputItem = ProcessItem(input);
+                            var inputItem = input.GetInternalClone();
                             EnsureMachineKey<Models.Metadata.Input?>(machine, Models.Metadata.Machine.InputKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.InputKey, inputItem);
                             break;
@@ -682,7 +651,7 @@ namespace SabreTools.DatFiles
                             }
                             break;
                         case DatItems.Formats.Port port:
-                            var portItem = ProcessItem(port);
+                            var portItem = port.GetInternalClone();
                             EnsureMachineKey<Models.Metadata.Port?>(machine, Models.Metadata.Machine.PortKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.PortKey, portItem);
                             break;
@@ -729,7 +698,7 @@ namespace SabreTools.DatFiles
                             AppendToMachineKey(machine, Models.Metadata.Machine.SharedFeatKey, sharedFeatItem);
                             break;
                         case DatItems.Formats.Slot slot:
-                            var slotItem = ProcessItem(slot);
+                            var slotItem = slot.GetInternalClone();
                             EnsureMachineKey<Models.Metadata.Slot?>(machine, Models.Metadata.Machine.SlotKey);
                             AppendToMachineKey(machine, Models.Metadata.Machine.SlotKey, slotItem);
                             break;
@@ -935,132 +904,14 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Convert Adjuster information
-        /// </summary>
-        /// <param name="item">Item to convert</param>
-        private static Models.Metadata.Adjuster ProcessItem(DatItems.Formats.Adjuster item)
-        {
-            var adjusterItem = item.GetInternalClone();
-
-            var condition = item.GetFieldValue<DatItems.Formats.Condition?>(Models.Metadata.Adjuster.ConditionKey);
-            if (condition != null)
-                adjusterItem[Models.Metadata.Adjuster.ConditionKey] = condition.GetInternalClone();
-
-            return adjusterItem;
-        }
-
-        /// <summary>
-        /// Convert Configuration information
-        /// </summary>
-        /// <param name="item">Item to convert</param>
-        private static Models.Metadata.Configuration ProcessItem(DatItems.Formats.Configuration item)
-        {
-            var configurationItem = item.GetInternalClone();
-
-            var condition = item.GetFieldValue<DatItems.Formats.Condition?>(Models.Metadata.Configuration.ConditionKey);
-            if (condition != null)
-                configurationItem[Models.Metadata.Configuration.ConditionKey] = condition.GetInternalClone();
-
-            var confLocations = item.GetFieldValue<DatItems.Formats.ConfLocation[]?>(Models.Metadata.Configuration.ConfLocationKey);
-            if (confLocations != null)
-            {
-                Models.Metadata.ConfLocation[] confLocationItems = Array.ConvertAll(confLocations, confLocation => confLocation.GetInternalClone());
-                configurationItem[Models.Metadata.Configuration.ConfLocationKey] = confLocationItems;
-            }
-
-            var confSettings = item.GetFieldValue<DatItems.Formats.ConfSetting[]?>(Models.Metadata.Configuration.ConfSettingKey);
-            if (confSettings != null)
-            {
-                Models.Metadata.ConfSetting[] confSettingItems = new Models.Metadata.ConfSetting[confSettings.Length];
-                for (int i = 0; i < confSettings.Length; i++)
-                {
-                    var confSetting = confSettings[i];
-                    Models.Metadata.ConfSetting confSettingItem = confSetting.GetInternalClone();
-
-                    // Handle subitems
-                    var subCondition = confSetting.GetFieldValue<DatItems.Formats.Condition>(Models.Metadata.ConfSetting.ConditionKey);
-                    if (subCondition != null)
-                        confSettingItem[Models.Metadata.ConfSetting.ConditionKey] = subCondition.GetInternalClone();
-
-                    confSettingItems[i] = confSettingItem;
-                }
-
-                configurationItem[Models.Metadata.Configuration.ConfSettingKey] = confSettingItems;
-            }
-
-            return configurationItem;
-        }
-
-        /// <summary>
-        /// Convert Device information
-        /// </summary>
-        /// <param name="item">Item to convert</param>
-        private static Models.Metadata.Device ProcessItem(DatItems.Formats.Device item)
-        {
-            var deviceItem = item.GetInternalClone();
-
-            var instance = item.GetFieldValue<DatItems.Formats.Instance?>(Models.Metadata.Device.InstanceKey);
-            if (instance != null)
-                deviceItem[Models.Metadata.Device.InstanceKey] = instance.GetInternalClone();
-
-            var extensions = item.GetFieldValue<DatItems.Formats.Extension[]?>(Models.Metadata.Device.ExtensionKey);
-            if (extensions != null)
-            {
-                Models.Metadata.Extension[] extensionItems = Array.ConvertAll(extensions, extension => extension.GetInternalClone());
-                deviceItem[Models.Metadata.Device.ExtensionKey] = extensionItems;
-            }
-
-            return deviceItem;
-        }
-
-        /// <summary>
-        /// Convert DipSwitch information
-        /// </summary>
-        /// <param name="item">Item to convert</param>
-        /// <param name="machine">Machine to use for Part</param>
-        private static Models.Metadata.DipSwitch ProcessItem(DatItems.Formats.DipSwitch item)
-        {
-            var dipSwitchItem = item.GetInternalClone();
-
-            var condition = item.GetFieldValue<DatItems.Formats.Condition?>(Models.Metadata.DipSwitch.ConditionKey);
-            if (condition != null)
-                dipSwitchItem[Models.Metadata.DipSwitch.ConditionKey] = condition.GetInternalClone();
-
-            var dipLocations = item.GetFieldValue<DatItems.Formats.DipLocation[]?>(Models.Metadata.DipSwitch.DipLocationKey);
-            if (dipLocations != null)
-            {
-                Models.Metadata.DipLocation[] dipLocationItems = Array.ConvertAll(dipLocations, dipLocation => dipLocation.GetInternalClone());
-                dipSwitchItem[Models.Metadata.DipSwitch.DipLocationKey] = dipLocationItems;
-            }
-
-            var dipValues = item.GetFieldValue<DatItems.Formats.DipValue[]?>(Models.Metadata.DipSwitch.DipValueKey);
-            if (dipValues != null)
-            {
-                Models.Metadata.DipValue[] dipValueItems = new Models.Metadata.DipValue[dipValues.Length];
-                for (int i = 0; i < dipValues.Length; i++)
-                {
-                    var dipValue = dipValues[i];
-                    Models.Metadata.DipValue dipValueItem = dipValue.GetInternalClone();
-
-                    // Handle subitems
-                    var subCondition = dipValue.GetFieldValue<DatItems.Formats.Condition>(Models.Metadata.DipValue.ConditionKey);
-                    if (subCondition != null)
-                        dipValueItem[Models.Metadata.DipValue.ConditionKey] = subCondition.GetInternalClone();
-
-                    dipValueItems[i] = dipValueItem;
-                }
-
-                dipSwitchItem[Models.Metadata.DipSwitch.DipValueKey] = dipValueItems;
-            }
-
-            return dipSwitchItem;
-        }
-
-        /// <summary>
         /// Convert Display information
         /// </summary>
         /// <param name="item">Item to convert</param>
         /// <param name="machine">Machine to use for Video</param>
+        /// <remarks>
+        /// This method is required because both a Display and a Video
+        /// item might be created and added for a given Display input.
+        /// </remarks>
         private static Models.Metadata.Display ProcessItem(DatItems.Formats.Display item, Models.Metadata.Machine machine)
         {
             var displayItem = item.GetInternalClone();
@@ -1096,46 +947,14 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Convert Input information
-        /// </summary>
-        /// <param name="item">Item to convert</param>
-        private static Models.Metadata.Input ProcessItem(DatItems.Formats.Input item)
-        {
-            var inputItem = item.GetInternalClone();
-
-            var controls = item.GetFieldValue<DatItems.Formats.Control[]?>(Models.Metadata.Input.ControlKey);
-            if (controls != null)
-            {
-                Models.Metadata.Control[] controlItems = Array.ConvertAll(controls, control => control.GetInternalClone());
-                inputItem[Models.Metadata.Input.ControlKey] = controlItems;
-            }
-
-            return inputItem;
-        }
-
-        /// <summary>
-        /// Convert Port information
-        /// </summary>
-        /// <param name="item">Item to convert</param>
-        private static Models.Metadata.Port ProcessItem(DatItems.Formats.Port item)
-        {
-            var slotItem = item.GetInternalClone();
-
-            var analogs = item.GetFieldValue<DatItems.Formats.Analog[]?>(Models.Metadata.Port.AnalogKey);
-            if (analogs != null)
-            {
-                Models.Metadata.Analog[] analogItems = Array.ConvertAll(analogs, analog => analog.GetInternalClone());
-                slotItem[Models.Metadata.Port.AnalogKey] = analogItems;
-            }
-
-            return slotItem;
-        }
-
-        /// <summary>
         /// Convert Rom information
         /// </summary>
         /// <param name="item">Item to convert</param>
         /// <param name="machine">Machine to use for Part and DataArea</param>
+        /// <remarks>
+        /// This method is required because both a Rom and a Dump
+        /// item might be created and added for a given Rom input.
+        /// </remarks>
         private static Models.Metadata.Rom ProcessItem(DatItems.Formats.Rom item, Models.Metadata.Machine machine)
         {
             var romItem = item.GetInternalClone();
@@ -1229,24 +1048,6 @@ namespace SabreTools.DatFiles
             }
 
             return romItem;
-        }
-
-        /// <summary>
-        /// Convert Slot information
-        /// </summary>
-        /// <param name="item">Item to convert</param>
-        private static Models.Metadata.Slot ProcessItem(DatItems.Formats.Slot item)
-        {
-            var slotItem = item.GetInternalClone();
-
-            var slotOptions = item.GetFieldValue<DatItems.Formats.SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey);
-            if (slotOptions != null)
-            {
-                Models.Metadata.SlotOption[] slotOptionItems = Array.ConvertAll(slotOptions, slotOption => slotOption.GetInternalClone());
-                slotItem[Models.Metadata.Slot.SlotOptionKey] = slotOptionItems;
-            }
-
-            return slotItem;
         }
 
         /// <summary>

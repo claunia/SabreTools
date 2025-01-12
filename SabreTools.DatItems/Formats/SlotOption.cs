@@ -23,6 +23,7 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public SlotOption() : base() { }
+
         public SlotOption(Models.Metadata.SlotOption item) : base(item)
         {
             // Process flag values

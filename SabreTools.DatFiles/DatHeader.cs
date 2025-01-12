@@ -163,15 +163,6 @@ namespace SabreTools.DatFiles
 
         #endregion
 
-        #region Accessors
-
-        /// <summary>
-        /// Get a clone of the current internal model
-        /// </summary>
-        public Models.Metadata.Header GetInternalClone() => (_internal.Clone() as Models.Metadata.Header)!;
-
-        #endregion
-
         #region Cloning Methods
 
         /// <summary>
@@ -253,6 +244,36 @@ namespace SabreTools.DatFiles
                 GetBoolFieldValue(DatHeader.QuotesKey));
             header.SetFieldValue<bool?>(DatHeader.UseRomNameKey,
                 GetBoolFieldValue(DatHeader.UseRomNameKey));
+
+            return header;
+        }
+
+        /// <summary>
+        /// Get a clone of the current internal model
+        /// </summary>
+        public Models.Metadata.Header GetInternalClone()
+        {
+            var header = (_internal.Clone() as Models.Metadata.Header)!;
+
+            // Remove fields with default values
+            if (header.ReadString(Models.Metadata.Header.ForceMergingKey).AsEnumValue<MergingFlag>() == MergingFlag.None)
+                header.Remove(Models.Metadata.Header.ForceMergingKey);
+            if (header.ReadString(Models.Metadata.Header.ForceNodumpKey).AsEnumValue<NodumpFlag>() == NodumpFlag.None)
+                header.Remove(Models.Metadata.Header.ForceNodumpKey);
+            if (header.ReadString(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>() == PackingFlag.None)
+                header.Remove(Models.Metadata.Header.ForcePackingKey);
+
+            // Convert subheader values
+            if (CanOpenSpecified)
+                header[Models.Metadata.Header.CanOpenKey] = new Models.OfflineList.CanOpen { Extension = GetStringArrayFieldValue(Models.Metadata.Header.CanOpenKey) };
+            if (ImagesSpecified)
+                header[Models.Metadata.Header.ImagesKey] = GetFieldValue<Models.OfflineList.Images>(Models.Metadata.Header.ImagesKey);
+            if (InfosSpecified)
+                header[Models.Metadata.Header.InfosKey] = GetFieldValue<Models.OfflineList.Infos>(Models.Metadata.Header.InfosKey);
+            if (NewDatSpecified)
+                header[Models.Metadata.Header.NewDatKey] = GetFieldValue<Models.OfflineList.NewDat>(Models.Metadata.Header.NewDatKey);
+            if (SearchSpecified)
+                header[Models.Metadata.Header.SearchKey] = GetFieldValue<Models.OfflineList.Search>(Models.Metadata.Header.SearchKey);
 
             return header;
         }

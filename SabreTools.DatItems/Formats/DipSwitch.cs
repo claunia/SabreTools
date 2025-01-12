@@ -76,6 +76,7 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public DipSwitch() : base() { }
+
         public DipSwitch(Models.Metadata.DipSwitch item) : base(item)
         {
             // Process flag values
@@ -100,6 +101,36 @@ namespace SabreTools.DatItems.Formats
                 DipValue[] dipValueItems = Array.ConvertAll(dipValues, dipValue => new DipValue(dipValue));
                 SetFieldValue<DipValue[]?>(Models.Metadata.DipSwitch.DipValueKey, dipValueItems);
             }
+        }
+
+        #endregion
+
+        #region Cloning Methods
+
+        /// <inheritdoc/>
+        public override Models.Metadata.DipSwitch GetInternalClone()
+        {
+            var dipSwitchItem = base.GetInternalClone();
+
+            var condition = GetFieldValue<Condition?>(Models.Metadata.DipSwitch.ConditionKey);
+            if (condition != null)
+                dipSwitchItem[Models.Metadata.DipSwitch.ConditionKey] = condition.GetInternalClone();
+
+            var dipLocations = GetFieldValue<DipLocation[]?>(Models.Metadata.DipSwitch.DipLocationKey);
+            if (dipLocations != null)
+            {
+                Models.Metadata.DipLocation[] dipLocationItems = Array.ConvertAll(dipLocations, dipLocation => dipLocation.GetInternalClone());
+                dipSwitchItem[Models.Metadata.DipSwitch.DipLocationKey] = dipLocationItems;
+            }
+
+            var dipValues = GetFieldValue<DipValue[]?>(Models.Metadata.DipSwitch.DipValueKey);
+            if (dipValues != null)
+            {
+                Models.Metadata.DipValue[] dipValueItems = Array.ConvertAll(dipValues, dipValue => dipValue.GetInternalClone());
+                dipSwitchItem[Models.Metadata.DipSwitch.DipValueKey] = dipValueItems;
+            }
+
+            return dipSwitchItem;
         }
 
         #endregion

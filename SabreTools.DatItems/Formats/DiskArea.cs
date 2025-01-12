@@ -23,6 +23,7 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public DiskArea() : base() { }
+
         public DiskArea(Models.Metadata.DiskArea item) : base(item) { }
 
         #endregion

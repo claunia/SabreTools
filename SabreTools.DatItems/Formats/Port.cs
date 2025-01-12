@@ -34,6 +34,7 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public Port() : base() { }
+
         public Port(Models.Metadata.Port item) : base(item)
         {
             // Handle subitems
@@ -43,6 +44,25 @@ namespace SabreTools.DatItems.Formats
                 Analog[] analogItems = Array.ConvertAll(analogs, analog => new Analog(analog));
                 SetFieldValue<Analog[]?>(Models.Metadata.Port.AnalogKey, analogItems);
             }
+        }
+
+        #endregion
+
+        #region Cloning Methods
+
+        /// <inheritdoc/>
+        public override Models.Metadata.Port GetInternalClone()
+        {
+            var portItem = base.GetInternalClone();
+
+            var analogs = GetFieldValue<Analog[]?>(Models.Metadata.Port.AnalogKey);
+            if (analogs != null)
+            {
+                Models.Metadata.Analog[] analogItems = Array.ConvertAll(analogs, analog => analog.GetInternalClone());
+                portItem[Models.Metadata.Port.AnalogKey] = analogItems;
+            }
+
+            return portItem;
         }
 
         #endregion

@@ -35,6 +35,7 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public Input() : base() { }
+
         public Input(Models.Metadata.Input item) : base(item)
         {
             // Process flag values
@@ -56,6 +57,25 @@ namespace SabreTools.DatItems.Formats
                 Control[] controlItems = Array.ConvertAll(controls, control => new Control(control));
                 SetFieldValue<Control[]?>(Models.Metadata.Input.ControlKey, controlItems);
             }
+        }
+
+        #endregion
+
+        #region Cloning Methods
+
+        /// <inheritdoc/>
+        public override Models.Metadata.Input GetInternalClone()
+        {
+            var inputItem = base.GetInternalClone();
+
+            var controls = GetFieldValue<Control[]?>(Models.Metadata.Input.ControlKey);
+            if (controls != null)
+            {
+                Models.Metadata.Control[] controlItems = Array.ConvertAll(controls, control => control.GetInternalClone());
+                inputItem[Models.Metadata.Input.ControlKey] = controlItems;
+            }
+
+            return inputItem;
         }
 
         #endregion

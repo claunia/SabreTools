@@ -22,6 +22,7 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public Sample() : base() { }
+
         public Sample(Models.Metadata.Sample item) : base(item) { }
 
         #endregion

@@ -22,6 +22,7 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public Analog() : base() { }
+
         public Analog(Models.Metadata.Analog item) : base(item) { }
 
         #endregion

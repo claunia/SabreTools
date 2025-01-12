@@ -22,6 +22,7 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public DeviceRef() : base() { }
+
         public DeviceRef(Models.Metadata.DeviceRef item) : base(item) { }
 
         #endregion

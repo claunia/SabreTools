@@ -45,6 +45,7 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public Device() : base() { }
+
         public Device(Models.Metadata.Device item) : base(item)
         {
             // Process flag values
@@ -64,6 +65,29 @@ namespace SabreTools.DatItems.Formats
                 Extension[] extensionItems = Array.ConvertAll(extensions, extension => new Extension(extension));
                 SetFieldValue<Extension[]?>(Models.Metadata.Device.ExtensionKey, extensionItems);
             }
+        }
+
+        #endregion
+
+        #region Cloning Methods
+
+        /// <inheritdoc/>
+        public override Models.Metadata.Device GetInternalClone()
+        {
+            var deviceItem = base.GetInternalClone();
+
+            var instance = GetFieldValue<Instance?>(Models.Metadata.Device.InstanceKey);
+            if (instance != null)
+                deviceItem[Models.Metadata.Device.InstanceKey] = instance.GetInternalClone();
+
+            var extensions = GetFieldValue<Extension[]?>(Models.Metadata.Device.ExtensionKey);
+            if (extensions != null)
+            {
+                Models.Metadata.Extension[] extensionItems = Array.ConvertAll(extensions, extension => extension.GetInternalClone());
+                deviceItem[Models.Metadata.Device.ExtensionKey] = extensionItems;
+            }
+
+            return deviceItem;
         }
 
         #endregion

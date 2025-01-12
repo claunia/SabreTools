@@ -33,6 +33,7 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public DipValue() : base() { }
+
         public DipValue(Models.Metadata.DipValue item) : base(item)
         {
             // Process flag values
@@ -43,6 +44,23 @@ namespace SabreTools.DatItems.Formats
             var condition = GetFieldValue<Models.Metadata.Condition>(Models.Metadata.DipValue.ConditionKey);
             if (condition != null)
                 SetFieldValue<Condition?>(Models.Metadata.DipValue.ConditionKey, new Condition(condition));
+        }
+
+        #endregion
+
+        #region Cloning Methods
+
+        /// <inheritdoc/>
+        public override Models.Metadata.DipValue GetInternalClone()
+        {
+            var dipValueItem = base.GetInternalClone();
+
+            // Handle subitems
+            var subCondition = GetFieldValue<Condition>(Models.Metadata.DipValue.ConditionKey);
+            if (subCondition != null)
+                dipValueItem[Models.Metadata.DipValue.ConditionKey] = subCondition.GetInternalClone();
+
+            return dipValueItem;
         }
 
         #endregion

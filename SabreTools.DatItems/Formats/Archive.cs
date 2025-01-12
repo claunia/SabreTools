@@ -89,6 +89,7 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public Archive() : base() { }
+
         public Archive(Models.Metadata.Archive item) : base(item) { }
 
         #endregion

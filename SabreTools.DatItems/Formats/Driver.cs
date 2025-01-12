@@ -23,6 +23,7 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public Driver() : base() { }
+
         public Driver(Models.Metadata.Driver item) : base(item)
         {
             // Process flag values

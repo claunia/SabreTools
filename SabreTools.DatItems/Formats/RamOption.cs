@@ -23,6 +23,7 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public RamOption() : base() { }
+
         public RamOption(Models.Metadata.RamOption item) : base(item)
         {
             // Process flag values

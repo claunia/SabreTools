@@ -23,6 +23,7 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public Chip() : base() { }
+
         public Chip(Models.Metadata.Chip item) : base(item)
         {
             // Process flag values
