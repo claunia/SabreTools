@@ -27,10 +27,10 @@ namespace SabreTools.DatItems.Test.Formats
             disk.SetFieldValue(Disk.DiskAreaKey, diskArea);
             disk.SetFieldValue(Models.Metadata.Disk.MergeKey, "XXXXXX");
             disk.SetFieldValue(Models.Metadata.Disk.RegionKey, "XXXXXX");
-            disk.SetFieldValue(Models.Metadata.Disk.StatusKey, "XXXXXX");
+            disk.SetFieldValue(Models.Metadata.Disk.StatusKey, "good");
             disk.SetFieldValue(Models.Metadata.Disk.OptionalKey, "XXXXXX");
-            disk.SetFieldValue(Models.Metadata.Disk.MD5Key, "XXXXXX");
-            disk.SetFieldValue(Models.Metadata.Disk.SHA1Key, "XXXXXX");
+            disk.SetFieldValue(Models.Metadata.Disk.MD5Key, ZeroHash.MD5Str);
+            disk.SetFieldValue(Models.Metadata.Disk.SHA1Key, ZeroHash.SHA1Str);
             disk.SetFieldValue(DatItem.DupeTypeKey, DupeType.All | DupeType.External);
             disk.SetFieldValue(DatItem.MachineKey, machine);
             disk.SetFieldValue(Disk.PartKey, part);
@@ -42,10 +42,10 @@ namespace SabreTools.DatItems.Test.Formats
             Assert.Equal("XXXXXX.chd", actual.GetName());
             Assert.Equal("XXXXXX", actual.GetStringFieldValue(Models.Metadata.Rom.MergeKey));
             Assert.Equal("XXXXXX", actual.GetStringFieldValue(Models.Metadata.Rom.RegionKey));
-            Assert.Equal("XXXXXX", actual.GetStringFieldValue(Models.Metadata.Rom.StatusKey));
+            Assert.Equal("good", actual.GetStringFieldValue(Models.Metadata.Rom.StatusKey));
             Assert.Equal("XXXXXX", actual.GetStringFieldValue(Models.Metadata.Rom.OptionalKey));
-            Assert.Equal("XXXXXX", actual.GetStringFieldValue(Models.Metadata.Rom.MD5Key));
-            Assert.Equal("XXXXXX", actual.GetStringFieldValue(Models.Metadata.Rom.SHA1Key));
+            Assert.Equal(ZeroHash.MD5Str, actual.GetStringFieldValue(Models.Metadata.Rom.MD5Key));
+            Assert.Equal(ZeroHash.SHA1Str, actual.GetStringFieldValue(Models.Metadata.Rom.SHA1Key));
             Assert.Equal(DupeType.All | DupeType.External, actual.GetFieldValue<DupeType>(DatItem.DupeTypeKey));
 
             DataArea? actualDataArea = actual.GetFieldValue<DataArea?>(Rom.DataAreaKey);

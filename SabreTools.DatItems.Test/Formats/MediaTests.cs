@@ -18,10 +18,10 @@ namespace SabreTools.DatItems.Test.Formats
 
             Media media = new Media();
             media.SetName("XXXXXX");
-            media.SetFieldValue(Models.Metadata.Media.MD5Key, "XXXXXX");
-            media.SetFieldValue(Models.Metadata.Media.SHA1Key, "XXXXXX");
-            media.SetFieldValue(Models.Metadata.Media.SHA256Key, "XXXXXX");
-            media.SetFieldValue(Models.Metadata.Media.SpamSumKey, "XXXXXX");
+            media.SetFieldValue(Models.Metadata.Media.MD5Key, ZeroHash.MD5Str);
+            media.SetFieldValue(Models.Metadata.Media.SHA1Key, ZeroHash.SHA1Str);
+            media.SetFieldValue(Models.Metadata.Media.SHA256Key, ZeroHash.SHA256Str);
+            media.SetFieldValue(Models.Metadata.Media.SpamSumKey, ZeroHash.SpamSumStr);
             media.SetFieldValue(DatItem.DupeTypeKey, DupeType.All | DupeType.External);
             media.SetFieldValue(DatItem.MachineKey, machine);
             media.SetFieldValue(DatItem.RemoveKey, (bool?)false);
@@ -30,10 +30,10 @@ namespace SabreTools.DatItems.Test.Formats
             Rom actual = media.ConvertToRom();
 
             Assert.Equal("XXXXXX.aaruf", actual.GetName());
-            Assert.Equal("XXXXXX", actual.GetStringFieldValue(Models.Metadata.Rom.MD5Key));
-            Assert.Equal("XXXXXX", actual.GetStringFieldValue(Models.Metadata.Rom.SHA1Key));
-            Assert.Equal("XXXXXX", actual.GetStringFieldValue(Models.Metadata.Rom.SHA256Key));
-            Assert.Equal("XXXXXX", actual.GetStringFieldValue(Models.Metadata.Rom.SpamSumKey));
+            Assert.Equal(ZeroHash.MD5Str, actual.GetStringFieldValue(Models.Metadata.Rom.MD5Key));
+            Assert.Equal(ZeroHash.SHA1Str, actual.GetStringFieldValue(Models.Metadata.Rom.SHA1Key));
+            Assert.Equal(ZeroHash.SHA256Str, actual.GetStringFieldValue(Models.Metadata.Rom.SHA256Key));
+            Assert.Equal(ZeroHash.SpamSumStr, actual.GetStringFieldValue(Models.Metadata.Rom.SpamSumKey));
             Assert.Equal(DupeType.All | DupeType.External, actual.GetFieldValue<DupeType>(DatItem.DupeTypeKey));
 
             Machine? actualMachine = actual.GetFieldValue<Machine?>(DatItem.MachineKey);
