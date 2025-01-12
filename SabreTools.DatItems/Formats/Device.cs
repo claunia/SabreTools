@@ -1,5 +1,8 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 using Newtonsoft.Json;
+using SabreTools.Core;
+using SabreTools.Core.Tools;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -42,7 +45,26 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public Device() : base() { }
-        public Device(Models.Metadata.Device item) : base(item) { }
+        public Device(Models.Metadata.Device item) : base(item)
+        {
+            // Process flag values
+            if (GetBoolFieldValue(Models.Metadata.Device.MandatoryKey) != null)
+                SetFieldValue<string?>(Models.Metadata.Device.MandatoryKey, GetBoolFieldValue(Models.Metadata.Device.MandatoryKey).FromYesNo());
+            if (GetStringFieldValue(Models.Metadata.Device.DeviceTypeKey) != null)
+                SetFieldValue<string?>(Models.Metadata.Device.DeviceTypeKey, GetStringFieldValue(Models.Metadata.Device.DeviceTypeKey).AsEnumValue<DeviceType>().AsStringValue());
+
+            // Handle subitems
+            var instance = item.Read<Models.Metadata.Instance>(Models.Metadata.Device.InstanceKey);
+            if (instance != null)
+                SetFieldValue<Instance?>(Models.Metadata.Device.InstanceKey, new Instance(instance));
+
+            var extensions = item.ReadItemArray<Models.Metadata.Extension>(Models.Metadata.Device.ExtensionKey);
+            if (extensions != null)
+            {
+                Extension[] extensionItems = Array.ConvertAll(extensions, extension => new Extension(extension));
+                SetFieldValue<Extension[]?>(Models.Metadata.Device.ExtensionKey, extensionItems);
+            }
+        }
 
         #endregion
     }

@@ -137,7 +137,8 @@ namespace SabreTools.DatFiles
         /// <param name="datHeader">Replacement header to be used</param>
         public void SetHeader(DatHeader datHeader)
         {
-            Header = (DatHeader)datHeader.Clone();
+            // TODO: Figure out why clone loses data here
+            Header = datHeader;
         }
 
         #endregion

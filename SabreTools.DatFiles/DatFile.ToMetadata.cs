@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using SabreTools.Core.Tools;
@@ -68,11 +69,11 @@ namespace SabreTools.DatFiles
             var header = Header.GetInternalClone();
 
             // Remove fields with default values
-            if (header.Read<MergingFlag>(Models.Metadata.Header.ForceMergingKey) == MergingFlag.None)
+            if (header.ReadString(Models.Metadata.Header.ForceMergingKey).AsEnumValue<MergingFlag>() == MergingFlag.None)
                 header.Remove(Models.Metadata.Header.ForceMergingKey);
-            if (header.Read<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey) == NodumpFlag.None)
+            if (header.ReadString(Models.Metadata.Header.ForceNodumpKey).AsEnumValue<NodumpFlag>() == NodumpFlag.None)
                 header.Remove(Models.Metadata.Header.ForceNodumpKey);
-            if (header.Read<PackingFlag>(Models.Metadata.Header.ForcePackingKey) == PackingFlag.None)
+            if (header.ReadString(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>() == PackingFlag.None)
                 header.Remove(Models.Metadata.Header.ForcePackingKey);
 
             // Convert subheader values
@@ -963,27 +964,15 @@ namespace SabreTools.DatFiles
             var confLocations = item.GetFieldValue<DatItems.Formats.ConfLocation[]?>(Models.Metadata.Configuration.ConfLocationKey);
             if (confLocations != null)
             {
-                List<Models.Metadata.ConfLocation> confLocationItems = [];
-                foreach (var confLocation in confLocations)
-                {
-                    var confLocationItem = confLocation.GetInternalClone();
-                    confLocationItems.Add(confLocationItem);
-                }
-
-                configurationItem[Models.Metadata.Configuration.ConfLocationKey] = confLocationItems.ToArray();
+                Models.Metadata.ConfLocation[] confLocationItems = Array.ConvertAll(confLocations, confLocation => confLocation.GetInternalClone());
+                configurationItem[Models.Metadata.Configuration.ConfLocationKey] = confLocationItems;
             }
 
             var confSettings = item.GetFieldValue<DatItems.Formats.ConfSetting[]?>(Models.Metadata.Configuration.ConfSettingKey);
             if (confSettings != null)
             {
-                List<Models.Metadata.ConfSetting> confSettingItems = [];
-                foreach (var confSetting in confSettings)
-                {
-                    var confSettingItem = confSetting.GetInternalClone();
-                    confSettingItems.Add(confSettingItem);
-                }
-
-                configurationItem[Models.Metadata.Configuration.ConfSettingKey] = confSettingItems.ToArray();
+                Models.Metadata.ConfSetting[] confSettingItems = Array.ConvertAll(confSettings, confSetting => confSetting.GetInternalClone());
+                configurationItem[Models.Metadata.Configuration.ConfSettingKey] = confSettingItems;
             }
 
             return configurationItem;
@@ -1004,14 +993,8 @@ namespace SabreTools.DatFiles
             var extensions = item.GetFieldValue<DatItems.Formats.Extension[]?>(Models.Metadata.Device.ExtensionKey);
             if (extensions != null)
             {
-                List<Models.Metadata.Extension> extensionItems = [];
-                foreach (var extension in extensions)
-                {
-                    var extensionItem = extension.GetInternalClone();
-                    extensionItems.Add(extensionItem);
-                }
-
-                deviceItem[Models.Metadata.Device.ExtensionKey] = extensionItems.ToArray();
+                Models.Metadata.Extension[] extensionItems = Array.ConvertAll(extensions, extension => extension.GetInternalClone());
+                deviceItem[Models.Metadata.Device.ExtensionKey] = extensionItems;
             }
 
             return deviceItem;
@@ -1033,27 +1016,15 @@ namespace SabreTools.DatFiles
             var dipLocations = item.GetFieldValue<DatItems.Formats.DipLocation[]?>(Models.Metadata.DipSwitch.DipLocationKey);
             if (dipLocations != null)
             {
-                List<Models.Metadata.DipLocation> dipLocationItems = [];
-                foreach (var dipLocation in dipLocations)
-                {
-                    var extensionItem = dipLocation.GetInternalClone();
-                    dipLocationItems.Add(extensionItem);
-                }
-
-                dipSwitchItem[Models.Metadata.DipSwitch.DipLocationKey] = dipLocationItems.ToArray();
+                Models.Metadata.DipLocation[] dipLocationItems = Array.ConvertAll(dipLocations, dipLocation => dipLocation.GetInternalClone());
+                dipSwitchItem[Models.Metadata.DipSwitch.DipLocationKey] = dipLocationItems;
             }
 
             var dipValues = item.GetFieldValue<DatItems.Formats.DipValue[]?>(Models.Metadata.DipSwitch.DipValueKey);
             if (dipValues != null)
             {
-                List<Models.Metadata.DipValue> dipValueItems = [];
-                foreach (var dipValue in dipValues)
-                {
-                    var extensionItem = dipValue.GetInternalClone();
-                    dipValueItems.Add(extensionItem);
-                }
-
-                dipSwitchItem[Models.Metadata.DipSwitch.DipValueKey] = dipValueItems.ToArray();
+                Models.Metadata.DipValue[] dipValueItems = Array.ConvertAll(dipValues, dipValue => dipValue.GetInternalClone());
+                dipSwitchItem[Models.Metadata.DipSwitch.DipValueKey] = dipValueItems;
             }
 
             return dipSwitchItem;

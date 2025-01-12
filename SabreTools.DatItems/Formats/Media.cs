@@ -1,6 +1,7 @@
 ﻿using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -30,6 +31,14 @@ namespace SabreTools.DatItems.Formats
         public Media(Models.Metadata.Media item) : base(item)
         {
             SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
+
+            // Process hash values
+            if (GetStringFieldValue(Models.Metadata.Media.MD5Key) != null)
+                SetFieldValue<string?>(Models.Metadata.Media.MD5Key, TextHelper.NormalizeMD5(GetStringFieldValue(Models.Metadata.Media.MD5Key)));
+            if (GetStringFieldValue(Models.Metadata.Media.SHA1Key) != null)
+                SetFieldValue<string?>(Models.Metadata.Media.SHA1Key, TextHelper.NormalizeSHA1(GetStringFieldValue(Models.Metadata.Media.SHA1Key)));
+            if (GetStringFieldValue(Models.Metadata.Media.SHA256Key) != null)
+                SetFieldValue<string?>(Models.Metadata.Media.SHA256Key, TextHelper.NormalizeSHA256(GetStringFieldValue(Models.Metadata.Media.SHA256Key)));
         }
 
         #endregion

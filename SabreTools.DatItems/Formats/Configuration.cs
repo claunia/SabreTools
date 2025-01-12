@@ -1,5 +1,7 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 using Newtonsoft.Json;
+using SabreTools.Core;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -52,7 +54,27 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public Configuration() : base() { }
-        public Configuration(Models.Metadata.Configuration item) : base(item) { }
+        public Configuration(Models.Metadata.Configuration item) : base(item)
+        {
+            // Handle subitems
+            var condition = item.Read<Models.Metadata.Condition>(Models.Metadata.Configuration.ConditionKey);
+            if (condition != null)
+                SetFieldValue<Condition?>(Models.Metadata.Configuration.ConditionKey, new Condition(condition));
+
+            var confLocations = item.ReadItemArray<Models.Metadata.ConfLocation>(Models.Metadata.Configuration.ConfLocationKey);
+            if (confLocations != null)
+            {
+                ConfLocation[] confLocationItems = Array.ConvertAll(confLocations, confLocation => new ConfLocation(confLocation));
+                SetFieldValue<ConfLocation[]?>(Models.Metadata.Configuration.ConfLocationKey, confLocationItems);
+            }
+
+            var confSettings = item.ReadItemArray<Models.Metadata.ConfSetting>(Models.Metadata.Configuration.ConfSettingKey);
+            if (confSettings != null)
+            {
+                ConfSetting[] confSettingItems = Array.ConvertAll(confSettings, confSetting => new ConfSetting(confSetting));
+                SetFieldValue<ConfSetting[]?>(Models.Metadata.Configuration.ConfSettingKey, confSettingItems);
+            }
+        }
 
         #endregion
     }

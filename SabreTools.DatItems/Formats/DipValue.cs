@@ -1,5 +1,6 @@
 using System.Xml.Serialization;
 using Newtonsoft.Json;
+using SabreTools.Core.Tools;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -32,7 +33,17 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public DipValue() : base() { }
-        public DipValue(Models.Metadata.DipValue item) : base(item) { }
+        public DipValue(Models.Metadata.DipValue item) : base(item)
+        {
+            // Process flag values
+            if (GetBoolFieldValue(Models.Metadata.DipValue.DefaultKey) != null)
+                SetFieldValue<string?>(Models.Metadata.DipValue.DefaultKey, GetBoolFieldValue(Models.Metadata.DipValue.DefaultKey).FromYesNo());
+
+            // Handle subitems
+            var condition = GetFieldValue<Models.Metadata.Condition>(Models.Metadata.DipValue.ConditionKey);
+            if (condition != null)
+                SetFieldValue<Condition?>(Models.Metadata.DipValue.ConditionKey, new Condition(condition));
+        }
 
         #endregion
     }

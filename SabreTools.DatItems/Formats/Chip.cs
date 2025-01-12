@@ -1,5 +1,6 @@
 ﻿using System.Xml.Serialization;
 using Newtonsoft.Json;
+using SabreTools.Core.Tools;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -22,7 +23,14 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public Chip() : base() { }
-        public Chip(Models.Metadata.Chip item) : base(item) { }
+        public Chip(Models.Metadata.Chip item) : base(item)
+        {
+            // Process flag values
+            if (GetBoolFieldValue(Models.Metadata.Chip.SoundOnlyKey) != null)
+                SetFieldValue<string?>(Models.Metadata.Chip.SoundOnlyKey, GetBoolFieldValue(Models.Metadata.Chip.SoundOnlyKey).FromYesNo());
+            if (GetStringFieldValue(Models.Metadata.Chip.ChipTypeKey) != null)
+                SetFieldValue<string?>(Models.Metadata.Chip.ChipTypeKey, GetStringFieldValue(Models.Metadata.Chip.ChipTypeKey).AsEnumValue<ChipType>().AsStringValue());
+        }
 
         #endregion
     }

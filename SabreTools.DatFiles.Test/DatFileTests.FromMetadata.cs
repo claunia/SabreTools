@@ -37,7 +37,7 @@ namespace SabreTools.DatFiles.Test
         [Fact]
         public void ConvertFromMetadata_FilledHeader()
         {
-            Models.Metadata.Header? header = CreateHeader();
+            Models.Metadata.Header? header = CreateMetadataHeader();
             Models.Metadata.Machine[]? machines = null;
             Models.Metadata.MetadataFile? item = new Models.Metadata.MetadataFile
             {
@@ -55,7 +55,7 @@ namespace SabreTools.DatFiles.Test
         public void ConvertFromMetadata_FilledMachine()
         {
             Models.Metadata.Header? header = null;
-            Models.Metadata.Machine machine = CreateMachine();
+            Models.Metadata.Machine machine = CreateMetadataMachine();
             Models.Metadata.Machine[]? machines = [machine];
             Models.Metadata.MetadataFile? item = new Models.Metadata.MetadataFile
             {
@@ -184,7 +184,7 @@ namespace SabreTools.DatFiles.Test
 
         #region Creation Helpers
 
-        private static Models.Metadata.Header CreateHeader()
+        private static Models.Metadata.Header CreateMetadataHeader()
         {
             Models.OfflineList.CanOpen canOpen = new Models.OfflineList.CanOpen
             {
@@ -248,101 +248,101 @@ namespace SabreTools.DatFiles.Test
             };
         }
 
-        private static Models.Metadata.Machine CreateMachine()
+        private static Models.Metadata.Machine CreateMetadataMachine()
         {
             return new Models.Metadata.Machine
             {
-                [Models.Metadata.Machine.AdjusterKey] = new Models.Metadata.Adjuster[] { CreateAdjuster() },
-                [Models.Metadata.Machine.ArchiveKey] = new Models.Metadata.Archive[] { CreateArchive() },
-                [Models.Metadata.Machine.BiosSetKey] = new Models.Metadata.BiosSet[] { CreateBiosSet() },
+                [Models.Metadata.Machine.AdjusterKey] = new Models.Metadata.Adjuster[] { CreateMetadataAdjuster() },
+                [Models.Metadata.Machine.ArchiveKey] = new Models.Metadata.Archive[] { CreateMetadataArchive() },
+                [Models.Metadata.Machine.BiosSetKey] = new Models.Metadata.BiosSet[] { CreateMetadataBiosSet() },
                 [Models.Metadata.Machine.BoardKey] = "board",
                 [Models.Metadata.Machine.ButtonsKey] = "buttons",
                 [Models.Metadata.Machine.CategoryKey] = "category",
-                [Models.Metadata.Machine.ChipKey] = new Models.Metadata.Chip[] { CreateChip() },
+                [Models.Metadata.Machine.ChipKey] = new Models.Metadata.Chip[] { CreateMetadataChip() },
                 [Models.Metadata.Machine.CloneOfKey] = "cloneof",
                 [Models.Metadata.Machine.CloneOfIdKey] = "cloneofid",
                 [Models.Metadata.Machine.CommentKey] = "comment",
                 [Models.Metadata.Machine.CompanyKey] = "company",
-                [Models.Metadata.Machine.ConfigurationKey] = new Models.Metadata.Configuration[] { CreateConfiguration() },
+                [Models.Metadata.Machine.ConfigurationKey] = new Models.Metadata.Configuration[] { CreateMetadataConfiguration() },
                 [Models.Metadata.Machine.ControlKey] = "control",
                 [Models.Metadata.Machine.CountryKey] = "country",
                 [Models.Metadata.Machine.DescriptionKey] = "description",
-                [Models.Metadata.Machine.DeviceKey] = new Models.Metadata.Device[] { CreateDevice() },
-                [Models.Metadata.Machine.DeviceRefKey] = new Models.Metadata.DeviceRef[] { CreateDeviceRef() },
-                [Models.Metadata.Machine.DipSwitchKey] = new Models.Metadata.DipSwitch[] { CreateDipSwitch() },
+                [Models.Metadata.Machine.DeviceKey] = new Models.Metadata.Device[] { CreateMetadataDevice() },
+                [Models.Metadata.Machine.DeviceRefKey] = new Models.Metadata.DeviceRef[] { CreateMetadataDeviceRef() },
+                [Models.Metadata.Machine.DipSwitchKey] = new Models.Metadata.DipSwitch[] { CreateMetadataDipSwitch() },
                 [Models.Metadata.Machine.DirNameKey] = "dirname",
-                [Models.Metadata.Machine.DiskKey] = new Models.Metadata.Disk[] { CreateDisk() },
+                [Models.Metadata.Machine.DiskKey] = new Models.Metadata.Disk[] { CreateMetadataDisk() },
                 [Models.Metadata.Machine.DisplayCountKey] = "displaycount",
-                [Models.Metadata.Machine.DisplayKey] = new Models.Metadata.Display[] { CreateDisplay() },
+                [Models.Metadata.Machine.DisplayKey] = new Models.Metadata.Display[] { CreateMetadataDisplay() },
                 [Models.Metadata.Machine.DisplayTypeKey] = "displaytype",
-                [Models.Metadata.Machine.DriverKey] = CreateDriver(),
-                [Models.Metadata.Machine.DumpKey] = new Models.Metadata.Dump[] { CreateDump() },
+                [Models.Metadata.Machine.DriverKey] = CreateMetadataDriver(),
+                [Models.Metadata.Machine.DumpKey] = new Models.Metadata.Dump[] { CreateMetadataDump() },
                 [Models.Metadata.Machine.DuplicateIDKey] = "duplicateid",
                 [Models.Metadata.Machine.EmulatorKey] = "emulator",
                 [Models.Metadata.Machine.ExtraKey] = "extra",
                 [Models.Metadata.Machine.FavoriteKey] = "favorite",
-                [Models.Metadata.Machine.FeatureKey] = new Models.Metadata.Feature[] { CreateFeature() },
+                [Models.Metadata.Machine.FeatureKey] = new Models.Metadata.Feature[] { CreateMetadataFeature() },
                 [Models.Metadata.Machine.GenMSXIDKey] = "genmsxid",
                 [Models.Metadata.Machine.HistoryKey] = "history",
                 [Models.Metadata.Machine.IdKey] = "id",
                 [Models.Metadata.Machine.Im1CRCKey] = ZeroHash.CRC32Str,
                 [Models.Metadata.Machine.Im2CRCKey] = ZeroHash.CRC32Str,
                 [Models.Metadata.Machine.ImageNumberKey] = "imagenumber",
-                [Models.Metadata.Machine.InfoKey] = new Models.Metadata.Info[] { CreateInfo() },
-                [Models.Metadata.Machine.InputKey] = CreateInput(),
+                [Models.Metadata.Machine.InfoKey] = new Models.Metadata.Info[] { CreateMetadataInfo() },
+                [Models.Metadata.Machine.InputKey] = CreateMetadataInput(),
                 [Models.Metadata.Machine.IsBiosKey] = "yes",
                 [Models.Metadata.Machine.IsDeviceKey] = "yes",
                 [Models.Metadata.Machine.IsMechanicalKey] = "yes",
                 [Models.Metadata.Machine.LanguageKey] = "language",
                 [Models.Metadata.Machine.LocationKey] = "location",
                 [Models.Metadata.Machine.ManufacturerKey] = "manufacturer",
-                [Models.Metadata.Machine.MediaKey] = new Models.Metadata.Media[] { CreateMedia() },
+                [Models.Metadata.Machine.MediaKey] = new Models.Metadata.Media[] { CreateMetadataMedia() },
                 [Models.Metadata.Machine.NameKey] = "name",
                 [Models.Metadata.Machine.NotesKey] = "notes",
-                [Models.Metadata.Machine.PartKey] = new Models.Metadata.Part[] { CreatePart() },
+                [Models.Metadata.Machine.PartKey] = new Models.Metadata.Part[] { CreateMetadataPart() },
                 [Models.Metadata.Machine.PlayedCountKey] = "playedcount",
                 [Models.Metadata.Machine.PlayedTimeKey] = "playedtime",
                 [Models.Metadata.Machine.PlayersKey] = "players",
-                [Models.Metadata.Machine.PortKey] = new Models.Metadata.Port[] { CreatePort() },
+                [Models.Metadata.Machine.PortKey] = new Models.Metadata.Port[] { CreateMetadataPort() },
                 [Models.Metadata.Machine.PublisherKey] = "publisher",
-                [Models.Metadata.Machine.RamOptionKey] = new Models.Metadata.RamOption[] { CreateRamOption() },
+                [Models.Metadata.Machine.RamOptionKey] = new Models.Metadata.RamOption[] { CreateMetadataRamOption() },
                 [Models.Metadata.Machine.RebuildToKey] = "rebuildto",
-                [Models.Metadata.Machine.ReleaseKey] = new Models.Metadata.Release[] { CreateRelease() },
+                [Models.Metadata.Machine.ReleaseKey] = new Models.Metadata.Release[] { CreateMetadataRelease() },
                 [Models.Metadata.Machine.ReleaseNumberKey] = "releasenumber",
-                [Models.Metadata.Machine.RomKey] = new Models.Metadata.Rom[] { CreateRom() },
+                [Models.Metadata.Machine.RomKey] = new Models.Metadata.Rom[] { CreateMetadataRom() },
                 [Models.Metadata.Machine.RomOfKey] = "romof",
                 [Models.Metadata.Machine.RotationKey] = "rotation",
                 [Models.Metadata.Machine.RunnableKey] = "yes",
-                [Models.Metadata.Machine.SampleKey] = new Models.Metadata.Sample[] { CreateSample() },
+                [Models.Metadata.Machine.SampleKey] = new Models.Metadata.Sample[] { CreateMetadataSample() },
                 [Models.Metadata.Machine.SampleOfKey] = "sampleof",
                 [Models.Metadata.Machine.SaveTypeKey] = "savetype",
-                [Models.Metadata.Machine.SharedFeatKey] = new Models.Metadata.SharedFeat[] { CreateSharedFeat() },
-                [Models.Metadata.Machine.SlotKey] = new Models.Metadata.Slot[] { CreateSlot() },
-                [Models.Metadata.Machine.SoftwareListKey] = new Models.Metadata.SoftwareList[] { CreateSoftwareList() },
-                [Models.Metadata.Machine.SoundKey] = CreateSound(),
+                [Models.Metadata.Machine.SharedFeatKey] = new Models.Metadata.SharedFeat[] { CreateMetadataSharedFeat() },
+                [Models.Metadata.Machine.SlotKey] = new Models.Metadata.Slot[] { CreateMetadataSlot() },
+                [Models.Metadata.Machine.SoftwareListKey] = new Models.Metadata.SoftwareList[] { CreateMetadataSoftwareList() },
+                [Models.Metadata.Machine.SoundKey] = CreateMetadataSound(),
                 [Models.Metadata.Machine.SourceFileKey] = "sourcefile",
                 [Models.Metadata.Machine.SourceRomKey] = "sourcerom",
                 [Models.Metadata.Machine.StatusKey] = "status",
                 [Models.Metadata.Machine.SupportedKey] = "yes",
                 [Models.Metadata.Machine.SystemKey] = "system",
                 [Models.Metadata.Machine.TagsKey] = "tags",
-                [Models.Metadata.Machine.TruripKey] = CreateTrurip(),
-                [Models.Metadata.Machine.VideoKey] = new Models.Metadata.Video[] { CreateVideo() },
+                [Models.Metadata.Machine.TruripKey] = CreateMetadataTrurip(),
+                [Models.Metadata.Machine.VideoKey] = new Models.Metadata.Video[] { CreateMetadataVideo() },
                 [Models.Metadata.Machine.YearKey] = "year",
             };
         }
 
-        private static Models.Metadata.Adjuster CreateAdjuster()
+        private static Models.Metadata.Adjuster CreateMetadataAdjuster()
         {
             return new Models.Metadata.Adjuster
             {
-                [Models.Metadata.Adjuster.ConditionKey] = CreateCondition(),
+                [Models.Metadata.Adjuster.ConditionKey] = CreateMetadataCondition(),
                 [Models.Metadata.Adjuster.DefaultKey] = true,
                 [Models.Metadata.Adjuster.NameKey] = "name",
             };
         }
 
-        private static Models.Metadata.Analog CreateAnalog()
+        private static Models.Metadata.Analog CreateMetadataAnalog()
         {
             return new Models.Metadata.Analog
             {
@@ -350,7 +350,7 @@ namespace SabreTools.DatFiles.Test
             };
         }
 
-        private static Models.Metadata.Archive CreateArchive()
+        private static Models.Metadata.Archive CreateMetadataArchive()
         {
             return new Models.Metadata.Archive
             {
@@ -358,7 +358,7 @@ namespace SabreTools.DatFiles.Test
             };
         }
 
-        private static Models.Metadata.BiosSet CreateBiosSet()
+        private static Models.Metadata.BiosSet CreateMetadataBiosSet()
         {
             return new Models.Metadata.BiosSet
             {
@@ -368,11 +368,11 @@ namespace SabreTools.DatFiles.Test
             };
         }
 
-        private static Models.Metadata.Chip CreateChip()
+        private static Models.Metadata.Chip CreateMetadataChip()
         {
             return new Models.Metadata.Chip
             {
-                [Models.Metadata.Chip.ClockKey] = 12345,
+                [Models.Metadata.Chip.ClockKey] = 12345L,
                 [Models.Metadata.Chip.FlagsKey] = "flags",
                 [Models.Metadata.Chip.NameKey] = "name",
                 [Models.Metadata.Chip.SoundOnlyKey] = "yes",
@@ -381,20 +381,20 @@ namespace SabreTools.DatFiles.Test
             };
         }
 
-        private static Models.Metadata.Configuration CreateConfiguration()
+        private static Models.Metadata.Configuration CreateMetadataConfiguration()
         {
             return new Models.Metadata.Configuration
             {
-                [Models.Metadata.Configuration.ConditionKey] = CreateCondition(),
-                [Models.Metadata.Configuration.ConfLocationKey] = new Models.Metadata.ConfLocation[] { CreateConfLocation() },
-                [Models.Metadata.Configuration.ConfSettingKey] = new Models.Metadata.ConfSetting[] { CreateConfSetting() },
+                [Models.Metadata.Configuration.ConditionKey] = CreateMetadataCondition(),
+                [Models.Metadata.Configuration.ConfLocationKey] = new Models.Metadata.ConfLocation[] { CreateMetadataConfLocation() },
+                [Models.Metadata.Configuration.ConfSettingKey] = new Models.Metadata.ConfSetting[] { CreateMetadataConfSetting() },
                 [Models.Metadata.Configuration.MaskKey] = "mask",
                 [Models.Metadata.Configuration.NameKey] = "name",
                 [Models.Metadata.Configuration.TagKey] = "tag",
             };
         }
 
-        private static Models.Metadata.Condition CreateCondition()
+        private static Models.Metadata.Condition CreateMetadataCondition()
         {
             return new Models.Metadata.Condition
             {
@@ -405,7 +405,7 @@ namespace SabreTools.DatFiles.Test
             };
         }
 
-        private static Models.Metadata.ConfLocation CreateConfLocation()
+        private static Models.Metadata.ConfLocation CreateMetadataConfLocation()
         {
             return new Models.Metadata.ConfLocation
             {
@@ -415,29 +415,29 @@ namespace SabreTools.DatFiles.Test
             };
         }
 
-        private static Models.Metadata.ConfSetting CreateConfSetting()
+        private static Models.Metadata.ConfSetting CreateMetadataConfSetting()
         {
             return new Models.Metadata.ConfSetting
             {
-                [Models.Metadata.ConfSetting.ConditionKey] = CreateCondition(),
+                [Models.Metadata.ConfSetting.ConditionKey] = CreateMetadataCondition(),
                 [Models.Metadata.ConfSetting.DefaultKey] = "yes",
                 [Models.Metadata.ConfSetting.NameKey] = "name",
                 [Models.Metadata.ConfSetting.ValueKey] = "value",
             };
         }
 
-        private static Models.Metadata.Control CreateControl()
+        private static Models.Metadata.Control CreateMetadataControl()
         {
             return new Models.Metadata.Control
             {
-                [Models.Metadata.Control.ButtonsKey] = 12345,
-                [Models.Metadata.Control.KeyDeltaKey] = 12345,
-                [Models.Metadata.Control.MaximumKey] = 12345,
-                [Models.Metadata.Control.MinimumKey] = 12345,
-                [Models.Metadata.Control.PlayerKey] = 12345,
-                [Models.Metadata.Control.ReqButtonsKey] = 12345,
+                [Models.Metadata.Control.ButtonsKey] = 12345L,
+                [Models.Metadata.Control.KeyDeltaKey] = 12345L,
+                [Models.Metadata.Control.MaximumKey] = 12345L,
+                [Models.Metadata.Control.MinimumKey] = 12345L,
+                [Models.Metadata.Control.PlayerKey] = 12345L,
+                [Models.Metadata.Control.ReqButtonsKey] = 12345L,
                 [Models.Metadata.Control.ReverseKey] = "yes",
-                [Models.Metadata.Control.SensitivityKey] = 12345,
+                [Models.Metadata.Control.SensitivityKey] = 12345L,
                 [Models.Metadata.Control.ControlTypeKey] = "lightgun",
                 [Models.Metadata.Control.WaysKey] = "ways",
                 [Models.Metadata.Control.Ways2Key] = "ways2",
@@ -445,13 +445,13 @@ namespace SabreTools.DatFiles.Test
             };
         }
 
-        private static Models.Metadata.Device CreateDevice()
+        private static Models.Metadata.Device CreateMetadataDevice()
         {
             return new Models.Metadata.Device
             {
-                [Models.Metadata.Device.ExtensionKey] = new Models.Metadata.Extension[] { CreateExtension() },
+                [Models.Metadata.Device.ExtensionKey] = new Models.Metadata.Extension[] { CreateMetadataExtension() },
                 [Models.Metadata.Device.FixedImageKey] = "fixedimage",
-                [Models.Metadata.Device.InstanceKey] = CreateInstance(),
+                [Models.Metadata.Device.InstanceKey] = CreateMetadataInstance(),
                 [Models.Metadata.Device.InterfaceKey] = "interface",
                 [Models.Metadata.Device.MandatoryKey] = 1,
                 [Models.Metadata.Device.TagKey] = "tag",
@@ -459,7 +459,7 @@ namespace SabreTools.DatFiles.Test
             };
         }
 
-        private static Models.Metadata.DeviceRef CreateDeviceRef()
+        private static Models.Metadata.DeviceRef CreateMetadataDeviceRef()
         {
             return new Models.Metadata.DeviceRef
             {
@@ -467,7 +467,7 @@ namespace SabreTools.DatFiles.Test
             };
         }
 
-        private static Models.Metadata.DipLocation CreateDipLocation()
+        private static Models.Metadata.DipLocation CreateMetadataDipLocation()
         {
             return new Models.Metadata.DipLocation
             {
@@ -477,14 +477,14 @@ namespace SabreTools.DatFiles.Test
             };
         }
 
-        private static Models.Metadata.DipSwitch CreateDipSwitch()
+        private static Models.Metadata.DipSwitch CreateMetadataDipSwitch()
         {
             return new Models.Metadata.DipSwitch
             {
-                [Models.Metadata.DipSwitch.ConditionKey] = CreateCondition(),
+                [Models.Metadata.DipSwitch.ConditionKey] = CreateMetadataCondition(),
                 [Models.Metadata.DipSwitch.DefaultKey] = "yes",
-                [Models.Metadata.DipSwitch.DipLocationKey] = new Models.Metadata.DipLocation[] { CreateDipLocation() },
-                [Models.Metadata.DipSwitch.DipValueKey] = new Models.Metadata.DipValue[] { CreateDipValue() },
+                [Models.Metadata.DipSwitch.DipLocationKey] = new Models.Metadata.DipLocation[] { CreateMetadataDipLocation() },
+                [Models.Metadata.DipSwitch.DipValueKey] = new Models.Metadata.DipValue[] { CreateMetadataDipValue() },
                 [Models.Metadata.DipSwitch.EntryKey] = new string[] { "entry" },
                 [Models.Metadata.DipSwitch.MaskKey] = "mask",
                 [Models.Metadata.DipSwitch.NameKey] = "name",
@@ -492,30 +492,30 @@ namespace SabreTools.DatFiles.Test
             };
         }
 
-        private static Models.Metadata.DipValue CreateDipValue()
+        private static Models.Metadata.DipValue CreateMetadataDipValue()
         {
             return new Models.Metadata.DipValue
             {
-                [Models.Metadata.DipValue.ConditionKey] = CreateCondition(),
+                [Models.Metadata.DipValue.ConditionKey] = CreateMetadataCondition(),
                 [Models.Metadata.DipValue.DefaultKey] = "yes",
                 [Models.Metadata.DipValue.NameKey] = "name",
                 [Models.Metadata.DipValue.ValueKey] = "value",
             };
         }
 
-        private static Models.Metadata.DataArea CreateDataArea()
+        private static Models.Metadata.DataArea CreateMetadataDataArea()
         {
             return new Models.Metadata.DataArea
             {
                 [Models.Metadata.DataArea.EndiannessKey] = "big",
                 [Models.Metadata.DataArea.NameKey] = "name",
                 [Models.Metadata.DataArea.RomKey] = new Models.Metadata.Rom[] { new Models.Metadata.Rom() },
-                [Models.Metadata.DataArea.SizeKey] = 12345,
+                [Models.Metadata.DataArea.SizeKey] = 12345L,
                 [Models.Metadata.DataArea.WidthKey] = 64,
             };
         }
 
-        private static Models.Metadata.Disk CreateDisk()
+        private static Models.Metadata.Disk CreateMetadataDisk()
         {
             return new Models.Metadata.Disk
             {
@@ -531,7 +531,7 @@ namespace SabreTools.DatFiles.Test
             };
         }
 
-        private static Models.Metadata.DiskArea CreateDiskArea()
+        private static Models.Metadata.DiskArea CreateMetadataDiskArea()
         {
             return new Models.Metadata.DiskArea
             {
@@ -540,28 +540,28 @@ namespace SabreTools.DatFiles.Test
             };
         }
 
-        private static Models.Metadata.Display CreateDisplay()
+        private static Models.Metadata.Display CreateMetadataDisplay()
         {
             return new Models.Metadata.Display
             {
                 [Models.Metadata.Display.FlipXKey] = "yes",
-                [Models.Metadata.Display.HBEndKey] = 12345,
-                [Models.Metadata.Display.HBStartKey] = 12345,
-                [Models.Metadata.Display.HeightKey] = 12345,
-                [Models.Metadata.Display.HTotalKey] = 12345,
-                [Models.Metadata.Display.PixClockKey] = 12345,
-                [Models.Metadata.Display.RefreshKey] = 12345,
+                [Models.Metadata.Display.HBEndKey] = 12345L,
+                [Models.Metadata.Display.HBStartKey] = 12345L,
+                [Models.Metadata.Display.HeightKey] = 12345L,
+                [Models.Metadata.Display.HTotalKey] = 12345L,
+                [Models.Metadata.Display.PixClockKey] = 12345L,
+                [Models.Metadata.Display.RefreshKey] = 12345L,
                 [Models.Metadata.Display.RotateKey] = 90,
                 [Models.Metadata.Display.TagKey] = "tag",
                 [Models.Metadata.Display.DisplayTypeKey] = "vector",
-                [Models.Metadata.Display.VBEndKey] = 12345,
-                [Models.Metadata.Display.VBStartKey] = 12345,
-                [Models.Metadata.Display.VTotalKey] = 12345,
-                [Models.Metadata.Display.WidthKey] = 12345,
+                [Models.Metadata.Display.VBEndKey] = 12345L,
+                [Models.Metadata.Display.VBStartKey] = 12345L,
+                [Models.Metadata.Display.VTotalKey] = 12345L,
+                [Models.Metadata.Display.WidthKey] = 12345L,
             };
         }
 
-        private static Models.Metadata.Driver CreateDriver()
+        private static Models.Metadata.Driver CreateMetadataDriver()
         {
             return new Models.Metadata.Driver
             {
@@ -580,11 +580,11 @@ namespace SabreTools.DatFiles.Test
             };
         }
 
-        private static Models.Metadata.Dump CreateDump()
+        private static Models.Metadata.Dump CreateMetadataDump()
         {
             return new Models.Metadata.Dump
             {
-                [Models.Metadata.Dump.OriginalKey] = CreateOriginal(),
+                [Models.Metadata.Dump.OriginalKey] = CreateMetadataOriginal(),
 
                 // The following are searched for in order
                 // For the purposes of this test, only RomKey will be populated
@@ -595,7 +595,7 @@ namespace SabreTools.DatFiles.Test
             };
         }
 
-        private static Models.Metadata.Extension CreateExtension()
+        private static Models.Metadata.Extension CreateMetadataExtension()
         {
             return new Models.Metadata.Extension
             {
@@ -603,7 +603,7 @@ namespace SabreTools.DatFiles.Test
             };
         }
 
-        private static Models.Metadata.Feature CreateFeature()
+        private static Models.Metadata.Feature CreateMetadataFeature()
         {
             return new Models.Metadata.Feature
             {
@@ -615,7 +615,7 @@ namespace SabreTools.DatFiles.Test
             };
         }
 
-        private static Models.Metadata.Info CreateInfo()
+        private static Models.Metadata.Info CreateMetadataInfo()
         {
             return new Models.Metadata.Info
             {
@@ -624,20 +624,20 @@ namespace SabreTools.DatFiles.Test
             };
         }
 
-        private static Models.Metadata.Input CreateInput()
+        private static Models.Metadata.Input CreateMetadataInput()
         {
             return new Models.Metadata.Input
             {
-                [Models.Metadata.Input.ButtonsKey] = 12345,
-                [Models.Metadata.Input.CoinsKey] = 12345,
-                [Models.Metadata.Input.ControlKey] = new Models.Metadata.Control[] { CreateControl() },
-                [Models.Metadata.Input.PlayersKey] = 12345,
+                [Models.Metadata.Input.ButtonsKey] = 12345L,
+                [Models.Metadata.Input.CoinsKey] = 12345L,
+                [Models.Metadata.Input.ControlKey] = new Models.Metadata.Control[] { CreateMetadataControl() },
+                [Models.Metadata.Input.PlayersKey] = 12345L,
                 [Models.Metadata.Input.ServiceKey] = "yes",
                 [Models.Metadata.Input.TiltKey] = "yes",
             };
         }
 
-        private static Models.Metadata.Instance CreateInstance()
+        private static Models.Metadata.Instance CreateMetadataInstance()
         {
             return new Models.Metadata.Instance
             {
@@ -646,7 +646,7 @@ namespace SabreTools.DatFiles.Test
             };
         }
 
-        private static Models.Metadata.Media CreateMedia()
+        private static Models.Metadata.Media CreateMetadataMedia()
         {
             return new Models.Metadata.Media
             {
@@ -658,7 +658,7 @@ namespace SabreTools.DatFiles.Test
             };
         }
 
-        private static Models.Metadata.Original CreateOriginal()
+        private static Models.Metadata.Original CreateMetadataOriginal()
         {
             return new Models.Metadata.Original
             {
@@ -667,29 +667,29 @@ namespace SabreTools.DatFiles.Test
             };
         }
 
-        private static Models.Metadata.Part CreatePart()
+        private static Models.Metadata.Part CreateMetadataPart()
         {
             return new Models.Metadata.Part
             {
-                [Models.Metadata.Part.DataAreaKey] = new Models.Metadata.DataArea[] { CreateDataArea() },
-                [Models.Metadata.Part.DiskAreaKey] = new Models.Metadata.DiskArea[] { CreateDiskArea() },
+                [Models.Metadata.Part.DataAreaKey] = new Models.Metadata.DataArea[] { CreateMetadataDataArea() },
+                [Models.Metadata.Part.DiskAreaKey] = new Models.Metadata.DiskArea[] { CreateMetadataDiskArea() },
                 [Models.Metadata.Part.DipSwitchKey] = new Models.Metadata.DipSwitch[] { new Models.Metadata.DipSwitch() },
-                [Models.Metadata.Part.FeatureKey] = new Models.Metadata.Feature[] { CreateFeature() },
+                [Models.Metadata.Part.FeatureKey] = new Models.Metadata.Feature[] { CreateMetadataFeature() },
                 [Models.Metadata.Part.InterfaceKey] = "interface",
                 [Models.Metadata.Part.NameKey] = "name",
             };
         }
 
-        private static Models.Metadata.Port CreatePort()
+        private static Models.Metadata.Port CreateMetadataPort()
         {
             return new Models.Metadata.Port
             {
-                [Models.Metadata.Port.AnalogKey] = new Models.Metadata.Analog[] { CreateAnalog() },
+                [Models.Metadata.Port.AnalogKey] = new Models.Metadata.Analog[] { CreateMetadataAnalog() },
                 [Models.Metadata.Port.TagKey] = "tag",
             };
         }
 
-        private static Models.Metadata.RamOption CreateRamOption()
+        private static Models.Metadata.RamOption CreateMetadataRamOption()
         {
             return new Models.Metadata.RamOption
             {
@@ -699,7 +699,7 @@ namespace SabreTools.DatFiles.Test
             };
         }
 
-        private static Models.Metadata.Release CreateRelease()
+        private static Models.Metadata.Release CreateMetadataRelease()
         {
             return new Models.Metadata.Release
             {
@@ -711,7 +711,7 @@ namespace SabreTools.DatFiles.Test
             };
         }
 
-        private static Models.Metadata.Rom CreateRom()
+        private static Models.Metadata.Rom CreateMetadataRom()
         {
             return new Models.Metadata.Rom
             {
@@ -733,7 +733,7 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.Rom.DateKey] = "date",
                 [Models.Metadata.Rom.DisposeKey] = "yes",
                 [Models.Metadata.Rom.ExtensionKey] = "extension",
-                [Models.Metadata.Rom.FileCountKey] = 12345,
+                [Models.Metadata.Rom.FileCountKey] = 12345L,
                 [Models.Metadata.Rom.FileIsAvailableKey] = true,
                 [Models.Metadata.Rom.FlagsKey] = "flags",
                 [Models.Metadata.Rom.FormatKey] = "format",
@@ -779,7 +779,7 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.Rom.SHA256Key] = ZeroHash.SHA256Str,
                 [Models.Metadata.Rom.SHA384Key] = ZeroHash.SHA384Str,
                 [Models.Metadata.Rom.SHA512Key] = ZeroHash.SHA512Str,
-                [Models.Metadata.Rom.SizeKey] = 12345,
+                [Models.Metadata.Rom.SizeKey] = 12345L,
                 [Models.Metadata.Rom.SoundOnlyKey] = "yes",
                 [Models.Metadata.Rom.SourceKey] = "source",
                 [Models.Metadata.Rom.SpamSumKey] = ZeroHash.SpamSumStr,
@@ -810,7 +810,7 @@ namespace SabreTools.DatFiles.Test
             };
         }
 
-        private static Models.Metadata.Sample CreateSample()
+        private static Models.Metadata.Sample CreateMetadataSample()
         {
             return new Models.Metadata.Sample
             {
@@ -818,7 +818,7 @@ namespace SabreTools.DatFiles.Test
             };
         }
 
-        private static Models.Metadata.SharedFeat CreateSharedFeat()
+        private static Models.Metadata.SharedFeat CreateMetadataSharedFeat()
         {
             return new Models.Metadata.SharedFeat
             {
@@ -827,16 +827,16 @@ namespace SabreTools.DatFiles.Test
             };
         }
 
-        private static Models.Metadata.Slot CreateSlot()
+        private static Models.Metadata.Slot CreateMetadataSlot()
         {
             return new Models.Metadata.Slot
             {
                 [Models.Metadata.Slot.NameKey] = "name",
-                [Models.Metadata.Slot.SlotOptionKey] = new Models.Metadata.SlotOption[] { CreateSlotOption() },
+                [Models.Metadata.Slot.SlotOptionKey] = new Models.Metadata.SlotOption[] { CreateMetadataSlotOption() },
             };
         }
 
-        private static Models.Metadata.SlotOption CreateSlotOption()
+        private static Models.Metadata.SlotOption CreateMetadataSlotOption()
         {
             return new Models.Metadata.SlotOption
             {
@@ -846,24 +846,24 @@ namespace SabreTools.DatFiles.Test
             };
         }
 
-        private static Models.Metadata.Software CreateSoftware()
+        private static Models.Metadata.Software CreateMetadataSoftware()
         {
             return new Models.Metadata.Software
             {
                 [Models.Metadata.Software.CloneOfKey] = "cloneof",
                 [Models.Metadata.Software.DescriptionKey] = "description",
-                [Models.Metadata.Software.InfoKey] = new Models.Metadata.Info[] { CreateInfo() },
+                [Models.Metadata.Software.InfoKey] = new Models.Metadata.Info[] { CreateMetadataInfo() },
                 [Models.Metadata.Software.NameKey] = "name",
                 [Models.Metadata.Software.NotesKey] = "notes",
-                [Models.Metadata.Software.PartKey] = new Models.Metadata.Part[] { CreatePart() },
+                [Models.Metadata.Software.PartKey] = new Models.Metadata.Part[] { CreateMetadataPart() },
                 [Models.Metadata.Software.PublisherKey] = "publisher",
-                [Models.Metadata.Software.SharedFeatKey] = new Models.Metadata.SharedFeat[] { CreateSharedFeat() },
+                [Models.Metadata.Software.SharedFeatKey] = new Models.Metadata.SharedFeat[] { CreateMetadataSharedFeat() },
                 [Models.Metadata.Software.SupportedKey] = "yes",
                 [Models.Metadata.Software.YearKey] = "year",
             };
         }
 
-        private static Models.Metadata.SoftwareList CreateSoftwareList()
+        private static Models.Metadata.SoftwareList CreateMetadataSoftwareList()
         {
             return new Models.Metadata.SoftwareList
             {
@@ -871,21 +871,21 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.SoftwareList.FilterKey] = "filter",
                 [Models.Metadata.SoftwareList.NameKey] = "name",
                 [Models.Metadata.SoftwareList.NotesKey] = "notes",
-                [Models.Metadata.SoftwareList.SoftwareKey] = new Models.Metadata.Software[] { CreateSoftware() },
+                [Models.Metadata.SoftwareList.SoftwareKey] = new Models.Metadata.Software[] { CreateMetadataSoftware() },
                 [Models.Metadata.SoftwareList.StatusKey] = "original",
                 [Models.Metadata.SoftwareList.TagKey] = "tag",
             };
         }
 
-        private static Models.Metadata.Sound CreateSound()
+        private static Models.Metadata.Sound CreateMetadataSound()
         {
             return new Models.Metadata.Sound
             {
-                [Models.Metadata.Sound.ChannelsKey] = 12345,
+                [Models.Metadata.Sound.ChannelsKey] = 12345L,
             };
         }
 
-        private static Models.Logiqx.Trurip CreateTrurip()
+        private static Models.Logiqx.Trurip CreateMetadataTrurip()
         {
             return new Models.Logiqx.Trurip
             {
@@ -906,17 +906,17 @@ namespace SabreTools.DatFiles.Test
             };
         }
 
-        private static Models.Metadata.Video CreateVideo()
+        private static Models.Metadata.Video CreateMetadataVideo()
         {
             return new Models.Metadata.Video
             {
-                [Models.Metadata.Video.AspectXKey] = 12345,
-                [Models.Metadata.Video.AspectYKey] = 12345,
-                [Models.Metadata.Video.HeightKey] = 12345,
+                [Models.Metadata.Video.AspectXKey] = 12345L,
+                [Models.Metadata.Video.AspectYKey] = 12345L,
+                [Models.Metadata.Video.HeightKey] = 12345L,
                 [Models.Metadata.Video.OrientationKey] = "vertical",
-                [Models.Metadata.Video.RefreshKey] = 12345,
+                [Models.Metadata.Video.RefreshKey] = 12345L,
                 [Models.Metadata.Video.ScreenKey] = "vector",
-                [Models.Metadata.Video.WidthKey] = 12345,
+                [Models.Metadata.Video.WidthKey] = 12345L,
             };
         }
 
@@ -1061,7 +1061,7 @@ namespace SabreTools.DatFiles.Test
         private static void ValidateChip(Chip? chip)
         {
             Assert.NotNull(chip);
-            Assert.Equal(12345, chip.GetInt64FieldValue(Models.Metadata.Chip.ClockKey));
+            Assert.Equal(12345L, chip.GetInt64FieldValue(Models.Metadata.Chip.ClockKey));
             Assert.Equal("flags", chip.GetStringFieldValue(Models.Metadata.Chip.FlagsKey));
             Assert.Equal("name", chip.GetStringFieldValue(Models.Metadata.Chip.NameKey));
             Assert.True(chip.GetBoolFieldValue(Models.Metadata.Chip.SoundOnlyKey));
@@ -1121,14 +1121,14 @@ namespace SabreTools.DatFiles.Test
         private static void ValidateControl(Control? control)
         {
             Assert.NotNull(control);
-            Assert.Equal(12345, control.GetInt64FieldValue(Models.Metadata.Control.ButtonsKey));
-            Assert.Equal(12345, control.GetInt64FieldValue(Models.Metadata.Control.KeyDeltaKey));
-            Assert.Equal(12345, control.GetInt64FieldValue(Models.Metadata.Control.MaximumKey));
-            Assert.Equal(12345, control.GetInt64FieldValue(Models.Metadata.Control.MinimumKey));
-            Assert.Equal(12345, control.GetInt64FieldValue(Models.Metadata.Control.PlayerKey));
-            Assert.Equal(12345, control.GetInt64FieldValue(Models.Metadata.Control.ReqButtonsKey));
+            Assert.Equal(12345L, control.GetInt64FieldValue(Models.Metadata.Control.ButtonsKey));
+            Assert.Equal(12345L, control.GetInt64FieldValue(Models.Metadata.Control.KeyDeltaKey));
+            Assert.Equal(12345L, control.GetInt64FieldValue(Models.Metadata.Control.MaximumKey));
+            Assert.Equal(12345L, control.GetInt64FieldValue(Models.Metadata.Control.MinimumKey));
+            Assert.Equal(12345L, control.GetInt64FieldValue(Models.Metadata.Control.PlayerKey));
+            Assert.Equal(12345L, control.GetInt64FieldValue(Models.Metadata.Control.ReqButtonsKey));
             Assert.True(control.GetBoolFieldValue(Models.Metadata.Control.ReverseKey));
-            Assert.Equal(12345, control.GetInt64FieldValue(Models.Metadata.Control.SensitivityKey));
+            Assert.Equal(12345L, control.GetInt64FieldValue(Models.Metadata.Control.SensitivityKey));
             Assert.Equal("lightgun", control.GetStringFieldValue(Models.Metadata.Control.ControlTypeKey));
             Assert.Equal("ways", control.GetStringFieldValue(Models.Metadata.Control.WaysKey));
             Assert.Equal("ways2", control.GetStringFieldValue(Models.Metadata.Control.Ways2Key));
@@ -1140,7 +1140,7 @@ namespace SabreTools.DatFiles.Test
             Assert.NotNull(dataArea);
             Assert.Equal("big", dataArea.GetStringFieldValue(Models.Metadata.DataArea.EndiannessKey));
             Assert.Equal("name", dataArea.GetStringFieldValue(Models.Metadata.DataArea.NameKey));
-            Assert.Equal(12345, dataArea.GetInt64FieldValue(Models.Metadata.DataArea.SizeKey));
+            Assert.Equal(12345L, dataArea.GetInt64FieldValue(Models.Metadata.DataArea.SizeKey));
             Assert.Equal(64, dataArea.GetInt64FieldValue(Models.Metadata.DataArea.WidthKey));
         }
 
@@ -1238,19 +1238,19 @@ namespace SabreTools.DatFiles.Test
         {
             Assert.NotNull(display);
             Assert.True(display.GetBoolFieldValue(Models.Metadata.Display.FlipXKey));
-            Assert.Equal(12345, display.GetInt64FieldValue(Models.Metadata.Display.HBEndKey));
-            Assert.Equal(12345, display.GetInt64FieldValue(Models.Metadata.Display.HBStartKey));
-            Assert.Equal(12345, display.GetInt64FieldValue(Models.Metadata.Display.HeightKey));
-            Assert.Equal(12345, display.GetInt64FieldValue(Models.Metadata.Display.HTotalKey));
-            Assert.Equal(12345, display.GetInt64FieldValue(Models.Metadata.Display.PixClockKey));
-            Assert.Equal(12345, display.GetInt64FieldValue(Models.Metadata.Display.RefreshKey));
+            Assert.Equal(12345L, display.GetInt64FieldValue(Models.Metadata.Display.HBEndKey));
+            Assert.Equal(12345L, display.GetInt64FieldValue(Models.Metadata.Display.HBStartKey));
+            Assert.Equal(12345L, display.GetInt64FieldValue(Models.Metadata.Display.HeightKey));
+            Assert.Equal(12345L, display.GetInt64FieldValue(Models.Metadata.Display.HTotalKey));
+            Assert.Equal(12345L, display.GetInt64FieldValue(Models.Metadata.Display.PixClockKey));
+            Assert.Equal(12345L, display.GetInt64FieldValue(Models.Metadata.Display.RefreshKey));
             Assert.Equal(90, display.GetInt64FieldValue(Models.Metadata.Display.RotateKey));
             Assert.Equal("tag", display.GetStringFieldValue(Models.Metadata.Display.TagKey));
             Assert.Equal("vector", display.GetStringFieldValue(Models.Metadata.Display.DisplayTypeKey));
-            Assert.Equal(12345, display.GetInt64FieldValue(Models.Metadata.Display.VBEndKey));
-            Assert.Equal(12345, display.GetInt64FieldValue(Models.Metadata.Display.VBStartKey));
-            Assert.Equal(12345, display.GetInt64FieldValue(Models.Metadata.Display.VTotalKey));
-            Assert.Equal(12345, display.GetInt64FieldValue(Models.Metadata.Display.WidthKey));
+            Assert.Equal(12345L, display.GetInt64FieldValue(Models.Metadata.Display.VBEndKey));
+            Assert.Equal(12345L, display.GetInt64FieldValue(Models.Metadata.Display.VBStartKey));
+            Assert.Equal(12345L, display.GetInt64FieldValue(Models.Metadata.Display.VTotalKey));
+            Assert.Equal(12345L, display.GetInt64FieldValue(Models.Metadata.Display.WidthKey));
         }
 
         private static void ValidateDriver(Driver? driver)
@@ -1296,9 +1296,9 @@ namespace SabreTools.DatFiles.Test
         private static void ValidateInput(Input? input)
         {
             Assert.NotNull(input);
-            Assert.Equal(12345, input.GetInt64FieldValue(Models.Metadata.Input.ButtonsKey));
-            Assert.Equal(12345, input.GetInt64FieldValue(Models.Metadata.Input.CoinsKey));
-            Assert.Equal(12345, input.GetInt64FieldValue(Models.Metadata.Input.PlayersKey));
+            Assert.Equal(12345L, input.GetInt64FieldValue(Models.Metadata.Input.ButtonsKey));
+            Assert.Equal(12345L, input.GetInt64FieldValue(Models.Metadata.Input.CoinsKey));
+            Assert.Equal(12345L, input.GetInt64FieldValue(Models.Metadata.Input.PlayersKey));
             Assert.True(input.GetBoolFieldValue(Models.Metadata.Input.ServiceKey));
             Assert.True(input.GetBoolFieldValue(Models.Metadata.Input.TiltKey));
 
@@ -1395,7 +1395,7 @@ namespace SabreTools.DatFiles.Test
             Assert.Equal("date", rom.GetStringFieldValue(Models.Metadata.Rom.DateKey));
             Assert.True(rom.GetBoolFieldValue(Models.Metadata.Rom.DisposeKey));
             Assert.Equal("extension", rom.GetStringFieldValue(Models.Metadata.Rom.ExtensionKey));
-            Assert.Equal(12345, rom.GetInt64FieldValue(Models.Metadata.Rom.FileCountKey));
+            Assert.Equal(12345L, rom.GetInt64FieldValue(Models.Metadata.Rom.FileCountKey));
             Assert.True(rom.GetBoolFieldValue(Models.Metadata.Rom.FileIsAvailableKey));
             Assert.Equal("flags", rom.GetStringFieldValue(Models.Metadata.Rom.FlagsKey));
             Assert.Equal("format", rom.GetStringFieldValue(Models.Metadata.Rom.FormatKey));
@@ -1441,7 +1441,7 @@ namespace SabreTools.DatFiles.Test
             Assert.Equal(ZeroHash.SHA256Str, rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key));
             Assert.Equal(ZeroHash.SHA384Str, rom.GetStringFieldValue(Models.Metadata.Rom.SHA384Key));
             Assert.Equal(ZeroHash.SHA512Str, rom.GetStringFieldValue(Models.Metadata.Rom.SHA512Key));
-            Assert.Equal(12345, rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey));
+            Assert.Equal(12345L, rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey));
             Assert.True(rom.GetBoolFieldValue(Models.Metadata.Rom.SoundOnlyKey));
             Assert.Equal("source", rom.GetStringFieldValue(Models.Metadata.Rom.SourceKey));
             Assert.Equal(ZeroHash.SpamSumStr, rom.GetStringFieldValue(Models.Metadata.Rom.SpamSumKey));
@@ -1518,7 +1518,7 @@ namespace SabreTools.DatFiles.Test
         private static void ValidateSound(Sound? sound)
         {
             Assert.NotNull(sound);
-            Assert.Equal(12345, sound.GetInt64FieldValue(Models.Metadata.Sound.ChannelsKey));
+            Assert.Equal(12345L, sound.GetInt64FieldValue(Models.Metadata.Sound.ChannelsKey));
         }
 
         // TODO: Figure out why so many fields are omitted
@@ -1544,12 +1544,12 @@ namespace SabreTools.DatFiles.Test
         private static void ValidateVideo(Display? display)
         {
             Assert.NotNull(display);
-            Assert.Equal(12345, display.GetInt64FieldValue(Models.Metadata.Video.AspectXKey));
-            Assert.Equal(12345, display.GetInt64FieldValue(Models.Metadata.Video.AspectYKey));
+            Assert.Equal(12345L, display.GetInt64FieldValue(Models.Metadata.Video.AspectXKey));
+            Assert.Equal(12345L, display.GetInt64FieldValue(Models.Metadata.Video.AspectYKey));
             Assert.Equal("vector", display.GetStringFieldValue(Models.Metadata.Display.DisplayTypeKey));
-            Assert.Equal(12345, display.GetInt64FieldValue(Models.Metadata.Display.HeightKey));
-            Assert.Equal(12345, display.GetInt64FieldValue(Models.Metadata.Display.RefreshKey));
-            Assert.Equal(12345, display.GetInt64FieldValue(Models.Metadata.Display.WidthKey));
+            Assert.Equal(12345L, display.GetInt64FieldValue(Models.Metadata.Display.HeightKey));
+            Assert.Equal(12345L, display.GetInt64FieldValue(Models.Metadata.Display.RefreshKey));
+            Assert.Equal(12345L, display.GetInt64FieldValue(Models.Metadata.Display.WidthKey));
             Assert.Equal(90, display.GetInt64FieldValue(Models.Metadata.Display.RotateKey));
         }
 

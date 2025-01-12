@@ -1,5 +1,6 @@
 ﻿using System.Xml.Serialization;
 using Newtonsoft.Json;
+using SabreTools.Core.Tools;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -22,7 +23,12 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public SlotOption() : base() { }
-        public SlotOption(Models.Metadata.SlotOption item) : base(item) { }
+        public SlotOption(Models.Metadata.SlotOption item) : base(item)
+        {
+            // Process flag values
+            if (GetBoolFieldValue(Models.Metadata.SlotOption.DefaultKey) != null)
+                SetFieldValue<string?>(Models.Metadata.SlotOption.DefaultKey, GetBoolFieldValue(Models.Metadata.SlotOption.DefaultKey).FromYesNo());
+        }
 
         #endregion
     }

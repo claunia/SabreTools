@@ -1,5 +1,8 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 using Newtonsoft.Json;
+using SabreTools.Core;
+using SabreTools.Core.Tools;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -73,7 +76,31 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public DipSwitch() : base() { }
-        public DipSwitch(Models.Metadata.DipSwitch item) : base(item) { }
+        public DipSwitch(Models.Metadata.DipSwitch item) : base(item)
+        {
+            // Process flag values
+            if (GetBoolFieldValue(Models.Metadata.DipSwitch.DefaultKey) != null)
+                SetFieldValue<string?>(Models.Metadata.DipSwitch.DefaultKey, GetBoolFieldValue(Models.Metadata.DipSwitch.DefaultKey).FromYesNo());
+
+            // Handle subitems
+            var condition = item.Read<Models.Metadata.Condition>(Models.Metadata.DipSwitch.ConditionKey);
+            if (condition != null)
+                SetFieldValue<Condition?>(Models.Metadata.DipSwitch.ConditionKey, new Condition(condition));
+
+            var dipLocations = item.ReadItemArray<Models.Metadata.DipLocation>(Models.Metadata.DipSwitch.DipLocationKey);
+            if (dipLocations != null)
+            {
+                DipLocation[] dipLocationItems = Array.ConvertAll(dipLocations, dipLocation => new DipLocation(dipLocation));
+                SetFieldValue<DipLocation[]?>(Models.Metadata.DipSwitch.DipLocationKey, dipLocationItems);
+            }
+
+            var dipValues = item.ReadItemArray<Models.Metadata.DipValue>(Models.Metadata.DipSwitch.DipValueKey);
+            if (dipValues != null)
+            {
+                DipValue[] dipValueItems = Array.ConvertAll(dipValues, dipValue => new DipValue(dipValue));
+                SetFieldValue<DipValue[]?>(Models.Metadata.DipSwitch.DipValueKey, dipValueItems);
+            }
+        }
 
         #endregion
     }

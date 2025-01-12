@@ -1,5 +1,6 @@
 using System.Xml.Serialization;
 using Newtonsoft.Json;
+using SabreTools.Core.Tools;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -22,7 +23,12 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public ConfLocation() : base() { }
-        public ConfLocation(Models.Metadata.ConfLocation item) : base(item) { }
+        public ConfLocation(Models.Metadata.ConfLocation item) : base(item)
+        {
+            // Process flag values
+            if (GetBoolFieldValue(Models.Metadata.ConfLocation.InvertedKey) != null)
+                SetFieldValue<string?>(Models.Metadata.ConfLocation.InvertedKey, GetBoolFieldValue(Models.Metadata.ConfLocation.InvertedKey).FromYesNo());
+        }
 
         #endregion
     }

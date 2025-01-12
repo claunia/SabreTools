@@ -92,6 +92,44 @@ namespace SabreTools.DatItems.Formats
         public Rom(Models.Metadata.Rom item) : base(item)
         {
             SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
+
+            // Process flag values
+            if (GetBoolFieldValue(Models.Metadata.Rom.DisposeKey) != null)
+                SetFieldValue<string?>(Models.Metadata.Rom.DisposeKey, GetBoolFieldValue(Models.Metadata.Rom.DisposeKey).FromYesNo());
+            if (GetBoolFieldValue(Models.Metadata.Rom.InvertedKey) != null)
+                SetFieldValue<string?>(Models.Metadata.Rom.InvertedKey, GetBoolFieldValue(Models.Metadata.Rom.InvertedKey).FromYesNo());
+            if (GetStringFieldValue(Models.Metadata.Rom.LoadFlagKey) != null)
+                SetFieldValue<string?>(Models.Metadata.Rom.LoadFlagKey, GetStringFieldValue(Models.Metadata.Rom.LoadFlagKey).AsEnumValue<LoadFlag>().AsStringValue());
+            if (GetStringFieldValue(Models.Metadata.Rom.OpenMSXMediaType) != null)
+                SetFieldValue<string?>(Models.Metadata.Rom.OpenMSXMediaType, GetStringFieldValue(Models.Metadata.Rom.OpenMSXMediaType).AsEnumValue<OpenMSXSubType>().AsStringValue());
+            if (GetBoolFieldValue(Models.Metadata.Rom.MIAKey) != null)
+                SetFieldValue<string?>(Models.Metadata.Rom.MIAKey, GetBoolFieldValue(Models.Metadata.Rom.MIAKey).FromYesNo());
+            if (GetBoolFieldValue(Models.Metadata.Rom.OptionalKey) != null)
+                SetFieldValue<string?>(Models.Metadata.Rom.OptionalKey, GetBoolFieldValue(Models.Metadata.Rom.OptionalKey).FromYesNo());
+            if (GetBoolFieldValue(Models.Metadata.Rom.SoundOnlyKey) != null)
+                SetFieldValue<string?>(Models.Metadata.Rom.SoundOnlyKey, GetBoolFieldValue(Models.Metadata.Rom.SoundOnlyKey).FromYesNo());
+            if (GetStringFieldValue(Models.Metadata.Rom.StatusKey) != null)
+                SetFieldValue<string?>(Models.Metadata.Rom.StatusKey, GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>().AsStringValue());
+
+            // Process hash values
+            if (GetInt64FieldValue(Models.Metadata.Rom.SizeKey) != null)
+                SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, GetInt64FieldValue(Models.Metadata.Rom.SizeKey).ToString());
+            if (GetStringFieldValue(Models.Metadata.Rom.CRCKey) != null)
+                SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, TextHelper.NormalizeCRC32(GetStringFieldValue(Models.Metadata.Rom.CRCKey)));
+            if (GetStringFieldValue(Models.Metadata.Rom.MD2Key) != null)
+                SetFieldValue<string?>(Models.Metadata.Rom.MD2Key, TextHelper.NormalizeMD2(GetStringFieldValue(Models.Metadata.Rom.MD2Key)));
+            if (GetStringFieldValue(Models.Metadata.Rom.MD4Key) != null)
+                SetFieldValue<string?>(Models.Metadata.Rom.MD4Key, TextHelper.NormalizeMD4(GetStringFieldValue(Models.Metadata.Rom.MD4Key)));
+            if (GetStringFieldValue(Models.Metadata.Rom.MD5Key) != null)
+                SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, TextHelper.NormalizeMD5(GetStringFieldValue(Models.Metadata.Rom.MD5Key)));
+            if (GetStringFieldValue(Models.Metadata.Rom.SHA1Key) != null)
+                SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, TextHelper.NormalizeSHA1(GetStringFieldValue(Models.Metadata.Rom.SHA1Key)));
+            if (GetStringFieldValue(Models.Metadata.Rom.SHA256Key) != null)
+                SetFieldValue<string?>(Models.Metadata.Rom.SHA256Key, TextHelper.NormalizeSHA256(GetStringFieldValue(Models.Metadata.Rom.SHA256Key)));
+            if (GetStringFieldValue(Models.Metadata.Rom.SHA384Key) != null)
+                SetFieldValue<string?>(Models.Metadata.Rom.SHA384Key, TextHelper.NormalizeSHA384(GetStringFieldValue(Models.Metadata.Rom.SHA384Key)));
+            if (GetStringFieldValue(Models.Metadata.Rom.SHA512Key) != null)
+                SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key, TextHelper.NormalizeSHA512(GetStringFieldValue(Models.Metadata.Rom.SHA512Key)));
         }
 
         #endregion

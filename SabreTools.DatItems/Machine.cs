@@ -53,6 +53,28 @@ namespace SabreTools.DatItems
                 if (machine.ContainsKey(fieldName))
                     _internal[fieldName] = machine[fieldName];
             }
+
+            // Process flag values
+            if (GetStringFieldValue(Models.Metadata.Machine.Im1CRCKey) != null)
+                SetFieldValue<string?>(Models.Metadata.Machine.Im1CRCKey, TextHelper.NormalizeCRC32(GetStringFieldValue(Models.Metadata.Machine.Im1CRCKey)));
+            if (GetStringFieldValue(Models.Metadata.Machine.Im2CRCKey) != null)
+                SetFieldValue<string?>(Models.Metadata.Machine.Im2CRCKey, TextHelper.NormalizeCRC32(GetStringFieldValue(Models.Metadata.Machine.Im2CRCKey)));
+            if (GetBoolFieldValue(Models.Metadata.Machine.IsBiosKey) != null)
+                SetFieldValue<string?>(Models.Metadata.Machine.IsBiosKey, GetBoolFieldValue(Models.Metadata.Machine.IsBiosKey).FromYesNo());
+            if (GetBoolFieldValue(Models.Metadata.Machine.IsDeviceKey) != null)
+                SetFieldValue<string?>(Models.Metadata.Machine.IsDeviceKey, GetBoolFieldValue(Models.Metadata.Machine.IsDeviceKey).FromYesNo());
+            if (GetBoolFieldValue(Models.Metadata.Machine.IsMechanicalKey) != null)
+                SetFieldValue<string?>(Models.Metadata.Machine.IsMechanicalKey, GetBoolFieldValue(Models.Metadata.Machine.IsMechanicalKey).FromYesNo());
+            if (GetStringFieldValue(Models.Metadata.Machine.SupportedKey) != null)
+                SetFieldValue<string?>(Models.Metadata.Machine.SupportedKey, GetStringFieldValue(Models.Metadata.Machine.SupportedKey).AsEnumValue<Supported>().AsStringValue());
+
+            // Handle Trurip object, if it exists
+            if (machine.ContainsKey(Models.Metadata.Machine.TruripKey))
+            {
+                var truripItem = machine.Read<Models.Logiqx.Trurip>(Models.Metadata.Machine.TruripKey);
+                if (truripItem != null)
+                    SetFieldValue<Trurip>(Models.Metadata.Machine.TruripKey, new Trurip(truripItem));
+            }
         }
 
         #endregion

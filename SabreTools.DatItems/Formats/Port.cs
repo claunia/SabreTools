@@ -1,5 +1,7 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 using Newtonsoft.Json;
+using SabreTools.Core;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -32,7 +34,16 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public Port() : base() { }
-        public Port(Models.Metadata.Port item) : base(item) { }
+        public Port(Models.Metadata.Port item) : base(item)
+        {
+            // Handle subitems
+            var analogs = item.ReadItemArray<Models.Metadata.Analog>(Models.Metadata.Port.AnalogKey);
+            if (analogs != null)
+            {
+                Analog[] analogItems = Array.ConvertAll(analogs, analog => new Analog(analog));
+                SetFieldValue<Analog[]?>(Models.Metadata.Port.AnalogKey, analogItems);
+            }
+        }
 
         #endregion
     }

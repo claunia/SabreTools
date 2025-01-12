@@ -68,6 +68,20 @@ namespace SabreTools.DatItems.Formats
         public Disk(Models.Metadata.Disk item) : base(item)
         {
             SetFieldValue<DupeType>(DatItem.DupeTypeKey, 0x00);
+
+            // Process flag values
+            if (GetBoolFieldValue(Models.Metadata.Disk.OptionalKey) != null)
+                SetFieldValue<string?>(Models.Metadata.Disk.OptionalKey, GetBoolFieldValue(Models.Metadata.Disk.OptionalKey).FromYesNo());
+            if (GetStringFieldValue(Models.Metadata.Disk.StatusKey) != null)
+                SetFieldValue<string?>(Models.Metadata.Disk.StatusKey, GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>().AsStringValue());
+            if (GetBoolFieldValue(Models.Metadata.Disk.WritableKey) != null)
+                SetFieldValue<string?>(Models.Metadata.Disk.WritableKey, GetBoolFieldValue(Models.Metadata.Disk.WritableKey).FromYesNo());
+
+            // Process hash values
+            if (GetStringFieldValue(Models.Metadata.Disk.MD5Key) != null)
+                SetFieldValue<string?>(Models.Metadata.Disk.MD5Key, TextHelper.NormalizeMD5(GetStringFieldValue(Models.Metadata.Disk.MD5Key)));
+            if (GetStringFieldValue(Models.Metadata.Disk.SHA1Key) != null)
+                SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, TextHelper.NormalizeSHA1(GetStringFieldValue(Models.Metadata.Disk.SHA1Key)));
         }
 
         #endregion

@@ -1,5 +1,6 @@
 ﻿using System.Xml.Serialization;
 using Newtonsoft.Json;
+using SabreTools.Core.Tools;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -22,7 +23,15 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public SoftwareList() : base() { }
-        public SoftwareList(Models.Metadata.SoftwareList item) : base(item) { }
+        public SoftwareList(Models.Metadata.SoftwareList item) : base(item)
+        {
+            // Process flag values
+            if (GetStringFieldValue(Models.Metadata.SoftwareList.StatusKey) != null)
+                SetFieldValue<string?>(Models.Metadata.SoftwareList.StatusKey, GetStringFieldValue(Models.Metadata.SoftwareList.StatusKey).AsEnumValue<SoftwareListStatus>().AsStringValue());
+        
+            // Handle subitems
+            // TODO: Handle the Software subitem
+        }
 
         #endregion
     }

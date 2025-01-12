@@ -1,5 +1,6 @@
 ﻿using System.Xml.Serialization;
 using Newtonsoft.Json;
+using SabreTools.Core.Tools;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -32,7 +33,17 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public Adjuster() : base() { }
-        public Adjuster(Models.Metadata.Adjuster item) : base(item) { }
+        public Adjuster(Models.Metadata.Adjuster item) : base(item)
+        {
+            // Process flag values
+            if (GetBoolFieldValue(Models.Metadata.Adjuster.DefaultKey) != null)
+                SetFieldValue<string?>(Models.Metadata.Adjuster.DefaultKey, GetBoolFieldValue(Models.Metadata.Adjuster.DefaultKey).FromYesNo());
+
+            // Handle subitems
+            var condition = item.Read<Models.Metadata.Condition>(Models.Metadata.Adjuster.ConditionKey);
+            if (condition != null)
+                SetFieldValue(Models.Metadata.Adjuster.ConditionKey, new Condition(condition));
+        }
 
         #endregion
     }

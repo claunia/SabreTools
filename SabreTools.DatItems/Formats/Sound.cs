@@ -22,7 +22,12 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public Sound() : base() { }
-        public Sound(Models.Metadata.Sound item) : base(item) { }
+        public Sound(Models.Metadata.Sound item) : base(item)
+        {
+            // Process flag values
+            if (GetInt64FieldValue(Models.Metadata.Sound.ChannelsKey) != null)
+                SetFieldValue<string?>(Models.Metadata.Sound.ChannelsKey, GetInt64FieldValue(Models.Metadata.Sound.ChannelsKey).ToString());
+        }
 
         #endregion
     }

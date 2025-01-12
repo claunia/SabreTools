@@ -1,5 +1,6 @@
 ﻿using System.Xml.Serialization;
 using Newtonsoft.Json;
+using SabreTools.Core.Tools;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -22,7 +23,12 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public BiosSet() : base() { }
-        public BiosSet(Models.Metadata.BiosSet item) : base(item) { }
+        public BiosSet(Models.Metadata.BiosSet item) : base(item)
+        {
+            // Process flag values
+            if (GetBoolFieldValue(Models.Metadata.BiosSet.DefaultKey) != null)
+                SetFieldValue<string?>(Models.Metadata.BiosSet.DefaultKey, GetBoolFieldValue(Models.Metadata.BiosSet.DefaultKey).FromYesNo());
+        }
 
         #endregion
     }

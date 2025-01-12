@@ -1,5 +1,6 @@
 using System.Xml.Serialization;
 using Newtonsoft.Json;
+using SabreTools.Core.Tools;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -32,7 +33,17 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public ConfSetting() : base() { }
-        public ConfSetting(Models.Metadata.ConfSetting item) : base(item) { }
+        public ConfSetting(Models.Metadata.ConfSetting item) : base(item)
+        {
+            // Process flag values
+            if (GetBoolFieldValue(Models.Metadata.ConfSetting.DefaultKey) != null)
+                SetFieldValue<string?>(Models.Metadata.ConfSetting.DefaultKey, GetBoolFieldValue(Models.Metadata.ConfSetting.DefaultKey).FromYesNo());
+
+            // Handle subitems
+            var condition = GetFieldValue<Models.Metadata.Condition>(Models.Metadata.ConfSetting.ConditionKey);
+            if (condition != null)
+                SetFieldValue<Condition?>(Models.Metadata.ConfSetting.ConditionKey, new Condition(condition));
+        }
 
         #endregion
     }

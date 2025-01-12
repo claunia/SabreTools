@@ -1,5 +1,6 @@
 ﻿using System.Xml.Serialization;
 using Newtonsoft.Json;
+using SabreTools.Core.Tools;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -22,7 +23,12 @@ namespace SabreTools.DatItems.Formats
         #region Constructors
 
         public Condition() : base() { }
-        public Condition(Models.Metadata.Condition item) : base(item) { }
+        public Condition(Models.Metadata.Condition item) : base(item)
+        {
+            // Process flag values
+            if (GetStringFieldValue(Models.Metadata.Condition.RelationKey) != null)
+                SetFieldValue<string?>(Models.Metadata.Condition.RelationKey, GetStringFieldValue(Models.Metadata.Condition.RelationKey).AsEnumValue<Relation>().AsStringValue());
+        }
 
         #endregion
     }
