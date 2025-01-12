@@ -1076,6 +1076,18 @@ namespace SabreTools.DatFiles
                 videoItem[Models.Metadata.Video.ScreenKey] = displayItem.ReadString(Models.Metadata.Display.DisplayTypeKey).AsEnumValue<DisplayType>().AsStringValue();
                 videoItem[Models.Metadata.Video.WidthKey] = displayItem.ReadLong(Models.Metadata.Display.WidthKey).ToString();
 
+                switch (displayItem.ReadLong(Models.Metadata.Display.RotateKey))
+                {
+                    case 0:
+                    case 180:
+                        videoItem[Models.Metadata.Video.OrientationKey] = "horizontal";
+                        break;
+                    case 90:
+                    case 270:
+                        videoItem[Models.Metadata.Video.OrientationKey] = "vertical";
+                        break;
+                }
+
                 EnsureMachineKey<Models.Metadata.Video?>(machine, Models.Metadata.Machine.VideoKey);
                 AppendToMachineKey(machine, Models.Metadata.Machine.VideoKey, videoItem);
             }
@@ -1094,14 +1106,8 @@ namespace SabreTools.DatFiles
             var controls = item.GetFieldValue<DatItems.Formats.Control[]?>(Models.Metadata.Input.ControlKey);
             if (controls != null)
             {
-                List<Models.Metadata.Control> controlItems = [];
-                foreach (var control in controls)
-                {
-                    var controlItem = control.GetInternalClone();
-                    controlItems.Add(controlItem);
-                }
-
-                inputItem[Models.Metadata.Input.ControlKey] = controlItems.ToArray();
+                Models.Metadata.Control[] controlItems = Array.ConvertAll(controls, control => control.GetInternalClone());
+                inputItem[Models.Metadata.Input.ControlKey] = controlItems;
             }
 
             return inputItem;
@@ -1118,14 +1124,8 @@ namespace SabreTools.DatFiles
             var analogs = item.GetFieldValue<DatItems.Formats.Analog[]?>(Models.Metadata.Port.AnalogKey);
             if (analogs != null)
             {
-                List<Models.Metadata.Analog> analogItems = [];
-                foreach (var analog in analogs)
-                {
-                    var extensionItem = analog.GetInternalClone();
-                    analogItems.Add(extensionItem);
-                }
-
-                slotItem[Models.Metadata.Port.AnalogKey] = analogItems.ToArray();
+                Models.Metadata.Analog[] analogItems = Array.ConvertAll(analogs, analog => analog.GetInternalClone());
+                slotItem[Models.Metadata.Port.AnalogKey] = analogItems;
             }
 
             return slotItem;
@@ -1242,14 +1242,8 @@ namespace SabreTools.DatFiles
             var slotOptions = item.GetFieldValue<DatItems.Formats.SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey);
             if (slotOptions != null)
             {
-                List<Models.Metadata.SlotOption> slotOptionItems = [];
-                foreach (var slotOption in slotOptions)
-                {
-                    var extensionItem = slotOption.GetInternalClone();
-                    slotOptionItems.Add(extensionItem);
-                }
-
-                slotItem[Models.Metadata.Slot.SlotOptionKey] = slotOptionItems.ToArray();
+                Models.Metadata.SlotOption[] slotOptionItems = Array.ConvertAll(slotOptions, slotOption => slotOption.GetInternalClone());
+                slotItem[Models.Metadata.Slot.SlotOptionKey] = slotOptionItems;
             }
 
             return slotItem;

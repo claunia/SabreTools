@@ -453,7 +453,7 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.Device.FixedImageKey] = "fixedimage",
                 [Models.Metadata.Device.InstanceKey] = CreateMetadataInstance(),
                 [Models.Metadata.Device.InterfaceKey] = "interface",
-                [Models.Metadata.Device.MandatoryKey] = 1,
+                [Models.Metadata.Device.MandatoryKey] = 1L,
                 [Models.Metadata.Device.TagKey] = "tag",
                 [Models.Metadata.Device.DeviceTypeKey] = "punchtape",
             };
