@@ -971,7 +971,20 @@ namespace SabreTools.DatFiles
             var confSettings = item.GetFieldValue<DatItems.Formats.ConfSetting[]?>(Models.Metadata.Configuration.ConfSettingKey);
             if (confSettings != null)
             {
-                Models.Metadata.ConfSetting[] confSettingItems = Array.ConvertAll(confSettings, confSetting => confSetting.GetInternalClone());
+                Models.Metadata.ConfSetting[] confSettingItems = new Models.Metadata.ConfSetting[confSettings.Length];
+                for (int i = 0; i < confSettings.Length; i++)
+                {
+                    var confSetting = confSettings[i];
+                    Models.Metadata.ConfSetting confSettingItem = confSetting.GetInternalClone();
+
+                    // Handle subitems
+                    var subCondition = confSetting.GetFieldValue<DatItems.Formats.Condition>(Models.Metadata.ConfSetting.ConditionKey);
+                    if (subCondition != null)
+                        confSettingItem[Models.Metadata.ConfSetting.ConditionKey] = subCondition.GetInternalClone();
+
+                    confSettingItems[i] = confSettingItem;
+                }
+
                 configurationItem[Models.Metadata.Configuration.ConfSettingKey] = confSettingItems;
             }
 
@@ -1023,7 +1036,20 @@ namespace SabreTools.DatFiles
             var dipValues = item.GetFieldValue<DatItems.Formats.DipValue[]?>(Models.Metadata.DipSwitch.DipValueKey);
             if (dipValues != null)
             {
-                Models.Metadata.DipValue[] dipValueItems = Array.ConvertAll(dipValues, dipValue => dipValue.GetInternalClone());
+                Models.Metadata.DipValue[] dipValueItems = new Models.Metadata.DipValue[dipValues.Length];
+                for (int i = 0; i < dipValues.Length; i++)
+                {
+                    var dipValue = dipValues[i];
+                    Models.Metadata.DipValue dipValueItem = dipValue.GetInternalClone();
+
+                    // Handle subitems
+                    var subCondition = dipValue.GetFieldValue<DatItems.Formats.Condition>(Models.Metadata.DipValue.ConditionKey);
+                    if (subCondition != null)
+                        dipValueItem[Models.Metadata.DipValue.ConditionKey] = subCondition.GetInternalClone();
+
+                    dipValueItems[i] = dipValueItem;
+                }
+
                 dipSwitchItem[Models.Metadata.DipSwitch.DipValueKey] = dipValueItems;
             }
 
