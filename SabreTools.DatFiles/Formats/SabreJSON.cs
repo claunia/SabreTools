@@ -37,7 +37,7 @@ namespace SabreTools.DatFiles.Formats
             var sr = new StreamReader(fs, new UTF8Encoding(false));
             var jtr = new JsonTextReader(sr);
             var source = new Source(indexId, filename);
-            long sourceIndex = ItemsDB.AddSource(source);
+            long sourceIndex = AddSourceDB(source);
 
             // If we got a null reader, just return
             if (jtr == null)
@@ -149,7 +149,7 @@ namespace SabreTools.DatFiles.Formats
             // Add the machine to the dictionary
             long machineIndex = -1;
             if (machine != null)
-                machineIndex = ItemsDB.AddMachine(machine);
+                machineIndex = AddMachineDB(machine);
 
             // Read items, if possible
             if (machineObj.ContainsKey("items"))
@@ -359,8 +359,8 @@ namespace SabreTools.DatFiles.Formats
             {
                 datItem.CopyMachineInformation(machine);
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
-                Items.AddItem(datItem, statsOnly);
-                ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
+                AddItem(datItem, statsOnly);
+                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 

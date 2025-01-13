@@ -106,7 +106,7 @@ namespace SabreTools.DatTools
             datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey, $"fixDAT_{datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)}");
             datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, $"fixDAT_{datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)}");
             datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, $"fixDAT_{datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)}");
-            datFile.Items.ClearMarked();
+            datFile.ClearMarked();
 
             return success;
         }
@@ -191,7 +191,7 @@ namespace SabreTools.DatTools
             datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey, $"fixDAT_{datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)}");
             datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, $"fixDAT_{datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)}");
             datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, $"fixDAT_{datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)}");
-            datFile.ItemsDB.ClearMarked();
+            datFile.ClearMarked();
 
             return success;
         }
@@ -240,7 +240,7 @@ namespace SabreTools.DatTools
             datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey, $"fixDAT_{datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)}");
             datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, $"fixDAT_{datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)}");
             datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, $"fixDAT_{datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)}");
-            datFile.Items.ClearMarked();
+            datFile.ClearMarked();
 
             return success;
         }
@@ -288,7 +288,7 @@ namespace SabreTools.DatTools
             datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey, $"fixDAT_{datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)}");
             datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, $"fixDAT_{datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)}");
             datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, $"fixDAT_{datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)}");
-            datFile.ItemsDB.ClearMarked();
+            datFile.ClearMarked();
 
             return success;
         }

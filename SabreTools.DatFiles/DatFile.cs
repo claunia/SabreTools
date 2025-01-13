@@ -123,15 +123,6 @@ namespace SabreTools.DatFiles
         #region Accessors
 
         /// <summary>
-        /// Reset the internal item dictionary
-        /// </summary>
-        public void ResetDictionary()
-        {
-            Items.Clear();
-            ItemsDB = new ItemDictionaryDB();
-        }
-
-        /// <summary>
         /// Set the internal header
         /// </summary>
         /// <param name="datHeader">Replacement header to be used</param>
@@ -153,6 +144,106 @@ namespace SabreTools.DatFiles
         {
             Items.ExecuteFilters(filterRunner);
             ItemsDB.ExecuteFilters(filterRunner);
+        }
+
+        #endregion
+
+        #region Item Dictionary Manipulation
+
+        /// <summary>
+        /// Add a value to the file dictionary
+        /// </summary>
+        /// <param name="key">Key in the dictionary to add to</param>
+        /// <param name="value">Value to add to the dictionary</param>
+        public void Add(string key, DatItem value)
+        {
+            Items.Add(key, value);
+        }
+
+        /// <summary>
+        /// Add a range of values to the file dictionary
+        /// </summary>
+        /// <param name="key">Key in the dictionary to add to</param>
+        /// <param name="value">Value to add to the dictionary</param>
+        public void Add(string key, List<DatItem>? value)
+        {
+            Items.Add(key, value);
+        }
+
+        /// <summary>
+        /// Add a DatItem to the dictionary after checking
+        /// </summary>
+        /// <param name="item">Item data to check against</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        /// <returns>The key for the item</returns>
+        public string AddItem(DatItem item, bool statsOnly)
+        {
+            return Items.AddItem(item, statsOnly);
+        }
+
+        /// <summary>
+        /// Add a DatItem to the dictionary after validation
+        /// </summary>
+        /// <param name="item">Item data to validate</param>
+        /// <param name="machineIndex">Index of the machine related to the item</param>
+        /// <param name="sourceIndex">Index of the source related to the item</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        /// <returns>The index for the added item, -1 on error</returns>
+        public long AddItemDB(DatItem item, long machineIndex, long sourceIndex, bool statsOnly)
+        {
+            return ItemsDB.AddItem(item, machineIndex, sourceIndex, statsOnly);
+        }
+
+        /// <summary>
+        /// Add a machine, returning the insert index
+        /// </summary>
+        public long AddMachineDB(Machine machine)
+        {
+            return ItemsDB.AddMachine(machine);
+        }
+
+        /// <summary>
+        /// Add a source, returning the insert index
+        /// </summary>
+        public long AddSourceDB(Source source)
+        {
+            return ItemsDB.AddSource(source);
+        }
+
+        /// <summary>
+        /// Remove any keys that have null or empty values
+        /// </summary>
+        public void ClearEmpty()
+        {
+            Items.ClearEmpty();
+            ItemsDB.ClearEmpty();
+        }
+
+        /// <summary>
+        /// Remove all items marked for removal
+        /// </summary>
+        public void ClearMarked()
+        {
+            Items.ClearMarked();
+            ItemsDB.ClearMarked();
+        }
+
+        /// <summary>
+        /// Remove a key from the file dictionary if it exists
+        /// </summary>
+        /// <param name="key">Key in the dictionary to remove</param>
+        public bool Remove(string key)
+        {
+            return Items.Remove(key);
+        }
+
+        /// <summary>
+        /// Reset the internal item dictionary
+        /// </summary>
+        public void ResetDictionary()
+        {
+            Items.Clear();
+            ItemsDB = new ItemDictionaryDB();
         }
 
         #endregion

@@ -29,8 +29,8 @@ namespace SabreTools.DatFiles.Test
         {
             DatFile? datFile = new Formats.Logiqx(datFile: null, deprecated: false);
             datFile.Header.SetFieldValue(Models.Metadata.Header.NameKey, "name");
-            datFile.Items.Add("key", new Rom());
-            datFile.ItemsDB.AddItem(new Rom(), 0, 0, false);
+            datFile.Add("key", new Rom());
+            datFile.AddItemDB(new Rom(), 0, 0, false);
 
             DatFile created = new Formats.Logiqx(datFile, deprecated: false);
 
@@ -183,8 +183,8 @@ namespace SabreTools.DatFiles.Test
         {
             DatFile datFile = new Formats.Logiqx(datFile: null, deprecated: false);
             datFile.Header.SetFieldValue(Models.Metadata.Header.NameKey, "name");
-            datFile.Items.Add("key", new Rom());
-            datFile.ItemsDB.AddItem(new Rom(), 0, 0, false);
+            datFile.Add("key", new Rom());
+            datFile.AddItemDB(new Rom(), 0, 0, false);
 
             datFile.ResetDictionary();
 

@@ -366,8 +366,8 @@ namespace SabreTools.DatFiles
                     newItems.Add(newItem);
                 }
 
-                datFile.Items.Remove(key);
-                datFile.Items.AddRange(key, newItems);
+                datFile.Remove(key);
+                datFile.Add(key, newItems);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
@@ -497,8 +497,8 @@ namespace SabreTools.DatFiles
                     }
 
                     // Now add the new list to the key
-                    intDat.Items.Remove(key);
-                    intDat.Items.AddRange(key, newDatItems);
+                    intDat.Remove(key);
+                    intDat.Add(key, newDatItems);
 #if NET40_OR_GREATER || NETCOREAPP
                 });
 #else
@@ -546,8 +546,8 @@ namespace SabreTools.DatFiles
                     }
 
                     // Now add the new list to the key
-                    intDat.Items.Remove(key);
-                    intDat.Items.AddRange(key, newDatItems);
+                    intDat.Remove(key);
+                    intDat.Add(key, newDatItems);
 #if NET40_OR_GREATER || NETCOREAPP
                 });
 #else
@@ -734,7 +734,7 @@ namespace SabreTools.DatFiles
 
                     // If we have an exact match, remove the game
                     if (exactMatch)
-                        intDat.Items.Remove(key);
+                        intDat.Remove(key);
                 }
 
                 // Standard Against uses hashes
@@ -756,8 +756,8 @@ namespace SabreTools.DatFiles
                     }
 
                     // Now add the new list to the key
-                    intDat.Items.Remove(key);
-                    intDat.Items.AddRange(key, keepDatItems);
+                    intDat.Remove(key);
+                    intDat.Add(key, keepDatItems);
                 }
 #if NET40_OR_GREATER || NETCOREAPP
             });
@@ -888,7 +888,7 @@ namespace SabreTools.DatFiles
                         if (item.GetFieldValue<Source?>(DatItem.SourceKey) != null)
                             newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $" ({Path.GetFileNameWithoutExtension(inputs[item.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].CurrentPath)})");
 
-                        dupeData.Items.Add(key, newrom);
+                        dupeData.Add(key, newrom);
                     }
                 }
 #if NET40_OR_GREATER || NETCOREAPP
@@ -947,14 +947,14 @@ namespace SabreTools.DatFiles
             // Loop through and add all sources
             foreach (var source in sources)
             {
-                long newSourceIndex = dupeData.ItemsDB.AddSource(source.Value);
+                long newSourceIndex = dupeData.AddSourceDB(source.Value);
                 sourceRemapping[source.Key] = newSourceIndex;
             }
 
             // Loop through and add all machines
             foreach (var machine in machines)
             {
-                long newMachineIndex = dupeData.ItemsDB.AddMachine(machine.Value);
+                long newMachineIndex = dupeData.AddMachineDB(machine.Value);
                 machineRemapping[machine.Key] = newMachineIndex;
             }
 
@@ -1001,11 +1001,11 @@ namespace SabreTools.DatFiles
                 {
                     var newMachine = currentMachine.Value.Clone() as Machine;
                     newMachine!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, renamedMachineName);
-                    long newMachineIndex = dupeData.ItemsDB.AddMachine(newMachine!);
+                    long newMachineIndex = dupeData.AddMachineDB(newMachine!);
                     renamedMachine = new KeyValuePair<long, Machine?>(newMachineIndex, newMachine);
                 }
 
-                dupeData.ItemsDB.AddItem(item.Value, renamedMachine.Key, sourceRemapping[sourceIndex], statsOnly: false);
+                dupeData.AddItemDB(item.Value, renamedMachine.Key, sourceRemapping[sourceIndex], statsOnly: false);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
@@ -1109,7 +1109,7 @@ namespace SabreTools.DatFiles
 #else
                     if (item.GetFieldValue<DupeType>(DatItem.DupeTypeKey).HasFlag(DupeType.Internal) || item.GetFieldValue<DupeType>(DatItem.DupeTypeKey) == 0x00)
 #endif
-                        outDats[item.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].Items.Add(key, item);
+                        outDats[item.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].Add(key, item);
                 }
 #if NET40_OR_GREATER || NETCOREAPP
             });
@@ -1187,24 +1187,24 @@ namespace SabreTools.DatFiles
             // Loop through and add all sources
             foreach (var source in sources)
             {
-                long newSourceIndex = outDats[0].ItemsDB.AddSource(source.Value);
+                long newSourceIndex = outDats[0].AddSourceDB(source.Value);
                 sourceRemapping[source.Key] = newSourceIndex;
 
                 for (int i = 1; i < outDats.Count; i++)
                 {
-                    _ = outDats[i].ItemsDB.AddSource(source.Value);
+                    _ = outDats[i].AddSourceDB(source.Value);
                 }
             }
 
             // Loop through and add all machines
             foreach (var machine in machines)
             {
-                long newMachineIndex = outDats[0].ItemsDB.AddMachine(machine.Value);
+                long newMachineIndex = outDats[0].AddMachineDB(machine.Value);
                 machineRemapping[machine.Key] = newMachineIndex;
 
                 for (int i = 1; i < outDats.Count; i++)
                 {
-                    _ = outDats[i].ItemsDB.AddMachine(machine.Value);
+                    _ = outDats[i].AddMachineDB(machine.Value);
                 }
             }
 
@@ -1235,7 +1235,7 @@ namespace SabreTools.DatFiles
 #else
                 if (item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey).HasFlag(DupeType.Internal) || item.Value.GetFieldValue<DupeType>(DatItem.DupeTypeKey) == 0x00)
 #endif
-                    outDats[source.Index].ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], sourceRemapping[sourceIndex], statsOnly: false);
+                    outDats[source.Index].AddItemDB(item.Value, machineRemapping[machineIndex], sourceRemapping[sourceIndex], statsOnly: false);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
@@ -1321,7 +1321,7 @@ namespace SabreTools.DatFiles
                             continue;
 
                         newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $" ({Path.GetFileNameWithoutExtension(inputs[newrom.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].CurrentPath)})");
-                        outerDiffData.Items.Add(key, newrom);
+                        outerDiffData.Add(key, newrom);
                     }
                 }
 #if NET40_OR_GREATER || NETCOREAPP
@@ -1380,14 +1380,14 @@ namespace SabreTools.DatFiles
             // Loop through and add all sources
             foreach (var source in sources)
             {
-                long newSourceIndex = outerDiffData.ItemsDB.AddSource(source.Value);
+                long newSourceIndex = outerDiffData.AddSourceDB(source.Value);
                 sourceRemapping[source.Key] = newSourceIndex;
             }
 
             // Loop through and add all machines
             foreach (var machine in machines)
             {
-                long newMachineIndex = outerDiffData.ItemsDB.AddMachine(machine.Value);
+                long newMachineIndex = outerDiffData.AddMachineDB(machine.Value);
                 machineRemapping[machine.Key] = newMachineIndex;
             }
 
@@ -1434,11 +1434,11 @@ namespace SabreTools.DatFiles
                 {
                     var newMachine = currentMachine.Value.Clone() as Machine;
                     newMachine!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, renamedMachineName);
-                    long newMachineIndex = outerDiffData.ItemsDB.AddMachine(newMachine);
+                    long newMachineIndex = outerDiffData.AddMachineDB(newMachine);
                     renamedMachine = new KeyValuePair<long, Machine?>(newMachineIndex, newMachine);
                 }
 
-                outerDiffData.ItemsDB.AddItem(item.Value, renamedMachine.Key, sourceRemapping[sourceIndex], statsOnly: false);
+                outerDiffData.AddItemDB(item.Value, renamedMachine.Key, sourceRemapping[sourceIndex], statsOnly: false);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
@@ -1523,11 +1523,11 @@ namespace SabreTools.DatFiles
             foreach (string key in keys)
             {
                 // Add everything from the key to the internal DAT
-                addTo.Items.AddRange(key, addFrom.Items[key]);
+                addTo.Add(key, addFrom.Items[key]);
 
                 // Now remove the key from the source DAT
                 if (delete)
-                    addFrom.Items.Remove(key);
+                    addFrom.Remove(key);
             }
 
             // Now remove the file dictionary from the source DAT
@@ -1557,14 +1557,14 @@ namespace SabreTools.DatFiles
             // Loop through and add all sources
             foreach (var source in sources)
             {
-                long newSourceIndex = addTo.ItemsDB.AddSource(source.Value);
+                long newSourceIndex = addTo.AddSourceDB(source.Value);
                 sourceRemapping[source.Key] = newSourceIndex;
             }
 
             // Loop through and add all machines
             foreach (var machine in machines)
             {
-                long newMachineIndex = addTo.ItemsDB.AddMachine(machine.Value);
+                long newMachineIndex = addTo.AddMachineDB(machine.Value);
                 machineRemapping[machine.Key] = newMachineIndex;
             }
 
@@ -1581,7 +1581,7 @@ namespace SabreTools.DatFiles
                 long machineIndex = itemMachineMappings[item.Key];
                 long sourceIndex = itemSourceMappings[item.Key];
 
-                addTo.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], sourceRemapping[sourceIndex], statsOnly: false);
+                addTo.AddItemDB(item.Value, machineRemapping[machineIndex], sourceRemapping[sourceIndex], statsOnly: false);
 
                 // Now remove the key from the source DAT
                 if (delete)
@@ -1630,7 +1630,7 @@ namespace SabreTools.DatFiles
                 {
                     var source = item.GetFieldValue<Source?>(DatItem.SourceKey);
                     if (source != null && source.Index == index)
-                        indexDat.Items.Add(key, item);
+                        indexDat.Add(key, item);
                 }
 #if NET40_OR_GREATER || NETCOREAPP
             });
@@ -1662,14 +1662,14 @@ namespace SabreTools.DatFiles
             // Loop through and add all sources
             foreach (var source in sources)
             {
-                long newSourceIndex = indexDat.ItemsDB.AddSource(source.Value);
+                long newSourceIndex = indexDat.AddSourceDB(source.Value);
                 sourceRemapping[source.Key] = newSourceIndex;
             }
 
             // Loop through and add all machines
             foreach (var machine in machines)
             {
-                long newMachineIndex = indexDat.ItemsDB.AddMachine(machine.Value);
+                long newMachineIndex = indexDat.AddMachineDB(machine.Value);
                 machineRemapping[machine.Key] = newMachineIndex;
             }
 
@@ -1690,7 +1690,7 @@ namespace SabreTools.DatFiles
                 var source = datFile.ItemsDB.GetSource(sourceIndex);
 
                 if (source != null && source.Index == index)
-                    indexDat.ItemsDB.AddItem(item.Value, machineRemapping[machineIndex], sourceRemapping[sourceIndex], statsOnly: false);
+                    indexDat.AddItemDB(item.Value, machineRemapping[machineIndex], sourceRemapping[sourceIndex], statsOnly: false);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else

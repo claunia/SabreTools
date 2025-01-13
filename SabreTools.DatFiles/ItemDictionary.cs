@@ -139,7 +139,7 @@ namespace SabreTools.DatFiles
                 if (value == null)
                     items[key] = null;
                 else
-                    AddRange(key, value);
+                    Add(key, value);
             }
         }
 
@@ -175,7 +175,25 @@ namespace SabreTools.DatFiles
         /// <param name="value">Value to add to the dictionary</param>
         public void Add(string key, List<DatItem>? value)
         {
-            AddRange(key, value);
+            // Explicit lock for some weird corner cases
+            lock (key)
+            {
+                // If the value is null or empty, just return
+                if (value == null || value.Count == 0)
+                    return;
+
+                // Ensure the key exists
+                EnsureKey(key);
+
+                // Now add the value
+                items[key]!.AddRange(value);
+
+                // Now update the statistics
+                foreach (DatItem item in value)
+                {
+                    DatStatistics.AddItemStatistics(item);
+                }
+            }
         }
 
         /// <summary>
@@ -279,39 +297,11 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Add a range of values to the file dictionary
-        /// </summary>
-        /// <param name="key">Key in the dictionary to add to</param>
-        /// <param name="value">Value to add to the dictionary</param>
-        public void AddRange(string key, List<DatItem>? value)
-        {
-            // Explicit lock for some weird corner cases
-            lock (key)
-            {
-                // If the value is null or empty, just return
-                if (value == null || value.Count == 0)
-                    return;
-
-                // Ensure the key exists
-                EnsureKey(key);
-
-                // Now add the value
-                items[key]!.AddRange(value);
-
-                // Now update the statistics
-                foreach (DatItem item in value)
-                {
-                    DatStatistics.AddItemStatistics(item);
-                }
-            }
-        }
-
-        /// <summary>
         /// Remove any keys that have null or empty values
         /// </summary>
         public void ClearEmpty()
         {
-            List<string> keys = [.. items.Keys];
+            string[] keys = [.. Keys];
             foreach (string key in keys)
             {
 #if NET40_OR_GREATER || NETCOREAPP
@@ -347,18 +337,18 @@ namespace SabreTools.DatFiles
         /// </summary>
         public void ClearMarked()
         {
-            List<string> keys = [.. items.Keys];
+            string[] keys = [.. Keys];
             foreach (string key in keys)
             {
                 // Skip invalid item lists
-                List<DatItem>? oldItemList = items[key];
+                List<DatItem>? oldItemList = this[key];
                 if (oldItemList == null)
                     return;
 
                 List<DatItem> newItemList = oldItemList.FindAll(i => i.GetBoolFieldValue(DatItem.RemoveKey) != true);
 
                 Remove(key);
-                AddRange(key, newItemList);
+                Add(key, newItemList);
             }
         }
 
@@ -605,8 +595,8 @@ namespace SabreTools.DatFiles
 
             // Add back all roms with the proper flags
             Remove(key);
-            AddRange(key, output);
-            AddRange(key, left);
+            Add(key, output);
+            Add(key, left);
 
             return output;
         }
@@ -777,7 +767,7 @@ namespace SabreTools.DatFiles
 
                 // Add the list back to the dictionary
                 Reset(key);
-                AddRange(key, sortedlist);
+                Add(key, sortedlist);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
@@ -1057,7 +1047,7 @@ namespace SabreTools.DatFiles
                 }
 
                 Remove(key);
-                AddRange(key, items);
+                Add(key, items);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
@@ -1184,7 +1174,7 @@ namespace SabreTools.DatFiles
 
                 // Replace the old list of roms with the new one
                 Remove(key);
-                AddRange(key, newItems);
+                Add(key, newItems);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
@@ -1337,7 +1327,7 @@ namespace SabreTools.DatFiles
                     {
                         // If the slot option is missing
                         if (string.IsNullOrEmpty(slotOption))
-                        // If the machine doesn't exist then we continue
+                            // If the machine doesn't exist then we continue
                             continue;
 
                         // Add to the list of new slot option names

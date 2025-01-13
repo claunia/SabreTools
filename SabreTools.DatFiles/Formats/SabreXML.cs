@@ -42,7 +42,7 @@ namespace SabreTools.DatFiles.Formats
                 ValidationType = ValidationType.None,
             });
             var source = new Source(indexId, filename);
-            long sourceIndex = ItemsDB.AddSource(source);
+            long sourceIndex = AddSourceDB(source);
 
             // If we got a null reader, just return
             if (xtr == null)
@@ -129,7 +129,7 @@ namespace SabreTools.DatFiles.Formats
                         XmlSerializer xs = new(typeof(Machine));
                         machine = xs?.Deserialize(xtr.ReadSubtree()) as Machine;
                         if (machine != null)
-                            machineIndex = ItemsDB.AddMachine(machine);
+                            machineIndex = AddMachineDB(machine);
 
                         xtr.Skip();
                         break;
@@ -181,8 +181,8 @@ namespace SabreTools.DatFiles.Formats
                         {
                             item.CopyMachineInformation(machine);
                             item.SetFieldValue<Source?>(DatItem.SourceKey, source);
-                            Items.AddItem(item, statsOnly);
-                            ItemsDB.AddItem(item, machineIndex, sourceIndex, statsOnly);
+                            AddItem(item, statsOnly);
+                            AddItemDB(item, machineIndex, sourceIndex, statsOnly);
                         }
                         xtr.Skip();
                         break;

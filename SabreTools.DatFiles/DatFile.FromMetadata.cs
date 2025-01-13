@@ -24,8 +24,8 @@ namespace SabreTools.DatFiles
                 return;
 
             // Create an internal source and add to the dictionary
-            var source = new DatItems.Source(indexId, filename);
-            long sourceIndex = ItemsDB.AddSource(source);
+            var source = new Source(indexId, filename);
+            long sourceIndex = AddSourceDB(source);
 
             // Get the header from the metadata
             var header = item.Read<Models.Metadata.Header>(Models.Metadata.MetadataFile.HeaderKey);
@@ -203,7 +203,7 @@ namespace SabreTools.DatFiles
 
             // Create an internal machine and add to the dictionary
             var machine = new Machine(item);
-            long machineIndex = ItemsDB.AddMachine(machine);
+            long machineIndex = AddMachineDB(machine);
 
             // Convert items in the machine
             if (item.ContainsKey(Models.Metadata.Machine.AdjusterKey))
@@ -366,8 +366,8 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
-                Items.AddItem(datItem, statsOnly);
-                ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
+                AddItem(datItem, statsOnly);
+                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -393,8 +393,8 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
-                Items.AddItem(datItem, statsOnly);
-                ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
+                AddItem(datItem, statsOnly);
+                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -420,8 +420,8 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
-                Items.AddItem(datItem, statsOnly);
-                ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
+                AddItem(datItem, statsOnly);
+                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -447,8 +447,8 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
-                Items.AddItem(datItem, statsOnly);
-                ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
+                AddItem(datItem, statsOnly);
+                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -474,8 +474,8 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
-                Items.AddItem(datItem, statsOnly);
-                ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
+                AddItem(datItem, statsOnly);
+                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -501,8 +501,8 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
-                Items.AddItem(datItem, statsOnly);
-                ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
+                AddItem(datItem, statsOnly);
+                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -528,8 +528,8 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
-                Items.AddItem(datItem, statsOnly);
-                ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
+                AddItem(datItem, statsOnly);
+                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -555,8 +555,8 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
-                Items.AddItem(datItem, statsOnly);
-                ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
+                AddItem(datItem, statsOnly);
+                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -582,8 +582,8 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
-                Items.AddItem(datItem, statsOnly);
-                ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
+                AddItem(datItem, statsOnly);
+                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -609,8 +609,8 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
-                Items.AddItem(datItem, statsOnly);
-                ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
+                AddItem(datItem, statsOnly);
+                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -636,8 +636,8 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
-                Items.AddItem(datItem, statsOnly);
-                ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
+                AddItem(datItem, statsOnly);
+                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -729,8 +729,8 @@ namespace SabreTools.DatFiles
                 if (datItem.GetStringFieldValue(Models.Metadata.Rom.SHA512Key) != null)
                     datItem.SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key, TextHelper.NormalizeSHA512(datItem.GetStringFieldValue(Models.Metadata.Rom.SHA512Key)));
 
-                Items.AddItem(datItem, statsOnly);
-                ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
+                AddItem(datItem, statsOnly);
+                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -756,8 +756,8 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
-                Items.AddItem(datItem, statsOnly);
-                ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
+                AddItem(datItem, statsOnly);
+                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -783,8 +783,8 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
-                Items.AddItem(datItem, statsOnly);
-                ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
+                AddItem(datItem, statsOnly);
+                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -810,8 +810,8 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
-                Items.AddItem(datItem, statsOnly);
-                ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
+                AddItem(datItem, statsOnly);
+                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -837,8 +837,8 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
-                Items.AddItem(datItem, statsOnly);
-                ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
+                AddItem(datItem, statsOnly);
+                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -881,8 +881,8 @@ namespace SabreTools.DatFiles
                             romItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                             romItem.CopyMachineInformation(machine);
 
-                            Items.AddItem(romItem, statsOnly);
-                            ItemsDB.AddItem(romItem, machineIndex, sourceIndex, statsOnly);
+                            AddItem(romItem, statsOnly);
+                            AddItemDB(romItem, machineIndex, sourceIndex, statsOnly);
                         }
                     }
                 }
@@ -905,8 +905,8 @@ namespace SabreTools.DatFiles
                             diskItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                             diskItem.CopyMachineInformation(machine);
 
-                            Items.AddItem(diskItem, statsOnly);
-                            ItemsDB.AddItem(diskItem, machineIndex, sourceIndex, statsOnly);
+                            AddItem(diskItem, statsOnly);
+                            AddItemDB(diskItem, machineIndex, sourceIndex, statsOnly);
                         }
                     }
                 }
@@ -921,8 +921,8 @@ namespace SabreTools.DatFiles
                         dipSwitchItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                         dipSwitchItem.CopyMachineInformation(machine);
 
-                        Items.AddItem(dipSwitchItem, statsOnly);
-                        ItemsDB.AddItem(dipSwitchItem, machineIndex, sourceIndex, statsOnly);
+                        AddItem(dipSwitchItem, statsOnly);
+                        AddItemDB(dipSwitchItem, machineIndex, sourceIndex, statsOnly);
                     }
                 }
 
@@ -936,8 +936,8 @@ namespace SabreTools.DatFiles
                         partFeatureItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                         partFeatureItem.CopyMachineInformation(machine);
 
-                        Items.AddItem(partFeatureItem, statsOnly);
-                        ItemsDB.AddItem(partFeatureItem, machineIndex, sourceIndex, statsOnly);
+                        AddItem(partFeatureItem, statsOnly);
+                        AddItemDB(partFeatureItem, machineIndex, sourceIndex, statsOnly);
                     }
                 }
             }
@@ -965,8 +965,8 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
-                Items.AddItem(datItem, statsOnly);
-                ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
+                AddItem(datItem, statsOnly);
+                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -992,8 +992,8 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
-                Items.AddItem(datItem, statsOnly);
-                ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
+                AddItem(datItem, statsOnly);
+                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1019,8 +1019,8 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
-                Items.AddItem(datItem, statsOnly);
-                ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
+                AddItem(datItem, statsOnly);
+                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1046,8 +1046,8 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
-                Items.AddItem(datItem, statsOnly);
-                ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
+                AddItem(datItem, statsOnly);
+                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1073,8 +1073,8 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
-                Items.AddItem(datItem, statsOnly);
-                ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
+                AddItem(datItem, statsOnly);
+                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1100,8 +1100,8 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
-                Items.AddItem(datItem, statsOnly);
-                ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
+                AddItem(datItem, statsOnly);
+                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1127,8 +1127,8 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
-                Items.AddItem(datItem, statsOnly);
-                ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
+                AddItem(datItem, statsOnly);
+                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1154,8 +1154,8 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
-                Items.AddItem(datItem, statsOnly);
-                ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
+                AddItem(datItem, statsOnly);
+                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1181,8 +1181,8 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
-                Items.AddItem(datItem, statsOnly);
-                ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
+                AddItem(datItem, statsOnly);
+                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1208,8 +1208,8 @@ namespace SabreTools.DatFiles
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
 
-                Items.AddItem(datItem, statsOnly);
-                ItemsDB.AddItem(datItem, machineIndex, sourceIndex, statsOnly);
+                AddItem(datItem, statsOnly);
+                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 

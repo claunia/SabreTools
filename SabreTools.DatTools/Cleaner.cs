@@ -145,15 +145,11 @@ namespace SabreTools.DatTools
                 }
 
                 // Remove all marked items
-                datFile.Items.ClearMarked();
-                datFile.ItemsDB.ClearMarked();
+                datFile.ClearMarked();
 
                 // We remove any blanks, if we aren't supposed to have any
                 if (KeepEmptyGames == false)
-                {
-                    datFile.Items.ClearEmpty();
-                    datFile.ItemsDB.ClearEmpty();
-                }
+                    datFile.ClearEmpty();
             }
             catch (Exception ex) when (!throwOnError)
             {

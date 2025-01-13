@@ -639,7 +639,7 @@ namespace SabreTools.DatTools
                 var machine = new Machine();
                 machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, Path.GetFileNameWithoutExtension(item.GetName()));
                 machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Path.GetFileNameWithoutExtension(item.GetName()));
-                long machineIndex = datFile.ItemsDB.AddMachine(machine);
+                long machineIndex = datFile.AddMachineDB(machine);
 
                 // If we are coming from an archive, set the correct machine name
                 if (machinename != null)
@@ -648,7 +648,7 @@ namespace SabreTools.DatTools
                     machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machinename);
                 }
 
-                long index = datFile.ItemsDB.AddItem(item, machineIndex, -1, false);
+                long index = datFile.AddItemDB(item, machineIndex, -1, false);
                 dupes[index] = item;
                 return true;
             }

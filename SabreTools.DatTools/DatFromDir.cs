@@ -230,7 +230,7 @@ namespace SabreTools.DatTools
             {
                 // Add the list if it doesn't exist already
                 Rom rom = baseFile.ConvertToRom();
-                datFile.Items.Add(rom.GetKey(ItemKey.CRC), rom);
+                datFile.Add(rom.GetKey(ItemKey.CRC), rom);
                 _staticLogger.Verbose($"File added: {Path.GetFileNameWithoutExtension(item)}");
             }
             else
@@ -441,7 +441,7 @@ namespace SabreTools.DatTools
 
                 // Add the file information to the DAT
                 string key = datItem.GetKey(ItemKey.CRC);
-                datFile.Items.Add(key, datItem);
+                datFile.Add(key, datItem);
 
                 _staticLogger.Verbose($"File added: {datItem.GetName() ?? string.Empty}");
             }

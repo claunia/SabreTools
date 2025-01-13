@@ -295,14 +295,6 @@ namespace SabreTools.DatFiles
                 if (!_buckets.ContainsKey(key))
                     continue;
 
-                // If the value is null, remove
-                else if (_buckets[key] == null)
-#if NET40_OR_GREATER || NETCOREAPP
-                    _buckets.TryRemove(key, out _);
-#else
-                    _buckets.Remove(key);
-#endif
-
                 // If there are no non-blank items, remove
                 else if (!_buckets[key].Exists(i => GetItem(i) != null && GetItem(i) is not Blank))
 #if NET40_OR_GREATER || NETCOREAPP
