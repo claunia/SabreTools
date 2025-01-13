@@ -85,8 +85,8 @@ namespace SabreTools.DatFiles.Test
             long biosMachineIndex = datFile.AddMachineDB(biosMachine);
             long deviceMachineIndex = datFile.AddMachineDB(deviceMachine);
             long sourceIndex = datFile.AddSourceDB(source);
-            long biosItemId = datFile.AddItemDB(biosItem, biosMachineIndex, sourceIndex, statsOnly: false);
-            long deviceItemId = datFile.AddItemDB(deviceItem, deviceMachineIndex, sourceIndex, statsOnly: false);
+            _ = datFile.AddItemDB(biosItem, biosMachineIndex, sourceIndex, statsOnly: false);
+            _ = datFile.AddItemDB(deviceItem, deviceMachineIndex, sourceIndex, statsOnly: false);
 
             datFile.BucketBy(ItemKey.Machine, DedupeType.None);
             datFile.RemoveBiosAndDeviceSets();
@@ -98,7 +98,108 @@ namespace SabreTools.DatFiles.Test
 
         #region RemoveItemsFromCloneOfChild
 
-        // TODO: Implement RemoveItemsFromCloneOfChild tests
+        [Fact]
+        public void RemoveItemsFromCloneOfChild_Items()
+        {
+            Source source = new Source(0, source: null);
+
+            Machine parentMachine = new Machine();
+            parentMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "parent");
+            parentMachine.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, "romof");
+
+            Machine childMachine = new Machine();
+            childMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "child");
+            childMachine.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, "parent");
+
+            DatItem parentItem = new Rom();
+            parentItem.SetName("parent_rom");
+            parentItem.SetFieldValue<long>(Models.Metadata.Rom.SizeKey, 12345);
+            parentItem.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "deadbeef");
+            parentItem.SetFieldValue<Machine>(DatItem.MachineKey, parentMachine);
+            parentItem.SetFieldValue<Source>(DatItem.SourceKey, source);
+
+            DatItem matchChildItem = new Rom();
+            matchChildItem.SetName("match_child_rom");
+            matchChildItem.SetFieldValue<long>(Models.Metadata.Rom.SizeKey, 12345);
+            matchChildItem.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "deadbeef");
+            matchChildItem.SetFieldValue<Machine>(DatItem.MachineKey, childMachine);
+            matchChildItem.SetFieldValue<Source>(DatItem.SourceKey, source);
+
+            DatItem noMatchChildItem = new Rom();
+            noMatchChildItem.SetName("no_match_child_rom");
+            noMatchChildItem.SetFieldValue<long>(Models.Metadata.Rom.SizeKey, 12345);
+            noMatchChildItem.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "beefdead");
+            noMatchChildItem.SetFieldValue<Machine>(DatItem.MachineKey, childMachine);
+            noMatchChildItem.SetFieldValue<Source>(DatItem.SourceKey, source);
+
+            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            datFile.AddItem(parentItem, statsOnly: false);
+            datFile.AddItem(matchChildItem, statsOnly: false);
+            datFile.AddItem(noMatchChildItem, statsOnly: false);
+
+            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.RemoveItemsFromCloneOfChild();
+
+            Assert.Single(datFile.GetItemsForBucket("parent"));
+            DatItem actual = Assert.Single(datFile.GetItemsForBucket("child"));
+            Machine? actualMachine = actual.GetFieldValue<Machine>(DatItem.MachineKey);
+            Assert.NotNull(actualMachine);
+            Assert.Equal("child", actualMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("romof", actualMachine.GetStringFieldValue(Models.Metadata.Machine.RomOfKey));
+        }
+
+        [Fact]
+        public void RemoveItemsFromCloneOfChild_ItemsDB()
+        {
+            Source source = new Source(0, source: null);
+
+            Machine parentMachine = new Machine();
+            parentMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "parent");
+            parentMachine.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, "romof");
+
+            Machine childMachine = new Machine();
+            childMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "child");
+            childMachine.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, "parent");
+
+            DatItem parentItem = new Rom();
+            parentItem.SetName("parent_rom");
+            parentItem.SetFieldValue<long>(Models.Metadata.Rom.SizeKey, 12345);
+            parentItem.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "deadbeef");
+            parentItem.SetFieldValue<Machine>(DatItem.MachineKey, parentMachine);
+            parentItem.SetFieldValue<Source>(DatItem.SourceKey, source);
+
+            DatItem matchChildItem = new Rom();
+            matchChildItem.SetName("match_child_rom");
+            matchChildItem.SetFieldValue<long>(Models.Metadata.Rom.SizeKey, 12345);
+            matchChildItem.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "deadbeef");
+            matchChildItem.SetFieldValue<Machine>(DatItem.MachineKey, childMachine);
+            matchChildItem.SetFieldValue<Source>(DatItem.SourceKey, source);
+
+            DatItem noMatchChildItem = new Rom();
+            noMatchChildItem.SetName("no_match_child_rom");
+            noMatchChildItem.SetFieldValue<long>(Models.Metadata.Rom.SizeKey, 12345);
+            noMatchChildItem.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "beefdead");
+            noMatchChildItem.SetFieldValue<Machine>(DatItem.MachineKey, childMachine);
+            noMatchChildItem.SetFieldValue<Source>(DatItem.SourceKey, source);
+
+            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            long biosMachineIndex = datFile.AddMachineDB(parentMachine);
+            long deviceMachineIndex = datFile.AddMachineDB(childMachine);
+            long sourceIndex = datFile.AddSourceDB(source);
+            _ = datFile.AddItemDB(parentItem, biosMachineIndex, sourceIndex, statsOnly: false);
+            _ = datFile.AddItemDB(matchChildItem, deviceMachineIndex, sourceIndex, statsOnly: false);
+            _ = datFile.AddItemDB(noMatchChildItem, deviceMachineIndex, sourceIndex, statsOnly: false);
+
+            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.RemoveItemsFromCloneOfChild();
+
+            Assert.Single(datFile.GetItemsForBucketDB("parent"));
+            long actual = Assert.Single(datFile.GetItemsForBucketDB("child")).Key;
+            Machine? actualMachine = datFile.ItemsDB.GetMachineForItem(actual).Value;
+            Assert.NotNull(actualMachine);
+            Assert.Equal("child", actualMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("romof", actualMachine.GetStringFieldValue(Models.Metadata.Machine.RomOfKey));
+        }
 
         #endregion
 
@@ -155,7 +256,7 @@ namespace SabreTools.DatFiles.Test
             DatFile datFile = new Logiqx(datFile: null, deprecated: false);
             long machineIndex = datFile.AddMachineDB(machine);
             long sourceIndex = datFile.AddSourceDB(source);
-            long itemId = datFile.AddItemDB(datItem, machineIndex, sourceIndex, statsOnly: false);
+            _ = datFile.AddItemDB(datItem, machineIndex, sourceIndex, statsOnly: false);
 
             datFile.BucketBy(ItemKey.Machine, DedupeType.None);
             datFile.RemoveMachineRelationshipTags();

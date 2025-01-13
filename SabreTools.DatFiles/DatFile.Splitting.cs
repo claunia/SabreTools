@@ -989,10 +989,10 @@ namespace SabreTools.DatFiles
                 // If the parent exists and has items, we remove the parent items from the current game
                 foreach (DatItem item in parentItems)
                 {
-                    DatItem datItem = (DatItem)item.Clone();
-                    while (items.Contains(datItem))
+                    var matchedItems = items.FindAll(i => i.Equals(item));
+                    foreach (var match in matchedItems)
                     {
-                        Items.Remove(bucket, datItem);
+                        Items.Remove(bucket, match);
                     }
                 }
 
@@ -1037,7 +1037,7 @@ namespace SabreTools.DatFiles
                 // If the parent exists and has items, we remove the parent items from the current game
                 foreach (var item in parentItems)
                 {
-                    var matchedItems = items.Where(i => i.Value == item.Value);
+                    var matchedItems = items.Where(i => i.Value.Equals(item.Value));
                     foreach (var match in matchedItems)
                     {
                         ItemsDB.RemoveItem(match.Key);
