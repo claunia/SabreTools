@@ -95,7 +95,7 @@ namespace SabreTools.DatTools
             try
             {
                 // Bucket by game first
-                datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None);
+                datFile.BucketBy(ItemKey.Machine, DedupeType.None);
 
                 // Create mappings based on the extra items
                 var combinedMaps = CombineExtras();
@@ -109,7 +109,7 @@ namespace SabreTools.DatTools
                         continue;
 
                     // Get the list of DatItems for the machine
-                    var datItems = datFile.Items[machine];
+                    var datItems = datFile.GetItemsForBucket(machine);
                     if (datItems == null)
                         continue;
 
@@ -158,7 +158,7 @@ namespace SabreTools.DatTools
             try
             {
                 // Bucket by game first
-                datFile.ItemsDB.BucketBy(ItemKey.Machine, DedupeType.None);
+                datFile.BucketBy(ItemKey.Machine, DedupeType.None);
 
                 // Create mappings based on the extra items
                 var combinedMaps = CombineExtras();
@@ -168,7 +168,7 @@ namespace SabreTools.DatTools
                 foreach (string game in games)
                 {
                     // Get the list of DatItems for the machine
-                    var datItems = datFile.ItemsDB.GetItemsForBucket(game);
+                    var datItems = datFile.GetItemsForBucketDB(game);
                     if (datItems == null)
                         continue;
 

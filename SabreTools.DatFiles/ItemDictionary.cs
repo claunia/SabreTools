@@ -44,7 +44,7 @@ namespace SabreTools.DatFiles
         /// Internal dictionary for the class
         /// </summary>
 #if NET40_OR_GREATER || NETCOREAPP
-        private readonly ConcurrentDictionary<string, List<DatItem>?> items = [];
+        private readonly ConcurrentDictionary<string, List<DatItem>?> _items = [];
 #else
         private readonly Dictionary<string, List<DatItem>?> items = [];
 #endif
@@ -67,7 +67,7 @@ namespace SabreTools.DatFiles
         [JsonIgnore, XmlIgnore]
         public ICollection<string> Keys
         {
-            get { return items.Keys; }
+            get { return _items.Keys; }
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace SabreTools.DatFiles
         {
             get
             {
-                List<string> keys = [.. items.Keys];
+                List<string> keys = [.. _items.Keys];
                 keys.Sort(new NaturalComparer());
                 return keys;
             }
@@ -130,14 +130,14 @@ namespace SabreTools.DatFiles
                     EnsureKey(key);
 
                     // Now return the value
-                    return items[key];
+                    return _items[key];
                 }
             }
             set
             {
                 Remove(key);
                 if (value == null)
-                    items[key] = null;
+                    _items[key] = null;
                 else
                     Add(key, value);
             }
@@ -161,7 +161,7 @@ namespace SabreTools.DatFiles
                     return;
 
                 // Now add the value
-                items[key]!.Add(value);
+                _items[key]!.Add(value);
 
                 // Now update the statistics
                 DatStatistics.AddItemStatistics(value);
@@ -186,7 +186,7 @@ namespace SabreTools.DatFiles
                 EnsureKey(key);
 
                 // Now add the value
-                items[key]!.AddRange(value);
+                _items[key]!.AddRange(value);
 
                 // Now update the statistics
                 foreach (DatItem item in value)
@@ -299,23 +299,23 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Remove any keys that have null or empty values
         /// </summary>
-        public void ClearEmpty()
+        internal void ClearEmpty()
         {
             string[] keys = [.. Keys];
             foreach (string key in keys)
             {
 #if NET40_OR_GREATER || NETCOREAPP
                 // If the key doesn't exist, skip
-                if (!items.TryGetValue(key, out var value))
+                if (!_items.TryGetValue(key, out var value))
                     continue;
 
                 // If the value is null, remove
                 else if (value == null)
-                    items.TryRemove(key, out _);
+                    _items.TryRemove(key, out _);
 
                 // If there are no non-blank items, remove
                 else if (value!.FindIndex(i => i != null && i is not Blank) == -1)
-                    items.TryRemove(key, out _);
+                    _items.TryRemove(key, out _);
 #else
                 // If the key doesn't exist, skip
                 if (!items.ContainsKey(key))
@@ -335,7 +335,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Remove all items marked for removal
         /// </summary>
-        public void ClearMarked()
+        internal void ClearMarked()
         {
             string[] keys = [.. Keys];
             foreach (string key in keys)
@@ -366,7 +366,7 @@ namespace SabreTools.DatFiles
             // Explicit lock for some weird corner cases
             lock (key)
             {
-                return items.ContainsKey(key);
+                return _items.ContainsKey(key);
             }
         }
 
@@ -386,7 +386,7 @@ namespace SabreTools.DatFiles
             lock (key)
             {
 #if NET40_OR_GREATER || NETCOREAPP
-                if (items.TryGetValue(key, out var list) && list != null)
+                if (_items.TryGetValue(key, out var list) && list != null)
                     return list.Contains(value);
 #else
                 if (items.ContainsKey(key) && items[key] != null)
@@ -404,32 +404,34 @@ namespace SabreTools.DatFiles
         public void EnsureKey(string key)
         {
             // If the key is missing from the dictionary, add it
-            if (!items.ContainsKey(key))
+            if (!_items.ContainsKey(key))
 #if NET40_OR_GREATER || NETCOREAPP
-                items.TryAdd(key, []);
+                _items.TryAdd(key, []);
 #else
                 items[key] = [];
 #endif
         }
 
         /// <summary>
-        /// Get a list of filtered items for a given key
+        /// Get the items associated with a bucket name
         /// </summary>
-        /// <param name="key">Key in the dictionary to retrieve</param>
-        public List<DatItem> FilteredItems(string key)
+        public List<DatItem> GetItemsForBucket(string bucketName, bool filter = false)
         {
-            lock (key)
-            {
-                // Get the list, if possible
-                List<DatItem>? fi = items[key];
-                if (fi == null)
-                    return [];
+            if (!_items.ContainsKey(bucketName))
+                return [];
 
-                // Filter the list
-                return fi.FindAll(i => i != null)
-                    .FindAll(i => i.GetBoolFieldValue(DatItem.RemoveKey) != true)
-                    .FindAll(i => i.GetFieldValue<Machine>(DatItem.MachineKey) != null);
+            var items = _items[bucketName];
+            if (items == null)
+                return [];
+
+            var datItems = new List<DatItem>();
+            foreach (DatItem item in items)
+            {
+                if (!filter || item.GetBoolFieldValue(DatItem.RemoveKey) != true)
+                    datItems.Add(item);
             }
+
+            return datItems;
         }
 
         /// <summary>
@@ -442,18 +444,18 @@ namespace SabreTools.DatFiles
             lock (key)
             {
                 // If the key doesn't exist, return
-                if (!ContainsKey(key) || items[key] == null)
+                if (!ContainsKey(key) || _items[key] == null)
                     return false;
 
                 // Remove the statistics first
-                foreach (DatItem item in items[key]!)
+                foreach (DatItem item in _items[key]!)
                 {
                     DatStatistics.RemoveItemStatistics(item);
                 }
 
                 // Remove the key from the dictionary
 #if NET40_OR_GREATER || NETCOREAPP
-                return items.TryRemove(key, out _);
+                return _items.TryRemove(key, out _);
 #else
                 return items.Remove(key);
 #endif
@@ -471,13 +473,13 @@ namespace SabreTools.DatFiles
             lock (key)
             {
                 // If the key and value doesn't exist, return
-                if (!Contains(key, value) || items[key] == null)
+                if (!Contains(key, value) || _items[key] == null)
                     return false;
 
                 // Remove the statistics first
                 DatStatistics.RemoveItemStatistics(value);
 
-                return items[key]!.Remove(value);
+                return _items[key]!.Remove(value);
             }
         }
 
@@ -488,17 +490,17 @@ namespace SabreTools.DatFiles
         public bool Reset(string key)
         {
             // If the key doesn't exist, return
-            if (!ContainsKey(key) || items[key] == null)
+            if (!ContainsKey(key) || _items[key] == null)
                 return false;
 
             // Remove the statistics first
-            foreach (DatItem item in items[key]!)
+            foreach (DatItem item in _items[key]!)
             {
                 DatStatistics.RemoveItemStatistics(item);
             }
 
             // Remove the key from the dictionary
-            items[key] = [];
+            _items[key] = [];
             return true;
         }
 
@@ -522,10 +524,10 @@ namespace SabreTools.DatFiles
         /// <param name="dedupeType">Dedupe type that should be used</param>
         /// <param name="lower">True if the key should be lowercased (default), false otherwise</param>
         /// <param name="norename">True if games should only be compared on game and file name, false if system and source are counted</param>
-        public void BucketBy(ItemKey bucketBy, DedupeType dedupeType, bool lower = true, bool norename = true)
+        internal void BucketBy(ItemKey bucketBy, DedupeType dedupeType, bool lower = true, bool norename = true)
         {
             // If we have a situation where there's no dictionary or no keys at all, we skip
-            if (items == null || items.Count == 0)
+            if (_items == null || _items.Count == 0)
                 return;
 
             // If the sorted type isn't the same, we want to sort the dictionary accordingly
@@ -555,7 +557,7 @@ namespace SabreTools.DatFiles
         /// <param name="datItem">Item to try to match</param>
         /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
         /// <returns>List of matched DatItem objects</returns>
-        public List<DatItem> GetDuplicates(DatItem datItem, bool sorted = false)
+        internal List<DatItem> GetDuplicates(DatItem datItem, bool sorted = false)
         {
             List<DatItem> output = [];
 
@@ -607,7 +609,7 @@ namespace SabreTools.DatFiles
         /// <param name="datItem">Item to try to match</param>
         /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
         /// <returns>True if it contains the rom, false otherwise</returns>
-        public bool HasDuplicates(DatItem datItem, bool sorted = false)
+        internal bool HasDuplicates(DatItem datItem, bool sorted = false)
         {
             // Check for an empty rom list first
             if (DatStatistics.TotalCount == 0)
@@ -820,13 +822,14 @@ namespace SabreTools.DatFiles
 
         #endregion
 
+        // TODO: All internal, can this be put into a better location?
         #region Filtering
 
         /// <summary>
         /// Execute all filters in a filter runner on the items in the dictionary
         /// </summary>
         /// <param name="filterRunner">Preconfigured filter runner to use</param>
-        public void ExecuteFilters(FilterRunner filterRunner)
+        internal void ExecuteFilters(FilterRunner filterRunner)
         {
             List<string> keys = [.. Keys];
 #if NET452_OR_GREATER || NETCOREAPP
@@ -867,7 +870,7 @@ namespace SabreTools.DatFiles
         /// Use game descriptions as names, updating cloneof/romof/sampleof
         /// </summary>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
-        public void MachineDescriptionToName(bool throwOnError = false)
+        internal void MachineDescriptionToName(bool throwOnError = false)
         {
             try
             {
@@ -884,6 +887,39 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Ensure that all roms are in their own game (or at least try to ensure)
+        /// </summary>
+        internal void SetOneRomPerGame()
+        {
+            // For each rom, we want to update the game to be "<game name>/<rom name>"
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(Keys, Core.Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(Keys, key =>
+#else
+            foreach (var key in Keys)
+#endif
+            {
+                var items = this[key];
+                if (items == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                    return;
+#else
+                    continue;
+#endif
+
+                for (int i = 0; i < items.Count; i++)
+                {
+                    SetOneRomPerGame(items[i]);
+                }
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
+        }
+
+        /// <summary>
         /// Filter a DAT using 1G1R logic given an ordered set of regions
         /// </summary>
         /// <param name="regionList">List of regions in order of priority</param>
@@ -897,7 +933,7 @@ namespace SabreTools.DatFiles
         /// to clone sets based on name, nor does it have the ability to match on the 
         /// Release DatItem type.
         /// </remarks>
-        public void SetOneGamePerRegion(List<string> regionList)
+        internal void SetOneGamePerRegion(List<string> regionList)
         {
             // If we have null region list, make it empty
             regionList ??= [];
@@ -977,42 +1013,9 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Ensure that all roms are in their own game (or at least try to ensure)
-        /// </summary>
-        public void SetOneRomPerGame()
-        {
-            // For each rom, we want to update the game to be "<game name>/<rom name>"
-#if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(Keys, Core.Globals.ParallelOptions, key =>
-#elif NET40_OR_GREATER
-            Parallel.ForEach(Keys, key =>
-#else
-            foreach (var key in Keys)
-#endif
-            {
-                var items = this[key];
-                if (items == null)
-#if NET40_OR_GREATER || NETCOREAPP
-                    return;
-#else
-                    continue;
-#endif
-
-                for (int i = 0; i < items.Count; i++)
-                {
-                    SetOneRomPerGame(items[i]);
-                }
-#if NET40_OR_GREATER || NETCOREAPP
-            });
-#else
-            }
-#endif
-        }
-
-        /// <summary>
         /// Strip the dates from the beginning of scene-style set names
         /// </summary>
-        public void StripSceneDatesFromItems()
+        internal void StripSceneDatesFromItems()
         {
             // Set the regex pattern to use
             string pattern = @"([0-9]{2}\.[0-9]{2}\.[0-9]{2}-)(.*?-.*?)";
@@ -1184,12 +1187,13 @@ namespace SabreTools.DatFiles
 
         #endregion
 
+        // TODO: All internal, can this be put into a better location?
         #region Splitting
 
         /// <summary>
         /// Use romof tags to add roms to the children
         /// </summary>
-        public void AddRomsFromBios()
+        internal void AddRomsFromBios()
         {
             List<string> games = [.. Keys];
             games.Sort();
@@ -1233,7 +1237,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="dev">True if only child device sets are touched, false for non-device sets (default)</param>
         /// <param name="useSlotOptions">True if slotoptions tags are used as well, false otherwise</param>
-        public bool AddRomsFromDevices(bool dev, bool useSlotOptions)
+        internal bool AddRomsFromDevices(bool dev, bool useSlotOptions)
         {
             bool foundnew = false;
             List<string> machines = [.. Keys];
@@ -1382,7 +1386,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Use cloneof tags to add roms to the children, setting the new romof tag in the process
         /// </summary>
-        public void AddRomsFromParent()
+        internal void AddRomsFromParent()
         {
             List<string> games = [.. Keys];
             games.Sort();
@@ -1437,7 +1441,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="subfolder">True to add DatItems to subfolder of parent (not including Disk), false otherwise</param>
         /// <param name="skipDedup">True to skip checking for duplicate ROMs in parent, false otherwise</param>
-        public void AddRomsFromChildren(bool subfolder, bool skipDedup)
+        internal void AddRomsFromChildren(bool subfolder, bool skipDedup)
         {
             List<string> games = [.. Keys];
             games.Sort();
@@ -1563,7 +1567,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Remove all BIOS and device sets
         /// </summary>
-        public void RemoveBiosAndDeviceSets()
+        internal void RemoveBiosAndDeviceSets()
         {
             List<string> games = [.. Keys];
             games.Sort();
@@ -1593,7 +1597,7 @@ namespace SabreTools.DatFiles
         /// Use romof tags to remove bios roms from children
         /// </summary>
         /// <param name="bios">True if only child Bios sets are touched, false for non-bios sets</param>
-        public void RemoveBiosRomsFromChild(bool bios)
+        internal void RemoveBiosRomsFromChild(bool bios)
         {
             // Loop through the romof tags
             List<string> games = [.. Keys];
@@ -1640,7 +1644,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Use cloneof tags to remove roms from the children
         /// </summary>
-        public void RemoveRomsFromChild()
+        internal void RemoveRomsFromChild()
         {
             List<string> games = [.. Keys];
             games.Sort();
@@ -1690,7 +1694,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Remove all romof and cloneof tags from all games
         /// </summary>
-        public void RemoveTagsFromChild()
+        internal void RemoveTagsFromChild()
         {
             List<string> games = [.. Keys];
             games.Sort();
@@ -1724,13 +1728,13 @@ namespace SabreTools.DatFiles
             DatStatistics.ResetStatistics();
 
             // If we have a blank Dat in any way, return
-            if (items == null)
+            if (_items == null)
                 return;
 
             // Loop through and add
-            foreach (string key in items.Keys)
+            foreach (string key in _items.Keys)
             {
-                List<DatItem>? datItems = items[key];
+                List<DatItem>? datItems = _items[key];
                 if (datItems == null)
                     continue;
 
@@ -1745,50 +1749,50 @@ namespace SabreTools.DatFiles
 
         #region IDictionary Implementations
 
-        public ICollection<List<DatItem>?> Values => ((IDictionary<string, List<DatItem>?>)items).Values;
+        public ICollection<List<DatItem>?> Values => ((IDictionary<string, List<DatItem>?>)_items).Values;
 
-        public int Count => ((ICollection<KeyValuePair<string, List<DatItem>?>>)items).Count;
+        public int Count => ((ICollection<KeyValuePair<string, List<DatItem>?>>)_items).Count;
 
-        public bool IsReadOnly => ((ICollection<KeyValuePair<string, List<DatItem>?>>)items).IsReadOnly;
+        public bool IsReadOnly => ((ICollection<KeyValuePair<string, List<DatItem>?>>)_items).IsReadOnly;
 
         public bool TryGetValue(string key, out List<DatItem>? value)
         {
-            return ((IDictionary<string, List<DatItem>?>)items).TryGetValue(key, out value);
+            return ((IDictionary<string, List<DatItem>?>)_items).TryGetValue(key, out value);
         }
 
         public void Add(KeyValuePair<string, List<DatItem>?> item)
         {
-            ((ICollection<KeyValuePair<string, List<DatItem>?>>)items).Add(item);
+            ((ICollection<KeyValuePair<string, List<DatItem>?>>)_items).Add(item);
         }
 
         public void Clear()
         {
-            ((ICollection<KeyValuePair<string, List<DatItem>?>>)items).Clear();
+            ((ICollection<KeyValuePair<string, List<DatItem>?>>)_items).Clear();
         }
 
         public bool Contains(KeyValuePair<string, List<DatItem>?> item)
         {
-            return ((ICollection<KeyValuePair<string, List<DatItem>?>>)items).Contains(item);
+            return ((ICollection<KeyValuePair<string, List<DatItem>?>>)_items).Contains(item);
         }
 
         public void CopyTo(KeyValuePair<string, List<DatItem>?>[] array, int arrayIndex)
         {
-            ((ICollection<KeyValuePair<string, List<DatItem>?>>)items).CopyTo(array, arrayIndex);
+            ((ICollection<KeyValuePair<string, List<DatItem>?>>)_items).CopyTo(array, arrayIndex);
         }
 
         public bool Remove(KeyValuePair<string, List<DatItem>?> item)
         {
-            return ((ICollection<KeyValuePair<string, List<DatItem>?>>)items).Remove(item);
+            return ((ICollection<KeyValuePair<string, List<DatItem>?>>)_items).Remove(item);
         }
 
         public IEnumerator<KeyValuePair<string, List<DatItem>?>> GetEnumerator()
         {
-            return ((IEnumerable<KeyValuePair<string, List<DatItem>?>>)items).GetEnumerator();
+            return ((IEnumerable<KeyValuePair<string, List<DatItem>?>>)_items).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable)items).GetEnumerator();
+            return ((IEnumerable)_items).GetEnumerator();
         }
 
         #endregion

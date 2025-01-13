@@ -286,7 +286,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Remove any keys that have null or empty values
         /// </summary>
-        public void ClearEmpty()
+        internal void ClearEmpty()
         {
             var keys = Array.FindAll(SortedKeys, k => k != null);
             foreach (string key in keys)
@@ -308,7 +308,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Remove all items marked for removal
         /// </summary>
-        public void ClearMarked()
+        internal void ClearMarked()
         {
             var itemIndices = _items.Keys;
             foreach (long itemIndex in itemIndices)
@@ -594,7 +594,7 @@ namespace SabreTools.DatFiles
         /// <param name="lower">True if the key should be lowercased (default), false otherwise</param>
         /// <param name="norename">True if games should only be compared on game and file name, false if system and source are counted</param>
         /// <returns></returns>
-        public void BucketBy(ItemKey bucketBy, DedupeType dedupeType, bool lower = true, bool norename = true)
+        internal void BucketBy(ItemKey bucketBy, DedupeType dedupeType, bool lower = true, bool norename = true)
         {
             // If the sorted type isn't the same, we want to sort the dictionary accordingly
             if (_bucketedBy != bucketBy && bucketBy != ItemKey.NULL)
@@ -618,7 +618,7 @@ namespace SabreTools.DatFiles
         /// <param name="datItem">Item to try to match</param>
         /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
         /// <returns>List of matched DatItem objects</returns>
-        public Dictionary<long, DatItem> GetDuplicates(DatItem datItem, bool sorted = false)
+        internal Dictionary<long, DatItem> GetDuplicates(DatItem datItem, bool sorted = false)
         {
             Dictionary<long, DatItem> output = [];
 
@@ -663,7 +663,7 @@ namespace SabreTools.DatFiles
         /// <param name="datItem">Item to try to match</param>
         /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
         /// <returns>List of matched DatItem objects</returns>
-        public Dictionary<long, DatItem> GetDuplicates(KeyValuePair<long, DatItem> datItem, bool sorted = false)
+        internal Dictionary<long, DatItem> GetDuplicates(KeyValuePair<long, DatItem> datItem, bool sorted = false)
         {
             Dictionary<long, DatItem> output = [];
 
@@ -708,7 +708,7 @@ namespace SabreTools.DatFiles
         /// <param name="datItem">Item to try to match</param>
         /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
         /// <returns>True if it contains the rom, false otherwise</returns>
-        public bool HasDuplicates(KeyValuePair<long, DatItem> datItem, bool sorted = false)
+        internal bool HasDuplicates(KeyValuePair<long, DatItem> datItem, bool sorted = false)
         {
             // Check for an empty rom list first
             if (DatStatistics.TotalCount == 0)
@@ -1206,13 +1206,14 @@ namespace SabreTools.DatFiles
 
         #endregion
 
+        // TODO: All internal, can this be put into a better location?
         #region Filtering
 
         /// <summary>
         /// Execute all filters in a filter runner on the items in the dictionary
         /// </summary>
         /// <param name="filterRunner">Preconfigured filter runner to use</param>
-        public void ExecuteFilters(FilterRunner filterRunner)
+        internal void ExecuteFilters(FilterRunner filterRunner)
         {
             List<string> keys = [.. SortedKeys];
 #if NET452_OR_GREATER || NETCOREAPP
@@ -1235,7 +1236,7 @@ namespace SabreTools.DatFiles
         /// Use game descriptions as names, updating cloneof/romof/sampleof
         /// </summary>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
-        public void MachineDescriptionToName(bool throwOnError = false)
+        internal void MachineDescriptionToName(bool throwOnError = false)
         {
             try
             {
@@ -1252,6 +1253,39 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Ensure that all roms are in their own game (or at least try to ensure)
+        /// </summary>
+        internal void SetOneRomPerGame()
+        {
+            // For each rom, we want to update the game to be "<game name>/<rom name>"
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(SortedKeys, Core.Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(SortedKeys, key =>
+#else
+            foreach (var key in SortedKeys)
+#endif
+            {
+                var items = GetItemsForBucket(key);
+                if (items == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                    return;
+#else
+                    continue;
+#endif
+
+                foreach (var item in items)
+                {
+                    SetOneRomPerGame(item);
+                }
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
+        }
+
+        /// <summary>
         /// Filter a DAT using 1G1R logic given an ordered set of regions
         /// </summary>
         /// <param name="regionList">List of regions in order of priority</param>
@@ -1265,7 +1299,7 @@ namespace SabreTools.DatFiles
         /// to clone sets based on name, nor does it have the ability to match on the 
         /// Release DatItem type.
         /// </remarks>
-        public void SetOneGamePerRegion(List<string> regionList)
+        internal void SetOneGamePerRegion(List<string> regionList)
         {
             // If we have null region list, make it empty
             regionList ??= [];
@@ -1352,42 +1386,9 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Ensure that all roms are in their own game (or at least try to ensure)
-        /// </summary>
-        public void SetOneRomPerGame()
-        {
-            // For each rom, we want to update the game to be "<game name>/<rom name>"
-#if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(SortedKeys, Core.Globals.ParallelOptions, key =>
-#elif NET40_OR_GREATER
-            Parallel.ForEach(SortedKeys, key =>
-#else
-            foreach (var key in SortedKeys)
-#endif
-            {
-                var items = GetItemsForBucket(key);
-                if (items == null)
-#if NET40_OR_GREATER || NETCOREAPP
-                    return;
-#else
-                    continue;
-#endif
-
-                foreach (var item in items)
-                {
-                    SetOneRomPerGame(item);
-                }
-#if NET40_OR_GREATER || NETCOREAPP
-            });
-#else
-            }
-#endif
-        }
-
-        /// <summary>
         /// Strip the dates from the beginning of scene-style set names
         /// </summary>
-        public void StripSceneDatesFromItems()
+        internal void StripSceneDatesFromItems()
         {
             // Set the regex pattern to use
             string pattern = @"([0-9]{2}\.[0-9]{2}\.[0-9]{2}-)(.*?-.*?)";
@@ -1599,12 +1600,13 @@ namespace SabreTools.DatFiles
 
         #endregion
 
+        // TODO: All internal, can this be put into a better location?
         #region Splitting
 
         /// <summary>
         /// Use romof tags to add roms to the children
         /// </summary>
-        public void AddRomsFromBios()
+        internal void AddRomsFromBios()
         {
             List<string> games = [.. SortedKeys];
             foreach (string game in games)
@@ -1650,7 +1652,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="dev">True if only child device sets are touched, false for non-device sets</param>
         /// <param name="useSlotOptions">True if slotoptions tags are used as well, false otherwise</param>
-        public bool AddRomsFromDevices(bool dev, bool useSlotOptions)
+        internal bool AddRomsFromDevices(bool dev, bool useSlotOptions)
         {
             bool foundnew = false;
             List<string> games = [.. SortedKeys];
@@ -1812,7 +1814,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Use cloneof tags to add roms to the children, setting the new romof tag in the process
         /// </summary>
-        public void AddRomsFromParent()
+        internal void AddRomsFromParent()
         {
             List<string> games = [.. SortedKeys];
             foreach (string game in games)
@@ -1875,7 +1877,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="subfolder">True to add DatItems to subfolder of parent (not including Disk), false otherwise</param>
         /// <param name="skipDedup">True to skip checking for duplicate ROMs in parent, false otherwise</param>
-        public void AddRomsFromChildren(bool subfolder, bool skipDedup)
+        internal void AddRomsFromChildren(bool subfolder, bool skipDedup)
         {
             List<string> games = [.. SortedKeys];
             foreach (string game in games)
@@ -2002,7 +2004,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Remove all BIOS and device sets
         /// </summary>
-        public void RemoveBiosAndDeviceSets()
+        internal void RemoveBiosAndDeviceSets()
         {
             List<string> games = [.. SortedKeys];
             foreach (string game in games)
@@ -2033,7 +2035,7 @@ namespace SabreTools.DatFiles
         /// Use romof tags to remove bios roms from children
         /// </summary>
         /// <param name="bios">True if only child Bios sets are touched, false for non-bios sets</param>
-        public void RemoveBiosRomsFromChild(bool bios)
+        internal void RemoveBiosRomsFromChild(bool bios)
         {
             // Loop through the romof tags
             List<string> games = [.. SortedKeys];
@@ -2078,7 +2080,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Use cloneof tags to remove roms from the children
         /// </summary>
-        public void RemoveRomsFromChild()
+        internal void RemoveRomsFromChild()
         {
             List<string> games = [.. SortedKeys];
             foreach (string game in games)
@@ -2134,7 +2136,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Remove all romof and cloneof tags from all games
         /// </summary>
-        public void RemoveTagsFromChild()
+        internal void RemoveTagsFromChild()
         {
             List<string> games = [.. SortedKeys];
             foreach (string game in games)

@@ -224,7 +224,7 @@ namespace SabreTools.DatFiles.Formats
                 // Use a sorted list of games to output
                 foreach (string key in Items.SortedKeys)
                 {
-                    List<DatItem> datItems = Items.FilteredItems(key);
+                    List<DatItem> datItems = GetItemsForBucket(key, filter: true);
 
                     // If this machine doesn't contain any writable items, skip
                     if (!ContainsWritable(datItems))
@@ -307,7 +307,7 @@ namespace SabreTools.DatFiles.Formats
                 foreach (string key in ItemsDB.SortedKeys)
                 {
                     // If this machine doesn't contain any writable items, skip
-                    var itemsDict = ItemsDB.GetItemsForBucket(key, filter: true);
+                    var itemsDict = GetItemsForBucketDB(key, filter: true);
                     if (itemsDict == null || !ContainsWritable([.. itemsDict.Values]))
                         continue;
 

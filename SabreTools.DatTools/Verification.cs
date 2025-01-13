@@ -55,7 +55,7 @@ namespace SabreTools.DatTools
                 return success;
 
             // Now that we have a list of depots, we want to bucket the input DAT by SHA-1
-            datFile.Items.BucketBy(ItemKey.SHA1, DedupeType.None);
+            datFile.BucketBy(ItemKey.SHA1, DedupeType.None);
 
             // Then we want to loop through each of the hashes and see if we can rebuild
             List<string> keys = [.. datFile.Items.SortedKeys];
@@ -96,8 +96,8 @@ namespace SabreTools.DatTools
                     continue;
 
                 // Now we want to remove all duplicates from the DAT
-                datFile.Items.GetDuplicates(fileinfo.ConvertToRom())
-                    .AddRange(datFile.Items.GetDuplicates(fileinfo.ConvertToDisk()));
+                datFile.GetDuplicates(fileinfo.ConvertToRom())
+                    .AddRange(datFile.GetDuplicates(fileinfo.ConvertToDisk()));
             }
 
             watch.Stop();
@@ -140,7 +140,7 @@ namespace SabreTools.DatTools
                 return success;
 
             // Now that we have a list of depots, we want to bucket the input DAT by SHA-1
-            datFile.ItemsDB.BucketBy(ItemKey.SHA1, DedupeType.None);
+            datFile.BucketBy(ItemKey.SHA1, DedupeType.None);
 
             // Then we want to loop through each of the hashes and see if we can rebuild
             List<string> keys = [.. datFile.ItemsDB.SortedKeys];
@@ -181,8 +181,8 @@ namespace SabreTools.DatTools
                     continue;
 
                 // Now we want to remove all duplicates from the DAT
-                datFile.ItemsDB.GetDuplicates(new KeyValuePair<long, DatItem>(-1, fileinfo.ConvertToRom()))
-                    .Concat(datFile.ItemsDB.GetDuplicates(new KeyValuePair<long, DatItem>(-1, fileinfo.ConvertToDisk())));
+                datFile.GetDuplicatesDB(new KeyValuePair<long, DatItem>(-1, fileinfo.ConvertToRom()))
+                    .Concat(datFile.GetDuplicatesDB(new KeyValuePair<long, DatItem>(-1, fileinfo.ConvertToDisk())));
             }
 
             watch.Stop();
@@ -211,15 +211,15 @@ namespace SabreTools.DatTools
             // Force bucketing according to the flags
             datFile.Items.SetBucketedBy(ItemKey.NULL);
             if (hashOnly)
-                datFile.Items.BucketBy(ItemKey.CRC, DedupeType.Full);
+                datFile.BucketBy(ItemKey.CRC, DedupeType.Full);
             else
-                datFile.Items.BucketBy(ItemKey.Machine, DedupeType.Full);
+                datFile.BucketBy(ItemKey.Machine, DedupeType.Full);
 
             // Then mark items for removal
             List<string> keys = [.. datFile.Items.SortedKeys];
             foreach (string key in keys)
             {
-                List<DatItem>? items = datFile.Items[key];
+                List<DatItem>? items = datFile.GetItemsForBucket(key);
                 if (items == null)
                     continue;
 
@@ -259,9 +259,9 @@ namespace SabreTools.DatTools
 
             // Force bucketing according to the flags
             if (hashOnly)
-                datFile.ItemsDB.BucketBy(ItemKey.CRC, DedupeType.Full);
+                datFile.BucketBy(ItemKey.CRC, DedupeType.Full);
             else
-                datFile.ItemsDB.BucketBy(ItemKey.Machine, DedupeType.Full);
+                datFile.BucketBy(ItemKey.Machine, DedupeType.Full);
 
             // Then mark items for removal
             List<string> keys = [.. datFile.ItemsDB.SortedKeys];

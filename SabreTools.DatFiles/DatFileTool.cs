@@ -320,7 +320,7 @@ namespace SabreTools.DatFiles
             foreach (var key in keys)
 #endif
             {
-                List<DatItem>? items = datFile.Items[key];
+                List<DatItem>? items = datFile.GetItemsForBucket(key);
                 if (items == null)
 #if NET40_OR_GREATER || NETCOREAPP
                     return;
@@ -391,7 +391,7 @@ namespace SabreTools.DatFiles
             foreach (var key in keys)
 #endif
             {
-                var items = datFile.ItemsDB.GetItemsForBucket(key);
+                var items = datFile.GetItemsForBucketDB(key);
                 if (items == null)
 #if NET40_OR_GREATER || NETCOREAPP
                     return;
@@ -462,8 +462,8 @@ namespace SabreTools.DatFiles
             if (itemFieldNames.Count > 0)
             {
                 // For comparison's sake, we want to use CRC as the base bucketing
-                datFile.Items.BucketBy(ItemKey.CRC, DedupeType.Full);
-                intDat.Items.BucketBy(ItemKey.CRC, DedupeType.None);
+                datFile.BucketBy(ItemKey.CRC, DedupeType.Full);
+                intDat.BucketBy(ItemKey.CRC, DedupeType.None);
 
                 // Then we do a hashwise comparison against the base DAT
 #if NET452_OR_GREATER || NETCOREAPP
@@ -474,7 +474,7 @@ namespace SabreTools.DatFiles
                 foreach (var key in intDat.Items.Keys)
 #endif
                 {
-                    List<DatItem>? datItems = intDat.Items[key];
+                    List<DatItem>? datItems = intDat.GetItemsForBucket(key);
                     if (datItems == null)
 #if NET40_OR_GREATER || NETCOREAPP
                         return;
@@ -510,8 +510,8 @@ namespace SabreTools.DatFiles
             if (machineFieldNames.Count > 0)
             {
                 // For comparison's sake, we want to use Machine Name as the base bucketing
-                datFile.Items.BucketBy(ItemKey.Machine, DedupeType.Full);
-                intDat.Items.BucketBy(ItemKey.Machine, DedupeType.None);
+                datFile.BucketBy(ItemKey.Machine, DedupeType.Full);
+                intDat.BucketBy(ItemKey.Machine, DedupeType.None);
 
                 // Then we do a namewise comparison against the base DAT
 #if NET452_OR_GREATER || NETCOREAPP
@@ -522,7 +522,7 @@ namespace SabreTools.DatFiles
                 foreach (var key in intDat.Items.Keys)
 #endif
                 {
-                    List<DatItem>? datItems = intDat.Items[key];
+                    List<DatItem>? datItems = intDat.GetItemsForBucket(key);
                     if (datItems == null)
 #if NET40_OR_GREATER || NETCOREAPP
                         return;
@@ -579,8 +579,8 @@ namespace SabreTools.DatFiles
             if (itemFieldNames.Count > 0)
             {
                 // For comparison's sake, we want to use CRC as the base bucketing
-                datFile.ItemsDB.BucketBy(ItemKey.CRC, DedupeType.Full);
-                intDat.ItemsDB.BucketBy(ItemKey.CRC, DedupeType.None);
+                datFile.BucketBy(ItemKey.CRC, DedupeType.Full);
+                intDat.BucketBy(ItemKey.CRC, DedupeType.None);
 
                 // Then we do a hashwise comparison against the base DAT
 #if NET452_OR_GREATER || NETCOREAPP
@@ -591,7 +591,7 @@ namespace SabreTools.DatFiles
                 foreach (var key in intDat.ItemsDB.SortedKeys)
 #endif
                 {
-                    var datItems = intDat.ItemsDB.GetItemsForBucket(key);
+                    var datItems = intDat.GetItemsForBucketDB(key);
                     if (datItems == null)
 #if NET40_OR_GREATER || NETCOREAPP
                         return;
@@ -601,7 +601,7 @@ namespace SabreTools.DatFiles
 
                     foreach (var datItem in datItems)
                     {
-                        var dupes = datFile.ItemsDB.GetDuplicates(datItem, sorted: true);
+                        var dupes = datFile.GetDuplicatesDB(datItem, sorted: true);
                         if (datItem.Value.Clone() is not DatItem newDatItem)
                             continue;
 
@@ -620,8 +620,8 @@ namespace SabreTools.DatFiles
             if (machineFieldNames.Count > 0)
             {
                 // For comparison's sake, we want to use Machine Name as the base bucketing
-                datFile.ItemsDB.BucketBy(ItemKey.Machine, DedupeType.Full);
-                intDat.ItemsDB.BucketBy(ItemKey.Machine, DedupeType.None);
+                datFile.BucketBy(ItemKey.Machine, DedupeType.Full);
+                intDat.BucketBy(ItemKey.Machine, DedupeType.None);
 
                 // Then we do a namewise comparison against the base DAT
 #if NET452_OR_GREATER || NETCOREAPP
@@ -632,7 +632,7 @@ namespace SabreTools.DatFiles
                 foreach (var key in intDat.ItemsDB.SortedKeys)
 #endif
                 {
-                    var datItems = intDat.ItemsDB.GetItemsForBucket(key);
+                    var datItems = intDat.GetItemsForBucketDB(key);
                     if (datItems == null)
 #if NET40_OR_GREATER || NETCOREAPP
                         return;
@@ -642,7 +642,7 @@ namespace SabreTools.DatFiles
 
                     foreach (var datItem in datItems)
                     {
-                        var datMachine = datFile.ItemsDB.GetMachineForItem(datFile.ItemsDB.GetItemsForBucket(key)!.First().Key);
+                        var datMachine = datFile.ItemsDB.GetMachineForItem(datFile.GetItemsForBucketDB(key)!.First().Key);
                         var intMachine = intDat.ItemsDB.GetMachineForItem(datItem.Key);
                         if (datMachine.Value != null && intMachine.Value != null)
                             Replacer.ReplaceFields(intMachine.Value, datMachine.Value, machineFieldNames, onlySame);
@@ -671,17 +671,17 @@ namespace SabreTools.DatFiles
         {
             // For comparison's sake, we want to use a base ordering
             if (useGames)
-                datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None);
+                datFile.BucketBy(ItemKey.Machine, DedupeType.None);
             else
-                datFile.Items.BucketBy(ItemKey.CRC, DedupeType.None);
+                datFile.BucketBy(ItemKey.CRC, DedupeType.None);
 
             InternalStopwatch watch = new($"Comparing '{intDat.Header.GetStringFieldValue(DatHeader.FileNameKey)}' to base DAT");
 
             // For comparison's sake, we want to a the base bucketing
             if (useGames)
-                intDat.Items.BucketBy(ItemKey.Machine, DedupeType.None);
+                intDat.BucketBy(ItemKey.Machine, DedupeType.None);
             else
-                intDat.Items.BucketBy(ItemKey.CRC, DedupeType.Full);
+                intDat.BucketBy(ItemKey.CRC, DedupeType.Full);
 
             // Then we compare against the base DAT
             List<string> keys = [.. intDat.Items.Keys];
@@ -740,7 +740,7 @@ namespace SabreTools.DatFiles
                 // Standard Against uses hashes
                 else
                 {
-                    List<DatItem>? datItems = intDat.Items[key];
+                    List<DatItem>? datItems = intDat.GetItemsForBucket(key);
                     if (datItems == null)
 #if NET40_OR_GREATER || NETCOREAPP
                         return;
@@ -751,7 +751,7 @@ namespace SabreTools.DatFiles
                     List<DatItem> keepDatItems = [];
                     foreach (DatItem datItem in datItems)
                     {
-                        if (!datFile.Items.HasDuplicates(datItem, true))
+                        if (!datFile.HasDuplicates(datItem, true))
                             keepDatItems.Add(datItem);
                     }
 
@@ -780,7 +780,7 @@ namespace SabreTools.DatFiles
             List<DatFile> outDats = [];
 
             // Ensure the current DatFile is sorted optimally
-            datFile.Items.BucketBy(ItemKey.CRC, DedupeType.None);
+            datFile.BucketBy(ItemKey.CRC, DedupeType.None);
 
             // Loop through each of the inputs and get or create a new DatData object
             InternalStopwatch watch = new("Initializing and filling all output DATs");
@@ -795,10 +795,10 @@ namespace SabreTools.DatFiles
             for (int j = 0; j < datHeaders.Count; j++)
 #endif
             {
-                DatFile diffData = DatFileTool.CreateDatFile(datHeaders[j]);
+                DatFile diffData = CreateDatFile(datHeaders[j]);
                 diffData.ResetDictionary();
                 FillWithSourceIndex(datFile, diffData, j);
-                //FillWithSourceIndexDB(datFile, diffData, j);
+                FillWithSourceIndexDB(datFile, diffData, j);
                 outDatsArray[j] = diffData;
 #if NET40_OR_GREATER || NETCOREAPP
             });
@@ -844,7 +844,7 @@ namespace SabreTools.DatFiles
                 datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, "datFile.All DATs");
 
             string post = " (Duplicates)";
-            DatFile dupeData = DatFileTool.CreateDatFile(datFile.Header);
+            DatFile dupeData = CreateDatFile(datFile.Header);
             dupeData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, dupeData.Header.GetStringFieldValue(DatHeader.FileNameKey) + post);
             dupeData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, dupeData.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + post);
             dupeData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, dupeData.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + post);
@@ -863,7 +863,7 @@ namespace SabreTools.DatFiles
             foreach (var key in datFile.Items.Keys)
 #endif
             {
-                List<DatItem> items = Merge(datFile.Items[key]);
+                List<DatItem> items = Merge(datFile.GetItemsForBucket(key));
 
                 // If the rom list is empty or null, just skip it
                 if (items == null || items.Count == 0)
@@ -922,7 +922,7 @@ namespace SabreTools.DatFiles
                 datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, "datFile.All DATs");
 
             string post = " (Duplicates)";
-            DatFile dupeData = DatFileTool.CreateDatFile(datFile.Header);
+            DatFile dupeData = CreateDatFile(datFile.Header);
             dupeData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, dupeData.Header.GetStringFieldValue(DatHeader.FileNameKey) + post);
             dupeData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, dupeData.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + post);
             dupeData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, dupeData.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + post);
@@ -1060,7 +1060,7 @@ namespace SabreTools.DatFiles
 #endif
             {
                 string innerpost = $" ({j} - {inputs[j].GetNormalizedFileName(true)} Only)";
-                DatFile diffData = DatFileTool.CreateDatFile(datFile.Header);
+                DatFile diffData = CreateDatFile(datFile.Header);
                 diffData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, diffData.Header.GetStringFieldValue(DatHeader.FileNameKey) + innerpost);
                 diffData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, diffData.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + innerpost);
                 diffData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, diffData.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + innerpost);
@@ -1088,7 +1088,7 @@ namespace SabreTools.DatFiles
             foreach (var key in datFile.Items.Keys)
 #endif
             {
-                List<DatItem> items = Merge(datFile.Items[key]);
+                List<DatItem> items = Merge(datFile.GetItemsForBucket(key));
 
                 // If the rom list is empty or null, just skip it
                 if (items == null || items.Count == 0)
@@ -1153,7 +1153,7 @@ namespace SabreTools.DatFiles
 #endif
             {
                 string innerpost = $" ({j} - {inputs[j].GetNormalizedFileName(true)} Only)";
-                DatFile diffData = DatFileTool.CreateDatFile(datFile.Header);
+                DatFile diffData = CreateDatFile(datFile.Header);
                 diffData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, diffData.Header.GetStringFieldValue(DatHeader.FileNameKey) + innerpost);
                 diffData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, diffData.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + innerpost);
                 diffData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, diffData.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + innerpost);
@@ -1279,7 +1279,7 @@ namespace SabreTools.DatFiles
                 datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, "All DATs");
 
             string post = " (No Duplicates)";
-            DatFile outerDiffData = DatFileTool.CreateDatFile(datFile.Header);
+            DatFile outerDiffData = CreateDatFile(datFile.Header);
             outerDiffData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, outerDiffData.Header.GetStringFieldValue(DatHeader.FileNameKey) + post);
             outerDiffData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, outerDiffData.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + post);
             outerDiffData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, outerDiffData.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + post);
@@ -1298,7 +1298,7 @@ namespace SabreTools.DatFiles
             foreach (var key in datFile.Items.Keys)
 #endif
             {
-                List<DatItem> items = Merge(datFile.Items[key]);
+                List<DatItem> items = Merge(datFile.GetItemsForBucket(key));
 
                 // If the rom list is empty or null, just skip it
                 if (items == null || items.Count == 0)
@@ -1355,7 +1355,7 @@ namespace SabreTools.DatFiles
                 datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, "All DATs");
 
             string post = " (No Duplicates)";
-            DatFile outerDiffData = DatFileTool.CreateDatFile(datFile.Header);
+            DatFile outerDiffData = CreateDatFile(datFile.Header);
             outerDiffData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, outerDiffData.Header.GetStringFieldValue(DatHeader.FileNameKey) + post);
             outerDiffData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, outerDiffData.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + post);
             outerDiffData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, outerDiffData.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + post);
@@ -1488,7 +1488,7 @@ namespace SabreTools.DatFiles
             {
                 var input = inputs[i];
                 _staticLogger.User($"Adding DAT: {input.CurrentPath}");
-                datFiles[i] = DatFileTool.CreateDatFile(datFile.Header.CloneFiltering());
+                datFiles[i] = CreateDatFile(datFile.Header.CloneFiltering());
                 Parser.ParseInto(datFiles[i], input, i, keep: true);
 #if NET40_OR_GREATER || NETCOREAPP
             });
@@ -1523,7 +1523,7 @@ namespace SabreTools.DatFiles
             foreach (string key in keys)
             {
                 // Add everything from the key to the internal DAT
-                addTo.Add(key, addFrom.Items[key]);
+                addTo.Add(key, addFrom.GetItemsForBucket(key));
 
                 // Now remove the key from the source DAT
                 if (delete)
@@ -1616,7 +1616,7 @@ namespace SabreTools.DatFiles
             foreach (var key in datFile.Items.Keys)
 #endif
             {
-                List<DatItem> items = Merge(datFile.Items[key]);
+                List<DatItem> items = Merge(datFile.GetItemsForBucket(key));
 
                 // If the rom list is empty or null, just skip it
                 if (items == null || items.Count == 0)

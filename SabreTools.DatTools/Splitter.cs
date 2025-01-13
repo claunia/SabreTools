@@ -41,7 +41,7 @@ namespace SabreTools.DatTools
         public static (DatFile? extADat, DatFile? extBDat) SplitByExtension(DatFile datFile, List<string> extA, List<string> extB)
         {
             // If roms is empty, return false
-            if (datFile.Items.DatStatistics.TotalCount == 0)
+            if (datFile.DatStatistics.TotalCount == 0)
                 return (null, null);
 
             InternalStopwatch watch = new($"Splitting DAT by extension");
@@ -73,7 +73,7 @@ namespace SabreTools.DatTools
             foreach (var key in datFile.Items.Keys)
 #endif
             {
-                var items = datFile.Items[key];
+                var items = datFile.GetItemsForBucket(key);
                 if (items == null)
 #if NET40_OR_GREATER || NETCOREAPP
                     return;
@@ -249,7 +249,7 @@ namespace SabreTools.DatTools
             foreach (var key in datFile.Items.Keys)
 #endif
             {
-                var items = datFile.Items[key];
+                var items = datFile.GetItemsForBucket(key);
                 if (items == null)
 #if NET40_OR_GREATER || NETCOREAPP
                     return;
@@ -493,7 +493,7 @@ namespace SabreTools.DatTools
             InternalStopwatch watch = new($"Splitting DAT by level");
 
             // First, bucket by games so that we can do the right thing
-            datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, lower: false, norename: true);
+            datFile.BucketBy(ItemKey.Machine, DedupeType.None, lower: false, norename: true);
 
             // Create a temporary DAT to add things to
             DatFile tempDat = DatFileTool.CreateDatFile(datFile.Header);
@@ -521,7 +521,7 @@ namespace SabreTools.DatTools
                 }
 
                 // Clean the input list and set all games to be pathless
-                List<DatItem>? items = datFile.Items[key];
+                List<DatItem>? items = datFile.GetItemsForBucket(key);
                 if (items == null)
 #if NET40_OR_GREATER || NETCOREAPP
                     return;
@@ -638,7 +638,7 @@ namespace SabreTools.DatTools
             foreach (var key in datFile.Items.Keys)
 #endif
             {
-                List<DatItem>? items = datFile.Items[key];
+                List<DatItem>? items = datFile.GetItemsForBucket(key);
                 if (items == null)
 #if NET40_OR_GREATER || NETCOREAPP
                     return;
@@ -777,7 +777,7 @@ namespace SabreTools.DatTools
             InternalStopwatch watch = new($"Splitting DAT by total size");
 
             // Sort the DatFile by machine name
-            datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
 
             // Get the keys in a known order for easier sorting
             var keys = datFile.Items.SortedKeys;
@@ -920,7 +920,7 @@ namespace SabreTools.DatTools
             foreach (var key in datFile.Items.Keys)
 #endif
             {
-                List<DatItem> items = DatFileTool.Merge(datFile.Items[key]);
+                List<DatItem> items = DatFileTool.Merge(datFile.GetItemsForBucket(key));
 
                 // If the rom list is empty or null, just skip it
                 if (items == null || items.Count == 0)

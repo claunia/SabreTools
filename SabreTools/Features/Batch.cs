@@ -236,8 +236,7 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override void Process(BatchState batchState)
             {
-                batchState.DatFile.Items.MachineDescriptionToName();
-                batchState.DatFile.ItemsDB.MachineDescriptionToName();
+                batchState.DatFile.MachineDescriptionToName();
             }
         }
 
@@ -608,8 +607,7 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override void Process(BatchState batchState)
             {
-                batchState.DatFile.Items.SetOneGamePerRegion([.. Arguments]);
-                batchState.DatFile.ItemsDB.SetOneGamePerRegion([.. Arguments]);
+                batchState.DatFile.SetOneGamePerRegion([.. Arguments]);
             }
         }
 
@@ -642,8 +640,7 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override void Process(BatchState batchState)
             {
-                batchState.DatFile.Items.SetOneRomPerGame();
-                batchState.DatFile.ItemsDB.SetOneRomPerGame();
+                batchState.DatFile.SetOneRomPerGame();
             }
         }
 
@@ -777,8 +774,7 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override void Process(BatchState batchState)
             {
-                batchState.DatFile.Items.StripSceneDatesFromItems();
-                batchState.DatFile.ItemsDB.StripSceneDatesFromItems();
+                batchState.DatFile.StripSceneDatesFromItems();
             }
         }
 

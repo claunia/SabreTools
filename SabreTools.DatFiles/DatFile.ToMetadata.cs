@@ -71,7 +71,7 @@ namespace SabreTools.DatFiles
             // Loop through the sorted items and create games for them
             foreach (string key in Items.SortedKeys)
             {
-                var items = Items.FilteredItems(key);
+                var items = Items.GetItemsForBucket(key, filter: true);
                 if (items == null || items.Count == 0)
                     continue;
 
@@ -494,7 +494,7 @@ namespace SabreTools.DatFiles
             // Loop through the sorted items and create games for them
             foreach (string key in ItemsDB.SortedKeys)
             {
-                var items = ItemsDB.GetItemsForBucket(key, filter: true);
+                var items = GetItemsForBucketDB(key, filter: true);
                 if (items == null || items.Count == 0)
                     continue;
 

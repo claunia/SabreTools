@@ -53,7 +53,7 @@ namespace SabreTools.DatTools
             #region Perform setup
 
             // If the DAT is not populated and inverse is not set, inform the user and quit
-            if (datFile.Items.DatStatistics.TotalCount == 0 && !inverse)
+            if (datFile.DatStatistics.TotalCount == 0 && !inverse)
             {
                 _staticLogger.User("No entries were found to rebuild, exiting...");
                 return false;
@@ -106,7 +106,7 @@ namespace SabreTools.DatTools
                 return success;
 
             // Now that we have a list of depots, we want to bucket the input DAT by SHA-1
-            datFile.Items.BucketBy(ItemKey.SHA1, DedupeType.None);
+            datFile.BucketBy(ItemKey.SHA1, DedupeType.None);
 
             // Then we want to loop through each of the hashes and see if we can rebuild
             List<string> keys = [.. datFile.Items.SortedKeys];
@@ -147,10 +147,10 @@ namespace SabreTools.DatTools
                     continue;
 
                 // Ensure we are sorted correctly (some other calls can change this)
-                //datFile.Items.BucketBy(ItemKey.SHA1, DedupeType.None);
+                //datFile.BucketBy(ItemKey.SHA1, DedupeType.None);
 
                 // If there are no items in the hash, we continue
-                var items = datFile.Items[hash];
+                var items = datFile.GetItemsForBucket(hash);
                 if (items == null || items.Count == 0)
                     continue;
 
@@ -204,7 +204,7 @@ namespace SabreTools.DatTools
             #region Perform setup
 
             // If the DAT is not populated and inverse is not set, inform the user and quit
-            if (datFile.Items.DatStatistics.TotalCount == 0 && !inverse)
+            if (datFile.DatStatistics.TotalCount == 0 && !inverse)
             {
                 _staticLogger.User("No entries were found to rebuild, exiting...");
                 return false;
@@ -451,7 +451,7 @@ namespace SabreTools.DatTools
                 if (outputFormat == OutputFormat.Folder && datFile.Header.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>() == PackingFlag.Partial)
                 {
                     shouldCheck = true;
-                    datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, lower: false);
+                    datFile.BucketBy(ItemKey.Machine, DedupeType.None, lower: false);
                 }
 
                 // Now loop through the list and rebuild accordingly
@@ -463,7 +463,7 @@ namespace SabreTools.DatTools
                         continue;
 
                     // If we should check for the items in the machine
-                    var items = datFile.Items[machine.GetStringFieldValue(Models.Metadata.Machine.NameKey)!];
+                    var items = datFile.GetItemsForBucket(machine.GetStringFieldValue(Models.Metadata.Machine.NameKey)!);
                     if (shouldCheck && items!.Count > 1)
                         outputFormat = OutputFormat.Folder;
                     else if (shouldCheck && items!.Count == 1)
@@ -553,7 +553,7 @@ namespace SabreTools.DatTools
         private static bool ShouldRebuild(DatFile datFile, DatItem datItem, Stream? stream, bool inverse, out List<DatItem> dupes)
         {
             // Find if the file has duplicates in the DAT
-            dupes = datFile.Items.GetDuplicates(datItem);
+            dupes = datFile.GetDuplicates(datItem);
             bool hasDuplicates = dupes.Count > 0;
 
             // If we have duplicates but we're filtering
@@ -609,7 +609,7 @@ namespace SabreTools.DatTools
         private static bool ShouldRebuildDB(DatFile datFile, KeyValuePair<long, DatItem> datItem, Stream? stream, bool inverse, out Dictionary<long, DatItem> dupes)
         {
             // Find if the file has duplicates in the DAT
-            dupes = datFile.ItemsDB.GetDuplicates(datItem);
+            dupes = datFile.GetDuplicatesDB(datItem);
             bool hasDuplicates = dupes.Count > 0;
 
             // If we have duplicates but we're filtering

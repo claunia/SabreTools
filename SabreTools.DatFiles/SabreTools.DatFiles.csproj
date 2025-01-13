@@ -24,6 +24,7 @@
 
     <ItemGroup>
         <InternalsVisibleTo Include="SabreTools.DatFiles.Test" />
+        <InternalsVisibleTo Include="SabreTools.Test" />
     </ItemGroup>
 
     <ItemGroup>

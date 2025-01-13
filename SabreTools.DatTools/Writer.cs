@@ -77,12 +77,10 @@ namespace SabreTools.DatTools
             EnsureHeaderFields(datFile);
 
             // Bucket roms by game name, if not already
-            datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None);
-            datFile.ItemsDB.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
 
             // Output the number of items we're going to be writing
-            _staticLogger.User($"A total of {datFile.Items.DatStatistics.TotalCount - datFile.Items.DatStatistics.RemovedCount} items will be written out to '{datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)}'");
-            //logger.User($"A total of {datFile.ItemsDB.DatStatistics.TotalCount - datFile.ItemsDB.DatStatistics.RemovedCount} items will be written out to '{datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)}'");
+            _staticLogger.User($"A total of {datFile.DatStatistics.TotalCount - datFile.DatStatistics.RemovedCount} items will be written out to '{datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)}'");
 
             // Get the outfile names
             Dictionary<DatFormat, string> outfiles = datFile.Header.CreateOutFileNames(outDir!, overwrite);
@@ -133,33 +131,21 @@ namespace SabreTools.DatTools
         /// <param name="datFile">Current DatFile object to write from</param>
         public static void WriteStatsToConsole(DatFile datFile)
         {
-            long diskCount = datFile.Items.DatStatistics.GetItemCount(ItemType.Disk);
-            long mediaCount = datFile.Items.DatStatistics.GetItemCount(ItemType.Media);
-            long romCount = datFile.Items.DatStatistics.GetItemCount(ItemType.Rom);
+            long diskCount = datFile.DatStatistics.GetItemCount(ItemType.Disk);
+            long mediaCount = datFile.DatStatistics.GetItemCount(ItemType.Media);
+            long romCount = datFile.DatStatistics.GetItemCount(ItemType.Rom);
 
             if (diskCount + mediaCount + romCount == 0)
                 datFile.Items.RecalculateStats();
 
-            diskCount = datFile.ItemsDB.DatStatistics.GetItemCount(ItemType.Disk);
-            mediaCount = datFile.ItemsDB.DatStatistics.GetItemCount(ItemType.Media);
-            romCount = datFile.ItemsDB.DatStatistics.GetItemCount(ItemType.Rom);
+            datFile.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
-            if (diskCount + mediaCount + romCount == 0)
-                datFile.ItemsDB.RecalculateStats();
-
-            datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
-            datFile.ItemsDB.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
-
-            datFile.Items.DatStatistics.DisplayName = datFile.Header.GetStringFieldValue(DatHeader.FileNameKey);
-            datFile.Items.DatStatistics.MachineCount = datFile.Items.Keys.Count;
-
-            datFile.ItemsDB.DatStatistics.DisplayName = datFile.Header.GetStringFieldValue(DatHeader.FileNameKey);
-            datFile.ItemsDB.DatStatistics.MachineCount = datFile.Items.Keys.Count;
+            datFile.DatStatistics.DisplayName = datFile.Header.GetStringFieldValue(DatHeader.FileNameKey);
+            datFile.DatStatistics.MachineCount = datFile.Items.Keys.Count;
 
             List<DatStatistics> statsList =
             [
-                datFile.Items.DatStatistics,
-                //datFile.ItemsDB.DatStatistics,
+                datFile.DatStatistics,
             ];
             var consoleOutput = BaseReport.Create(StatReportFormat.None, statsList);
             consoleOutput!.WriteToFile(null, true, true);
@@ -232,13 +218,13 @@ namespace SabreTools.DatTools
             datFile.ItemsDB.RecalculateStats();
 
             // If there's nothing there, abort
-            if (datFile.Items.DatStatistics.TotalCount == 0)
+            if (datFile.DatStatistics.TotalCount == 0)
                 return false;
             // if (datFile.ItemsDB.DatStatistics.TotalCount == 0)
             //     return false;
 
             // If every item is removed, abort
-            if (datFile.Items.DatStatistics.TotalCount == datFile.Items.DatStatistics.RemovedCount)
+            if (datFile.DatStatistics.TotalCount == datFile.DatStatistics.RemovedCount)
                 return false;
             // if (datFile.ItemsDB.DatStatistics.TotalCount == datFile.ItemsDB.DatStatistics.RemovedCount)
             //     return false;

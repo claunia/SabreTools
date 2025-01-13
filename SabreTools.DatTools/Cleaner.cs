@@ -106,43 +106,25 @@ namespace SabreTools.DatTools
 
                 // Bucket and dedupe according to the flag
                 if (DedupeRoms == DedupeType.Full)
-                {
-                    datFile.Items.BucketBy(ItemKey.CRC, DedupeRoms);
-                    datFile.ItemsDB.BucketBy(ItemKey.CRC, DedupeRoms);
-                }
+                    datFile.BucketBy(ItemKey.CRC, DedupeRoms);
                 else if (DedupeRoms == DedupeType.Game)
-                {
-                    datFile.Items.BucketBy(ItemKey.Machine, DedupeRoms);
-                    datFile.ItemsDB.BucketBy(ItemKey.Machine, DedupeRoms);
-                }
+                    datFile.BucketBy(ItemKey.Machine, DedupeRoms);
 
                 // Process description to machine name
                 if (DescriptionAsName == true)
-                {
-                    datFile.Items.MachineDescriptionToName(throwOnError);
-                    datFile.ItemsDB.MachineDescriptionToName(throwOnError);
-                }
+                    datFile.MachineDescriptionToName(throwOnError);
 
                 // If we are removing scene dates, do that now
                 if (SceneDateStrip == true)
-                {
-                    datFile.Items.StripSceneDatesFromItems();
-                    datFile.ItemsDB.StripSceneDatesFromItems();
-                }
+                    datFile.StripSceneDatesFromItems();
 
                 // Run the one rom per game logic, if required
                 if (OneGamePerRegion == true && RegionList != null)
-                {
-                    datFile.Items.SetOneGamePerRegion(RegionList);
-                    datFile.ItemsDB.SetOneGamePerRegion(RegionList);
-                }
+                    datFile.SetOneGamePerRegion(RegionList);
 
                 // Run the one rom per game logic, if required
                 if (OneRomPerGame == true)
-                {
-                    datFile.Items.SetOneRomPerGame();
-                    datFile.ItemsDB.SetOneRomPerGame();
-                }
+                    datFile.SetOneRomPerGame();
 
                 // Remove all marked items
                 datFile.ClearMarked();
@@ -174,7 +156,7 @@ namespace SabreTools.DatTools
             foreach (string key in keys)
             {
                 // For every item in the current key
-                var items = datFile.Items[key];
+                var items = datFile.GetItemsForBucket(key);
                 if (items == null)
                     continue;
 
@@ -203,7 +185,7 @@ namespace SabreTools.DatTools
             foreach (string key in keys)
             {
                 // For every item in the current key
-                var items = datFile.ItemsDB.GetItemsForBucket(key);
+                var items = datFile.GetItemsForBucketDB(key);
                 if (items == null)
                     continue;
 

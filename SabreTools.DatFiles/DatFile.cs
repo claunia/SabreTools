@@ -39,6 +39,13 @@ namespace SabreTools.DatFiles
         public ItemDictionaryDB ItemsDB { get; private set; } = new ItemDictionaryDB();
 
         /// <summary>
+        /// DAT statistics
+        /// </summary>
+        [JsonIgnore, XmlIgnore]
+        public DatStatistics DatStatistics => Items.DatStatistics;
+        //public DatStatistics DatStatistics => ItemsDB.DatStatistics;
+
+        /// <summary>
         /// List of supported types for writing
         /// </summary>
         public abstract ItemType[] SupportedTypes { get; }
@@ -134,21 +141,7 @@ namespace SabreTools.DatFiles
 
         #endregion
 
-        #region Filtering
-
-        /// <summary>
-        /// Execute all filters in a filter runner on the items in the dictionary
-        /// </summary>
-        /// <param name="filterRunner">Preconfigured filter runner to use</param>
-        public void ExecuteFilters(FilterRunner filterRunner)
-        {
-            Items.ExecuteFilters(filterRunner);
-            ItemsDB.ExecuteFilters(filterRunner);
-        }
-
-        #endregion
-
-        #region Item Dictionary Manipulation
+        #region Item Dictionary Passthrough - Accessors
 
         /// <summary>
         /// Add a value to the file dictionary
@@ -229,6 +222,18 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Get the items associated with a bucket name
+        /// </summary>
+        public List<DatItem> GetItemsForBucket(string bucketName, bool filter = false)
+            => Items.GetItemsForBucket(bucketName, filter);
+
+        /// <summary>
+        /// Get the indices and items associated with a bucket name
+        /// </summary>
+        public Dictionary<long, DatItem> GetItemsForBucketDB(string bucketName, bool filter = false)
+            => ItemsDB.GetItemsForBucket(bucketName, filter);
+
+        /// <summary>
         /// Remove a key from the file dictionary if it exists
         /// </summary>
         /// <param name="key">Key in the dictionary to remove</param>
@@ -244,6 +249,203 @@ namespace SabreTools.DatFiles
         {
             Items.Clear();
             ItemsDB = new ItemDictionaryDB();
+        }
+
+        #endregion
+
+        #region Item Dictionary Passthrough - Bucketing
+
+        /// <summary>
+        /// Take the arbitrarily bucketed Files Dictionary and convert to one bucketed by a user-defined method
+        /// </summary>
+        /// <param name="bucketBy">ItemKey enum representing how to bucket the individual items</param>
+        /// <param name="dedupeType">Dedupe type that should be used</param>
+        /// <param name="lower">True if the key should be lowercased (default), false otherwise</param>
+        /// <param name="norename">True if games should only be compared on game and file name, false if system and source are counted</param>
+        public void BucketBy(ItemKey bucketBy, DedupeType dedupeType, bool lower = true, bool norename = true)
+        {
+            Items.BucketBy(bucketBy, dedupeType, lower, norename);
+            ItemsDB.BucketBy(bucketBy, dedupeType, lower, norename);
+        }
+
+        /// <summary>
+        /// List all duplicates found in a DAT based on a DatItem
+        /// </summary>
+        /// <param name="datItem">Item to try to match</param>
+        /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
+        /// <returns>List of matched DatItem objects</returns>
+        public List<DatItem> GetDuplicates(DatItem datItem, bool sorted = false)
+            => Items.GetDuplicates(datItem, sorted);
+
+        /// <summary>
+        /// List all duplicates found in a DAT based on a DatItem
+        /// </summary>
+        /// <param name="datItem">Item to try to match</param>
+        /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
+        /// <returns>List of matched DatItem objects</returns>
+        public Dictionary<long, DatItem> GetDuplicatesDB(KeyValuePair<long, DatItem> datItem, bool sorted = false)
+            => ItemsDB.GetDuplicates(datItem, sorted);
+
+        /// <summary>
+        /// Check if a DAT contains the given DatItem
+        /// </summary>
+        /// <param name="datItem">Item to try to match</param>
+        /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
+        /// <returns>True if it contains the rom, false otherwise</returns>
+        public bool HasDuplicates(DatItem datItem, bool sorted = false)
+            => Items.HasDuplicates(datItem, sorted);
+
+        /// <summary>
+        /// Check if a DAT contains the given DatItem
+        /// </summary>
+        /// <param name="datItem">Item to try to match</param>
+        /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
+        /// <returns>True if it contains the rom, false otherwise</returns>
+        public bool HasDuplicates(KeyValuePair<long, DatItem> datItem, bool sorted = false)
+            => ItemsDB.HasDuplicates(datItem, sorted);
+
+        #endregion
+
+        #region Item Dictionary Passthrough - Filtering
+
+        /// <summary>
+        /// Execute all filters in a filter runner on the items in the dictionary
+        /// </summary>
+        /// <param name="filterRunner">Preconfigured filter runner to use</param>
+        public void ExecuteFilters(FilterRunner filterRunner)
+        {
+            Items.ExecuteFilters(filterRunner);
+            ItemsDB.ExecuteFilters(filterRunner);
+        }
+
+        /// <summary>
+        /// Use game descriptions as names, updating cloneof/romof/sampleof
+        /// </summary>
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        public void MachineDescriptionToName(bool throwOnError = false)
+        {
+            Items.MachineDescriptionToName(throwOnError);
+            ItemsDB.MachineDescriptionToName(throwOnError);
+        }
+
+        /// <summary>
+        /// Ensure that all roms are in their own game (or at least try to ensure)
+        /// </summary>
+        public void SetOneRomPerGame()
+        {
+            Items.SetOneRomPerGame();
+            ItemsDB.SetOneRomPerGame();
+        }
+
+        /// <summary>
+        /// Filter a DAT using 1G1R logic given an ordered set of regions
+        /// </summary>
+        /// <param name="regionList">List of regions in order of priority</param>
+        /// <remarks>
+        /// In the most technical sense, the way that the region list is being used does not
+        /// confine its values to be just regions. Since it's essentially acting like a
+        /// specialized version of the machine name filter, anything that is usually encapsulated
+        /// in parenthesis would be matched on, including disc numbers, languages, editions,
+        /// and anything else commonly used. Please note that, unlike other existing 1G1R 
+        /// solutions, this does not have the ability to contain custom mappings of parent
+        /// to clone sets based on name, nor does it have the ability to match on the 
+        /// Release DatItem type.
+        /// </remarks>
+        public void SetOneGamePerRegion(List<string> regionList)
+        {
+            Items.SetOneGamePerRegion(regionList);
+            ItemsDB.SetOneGamePerRegion(regionList);
+        }
+
+        /// <summary>
+        /// Strip the dates from the beginning of scene-style set names
+        /// </summary>
+        public void StripSceneDatesFromItems()
+        {
+            Items.StripSceneDatesFromItems();
+            ItemsDB.StripSceneDatesFromItems();
+        }
+
+        #endregion
+
+        #region Item Dictionary Passthrough - Splitting
+
+        /// <summary>
+        /// Use romof tags to add roms to the children
+        /// </summary>
+        public void AddRomsFromBios()
+        {
+            Items.AddRomsFromBios();
+            ItemsDB.AddRomsFromBios();
+        }
+
+        /// <summary>
+        /// Use device_ref and optionally slotoption tags to add roms to the children
+        /// </summary>
+        /// <param name="dev">True if only child device sets are touched, false for non-device sets</param>
+        /// <param name="useSlotOptions">True if slotoptions tags are used as well, false otherwise</param>
+        public bool AddRomsFromDevices(bool dev, bool useSlotOptions)
+        {
+            bool foundnew = Items.AddRomsFromDevices(dev, useSlotOptions);
+            foundnew |= ItemsDB.AddRomsFromDevices(dev, useSlotOptions);
+            return foundnew;
+        }
+
+        /// <summary>
+        /// Use cloneof tags to add roms to the parents, removing the child sets in the process
+        /// </summary>
+        /// <param name="subfolder">True to add DatItems to subfolder of parent (not including Disk), false otherwise</param>
+        /// <param name="skipDedup">True to skip checking for duplicate ROMs in parent, false otherwise</param>
+        public void AddRomsFromChildren(bool subfolder, bool skipDedup)
+        {
+            Items.AddRomsFromChildren(subfolder, skipDedup);
+            ItemsDB.AddRomsFromChildren(subfolder, skipDedup);
+        }
+
+        /// <summary>
+        /// Use cloneof tags to add roms to the children, setting the new romof tag in the process
+        /// </summary>
+        public void AddRomsFromParent()
+        {
+            Items.AddRomsFromParent();
+            ItemsDB.AddRomsFromParent();
+        }
+
+        /// <summary>
+        /// Remove all BIOS and device sets
+        /// </summary>
+        public void RemoveBiosAndDeviceSets()
+        {
+            Items.RemoveBiosAndDeviceSets();
+            ItemsDB.RemoveBiosAndDeviceSets();
+        }
+
+        /// <summary>
+        /// Use romof tags to remove bios roms from children
+        /// </summary>
+        /// <param name="bios">True if only child Bios sets are touched, false for non-bios sets</param>
+        public void RemoveBiosRomsFromChild(bool bios)
+        {
+            Items.RemoveBiosRomsFromChild(bios);
+            ItemsDB.RemoveBiosRomsFromChild(bios);
+        }
+
+        /// <summary>
+        /// Use cloneof tags to remove roms from the children
+        /// </summary>
+        public void RemoveRomsFromChild()
+        {
+            Items.RemoveRomsFromChild();
+            ItemsDB.RemoveRomsFromChild();
+        }
+
+        /// <summary>
+        /// Remove all romof and cloneof tags from all games
+        /// </summary>
+        public void RemoveTagsFromChild()
+        {
+            Items.RemoveTagsFromChild();
+            ItemsDB.RemoveTagsFromChild();
         }
 
         #endregion

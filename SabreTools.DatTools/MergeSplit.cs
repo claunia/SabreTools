@@ -102,18 +102,14 @@ namespace SabreTools.DatTools
             _staticLogger.User("Creating device non-merged sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
-            datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
-            datFile.ItemsDB.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
+            datFile.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
-            while (datFile.Items.AddRomsFromDevices(false, false)) ;
-            while (datFile.ItemsDB.AddRomsFromDevices(false, false)) ;
-            while (datFile.Items.AddRomsFromDevices(true, false)) ;
-            while (datFile.ItemsDB.AddRomsFromDevices(true, false)) ;
+            while (datFile.AddRomsFromDevices(false, false)) ;
+            while (datFile.AddRomsFromDevices(true, false)) ;
 
             // Then, remove the romof and cloneof tags so it's not picked up by the manager
-            datFile.Items.RemoveTagsFromChild();
-            datFile.ItemsDB.RemoveTagsFromChild();
+            datFile.RemoveTagsFromChild();
         }
 
         /// <summary>
@@ -125,22 +121,17 @@ namespace SabreTools.DatTools
             _staticLogger.User("Creating fully merged sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
-            datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
-            datFile.ItemsDB.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
+            datFile.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
-            datFile.Items.AddRomsFromChildren(true, false);
-            datFile.ItemsDB.AddRomsFromChildren(true, false);
+            datFile.AddRomsFromChildren(true, false);
 
             // Now that we have looped through the cloneof tags, we loop through the romof tags
-            datFile.Items.RemoveBiosRomsFromChild(false);
-            datFile.ItemsDB.RemoveBiosRomsFromChild(false);
-            datFile.Items.RemoveBiosRomsFromChild(true);
-            datFile.ItemsDB.RemoveBiosRomsFromChild(true);
+            datFile.RemoveBiosRomsFromChild(false);
+            datFile.RemoveBiosRomsFromChild(true);
 
             // Finally, remove the romof and cloneof tags so it's not picked up by the manager
-            datFile.Items.RemoveTagsFromChild();
-            datFile.ItemsDB.RemoveTagsFromChild();
+            datFile.RemoveTagsFromChild();
         }
 
         /// <summary>
@@ -152,24 +143,18 @@ namespace SabreTools.DatTools
             _staticLogger.User("Creating fully non-merged sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
-            datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
-            datFile.ItemsDB.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
+            datFile.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
-            while (datFile.Items.AddRomsFromDevices(true, true)) ;
-            while (datFile.ItemsDB.AddRomsFromDevices(true, true)) ;
-            datFile.Items.AddRomsFromDevices(false, true);
-            datFile.ItemsDB.AddRomsFromDevices(false, true);
-            datFile.Items.AddRomsFromParent();
-            datFile.ItemsDB.AddRomsFromParent();
+            while (datFile.AddRomsFromDevices(true, true)) ;
+            datFile.AddRomsFromDevices(false, true);
+            datFile.AddRomsFromParent();
 
             // Now that we have looped through the cloneof tags, we loop through the romof tags
-            datFile.Items.AddRomsFromBios();
-            datFile.ItemsDB.AddRomsFromBios();
+            datFile.AddRomsFromBios();
 
             // Then, remove the romof and cloneof tags so it's not picked up by the manager
-            datFile.Items.RemoveTagsFromChild();
-            datFile.ItemsDB.RemoveTagsFromChild();
+            datFile.RemoveTagsFromChild();
         }
 
         /// <summary>
@@ -181,22 +166,17 @@ namespace SabreTools.DatTools
             _staticLogger.User("Creating merged sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
-            datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
-            datFile.ItemsDB.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
+            datFile.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
-            datFile.Items.AddRomsFromChildren(true, true);
-            datFile.ItemsDB.AddRomsFromChildren(true, true);
+            datFile.AddRomsFromChildren(true, true);
 
             // Now that we have looped through the cloneof tags, we loop through the romof tags
-            datFile.Items.RemoveBiosRomsFromChild(false);
-            datFile.ItemsDB.RemoveBiosRomsFromChild(false);
-            datFile.Items.RemoveBiosRomsFromChild(true);
-            datFile.ItemsDB.RemoveBiosRomsFromChild(true);
+            datFile.RemoveBiosRomsFromChild(false);
+            datFile.RemoveBiosRomsFromChild(true);
 
             // Finally, remove the romof and cloneof tags so it's not picked up by the manager
-            datFile.Items.RemoveTagsFromChild();
-            datFile.ItemsDB.RemoveTagsFromChild();
+            datFile.RemoveTagsFromChild();
         }
 
         /// <summary>
@@ -208,22 +188,17 @@ namespace SabreTools.DatTools
             _staticLogger.User("Creating non-merged sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
-            datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
-            datFile.ItemsDB.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
+            datFile.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
-            datFile.Items.AddRomsFromParent();
-            datFile.ItemsDB.AddRomsFromParent();
+            datFile.AddRomsFromParent();
 
             // Now that we have looped through the cloneof tags, we loop through the romof tags
-            datFile.Items.RemoveBiosRomsFromChild(false);
-            datFile.ItemsDB.RemoveBiosRomsFromChild(false);
-            datFile.Items.RemoveBiosRomsFromChild(true);
-            datFile.ItemsDB.RemoveBiosRomsFromChild(true);
+            datFile.RemoveBiosRomsFromChild(false);
+            datFile.RemoveBiosRomsFromChild(true);
 
             // Finally, remove the romof and cloneof tags so it's not picked up by the manager
-            datFile.Items.RemoveTagsFromChild();
-            datFile.ItemsDB.RemoveTagsFromChild();
+            datFile.RemoveTagsFromChild();
         }
 
         /// <summary>
@@ -235,22 +210,17 @@ namespace SabreTools.DatTools
             _staticLogger.User("Creating split sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
-            datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
-            datFile.ItemsDB.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
+            datFile.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
-            datFile.Items.RemoveRomsFromChild();
-            datFile.ItemsDB.RemoveRomsFromChild();
+            datFile.RemoveRomsFromChild();
 
             // Now that we have looped through the cloneof tags, we loop through the romof tags
-            datFile.Items.RemoveBiosRomsFromChild(false);
-            datFile.ItemsDB.RemoveBiosRomsFromChild(false);
-            datFile.Items.RemoveBiosRomsFromChild(true);
-            datFile.ItemsDB.RemoveBiosRomsFromChild(true);
+            datFile.RemoveBiosRomsFromChild(false);
+            datFile.RemoveBiosRomsFromChild(true);
 
             // Finally, remove the romof and cloneof tags so it's not picked up by the manager
-            datFile.Items.RemoveTagsFromChild();
-            datFile.ItemsDB.RemoveTagsFromChild();
+            datFile.RemoveTagsFromChild();
         }
 
         #endregion

@@ -81,21 +81,18 @@ namespace SabreTools.DatTools
                 // Add single DAT stats (if asked)
                 if (single)
                 {
-                    DatStatistics individualStats = datdata.Items.DatStatistics;
-                    //DatStatistics individualStats = datdata.ItemsDB.DatStatistics;
+                    DatStatistics individualStats = datdata.DatStatistics;
                     individualStats.DisplayName = datdata.Header.GetStringFieldValue(DatHeader.FileNameKey);
                     individualStats.MachineCount = datdata.Items.Keys.Count;
                     stats.Add(individualStats);
                 }
 
                 // Add single DAT stats to dir
-                dirStats.AddStatistics(datdata.Items.DatStatistics);
-                //dirStats.AddStatistics(datdata.ItemsDB.DatStatistics);
+                dirStats.AddStatistics(datdata.DatStatistics);
                 dirStats.GameCount += datdata.Items.Keys.Count;
 
                 // Add single DAT stats to totals
-                totalStats.AddStatistics(datdata.Items.DatStatistics);
-                //totalStats.AddStatistics(datdata.ItemsDB.DatStatistics);
+                totalStats.AddStatistics(datdata.DatStatistics);
                 totalStats.GameCount += datdata.Items.Keys.Count;
 
                 // Make sure to assign the new directory
