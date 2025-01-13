@@ -258,6 +258,8 @@ namespace SabreTools.DatFiles
                 // Get the cloneof parent items
                 string? cloneOf = machine.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey);
                 List<DatItem> parentItems = GetItemsForBucket(cloneOf);
+                if (cloneOf == null)
+                    continue;
 
                 // Otherwise, move the items from the current game to a subfolder of the parent game
                 DatItem copyFrom;
@@ -296,14 +298,14 @@ namespace SabreTools.DatFiles
                             .Contains(mergeTag))
                         {
                             disk.CopyMachineInformation(copyFrom);
-                            Add(cloneOf!, disk);
+                            Add(cloneOf, disk);
                         }
 
                         // If there is no merge tag, add to parent
                         else if (mergeTag == null)
                         {
                             disk.CopyMachineInformation(copyFrom);
-                            Add(cloneOf!, disk);
+                            Add(cloneOf, disk);
                         }
                     }
 
@@ -329,7 +331,7 @@ namespace SabreTools.DatFiles
                                 rom.SetName($"{rom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)}\\{rom.GetName()}");
 
                             rom.CopyMachineInformation(copyFrom);
-                            Add(cloneOf!, rom);
+                            Add(cloneOf, rom);
                         }
 
                         // If the parent doesn't already contain this item, add to subfolder of parent
@@ -339,7 +341,7 @@ namespace SabreTools.DatFiles
                                 rom.SetName($"{item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)}\\{rom.GetName()}");
 
                             rom.CopyMachineInformation(copyFrom);
-                            Add(cloneOf!, rom);
+                            Add(cloneOf, rom);
                         }
                     }
 
@@ -350,7 +352,7 @@ namespace SabreTools.DatFiles
                             item.SetName($"{item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)}\\{item.GetName()}");
 
                         item.CopyMachineInformation(copyFrom);
-                        Add(cloneOf!, item);
+                        Add(cloneOf, item);
                     }
                 }
 
@@ -410,7 +412,7 @@ namespace SabreTools.DatFiles
                         string? mergeTag = disk.GetStringFieldValue(Models.Metadata.Disk.MergeKey);
 
                         // If the merge tag exists and the parent already contains it, skip
-                        if (mergeTag != null && parentItems.Values
+                        if (mergeTag != null && GetItemsForBucketDB(cloneOf).Values
                             .Where(i => i is Disk)
                             .Select(i => (i as Disk)!.GetName())
                             .Contains(mergeTag))
@@ -419,7 +421,7 @@ namespace SabreTools.DatFiles
                         }
 
                         // If the merge tag exists but the parent doesn't contain it, add to parent
-                        else if (mergeTag != null && !parentItems.Values
+                        else if (mergeTag != null && !GetItemsForBucketDB(cloneOf).Values
                             .Where(i => i is Disk)
                             .Select(i => (i as Disk)!.GetName())
                             .Contains(mergeTag))
@@ -440,7 +442,7 @@ namespace SabreTools.DatFiles
                     else if (item.Value is Rom rom)
                     {
                         // If the merge tag exists and the parent already contains it, skip
-                        if (rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey) != null && parentItems.Values
+                        if (rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey) != null && GetItemsForBucketDB(cloneOf).Values
                             .Where(i => i is Rom)
                             .Select(i => (i as Rom)!.GetName())
                             .Contains(rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey)))
@@ -449,7 +451,7 @@ namespace SabreTools.DatFiles
                         }
 
                         // If the merge tag exists but the parent doesn't contain it, add to subfolder of parent
-                        else if (rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey) != null && !parentItems.Values
+                        else if (rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey) != null && !GetItemsForBucketDB(cloneOf).Values
                             .Where(i => i is Rom)
                             .Select(i => (i as Rom)!.GetName())
                             .Contains(rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey)))
@@ -462,7 +464,7 @@ namespace SabreTools.DatFiles
                         }
 
                         // If the parent doesn't already contain this item, add to subfolder of parent
-                        else if (!parentItems.Contains(item) || skipDedup)
+                        else if (!GetItemsForBucketDB(cloneOf).Values.Contains(item.Value) || skipDedup)
                         {
                             if (subfolder)
                                 rom.SetName($"{machineName}\\{rom.GetName()}");
@@ -473,7 +475,7 @@ namespace SabreTools.DatFiles
                     }
 
                     // All other that would be missing to subfolder of parent
-                    else if (!parentItems.Contains(item))
+                    else if (!GetItemsForBucketDB(cloneOf).Values.Contains(item.Value))
                     {
                         if (subfolder)
                             item.Value.SetName($"{machineName}\\{item.Value.GetName()}");
