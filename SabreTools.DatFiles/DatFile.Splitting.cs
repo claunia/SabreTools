@@ -12,16 +12,6 @@ namespace SabreTools.DatFiles
         #region Splitting
 
         /// <summary>
-        /// Use romof tags to add items to the children
-        /// </summary>
-        /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
-        public void AddItemsFromBios()
-        {
-            AddItemsFromBiosImpl();
-            AddItemsFromBiosImplDB();
-        }
-
-        /// <summary>
         /// Use cloneof tags to add items to the parents, removing the child sets in the process
         /// </summary>
         /// <param name="subfolder">True to add DatItems to subfolder of parent (not including Disk), false otherwise</param>
@@ -50,10 +40,20 @@ namespace SabreTools.DatFiles
         /// Use cloneof tags to add items to the children, setting the new romof tag in the process
         /// </summary>
         /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
-        public void AddItemsFromParent()
+        public void AddItemsFromCloneOfParent()
         {
-            AddItemsFromParentImpl();
-            AddItemsFromParentImplDB();
+            AddItemsFromCloneOfParentImpl();
+            AddItemsFromCloneOfParentImplDB();
+        }
+
+        /// <summary>
+        /// Use romof tags to add items to the children
+        /// </summary>
+        /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
+        public void AddItemsFromRomOfParent()
+        {
+            AddItemsFromRomOfParentImpl();
+            AddItemsFromRomOfParentImplDB();
         }
 
         /// <summary>
@@ -100,92 +100,6 @@ namespace SabreTools.DatFiles
         #endregion
 
         #region Splitting Implementations
-
-        /// <summary>
-        /// Use romof tags to add items to the children
-        /// </summary>
-        /// <remarks>
-        /// Applies to <see cref="Items"/>.
-        /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
-        /// </remarks>
-        private void AddItemsFromBiosImpl()
-        {
-            List<string> buckets = [.. Items.Keys];
-            buckets.Sort();
-
-            foreach (string bucket in buckets)
-            {
-                // If the bucket has no items in it
-                List<DatItem> items = GetItemsForBucket(bucket);
-                if (items.Count == 0)
-                    continue;
-
-                // Get the machine
-                var machine = items[0].GetFieldValue<Machine>(DatItem.MachineKey);
-                if (machine == null)
-                    continue;
-
-                // Get the romof parent items
-                string? romOf = machine.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
-                List<DatItem> parentItems = GetItemsForBucket(romOf);
-                if (parentItems.Count == 0)
-                    continue;
-
-                // If the parent exists and has items, we copy the items from the parent to the current game
-                DatItem copyFrom = items[0];
-                foreach (DatItem item in parentItems)
-                {
-                    DatItem datItem = (DatItem)item.Clone();
-                    datItem.CopyMachineInformation(copyFrom);
-                    if (items.FindIndex(i => i.GetName() == datItem.GetName()) == -1 && !items.Contains(datItem))
-                        Add(bucket, datItem);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Use romof tags to add items to the children
-        /// </summary>
-        /// <remarks>
-        /// Applies to <see cref="ItemsDB"/>.
-        /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
-        /// </remarks>
-        private void AddItemsFromBiosImplDB()
-        {
-            List<string> buckets = [.. ItemsDB.SortedKeys];
-            foreach (string bucket in buckets)
-            {
-                // If the bucket has no items in it
-                Dictionary<long, DatItem> items = GetItemsForBucketDB(bucket);
-                if (items.Count == 0)
-                    continue;
-
-                // Get the source for the first item
-                var source = ItemsDB.GetSourceForItem(items.First().Key);
-
-                // Get the machine for the first item
-                var machine = ItemsDB.GetMachineForItem(items.First().Key);
-                if (machine.Value == null)
-                    continue;
-
-                // Get the romof parent items
-                string? romOf = machine.Value.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
-                Dictionary<long, DatItem> parentItems = GetItemsForBucketDB(romOf);
-                if (parentItems.Count == 0)
-                    continue;
-
-                // If the parent exists and has items, we copy the items from the parent to the current game
-                foreach (var item in parentItems)
-                {
-                    DatItem datItem = (DatItem)item.Value.Clone();
-                    if (items.Any(i => i.Value.GetName() == datItem.GetName())
-                        && items.Any(i => i.Value == datItem))
-                    {
-                        ItemsDB.AddItem(datItem, machine.Key, source.Key);
-                    }
-                }
-            }
-        }
 
         /// <summary>
         /// Use cloneof tags to add items to the parents, removing the child sets in the process
@@ -771,7 +685,7 @@ namespace SabreTools.DatFiles
         /// Applies to <see cref="Items"/>.
         /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
         /// </remarks>
-        private void AddItemsFromParentImpl()
+        private void AddItemsFromCloneOfParentImpl()
         {
             List<string> buckets = [.. Items.Keys];
             buckets.Sort();
@@ -824,7 +738,7 @@ namespace SabreTools.DatFiles
         /// Applies to <see cref="ItemsDB"/>.
         /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
         /// </remarks>
-        private void AddItemsFromParentImplDB()
+        private void AddItemsFromCloneOfParentImplDB()
         {
             List<string> buckets = [.. ItemsDB.SortedKeys];
             foreach (string bucket in buckets)
@@ -878,6 +792,92 @@ namespace SabreTools.DatFiles
                         continue;
 
                     itemMachine.Value.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, romof);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Use romof tags to add items to the children
+        /// </summary>
+        /// <remarks>
+        /// Applies to <see cref="Items"/>.
+        /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
+        /// </remarks>
+        private void AddItemsFromRomOfParentImpl()
+        {
+            List<string> buckets = [.. Items.Keys];
+            buckets.Sort();
+
+            foreach (string bucket in buckets)
+            {
+                // If the bucket has no items in it
+                List<DatItem> items = GetItemsForBucket(bucket);
+                if (items.Count == 0)
+                    continue;
+
+                // Get the machine
+                var machine = items[0].GetFieldValue<Machine>(DatItem.MachineKey);
+                if (machine == null)
+                    continue;
+
+                // Get the romof parent items
+                string? romOf = machine.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
+                List<DatItem> parentItems = GetItemsForBucket(romOf);
+                if (parentItems.Count == 0)
+                    continue;
+
+                // If the parent exists and has items, we copy the items from the parent to the current game
+                DatItem copyFrom = items[0];
+                foreach (DatItem item in parentItems)
+                {
+                    DatItem datItem = (DatItem)item.Clone();
+                    datItem.CopyMachineInformation(copyFrom);
+                    if (items.FindIndex(i => i.GetName() == datItem.GetName()) == -1 && !items.Contains(datItem))
+                        Add(bucket, datItem);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Use romof tags to add items to the children
+        /// </summary>
+        /// <remarks>
+        /// Applies to <see cref="ItemsDB"/>.
+        /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
+        /// </remarks>
+        private void AddItemsFromRomOfParentImplDB()
+        {
+            List<string> buckets = [.. ItemsDB.SortedKeys];
+            foreach (string bucket in buckets)
+            {
+                // If the bucket has no items in it
+                Dictionary<long, DatItem> items = GetItemsForBucketDB(bucket);
+                if (items.Count == 0)
+                    continue;
+
+                // Get the source for the first item
+                var source = ItemsDB.GetSourceForItem(items.First().Key);
+
+                // Get the machine for the first item
+                var machine = ItemsDB.GetMachineForItem(items.First().Key);
+                if (machine.Value == null)
+                    continue;
+
+                // Get the romof parent items
+                string? romOf = machine.Value.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
+                Dictionary<long, DatItem> parentItems = GetItemsForBucketDB(romOf);
+                if (parentItems.Count == 0)
+                    continue;
+
+                // If the parent exists and has items, we copy the items from the parent to the current game
+                foreach (var item in parentItems)
+                {
+                    DatItem datItem = (DatItem)item.Value.Clone();
+                    if (items.Any(i => i.Value.GetName() == datItem.GetName())
+                        && items.Any(i => i.Value == datItem))
+                    {
+                        ItemsDB.AddItem(datItem, machine.Key, source.Key);
+                    }
                 }
             }
         }

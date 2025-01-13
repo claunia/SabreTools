@@ -148,10 +148,10 @@ namespace SabreTools.DatTools
             // Now we want to loop through all of the games and set the correct information
             while (datFile.AddItemsFromDevices(true, true)) ;
             datFile.AddItemsFromDevices(false, true);
-            datFile.AddItemsFromParent();
+            datFile.AddItemsFromCloneOfParent();
 
             // Now that we have looped through the cloneof tags, we loop through the romof tags
-            datFile.AddItemsFromBios();
+            datFile.AddItemsFromRomOfParent();
 
             // Then, remove the romof and cloneof tags so it's not picked up by the manager
             datFile.RemoveMachineRelationshipTags();
@@ -191,7 +191,7 @@ namespace SabreTools.DatTools
             datFile.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
-            datFile.AddItemsFromParent();
+            datFile.AddItemsFromCloneOfParent();
 
             // Now that we have looped through the cloneof tags, we loop through the romof tags
             datFile.RemoveItemsFromRomOfChild(false);

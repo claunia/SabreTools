@@ -7,12 +7,6 @@ namespace SabreTools.DatFiles.Test
 {
     public partial class DatFileTests
     {
-        #region AddItemsFromBios
-
-        // TODO: Implement AddItemsFromBios tests
-
-        #endregion
-
         #region AddItemsFromChildren
 
         // TODO: Implement AddItemsFromChildren tests
@@ -25,9 +19,15 @@ namespace SabreTools.DatFiles.Test
 
         #endregion
 
-        #region AddItemsFromParent
+        #region AddItemsFromCloneOfParent
 
-        // TODO: Implement AddItemsFromParent tests
+        // TODO: Implement AddItemsFromCloneOfParent tests
+
+        #endregion
+
+        #region AddItemsFromRomOfParent
+
+        // TODO: Implement AddItemsFromRomOfParent tests
 
         #endregion
 
