@@ -37,15 +37,15 @@ namespace SabreTools.DatFiles.Test
 
         #endregion
 
-        #region RemoveBiosItemsFromChild
+        #region RemoveItemsFromCloneOfChild
 
-        // TODO: Implement RemoveBiosItemsFromChild tests
+        // TODO: Implement RemoveItemsFromCloneOfChild tests
 
         #endregion
 
-        #region RemoveItemsFromChild
+        #region RemoveItemsFromRomOfChild
 
-        // TODO: Implement RemoveItemsFromChild tests
+        // TODO: Implement RemoveItemsFromRomOfChild tests
 
         #endregion
 

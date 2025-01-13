@@ -62,6 +62,15 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Use cloneof tags to remove items from the children
+        /// </summary>
+        public void RemoveItemsFromCloneOfChild()
+        {
+            RemoveItemsFromCloneOfChildImpl();
+            RemoveItemsFromCloneOfChildImplDB();
+        }
+
+        /// <summary>
         /// Use romof tags to remove bios items from children
         /// </summary>
         /// <param name="bios">True if only child Bios sets are touched, false for non-bios sets</param>
@@ -69,15 +78,6 @@ namespace SabreTools.DatFiles
         {
             RemoveItemsFromRomOfChildImpl(bios);
             RemoveItemsFromRomOfChildImplDB(bios);
-        }
-
-        /// <summary>
-        /// Use cloneof tags to remove items from the children
-        /// </summary>
-        public void RemoveItemsFromCloneOfChild()
-        {
-            RemoveItemsFromCloneOfChildImpl();
-            RemoveItemsFromCloneOfChildImplDB();
         }
 
         /// <summary>
