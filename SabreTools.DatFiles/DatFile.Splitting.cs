@@ -97,15 +97,16 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Use romof tags to add roms to the children
         /// </summary>
+        /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
         private void AddRomsFromBiosImpl()
         {
-            List<string> games = [.. Items.Keys];
-            games.Sort();
+            List<string> buckets = [.. Items.Keys];
+            buckets.Sort();
 
-            foreach (string game in games)
+            foreach (string bucket in buckets)
             {
-                // If the game has no items in it, we want to continue
-                var items = Items[game];
+                // If the bucket has no items in it
+                var items = Items[bucket];
                 if (items == null || items.Count == 0)
                     continue;
 
@@ -131,7 +132,7 @@ namespace SabreTools.DatFiles
                     DatItem datItem = (DatItem)item.Clone();
                     datItem.CopyMachineInformation(copyFrom);
                     if (items.FindIndex(i => i.GetName() == datItem.GetName()) == -1 && !items.Contains(datItem))
-                        Add(game, datItem);
+                        Add(bucket, datItem);
                 }
             }
         }
@@ -139,13 +140,14 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Use romof tags to add roms to the children
         /// </summary>
+        /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
         private void AddRomsFromBiosImplDB()
         {
-            List<string> games = [.. ItemsDB.SortedKeys];
-            foreach (string game in games)
+            List<string> buckets = [.. ItemsDB.SortedKeys];
+            foreach (string bucket in buckets)
             {
-                // Get the items for this game
-                var items = GetItemsForBucketDB(game);
+                // If the bucket has no items in it
+                var items = GetItemsForBucketDB(bucket);
                 if (items == null || items.Count == 0)
                     continue;
 
@@ -185,15 +187,16 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="subfolder">True to add DatItems to subfolder of parent (not including Disk), false otherwise</param>
         /// <param name="skipDedup">True to skip checking for duplicate ROMs in parent, false otherwise</param>
+        /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
         private void AddRomsFromChildrenImpl(bool subfolder, bool skipDedup)
         {
-            List<string> games = [.. Items.Keys];
-            games.Sort();
+            List<string> buckets = [.. Items.Keys];
+            buckets.Sort();
 
-            foreach (string game in games)
+            foreach (string bucket in buckets)
             {
-                // If the game has no items in it, we want to continue
-                var items = Items[game];
+                // If the bucket has no items in it
+                var items = Items[bucket];
                 if (items == null || items.Count == 0)
                     continue;
 
@@ -223,7 +226,7 @@ namespace SabreTools.DatFiles
                     copyFrom = parentItems[0];
                 }
 
-                items = Items[game];
+                items = Items[bucket];
                 foreach (DatItem item in items!)
                 {
                     // Special disk handling
@@ -304,7 +307,7 @@ namespace SabreTools.DatFiles
                 }
 
                 // Then, remove the old game so it's not picked up by the writer
-                Remove(game);
+                Remove(bucket);
             }
         }
 
@@ -313,13 +316,14 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="subfolder">True to add DatItems to subfolder of parent (not including Disk), false otherwise</param>
         /// <param name="skipDedup">True to skip checking for duplicate ROMs in parent, false otherwise</param>
+        /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
         private void AddRomsFromChildrenImplDB(bool subfolder, bool skipDedup)
         {
-            List<string> games = [.. ItemsDB.SortedKeys];
-            foreach (string game in games)
+            List<string> buckets = [.. ItemsDB.SortedKeys];
+            foreach (string bucket in buckets)
             {
-                // If the game has no items in it, we want to continue
-                var items = GetItemsForBucketDB(game);
+                // If the bucket has no items in it
+                var items = GetItemsForBucketDB(bucket);
                 if (items == null || items.Count == 0)
                     continue;
 
@@ -338,7 +342,7 @@ namespace SabreTools.DatFiles
                 if (cloneOfMachine.Value == null)
                     continue;
 
-                items = GetItemsForBucketDB(game);
+                items = GetItemsForBucketDB(bucket);
                 foreach (var item in items)
                 {
                     // Get the parent items and current machine name
@@ -430,9 +434,9 @@ namespace SabreTools.DatFiles
 
                 // Then, remove the old game so it's not picked up by the writer
 #if NET40_OR_GREATER || NETCOREAPP
-                ItemsDB._buckets.TryRemove(game, out _);
+                ItemsDB._buckets.TryRemove(bucket, out _);
 #else
-                ItemsDB._buckets.Remove(game);
+                ItemsDB._buckets.Remove(bucket);
 #endif
             }
         }
@@ -442,16 +446,18 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="dev">True if only child device sets are touched, false for non-device sets (default)</param>
         /// <param name="useSlotOptions">True if slotoptions tags are used as well, false otherwise</param>
+        /// <returns>True if any items were processed, false otherwise</returns>
+        /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
         private bool AddRomsFromDevicesImpl(bool dev, bool useSlotOptions)
         {
             bool foundnew = false;
-            List<string> machines = [.. Items.Keys];
-            machines.Sort();
+            List<string> buckets = [.. Items.Keys];
+            buckets.Sort();
 
-            foreach (string machine in machines)
+            foreach (string bucket in buckets)
             {
-                // If the machine doesn't have items, we continue
-                var datItems = Items[machine];
+                // If the bucket doesn't have items
+                var datItems = Items[bucket];
                 if (datItems == null || datItems.Count == 0)
                     continue;
 
@@ -510,7 +516,7 @@ namespace SabreTools.DatFiles
                                 // Clone the item and then add it
                                 DatItem datItem = (DatItem)item.Clone();
                                 datItem.CopyMachineInformation(copyFrom);
-                                Add(machine, datItem);
+                                Add(bucket, datItem);
                             }
                         }
                     }
@@ -563,7 +569,7 @@ namespace SabreTools.DatFiles
                                 // Clone the item and then add it
                                 DatItem datItem = (DatItem)item.Clone();
                                 datItem.CopyMachineInformation(copyFrom);
-                                Add(machine, datItem);
+                                Add(bucket, datItem);
                             }
                         }
                     }
@@ -593,14 +599,16 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="dev">True if only child device sets are touched, false for non-device sets</param>
         /// <param name="useSlotOptions">True if slotoptions tags are used as well, false otherwise</param>
+        /// <returns>True if any items were processed, false otherwise</returns>
+        /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
         private bool AddRomsFromDevicesImplDB(bool dev, bool useSlotOptions)
         {
             bool foundnew = false;
-            List<string> games = [.. ItemsDB.SortedKeys];
-            foreach (string game in games)
+            List<string> buckets = [.. ItemsDB.SortedKeys];
+            foreach (string bucket in buckets)
             {
-                // If the game has no items in it, we want to continue
-                var items = GetItemsForBucketDB(game);
+                // If the bucket has no items in it
+                var items = GetItemsForBucketDB(bucket);
                 if (items == null || items.Count == 0)
                     continue;
 
@@ -712,7 +720,7 @@ namespace SabreTools.DatFiles
                             .Select(o => o.GetStringFieldValue(Models.Metadata.SlotOption.DevNameKey)!));
 
                         // Set new machine information and add to the current machine
-                        var copyFrom = ItemsDB.GetMachineForItem(GetItemsForBucketDB(game)!.First().Key);
+                        var copyFrom = ItemsDB.GetMachineForItem(GetItemsForBucketDB(bucket)!.First().Key);
                         if (copyFrom.Value == null)
                             continue;
 
@@ -755,15 +763,16 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Use cloneof tags to add roms to the children, setting the new romof tag in the process
         /// </summary>
+        /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
         private void AddRomsFromParentImpl()
         {
-            List<string> games = [.. Items.Keys];
-            games.Sort();
+            List<string> buckets = [.. Items.Keys];
+            buckets.Sort();
 
-            foreach (string game in games)
+            foreach (string bucket in buckets)
             {
-                // If the game has no items in it, we want to continue
-                var items = Items[game];
+                // If the bucket has no items in it
+                var items = Items[bucket];
                 if (items == null || items.Count == 0)
                     continue;
 
@@ -791,12 +800,12 @@ namespace SabreTools.DatFiles
                     if (items.FindIndex(i => string.Equals(i.GetName(), datItem.GetName(), StringComparison.OrdinalIgnoreCase)) == -1
                         && !items.Contains(datItem))
                     {
-                        Add(game, datItem);
+                        Add(bucket, datItem);
                     }
                 }
 
                 // Now we want to get the parent romof tag and put it in each of the items
-                items = Items[game];
+                items = Items[bucket];
                 string? romof = Items[cloneOf!]![0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
                 foreach (DatItem item in items!)
                 {
@@ -808,13 +817,14 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Use cloneof tags to add roms to the children, setting the new romof tag in the process
         /// </summary>
+        /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
         private void AddRomsFromParentImplDB()
         {
-            List<string> games = [.. ItemsDB.SortedKeys];
-            foreach (string game in games)
+            List<string> buckets = [.. ItemsDB.SortedKeys];
+            foreach (string bucket in buckets)
             {
-                // If the game has no items in it, we want to continue
-                var items = GetItemsForBucketDB(game);
+                // If the bucket has no items in it
+                var items = GetItemsForBucketDB(bucket);
                 if (items == null || items.Count == 0)
                     continue;
 
@@ -853,7 +863,7 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // Now we want to get the parent romof tag and put it in each of the items
-                items = GetItemsForBucketDB(game);
+                items = GetItemsForBucketDB(bucket);
                 string? romof = parentMachine.Value.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
                 foreach (var key in items.Keys)
                 {
@@ -869,15 +879,16 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Remove all BIOS and device sets
         /// </summary>
+        /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
         private void RemoveBiosAndDeviceSetsImpl()
         {
-            List<string> games = [.. Items.Keys];
-            games.Sort();
+            List<string> buckets = [.. Items.Keys];
+            buckets.Sort();
 
-            foreach (string game in games)
+            foreach (string bucket in buckets)
             {
-                // If the game has no items in it, we want to continue
-                var items = Items[game];
+                // If the bucket has no items in it
+                var items = Items[bucket];
                 if (items == null || items.Count == 0)
                     continue;
 
@@ -890,7 +901,7 @@ namespace SabreTools.DatFiles
                 if ((machine.GetBoolFieldValue(Models.Metadata.Machine.IsBiosKey) == true)
                     || (machine.GetBoolFieldValue(Models.Metadata.Machine.IsDeviceKey) == true))
                 {
-                    Remove(game);
+                    Remove(bucket);
                 }
             }
         }
@@ -898,13 +909,14 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Remove all BIOS and device sets
         /// </summary>
+        /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
         private void RemoveBiosAndDeviceSetsImplDB()
         {
-            List<string> games = [.. ItemsDB.SortedKeys];
-            foreach (string game in games)
+            List<string> buckets = [.. ItemsDB.SortedKeys];
+            foreach (string bucket in buckets)
             {
-                // If the game has no items in it, we want to continue
-                var items = GetItemsForBucketDB(game);
+                // If the bucket has no items in it
+                var items = GetItemsForBucketDB(bucket);
                 if (items == null || items.Count == 0)
                     continue;
 
@@ -929,16 +941,17 @@ namespace SabreTools.DatFiles
         /// Use romof tags to remove bios roms from children
         /// </summary>
         /// <param name="bios">True if only child Bios sets are touched, false for non-bios sets</param>
+        /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
         private void RemoveBiosRomsFromChildImpl(bool bios)
         {
             // Loop through the romof tags
-            List<string> games = [.. Items.Keys];
-            games.Sort();
+            List<string> buckets = [.. Items.Keys];
+            buckets.Sort();
 
-            foreach (string game in games)
+            foreach (string bucket in buckets)
             {
-                // If the game has no items in it, we want to continue
-                var items = Items[game];
+                // If the bucket has no items in it
+                var items = Items[bucket];
                 if (items == null || items.Count == 0)
                     continue;
 
@@ -967,7 +980,7 @@ namespace SabreTools.DatFiles
                     DatItem datItem = (DatItem)item.Clone();
                     while (items.Contains(datItem))
                     {
-                        Items.Remove(game, datItem);
+                        Items.Remove(bucket, datItem);
                     }
                 }
             }
@@ -977,14 +990,15 @@ namespace SabreTools.DatFiles
         /// Use romof tags to remove bios roms from children
         /// </summary>
         /// <param name="bios">True if only child Bios sets are touched, false for non-bios sets</param>
+        /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
         internal void RemoveBiosRomsFromChildImplDB(bool bios)
         {
             // Loop through the romof tags
-            List<string> games = [.. ItemsDB.SortedKeys];
-            foreach (string game in games)
+            List<string> buckets = [.. ItemsDB.SortedKeys];
+            foreach (string bucket in buckets)
             {
-                // If the game has no items in it, we want to continue
-                var items = GetItemsForBucketDB(game);
+                // If the bucket has no items in it
+                var items = GetItemsForBucketDB(bucket);
                 if (items == null || items.Count == 0)
                     continue;
 
@@ -1022,15 +1036,16 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Use cloneof tags to remove roms from the children
         /// </summary>
+        /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
         private void RemoveRomsFromChildImpl()
         {
-            List<string> games = [.. Items.Keys];
-            games.Sort();
+            List<string> buckets = [.. Items.Keys];
+            buckets.Sort();
 
-            foreach (string game in games)
+            foreach (string bucket in buckets)
             {
-                // If the game has no items in it, we want to continue
-                var items = Items[game];
+                // If the bucket has no items in it
+                var items = Items[bucket];
                 if (items == null || items.Count == 0)
                     continue;
 
@@ -1055,12 +1070,12 @@ namespace SabreTools.DatFiles
                     DatItem datItem = (DatItem)item.Clone();
                     while (items.Contains(datItem))
                     {
-                        Items.Remove(game, datItem);
+                        Items.Remove(bucket, datItem);
                     }
                 }
 
                 // Now we want to get the parent romof tag and put it in each of the remaining items
-                items = Items[game];
+                items = Items[bucket];
                 string? romof = Items[cloneOf!]![0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
                 foreach (DatItem item in items!)
                 {
@@ -1072,13 +1087,14 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Use cloneof tags to remove roms from the children
         /// </summary>
+        /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
         internal void RemoveRomsFromChildImplDB()
         {
-            List<string> games = [.. ItemsDB.SortedKeys];
-            foreach (string game in games)
+            List<string> buckets = [.. ItemsDB.SortedKeys];
+            foreach (string bucket in buckets)
             {
-                // If the game has no items in it, we want to continue
-                var items = GetItemsForBucketDB(game);
+                // If the bucket has no items in it
+                var items = GetItemsForBucketDB(bucket);
                 if (items == null || items.Count == 0)
                     continue;
 
@@ -1108,7 +1124,7 @@ namespace SabreTools.DatFiles
                 }
 
                 // Now we want to get the parent romof tag and put it in each of the remaining items
-                items = GetItemsForBucketDB(game);
+                items = GetItemsForBucketDB(bucket);
                 machine = ItemsDB.GetMachineForItem(GetItemsForBucketDB(cloneOf!)!.First().Key);
                 if (machine.Value == null)
                     continue;
@@ -1131,13 +1147,13 @@ namespace SabreTools.DatFiles
         /// <remarks>Applies to <see cref="Items"/></remarks>
         private void RemoveMachineRelationshipTagsImpl()
         {
-            List<string> games = [.. Items.Keys];
-            games.Sort();
+            List<string> buckets = [.. Items.Keys];
+            buckets.Sort();
 
-            foreach (string game in games)
+            foreach (string bucket in buckets)
             {
-                // If the game has no items in it, we want to continue
-                var items = Items[game];
+                // If the bucket has no items in it
+                var items = Items[bucket];
                 if (items == null || items.Count == 0)
                     continue;
 
