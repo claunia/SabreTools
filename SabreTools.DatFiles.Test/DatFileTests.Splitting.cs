@@ -63,7 +63,98 @@ namespace SabreTools.DatFiles.Test
 
         #region AddItemsFromRomOfParent
 
-        // TODO: Implement AddItemsFromRomOfParent tests
+        [Fact]
+        public void AddItemsFromRomOfParent_Items()
+        {
+            Source source = new Source(0, source: null);
+
+            Machine parentMachine = new Machine();
+            parentMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "parent");
+
+            Machine childMachine = new Machine();
+            childMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "child");
+            childMachine.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, "parent");
+            childMachine.SetFieldValue<bool>(Models.Metadata.Machine.IsBiosKey, true);
+
+            DatItem parentItem = new Rom();
+            parentItem.SetName("parent_rom");
+            parentItem.SetFieldValue<long>(Models.Metadata.Rom.SizeKey, 12345);
+            parentItem.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "deadbeef");
+            parentItem.SetFieldValue<Machine>(DatItem.MachineKey, parentMachine);
+            parentItem.SetFieldValue<Source>(DatItem.SourceKey, source);
+
+            DatItem matchChildItem = new Rom();
+            matchChildItem.SetName("match_child_rom");
+            matchChildItem.SetFieldValue<long>(Models.Metadata.Rom.SizeKey, 12345);
+            matchChildItem.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "deadbeef");
+            matchChildItem.SetFieldValue<Machine>(DatItem.MachineKey, childMachine);
+            matchChildItem.SetFieldValue<Source>(DatItem.SourceKey, source);
+
+            DatItem noMatchChildItem = new Rom();
+            noMatchChildItem.SetName("no_match_child_rom");
+            noMatchChildItem.SetFieldValue<long>(Models.Metadata.Rom.SizeKey, 12345);
+            noMatchChildItem.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "beefdead");
+            noMatchChildItem.SetFieldValue<Machine>(DatItem.MachineKey, childMachine);
+            noMatchChildItem.SetFieldValue<Source>(DatItem.SourceKey, source);
+
+            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            datFile.AddItem(parentItem, statsOnly: false);
+            datFile.AddItem(matchChildItem, statsOnly: false);
+            datFile.AddItem(noMatchChildItem, statsOnly: false);
+
+            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.AddItemsFromRomOfParent();
+
+            Assert.Equal(2, datFile.GetItemsForBucket("child").Count);
+        }
+
+        [Fact]
+        public void AddItemsFromRomOfParent_ItemsDB()
+        {
+            Source source = new Source(0, source: null);
+
+            Machine parentMachine = new Machine();
+            parentMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "parent");
+
+            Machine childMachine = new Machine();
+            childMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "child");
+            childMachine.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, "parent");
+            childMachine.SetFieldValue<bool>(Models.Metadata.Machine.IsBiosKey, true);
+
+            DatItem parentItem = new Rom();
+            parentItem.SetName("parent_rom");
+            parentItem.SetFieldValue<long>(Models.Metadata.Rom.SizeKey, 12345);
+            parentItem.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "deadbeef");
+            parentItem.SetFieldValue<Machine>(DatItem.MachineKey, parentMachine);
+            parentItem.SetFieldValue<Source>(DatItem.SourceKey, source);
+
+            DatItem matchChildItem = new Rom();
+            matchChildItem.SetName("match_child_rom");
+            matchChildItem.SetFieldValue<long>(Models.Metadata.Rom.SizeKey, 12345);
+            matchChildItem.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "deadbeef");
+            matchChildItem.SetFieldValue<Machine>(DatItem.MachineKey, childMachine);
+            matchChildItem.SetFieldValue<Source>(DatItem.SourceKey, source);
+
+            DatItem noMatchChildItem = new Rom();
+            noMatchChildItem.SetName("no_match_child_rom");
+            noMatchChildItem.SetFieldValue<long>(Models.Metadata.Rom.SizeKey, 12345);
+            noMatchChildItem.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "beefdead");
+            noMatchChildItem.SetFieldValue<Machine>(DatItem.MachineKey, childMachine);
+            noMatchChildItem.SetFieldValue<Source>(DatItem.SourceKey, source);
+
+            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            long biosMachineIndex = datFile.AddMachineDB(parentMachine);
+            long deviceMachineIndex = datFile.AddMachineDB(childMachine);
+            long sourceIndex = datFile.AddSourceDB(source);
+            _ = datFile.AddItemDB(parentItem, biosMachineIndex, sourceIndex, statsOnly: false);
+            _ = datFile.AddItemDB(matchChildItem, deviceMachineIndex, sourceIndex, statsOnly: false);
+            _ = datFile.AddItemDB(noMatchChildItem, deviceMachineIndex, sourceIndex, statsOnly: false);
+
+            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.AddItemsFromRomOfParent();
+
+            Assert.Equal(2, datFile.GetItemsForBucketDB("child").Count);
+        }
 
         #endregion
 
