@@ -105,8 +105,8 @@ namespace SabreTools.DatTools
             datFile.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
-            while (datFile.AddRomsFromDevices(false, false)) ;
-            while (datFile.AddRomsFromDevices(true, false)) ;
+            while (datFile.AddItemsFromDevices(false, false)) ;
+            while (datFile.AddItemsFromDevices(true, false)) ;
 
             // Then, remove the romof and cloneof tags so it's not picked up by the manager
             datFile.RemoveMachineRelationshipTags();
@@ -124,11 +124,11 @@ namespace SabreTools.DatTools
             datFile.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
-            datFile.AddRomsFromChildren(true, false);
+            datFile.AddItemsFromChildren(true, false);
 
             // Now that we have looped through the cloneof tags, we loop through the romof tags
-            datFile.RemoveBiosRomsFromChild(false);
-            datFile.RemoveBiosRomsFromChild(true);
+            datFile.RemoveBiosItemsFromChild(false);
+            datFile.RemoveBiosItemsFromChild(true);
 
             // Finally, remove the romof and cloneof tags so it's not picked up by the manager
             datFile.RemoveMachineRelationshipTags();
@@ -146,12 +146,12 @@ namespace SabreTools.DatTools
             datFile.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
-            while (datFile.AddRomsFromDevices(true, true)) ;
-            datFile.AddRomsFromDevices(false, true);
-            datFile.AddRomsFromParent();
+            while (datFile.AddItemsFromDevices(true, true)) ;
+            datFile.AddItemsFromDevices(false, true);
+            datFile.AddItemsFromParent();
 
             // Now that we have looped through the cloneof tags, we loop through the romof tags
-            datFile.AddRomsFromBios();
+            datFile.AddItemsFromBios();
 
             // Then, remove the romof and cloneof tags so it's not picked up by the manager
             datFile.RemoveMachineRelationshipTags();
@@ -169,11 +169,11 @@ namespace SabreTools.DatTools
             datFile.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
-            datFile.AddRomsFromChildren(true, true);
+            datFile.AddItemsFromChildren(true, true);
 
             // Now that we have looped through the cloneof tags, we loop through the romof tags
-            datFile.RemoveBiosRomsFromChild(false);
-            datFile.RemoveBiosRomsFromChild(true);
+            datFile.RemoveBiosItemsFromChild(false);
+            datFile.RemoveBiosItemsFromChild(true);
 
             // Finally, remove the romof and cloneof tags so it's not picked up by the manager
             datFile.RemoveMachineRelationshipTags();
@@ -191,11 +191,11 @@ namespace SabreTools.DatTools
             datFile.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
-            datFile.AddRomsFromParent();
+            datFile.AddItemsFromParent();
 
             // Now that we have looped through the cloneof tags, we loop through the romof tags
-            datFile.RemoveBiosRomsFromChild(false);
-            datFile.RemoveBiosRomsFromChild(true);
+            datFile.RemoveBiosItemsFromChild(false);
+            datFile.RemoveBiosItemsFromChild(true);
 
             // Finally, remove the romof and cloneof tags so it's not picked up by the manager
             datFile.RemoveMachineRelationshipTags();
@@ -213,11 +213,11 @@ namespace SabreTools.DatTools
             datFile.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
-            datFile.RemoveRomsFromChild();
+            datFile.RemoveItemsFromChild();
 
             // Now that we have looped through the cloneof tags, we loop through the romof tags
-            datFile.RemoveBiosRomsFromChild(false);
-            datFile.RemoveBiosRomsFromChild(true);
+            datFile.RemoveBiosItemsFromChild(false);
+            datFile.RemoveBiosItemsFromChild(true);
 
             // Finally, remove the romof and cloneof tags so it's not picked up by the manager
             datFile.RemoveMachineRelationshipTags();

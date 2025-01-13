@@ -12,44 +12,44 @@ namespace SabreTools.DatFiles
         #region Splitting
 
         /// <summary>
-        /// Use romof tags to add roms to the children
+        /// Use romof tags to add items to the children
         /// </summary>
-        public void AddRomsFromBios()
+        public void AddItemsFromBios()
         {
-            AddRomsFromBiosImpl();
-            AddRomsFromBiosImplDB();
+            AddItemsFromBiosImpl();
+            AddItemsFromBiosImplDB();
         }
 
         /// <summary>
-        /// Use cloneof tags to add roms to the parents, removing the child sets in the process
+        /// Use cloneof tags to add items to the parents, removing the child sets in the process
         /// </summary>
         /// <param name="subfolder">True to add DatItems to subfolder of parent (not including Disk), false otherwise</param>
         /// <param name="skipDedup">True to skip checking for duplicate ROMs in parent, false otherwise</param>
-        public void AddRomsFromChildren(bool subfolder, bool skipDedup)
+        public void AddItemsFromChildren(bool subfolder, bool skipDedup)
         {
-            AddRomsFromChildrenImpl(subfolder, skipDedup);
-            AddRomsFromChildrenImplDB(subfolder, skipDedup);
+            AddItemsFromChildrenImpl(subfolder, skipDedup);
+            AddItemsFromChildrenImplDB(subfolder, skipDedup);
         }
 
         /// <summary>
-        /// Use device_ref and optionally slotoption tags to add roms to the children
+        /// Use device_ref and optionally slotoption tags to add items to the children
         /// </summary>
         /// <param name="dev">True if only child device sets are touched, false for non-device sets</param>
         /// <param name="useSlotOptions">True if slotoptions tags are used as well, false otherwise</param>
-        public bool AddRomsFromDevices(bool dev, bool useSlotOptions)
+        public bool AddItemsFromDevices(bool dev, bool useSlotOptions)
         {
-            bool foundnew = AddRomsFromDevicesImpl(dev, useSlotOptions);
-            foundnew |= AddRomsFromDevicesImplDB(dev, useSlotOptions);
+            bool foundnew = AddItemsFromDevicesImpl(dev, useSlotOptions);
+            foundnew |= AddItemsFromDevicesImplDB(dev, useSlotOptions);
             return foundnew;
         }
 
         /// <summary>
-        /// Use cloneof tags to add roms to the children, setting the new romof tag in the process
+        /// Use cloneof tags to add items to the children, setting the new romof tag in the process
         /// </summary>
-        public void AddRomsFromParent()
+        public void AddItemsFromParent()
         {
-            AddRomsFromParentImpl();
-            AddRomsFromParentImplDB();
+            AddItemsFromParentImpl();
+            AddItemsFromParentImplDB();
         }
 
         /// <summary>
@@ -62,26 +62,26 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Use romof tags to remove bios roms from children
+        /// Use romof tags to remove bios items from children
         /// </summary>
         /// <param name="bios">True if only child Bios sets are touched, false for non-bios sets</param>
-        public void RemoveBiosRomsFromChild(bool bios)
+        public void RemoveBiosItemsFromChild(bool bios)
         {
-            RemoveBiosRomsFromChildImpl(bios);
-            RemoveBiosRomsFromChildImplDB(bios);
+            RemoveBiosItemsFromChildImpl(bios);
+            RemoveBiosItemsFromChildImplDB(bios);
         }
 
         /// <summary>
-        /// Use cloneof tags to remove roms from the children
+        /// Use cloneof tags to remove items from the children
         /// </summary>
-        public void RemoveRomsFromChild()
+        public void RemoveItemsFromChild()
         {
-            RemoveRomsFromChildImpl();
-            RemoveRomsFromChildImplDB();
+            RemoveItemsFromChildImpl();
+            RemoveItemsFromChildImplDB();
         }
 
         /// <summary>
-        /// Remove all romof and cloneof tags from all games
+        /// Remove all romof and cloneof tags from all machines
         /// </summary>
         public void RemoveMachineRelationshipTags()
         {
@@ -94,13 +94,13 @@ namespace SabreTools.DatFiles
         #region Splitting Implementations
 
         /// <summary>
-        /// Use romof tags to add roms to the children
+        /// Use romof tags to add items to the children
         /// </summary>
         /// <remarks>
         /// Applies to <see cref="Items"/>.
         /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
         /// </remarks>
-        private void AddRomsFromBiosImpl()
+        private void AddItemsFromBiosImpl()
         {
             List<string> buckets = [.. Items.Keys];
             buckets.Sort();
@@ -140,13 +140,13 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Use romof tags to add roms to the children
+        /// Use romof tags to add items to the children
         /// </summary>
         /// <remarks>
         /// Applies to <see cref="ItemsDB"/>.
         /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
         /// </remarks>
-        private void AddRomsFromBiosImplDB()
+        private void AddItemsFromBiosImplDB()
         {
             List<string> buckets = [.. ItemsDB.SortedKeys];
             foreach (string bucket in buckets)
@@ -188,7 +188,7 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Use cloneof tags to add roms to the parents, removing the child sets in the process
+        /// Use cloneof tags to add items to the parents, removing the child sets in the process
         /// </summary>
         /// <param name="subfolder">True to add DatItems to subfolder of parent (not including Disk), false otherwise</param>
         /// <param name="skipDedup">True to skip checking for duplicate ROMs in parent, false otherwise</param>
@@ -196,7 +196,7 @@ namespace SabreTools.DatFiles
         /// Applies to <see cref="Items"/>.
         /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
         /// </remarks>
-        private void AddRomsFromChildrenImpl(bool subfolder, bool skipDedup)
+        private void AddItemsFromChildrenImpl(bool subfolder, bool skipDedup)
         {
             List<string> buckets = [.. Items.Keys];
             buckets.Sort();
@@ -320,7 +320,7 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Use cloneof tags to add roms to the parents, removing the child sets in the process
+        /// Use cloneof tags to add items to the parents, removing the child sets in the process
         /// </summary>
         /// <param name="subfolder">True to add DatItems to subfolder of parent (not including Disk), false otherwise</param>
         /// <param name="skipDedup">True to skip checking for duplicate ROMs in parent, false otherwise</param>
@@ -328,7 +328,7 @@ namespace SabreTools.DatFiles
         /// Applies to <see cref="ItemsDB"/>.
         /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
         /// </remarks>
-        private void AddRomsFromChildrenImplDB(bool subfolder, bool skipDedup)
+        private void AddItemsFromChildrenImplDB(bool subfolder, bool skipDedup)
         {
             List<string> buckets = [.. ItemsDB.SortedKeys];
             foreach (string bucket in buckets)
@@ -453,7 +453,7 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Use device_ref and optionally slotoption tags to add roms to the children
+        /// Use device_ref and optionally slotoption tags to add items to the children
         /// </summary>
         /// <param name="dev">True if only child device sets are touched, false for non-device sets (default)</param>
         /// <param name="useSlotOptions">True if slotoptions tags are used as well, false otherwise</param>
@@ -462,7 +462,7 @@ namespace SabreTools.DatFiles
         /// Applies to <see cref="Items"/>.
         /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
         /// </remarks>
-        private bool AddRomsFromDevicesImpl(bool dev, bool useSlotOptions)
+        private bool AddItemsFromDevicesImpl(bool dev, bool useSlotOptions)
         {
             bool foundnew = false;
             List<string> buckets = [.. Items.Keys];
@@ -609,7 +609,7 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Use device_ref and optionally slotoption tags to add roms to the children
+        /// Use device_ref and optionally slotoption tags to add items to the children
         /// </summary>
         /// <param name="dev">True if only child device sets are touched, false for non-device sets</param>
         /// <param name="useSlotOptions">True if slotoptions tags are used as well, false otherwise</param>
@@ -618,7 +618,7 @@ namespace SabreTools.DatFiles
         /// Applies to <see cref="ItemsDB"/>.
         /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
         /// </remarks>
-        private bool AddRomsFromDevicesImplDB(bool dev, bool useSlotOptions)
+        private bool AddItemsFromDevicesImplDB(bool dev, bool useSlotOptions)
         {
             bool foundnew = false;
             List<string> buckets = [.. ItemsDB.SortedKeys];
@@ -778,13 +778,13 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Use cloneof tags to add roms to the children, setting the new romof tag in the process
+        /// Use cloneof tags to add items to the children, setting the new romof tag in the process
         /// </summary>
         /// <remarks>
         /// Applies to <see cref="Items"/>.
         /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
         /// </remarks>
-        private void AddRomsFromParentImpl()
+        private void AddItemsFromParentImpl()
         {
             List<string> buckets = [.. Items.Keys];
             buckets.Sort();
@@ -835,13 +835,13 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Use cloneof tags to add roms to the children, setting the new romof tag in the process
+        /// Use cloneof tags to add items to the children, setting the new romof tag in the process
         /// </summary>
         /// <remarks>
         /// Applies to <see cref="ItemsDB"/>.
         /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
         /// </remarks>
-        private void AddRomsFromParentImplDB()
+        private void AddItemsFromParentImplDB()
         {
             List<string> buckets = [.. ItemsDB.SortedKeys];
             foreach (string bucket in buckets)
@@ -967,14 +967,14 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Use romof tags to remove bios roms from children
+        /// Use romof tags to remove bios items from children
         /// </summary>
         /// <param name="bios">True if only child Bios sets are touched, false for non-bios sets</param>
         /// <remarks>
         /// Applies to <see cref="Items"/>.
         /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
         /// </remarks>
-        private void RemoveBiosRomsFromChildImpl(bool bios)
+        private void RemoveBiosItemsFromChildImpl(bool bios)
         {
             // Loop through the romof tags
             List<string> buckets = [.. Items.Keys];
@@ -1019,14 +1019,14 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Use romof tags to remove bios roms from children
+        /// Use romof tags to remove bios items from children
         /// </summary>
         /// <param name="bios">True if only child Bios sets are touched, false for non-bios sets</param>
         /// <remarks>
         /// Applies to <see cref="ItemsDB"/>.
         /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
         /// </remarks>
-        private void RemoveBiosRomsFromChildImplDB(bool bios)
+        private void RemoveBiosItemsFromChildImplDB(bool bios)
         {
             // Loop through the romof tags
             List<string> buckets = [.. ItemsDB.SortedKeys];
@@ -1069,13 +1069,13 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Use cloneof tags to remove roms from the children
+        /// Use cloneof tags to remove items from the children
         /// </summary>
         /// <remarks>
         /// Applies to <see cref="Items"/>.
         /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
         /// </remarks>
-        private void RemoveRomsFromChildImpl()
+        private void RemoveItemsFromChildImpl()
         {
             List<string> buckets = [.. Items.Keys];
             buckets.Sort();
@@ -1123,13 +1123,13 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Use cloneof tags to remove roms from the children
+        /// Use cloneof tags to remove items from the children
         /// </summary>
         /// <remarks>
         /// Applies to <see cref="ItemsDB"/>.
         /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
         /// </remarks>
-        private void RemoveRomsFromChildImplDB()
+        private void RemoveItemsFromChildImplDB()
         {
             List<string> buckets = [.. ItemsDB.SortedKeys];
             foreach (string bucket in buckets)
@@ -1183,7 +1183,7 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Remove all romof and cloneof tags from all games
+        /// Remove all romof and cloneof tags from all machines
         /// </summary>
         /// <remarks>Applies to <see cref="Items"/></remarks>
         private void RemoveMachineRelationshipTagsImpl()
@@ -1213,7 +1213,7 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Remove all romof and cloneof tags from all games
+        /// Remove all romof and cloneof tags from all machines
         /// </summary>
         /// <remarks>Applies to <see cref="ItemsDB"/></remarks>
         private void RemoveMachineRelationshipTagsImplDB()
