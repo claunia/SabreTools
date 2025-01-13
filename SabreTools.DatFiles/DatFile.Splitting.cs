@@ -1026,7 +1026,7 @@ namespace SabreTools.DatFiles
         /// Applies to <see cref="ItemsDB"/>.
         /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
         /// </remarks>
-        internal void RemoveBiosRomsFromChildImplDB(bool bios)
+        private void RemoveBiosRomsFromChildImplDB(bool bios)
         {
             // Loop through the romof tags
             List<string> buckets = [.. ItemsDB.SortedKeys];
@@ -1129,7 +1129,7 @@ namespace SabreTools.DatFiles
         /// Applies to <see cref="ItemsDB"/>.
         /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
         /// </remarks>
-        internal void RemoveRomsFromChildImplDB()
+        private void RemoveRomsFromChildImplDB()
         {
             List<string> buckets = [.. ItemsDB.SortedKeys];
             foreach (string bucket in buckets)
