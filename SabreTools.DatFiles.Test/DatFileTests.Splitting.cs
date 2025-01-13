@@ -46,9 +46,9 @@ namespace SabreTools.DatFiles.Test
 
         #endregion
 
-        #region RemoveTagsFromChild
+        #region RemoveMachineRelationshipTags
 
-        // TODO: Implement RemoveTagsFromChild tests
+        // TODO: Implement RemoveMachineRelationshipTags tests
 
         #endregion
     }

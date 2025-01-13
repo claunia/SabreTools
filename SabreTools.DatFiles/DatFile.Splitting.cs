@@ -84,10 +84,10 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Remove all romof and cloneof tags from all games
         /// </summary>
-        public void RemoveTagsFromChild()
+        public void RemoveMachineRelationshipTags()
         {
-            RemoveTagsFromChildImpl();
-            RemoveTagsFromChildImplDB();
+            RemoveMachineRelationshipTagsImpl();
+            RemoveMachineRelationshipTagsImplDB();
         }
 
         #endregion
@@ -1128,7 +1128,8 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Remove all romof and cloneof tags from all games
         /// </summary>
-        private void RemoveTagsFromChildImpl()
+        /// <remarks>Applies to <see cref="Items"/></remarks>
+        private void RemoveMachineRelationshipTagsImpl()
         {
             List<string> games = [.. Items.Keys];
             games.Sort();
@@ -1157,7 +1158,8 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Remove all romof and cloneof tags from all games
         /// </summary>
-        private void RemoveTagsFromChildImplDB()
+        /// <remarks>Applies to <see cref="ItemsDB"/></remarks>
+        private void RemoveMachineRelationshipTagsImplDB()
         {
             var machines = ItemsDB.GetMachines();
             foreach (var machine in machines)

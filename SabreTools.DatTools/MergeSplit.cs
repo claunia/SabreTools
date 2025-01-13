@@ -109,7 +109,7 @@ namespace SabreTools.DatTools
             while (datFile.AddRomsFromDevices(true, false)) ;
 
             // Then, remove the romof and cloneof tags so it's not picked up by the manager
-            datFile.RemoveTagsFromChild();
+            datFile.RemoveMachineRelationshipTags();
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace SabreTools.DatTools
             datFile.RemoveBiosRomsFromChild(true);
 
             // Finally, remove the romof and cloneof tags so it's not picked up by the manager
-            datFile.RemoveTagsFromChild();
+            datFile.RemoveMachineRelationshipTags();
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace SabreTools.DatTools
             datFile.AddRomsFromBios();
 
             // Then, remove the romof and cloneof tags so it's not picked up by the manager
-            datFile.RemoveTagsFromChild();
+            datFile.RemoveMachineRelationshipTags();
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace SabreTools.DatTools
             datFile.RemoveBiosRomsFromChild(true);
 
             // Finally, remove the romof and cloneof tags so it's not picked up by the manager
-            datFile.RemoveTagsFromChild();
+            datFile.RemoveMachineRelationshipTags();
         }
 
         /// <summary>
@@ -198,7 +198,7 @@ namespace SabreTools.DatTools
             datFile.RemoveBiosRomsFromChild(true);
 
             // Finally, remove the romof and cloneof tags so it's not picked up by the manager
-            datFile.RemoveTagsFromChild();
+            datFile.RemoveMachineRelationshipTags();
         }
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace SabreTools.DatTools
             datFile.RemoveBiosRomsFromChild(true);
 
             // Finally, remove the romof and cloneof tags so it's not picked up by the manager
-            datFile.RemoveTagsFromChild();
+            datFile.RemoveMachineRelationshipTags();
         }
 
         #endregion
