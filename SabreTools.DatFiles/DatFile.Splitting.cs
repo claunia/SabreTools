@@ -24,6 +24,16 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Use cloneof tags to add items to the children, setting the new romof tag in the process
+        /// </summary>
+        /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
+        public void AddItemsFromCloneOfParent()
+        {
+            AddItemsFromCloneOfParentImpl();
+            AddItemsFromCloneOfParentImplDB();
+        }
+
+        /// <summary>
         /// Use device_ref and optionally slotoption tags to add items to the children
         /// </summary>
         /// <param name="dev">True if only child device sets are touched, false for non-device sets</param>
@@ -34,16 +44,6 @@ namespace SabreTools.DatFiles
             bool foundnew = AddItemsFromDevicesImpl(dev, useSlotOptions);
             foundnew |= AddItemsFromDevicesImplDB(dev, useSlotOptions);
             return foundnew;
-        }
-
-        /// <summary>
-        /// Use cloneof tags to add items to the children, setting the new romof tag in the process
-        /// </summary>
-        /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
-        public void AddItemsFromCloneOfParent()
-        {
-            AddItemsFromCloneOfParentImpl();
-            AddItemsFromCloneOfParentImplDB();
         }
 
         /// <summary>
@@ -363,6 +363,124 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Use cloneof tags to add items to the children, setting the new romof tag in the process
+        /// </summary>
+        /// <remarks>
+        /// Applies to <see cref="Items"/>.
+        /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
+        /// </remarks>
+        private void AddItemsFromCloneOfParentImpl()
+        {
+            List<string> buckets = [.. Items.Keys];
+            buckets.Sort();
+
+            foreach (string bucket in buckets)
+            {
+                // If the bucket has no items in it
+                List<DatItem> items = GetItemsForBucket(bucket);
+                if (items.Count == 0)
+                    continue;
+
+                // Get the machine
+                var machine = items[0].GetFieldValue<Machine>(DatItem.MachineKey);
+                if (machine == null)
+                    continue;
+
+                // Get the cloneof parent items
+                string? cloneOf = machine.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey);
+                List<DatItem> parentItems = GetItemsForBucket(cloneOf);
+                if (parentItems.Count == 0)
+                    continue;
+
+                // If the parent exists and has items, we copy the items from the parent to the current game
+                DatItem copyFrom = items[0];
+                foreach (DatItem item in parentItems)
+                {
+                    DatItem datItem = (DatItem)item.Clone();
+                    datItem.CopyMachineInformation(copyFrom);
+                    if (items.FindIndex(i => string.Equals(i.GetName(), datItem.GetName(), StringComparison.OrdinalIgnoreCase)) == -1
+                        && !items.Contains(datItem))
+                    {
+                        Add(bucket, datItem);
+                    }
+                }
+
+                // Now we want to get the parent romof tag and put it in each of the items
+                items = GetItemsForBucket(bucket);
+                string? romof = GetItemsForBucket(cloneOf)[0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
+                foreach (DatItem item in items)
+                {
+                    item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, romof);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Use cloneof tags to add items to the children, setting the new romof tag in the process
+        /// </summary>
+        /// <remarks>
+        /// Applies to <see cref="ItemsDB"/>.
+        /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
+        /// </remarks>
+        private void AddItemsFromCloneOfParentImplDB()
+        {
+            List<string> buckets = [.. ItemsDB.SortedKeys];
+            foreach (string bucket in buckets)
+            {
+                // If the bucket has no items in it
+                Dictionary<long, DatItem> items = GetItemsForBucketDB(bucket);
+                if (items.Count == 0)
+                    continue;
+
+                // Get the source for the first item
+                var source = ItemsDB.GetSourceForItem(items.First().Key);
+
+                // Get the machine for the first item in the list
+                var machine = ItemsDB.GetMachineForItem(items.First().Key);
+                if (machine.Value == null)
+                    continue;
+
+                // Get the clone parent
+                string? cloneOf = machine.Value.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey);
+                if (string.IsNullOrEmpty(cloneOf))
+                    continue;
+
+                // If the parent doesn't have any items, we want to continue
+                Dictionary<long, DatItem> parentItems = GetItemsForBucketDB(cloneOf);
+                if (parentItems.Count == 0)
+                    continue;
+
+                // If the parent exists and has items, we copy the items from the parent to the current game
+                foreach (var item in parentItems)
+                {
+                    DatItem datItem = (DatItem)item.Value.Clone();
+                    if (items.Values.Any(i => i.GetName()?.ToLowerInvariant() == datItem.GetName()?.ToLowerInvariant())
+                        && items.Values.Any(i => i == datItem))
+                    {
+                        ItemsDB.AddItem(datItem, machine.Key, source.Key);
+                    }
+                }
+
+                // Get the parent machine
+                var parentMachine = ItemsDB.GetMachineForItem(GetItemsForBucketDB(cloneOf).First().Key);
+                if (parentMachine.Value == null)
+                    continue;
+
+                // Now we want to get the parent romof tag and put it in each of the items
+                items = GetItemsForBucketDB(bucket);
+                string? romof = parentMachine.Value.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
+                foreach (var key in items.Keys)
+                {
+                    var itemMachine = ItemsDB.GetMachineForItem(key);
+                    if (itemMachine.Value == null)
+                        continue;
+
+                    itemMachine.Value.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, romof);
+                }
+            }
+        }
+
+        /// <summary>
         /// Use device_ref and optionally slotoption tags to add items to the children
         /// </summary>
         /// <param name="dev">True if only child device sets are touched, false for non-device sets (default)</param>
@@ -676,124 +794,6 @@ namespace SabreTools.DatFiles
             }
 
             return foundnew;
-        }
-
-        /// <summary>
-        /// Use cloneof tags to add items to the children, setting the new romof tag in the process
-        /// </summary>
-        /// <remarks>
-        /// Applies to <see cref="Items"/>.
-        /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
-        /// </remarks>
-        private void AddItemsFromCloneOfParentImpl()
-        {
-            List<string> buckets = [.. Items.Keys];
-            buckets.Sort();
-
-            foreach (string bucket in buckets)
-            {
-                // If the bucket has no items in it
-                List<DatItem> items = GetItemsForBucket(bucket);
-                if (items.Count == 0)
-                    continue;
-
-                // Get the machine
-                var machine = items[0].GetFieldValue<Machine>(DatItem.MachineKey);
-                if (machine == null)
-                    continue;
-
-                // Get the cloneof parent items
-                string? cloneOf = machine.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey);
-                List<DatItem> parentItems = GetItemsForBucket(cloneOf);
-                if (parentItems.Count == 0)
-                    continue;
-
-                // If the parent exists and has items, we copy the items from the parent to the current game
-                DatItem copyFrom = items[0];
-                foreach (DatItem item in parentItems)
-                {
-                    DatItem datItem = (DatItem)item.Clone();
-                    datItem.CopyMachineInformation(copyFrom);
-                    if (items.FindIndex(i => string.Equals(i.GetName(), datItem.GetName(), StringComparison.OrdinalIgnoreCase)) == -1
-                        && !items.Contains(datItem))
-                    {
-                        Add(bucket, datItem);
-                    }
-                }
-
-                // Now we want to get the parent romof tag and put it in each of the items
-                items = GetItemsForBucket(bucket);
-                string? romof = GetItemsForBucket(cloneOf)[0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
-                foreach (DatItem item in items)
-                {
-                    item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, romof);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Use cloneof tags to add items to the children, setting the new romof tag in the process
-        /// </summary>
-        /// <remarks>
-        /// Applies to <see cref="ItemsDB"/>.
-        /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
-        /// </remarks>
-        private void AddItemsFromCloneOfParentImplDB()
-        {
-            List<string> buckets = [.. ItemsDB.SortedKeys];
-            foreach (string bucket in buckets)
-            {
-                // If the bucket has no items in it
-                Dictionary<long, DatItem> items = GetItemsForBucketDB(bucket);
-                if (items.Count == 0)
-                    continue;
-
-                // Get the source for the first item
-                var source = ItemsDB.GetSourceForItem(items.First().Key);
-
-                // Get the machine for the first item in the list
-                var machine = ItemsDB.GetMachineForItem(items.First().Key);
-                if (machine.Value == null)
-                    continue;
-
-                // Get the clone parent
-                string? cloneOf = machine.Value.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey);
-                if (string.IsNullOrEmpty(cloneOf))
-                    continue;
-
-                // If the parent doesn't have any items, we want to continue
-                Dictionary<long, DatItem> parentItems = GetItemsForBucketDB(cloneOf);
-                if (parentItems.Count == 0)
-                    continue;
-
-                // If the parent exists and has items, we copy the items from the parent to the current game
-                foreach (var item in parentItems)
-                {
-                    DatItem datItem = (DatItem)item.Value.Clone();
-                    if (items.Values.Any(i => i.GetName()?.ToLowerInvariant() == datItem.GetName()?.ToLowerInvariant())
-                        && items.Values.Any(i => i == datItem))
-                    {
-                        ItemsDB.AddItem(datItem, machine.Key, source.Key);
-                    }
-                }
-
-                // Get the parent machine
-                var parentMachine = ItemsDB.GetMachineForItem(GetItemsForBucketDB(cloneOf).First().Key);
-                if (parentMachine.Value == null)
-                    continue;
-
-                // Now we want to get the parent romof tag and put it in each of the items
-                items = GetItemsForBucketDB(bucket);
-                string? romof = parentMachine.Value.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
-                foreach (var key in items.Keys)
-                {
-                    var itemMachine = ItemsDB.GetMachineForItem(key);
-                    if (itemMachine.Value == null)
-                        continue;
-
-                    itemMachine.Value.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, romof);
-                }
-            }
         }
 
         /// <summary>

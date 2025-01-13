@@ -13,15 +13,15 @@ namespace SabreTools.DatFiles.Test
 
         #endregion
 
-        #region AddItemsFromDevices
-
-        // TODO: Implement AddItemsFromDevices tests
-
-        #endregion
-
         #region AddItemsFromCloneOfParent
 
         // TODO: Implement AddItemsFromCloneOfParent tests
+
+        #endregion
+
+        #region AddItemsFromDevices
+
+        // TODO: Implement AddItemsFromDevices tests
 
         #endregion
 
