@@ -235,7 +235,7 @@ namespace SabreTools.DatFiles
                 }
 
                 items = GetItemsForBucket(bucket);
-                foreach (DatItem item in items!)
+                foreach (DatItem item in items)
                 {
                     // Special disk handling
                     if (item is Disk disk)
@@ -827,7 +827,7 @@ namespace SabreTools.DatFiles
                 // Now we want to get the parent romof tag and put it in each of the items
                 items = GetItemsForBucket(bucket);
                 string? romof = GetItemsForBucket(cloneOf!)![0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
-                foreach (DatItem item in items!)
+                foreach (DatItem item in items)
                 {
                     item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, romof);
                 }
@@ -1103,7 +1103,7 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // If the parent exists and has items, we remove the parent items from the current game
-                foreach (DatItem item in parentItems!)
+                foreach (DatItem item in parentItems)
                 {
                     DatItem datItem = (DatItem)item.Clone();
                     while (items.Contains(datItem))
@@ -1114,8 +1114,8 @@ namespace SabreTools.DatFiles
 
                 // Now we want to get the parent romof tag and put it in each of the remaining items
                 items = GetItemsForBucket(bucket);
-                string? romof = GetItemsForBucket(cloneOf!)![0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
-                foreach (DatItem item in items!)
+                string? romof = GetItemsForBucket(cloneOf)[0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
+                foreach (DatItem item in items)
                 {
                     item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, romof);
                 }
@@ -1171,7 +1171,7 @@ namespace SabreTools.DatFiles
                     continue;
 
                 string? romof = machine.Value.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
-                foreach (var item in items!)
+                foreach (var item in items)
                 {
                     machine = ItemsDB.GetMachineForItem(item.Key);
                     if (machine.Value == null)
