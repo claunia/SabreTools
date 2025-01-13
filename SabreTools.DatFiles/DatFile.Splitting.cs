@@ -74,10 +74,10 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Use cloneof tags to remove items from the children
         /// </summary>
-        public void RemoveItemsFromChild()
+        public void RemoveItemsFromCloneOfChild()
         {
-            RemoveItemsFromChildImpl();
-            RemoveItemsFromChildImplDB();
+            RemoveItemsFromCloneOfChildImpl();
+            RemoveItemsFromCloneOfChildImplDB();
         }
 
         /// <summary>
@@ -1075,7 +1075,7 @@ namespace SabreTools.DatFiles
         /// Applies to <see cref="Items"/>.
         /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
         /// </remarks>
-        private void RemoveItemsFromChildImpl()
+        private void RemoveItemsFromCloneOfChildImpl()
         {
             List<string> buckets = [.. Items.Keys];
             buckets.Sort();
@@ -1129,7 +1129,7 @@ namespace SabreTools.DatFiles
         /// Applies to <see cref="ItemsDB"/>.
         /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
         /// </remarks>
-        private void RemoveItemsFromChildImplDB()
+        private void RemoveItemsFromCloneOfChildImplDB()
         {
             List<string> buckets = [.. ItemsDB.SortedKeys];
             foreach (string bucket in buckets)

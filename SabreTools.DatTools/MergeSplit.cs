@@ -213,7 +213,7 @@ namespace SabreTools.DatTools
             datFile.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
-            datFile.RemoveItemsFromChild();
+            datFile.RemoveItemsFromCloneOfChild();
 
             // Now that we have looped through the cloneof tags, we loop through the romof tags
             datFile.RemoveBiosItemsFromChild(false);
