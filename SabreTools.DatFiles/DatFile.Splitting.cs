@@ -948,6 +948,9 @@ namespace SabreTools.DatFiles
                         ItemsDB.RemoveItem(key);
                     }
                 }
+
+                // Remove the machine
+                ItemsDB.RemoveMachine(machine.Key);
             }
         }
 

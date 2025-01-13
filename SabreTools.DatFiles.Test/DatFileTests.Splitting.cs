@@ -33,7 +33,66 @@ namespace SabreTools.DatFiles.Test
 
         #region RemoveBiosAndDeviceSets
 
-        // TODO: Implement RemoveBiosAndDeviceSets tests
+        [Fact]
+        public void RemoveBiosAndDeviceSets_Items()
+        {
+            Source source = new Source(0, source: null);
+
+            Machine biosMachine = new Machine();
+            biosMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "bios");
+            biosMachine.SetFieldValue<bool>(Models.Metadata.Machine.IsBiosKey, true);
+
+            Machine deviceMachine = new Machine();
+            deviceMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "device");
+            deviceMachine.SetFieldValue<bool>(Models.Metadata.Machine.IsDeviceKey, true);
+
+            DatItem biosItem = new Rom();
+            biosItem.SetFieldValue<Machine>(DatItem.MachineKey, biosMachine);
+            biosItem.SetFieldValue<Source>(DatItem.SourceKey, source);
+
+            DatItem deviceItem = new Rom();
+            deviceItem.SetFieldValue<Machine>(DatItem.MachineKey, deviceMachine);
+            deviceItem.SetFieldValue<Source>(DatItem.SourceKey, source);
+
+            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            datFile.AddItem(biosItem, statsOnly: false);
+            datFile.AddItem(deviceItem, statsOnly: false);
+
+            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.RemoveBiosAndDeviceSets();
+
+            Assert.Empty(datFile.GetItemsForBucket("bios"));
+            Assert.Empty(datFile.GetItemsForBucket("device"));
+        }
+
+        [Fact]
+        public void RemoveBiosAndDeviceSets_ItemsDB()
+        {
+            Source source = new Source(0, source: null);
+
+            Machine biosMachine = new Machine();
+            biosMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "bios");
+            biosMachine.SetFieldValue<bool>(Models.Metadata.Machine.IsBiosKey, true);
+
+            Machine deviceMachine = new Machine();
+            deviceMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "device");
+            deviceMachine.SetFieldValue<bool>(Models.Metadata.Machine.IsDeviceKey, true);
+
+            DatItem biosItem = new Rom();
+            DatItem deviceItem = new Rom();
+
+            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            long biosMachineIndex = datFile.AddMachineDB(biosMachine);
+            long deviceMachineIndex = datFile.AddMachineDB(deviceMachine);
+            long sourceIndex = datFile.AddSourceDB(source);
+            long biosItemId = datFile.AddItemDB(biosItem, biosMachineIndex, sourceIndex, statsOnly: false);
+            long deviceItemId = datFile.AddItemDB(deviceItem, deviceMachineIndex, sourceIndex, statsOnly: false);
+
+            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.RemoveBiosAndDeviceSets();
+
+            Assert.Empty(datFile.GetMachinesDB());
+        }
 
         #endregion
 
@@ -69,6 +128,7 @@ namespace SabreTools.DatFiles.Test
             DatFile datFile = new Logiqx(datFile: null, deprecated: false);
             datFile.AddItem(datItem, statsOnly: false);
 
+            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
             datFile.RemoveMachineRelationshipTags();
 
             DatItem actualItem = Assert.Single(datFile.GetItemsForBucket("machine"));
@@ -97,6 +157,7 @@ namespace SabreTools.DatFiles.Test
             long sourceIndex = datFile.AddSourceDB(source);
             long itemId = datFile.AddItemDB(datItem, machineIndex, sourceIndex, statsOnly: false);
 
+            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
             datFile.RemoveMachineRelationshipTags();
 
             Machine actual = Assert.Single(datFile.GetMachinesDB()).Value;
