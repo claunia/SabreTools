@@ -32,27 +32,12 @@ namespace SabreTools.DatFiles
         #region Creation
 
         /// <summary>
-        /// Create a generic DatFile to be used
-        /// </summary>
-        /// <returns>A default Logiqx DatFile</returns>
-        public static DatFile CreateDatFile()
-            => CreateDatFile(DatFormat.Logiqx, baseDat: null);
-
-        /// <summary>
-        /// Create a specific type of DatFile to be used based on a format
-        /// </summary>
-        /// <param name="datFormat">Format of the DAT to be created</param>
-        /// <returns>DatFile of the specific internal type</returns>
-        public static DatFile CreateDatFile(DatFormat datFormat)
-            => CreateDatFile(datFormat, baseDat: null);
-
-        /// <summary>
         /// Create a specific type of DatFile to be used based on a format and a base DAT
         /// </summary>
-        /// <param name="datFormat">Format of the DAT to be created</param>
-        /// <param name="baseDat">DatFile containing the information to use in specific operations</param>
+        /// <param name="datFormat">Format of the DAT to be created, default is <see cref="DatFormat.Logiqx"/> </param>
+        /// <param name="baseDat">DatFile containing the information to use in specific operations, default is null</param>
         /// <returns>DatFile of the specific internal type that corresponds to the inputs</returns>
-        public static DatFile CreateDatFile(DatFormat datFormat, DatFile? baseDat)
+        public static DatFile CreateDatFile(DatFormat datFormat = DatFormat.Logiqx, DatFile? baseDat = null)
         {
             return datFormat switch
             {
