@@ -935,7 +935,7 @@ namespace SabreTools.DatFiles
 
             // Get all current items, machines, and mappings
             var datItems = datFile.ItemsDB.GetItems();
-            var machines = datFile.ItemsDB.GetMachines();
+            var machines = datFile.GetMachinesDB();
             var sources = datFile.ItemsDB.GetSources();
             var itemMachineMappings = datFile.ItemsDB.GetItemMachineMappings();
             var itemSourceMappings = datFile.ItemsDB.GetItemSourceMappings();
@@ -1175,7 +1175,7 @@ namespace SabreTools.DatFiles
 
             // Get all current items, machines, and mappings
             var datItems = datFile.ItemsDB.GetItems();
-            var machines = datFile.ItemsDB.GetMachines();
+            var machines = datFile.GetMachinesDB();
             var sources = datFile.ItemsDB.GetSources();
             var itemMachineMappings = datFile.ItemsDB.GetItemMachineMappings();
             var itemSourceMappings = datFile.ItemsDB.GetItemSourceMappings();
@@ -1368,7 +1368,7 @@ namespace SabreTools.DatFiles
 
             // Get all current items, machines, and mappings
             var datItems = datFile.ItemsDB.GetItems();
-            var machines = datFile.ItemsDB.GetMachines();
+            var machines = datFile.GetMachinesDB();
             var sources = datFile.ItemsDB.GetSources();
             var itemMachineMappings = datFile.ItemsDB.GetItemMachineMappings();
             var itemSourceMappings = datFile.ItemsDB.GetItemSourceMappings();
@@ -1545,7 +1545,7 @@ namespace SabreTools.DatFiles
         {
             // Get all current items, machines, and mappings
             var datItems = addFrom.ItemsDB.GetItems();
-            var machines = addFrom.ItemsDB.GetMachines();
+            var machines = addFrom.GetMachinesDB();
             var sources = addFrom.ItemsDB.GetSources();
             var itemMachineMappings = addFrom.ItemsDB.GetItemMachineMappings();
             var itemSourceMappings = addFrom.ItemsDB.GetItemSourceMappings();
@@ -1650,7 +1650,7 @@ namespace SabreTools.DatFiles
         {
             // Get all current items, machines, and mappings
             var datItems = datFile.ItemsDB.GetItems();
-            var machines = datFile.ItemsDB.GetMachines();
+            var machines = datFile.GetMachinesDB();
             var sources = datFile.ItemsDB.GetSources();
             var itemMachineMappings = datFile.ItemsDB.GetItemMachineMappings();
             var itemSourceMappings = datFile.ItemsDB.GetItemSourceMappings();

@@ -234,6 +234,12 @@ namespace SabreTools.DatFiles
             => ItemsDB.GetItemsForBucket(bucketName, filter);
 
         /// <summary>
+        /// Get all machines and their indicies
+        /// </summary>
+        public IDictionary<long, Machine> GetMachinesDB()
+            => ItemsDB.GetMachines();
+
+        /// <summary>
         /// Remove a key from the file dictionary if it exists
         /// </summary>
         /// <param name="key">Key in the dictionary to remove</param>

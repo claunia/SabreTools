@@ -8,9 +8,8 @@ namespace SabreTools.DatFiles
 {
     public partial class DatFile
     {
-        // TODO: Make all private methods internal
         // TODO: Create tests for all of these individually
-        #region Item Dictionary Passthrough - Splitting
+        #region Splitting
 
         /// <summary>
         /// Use romof tags to add roms to the children
@@ -1219,7 +1218,7 @@ namespace SabreTools.DatFiles
         /// <remarks>Applies to <see cref="ItemsDB"/></remarks>
         private void RemoveMachineRelationshipTagsImplDB()
         {
-            var machines = ItemsDB.GetMachines();
+            var machines = GetMachinesDB();
             foreach (var machine in machines)
             {
                 // Get the machine
