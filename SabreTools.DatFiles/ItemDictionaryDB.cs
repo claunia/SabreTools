@@ -96,11 +96,12 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Internal dictionary for item to machine mappings
         /// </summary>
+        /// TODO: Make private when access issues are figured out
         [JsonIgnore, XmlIgnore]
 #if NET40_OR_GREATER || NETCOREAPP
-        private readonly ConcurrentDictionary<long, long> _itemToMachineMapping = [];
+        internal readonly ConcurrentDictionary<long, long> _itemToMachineMapping = [];
 #else
-        private readonly Dictionary<long, long> _itemToMachineMapping = [];
+        internal readonly Dictionary<long, long> _itemToMachineMapping = [];
 #endif
 
         /// <summary>
@@ -116,11 +117,12 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Internal dictionary representing the current buckets
         /// </summary>
+        /// TODO: Make private when access issues are figured out
         [JsonIgnore, XmlIgnore]
 #if NET40_OR_GREATER || NETCOREAPP
-        private readonly ConcurrentDictionary<string, List<long>> _buckets = [];
+        internal readonly ConcurrentDictionary<string, List<long>> _buckets = [];
 #else
-        private readonly Dictionary<string, List<long>> _buckets = [];
+        internal readonly Dictionary<string, List<long>> _buckets = [];
 #endif
 
         /// <summary>
@@ -561,7 +563,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Add an item, returning the insert index
         /// </summary>
-        private long AddItem(DatItem item, long machineIndex, long sourceIndex)
+        internal long AddItem(DatItem item, long machineIndex, long sourceIndex)
         {
             // Add the item with a new index
             _items[_itemIndex++] = item;
@@ -584,6 +586,7 @@ namespace SabreTools.DatFiles
 
         #endregion
 
+        // TODO: All internal, can this be put into a better location?
         #region Bucketing
 
         /// <summary>
@@ -663,6 +666,7 @@ namespace SabreTools.DatFiles
         /// <param name="datItem">Item to try to match</param>
         /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
         /// <returns>List of matched DatItem objects</returns>
+        /// <remarks>This also sets the remove flag on any duplicates found</remarks>
         internal Dictionary<long, DatItem> GetDuplicates(KeyValuePair<long, DatItem> datItem, bool sorted = false)
         {
             Dictionary<long, DatItem> output = [];
@@ -684,7 +688,10 @@ namespace SabreTools.DatFiles
             foreach (var rom in roms)
             {
                 if (rom.Value.GetBoolFieldValue(DatItem.RemoveKey) == true)
+                {
+                    left[rom.Key] = rom.Value;
                     continue;
+                }
 
                 if (datItem.Value.Equals(rom.Value))
                 {
@@ -1602,536 +1609,6 @@ namespace SabreTools.DatFiles
 
         // TODO: All internal, can this be put into a better location?
         #region Splitting
-
-        /// <summary>
-        /// Use romof tags to add roms to the children
-        /// </summary>
-        internal void AddRomsFromBios()
-        {
-            List<string> games = [.. SortedKeys];
-            foreach (string game in games)
-            {
-                // Get the items for this game
-                var items = GetItemsForBucket(game);
-                if (items == null || items.Count == 0)
-                    continue;
-
-                // Get the source for the first item
-                var source = GetSourceForItem(items.First().Key);
-
-                // Get the machine for the first item
-                var machine = GetMachineForItem(items.First().Key);
-                if (machine.Value == null)
-                    continue;
-
-                // Get the bios parent
-                string? romOf = machine.Value.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
-                if (string.IsNullOrEmpty(romOf))
-                    continue;
-
-                // If the parent doesn't have any items, we want to continue
-                var parentItems = GetItemsForBucket(romOf!);
-                if (parentItems == null || parentItems.Count == 0)
-                    continue;
-
-                // If the parent exists and has items, we copy the items from the parent to the current game
-                foreach (var item in parentItems)
-                {
-                    DatItem datItem = (item.Value.Clone() as DatItem)!;
-                    if (items.Any(i => i.Value.GetName() == datItem.GetName())
-                        && items.Any(i => i.Value == datItem))
-                    {
-                        AddItem(datItem, machine.Key, source.Key);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Use device_ref and optionally slotoption tags to add roms to the children
-        /// </summary>
-        /// <param name="dev">True if only child device sets are touched, false for non-device sets</param>
-        /// <param name="useSlotOptions">True if slotoptions tags are used as well, false otherwise</param>
-        internal bool AddRomsFromDevices(bool dev, bool useSlotOptions)
-        {
-            bool foundnew = false;
-            List<string> games = [.. SortedKeys];
-            foreach (string game in games)
-            {
-                // If the game has no items in it, we want to continue
-                var items = GetItemsForBucket(game);
-                if (items == null || items.Count == 0)
-                    continue;
-
-                // Get the source for the first item
-                var source = GetSourceForItem(items.First().Key);
-
-                // Get the machine for the first item
-                var machine = GetMachineForItem(items.First().Key);
-                if (machine.Value == null)
-                    continue;
-
-                // If the machine (is/is not) a device, we want to continue
-                if (dev ^ (machine.Value.GetBoolFieldValue(Models.Metadata.Machine.IsDeviceKey) == true))
-                    continue;
-
-                // Get all device reference names from the current machine
-                List<string?> deviceReferences = items.Values
-                    .Where(i => i is DeviceRef)
-                    .Select(i => i as DeviceRef)
-                    .Select(dr => dr!.GetName())
-                    .Distinct()
-                    .ToList();
-
-                // Get all slot option names from the current machine
-                List<string?> slotOptions = items.Values
-                    .Where(i => i is Slot)
-                    .Select(i => i as Slot)
-                    .Where(s => s!.SlotOptionsSpecified)
-                    .SelectMany(s => s!.GetFieldValue<SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey)!)
-                    .Select(so => so.GetStringFieldValue(Models.Metadata.SlotOption.DevNameKey))
-                    .Distinct()
-                    .ToList();
-
-                // If we're checking device references
-                if (deviceReferences.Count > 0)
-                {
-                    // Loop through all names and check the corresponding machines
-                    var newDeviceReferences = new HashSet<string>();
-                    foreach (string? deviceReference in deviceReferences)
-                    {
-                        // If the device reference is invalid
-                        if (deviceReference == null)
-                            continue;
-
-                        // If the machine doesn't exist then we continue
-                        var devItems = GetItemsForBucket(deviceReference);
-                        if (devItems == null || devItems.Count == 0)
-                            continue;
-
-                        // Add to the list of new device reference names
-                        newDeviceReferences.UnionWith(devItems.Values
-                            .Where(i => i is DeviceRef)
-                            .Select(i => (i as DeviceRef)!.GetName()!));
-
-                        // Set new machine information and add to the current machine
-                        var copyFrom = GetMachineForItem(items.First().Key);
-                        if (copyFrom.Value == null)
-                            continue;
-
-                        foreach (var item in devItems.Values)
-                        {
-                            // If the parent machine doesn't already contain this item, add it
-                            if (!items.Values.Any(i => i.GetStringFieldValue(Models.Metadata.DatItem.TypeKey) == item.GetStringFieldValue(Models.Metadata.DatItem.TypeKey)
-                                && i.GetName() == item.GetName()))
-                            {
-                                // Set that we found new items
-                                foundnew = true;
-
-                                // Clone the item and then add it
-                                DatItem datItem = (item.Clone() as DatItem)!;
-                                AddItem(datItem, machine.Key, source.Key);
-                            }
-                        }
-                    }
-
-                    // Now that every device reference is accounted for, add the new list of device references, if they don't already exist
-                    foreach (string deviceReference in newDeviceReferences)
-                    {
-                        if (!deviceReferences.Contains(deviceReference))
-                        {
-                            var deviceRef = new DeviceRef();
-                            deviceRef.SetName(deviceReference);
-                            AddItem(deviceRef, machine.Key, source.Key);
-                        }
-                    }
-                }
-
-                // If we're checking slotoptions
-                if (useSlotOptions && slotOptions.Count > 0)
-                {
-                    // Loop through all names and check the corresponding machines
-                    var newSlotOptions = new HashSet<string>();
-                    foreach (string? slotOption in slotOptions)
-                    {
-                        // If the slot option is invalid
-                        if (slotOption == null)
-                            continue;
-
-                        // If the machine doesn't exist then we continue
-                        var slotItems = GetItemsForBucket(slotOption);
-                        if (slotItems == null || slotItems.Count == 0)
-                            continue;
-
-                        // Add to the list of new slot option names
-                        newSlotOptions.UnionWith(slotItems.Values
-                            .Where(i => i is Slot)
-                            .Where(s => (s as Slot)!.SlotOptionsSpecified)
-                            .SelectMany(s => (s as Slot)!.GetFieldValue<SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey)!)
-                            .Select(o => o.GetStringFieldValue(Models.Metadata.SlotOption.DevNameKey)!));
-
-                        // Set new machine information and add to the current machine
-                        var copyFrom = GetMachineForItem(GetItemsForBucket(game)!.First().Key);
-                        if (copyFrom.Value == null)
-                            continue;
-
-                        foreach (var item in slotItems.Values)
-                        {
-                            // If the parent machine doesn't already contain this item, add it
-                            if (!items.Values.Any(i => i.GetStringFieldValue(Models.Metadata.DatItem.TypeKey) == item.GetStringFieldValue(Models.Metadata.DatItem.TypeKey)
-                                && i.GetName() == item.GetName()))
-                            {
-                                // Set that we found new items
-                                foundnew = true;
-
-                                // Clone the item and then add it
-                                DatItem datItem = (item.Clone() as DatItem)!;
-                                AddItem(datItem, machine.Key, source.Key);
-                            }
-                        }
-                    }
-
-                    // Now that every device is accounted for, add the new list of slot options, if they don't already exist
-                    foreach (string slotOption in newSlotOptions)
-                    {
-                        if (!slotOptions.Contains(slotOption))
-                        {
-                            var slotOptionItem = new SlotOption();
-                            slotOptionItem.SetFieldValue<string?>(Models.Metadata.SlotOption.DevNameKey, slotOption);
-
-                            var slotItem = new Slot();
-                            slotItem.SetFieldValue<SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey, [slotOptionItem]);
-
-                            AddItem(slotItem, machine.Key, source.Key);
-                        }
-                    }
-                }
-            }
-
-            return foundnew;
-        }
-
-        /// <summary>
-        /// Use cloneof tags to add roms to the children, setting the new romof tag in the process
-        /// </summary>
-        internal void AddRomsFromParent()
-        {
-            List<string> games = [.. SortedKeys];
-            foreach (string game in games)
-            {
-                // If the game has no items in it, we want to continue
-                var items = GetItemsForBucket(game);
-                if (items == null || items.Count == 0)
-                    continue;
-
-                // Get the source for the first item
-                var source = GetSourceForItem(items.First().Key);
-
-                // Get the machine for the first item in the list
-                var machine = GetMachineForItem(items.First().Key);
-                if (machine.Value == null)
-                    continue;
-
-                // Get the clone parent
-                string? cloneOf = machine.Value.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey);
-                if (string.IsNullOrEmpty(cloneOf))
-                    continue;
-
-                // If the parent doesn't have any items, we want to continue
-                var parentItems = GetItemsForBucket(cloneOf!);
-                if (parentItems == null || parentItems.Count == 0)
-                    continue;
-
-                // If the parent exists and has items, we copy the items from the parent to the current game
-                foreach (var item in parentItems)
-                {
-                    DatItem datItem = (DatItem)item.Value.Clone();
-                    if (items.Values.Any(i => i.GetName()?.ToLowerInvariant() == datItem.GetName()?.ToLowerInvariant())
-                        && items.Values.Any(i => i == datItem))
-                    {
-                        AddItem(datItem, machine.Key, source.Key);
-                    }
-                }
-
-                // Get the parent machine
-                var parentMachine = GetMachineForItem(GetItemsForBucket(cloneOf!)!.First().Key);
-                if (parentMachine.Value == null)
-                    continue;
-
-                // Now we want to get the parent romof tag and put it in each of the items
-                items = GetItemsForBucket(game);
-                string? romof = parentMachine.Value.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
-                foreach (var key in items.Keys)
-                {
-                    var itemMachine = GetMachineForItem(key);
-                    if (itemMachine.Value == null)
-                        continue;
-
-                    itemMachine.Value.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, romof);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Use cloneof tags to add roms to the parents, removing the child sets in the process
-        /// </summary>
-        /// <param name="subfolder">True to add DatItems to subfolder of parent (not including Disk), false otherwise</param>
-        /// <param name="skipDedup">True to skip checking for duplicate ROMs in parent, false otherwise</param>
-        internal void AddRomsFromChildren(bool subfolder, bool skipDedup)
-        {
-            List<string> games = [.. SortedKeys];
-            foreach (string game in games)
-            {
-                // If the game has no items in it, we want to continue
-                var items = GetItemsForBucket(game);
-                if (items == null || items.Count == 0)
-                    continue;
-
-                // Get the machine for the first item
-                var machine = GetMachineForItem(items.First().Key);
-                if (machine.Value == null)
-                    continue;
-
-                // Get the clone parent
-                string? cloneOf = machine.Value.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey);
-                if (string.IsNullOrEmpty(cloneOf))
-                    continue;
-
-                // Get the clone parent machine
-                var cloneOfMachine = GetMachine(cloneOf);
-                if (cloneOfMachine.Value == null)
-                    continue;
-
-                items = GetItemsForBucket(game);
-                foreach (var item in items)
-                {
-                    // Get the parent items and current machine name
-                    var parentItems = GetItemsForBucket(cloneOf!);
-                    if (parentItems == null || parentItems.Count == 0)
-                        continue;
-
-                    string? machineName = GetMachineForItem(item.Key).Value?
-                        .GetStringFieldValue(Models.Metadata.Machine.NameKey);
-
-                    // Special disk handling
-                    if (item.Value is Disk disk)
-                    {
-                        string? mergeTag = disk.GetStringFieldValue(Models.Metadata.Disk.MergeKey);
-
-                        // If the merge tag exists and the parent already contains it, skip
-                        if (mergeTag != null && parentItems.Values
-                            .Where(i => i is Disk)
-                            .Select(i => (i as Disk)!.GetName())
-                            .Contains(mergeTag))
-                        {
-                            continue;
-                        }
-
-                        // If the merge tag exists but the parent doesn't contain it, add to parent
-                        else if (mergeTag != null && !parentItems.Values
-                            .Where(i => i is Disk)
-                            .Select(i => (i as Disk)!.GetName())
-                            .Contains(mergeTag))
-                        {
-                            _itemToMachineMapping[item.Key] = cloneOfMachine.Key;
-                            _buckets[cloneOf!].Add(item.Key);
-                        }
-
-                        // If there is no merge tag, add to parent
-                        else if (mergeTag == null)
-                        {
-                            _itemToMachineMapping[item.Key] = cloneOfMachine.Key;
-                            _buckets[cloneOf!].Add(item.Key);
-                        }
-                    }
-
-                    // Special rom handling
-                    else if (item.Value is Rom rom)
-                    {
-                        // If the merge tag exists and the parent already contains it, skip
-                        if (rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey) != null && parentItems.Values
-                            .Where(i => i is Rom)
-                            .Select(i => (i as Rom)!.GetName())
-                            .Contains(rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey)))
-                        {
-                            continue;
-                        }
-
-                        // If the merge tag exists but the parent doesn't contain it, add to subfolder of parent
-                        else if (rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey) != null && !parentItems.Values
-                            .Where(i => i is Rom)
-                            .Select(i => (i as Rom)!.GetName())
-                            .Contains(rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey)))
-                        {
-                            if (subfolder)
-                                rom.SetName($"{machineName}\\{rom.GetName()}");
-
-                            _itemToMachineMapping[item.Key] = cloneOfMachine.Key;
-                            _buckets[cloneOf!].Add(item.Key);
-                        }
-
-                        // If the parent doesn't already contain this item, add to subfolder of parent
-                        else if (!parentItems.Contains(item) || skipDedup)
-                        {
-                            if (subfolder)
-                                rom.SetName($"{machineName}\\{rom.GetName()}");
-
-                            _itemToMachineMapping[item.Key] = cloneOfMachine.Key;
-                            _buckets[cloneOf!].Add(item.Key);
-                        }
-                    }
-
-                    // All other that would be missing to subfolder of parent
-                    else if (!parentItems.Contains(item))
-                    {
-                        if (subfolder)
-                            item.Value.SetName($"{machineName}\\{item.Value.GetName()}");
-
-                        _itemToMachineMapping[item.Key] = cloneOfMachine.Key;
-                        _buckets[cloneOf!].Add(item.Key);
-                    }
-                }
-
-                // Then, remove the old game so it's not picked up by the writer
-#if NET40_OR_GREATER || NETCOREAPP
-                _buckets.TryRemove(game, out _);
-#else
-                _buckets.Remove(game);
-#endif
-            }
-        }
-
-        /// <summary>
-        /// Remove all BIOS and device sets
-        /// </summary>
-        internal void RemoveBiosAndDeviceSets()
-        {
-            List<string> games = [.. SortedKeys];
-            foreach (string game in games)
-            {
-                // If the game has no items in it, we want to continue
-                var items = GetItemsForBucket(game);
-                if (items == null || items.Count == 0)
-                    continue;
-
-                // Get the machine
-                var machine = GetMachineForItem(items.First().Key);
-                if (machine.Value == null)
-                    continue;
-
-                // Remove flagged items
-                if ((machine.Value.GetBoolFieldValue(Models.Metadata.Machine.IsBiosKey) == true)
-                    || (machine.Value.GetBoolFieldValue(Models.Metadata.Machine.IsDeviceKey) == true))
-                {
-                    foreach (var key in items.Keys)
-                    {
-                        RemoveItem(key);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Use romof tags to remove bios roms from children
-        /// </summary>
-        /// <param name="bios">True if only child Bios sets are touched, false for non-bios sets</param>
-        internal void RemoveBiosRomsFromChild(bool bios)
-        {
-            // Loop through the romof tags
-            List<string> games = [.. SortedKeys];
-            foreach (string game in games)
-            {
-                // If the game has no items in it, we want to continue
-                var items = GetItemsForBucket(game);
-                if (items == null || items.Count == 0)
-                    continue;
-
-                // Get the machine for the item
-                var machine = GetMachineForItem(items.First().Key);
-                if (machine.Value == null)
-                    continue;
-
-                // If the game (is/is not) a bios, we want to continue
-                if (bios ^ (machine.Value.GetBoolFieldValue(Models.Metadata.Machine.IsBiosKey) == true))
-                    continue;
-
-                // Get the bios parent
-                string? romOf = machine.Value.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
-                if (string.IsNullOrEmpty(romOf))
-                    continue;
-
-                // If the parent doesn't have any items, we want to continue
-                var parentItems = GetItemsForBucket(romOf!);
-                if (parentItems == null || parentItems.Count == 0)
-                    continue;
-
-                // If the parent exists and has items, we remove the items that are in the parent from the current game
-                foreach (var item in parentItems)
-                {
-                    var matchedItems = items.Where(i => i.Value == item.Value);
-                    foreach (var match in matchedItems)
-                    {
-                        RemoveItem(match.Key);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Use cloneof tags to remove roms from the children
-        /// </summary>
-        internal void RemoveRomsFromChild()
-        {
-            List<string> games = [.. SortedKeys];
-            foreach (string game in games)
-            {
-                // If the game has no items in it, we want to continue
-                var items = GetItemsForBucket(game);
-                if (items == null || items.Count == 0)
-                    continue;
-
-                // Get the machine for the first item
-                var machine = GetMachineForItem(items.First().Key);
-                if (machine.Value == null)
-                    continue;
-
-                // Get the clone parent
-                string? cloneOf = machine.Value.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey);
-                if (string.IsNullOrEmpty(cloneOf))
-                    continue;
-
-                // If the parent doesn't have any items, we want to continue
-                var parentItems = GetItemsForBucket(cloneOf!);
-                if (parentItems == null || parentItems.Count == 0)
-                    continue;
-
-                // If the parent exists and has items, we remove the parent items from the current game
-                foreach (var item in parentItems)
-                {
-                    var matchedItems = items.Where(i => i.Value == item.Value);
-                    foreach (var match in matchedItems)
-                    {
-                        RemoveItem(match.Key);
-                    }
-                }
-
-                // Now we want to get the parent romof tag and put it in each of the remaining items
-                items = GetItemsForBucket(game);
-                machine = GetMachineForItem(GetItemsForBucket(cloneOf!)!.First().Key);
-                if (machine.Value == null)
-                    continue;
-
-                string? romof = machine.Value.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
-                foreach (var item in items!)
-                {
-                    machine = GetMachineForItem(item.Key);
-                    if (machine.Value == null)
-                        continue;
-
-                    machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, romof);
-                }
-            }
-        }
 
         /// <summary>
         /// Remove all romof and cloneof tags from all games

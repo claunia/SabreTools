@@ -283,6 +283,15 @@ namespace SabreTools.DatFiles
         /// <param name="datItem">Item to try to match</param>
         /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
         /// <returns>List of matched DatItem objects</returns>
+        public Dictionary<long, DatItem> GetDuplicatesDB(DatItem datItem, bool sorted = false)
+            => ItemsDB.GetDuplicates(datItem, sorted);
+
+        /// <summary>
+        /// List all duplicates found in a DAT based on a DatItem
+        /// </summary>
+        /// <param name="datItem">Item to try to match</param>
+        /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
+        /// <returns>List of matched DatItem objects</returns>
         public Dictionary<long, DatItem> GetDuplicatesDB(KeyValuePair<long, DatItem> datItem, bool sorted = false)
             => ItemsDB.GetDuplicates(datItem, sorted);
 
@@ -364,88 +373,6 @@ namespace SabreTools.DatFiles
         {
             Items.StripSceneDatesFromItems();
             ItemsDB.StripSceneDatesFromItems();
-        }
-
-        #endregion
-
-        #region Item Dictionary Passthrough - Splitting
-
-        /// <summary>
-        /// Use romof tags to add roms to the children
-        /// </summary>
-        public void AddRomsFromBios()
-        {
-            Items.AddRomsFromBios();
-            ItemsDB.AddRomsFromBios();
-        }
-
-        /// <summary>
-        /// Use device_ref and optionally slotoption tags to add roms to the children
-        /// </summary>
-        /// <param name="dev">True if only child device sets are touched, false for non-device sets</param>
-        /// <param name="useSlotOptions">True if slotoptions tags are used as well, false otherwise</param>
-        public bool AddRomsFromDevices(bool dev, bool useSlotOptions)
-        {
-            bool foundnew = Items.AddRomsFromDevices(dev, useSlotOptions);
-            foundnew |= ItemsDB.AddRomsFromDevices(dev, useSlotOptions);
-            return foundnew;
-        }
-
-        /// <summary>
-        /// Use cloneof tags to add roms to the parents, removing the child sets in the process
-        /// </summary>
-        /// <param name="subfolder">True to add DatItems to subfolder of parent (not including Disk), false otherwise</param>
-        /// <param name="skipDedup">True to skip checking for duplicate ROMs in parent, false otherwise</param>
-        public void AddRomsFromChildren(bool subfolder, bool skipDedup)
-        {
-            Items.AddRomsFromChildren(subfolder, skipDedup);
-            ItemsDB.AddRomsFromChildren(subfolder, skipDedup);
-        }
-
-        /// <summary>
-        /// Use cloneof tags to add roms to the children, setting the new romof tag in the process
-        /// </summary>
-        public void AddRomsFromParent()
-        {
-            Items.AddRomsFromParent();
-            ItemsDB.AddRomsFromParent();
-        }
-
-        /// <summary>
-        /// Remove all BIOS and device sets
-        /// </summary>
-        public void RemoveBiosAndDeviceSets()
-        {
-            Items.RemoveBiosAndDeviceSets();
-            ItemsDB.RemoveBiosAndDeviceSets();
-        }
-
-        /// <summary>
-        /// Use romof tags to remove bios roms from children
-        /// </summary>
-        /// <param name="bios">True if only child Bios sets are touched, false for non-bios sets</param>
-        public void RemoveBiosRomsFromChild(bool bios)
-        {
-            Items.RemoveBiosRomsFromChild(bios);
-            ItemsDB.RemoveBiosRomsFromChild(bios);
-        }
-
-        /// <summary>
-        /// Use cloneof tags to remove roms from the children
-        /// </summary>
-        public void RemoveRomsFromChild()
-        {
-            Items.RemoveRomsFromChild();
-            ItemsDB.RemoveRomsFromChild();
-        }
-
-        /// <summary>
-        /// Remove all romof and cloneof tags from all games
-        /// </summary>
-        public void RemoveTagsFromChild()
-        {
-            Items.RemoveTagsFromChild();
-            ItemsDB.RemoveTagsFromChild();
         }
 
         #endregion
