@@ -14,6 +14,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Use romof tags to add items to the children
         /// </summary>
+        /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
         public void AddItemsFromBios()
         {
             AddItemsFromBiosImpl();
@@ -25,6 +26,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="subfolder">True to add DatItems to subfolder of parent (not including Disk), false otherwise</param>
         /// <param name="skipDedup">True to skip checking for duplicate ROMs in parent, false otherwise</param>
+        /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
         public void AddItemsFromChildren(bool subfolder, bool skipDedup)
         {
             AddItemsFromChildrenImpl(subfolder, skipDedup);
@@ -36,6 +38,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="dev">True if only child device sets are touched, false for non-device sets</param>
         /// <param name="useSlotOptions">True if slotoptions tags are used as well, false otherwise</param>
+        /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
         public bool AddItemsFromDevices(bool dev, bool useSlotOptions)
         {
             bool foundnew = AddItemsFromDevicesImpl(dev, useSlotOptions);
@@ -46,6 +49,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Use cloneof tags to add items to the children, setting the new romof tag in the process
         /// </summary>
+        /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
         public void AddItemsFromParent()
         {
             AddItemsFromParentImpl();
@@ -55,6 +59,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Remove all BIOS and device sets
         /// </summary>
+        /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
         public void RemoveBiosAndDeviceSets()
         {
             RemoveBiosAndDeviceSetsImpl();
@@ -64,6 +69,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Use cloneof tags to remove items from the children
         /// </summary>
+        /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
         public void RemoveItemsFromCloneOfChild()
         {
             RemoveItemsFromCloneOfChildImpl();
@@ -74,6 +80,7 @@ namespace SabreTools.DatFiles
         /// Use romof tags to remove bios items from children
         /// </summary>
         /// <param name="bios">True if only child Bios sets are touched, false for non-bios sets</param>
+        /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
         public void RemoveItemsFromRomOfChild(bool bios)
         {
             RemoveItemsFromRomOfChildImpl(bios);
@@ -83,6 +90,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Remove all romof and cloneof tags from all machines
         /// </summary>
+        /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
         public void RemoveMachineRelationshipTags()
         {
             RemoveMachineRelationshipTagsImpl();
