@@ -37,6 +37,12 @@ namespace SabreTools.DatFiles.Test
 
         #endregion
 
+        #region ApplySplit
+
+        // TODO: Implement ApplySplit tests
+
+        #endregion
+
         #region AddItemsFromChildren
 
         // TODO: Implement AddItemsFromChildren tests
