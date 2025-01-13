@@ -1023,7 +1023,7 @@ namespace SabreTools.DatFiles
         internal void StripSceneDatesFromItems()
         {
             // Set the regex pattern to use
-            string pattern = @"([0-9]{2}\.[0-9]{2}\.[0-9]{2}-)(.*?-.*?)";
+            const string pattern = @"([0-9]{2}\.[0-9]{2}\.[0-9]{2}-)(.*?-.*?)";
 
             // Now process all of the roms
 #if NET452_OR_GREATER || NETCOREAPP

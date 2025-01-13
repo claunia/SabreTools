@@ -1398,42 +1398,29 @@ namespace SabreTools.DatFiles
         internal void StripSceneDatesFromItems()
         {
             // Set the regex pattern to use
-            string pattern = @"([0-9]{2}\.[0-9]{2}\.[0-9]{2}-)(.*?-.*?)";
+            const string pattern = @"([0-9]{2}\.[0-9]{2}\.[0-9]{2}-)(.*?-.*?)";
 
-            // Now process all of the roms
+            // Now process all of the machines
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(SortedKeys, Core.Globals.ParallelOptions, key =>
+            Parallel.ForEach(GetMachines(), Core.Globals.ParallelOptions, machine =>
 #elif NET40_OR_GREATER
-            Parallel.ForEach(SortedKeys, key =>
+            Parallel.ForEach(GetMachines(), machine =>
 #else
-            foreach (var key in SortedKeys)
+            foreach (var machine in GetMachines())
 #endif
             {
-                var items = GetItemsForBucket(key);
-                if (items == null)
+                if (machine.Value == null)
 #if NET40_OR_GREATER || NETCOREAPP
                     return;
 #else
                     continue;
 #endif
 
-                List<long> itemIds = [];
-                foreach (var item in items)
-                {
-                    var machine = GetMachineForItem(item.Key);
-                    if (machine.Value == null)
-                        continue;
+                if (Regex.IsMatch(machine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey)!, pattern))
+                    machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Regex.Replace(machine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey)!, pattern, "$2"));
 
-                    if (Regex.IsMatch(machine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey)!, pattern))
-                        machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Regex.Replace(machine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey)!, pattern, "$2"));
-
-                    if (Regex.IsMatch(machine.Value.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)!, pattern))
-                        machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, Regex.Replace(machine.Value.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)!, pattern, "$2"));
-
-                    itemIds.Add(item.Key);
-                }
-
-                _buckets[key] = itemIds;
+                if (Regex.IsMatch(machine.Value.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)!, pattern))
+                    machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, Regex.Replace(machine.Value.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)!, pattern, "$2"));
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
