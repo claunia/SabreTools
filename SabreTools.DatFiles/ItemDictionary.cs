@@ -46,7 +46,7 @@ namespace SabreTools.DatFiles
 #if NET40_OR_GREATER || NETCOREAPP
         private readonly ConcurrentDictionary<string, List<DatItem>?> _items = [];
 #else
-        private readonly Dictionary<string, List<DatItem>?> items = [];
+        private readonly Dictionary<string, List<DatItem>?> _items = [];
 #endif
 
         /// <summary>
@@ -318,16 +318,16 @@ namespace SabreTools.DatFiles
                     _items.TryRemove(key, out _);
 #else
                 // If the key doesn't exist, skip
-                if (!items.ContainsKey(key))
+                if (!_items.ContainsKey(key))
                     continue;
 
                 // If the value is null, remove
-                else if (items[key] == null)
-                    items.Remove(key);
+                else if (_items[key] == null)
+                    _items.Remove(key);
 
                 // If there are no non-blank items, remove
-                else if (items[key]!.FindIndex(i => i != null && i is not Blank) == -1)
-                    items.Remove(key);
+                else if (_items[key]!.FindIndex(i => i != null && i is not Blank) == -1)
+                    _items.Remove(key);
 #endif
             }
         }
@@ -389,8 +389,8 @@ namespace SabreTools.DatFiles
                 if (_items.TryGetValue(key, out var list) && list != null)
                     return list.Contains(value);
 #else
-                if (items.ContainsKey(key) && items[key] != null)
-                    return items[key]!.Contains(value);
+                if (_items.ContainsKey(key) && _items[key] != null)
+                    return _items[key]!.Contains(value);
 #endif
             }
 
@@ -408,7 +408,7 @@ namespace SabreTools.DatFiles
 #if NET40_OR_GREATER || NETCOREAPP
                 _items.TryAdd(key, []);
 #else
-                items[key] = [];
+                _items[key] = [];
 #endif
         }
 
@@ -457,7 +457,7 @@ namespace SabreTools.DatFiles
 #if NET40_OR_GREATER || NETCOREAPP
                 return _items.TryRemove(key, out _);
 #else
-                return items.Remove(key);
+                return _items.Remove(key);
 #endif
             }
         }
@@ -1110,24 +1110,29 @@ namespace SabreTools.DatFiles
         /// <param name="datItem">DatItem to run logic on</param>
         private static void SetOneRomPerGame(DatItem datItem)
         {
-            if (datItem.GetName() == null)
+            // If the item name is null
+            string? machineName = datItem.GetName();
+            if (machineName == null)
+                return;
+
+            // Get the current machine
+            var machine = datItem.GetFieldValue<Machine>(DatItem.MachineKey);
+            if (machine == null)
                 return;
 
             // Remove extensions from Rom items
-            string machine = datItem.GetName()!;
             if (datItem is Rom)
             {
-                string[] splitname = machine.Split('.');
-                machine = datItem.GetFieldValue<Machine>(DatItem.MachineKey)!
-                        .GetStringFieldValue(Models.Metadata.Machine.NameKey)
+                string[] splitname = machineName.Split('.');
+                machineName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey)
                     + $"/{string.Join(".", splitname, 0, splitname.Length > 1 ? splitname.Length - 1 : 1)}";
             }
 
             // Strip off "Default" prefix only for ORPG
-            if (machine.StartsWith("Default"))
-                machine = machine.Substring("Default".Length + 1);
+            if (machineName.StartsWith("Default"))
+                machineName = machineName.Substring("Default".Length + 1);
 
-            datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machine);
+            datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineName);
             datItem.SetName(Path.GetFileName(datItem.GetName()));
         }
 

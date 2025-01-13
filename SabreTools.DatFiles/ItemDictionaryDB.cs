@@ -1514,7 +1514,9 @@ namespace SabreTools.DatFiles
         /// <param name="datItem">DatItem to run logic on</param>
         private void SetOneRomPerGame(KeyValuePair<long, DatItem> datItem)
         {
-            if (datItem.Key < 0 || datItem.Value.GetName() == null)
+            // If the item name is null
+            string? machineName = datItem.Value.GetName();
+            if (datItem.Key < 0 || machineName == null)
                 return;
 
             // Get the current machine
@@ -1523,12 +1525,10 @@ namespace SabreTools.DatFiles
                 return;
 
             // Remove extensions from Rom items
-            string machineName = datItem.Value.GetName()!;
             if (datItem.Value is Rom)
             {
                 string[] splitname = machineName.Split('.');
-                machineName = datItem.Value.GetFieldValue<Machine>(DatItem.MachineKey)!
-                        .GetStringFieldValue(Models.Metadata.Machine.NameKey)
+                machineName = machine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey)
                     + $"/{string.Join(".", splitname, 0, splitname.Length > 1 ? splitname.Length - 1 : 1)}";
             }
 
