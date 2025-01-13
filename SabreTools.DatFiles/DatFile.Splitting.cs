@@ -155,7 +155,8 @@ namespace SabreTools.DatFiles
                         // If the merge tag exists and the parent already contains it, skip
                         if (mergeTag != null && GetItemsForBucket(cloneOf)
                             .FindAll(i => i is Disk)
-                            .ConvertAll(i => (i as Disk)!.GetName()).Contains(mergeTag))
+                            .ConvertAll(i => (i as Disk)!.GetName())
+                            .Contains(mergeTag))
                         {
                             continue;
                         }
@@ -163,7 +164,8 @@ namespace SabreTools.DatFiles
                         // If the merge tag exists but the parent doesn't contain it, add to parent
                         else if (mergeTag != null && !GetItemsForBucket(cloneOf)
                             .FindAll(i => i is Disk)
-                            .ConvertAll(i => (i as Disk)!.GetName()).Contains(mergeTag))
+                            .ConvertAll(i => (i as Disk)!.GetName())
+                            .Contains(mergeTag))
                         {
                             disk.CopyMachineInformation(copyFrom);
                             Add(cloneOf!, disk);
@@ -398,7 +400,7 @@ namespace SabreTools.DatFiles
                 {
                     DatItem datItem = (DatItem)item.Clone();
                     datItem.CopyMachineInformation(copyFrom);
-                    if (items.FindIndex(i => string.Equals(i.GetName(), datItem.GetName(), StringComparison.OrdinalIgnoreCase)) == -1
+                    if (!items.Exists(i => string.Equals(i.GetName(), datItem.GetName(), StringComparison.OrdinalIgnoreCase))
                         && !items.Contains(datItem))
                     {
                         Add(bucket, datItem);
@@ -832,7 +834,7 @@ namespace SabreTools.DatFiles
                 {
                     DatItem datItem = (DatItem)item.Clone();
                     datItem.CopyMachineInformation(copyFrom);
-                    if (items.FindIndex(i => i.GetName() == datItem.GetName()) == -1 && !items.Contains(datItem))
+                    if (!items.Exists(i => i.GetName() == datItem.GetName()) && !items.Contains(datItem))
                         Add(bucket, datItem);
                 }
             }
