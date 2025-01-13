@@ -387,7 +387,7 @@ namespace SabreTools.DatTools
                 blankRom.SetName(romname);
                 blankRom.SetFieldValue<Machine?>(DatItem.MachineKey, blankMachine);
 
-                datFile.Items["null"]?.Add(blankRom);
+                datFile.Add("null", blankRom);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else

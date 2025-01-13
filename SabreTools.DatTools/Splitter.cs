@@ -797,7 +797,7 @@ namespace SabreTools.DatTools
             foreach (string machine in keys)
             {
                 // Get the current machine
-                var items = datFile.Items[machine];
+                var items = datFile.GetItemsForBucket(machine);
                 if (items == null || items.Count == 0)
                 {
                     _staticLogger.Error($"{machine} contains no items and will be skipped");

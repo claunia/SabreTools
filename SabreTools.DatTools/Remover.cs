@@ -168,7 +168,7 @@ namespace SabreTools.DatTools
 
             foreach (var key in itemDictionary.Keys)
             {
-                List<DatItem>? items = itemDictionary[key];
+                List<DatItem>? items = itemDictionary.GetItemsForBucket(key);
                 if (items == null)
                     continue;
 

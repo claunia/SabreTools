@@ -20,6 +20,7 @@ using SabreTools.Hashing;
 using SabreTools.IO.Logging;
 using SabreTools.Matching.Compare;
 
+// TODO: Remove IDictionary implementation
 namespace SabreTools.DatFiles
 {
     /// <summary>
