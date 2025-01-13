@@ -472,8 +472,10 @@ namespace SabreTools.Features
             {
                 // If we're in SuperDAT mode, prefix all games with their respective DATs
                 if (string.Equals(userInputDat.Header.GetStringFieldValue(Models.Metadata.Header.TypeKey), "SuperDAT", StringComparison.OrdinalIgnoreCase))
+                {
                     DatFileTool.ApplySuperDAT(userInputDat, inputPaths);
-                //DatFileTool.ApplySuperDATDB(userInputDat, inputPaths);
+                    //DatFileTool.ApplySuperDATDB(userInputDat, inputPaths);
+                }
 
                 Writer.Write(userInputDat, OutputDir);
             }
