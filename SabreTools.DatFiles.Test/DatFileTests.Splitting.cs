@@ -332,7 +332,117 @@ namespace SabreTools.DatFiles.Test
 
         #region AddItemsFromDevices
 
-        // TODO: Implement AddItemsFromDevices tests
+        [Theory]
+        [InlineData(false, false, 4)]
+        [InlineData(false, true, 4)]
+        [InlineData(true, false, 3)]
+        [InlineData(true, true, 3)]
+        public void AddItemsFromDevices_Items(bool deviceOnly, bool useSlotOptions, int expected)
+        {
+            Source source = new Source(0, source: null);
+
+            Machine deviceMachine = new Machine();
+            deviceMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "device");
+            deviceMachine.SetFieldValue<bool>(Models.Metadata.Machine.IsDeviceKey, true);
+
+            Machine slotOptionMachine = new Machine();
+            slotOptionMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "slotoption");
+
+            Machine itemMachine = new Machine();
+            itemMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "machine");
+
+            DatItem deviceItem = new Sample();
+            deviceItem.SetName("device_item");
+            deviceItem.SetFieldValue<Machine>(DatItem.MachineKey, deviceMachine);
+            deviceItem.SetFieldValue<Source>(DatItem.SourceKey, source);
+
+            DatItem slotOptionItem = new Sample();
+            slotOptionItem.SetName("slot_option_item");
+            slotOptionItem.SetFieldValue<Machine>(DatItem.MachineKey, slotOptionMachine);
+            slotOptionItem.SetFieldValue<Source>(DatItem.SourceKey, source);
+
+            DatItem datItem = new Rom();
+            datItem.SetName("rom");
+            datItem.SetFieldValue<long>(Models.Metadata.Rom.SizeKey, 12345);
+            datItem.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "deadbeef");
+            datItem.SetFieldValue<Machine>(DatItem.MachineKey, itemMachine);
+            datItem.SetFieldValue<Source>(DatItem.SourceKey, source);
+
+            DatItem deviceRef = new DeviceRef();
+            deviceRef.SetName("device");
+            deviceRef.SetFieldValue<Machine>(DatItem.MachineKey, itemMachine);
+            deviceRef.SetFieldValue<Source>(DatItem.SourceKey, source);
+
+            DatItem slotOption = new SlotOption();
+            slotOption.SetName("slotoption");
+            slotOption.SetFieldValue<Machine>(DatItem.MachineKey, itemMachine);
+            slotOption.SetFieldValue<Source>(DatItem.SourceKey, source);
+
+            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            datFile.AddItem(deviceItem, statsOnly: false);
+            datFile.AddItem(slotOptionItem, statsOnly: false);
+            datFile.AddItem(datItem, statsOnly: false);
+            datFile.AddItem(deviceRef, statsOnly: false);
+            datFile.AddItem(slotOption, statsOnly: false);
+
+            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.AddItemsFromDevices(deviceOnly, useSlotOptions);
+
+            Assert.Equal(expected, datFile.GetItemsForBucket("machine").Count);
+        }
+
+        [Theory]
+        [InlineData(false, false, 4)]
+        [InlineData(false, true, 4)]
+        [InlineData(true, false, 3)]
+        [InlineData(true, true, 3)]
+        public void AddItemsFromDevices_ItemsDB(bool deviceOnly, bool useSlotOptions, int expected)
+        {
+            Source source = new Source(0, source: null);
+
+            Machine deviceMachine = new Machine();
+            deviceMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "device");
+            deviceMachine.SetFieldValue<bool>(Models.Metadata.Machine.IsDeviceKey, true);
+
+            Machine slotOptionMachine = new Machine();
+            slotOptionMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "slotoption");
+
+            Machine itemMachine = new Machine();
+            itemMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "machine");
+
+            DatItem deviceItem = new Sample();
+            deviceItem.SetName("device_item");
+
+            DatItem slotOptionItem = new Sample();
+            slotOptionItem.SetName("slot_option_item");
+
+            DatItem datItem = new Rom();
+            datItem.SetName("rom");
+            datItem.SetFieldValue<long>(Models.Metadata.Rom.SizeKey, 12345);
+            datItem.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "deadbeef");
+
+            DatItem deviceRef = new DeviceRef();
+            deviceRef.SetName("device");
+
+            DatItem slotOption = new SlotOption();
+            slotOption.SetName("slotoption");
+
+            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            long deviceMachineIndex = datFile.AddMachineDB(deviceMachine);
+            long slotOptionMachineIndex = datFile.AddMachineDB(slotOptionMachine);
+            long itemMachineIndex = datFile.AddMachineDB(itemMachine);
+            long sourceIndex = datFile.AddSourceDB(source);
+            _ = datFile.AddItemDB(deviceItem, deviceMachineIndex, sourceIndex, statsOnly: false);
+            _ = datFile.AddItemDB(slotOptionItem, slotOptionMachineIndex, sourceIndex, statsOnly: false);
+            _ = datFile.AddItemDB(datItem, itemMachineIndex, sourceIndex, statsOnly: false);
+            _ = datFile.AddItemDB(deviceRef, itemMachineIndex, sourceIndex, statsOnly: false);
+            _ = datFile.AddItemDB(slotOption, itemMachineIndex, sourceIndex, statsOnly: false);
+
+            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.AddItemsFromDevices(deviceOnly, useSlotOptions);
+
+            Assert.Equal(expected, datFile.GetItemsForBucketDB("machine").Count);
+        }
 
         #endregion
 

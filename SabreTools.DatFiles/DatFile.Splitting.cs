@@ -615,7 +615,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Use device_ref and optionally slotoption tags to add items to the children
         /// </summary>
-        /// <param name="deviceOnly">True if only child device sets are touched, false for non-device sets (default)</param>
+        /// <param name="deviceOnly">True if only child device sets are touched, false for non-device sets</param>
         /// <param name="useSlotOptions">True if slotoptions tags are used as well, false otherwise</param>
         /// <returns>True if any items were processed, false otherwise</returns>
         /// <remarks>
