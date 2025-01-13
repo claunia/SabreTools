@@ -1142,9 +1142,14 @@ namespace SabreTools.DatFiles
 
                 foreach (DatItem item in items)
                 {
-                    item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, null);
-                    item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, null);
-                    item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.SampleOfKey, null);
+                    // Get the machine
+                    var machine = item.GetFieldValue<Machine>(DatItem.MachineKey);
+                    if (machine == null)
+                        continue;
+                
+                    machine.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, null);
+                    machine.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, null);
+                    machine.SetFieldValue<string?>(Models.Metadata.Machine.SampleOfKey, null);
                 }
             }
         }
@@ -1157,6 +1162,7 @@ namespace SabreTools.DatFiles
             var machines = ItemsDB.GetMachines();
             foreach (var machine in machines)
             {
+                // Get the machine
                 if (machine.Value == null)
                     continue;
 
