@@ -1409,6 +1409,7 @@ namespace SabreTools.DatFiles
             foreach (var machine in GetMachines())
 #endif
             {
+                // Get the current machine
                 if (machine.Value == null)
 #if NET40_OR_GREATER || NETCOREAPP
                     return;
@@ -1439,37 +1440,37 @@ namespace SabreTools.DatFiles
             Dictionary<string, string> mapping = [];
 #endif
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(SortedKeys, Core.Globals.ParallelOptions, key =>
+            Parallel.ForEach(GetMachines(), Core.Globals.ParallelOptions, machine =>
 #elif NET40_OR_GREATER
-            Parallel.ForEach(SortedKeys, key =>
+            Parallel.ForEach(GetMachines(), machine =>
 #else
-            foreach (var key in SortedKeys)
+            foreach (var machine in GetMachines())
 #endif
             {
-                var items = GetItemsForBucket(key);
-                if (items == null)
+                // Get the current machine
+                if (machine.Value == null)
 #if NET40_OR_GREATER || NETCOREAPP
                     return;
 #else
                     continue;
 #endif
 
-                foreach (var item in items)
-                {
-                    // Get the current machine
-                    var machine = GetMachineForItem(item.Key);
-                    if (machine.Value == null)
-                        continue;
-
-                    // If the key mapping doesn't exist, add it
+                // Get the values to check against
+                string? machineName = machine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                string? machineDesc = machine.Value.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey);
+                if (machineName == null || machineDesc == null)
 #if NET40_OR_GREATER || NETCOREAPP
-                    mapping.TryAdd(machine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey)!,
-                        machine.Value.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)!.Replace('/', '_').Replace("\"", "''").Replace(":", " -"));
+                    return;
 #else
-                    mapping[machine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey)!]
-                        = machine.Value.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)!.Replace('/', '_').Replace("\"", "''").Replace(":", " -");
+                    continue;
 #endif
-                }
+
+                // If the key mapping doesn't exist, add it
+#if NET40_OR_GREATER || NETCOREAPP
+                mapping.TryAdd(machineName, machineDesc.Replace('/', '_').Replace("\"", "''").Replace(":", " -"));
+#else
+                mapping[machineName] = machineDesc.Replace('/', '_').Replace("\"", "''").Replace(":", " -");
+#endif
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else

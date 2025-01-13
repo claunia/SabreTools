@@ -1091,13 +1091,22 @@ namespace SabreTools.DatFiles
 
                 foreach (DatItem item in items)
                 {
+                    // Get the current machine
+                    var machine = item.GetFieldValue<Machine>(DatItem.MachineKey);
+                    if (machine == null)
+                        continue;
+
+                    // Get the values to check against
+                    string? machineName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    string? machineDesc = machine.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey);
+                    if (machineName == null || machineDesc == null)
+                        continue;
+
                     // If the key mapping doesn't exist, add it
 #if NET40_OR_GREATER || NETCOREAPP
-                    mapping.TryAdd(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!,
-                        item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)!.Replace('/', '_').Replace("\"", "''").Replace(":", " -"));
+                    mapping.TryAdd(machineName, machineDesc.Replace('/', '_').Replace("\"", "''").Replace(":", " -"));
 #else
-                    mapping[item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!]
-                        = item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)!.Replace('/', '_').Replace("\"", "''").Replace(":", " -");
+                    mapping[machineName] = machineDesc.Replace('/', '_').Replace("\"", "''").Replace(":", " -");
 #endif
                 }
 #if NET40_OR_GREATER || NETCOREAPP
