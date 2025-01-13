@@ -79,12 +79,14 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Use romof tags to remove bios items from children
         /// </summary>
-        /// <param name="bios">True if only child Bios sets are touched, false for non-bios sets</param>
         /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
-        public void RemoveItemsFromRomOfChild(bool bios)
+        public void RemoveItemsFromRomOfChild()
         {
-            RemoveItemsFromRomOfChildImpl(bios);
-            RemoveItemsFromRomOfChildImplDB(bios);
+            // TODO: Figure out why the bios flag is needed
+            RemoveItemsFromRomOfChildImpl(false);
+            RemoveItemsFromRomOfChildImplDB(false);
+            RemoveItemsFromRomOfChildImpl(true);
+            RemoveItemsFromRomOfChildImplDB(true);
         }
 
         /// <summary>

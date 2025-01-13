@@ -127,8 +127,7 @@ namespace SabreTools.DatTools
             datFile.AddItemsFromChildren(true, false);
 
             // Now that we have looped through the cloneof tags, we loop through the romof tags
-            datFile.RemoveItemsFromRomOfChild(false);
-            datFile.RemoveItemsFromRomOfChild(true);
+            datFile.RemoveItemsFromRomOfChild();
 
             // Finally, remove the romof and cloneof tags so it's not picked up by the manager
             datFile.RemoveMachineRelationshipTags();
@@ -172,8 +171,7 @@ namespace SabreTools.DatTools
             datFile.AddItemsFromChildren(true, true);
 
             // Now that we have looped through the cloneof tags, we loop through the romof tags
-            datFile.RemoveItemsFromRomOfChild(false);
-            datFile.RemoveItemsFromRomOfChild(true);
+            datFile.RemoveItemsFromRomOfChild();
 
             // Finally, remove the romof and cloneof tags so it's not picked up by the manager
             datFile.RemoveMachineRelationshipTags();
@@ -194,8 +192,7 @@ namespace SabreTools.DatTools
             datFile.AddItemsFromCloneOfParent();
 
             // Now that we have looped through the cloneof tags, we loop through the romof tags
-            datFile.RemoveItemsFromRomOfChild(false);
-            datFile.RemoveItemsFromRomOfChild(true);
+            datFile.RemoveItemsFromRomOfChild();
 
             // Finally, remove the romof and cloneof tags so it's not picked up by the manager
             datFile.RemoveMachineRelationshipTags();
@@ -216,8 +213,7 @@ namespace SabreTools.DatTools
             datFile.RemoveItemsFromCloneOfChild();
 
             // Now that we have looped through the cloneof tags, we loop through the romof tags
-            datFile.RemoveItemsFromRomOfChild(false);
-            datFile.RemoveItemsFromRomOfChild(true);
+            datFile.RemoveItemsFromRomOfChild();
 
             // Finally, remove the romof and cloneof tags so it's not picked up by the manager
             datFile.RemoveMachineRelationshipTags();
