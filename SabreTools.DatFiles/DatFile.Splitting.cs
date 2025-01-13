@@ -1125,7 +1125,7 @@ namespace SabreTools.DatFiles
             }
         }
 
-       /// <summary>
+        /// <summary>
         /// Remove all romof and cloneof tags from all games
         /// </summary>
         private void RemoveTagsFromChildImpl()
@@ -1154,24 +1154,15 @@ namespace SabreTools.DatFiles
         /// </summary>
         private void RemoveTagsFromChildImplDB()
         {
-            List<string> games = [.. ItemsDB.SortedKeys];
-            foreach (string game in games)
+            var machines = ItemsDB.GetMachines();
+            foreach (var machine in machines)
             {
-                // If the game has no items in it, we want to continue
-                var items = GetItemsForBucketDB(game);
-                if (items == null || items.Count == 0)
+                if (machine.Value == null)
                     continue;
 
-                foreach (long id in items.Keys)
-                {
-                    var machine = ItemsDB.GetMachineForItem(id);
-                    if (machine.Value == null)
-                        continue;
-
-                    machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, null);
-                    machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, null);
-                    machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.SampleOfKey, null);
-                }
+                machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, null);
+                machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, null);
+                machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.SampleOfKey, null);
             }
         }
 
