@@ -211,11 +211,8 @@ namespace SabreTools.DatFiles
         /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
         internal void RemoveItemsFromRomOfChild()
         {
-            // TODO: Figure out why the bios flag is needed
-            RemoveItemsFromRomOfChildImpl(false);
-            RemoveItemsFromRomOfChildImplDB(false);
-            RemoveItemsFromRomOfChildImpl(true);
-            RemoveItemsFromRomOfChildImplDB(true);
+            RemoveItemsFromRomOfChildImpl();
+            RemoveItemsFromRomOfChildImplDB();
         }
 
         /// <summary>
@@ -1192,14 +1189,13 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Use romof tags to remove bios items from children
+        /// Use romof tags to remove items from children
         /// </summary>
-        /// <param name="bios">True if only child Bios sets are touched, false for non-bios sets</param>
         /// <remarks>
         /// Applies to <see cref="Items"/>.
         /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
         /// </remarks>
-        private void RemoveItemsFromRomOfChildImpl(bool bios)
+        private void RemoveItemsFromRomOfChildImpl()
         {
             // Loop through the romof tags
             List<string> buckets = [.. Items.Keys];
@@ -1215,10 +1211,6 @@ namespace SabreTools.DatFiles
                 // Get the machine
                 var machine = items[0].GetFieldValue<Machine>(DatItem.MachineKey);
                 if (machine == null)
-                    continue;
-
-                // If the game (is/is not) a bios, we want to continue
-                if (bios ^ (machine.GetBoolFieldValue(Models.Metadata.Machine.IsBiosKey) == true))
                     continue;
 
                 // Get the romof parent items
@@ -1247,7 +1239,7 @@ namespace SabreTools.DatFiles
         /// Applies to <see cref="ItemsDB"/>.
         /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
         /// </remarks>
-        private void RemoveItemsFromRomOfChildImplDB(bool bios)
+        private void RemoveItemsFromRomOfChildImplDB()
         {
             // Loop through the romof tags
             List<string> buckets = [.. ItemsDB.SortedKeys];
@@ -1261,10 +1253,6 @@ namespace SabreTools.DatFiles
                 // Get the machine for the item
                 var machine = ItemsDB.GetMachineForItem(items.First().Key);
                 if (machine.Value == null)
-                    continue;
-
-                // If the game (is/is not) a bios, we want to continue
-                if (bios ^ (machine.Value.GetBoolFieldValue(Models.Metadata.Machine.IsBiosKey) == true))
                     continue;
 
                 // Get the romof parent items
