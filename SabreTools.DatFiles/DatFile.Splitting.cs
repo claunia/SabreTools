@@ -116,8 +116,8 @@ namespace SabreTools.DatFiles
             foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
-                var items = GetItemsForBucket(bucket);
-                if (items == null || items.Count == 0)
+                List<DatItem> items = GetItemsForBucket(bucket);
+                if (items.Count == 0)
                     continue;
 
                 // Get the machine
@@ -125,14 +125,10 @@ namespace SabreTools.DatFiles
                 if (machine == null)
                     continue;
 
-                // Get the bios parent
+                // Get the romof parent items
                 string? romOf = machine.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
-                if (string.IsNullOrEmpty(romOf))
-                    continue;
-
-                // If the parent doesn't have any items, we want to continue
-                var parentItems = GetItemsForBucket(romOf!);
-                if (parentItems == null || parentItems.Count == 0)
+                List<DatItem> parentItems = GetItemsForBucket(romOf);
+                if (parentItems.Count == 0)
                     continue;
 
                 // If the parent exists and has items, we copy the items from the parent to the current game
@@ -160,8 +156,8 @@ namespace SabreTools.DatFiles
             foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
-                var items = GetItemsForBucketDB(bucket);
-                if (items == null || items.Count == 0)
+                Dictionary<long, DatItem> items = GetItemsForBucketDB(bucket);
+                if (items.Count == 0)
                     continue;
 
                 // Get the source for the first item
@@ -172,14 +168,10 @@ namespace SabreTools.DatFiles
                 if (machine.Value == null)
                     continue;
 
-                // Get the bios parent
+                // Get the romof parent items
                 string? romOf = machine.Value.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
-                if (string.IsNullOrEmpty(romOf))
-                    continue;
-
-                // If the parent doesn't have any items, we want to continue
-                var parentItems = GetItemsForBucketDB(romOf!);
-                if (parentItems == null || parentItems.Count == 0)
+                Dictionary<long, DatItem> parentItems = GetItemsForBucketDB(romOf!);
+                if (parentItems.Count == 0)
                     continue;
 
                 // If the parent exists and has items, we copy the items from the parent to the current game
@@ -212,8 +204,8 @@ namespace SabreTools.DatFiles
             foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
-                var items = GetItemsForBucket(bucket);
-                if (items == null || items.Count == 0)
+                List<DatItem> items = GetItemsForBucket(bucket);
+                if (items.Count == 0)
                     continue;
 
                 // Get the machine
@@ -221,17 +213,13 @@ namespace SabreTools.DatFiles
                 if (machine == null)
                     continue;
 
-                // Get the clone parent
+                // Get the cloneof parent items
                 string? cloneOf = machine.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey);
-                if (string.IsNullOrEmpty(cloneOf))
-                    continue;
-
-                // Get the parent items
-                var parentItems = GetItemsForBucket(cloneOf!);
+                List<DatItem> parentItems = GetItemsForBucket(cloneOf);
 
                 // Otherwise, move the items from the current game to a subfolder of the parent game
                 DatItem copyFrom;
-                if (parentItems == null || parentItems.Count == 0)
+                if (parentItems.Count == 0)
                 {
                     copyFrom = new Rom();
                     copyFrom.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, cloneOf);
@@ -251,7 +239,7 @@ namespace SabreTools.DatFiles
                         string? mergeTag = disk.GetStringFieldValue(Models.Metadata.Disk.MergeKey);
 
                         // If the merge tag exists and the parent already contains it, skip
-                        if (mergeTag != null && GetItemsForBucket(cloneOf!)!
+                        if (mergeTag != null && GetItemsForBucket(cloneOf)
                             .FindAll(i => i is Disk)
                             .ConvertAll(i => (i as Disk)!.GetName()).Contains(mergeTag))
                         {
@@ -259,7 +247,7 @@ namespace SabreTools.DatFiles
                         }
 
                         // If the merge tag exists but the parent doesn't contain it, add to parent
-                        else if (mergeTag != null && !GetItemsForBucket(cloneOf!)!
+                        else if (mergeTag != null && !GetItemsForBucket(cloneOf)
                             .FindAll(i => i is Disk)
                             .ConvertAll(i => (i as Disk)!.GetName()).Contains(mergeTag))
                         {
@@ -279,7 +267,7 @@ namespace SabreTools.DatFiles
                     else if (item is Rom rom)
                     {
                         // If the merge tag exists and the parent already contains it, skip
-                        if (rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey) != null && GetItemsForBucket(cloneOf!)!
+                        if (rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey) != null && GetItemsForBucket(cloneOf)
                             .FindAll(i => i is Rom)
                             .ConvertAll(i => (i as Rom)!.GetName())
                             .Contains(rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey)))
@@ -288,7 +276,7 @@ namespace SabreTools.DatFiles
                         }
 
                         // If the merge tag exists but the parent doesn't contain it, add to subfolder of parent
-                        else if (rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey) != null && !GetItemsForBucket(cloneOf!)!
+                        else if (rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey) != null && !GetItemsForBucket(cloneOf)
                             .FindAll(i => i is Rom)
                             .ConvertAll(i => (i as Rom)!.GetName())
                             .Contains(rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey)))
@@ -301,7 +289,7 @@ namespace SabreTools.DatFiles
                         }
 
                         // If the parent doesn't already contain this item, add to subfolder of parent
-                        else if (!GetItemsForBucket(cloneOf!)!.Contains(item) || skipDedup)
+                        else if (!GetItemsForBucket(cloneOf).Contains(item) || skipDedup)
                         {
                             if (subfolder)
                                 rom.SetName($"{item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)}\\{rom.GetName()}");
@@ -312,7 +300,7 @@ namespace SabreTools.DatFiles
                     }
 
                     // All other that would be missing to subfolder of parent
-                    else if (!GetItemsForBucket(cloneOf!)!.Contains(item))
+                    else if (!GetItemsForBucket(cloneOf).Contains(item))
                     {
                         if (subfolder)
                             item.SetName($"{item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)}\\{item.GetName()}");
@@ -342,8 +330,8 @@ namespace SabreTools.DatFiles
             foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
-                var items = GetItemsForBucketDB(bucket);
-                if (items == null || items.Count == 0)
+                Dictionary<long, DatItem> items = GetItemsForBucketDB(bucket);
+                if (items.Count == 0)
                     continue;
 
                 // Get the machine for the first item
@@ -365,8 +353,8 @@ namespace SabreTools.DatFiles
                 foreach (var item in items)
                 {
                     // Get the parent items and current machine name
-                    var parentItems = GetItemsForBucketDB(cloneOf!);
-                    if (parentItems == null || parentItems.Count == 0)
+                    Dictionary<long, DatItem> parentItems = GetItemsForBucketDB(cloneOf);
+                    if (parentItems.Count == 0)
                         continue;
 
                     string? machineName = ItemsDB.GetMachineForItem(item.Key).Value?
@@ -479,8 +467,8 @@ namespace SabreTools.DatFiles
             foreach (string bucket in buckets)
             {
                 // If the bucket doesn't have items
-                var datItems = GetItemsForBucket(bucket);
-                if (datItems == null || datItems.Count == 0)
+                List<DatItem> datItems = GetItemsForBucket(bucket);
+                if (datItems.Count == 0)
                     continue;
 
                 // If the machine (is/is not) a device, we want to continue
@@ -512,13 +500,9 @@ namespace SabreTools.DatFiles
                     var newDeviceReferences = new HashSet<string>();
                     foreach (string? deviceReference in deviceReferences)
                     {
-                        // If the device reference is missing
-                        if (string.IsNullOrEmpty(deviceReference))
-                            continue;
-
                         // Add to the list of new device reference names
-                        var devItems = GetItemsForBucket(deviceReference!);
-                        if (devItems == null || devItems.Count == 0)
+                        List<DatItem> devItems = GetItemsForBucket(deviceReference);
+                        if (devItems.Count == 0)
                             continue;
 
                         newDeviceReferences.UnionWith(devItems
@@ -562,14 +546,9 @@ namespace SabreTools.DatFiles
                     var newSlotOptions = new HashSet<string>();
                     foreach (string? slotOption in slotOptions)
                     {
-                        // If the slot option is missing
-                        if (string.IsNullOrEmpty(slotOption))
-                            // If the machine doesn't exist then we continue
-                            continue;
-
                         // Add to the list of new slot option names
-                        var slotItems = GetItemsForBucket(slotOption!);
-                        if (slotItems == null || slotItems.Count == 0)
+                        List<DatItem> slotItems = GetItemsForBucket(slotOption);
+                        if (slotItems.Count == 0)
                             continue;
 
                         newSlotOptions.UnionWith(slotItems
@@ -633,8 +612,8 @@ namespace SabreTools.DatFiles
             foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
-                var items = GetItemsForBucketDB(bucket);
-                if (items == null || items.Count == 0)
+                Dictionary<long, DatItem> items = GetItemsForBucketDB(bucket);
+                if (items.Count == 0)
                     continue;
 
                 // Get the source for the first item
@@ -679,8 +658,8 @@ namespace SabreTools.DatFiles
                             continue;
 
                         // If the machine doesn't exist then we continue
-                        var devItems = GetItemsForBucketDB(deviceReference);
-                        if (devItems == null || devItems.Count == 0)
+                        Dictionary<long, DatItem> devItems = GetItemsForBucketDB(deviceReference);
+                        if (devItems.Count == 0)
                             continue;
 
                         // Add to the list of new device reference names
@@ -733,8 +712,8 @@ namespace SabreTools.DatFiles
                             continue;
 
                         // If the machine doesn't exist then we continue
-                        var slotItems = GetItemsForBucketDB(slotOption);
-                        if (slotItems == null || slotItems.Count == 0)
+                        Dictionary<long, DatItem> slotItems = GetItemsForBucketDB(slotOption);
+                        if (slotItems.Count == 0)
                             continue;
 
                         // Add to the list of new slot option names
@@ -745,7 +724,7 @@ namespace SabreTools.DatFiles
                             .Select(o => o.GetStringFieldValue(Models.Metadata.SlotOption.DevNameKey)!));
 
                         // Set new machine information and add to the current machine
-                        var copyFrom = ItemsDB.GetMachineForItem(GetItemsForBucketDB(bucket)!.First().Key);
+                        var copyFrom = ItemsDB.GetMachineForItem(GetItemsForBucketDB(bucket).First().Key);
                         if (copyFrom.Value == null)
                             continue;
 
@@ -800,8 +779,8 @@ namespace SabreTools.DatFiles
             foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
-                var items = GetItemsForBucket(bucket);
-                if (items == null || items.Count == 0)
+                List<DatItem> items = GetItemsForBucket(bucket);
+                if (items.Count == 0)
                     continue;
 
                 // Get the machine
@@ -809,14 +788,10 @@ namespace SabreTools.DatFiles
                 if (machine == null)
                     continue;
 
-                // Get the clone parent
+                // Get the cloneof parent items
                 string? cloneOf = machine.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey);
-                if (string.IsNullOrEmpty(cloneOf))
-                    continue;
-
-                // If the parent doesn't have any items, we want to continue
-                var parentItems = GetItemsForBucket(cloneOf!);
-                if (parentItems == null || parentItems.Count == 0)
+                List<DatItem> parentItems = GetItemsForBucket(cloneOf!);
+                if (parentItems.Count == 0)
                     continue;
 
                 // If the parent exists and has items, we copy the items from the parent to the current game
@@ -834,7 +809,7 @@ namespace SabreTools.DatFiles
 
                 // Now we want to get the parent romof tag and put it in each of the items
                 items = GetItemsForBucket(bucket);
-                string? romof = GetItemsForBucket(cloneOf!)![0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
+                string? romof = GetItemsForBucket(cloneOf)[0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
                 foreach (DatItem item in items)
                 {
                     item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, romof);
@@ -855,8 +830,8 @@ namespace SabreTools.DatFiles
             foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
-                var items = GetItemsForBucketDB(bucket);
-                if (items == null || items.Count == 0)
+                Dictionary<long, DatItem> items = GetItemsForBucketDB(bucket);
+                if (items.Count == 0)
                     continue;
 
                 // Get the source for the first item
@@ -873,8 +848,8 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // If the parent doesn't have any items, we want to continue
-                var parentItems = GetItemsForBucketDB(cloneOf!);
-                if (parentItems == null || parentItems.Count == 0)
+                Dictionary<long, DatItem> parentItems = GetItemsForBucketDB(cloneOf!);
+                if (parentItems.Count == 0)
                     continue;
 
                 // If the parent exists and has items, we copy the items from the parent to the current game
@@ -889,7 +864,7 @@ namespace SabreTools.DatFiles
                 }
 
                 // Get the parent machine
-                var parentMachine = ItemsDB.GetMachineForItem(GetItemsForBucketDB(cloneOf!)!.First().Key);
+                var parentMachine = ItemsDB.GetMachineForItem(GetItemsForBucketDB(cloneOf).First().Key);
                 if (parentMachine.Value == null)
                     continue;
 
@@ -922,8 +897,8 @@ namespace SabreTools.DatFiles
             foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
-                var items = GetItemsForBucket(bucket);
-                if (items == null || items.Count == 0)
+                List<DatItem> items = GetItemsForBucket(bucket);
+                if (items.Count == 0)
                     continue;
 
                 // Get the machine
@@ -953,8 +928,8 @@ namespace SabreTools.DatFiles
             foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
-                var items = GetItemsForBucketDB(bucket);
-                if (items == null || items.Count == 0)
+                Dictionary<long, DatItem> items = GetItemsForBucketDB(bucket);
+                if (items.Count == 0)
                     continue;
 
                 // Get the machine
@@ -989,8 +964,8 @@ namespace SabreTools.DatFiles
             foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
-                var items = GetItemsForBucket(bucket);
-                if (items == null || items.Count == 0)
+                List<DatItem> items = GetItemsForBucket(bucket);
+                if (items.Count == 0)
                     continue;
 
                 // Get the machine
@@ -998,14 +973,10 @@ namespace SabreTools.DatFiles
                 if (machine == null)
                     continue;
 
-                // Get the clone parent
+                // Get the cloneof parent items
                 string? cloneOf = machine.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey);
-                if (string.IsNullOrEmpty(cloneOf))
-                    continue;
-
-                // If the parent doesn't have any items, we want to continue
-                var parentItems = GetItemsForBucket(cloneOf!);
-                if (parentItems == null || parentItems.Count == 0)
+                List<DatItem> parentItems = GetItemsForBucket(cloneOf);
+                if (parentItems.Count == 0)
                     continue;
 
                 // If the parent exists and has items, we remove the parent items from the current game
@@ -1020,7 +991,7 @@ namespace SabreTools.DatFiles
 
                 // Now we want to get the parent romof tag and put it in each of the remaining items
                 items = GetItemsForBucket(bucket);
-                string? romof = GetItemsForBucket(cloneOf!)[0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
+                string? romof = GetItemsForBucket(cloneOf)[0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
                 foreach (DatItem item in items)
                 {
                     item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, romof);
@@ -1041,8 +1012,8 @@ namespace SabreTools.DatFiles
             foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
-                var items = GetItemsForBucketDB(bucket);
-                if (items == null || items.Count == 0)
+                Dictionary<long, DatItem> items = GetItemsForBucketDB(bucket);
+                if (items.Count == 0)
                     continue;
 
                 // Get the machine for the first item
@@ -1050,13 +1021,9 @@ namespace SabreTools.DatFiles
                 if (machine.Value == null)
                     continue;
 
-                // Get the clone parent
+                // Get the cloneof parent items
                 string? cloneOf = machine.Value.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey);
-                if (string.IsNullOrEmpty(cloneOf))
-                    continue;
-
-                // If the parent doesn't have any items, we want to continue
-                var parentItems = GetItemsForBucketDB(cloneOf!);
+                Dictionary<long, DatItem> parentItems = GetItemsForBucketDB(cloneOf!);
                 if (parentItems == null || parentItems.Count == 0)
                     continue;
 
@@ -1072,7 +1039,7 @@ namespace SabreTools.DatFiles
 
                 // Now we want to get the parent romof tag and put it in each of the remaining items
                 items = GetItemsForBucketDB(bucket);
-                machine = ItemsDB.GetMachineForItem(GetItemsForBucketDB(cloneOf!)!.First().Key);
+                machine = ItemsDB.GetMachineForItem(GetItemsForBucketDB(cloneOf).First().Key);
                 if (machine.Value == null)
                     continue;
 
@@ -1105,8 +1072,8 @@ namespace SabreTools.DatFiles
             foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
-                var items = GetItemsForBucket(bucket);
-                if (items == null || items.Count == 0)
+                List<DatItem> items = GetItemsForBucket(bucket);
+                if (items.Count == 0)
                     continue;
 
                 // Get the machine
@@ -1118,14 +1085,10 @@ namespace SabreTools.DatFiles
                 if (bios ^ (machine.GetBoolFieldValue(Models.Metadata.Machine.IsBiosKey) == true))
                     continue;
 
-                // Get the bios parent
+                // Get the romof parent items
                 string? romOf = machine.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
-                if (string.IsNullOrEmpty(romOf))
-                    continue;
-
-                // If the parent doesn't have any items, we want to continue
-                var parentItems = GetItemsForBucket(romOf!);
-                if (parentItems == null || parentItems.Count == 0)
+                List<DatItem> parentItems = GetItemsForBucket(romOf!);
+                if (parentItems.Count == 0)
                     continue;
 
                 // If the parent exists and has items, we remove the items that are in the parent from the current game
@@ -1155,8 +1118,8 @@ namespace SabreTools.DatFiles
             foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
-                var items = GetItemsForBucketDB(bucket);
-                if (items == null || items.Count == 0)
+                Dictionary<long, DatItem> items = GetItemsForBucketDB(bucket);
+                if (items.Count == 0)
                     continue;
 
                 // Get the machine for the item
@@ -1168,14 +1131,10 @@ namespace SabreTools.DatFiles
                 if (bios ^ (machine.Value.GetBoolFieldValue(Models.Metadata.Machine.IsBiosKey) == true))
                     continue;
 
-                // Get the bios parent
+                // Get the romof parent items
                 string? romOf = machine.Value.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
-                if (string.IsNullOrEmpty(romOf))
-                    continue;
-
-                // If the parent doesn't have any items, we want to continue
-                var parentItems = GetItemsForBucketDB(romOf!);
-                if (parentItems == null || parentItems.Count == 0)
+                Dictionary<long, DatItem> parentItems = GetItemsForBucketDB(romOf!);
+                if (parentItems.Count == 0)
                     continue;
 
                 // If the parent exists and has items, we remove the items that are in the parent from the current game
@@ -1212,7 +1171,7 @@ namespace SabreTools.DatFiles
                     var machine = item.GetFieldValue<Machine>(DatItem.MachineKey);
                     if (machine == null)
                         continue;
-                
+
                     machine.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, null);
                     machine.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, null);
                     machine.SetFieldValue<string?>(Models.Metadata.Machine.SampleOfKey, null);

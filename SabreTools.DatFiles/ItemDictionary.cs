@@ -416,8 +416,11 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Get the items associated with a bucket name
         /// </summary>
-        public List<DatItem> GetItemsForBucket(string bucketName, bool filter = false)
+        public List<DatItem> GetItemsForBucket(string? bucketName, bool filter = false)
         {
+            if (bucketName == null)
+                return [];
+
             if (!_items.ContainsKey(bucketName))
                 return [];
 

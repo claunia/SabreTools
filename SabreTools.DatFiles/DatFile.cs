@@ -224,13 +224,13 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Get the items associated with a bucket name
         /// </summary>
-        public List<DatItem> GetItemsForBucket(string bucketName, bool filter = false)
+        public List<DatItem> GetItemsForBucket(string? bucketName, bool filter = false)
             => Items.GetItemsForBucket(bucketName, filter);
 
         /// <summary>
         /// Get the indices and items associated with a bucket name
         /// </summary>
-        public Dictionary<long, DatItem> GetItemsForBucketDB(string bucketName, bool filter = false)
+        public Dictionary<long, DatItem> GetItemsForBucketDB(string? bucketName, bool filter = false)
             => ItemsDB.GetItemsForBucket(bucketName, filter);
 
         /// <summary>

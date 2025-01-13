@@ -463,7 +463,7 @@ namespace SabreTools.DatTools
                         continue;
 
                     // If we should check for the items in the machine
-                    var items = datFile.GetItemsForBucket(machine.GetStringFieldValue(Models.Metadata.Machine.NameKey)!);
+                    var items = datFile.GetItemsForBucket(machine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
                     if (shouldCheck && items!.Count > 1)
                         outputFormat = OutputFormat.Folder;
                     else if (shouldCheck && items!.Count == 1)

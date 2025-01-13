@@ -352,8 +352,11 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Get the indices and items associated with a bucket name
         /// </summary>
-        public Dictionary<long, DatItem> GetItemsForBucket(string bucketName, bool filter = false)
+        public Dictionary<long, DatItem> GetItemsForBucket(string? bucketName, bool filter = false)
         {
+            if (bucketName == null)
+                return [];
+
             if (!_buckets.ContainsKey(bucketName))
                 return [];
 
