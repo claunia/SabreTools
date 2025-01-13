@@ -838,7 +838,7 @@ namespace SabreTools.DatTools
                 }
 
                 // Add the current machine to the current DatFile
-                currentDat.Items[machine] = items;
+                currentDat.Add(machine, items);
                 currentSize += machineSize;
             }
 

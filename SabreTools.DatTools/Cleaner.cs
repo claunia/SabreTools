@@ -169,9 +169,6 @@ namespace SabreTools.DatTools
                     // Run cleaning per item
                     CleanDatItem(item);
                 }
-
-                // Assign back for caution
-                datFile.Items[key] = items;
             }
         }
 

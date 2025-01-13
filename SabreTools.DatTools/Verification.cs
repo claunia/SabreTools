@@ -229,9 +229,6 @@ namespace SabreTools.DatTools
                     if (items[i].GetFieldValue<Source?>(DatItem.SourceKey)?.Index != int.MaxValue)
                         items[i].SetFieldValue<bool?>(DatItem.RemoveKey, true);
                 }
-
-                // Set the list back, just in case
-                datFile.Items[key] = items;
             }
 
             watch.Stop();
