@@ -170,14 +170,14 @@ namespace SabreTools.DatFiles
 
                 // Get the romof parent items
                 string? romOf = machine.Value.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
-                Dictionary<long, DatItem> parentItems = GetItemsForBucketDB(romOf!);
+                Dictionary<long, DatItem> parentItems = GetItemsForBucketDB(romOf);
                 if (parentItems.Count == 0)
                     continue;
 
                 // If the parent exists and has items, we copy the items from the parent to the current game
                 foreach (var item in parentItems)
                 {
-                    DatItem datItem = (item.Value.Clone() as DatItem)!;
+                    DatItem datItem = (DatItem)item.Value.Clone();
                     if (items.Any(i => i.Value.GetName() == datItem.GetName())
                         && items.Any(i => i.Value == datItem))
                     {
@@ -682,7 +682,7 @@ namespace SabreTools.DatFiles
                                 foundnew = true;
 
                                 // Clone the item and then add it
-                                DatItem datItem = (item.Clone() as DatItem)!;
+                                DatItem datItem = (DatItem)item.Clone();
                                 ItemsDB.AddItem(datItem, machine.Key, source.Key);
                             }
                         }
@@ -738,7 +738,7 @@ namespace SabreTools.DatFiles
                                 foundnew = true;
 
                                 // Clone the item and then add it
-                                DatItem datItem = (item.Clone() as DatItem)!;
+                                DatItem datItem = (DatItem)item.Clone();
                                 ItemsDB.AddItem(datItem, machine.Key, source.Key);
                             }
                         }
@@ -790,7 +790,7 @@ namespace SabreTools.DatFiles
 
                 // Get the cloneof parent items
                 string? cloneOf = machine.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey);
-                List<DatItem> parentItems = GetItemsForBucket(cloneOf!);
+                List<DatItem> parentItems = GetItemsForBucket(cloneOf);
                 if (parentItems.Count == 0)
                     continue;
 
@@ -848,7 +848,7 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // If the parent doesn't have any items, we want to continue
-                Dictionary<long, DatItem> parentItems = GetItemsForBucketDB(cloneOf!);
+                Dictionary<long, DatItem> parentItems = GetItemsForBucketDB(cloneOf);
                 if (parentItems.Count == 0)
                     continue;
 
@@ -1023,7 +1023,7 @@ namespace SabreTools.DatFiles
 
                 // Get the cloneof parent items
                 string? cloneOf = machine.Value.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey);
-                Dictionary<long, DatItem> parentItems = GetItemsForBucketDB(cloneOf!);
+                Dictionary<long, DatItem> parentItems = GetItemsForBucketDB(cloneOf);
                 if (parentItems == null || parentItems.Count == 0)
                     continue;
 
@@ -1087,7 +1087,7 @@ namespace SabreTools.DatFiles
 
                 // Get the romof parent items
                 string? romOf = machine.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
-                List<DatItem> parentItems = GetItemsForBucket(romOf!);
+                List<DatItem> parentItems = GetItemsForBucket(romOf);
                 if (parentItems.Count == 0)
                     continue;
 
@@ -1133,7 +1133,7 @@ namespace SabreTools.DatFiles
 
                 // Get the romof parent items
                 string? romOf = machine.Value.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
-                Dictionary<long, DatItem> parentItems = GetItemsForBucketDB(romOf!);
+                Dictionary<long, DatItem> parentItems = GetItemsForBucketDB(romOf);
                 if (parentItems.Count == 0)
                     continue;
 
