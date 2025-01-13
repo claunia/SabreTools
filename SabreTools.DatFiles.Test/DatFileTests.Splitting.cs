@@ -7,6 +7,36 @@ namespace SabreTools.DatFiles.Test
 {
     public partial class DatFileTests
     {
+        #region ApplyDeviceNonMerged
+
+        // TODO: Implement ApplyDeviceNonMerged tests
+
+        #endregion
+
+        #region ApplyFullyMerged
+
+        // TODO: Implement ApplyFullyMerged tests
+
+        #endregion
+
+        #region ApplyFullyNonMerged
+
+        // TODO: Implement ApplyFullyNonMerged tests
+
+        #endregion
+
+        #region ApplyMerged
+
+        // TODO: Implement ApplyMerged tests
+
+        #endregion
+
+        #region ApplyNonMerged
+
+        // TODO: Implement ApplyNonMerged tests
+
+        #endregion
+
         #region AddItemsFromChildren
 
         // TODO: Implement AddItemsFromChildren tests

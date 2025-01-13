@@ -8,6 +8,136 @@ namespace SabreTools.DatFiles
 {
     public partial class DatFile
     {
+        #region Splitting
+
+        /// <summary>
+        /// Use cdevice_ref tags to get full non-merged sets and remove parenting tags
+        /// </summary>
+        /// <remarks>This is a destructive process and items will be removed</remarks>
+        public void ApplyDeviceNonMerged()
+        {
+            _logger.User("Creating device non-merged sets from the DAT");
+
+            // For sake of ease, the first thing we want to do is bucket by game
+            BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
+
+            // Now we want to loop through all of the games and set the correct information
+            while (AddItemsFromDevices(false, false)) ;
+            while (AddItemsFromDevices(true, false)) ;
+
+            // Then, remove the romof and cloneof tags so it's not picked up by the manager
+            RemoveMachineRelationshipTags();
+        }
+
+        /// <summary>
+        /// Use cloneof tags to create merged sets and remove the tags plus deduplicating if tags don't catch everything
+        /// </summary>
+        /// <remarks>This is a destructive process and items will be removed</remarks>
+        public void ApplyFullyMerged()
+        {
+            _logger.User("Creating fully merged sets from the DAT");
+
+            // For sake of ease, the first thing we want to do is bucket by game
+            BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
+
+            // Now we want to loop through all of the games and set the correct information
+            AddItemsFromChildren(true, false);
+
+            // Now that we have looped through the cloneof tags, we loop through the romof tags
+            RemoveItemsFromRomOfChild();
+
+            // Finally, remove the romof and cloneof tags so it's not picked up by the manager
+            RemoveMachineRelationshipTags();
+        }
+
+        /// <summary>
+        /// Use cloneof tags to create non-merged sets and remove the tags plus using the device_ref tags to get full sets
+        /// </summary>
+        /// <remarks>This is a destructive process and items will be removed</remarks>
+        public void ApplyFullyNonMerged()
+        {
+            _logger.User("Creating fully non-merged sets from the DAT");
+
+            // For sake of ease, the first thing we want to do is bucket by game
+            BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
+
+            // Now we want to loop through all of the games and set the correct information
+            while (AddItemsFromDevices(true, true)) ;
+            AddItemsFromDevices(false, true);
+            AddItemsFromCloneOfParent();
+
+            // Now that we have looped through the cloneof tags, we loop through the romof tags
+            AddItemsFromRomOfParent();
+
+            // Then, remove the romof and cloneof tags so it's not picked up by the manager
+            RemoveMachineRelationshipTags();
+        }
+
+        /// <summary>
+        /// Use cloneof tags to create merged sets and remove the tags
+        /// </summary>
+        /// <remarks>This is a destructive process and items will be removed</remarks>
+        public void ApplyMerged()
+        {
+            _logger.User("Creating merged sets from the DAT");
+
+            // For sake of ease, the first thing we want to do is bucket by game
+            BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
+
+            // Now we want to loop through all of the games and set the correct information
+            AddItemsFromChildren(true, true);
+
+            // Now that we have looped through the cloneof tags, we loop through the romof tags
+            RemoveItemsFromRomOfChild();
+
+            // Finally, remove the romof and cloneof tags so it's not picked up by the manager
+            RemoveMachineRelationshipTags();
+        }
+
+        /// <summary>
+        /// Use cloneof tags to create non-merged sets and remove the tags
+        /// </summary>
+        /// <remarks>This is a destructive process and items will be removed</remarks>
+        public void ApplyNonMerged()
+        {
+            _logger.User("Creating non-merged sets from the DAT");
+
+            // For sake of ease, the first thing we want to do is bucket by game
+            BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
+
+            // Now we want to loop through all of the games and set the correct information
+            AddItemsFromCloneOfParent();
+
+            // Now that we have looped through the cloneof tags, we loop through the romof tags
+            RemoveItemsFromRomOfChild();
+
+            // Finally, remove the romof and cloneof tags so it's not picked up by the manager
+            RemoveMachineRelationshipTags();
+        }
+
+        /// <summary>
+        /// Use cloneof and romof tags to create split sets and remove the tags
+        /// </summary>
+        /// <remarks>This is a destructive process and items will be removed</remarks>
+        public void ApplySplit()
+        {
+            _logger.User("Creating split sets from the DAT");
+
+            // For sake of ease, the first thing we want to do is bucket by game
+            BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
+
+            // Now we want to loop through all of the games and set the correct information
+            RemoveItemsFromCloneOfChild();
+
+            // Now that we have looped through the cloneof tags, we loop through the romof tags
+            RemoveItemsFromRomOfChild();
+
+            // Finally, remove the romof and cloneof tags so it's not picked up by the manager
+            RemoveMachineRelationshipTags();
+        }
+
+        #endregion
+
         #region Splitting Steps
 
         /// <summary>
@@ -16,7 +146,7 @@ namespace SabreTools.DatFiles
         /// <param name="subfolder">True to add DatItems to subfolder of parent (not including Disk), false otherwise</param>
         /// <param name="skipDedup">True to skip checking for duplicate ROMs in parent, false otherwise</param>
         /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
-        public void AddItemsFromChildren(bool subfolder, bool skipDedup)
+        internal void AddItemsFromChildren(bool subfolder, bool skipDedup)
         {
             AddItemsFromChildrenImpl(subfolder, skipDedup);
             AddItemsFromChildrenImplDB(subfolder, skipDedup);
@@ -26,7 +156,7 @@ namespace SabreTools.DatFiles
         /// Use cloneof tags to add items to the children, setting the new romof tag in the process
         /// </summary>
         /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
-        public void AddItemsFromCloneOfParent()
+        internal void AddItemsFromCloneOfParent()
         {
             AddItemsFromCloneOfParentImpl();
             AddItemsFromCloneOfParentImplDB();
@@ -38,7 +168,7 @@ namespace SabreTools.DatFiles
         /// <param name="deviceOnly">True if only child device sets are touched, false for non-device sets</param>
         /// <param name="useSlotOptions">True if slotoptions tags are used as well, false otherwise</param>
         /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
-        public bool AddItemsFromDevices(bool deviceOnly, bool useSlotOptions)
+        internal bool AddItemsFromDevices(bool deviceOnly, bool useSlotOptions)
         {
             bool foundnew = AddItemsFromDevicesImpl(deviceOnly, useSlotOptions);
             foundnew |= AddItemsFromDevicesImplDB(deviceOnly, useSlotOptions);
@@ -49,7 +179,7 @@ namespace SabreTools.DatFiles
         /// Use romof tags to add items to the children
         /// </summary>
         /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
-        public void AddItemsFromRomOfParent()
+        internal void AddItemsFromRomOfParent()
         {
             AddItemsFromRomOfParentImpl();
             AddItemsFromRomOfParentImplDB();
@@ -59,7 +189,7 @@ namespace SabreTools.DatFiles
         /// Remove all BIOS and device sets
         /// </summary>
         /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
-        public void RemoveBiosAndDeviceSets()
+        internal void RemoveBiosAndDeviceSets()
         {
             RemoveBiosAndDeviceSetsImpl();
             RemoveBiosAndDeviceSetsImplDB();
@@ -69,7 +199,7 @@ namespace SabreTools.DatFiles
         /// Use cloneof tags to remove items from the children
         /// </summary>
         /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
-        public void RemoveItemsFromCloneOfChild()
+        internal void RemoveItemsFromCloneOfChild()
         {
             RemoveItemsFromCloneOfChildImpl();
             RemoveItemsFromCloneOfChildImplDB();
@@ -79,7 +209,7 @@ namespace SabreTools.DatFiles
         /// Use romof tags to remove bios items from children
         /// </summary>
         /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
-        public void RemoveItemsFromRomOfChild()
+        internal void RemoveItemsFromRomOfChild()
         {
             // TODO: Figure out why the bios flag is needed
             RemoveItemsFromRomOfChildImpl(false);
@@ -92,7 +222,7 @@ namespace SabreTools.DatFiles
         /// Remove all romof and cloneof tags from all machines
         /// </summary>
         /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
-        public void RemoveMachineRelationshipTags()
+        internal void RemoveMachineRelationshipTags()
         {
             RemoveMachineRelationshipTagsImpl();
             RemoveMachineRelationshipTagsImplDB();
