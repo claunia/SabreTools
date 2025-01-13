@@ -65,10 +65,10 @@ namespace SabreTools.DatFiles
         /// Use romof tags to remove bios items from children
         /// </summary>
         /// <param name="bios">True if only child Bios sets are touched, false for non-bios sets</param>
-        public void RemoveBiosItemsFromChild(bool bios)
+        public void RemoveItemsFromRomOfChild(bool bios)
         {
-            RemoveBiosItemsFromChildImpl(bios);
-            RemoveBiosItemsFromChildImplDB(bios);
+            RemoveItemsFromRomOfChildImpl(bios);
+            RemoveItemsFromRomOfChildImplDB(bios);
         }
 
         /// <summary>
@@ -967,108 +967,6 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Use romof tags to remove bios items from children
-        /// </summary>
-        /// <param name="bios">True if only child Bios sets are touched, false for non-bios sets</param>
-        /// <remarks>
-        /// Applies to <see cref="Items"/>.
-        /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
-        /// </remarks>
-        private void RemoveBiosItemsFromChildImpl(bool bios)
-        {
-            // Loop through the romof tags
-            List<string> buckets = [.. Items.Keys];
-            buckets.Sort();
-
-            foreach (string bucket in buckets)
-            {
-                // If the bucket has no items in it
-                var items = GetItemsForBucket(bucket);
-                if (items == null || items.Count == 0)
-                    continue;
-
-                // Get the machine
-                var machine = items[0].GetFieldValue<Machine>(DatItem.MachineKey);
-                if (machine == null)
-                    continue;
-
-                // If the game (is/is not) a bios, we want to continue
-                if (bios ^ (machine.GetBoolFieldValue(Models.Metadata.Machine.IsBiosKey) == true))
-                    continue;
-
-                // Get the bios parent
-                string? romOf = machine.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
-                if (string.IsNullOrEmpty(romOf))
-                    continue;
-
-                // If the parent doesn't have any items, we want to continue
-                var parentItems = GetItemsForBucket(romOf!);
-                if (parentItems == null || parentItems.Count == 0)
-                    continue;
-
-                // If the parent exists and has items, we remove the items that are in the parent from the current game
-                foreach (DatItem item in parentItems)
-                {
-                    DatItem datItem = (DatItem)item.Clone();
-                    while (items.Contains(datItem))
-                    {
-                        Items.Remove(bucket, datItem);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Use romof tags to remove bios items from children
-        /// </summary>
-        /// <param name="bios">True if only child Bios sets are touched, false for non-bios sets</param>
-        /// <remarks>
-        /// Applies to <see cref="ItemsDB"/>.
-        /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
-        /// </remarks>
-        private void RemoveBiosItemsFromChildImplDB(bool bios)
-        {
-            // Loop through the romof tags
-            List<string> buckets = [.. ItemsDB.SortedKeys];
-            foreach (string bucket in buckets)
-            {
-                // If the bucket has no items in it
-                var items = GetItemsForBucketDB(bucket);
-                if (items == null || items.Count == 0)
-                    continue;
-
-                // Get the machine for the item
-                var machine = ItemsDB.GetMachineForItem(items.First().Key);
-                if (machine.Value == null)
-                    continue;
-
-                // If the game (is/is not) a bios, we want to continue
-                if (bios ^ (machine.Value.GetBoolFieldValue(Models.Metadata.Machine.IsBiosKey) == true))
-                    continue;
-
-                // Get the bios parent
-                string? romOf = machine.Value.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
-                if (string.IsNullOrEmpty(romOf))
-                    continue;
-
-                // If the parent doesn't have any items, we want to continue
-                var parentItems = GetItemsForBucketDB(romOf!);
-                if (parentItems == null || parentItems.Count == 0)
-                    continue;
-
-                // If the parent exists and has items, we remove the items that are in the parent from the current game
-                foreach (var item in parentItems)
-                {
-                    var matchedItems = items.Where(i => i.Value == item.Value);
-                    foreach (var match in matchedItems)
-                    {
-                        ItemsDB.RemoveItem(match.Key);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// Use cloneof tags to remove items from the children
         /// </summary>
         /// <remarks>
@@ -1178,6 +1076,108 @@ namespace SabreTools.DatFiles
                         continue;
 
                     machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, romof);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Use romof tags to remove bios items from children
+        /// </summary>
+        /// <param name="bios">True if only child Bios sets are touched, false for non-bios sets</param>
+        /// <remarks>
+        /// Applies to <see cref="Items"/>.
+        /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
+        /// </remarks>
+        private void RemoveItemsFromRomOfChildImpl(bool bios)
+        {
+            // Loop through the romof tags
+            List<string> buckets = [.. Items.Keys];
+            buckets.Sort();
+
+            foreach (string bucket in buckets)
+            {
+                // If the bucket has no items in it
+                var items = GetItemsForBucket(bucket);
+                if (items == null || items.Count == 0)
+                    continue;
+
+                // Get the machine
+                var machine = items[0].GetFieldValue<Machine>(DatItem.MachineKey);
+                if (machine == null)
+                    continue;
+
+                // If the game (is/is not) a bios, we want to continue
+                if (bios ^ (machine.GetBoolFieldValue(Models.Metadata.Machine.IsBiosKey) == true))
+                    continue;
+
+                // Get the bios parent
+                string? romOf = machine.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
+                if (string.IsNullOrEmpty(romOf))
+                    continue;
+
+                // If the parent doesn't have any items, we want to continue
+                var parentItems = GetItemsForBucket(romOf!);
+                if (parentItems == null || parentItems.Count == 0)
+                    continue;
+
+                // If the parent exists and has items, we remove the items that are in the parent from the current game
+                foreach (DatItem item in parentItems)
+                {
+                    DatItem datItem = (DatItem)item.Clone();
+                    while (items.Contains(datItem))
+                    {
+                        Items.Remove(bucket, datItem);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Use romof tags to remove bios items from children
+        /// </summary>
+        /// <param name="bios">True if only child Bios sets are touched, false for non-bios sets</param>
+        /// <remarks>
+        /// Applies to <see cref="ItemsDB"/>.
+        /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
+        /// </remarks>
+        private void RemoveItemsFromRomOfChildImplDB(bool bios)
+        {
+            // Loop through the romof tags
+            List<string> buckets = [.. ItemsDB.SortedKeys];
+            foreach (string bucket in buckets)
+            {
+                // If the bucket has no items in it
+                var items = GetItemsForBucketDB(bucket);
+                if (items == null || items.Count == 0)
+                    continue;
+
+                // Get the machine for the item
+                var machine = ItemsDB.GetMachineForItem(items.First().Key);
+                if (machine.Value == null)
+                    continue;
+
+                // If the game (is/is not) a bios, we want to continue
+                if (bios ^ (machine.Value.GetBoolFieldValue(Models.Metadata.Machine.IsBiosKey) == true))
+                    continue;
+
+                // Get the bios parent
+                string? romOf = machine.Value.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
+                if (string.IsNullOrEmpty(romOf))
+                    continue;
+
+                // If the parent doesn't have any items, we want to continue
+                var parentItems = GetItemsForBucketDB(romOf!);
+                if (parentItems == null || parentItems.Count == 0)
+                    continue;
+
+                // If the parent exists and has items, we remove the items that are in the parent from the current game
+                foreach (var item in parentItems)
+                {
+                    var matchedItems = items.Where(i => i.Value == item.Value);
+                    foreach (var match in matchedItems)
+                    {
+                        ItemsDB.RemoveItem(match.Key);
+                    }
                 }
             }
         }

@@ -127,8 +127,8 @@ namespace SabreTools.DatTools
             datFile.AddItemsFromChildren(true, false);
 
             // Now that we have looped through the cloneof tags, we loop through the romof tags
-            datFile.RemoveBiosItemsFromChild(false);
-            datFile.RemoveBiosItemsFromChild(true);
+            datFile.RemoveItemsFromRomOfChild(false);
+            datFile.RemoveItemsFromRomOfChild(true);
 
             // Finally, remove the romof and cloneof tags so it's not picked up by the manager
             datFile.RemoveMachineRelationshipTags();
@@ -172,8 +172,8 @@ namespace SabreTools.DatTools
             datFile.AddItemsFromChildren(true, true);
 
             // Now that we have looped through the cloneof tags, we loop through the romof tags
-            datFile.RemoveBiosItemsFromChild(false);
-            datFile.RemoveBiosItemsFromChild(true);
+            datFile.RemoveItemsFromRomOfChild(false);
+            datFile.RemoveItemsFromRomOfChild(true);
 
             // Finally, remove the romof and cloneof tags so it's not picked up by the manager
             datFile.RemoveMachineRelationshipTags();
@@ -194,8 +194,8 @@ namespace SabreTools.DatTools
             datFile.AddItemsFromParent();
 
             // Now that we have looped through the cloneof tags, we loop through the romof tags
-            datFile.RemoveBiosItemsFromChild(false);
-            datFile.RemoveBiosItemsFromChild(true);
+            datFile.RemoveItemsFromRomOfChild(false);
+            datFile.RemoveItemsFromRomOfChild(true);
 
             // Finally, remove the romof and cloneof tags so it's not picked up by the manager
             datFile.RemoveMachineRelationshipTags();
@@ -216,8 +216,8 @@ namespace SabreTools.DatTools
             datFile.RemoveItemsFromCloneOfChild();
 
             // Now that we have looped through the cloneof tags, we loop through the romof tags
-            datFile.RemoveBiosItemsFromChild(false);
-            datFile.RemoveBiosItemsFromChild(true);
+            datFile.RemoveItemsFromRomOfChild(false);
+            datFile.RemoveItemsFromRomOfChild(true);
 
             // Finally, remove the romof and cloneof tags so it's not picked up by the manager
             datFile.RemoveMachineRelationshipTags();
