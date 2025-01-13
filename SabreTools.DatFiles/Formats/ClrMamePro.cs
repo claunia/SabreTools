@@ -31,21 +31,14 @@ namespace SabreTools.DatFiles.Formats
                 ItemType.Sound,
             ];
 
-        /// <summary>
-        /// Get whether to assume quote usage on read and write or not
-        /// </summary>
-        private readonly bool _quotes;
-
         #endregion
 
         /// <summary>
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
-        /// <param name="quotes">Enable quotes on read and write, false otherwise</param>
-        public ClrMamePro(DatFile? datFile, bool quotes) : base(datFile)
+        public ClrMamePro(DatFile? datFile) : base(datFile)
         {
-            _quotes = quotes;
         }
 
         /// <inheritdoc/>
@@ -54,7 +47,7 @@ namespace SabreTools.DatFiles.Formats
             try
             {
                 // Deserialize the input file
-                var metadataFile = Serialization.Deserializers.ClrMamePro.DeserializeFile(filename, _quotes);
+                var metadataFile = Serialization.Deserializers.ClrMamePro.DeserializeFile(filename, quotes: true);
                 var metadata = new Serialization.CrossModel.ClrMamePro().Serialize(metadataFile);
 
                 // Convert to the internal format
@@ -176,7 +169,7 @@ namespace SabreTools.DatFiles.Formats
                 // Serialize the input file
                 var metadata = ConvertToMetadata(ignoreblanks);
                 var metadataFile = new Serialization.CrossModel.ClrMamePro().Deserialize(metadata);
-                if (!Serialization.Serializers.ClrMamePro.SerializeFile(metadataFile, outfile, _quotes))
+                if (!Serialization.Serializers.ClrMamePro.SerializeFile(metadataFile, outfile, quotes: true))
                 {
                     _logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
                     return false;

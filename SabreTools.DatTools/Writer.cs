@@ -30,18 +30,29 @@ namespace SabreTools.DatTools
         /// </summary>
         /// <param name="datFile">Current DatFile object to write from</param>
         /// <param name="outDir">Set the output directory (current directory on null)</param>
-        /// <param name="overwrite">True if files should be overwritten (default), false if they should be renamed instead</param>
-        /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise (default)</param>
-        /// <param name="quotes">True if quotes are assumed in supported types (default), false otherwise</param>
+        /// <returns>True if the DAT was written correctly, false otherwise</returns>
+        public static bool Write(DatFile datFile, string? outDir)
+            => Write(datFile, outDir, overwrite: true, throwOnError: false);
+
+        /// <summary>
+        /// Create and open an output file for writing direct from a dictionary
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to write from</param>
+        /// <param name="outDir">Set the output directory (current directory on null)</param>
+        /// <param name="overwrite">True if files should be overwritten, false if they should be renamed instead</param>
+        /// <returns>True if the DAT was written correctly, false otherwise</returns>
+        public static bool Write(DatFile datFile, string? outDir, bool overwrite)
+            => Write(datFile, outDir, overwrite, throwOnError: false);
+
+        /// <summary>
+        /// Create and open an output file for writing direct from a dictionary
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to write from</param>
+        /// <param name="outDir">Set the output directory (current directory on null)</param>
+        /// <param name="overwrite">True if files should be overwritten, false if they should be renamed instead</param>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         /// <returns>True if the DAT was written correctly, false otherwise</returns>
-        public static bool Write(
-            DatFile datFile,
-            string? outDir,
-            bool overwrite = true,
-            bool ignoreblanks = false,
-            bool quotes = true,
-            bool throwOnError = false)
+        public static bool Write(DatFile datFile, string? outDir, bool overwrite, bool throwOnError)
         {
             // If we have nothing writable, abort
             if (!HasWritable(datFile))
@@ -90,8 +101,8 @@ namespace SabreTools.DatTools
                     string outfile = outfiles[datFormat];
                     try
                     {
-                        DatFile writingDatFile = DatFileTool.CreateDatFile(datFormat, datFile, quotes);
-                        writingDatFile.WriteToFile(outfile, ignoreblanks, throwOnError);
+                        DatFile writingDatFile = DatFileTool.CreateDatFile(datFormat, datFile);
+                        writingDatFile.WriteToFile(outfile, ignoreblanks: true, throwOnError);
                     }
                     catch (Exception ex) when (!throwOnError)
                     {
