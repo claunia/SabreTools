@@ -97,9 +97,9 @@ namespace SabreTools.DatFiles
                 : datFile.Header.GetStringFieldValue(DatHeader.FileNameKey));
 
             // If the output type isn't set already, get the internal output type
-            DatFormat currentPathFormat = GetDatFormat(currentPath);
+            DatFormat datFormat = GetDatFormat(currentPath);
             datFile.Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, datFile.Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey) == 0
-                ? currentPathFormat
+                ? datFormat
                 : datFile.Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey));
             datFile.Items.SetBucketedBy(ItemKey.CRC); // Setting this because it can reduce issues later
 
@@ -108,7 +108,7 @@ namespace SabreTools.DatFiles
             // Now parse the correct type of DAT
             try
             {
-                DatFile parsingDatFile = DatFileTool.CreateDatFile(currentPathFormat, datFile);
+                DatFile parsingDatFile = DatFileTool.CreateDatFile(datFormat, datFile);
                 parsingDatFile.ParseFile(currentPath, indexId, keep, statsOnly: statsOnly, throwOnError: throwOnError);
             }
             catch (Exception ex) when (!throwOnError)
