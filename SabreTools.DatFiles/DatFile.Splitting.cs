@@ -36,13 +36,13 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Use device_ref and optionally slotoption tags to add items to the children
         /// </summary>
-        /// <param name="dev">True if only child device sets are touched, false for non-device sets</param>
+        /// <param name="deviceOnly">True if only child device sets are touched, false for non-device sets</param>
         /// <param name="useSlotOptions">True if slotoptions tags are used as well, false otherwise</param>
         /// <remarks>Assumes items are bucketed by <see cref="ItemKey.Machine"/></remarks>
-        public bool AddItemsFromDevices(bool dev, bool useSlotOptions)
+        public bool AddItemsFromDevices(bool deviceOnly, bool useSlotOptions)
         {
-            bool foundnew = AddItemsFromDevicesImpl(dev, useSlotOptions);
-            foundnew |= AddItemsFromDevicesImplDB(dev, useSlotOptions);
+            bool foundnew = AddItemsFromDevicesImpl(deviceOnly, useSlotOptions);
+            foundnew |= AddItemsFromDevicesImplDB(deviceOnly, useSlotOptions);
             return foundnew;
         }
 
