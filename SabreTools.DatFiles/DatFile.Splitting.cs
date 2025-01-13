@@ -613,14 +613,14 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Use device_ref and optionally slotoption tags to add items to the children
         /// </summary>
-        /// <param name="dev">True if only child device sets are touched, false for non-device sets (default)</param>
+        /// <param name="deviceOnly">True if only child device sets are touched, false for non-device sets (default)</param>
         /// <param name="useSlotOptions">True if slotoptions tags are used as well, false otherwise</param>
         /// <returns>True if any items were processed, false otherwise</returns>
         /// <remarks>
         /// Applies to <see cref="Items"/>.
         /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
         /// </remarks>
-        private bool AddItemsFromDevicesImpl(bool dev, bool useSlotOptions)
+        private bool AddItemsFromDevicesImpl(bool deviceOnly, bool useSlotOptions)
         {
             bool foundnew = false;
             List<string> buckets = [.. Items.Keys];
@@ -634,7 +634,7 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // If the machine (is/is not) a device, we want to continue
-                if (dev ^ (datItems[0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetBoolFieldValue(Models.Metadata.Machine.IsDeviceKey) == true))
+                if (deviceOnly ^ (datItems[0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetBoolFieldValue(Models.Metadata.Machine.IsDeviceKey) == true))
                     continue;
 
                 // Get all device reference names from the current machine
@@ -760,14 +760,14 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Use device_ref and optionally slotoption tags to add items to the children
         /// </summary>
-        /// <param name="dev">True if only child device sets are touched, false for non-device sets</param>
+        /// <param name="deviceOnly">True if only child device sets are touched, false for non-device sets</param>
         /// <param name="useSlotOptions">True if slotoptions tags are used as well, false otherwise</param>
         /// <returns>True if any items were processed, false otherwise</returns>
         /// <remarks>
         /// Applies to <see cref="ItemsDB"/>.
         /// Assumes items are bucketed by <see cref="ItemKey.Machine"/>.
         /// </remarks>
-        private bool AddItemsFromDevicesImplDB(bool dev, bool useSlotOptions)
+        private bool AddItemsFromDevicesImplDB(bool deviceOnly, bool useSlotOptions)
         {
             bool foundnew = false;
             List<string> buckets = [.. ItemsDB.SortedKeys];
@@ -787,7 +787,7 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // If the machine (is/is not) a device, we want to continue
-                if (dev ^ (machine.Value.GetBoolFieldValue(Models.Metadata.Machine.IsDeviceKey) == true))
+                if (deviceOnly ^ (machine.Value.GetBoolFieldValue(Models.Metadata.Machine.IsDeviceKey) == true))
                     continue;
 
                 // Get all device reference names from the current machine
