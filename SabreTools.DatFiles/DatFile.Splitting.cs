@@ -8,8 +8,7 @@ namespace SabreTools.DatFiles
 {
     public partial class DatFile
     {
-        // TODO: Create tests for all of these individually
-        #region Splitting
+        #region Splitting Steps
 
         /// <summary>
         /// Use cloneof tags to add items to the parents, removing the child sets in the process
