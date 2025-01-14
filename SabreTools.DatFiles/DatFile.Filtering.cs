@@ -242,16 +242,11 @@ namespace SabreTools.DatFiles
                 return;
 
             // Filter all items in the current key
-            List<DatItem> newItems = [];
             foreach (var item in items)
             {
                 if (item.PassesFilter(filterRunner))
-                    newItems.Add(item);
+                    item.SetFieldValue<bool?>(DatItem.RemoveKey, true);
             }
-
-            // Set the value in the key to the new set
-            Remove(bucketName);
-            Add(bucketName, newItems);
         }
 
         /// <summary>
@@ -270,11 +265,8 @@ namespace SabreTools.DatFiles
             foreach (var item in items)
             {
                 if (item.Value.PassesFilterDB(filterRunner))
-                    newItems.Add(item.Key);
+                    item.Value.SetFieldValue<bool?>(DatItem.RemoveKey, true);
             }
-
-            // Set the value in the key to the new set
-            ItemsDB._buckets[bucketName] = newItems;
         }
 
         /// <summary>
