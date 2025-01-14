@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using SabreTools.Core.Filter;
 using SabreTools.DatFiles.Formats;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -10,7 +11,63 @@ namespace SabreTools.DatFiles.Test
     {
         #region ExecuteFilters
 
-        // TODO: Add ExecuteFilters tests
+        [Fact]
+        public void ExecuteFilters_Items()
+        {
+            FilterObject filterObject = new FilterObject("rom.crc", "deadbeef", Operation.NotEquals);
+            FilterRunner filterRunner = new FilterRunner([filterObject]);
+
+            Source source = new Source(0, source: null);
+
+            Machine machine = new Machine();
+            machine.SetFieldValue(Models.Metadata.Machine.NameKey, "machine");
+
+            DatItem datItem = new Rom();
+            datItem.SetName("rom.bin");
+            datItem.SetFieldValue(Models.Metadata.Rom.CRCKey, "deadbeef");
+            datItem.SetFieldValue(DatItem.MachineKey, machine);
+            datItem.SetFieldValue(DatItem.SourceKey, source);
+
+            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            datFile.AddItem(datItem, statsOnly: false);
+
+            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.ExecuteFilters(filterRunner);
+
+            var actualDatItems = datFile.GetItemsForBucket("machine");
+            DatItem actualRom = Assert.Single(actualDatItems);
+            Assert.Equal(true, actualRom.GetBoolFieldValue(DatItem.RemoveKey));
+        }
+
+        [Fact]
+        public void ExecuteFilters_ItemsDB()
+        {
+            FilterObject filterObject = new FilterObject("rom.crc", "deadbeef", Operation.NotEquals);
+            FilterRunner filterRunner = new FilterRunner([filterObject]);
+
+            Source source = new Source(0, source: null);
+
+            Machine machine = new Machine();
+            machine.SetFieldValue(Models.Metadata.Machine.NameKey, "machine");
+
+            DatItem datItem = new Rom();
+            datItem.SetName("rom.bin");
+            datItem.SetFieldValue(Models.Metadata.Rom.CRCKey, "deadbeef");
+            datItem.SetFieldValue(DatItem.MachineKey, machine);
+            datItem.SetFieldValue(DatItem.SourceKey, source);
+
+            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            long sourceIndex = datFile.AddSourceDB(source);
+            long machineIndex = datFile.AddMachineDB(machine);
+            _ = datFile.AddItemDB(datItem, machineIndex, sourceIndex, statsOnly: false);
+
+            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.ExecuteFilters(filterRunner);
+
+            var actualDatItems = datFile.GetItemsForBucketDB("machine");
+            DatItem actualRom = Assert.Single(actualDatItems).Value;
+            Assert.Equal(true, actualRom.GetBoolFieldValue(DatItem.RemoveKey));
+        }
 
         #endregion
 

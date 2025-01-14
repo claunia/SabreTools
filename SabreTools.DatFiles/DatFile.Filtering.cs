@@ -188,6 +188,7 @@ namespace SabreTools.DatFiles
         /// Execute all filters in a filter runner on the items in the dictionary
         /// </summary>
         /// <param name="filterRunner">Preconfigured filter runner to use</param>
+        /// <remarks>Applies to <see cref="Items"/></remarks>
         private void ExecuteFiltersImpl(FilterRunner filterRunner)
         {
             List<string> keys = [.. Items.Keys];
@@ -211,6 +212,7 @@ namespace SabreTools.DatFiles
         /// Execute all filters in a filter runner on the items in the dictionary
         /// </summary>
         /// <param name="filterRunner">Preconfigured filter runner to use</param>
+        /// <remarks>Applies to <see cref="ItemsDB"/></remarks>
         private void ExecuteFiltersImplDB(FilterRunner filterRunner)
         {
             List<string> keys = [.. ItemsDB.SortedKeys];
@@ -235,6 +237,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="filterRunner">Preconfigured filter runner to use</param>
         /// <param name="bucketName">Name of the bucket to filter on</param>
+        /// <remarks>Applies to <see cref="Items"/></remarks>
         private void ExecuteFilterOnBucket(FilterRunner filterRunner, string bucketName)
         {
             List<DatItem>? items = GetItemsForBucket(bucketName);
@@ -244,7 +247,7 @@ namespace SabreTools.DatFiles
             // Filter all items in the current key
             foreach (var item in items)
             {
-                if (item.PassesFilter(filterRunner))
+                if (!item.PassesFilter(filterRunner))
                     item.SetFieldValue<bool?>(DatItem.RemoveKey, true);
             }
         }
@@ -254,6 +257,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="filterRunner">Preconfigured filter runner to use</param>
         /// <param name="bucketName">Name of the bucket to filter on</param>
+        /// <remarks>Applies to <see cref="ItemsDB"/></remarks>
         private void ExecuteFilterOnBucketDB(FilterRunner filterRunner, string bucketName)
         {
             var items = GetItemsForBucketDB(bucketName);
@@ -264,7 +268,7 @@ namespace SabreTools.DatFiles
             List<long> newItems = [];
             foreach (var item in items)
             {
-                if (item.Value.PassesFilterDB(filterRunner))
+                if (!item.Value.PassesFilterDB(filterRunner))
                     item.Value.SetFieldValue<bool?>(DatItem.RemoveKey, true);
             }
         }
