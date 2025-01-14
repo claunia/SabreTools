@@ -11,7 +11,6 @@ using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Linq;
 
 namespace SabreTools.DatFiles
 {
