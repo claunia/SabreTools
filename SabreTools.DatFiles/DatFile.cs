@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
-using SabreTools.Core.Filter;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -318,20 +317,6 @@ namespace SabreTools.DatFiles
         /// <returns>True if it contains the rom, false otherwise</returns>
         public bool HasDuplicates(KeyValuePair<long, DatItem> datItem, bool sorted = false)
             => ItemsDB.HasDuplicates(datItem, sorted);
-
-        #endregion
-
-        #region Item Dictionary Passthrough - Filtering
-
-        /// <summary>
-        /// Execute all filters in a filter runner on the items in the dictionary
-        /// </summary>
-        /// <param name="filterRunner">Preconfigured filter runner to use</param>
-        public void ExecuteFilters(FilterRunner filterRunner)
-        {
-            Items.ExecuteFilters(filterRunner);
-            ItemsDB.ExecuteFilters(filterRunner);
-        }
 
         #endregion
 

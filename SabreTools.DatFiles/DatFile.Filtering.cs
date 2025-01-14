@@ -3,14 +3,15 @@ using System.Collections.Generic;
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Collections.Concurrent;
 #endif
+using System.IO;
+using System.Text.RegularExpressions;
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
 #endif
 using SabreTools.Core;
+using SabreTools.Core.Filter;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
-using System.IO;
-using System.Text.RegularExpressions;
 
 namespace SabreTools.DatFiles
 {
@@ -26,6 +27,16 @@ namespace SabreTools.DatFiles
         #endregion
 
         #region Filtering
+
+        /// <summary>
+        /// Execute all filters in a filter runner on the items in the dictionary
+        /// </summary>
+        /// <param name="filterRunner">Preconfigured filter runner to use</param>
+        public void ExecuteFilters(FilterRunner filterRunner)
+        {
+            Items.ExecuteFilters(filterRunner);
+            ItemsDB.ExecuteFilters(filterRunner);
+        }
 
         /// <summary>
         /// Use game descriptions as names, updating cloneof/romof/sampleof
