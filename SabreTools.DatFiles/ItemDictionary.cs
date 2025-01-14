@@ -862,7 +862,8 @@ namespace SabreTools.DatFiles
                 }
 
                 // Set the value in the key to the new set
-                this[key] = newItems;
+                Remove(key);
+                Add(key, newItems);
 
 #if NET40_OR_GREATER || NETCOREAPP
             });
