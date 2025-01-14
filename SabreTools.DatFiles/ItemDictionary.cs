@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 #endif
 using System.Xml.Serialization;
 using Newtonsoft.Json;
-using SabreTools.Core.Filter;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -823,58 +822,6 @@ namespace SabreTools.DatFiles
 
             // Now that we have the sorted type, we get the proper key
             return datItem.GetKey(bucketedBy);
-        }
-
-        #endregion
-
-        // TODO: All internal, can this be put into a better location?
-        #region Filtering
-
-        /// <summary>
-        /// Execute all filters in a filter runner on the items in the dictionary
-        /// </summary>
-        /// <param name="filterRunner">Preconfigured filter runner to use</param>
-        internal void ExecuteFilters(FilterRunner filterRunner)
-        {
-            List<string> keys = [.. Keys];
-#if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(keys, Core.Globals.ParallelOptions, key =>
-#elif NET40_OR_GREATER
-            Parallel.ForEach(keys, key =>
-#else
-            foreach (var key in keys)
-#endif
-            {
-                ExecuteFilterOnBucket(filterRunner, key);
-#if NET40_OR_GREATER || NETCOREAPP
-            });
-#else
-            }
-#endif
-        }
-
-        /// <summary>
-        /// Execute all filters in a filter runner on a single bucket
-        /// </summary>
-        /// <param name="filterRunner">Preconfigured filter runner to use</param>
-        /// <param name="bucketName">Name of the bucket to filter on</param>
-        private void ExecuteFilterOnBucket(FilterRunner filterRunner, string bucketName)
-        {
-            List<DatItem>? items = GetItemsForBucket(bucketName);
-            if (items == null)
-                return;
-
-            // Filter all items in the current key
-            List<DatItem> newItems = [];
-            foreach (var item in items)
-            {
-                if (item.PassesFilter(filterRunner))
-                    newItems.Add(item);
-            }
-
-            // Set the value in the key to the new set
-            Remove(bucketName);
-            Add(bucketName, newItems);
         }
 
         #endregion

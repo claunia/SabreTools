@@ -34,8 +34,8 @@ namespace SabreTools.DatFiles
         /// <param name="filterRunner">Preconfigured filter runner to use</param>
         public void ExecuteFilters(FilterRunner filterRunner)
         {
-            Items.ExecuteFilters(filterRunner);
-            ItemsDB.ExecuteFilters(filterRunner);
+            ExecuteFiltersImpl(filterRunner);
+            ExecuteFiltersImplDB(filterRunner);
         }
 
         /// <summary>
@@ -182,6 +182,99 @@ namespace SabreTools.DatFiles
             }
 
             return mapping;
+        }
+
+        /// <summary>
+        /// Execute all filters in a filter runner on the items in the dictionary
+        /// </summary>
+        /// <param name="filterRunner">Preconfigured filter runner to use</param>
+        private void ExecuteFiltersImpl(FilterRunner filterRunner)
+        {
+            List<string> keys = [.. Items.Keys];
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(keys, Core.Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(keys, key =>
+#else
+            foreach (var key in keys)
+#endif
+            {
+                ExecuteFilterOnBucket(filterRunner, key);
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
+        }
+
+        /// <summary>
+        /// Execute all filters in a filter runner on the items in the dictionary
+        /// </summary>
+        /// <param name="filterRunner">Preconfigured filter runner to use</param>
+        private void ExecuteFiltersImplDB(FilterRunner filterRunner)
+        {
+            List<string> keys = [.. ItemsDB.SortedKeys];
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(keys, Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(keys, key =>
+#else
+            foreach (var key in keys)
+#endif
+            {
+                ExecuteFilterOnBucketDB(filterRunner, key);
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
+        }
+
+        /// <summary>
+        /// Execute all filters in a filter runner on a single bucket
+        /// </summary>
+        /// <param name="filterRunner">Preconfigured filter runner to use</param>
+        /// <param name="bucketName">Name of the bucket to filter on</param>
+        private void ExecuteFilterOnBucket(FilterRunner filterRunner, string bucketName)
+        {
+            List<DatItem>? items = GetItemsForBucket(bucketName);
+            if (items == null)
+                return;
+
+            // Filter all items in the current key
+            List<DatItem> newItems = [];
+            foreach (var item in items)
+            {
+                if (item.PassesFilter(filterRunner))
+                    newItems.Add(item);
+            }
+
+            // Set the value in the key to the new set
+            Remove(bucketName);
+            Add(bucketName, newItems);
+        }
+
+        /// <summary>
+        /// Execute all filters in a filter runner on a single bucket
+        /// </summary>
+        /// <param name="filterRunner">Preconfigured filter runner to use</param>
+        /// <param name="bucketName">Name of the bucket to filter on</param>
+        private void ExecuteFilterOnBucketDB(FilterRunner filterRunner, string bucketName)
+        {
+            var items = GetItemsForBucketDB(bucketName);
+            if (items == null)
+                return;
+
+            // Filter all items in the current key
+            List<long> newItems = [];
+            foreach (var item in items)
+            {
+                if (item.Value.PassesFilterDB(filterRunner))
+                    newItems.Add(item.Key);
+            }
+
+            // Set the value in the key to the new set
+            ItemsDB._buckets[bucketName] = newItems;
         }
 
         /// <summary>
