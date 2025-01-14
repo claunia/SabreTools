@@ -497,6 +497,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="datItem">DatItem to run logic on</param>
         /// <remarks>Applies to <see cref="ItemsDB"/></remarks>
+        /// TODO: Investigate if this causes cascading issues in updating the machine
         private void SetOneRomPerGameImplDB(KeyValuePair<long, DatItem> datItem)
         {
             // If the item name is null
