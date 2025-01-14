@@ -230,17 +230,11 @@ namespace SabreTools.DatFiles.Test
         [Fact]
         public void StripSceneDatesFromItems_ItemsDB()
         {
-            Source source = new Source(0, source: null);
-
             Machine machine = new Machine();
             machine.SetFieldValue(Models.Metadata.Machine.NameKey, "10.10.10-machine-name");
 
-            DatItem datItem = new Rom();
-
             DatFile datFile = new Logiqx(datFile: null, deprecated: false);
-            long sourceIndex = datFile.AddSourceDB(source);
-            long machineIndex = datFile.AddMachineDB(machine);
-            _ = datFile.AddItemDB(datItem, machineIndex, sourceIndex, statsOnly: false);
+            _ = datFile.AddMachineDB(machine);
 
             datFile.StripSceneDatesFromItems();
 
