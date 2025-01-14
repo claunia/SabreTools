@@ -84,6 +84,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Create machine to description mapping dictionary
         /// </summary>
+        /// <remarks>Applies to <see cref="Items"/></remarks>
         private IDictionary<string, string> CreateMachineToDescriptionMapping()
         {
 #if NET40_OR_GREATER || NETCOREAPP
@@ -139,6 +140,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Create machine to description mapping dictionary
         /// </summary>
+        /// <remarks>Applies to <see cref="ItemsDB"/></remarks>
         private Dictionary<string, string> CreateMachineToDescriptionMappingDB()
         {
             Dictionary<string, string> mapping = [];
@@ -165,6 +167,7 @@ namespace SabreTools.DatFiles
         /// Use game descriptions as names, updating cloneof/romof/sampleof
         /// </summary>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        /// <remarks>Applies to <see cref="Items"/></remarks>
         private void MachineDescriptionToNameImpl(bool throwOnError = false)
         {
             try
@@ -185,6 +188,7 @@ namespace SabreTools.DatFiles
         /// Use game descriptions as names, updating cloneof/romof/sampleof
         /// </summary>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        /// <remarks>Applies to <see cref="ItemsDB"/></remarks>
         private void MachineDescriptionToNameImplDB(bool throwOnError = false)
         {
             try
@@ -215,6 +219,7 @@ namespace SabreTools.DatFiles
         /// to clone sets based on name, nor does it have the ability to match on the 
         /// Release DatItem type.
         /// </remarks>
+        /// <remarks>Applies to <see cref="Items"/></remarks>
         private void SetOneGamePerRegionImpl(List<string> regionList)
         {
             // If we have null region list, make it empty
@@ -308,6 +313,7 @@ namespace SabreTools.DatFiles
         /// to clone sets based on name, nor does it have the ability to match on the 
         /// Release DatItem type.
         /// </remarks>
+        /// <remarks>Applies to <see cref="ItemsDB"/></remarks>
         private void SetOneGamePerRegionImplDB(List<string> regionList)
         {
             // If we have null region list, make it empty
@@ -397,6 +403,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Ensure that all roms are in their own game (or at least try to ensure)
         /// </summary>
+        /// <remarks>Applies to <see cref="Items"/></remarks>
         private void SetOneRomPerGameImpl()
         {
             // For each rom, we want to update the game to be "<game name>/<rom name>"
@@ -431,6 +438,7 @@ namespace SabreTools.DatFiles
         /// Set internal names to match One Rom Per Game (ORPG) logic
         /// </summary>
         /// <param name="datItem">DatItem to run logic on</param>
+        /// <remarks>Applies to <see cref="Items"/></remarks>
         private static void SetOneRomPerGameImpl(DatItem datItem)
         {
             // If the item name is null
@@ -462,6 +470,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Ensure that all roms are in their own game (or at least try to ensure)
         /// </summary>
+        /// <remarks>Applies to <see cref="ItemsDB"/></remarks>
         private void SetOneRomPerGameImplDB()
         {
             // For each rom, we want to update the game to be "<game name>/<rom name>"
@@ -496,6 +505,7 @@ namespace SabreTools.DatFiles
         /// Set internal names to match One Rom Per Game (ORPG) logic
         /// </summary>
         /// <param name="datItem">DatItem to run logic on</param>
+        /// <remarks>Applies to <see cref="ItemsDB"/></remarks>
         private void SetOneRomPerGameImplDB(KeyValuePair<long, DatItem> datItem)
         {
             // If the item name is null
@@ -527,6 +537,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Strip the dates from the beginning of scene-style set names
         /// </summary>
+        /// <remarks>Applies to <see cref="Items"/></remarks>
         private void StripSceneDatesFromItemsImpl()
         {
             // Now process all of the roms
@@ -570,6 +581,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Strip the dates from the beginning of scene-style set names
         /// </summary>
+        /// <remarks>Applies to <see cref="ItemsDB"/></remarks>
         private void StripSceneDatesFromItemsImplDB()
         {
             // Now process all of the machines
@@ -604,6 +616,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Update machine names from descriptions according to mappings
         /// </summary>
+        /// <remarks>Applies to <see cref="Items"/></remarks>
         private void UpdateMachineNamesFromDescriptions(IDictionary<string, string> mapping)
         {
 #if NET452_OR_GREATER || NETCOREAPP
@@ -661,6 +674,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Update machine names from descriptions according to mappings
         /// </summary>
+        /// <remarks>Applies to <see cref="ItemsDB"/></remarks>
         private void UpdateMachineNamesFromDescriptionsDB(Dictionary<string, string> mapping)
         {
             foreach (var machine in GetMachinesDB())
