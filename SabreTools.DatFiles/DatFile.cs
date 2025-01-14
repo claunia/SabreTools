@@ -333,54 +333,6 @@ namespace SabreTools.DatFiles
             ItemsDB.ExecuteFilters(filterRunner);
         }
 
-        /// <summary>
-        /// Use game descriptions as names, updating cloneof/romof/sampleof
-        /// </summary>
-        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
-        public void MachineDescriptionToName(bool throwOnError = false)
-        {
-            Items.MachineDescriptionToName(throwOnError);
-            ItemsDB.MachineDescriptionToName(throwOnError);
-        }
-
-        /// <summary>
-        /// Ensure that all roms are in their own game (or at least try to ensure)
-        /// </summary>
-        public void SetOneRomPerGame()
-        {
-            Items.SetOneRomPerGame();
-            ItemsDB.SetOneRomPerGame();
-        }
-
-        /// <summary>
-        /// Filter a DAT using 1G1R logic given an ordered set of regions
-        /// </summary>
-        /// <param name="regionList">List of regions in order of priority</param>
-        /// <remarks>
-        /// In the most technical sense, the way that the region list is being used does not
-        /// confine its values to be just regions. Since it's essentially acting like a
-        /// specialized version of the machine name filter, anything that is usually encapsulated
-        /// in parenthesis would be matched on, including disc numbers, languages, editions,
-        /// and anything else commonly used. Please note that, unlike other existing 1G1R 
-        /// solutions, this does not have the ability to contain custom mappings of parent
-        /// to clone sets based on name, nor does it have the ability to match on the 
-        /// Release DatItem type.
-        /// </remarks>
-        public void SetOneGamePerRegion(List<string> regionList)
-        {
-            Items.SetOneGamePerRegion(regionList);
-            ItemsDB.SetOneGamePerRegion(regionList);
-        }
-
-        /// <summary>
-        /// Strip the dates from the beginning of scene-style set names
-        /// </summary>
-        public void StripSceneDatesFromItems()
-        {
-            Items.StripSceneDatesFromItems();
-            ItemsDB.StripSceneDatesFromItems();
-        }
-
         #endregion
 
         #region Parsing
