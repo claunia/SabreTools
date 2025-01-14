@@ -514,7 +514,6 @@ namespace SabreTools.DatFiles
 
         #endregion
 
-        // TODO: All internal, can this be put into a better location?
         #region Bucketing
 
         /// <summary>
@@ -524,7 +523,7 @@ namespace SabreTools.DatFiles
         /// <param name="dedupeType">Dedupe type that should be used</param>
         /// <param name="lower">True if the key should be lowercased (default), false otherwise</param>
         /// <param name="norename">True if games should only be compared on game and file name, false if system and source are counted</param>
-        internal void BucketBy(ItemKey bucketBy, DedupeType dedupeType, bool lower = true, bool norename = true)
+        public void BucketBy(ItemKey bucketBy, DedupeType dedupeType, bool lower = true, bool norename = true)
         {
             // If we have a situation where there's no dictionary or no keys at all, we skip
             if (_items == null || _items.Count == 0)
