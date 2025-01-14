@@ -18,8 +18,8 @@ namespace SabreTools.DatFiles.Test
             DatFile datFile = new Formats.Logiqx(null, deprecated: false);
             datFile.ConvertFromMetadata(item, "filename", indexId: 0, keep: true, statsOnly: false);
 
-            Assert.Equal(0, datFile.DatStatistics.TotalCount);
-            Assert.Empty(datFile.ItemsDB.GetItems());
+            Assert.Equal(0, datFile.Items.DatStatistics.TotalCount);
+            Assert.Equal(0, datFile.ItemsDB.DatStatistics.TotalCount);
         }
 
         [Fact]
@@ -30,8 +30,8 @@ namespace SabreTools.DatFiles.Test
             DatFile datFile = new Formats.Logiqx(null, deprecated: false);
             datFile.ConvertFromMetadata(item, "filename", indexId: 0, keep: true, statsOnly: false);
 
-            Assert.Equal(0, datFile.DatStatistics.TotalCount);
-            Assert.Empty(datFile.ItemsDB.GetItems());
+            Assert.Equal(0, datFile.Items.DatStatistics.TotalCount);
+            Assert.Equal(0, datFile.ItemsDB.DatStatistics.TotalCount);
         }
 
         [Fact]

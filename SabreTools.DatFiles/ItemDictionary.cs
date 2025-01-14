@@ -350,10 +350,10 @@ namespace SabreTools.DatFiles
             {
 #if NET40_OR_GREATER || NETCOREAPP
                 if (_items.TryGetValue(key, out var list) && list != null)
-                    return list.Contains(value);
+                    return list.Exists(i => i.Equals(value));
 #else
                 if (_items.ContainsKey(key) && _items[key] != null)
-                    return _items[key]!.Contains(value);
+                    return _items[key]!.Exists(i => i.Equals(value));
 #endif
             }
 
@@ -681,7 +681,10 @@ namespace SabreTools.DatFiles
                     if (newkey != key)
                     {
                         Add(newkey, item);
-                        Remove(key, item);
+                        bool removed = Remove(key, item);
+                        if (!removed)
+                            break;
+
                         i--; // This make sure that the pointer stays on the correct since one was removed
                     }
                 }

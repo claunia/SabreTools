@@ -19,20 +19,35 @@ namespace SabreTools.DatFiles.Test
 
             Assert.NotNull(created.Header);
             Assert.NotNull(created.Items);
-            Assert.Equal(0, created.DatStatistics.TotalCount);
+            Assert.Equal(0, created.Items.DatStatistics.TotalCount);
             Assert.NotNull(created.ItemsDB);
-            Assert.Empty(created.ItemsDB.GetItems());
+            Assert.Equal(0, created.ItemsDB.DatStatistics.TotalCount);
         }
 
         [Fact]
         public void Constructor_NonNull()
         {
+            Source source = new Source(0, source: null);
+
+            Machine machine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "key");
+
+            DatItem rom = new Rom();
+            rom.SetName("rom");
+            rom.SetFieldValue(Models.Metadata.Rom.CRCKey, "deadbeef");
+            rom.SetFieldValue(DatItem.SourceKey, source);
+            rom.SetFieldValue(DatItem.MachineKey, machine);
+
             DatFile? datFile = new Formats.Logiqx(datFile: null, deprecated: false);
             datFile.Header.SetFieldValue(Models.Metadata.Header.NameKey, "name");
-            datFile.Add("key", new Rom());
-            datFile.AddItemDB(new Rom(), 0, 0, false);
+            datFile.AddItem(rom, statsOnly: false);
+
+            long sourceIndex = datFile.AddSourceDB(source);
+            long machineIndex = datFile.AddMachineDB(machine);
+            datFile.AddItemDB(rom, machineIndex, sourceIndex, statsOnly: false);
 
             DatFile created = new Formats.Logiqx(datFile, deprecated: false);
+            created.BucketBy(ItemKey.Machine, DedupeType.None);
 
             Assert.NotNull(created.Header);
             Assert.Equal("name", created.Header.GetStringFieldValue(Models.Metadata.Header.NameKey));
@@ -42,7 +57,7 @@ namespace SabreTools.DatFiles.Test
             Assert.True(datItem is Rom);
 
             Assert.NotNull(created.ItemsDB);
-            KeyValuePair<long, DatItem> dbKvp = Assert.Single(created.ItemsDB.GetItems());
+            KeyValuePair<long, DatItem> dbKvp = Assert.Single(created.GetItemsForBucketDB("key"));
             Assert.Equal(0, dbKvp.Key);
             Assert.True(dbKvp.Value is Rom);
         }
@@ -187,9 +202,9 @@ namespace SabreTools.DatFiles.Test
 
             Assert.NotNull(datFile.Header);
             Assert.NotNull(datFile.Items);
-            Assert.Equal(0, datFile.DatStatistics.TotalCount);
+            Assert.Equal(0, datFile.Items.DatStatistics.TotalCount);
             Assert.NotNull(datFile.ItemsDB);
-            Assert.Empty(datFile.ItemsDB.GetItems());
+            Assert.Equal(0, datFile.ItemsDB.DatStatistics.TotalCount);
         }
 
         #endregion
