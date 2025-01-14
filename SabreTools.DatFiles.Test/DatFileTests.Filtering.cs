@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using SabreTools.DatFiles.Formats;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -142,7 +143,61 @@ namespace SabreTools.DatFiles.Test
 
         #region SetOneGamePerRegion
 
-        // TODO: Implement SetOneGamePerRegion tests
+        [Fact]
+        public void SetOneGamePerRegion_Items()
+        {
+            Machine nowhereMachine = new Machine();
+            nowhereMachine.SetFieldValue(Models.Metadata.Machine.NameKey, "machine (Nowhere)");
+
+            Machine worldMachine = new Machine();
+            worldMachine.SetFieldValue(Models.Metadata.Machine.NameKey, "machine (World)");
+            worldMachine.SetFieldValue(Models.Metadata.Machine.CloneOfKey, "machine (Nowhere)");
+
+            DatItem nowhereRom = new Rom();
+            nowhereRom.SetName("rom.bin");
+            nowhereRom.SetFieldValue(DatItem.MachineKey, nowhereMachine);
+
+            DatItem worldRom = new Rom();
+            worldRom.SetName("rom.nib");
+            worldRom.SetFieldValue(DatItem.MachineKey, worldMachine);
+
+            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            datFile.AddItem(nowhereRom, statsOnly: false);
+            datFile.AddItem(worldRom, statsOnly: false);
+
+            List<string> regions = ["World", "Nowhere"];
+            datFile.SetOneGamePerRegion(regions);
+
+            Assert.Empty(datFile.GetItemsForBucket("machine (nowhere)"));
+
+            var actualDatItems = datFile.GetItemsForBucket("machine (world)");
+            DatItem actualWorldRom = Assert.Single(actualDatItems);
+            Machine? actualWorldMachine = actualWorldRom.GetFieldValue<Machine>(DatItem.MachineKey);
+            Assert.NotNull(actualWorldMachine);
+            Assert.Equal("machine (World)", actualWorldMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+        }
+
+        [Fact]
+        public void SetOneGamePerRegion_ItemsDB()
+        {
+            Machine nowhereMachine = new Machine();
+            nowhereMachine.SetFieldValue(Models.Metadata.Machine.NameKey, "machine (Nowhere)");
+
+            Machine worldMachine = new Machine();
+            worldMachine.SetFieldValue(Models.Metadata.Machine.NameKey, "machine (World)");
+            worldMachine.SetFieldValue(Models.Metadata.Machine.CloneOfKey, "machine (Nowhere)");
+
+            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            _ = datFile.AddMachineDB(nowhereMachine);
+            _ = datFile.AddMachineDB(worldMachine);
+
+            List<string> regions = ["World", "Nowhere"];
+            datFile.SetOneGamePerRegion(regions);
+
+            var actualWorldMachine = Assert.Single(datFile.GetMachinesDB());
+            Assert.NotNull(actualWorldMachine.Value);
+            Assert.Equal("machine (World)", actualWorldMachine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+        }
 
         #endregion
 

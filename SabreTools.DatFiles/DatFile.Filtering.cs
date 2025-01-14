@@ -303,9 +303,6 @@ namespace SabreTools.DatFiles
         /// <remarks>Applies to <see cref="ItemsDB"/></remarks>
         private void SetOneGamePerRegionImplDB(List<string> regionList)
         {
-            // For sake of ease, the first thing we want to do is bucket by game
-            BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
-
             // Then we want to get a mapping of all machines to parents
             Dictionary<string, List<string>> parents = [];
             foreach (var machine in GetMachinesDB())
@@ -314,7 +311,7 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // Get machine information
-                Machine? machineObj = machine.Value.GetFieldValue<Machine>(DatItem.MachineKey);
+                Machine? machineObj = machine.Value;
                 string? machineName = machineObj?.GetStringFieldValue(Models.Metadata.Machine.NameKey)?.ToLowerInvariant();
                 if (machineObj == null || machineName == null)
                     continue;
