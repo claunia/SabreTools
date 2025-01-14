@@ -442,8 +442,11 @@ namespace SabreTools.DatFiles
             if (machine == null)
                 return;
 
-            // TODO: Clone current machine so that all data can be retained
-            // TODO: Assign cloned machine to the item with the new name
+            // Clone current machine to avoid conflict
+            machine = (Machine)machine.Clone();
+
+            // Reassign the item to the new machine
+            datItem.SetFieldValue<Machine>(DatItem.MachineKey, machine);
 
             // Remove extensions from Rom items
             if (datItem is Rom)
@@ -500,7 +503,6 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="datItem">DatItem to run logic on</param>
         /// <remarks>Applies to <see cref="ItemsDB"/></remarks>
-        /// TODO: Investigate if this causes cascading issues in updating the machine
         private void SetOneRomPerGameImplDB(KeyValuePair<long, DatItem> datItem)
         {
             // If the item name is null
@@ -513,8 +515,14 @@ namespace SabreTools.DatFiles
             if (machine.Value == null)
                 return;
 
-            // TODO: Clone current machine so that all data can be retained
-            // TODO: Assign cloned machine to the item with the new name
+            // Clone current machine to avoid conflict
+            long newMachineIndex = AddMachineDB((Machine)machine.Value.Clone());
+            machine = new KeyValuePair<long, Machine?>(newMachineIndex, ItemsDB.GetMachine(newMachineIndex));
+            if (machine.Value == null)
+                return;
+
+            // Reassign the item to the new machine
+            ItemsDB._itemToMachineMapping[machine.Key] = newMachineIndex;
 
             // Remove extensions from Rom items
             if (datItem.Value is Rom)
