@@ -1005,75 +1005,13 @@ namespace SabreTools.DatFiles
                 // Treat NULL like machine
                 ItemKey.NULL => (norename ? string.Empty : sourceKeyPadded) + machineName,
                 ItemKey.Machine => (norename ? string.Empty : sourceKeyPadded) + machineName,
-                _ => GetBucketHashValue(datItem, bucketBy),
+                _ => datItem.GetKeyDB(bucketBy, source.Value, lower, norename),
             };
 
             if (lower)
                 bucketKey = bucketKey.ToLowerInvariant();
 
             return bucketKey;
-        }
-
-        /// <summary>
-        /// Get the hash value for a given item, if possible
-        /// </summary>
-        private static string GetBucketHashValue(DatItem datItem, ItemKey bucketBy)
-        {
-            return datItem switch
-            {
-                Disk disk => bucketBy switch
-                {
-                    ItemKey.CRC => ZeroHash.CRC32Str,
-                    ItemKey.MD2 => ZeroHash.GetString(HashType.MD2),
-                    ItemKey.MD4 => ZeroHash.GetString(HashType.MD4),
-                    ItemKey.MD5 => disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key) ?? string.Empty,
-                    ItemKey.SHA1 => disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key) ?? string.Empty,
-                    ItemKey.SHA256 => ZeroHash.SHA256Str,
-                    ItemKey.SHA384 => ZeroHash.SHA384Str,
-                    ItemKey.SHA512 => ZeroHash.SHA512Str,
-                    ItemKey.SpamSum => ZeroHash.SpamSumStr,
-                    _ => string.Empty,
-                },
-                Media media => bucketBy switch
-                {
-                    ItemKey.CRC => ZeroHash.CRC32Str,
-                    ItemKey.MD2 => ZeroHash.GetString(HashType.MD2),
-                    ItemKey.MD4 => ZeroHash.GetString(HashType.MD4),
-                    ItemKey.MD5 => media.GetStringFieldValue(Models.Metadata.Media.MD5Key) ?? string.Empty,
-                    ItemKey.SHA1 => media.GetStringFieldValue(Models.Metadata.Media.SHA1Key) ?? string.Empty,
-                    ItemKey.SHA256 => media.GetStringFieldValue(Models.Metadata.Media.SHA256Key) ?? string.Empty,
-                    ItemKey.SHA384 => ZeroHash.SHA384Str,
-                    ItemKey.SHA512 => ZeroHash.SHA512Str,
-                    ItemKey.SpamSum => media.GetStringFieldValue(Models.Metadata.Media.SpamSumKey) ?? string.Empty,
-                    _ => string.Empty,
-                },
-                Rom rom => bucketBy switch
-                {
-                    ItemKey.CRC => rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey) ?? string.Empty,
-                    ItemKey.MD2 => rom.GetStringFieldValue(Models.Metadata.Rom.MD2Key) ?? string.Empty,
-                    ItemKey.MD4 => rom.GetStringFieldValue(Models.Metadata.Rom.MD4Key) ?? string.Empty,
-                    ItemKey.MD5 => rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key) ?? string.Empty,
-                    ItemKey.SHA1 => rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key) ?? string.Empty,
-                    ItemKey.SHA256 => rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key) ?? string.Empty,
-                    ItemKey.SHA384 => rom.GetStringFieldValue(Models.Metadata.Rom.SHA384Key) ?? string.Empty,
-                    ItemKey.SHA512 => rom.GetStringFieldValue(Models.Metadata.Rom.SHA512Key) ?? string.Empty,
-                    ItemKey.SpamSum => rom.GetStringFieldValue(Models.Metadata.Rom.SpamSumKey) ?? string.Empty,
-                    _ => string.Empty,
-                },
-                _ => bucketBy switch
-                {
-                    ItemKey.CRC => ZeroHash.CRC32Str,
-                    ItemKey.MD2 => ZeroHash.GetString(HashType.MD2),
-                    ItemKey.MD4 => ZeroHash.GetString(HashType.MD4),
-                    ItemKey.MD5 => ZeroHash.MD5Str,
-                    ItemKey.SHA1 => ZeroHash.SHA1Str,
-                    ItemKey.SHA256 => ZeroHash.SHA256Str,
-                    ItemKey.SHA384 => ZeroHash.SHA384Str,
-                    ItemKey.SHA512 => ZeroHash.SHA512Str,
-                    ItemKey.SpamSum => ZeroHash.SpamSumStr,
-                    _ => string.Empty,
-                },
-            };
         }
 
         /// <summary>

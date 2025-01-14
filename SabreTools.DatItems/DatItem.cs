@@ -468,6 +468,7 @@ namespace SabreTools.DatItems
                     if (!norename && source != null)
                         sourceString = source.Index.ToString().PadLeft(10, '0') + "-";
 
+                    // TODO: This will never have a value for DB
                     string machineString = "Default";
                     var machine = GetFieldValue<Machine>(DatItem.MachineKey);
                     if (machine != null)

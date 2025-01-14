@@ -27,12 +27,12 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Determine the bucketing key for all items
         /// </summary>
-        private ItemKey bucketedBy;
+        private ItemKey _bucketedBy;
 
         /// <summary>
         /// Determine merging type for all items
         /// </summary>
-        private DedupeType mergedBy;
+        private DedupeType _mergedBy;
 
         /// <summary>
         /// Internal dictionary for the class
@@ -100,8 +100,8 @@ namespace SabreTools.DatFiles
         /// </summary>
         public ItemDictionary()
         {
-            bucketedBy = ItemKey.NULL;
-            mergedBy = DedupeType.None;
+            _bucketedBy = ItemKey.NULL;
+            _mergedBy = DedupeType.None;
             _logger = new Logger(this);
         }
 
@@ -482,7 +482,7 @@ namespace SabreTools.DatFiles
         /// <param name="newBucket"></param>
         public void SetBucketedBy(ItemKey newBucket)
         {
-            bucketedBy = newBucket;
+            _bucketedBy = newBucket;
         }
 
         #endregion
@@ -503,14 +503,14 @@ namespace SabreTools.DatFiles
                 return;
 
             // If the sorted type isn't the same, we want to sort the dictionary accordingly
-            if (bucketedBy != bucketBy && bucketBy != ItemKey.NULL)
+            if (_bucketedBy != bucketBy && bucketBy != ItemKey.NULL)
             {
                 _logger.User($"Organizing roms by {bucketBy}");
                 PerformBucketing(bucketBy, lower, norename);
             }
 
             // If the merge type isn't the same, we want to merge the dictionary accordingly
-            if (mergedBy != dedupeType)
+            if (_mergedBy != dedupeType)
             {
                 _logger.User($"Deduping roms by {dedupeType}");
                 PerformDeduplication(bucketBy, dedupeType);
@@ -653,10 +653,10 @@ namespace SabreTools.DatFiles
         private void PerformBucketing(ItemKey bucketBy, bool lower, bool norename)
         {
             // Set the sorted type
-            bucketedBy = bucketBy;
+            _bucketedBy = bucketBy;
 
             // Reset the merged type since this might change the merge
-            mergedBy = DedupeType.None;
+            _mergedBy = DedupeType.None;
 
             // First do the initial sort of all of the roms inplace
             List<string> oldkeys = [.. Keys];
@@ -713,7 +713,7 @@ namespace SabreTools.DatFiles
         private void PerformDeduplication(ItemKey bucketBy, DedupeType dedupeType)
         {
             // Set the sorted type
-            mergedBy = dedupeType;
+            _mergedBy = dedupeType;
 
             List<string> keys = [.. Keys];
 #if NET452_OR_GREATER || NETCOREAPP
@@ -787,7 +787,7 @@ namespace SabreTools.DatFiles
                 BucketBy(GetBestAvailable(), DedupeType.None);
 
             // Now that we have the sorted type, we get the proper key
-            return datItem.GetKey(bucketedBy);
+            return datItem.GetKey(_bucketedBy);
         }
 
         #endregion
