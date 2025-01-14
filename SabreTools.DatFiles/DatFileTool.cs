@@ -311,13 +311,12 @@ namespace SabreTools.DatFiles
         /// <param name="inputs">List of inputs to use for renaming</param>
         public static void ApplySuperDAT(DatFile datFile, List<ParentablePath> inputs)
         {
-            List<string> keys = [.. datFile.Items.SortedKeys];
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(keys, Core.Globals.ParallelOptions, key =>
+            Parallel.ForEach(datFile.Items.SortedKeys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
-            Parallel.ForEach(keys, key =>
+            Parallel.ForEach(datFile.Items.SortedKeys, key =>
 #else
-            foreach (var key in keys)
+            foreach (var key in datFile.Items.SortedKeys)
 #endif
             {
                 List<DatItem>? items = datFile.GetItemsForBucket(key);
@@ -685,13 +684,12 @@ namespace SabreTools.DatFiles
                 intDat.BucketBy(ItemKey.CRC, DedupeType.Full);
 
             // Then we compare against the base DAT
-            List<string> keys = [.. intDat.Items.SortedKeys];
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(keys, Core.Globals.ParallelOptions, key =>
+            Parallel.ForEach(intDat.Items.SortedKeys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
-            Parallel.ForEach(keys, key =>
+            Parallel.ForEach(intDat.Items.SortedKeys, key =>
 #else
-            foreach (var key in keys)
+            foreach (var key in intDat.Items.SortedKeys)
 #endif
             {
                 // Game Against uses game names
@@ -1522,8 +1520,7 @@ namespace SabreTools.DatFiles
         private static void AddFromExisting(DatFile addTo, DatFile addFrom, bool delete = false)
         {
             // Get the list of keys from the DAT
-            List<string> keys = [.. addFrom.Items.SortedKeys];
-            foreach (string key in keys)
+            foreach (string key in addFrom.Items.SortedKeys)
             {
                 // Add everything from the key to the internal DAT
                 addFrom.GetItemsForBucket(key).ForEach(item => addTo.AddItem(item, statsOnly: false));

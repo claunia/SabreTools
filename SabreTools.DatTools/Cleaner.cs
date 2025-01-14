@@ -152,8 +152,7 @@ namespace SabreTools.DatTools
         /// <param name="datFile">Current DatFile object to run operations on</param>
         internal void CleanDatItems(DatFile datFile)
         {
-            List<string> keys = [.. datFile.Items.SortedKeys];
-            foreach (string key in keys)
+            foreach (string key in datFile.Items.SortedKeys)
             {
                 // For every item in the current key
                 var items = datFile.GetItemsForBucket(key);

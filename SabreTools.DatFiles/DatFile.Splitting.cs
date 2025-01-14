@@ -240,10 +240,7 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void AddItemsFromChildrenImpl(bool subfolder, bool skipDedup)
         {
-            List<string> buckets = [.. Items.SortedKeys];
-            buckets.Sort();
-
-            foreach (string bucket in buckets)
+            foreach (string bucket in  Items.SortedKeys)
             {
                 // If the bucket has no items in it
                 List<DatItem> items = GetItemsForBucket(bucket);
@@ -503,10 +500,7 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void AddItemsFromCloneOfParentImpl()
         {
-            List<string> buckets = [.. Items.SortedKeys];
-            buckets.Sort();
-
-            foreach (string bucket in buckets)
+            foreach (string bucket in  Items.SortedKeys)
             {
                 // If the bucket has no items in it
                 List<DatItem> items = GetItemsForBucket(bucket);
@@ -625,10 +619,7 @@ namespace SabreTools.DatFiles
         private bool AddItemsFromDevicesImpl(bool deviceOnly, bool useSlotOptions)
         {
             bool foundnew = false;
-            List<string> buckets = [.. Items.SortedKeys];
-            buckets.Sort();
-
-            foreach (string bucket in buckets)
+            foreach (string bucket in  Items.SortedKeys)
             {
                 // If the bucket doesn't have items
                 List<DatItem> datItems = GetItemsForBucket(bucket);
@@ -937,10 +928,7 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void AddItemsFromRomOfParentImpl()
         {
-            List<string> buckets = [.. Items.SortedKeys];
-            buckets.Sort();
-
-            foreach (string bucket in buckets)
+            foreach (string bucket in  Items.SortedKeys)
             {
                 // If the bucket has no items in it
                 List<DatItem> items = GetItemsForBucket(bucket);
@@ -1023,10 +1011,7 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void RemoveBiosAndDeviceSetsImpl()
         {
-            List<string> buckets = [.. Items.SortedKeys];
-            buckets.Sort();
-
-            foreach (string bucket in buckets)
+            foreach (string bucket in  Items.SortedKeys)
             {
                 // If the bucket has no items in it
                 List<DatItem> items = GetItemsForBucket(bucket);
@@ -1093,10 +1078,7 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void RemoveItemsFromCloneOfChildImpl()
         {
-            List<string> buckets = [.. Items.SortedKeys];
-            buckets.Sort();
-
-            foreach (string bucket in buckets)
+            foreach (string bucket in  Items.SortedKeys)
             {
                 // If the bucket has no items in it
                 List<DatItem> items = GetItemsForBucket(bucket);
@@ -1200,10 +1182,7 @@ namespace SabreTools.DatFiles
         private void RemoveItemsFromRomOfChildImpl()
         {
             // Loop through the romof tags
-            List<string> buckets = [.. Items.SortedKeys];
-            buckets.Sort();
-
-            foreach (string bucket in buckets)
+            foreach (string bucket in  Items.SortedKeys)
             {
                 // If the bucket has no items in it
                 List<DatItem> items = GetItemsForBucket(bucket);
@@ -1281,10 +1260,7 @@ namespace SabreTools.DatFiles
         /// <remarks>Applies to <see cref="Items"/></remarks>
         private void RemoveMachineRelationshipTagsImpl()
         {
-            List<string> buckets = [.. Items.SortedKeys];
-            buckets.Sort();
-
-            foreach (string bucket in buckets)
+            foreach (string bucket in  Items.SortedKeys)
             {
                 // If the bucket has no items in it
                 var items = GetItemsForBucket(bucket);

@@ -109,8 +109,7 @@ namespace SabreTools.DatTools
             datFile.BucketBy(ItemKey.SHA1, DedupeType.None);
 
             // Then we want to loop through each of the hashes and see if we can rebuild
-            List<string> keys = [.. datFile.Items.SortedKeys];
-            foreach (string hash in keys)
+            foreach (string hash in datFile.Items.SortedKeys)
             {
                 // Pre-empt any issues that could arise from string length
                 if (hash.Length != Constants.SHA1Length)

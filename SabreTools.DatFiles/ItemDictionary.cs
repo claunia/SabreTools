@@ -50,36 +50,28 @@ namespace SabreTools.DatFiles
 
         #endregion
 
-        #region Publically available fields
-
-        #region Keys
+        #region Fields
 
         /// <summary>
         /// Get the keys in sorted order from the file dictionary
         /// </summary>
         /// <returns>List of the keys in sorted order</returns>
         [JsonIgnore, XmlIgnore]
-        public List<string> SortedKeys
+        public string[] SortedKeys
         {
             get
             {
                 List<string> keys = [.. _items.Keys];
                 keys.Sort(new NaturalComparer());
-                return keys;
+                return [.. keys];
             }
         }
-
-        #endregion
-
-        #region Statistics
 
         /// <summary>
         /// DAT statistics
         /// </summary>
         [JsonIgnore, XmlIgnore]
         public DatStatistics DatStatistics { get; } = new DatStatistics();
-
-        #endregion
 
         #endregion
 
@@ -204,8 +196,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         internal void ClearEmpty()
         {
-            string[] keys = [.. SortedKeys];
-            foreach (string key in keys)
+            foreach (string key in SortedKeys)
             {
 #if NET40_OR_GREATER || NETCOREAPP
                 // If the key doesn't exist, skip
@@ -240,8 +231,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         internal void ClearMarked()
         {
-            string[] keys = [.. SortedKeys];
-            foreach (string key in keys)
+            foreach (string key in SortedKeys)
             {
                 // Perform filtering on items
                 List<DatItem> list = GetItemsForBucket(key, filter: true);
@@ -664,13 +654,12 @@ namespace SabreTools.DatFiles
             // Set the sorted type
             _mergedBy = dedupeType;
 
-            List<string> keys = [.. SortedKeys];
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(keys, Core.Globals.ParallelOptions, key =>
+            Parallel.ForEach(SortedKeys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
-            Parallel.ForEach(keys, key =>
+            Parallel.ForEach(SortedKeys, key =>
 #else
-            foreach (var key in keys)
+            foreach (var key in SortedKeys)
 #endif
             {
                 // Get the possibly unsorted list
@@ -698,13 +687,12 @@ namespace SabreTools.DatFiles
         /// </summary>
         private void PerformSorting()
         {
-            List<string> keys = [.. SortedKeys];
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(keys, Core.Globals.ParallelOptions, key =>
+            Parallel.ForEach(SortedKeys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
-            Parallel.ForEach(keys, key =>
+            Parallel.ForEach(SortedKeys, key =>
 #else
-            foreach (var key in keys)
+            foreach (var key in SortedKeys)
 #endif
             {
                 // Get the possibly unsorted list

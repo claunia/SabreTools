@@ -58,7 +58,7 @@ namespace SabreTools.Test.DatFiles
             dict.AddItem(rom4, statsOnly: false);
 
             dict.BucketBy(itemKey, DedupeType.None);
-            Assert.Equal(expected, dict.SortedKeys.Count);
+            Assert.Equal(expected, dict.SortedKeys.Length);
         }
 
         [Fact]

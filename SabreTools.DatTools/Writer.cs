@@ -141,7 +141,7 @@ namespace SabreTools.DatTools
             datFile.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
             datFile.DatStatistics.DisplayName = datFile.Header.GetStringFieldValue(DatHeader.FileNameKey);
-            datFile.DatStatistics.MachineCount = datFile.Items.SortedKeys.Count;
+            datFile.DatStatistics.MachineCount = datFile.Items.SortedKeys.Length;
 
             List<DatStatistics> statsList =
             [

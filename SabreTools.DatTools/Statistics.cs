@@ -83,17 +83,17 @@ namespace SabreTools.DatTools
                 {
                     DatStatistics individualStats = datdata.DatStatistics;
                     individualStats.DisplayName = datdata.Header.GetStringFieldValue(DatHeader.FileNameKey);
-                    individualStats.MachineCount = datdata.Items.SortedKeys.Count;
+                    individualStats.MachineCount = datdata.Items.SortedKeys.Length;
                     stats.Add(individualStats);
                 }
 
                 // Add single DAT stats to dir
                 dirStats.AddStatistics(datdata.DatStatistics);
-                dirStats.GameCount += datdata.Items.SortedKeys.Count;
+                dirStats.GameCount += datdata.Items.SortedKeys.Length;
 
                 // Add single DAT stats to totals
                 totalStats.AddStatistics(datdata.DatStatistics);
-                totalStats.GameCount += datdata.Items.SortedKeys.Count;
+                totalStats.GameCount += datdata.Items.SortedKeys.Length;
 
                 // Make sure to assign the new directory
                 lastdir = thisdir;

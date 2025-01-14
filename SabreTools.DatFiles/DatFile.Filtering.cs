@@ -191,13 +191,12 @@ namespace SabreTools.DatFiles
         /// <remarks>Applies to <see cref="Items"/></remarks>
         private void ExecuteFiltersImpl(FilterRunner filterRunner)
         {
-            List<string> keys = [.. Items.SortedKeys];
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(keys, Core.Globals.ParallelOptions, key =>
+            Parallel.ForEach(Items.SortedKeys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
-            Parallel.ForEach(keys, key =>
+            Parallel.ForEach(Items.SortedKeys, key =>
 #else
-            foreach (var key in keys)
+            foreach (var key in Items.SortedKeys)
 #endif
             {
                 ExecuteFilterOnBucket(filterRunner, key);
