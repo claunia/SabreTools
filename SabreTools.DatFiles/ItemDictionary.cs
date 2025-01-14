@@ -736,7 +736,7 @@ namespace SabreTools.DatFiles
                 BucketBy(GetBestAvailable(), DedupeType.None);
 
             // Now that we have the sorted type, we get the proper key
-            return datItem.GetKey(_bucketedBy);
+            return GetBucketKey(datItem, _bucketedBy, lower: true, norename: true);
         }
 
         #endregion

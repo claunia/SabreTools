@@ -943,10 +943,7 @@ namespace SabreTools.DatFiles
 #endif
 
             var source = GetSourceForItem(itemIndex);
-            string sourceKeyPadded = source.Value?.Index.ToString().PadLeft(10, '0') + '-';
-
             var machine = GetMachineForItem(itemIndex);
-            string machineName = machine.Value?.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? "Default";
 
             // Treat NULL like machine
             if (bucketBy == ItemKey.NULL)
@@ -1188,9 +1185,7 @@ namespace SabreTools.DatFiles
                 BucketBy(GetBestAvailable(), DedupeType.None);
 
             // Now that we have the sorted type, we get the proper key
-            var machine = GetMachineForItem(datItem.Key);
-            var source = GetSourceForItem(datItem.Key);
-            return datItem.Value.GetKeyDB(_bucketedBy, machine.Value, source.Value);
+            return GetBucketKey(datItem.Key, _bucketedBy, lower: true, norename: true);
         }
 
         #endregion
