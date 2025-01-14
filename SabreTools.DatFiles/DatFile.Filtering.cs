@@ -442,6 +442,9 @@ namespace SabreTools.DatFiles
             if (machine == null)
                 return;
 
+            // TODO: Clone current machine so that all data can be retained
+            // TODO: Assign cloned machine to the item with the new name
+
             // Remove extensions from Rom items
             if (datItem is Rom)
             {
@@ -509,6 +512,9 @@ namespace SabreTools.DatFiles
             var machine = ItemsDB.GetMachineForItem(datItem.Key);
             if (machine.Value == null)
                 return;
+
+            // TODO: Clone current machine so that all data can be retained
+            // TODO: Assign cloned machine to the item with the new name
 
             // Remove extensions from Rom items
             if (datItem.Value is Rom)
