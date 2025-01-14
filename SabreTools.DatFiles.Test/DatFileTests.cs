@@ -19,7 +19,7 @@ namespace SabreTools.DatFiles.Test
 
             Assert.NotNull(created.Header);
             Assert.NotNull(created.Items);
-            Assert.Empty(created.Items);
+            Assert.Equal(0, created.DatStatistics.TotalCount);
             Assert.NotNull(created.ItemsDB);
             Assert.Empty(created.ItemsDB.GetItems());
         }
@@ -38,10 +38,7 @@ namespace SabreTools.DatFiles.Test
             Assert.Equal("name", created.Header.GetStringFieldValue(Models.Metadata.Header.NameKey));
 
             Assert.NotNull(created.Items);
-            KeyValuePair<string, List<DatItem>?> itemsKvp = Assert.Single(created.Items);
-            Assert.Equal("key", itemsKvp.Key);
-            Assert.NotNull(itemsKvp.Value);
-            DatItem datItem = Assert.Single(itemsKvp.Value);
+            DatItem datItem = Assert.Single(created.GetItemsForBucket("key"));
             Assert.True(datItem is Rom);
 
             Assert.NotNull(created.ItemsDB);
@@ -190,7 +187,7 @@ namespace SabreTools.DatFiles.Test
 
             Assert.NotNull(datFile.Header);
             Assert.NotNull(datFile.Items);
-            Assert.Empty(datFile.Items);
+            Assert.Equal(0, datFile.DatStatistics.TotalCount);
             Assert.NotNull(datFile.ItemsDB);
             Assert.Empty(datFile.ItemsDB.GetItems());
         }

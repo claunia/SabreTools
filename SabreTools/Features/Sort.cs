@@ -97,7 +97,7 @@ namespace SabreTools.Features
                     Parser.ParseInto(datdata, datfile, int.MaxValue, keep: true);
 
                     // Skip if nothing was parsed
-                    if (datdata.Items.Count == 0) // datdata.ItemsDB.SortedKeys.Length == 0
+                    if (datdata.DatStatistics.TotalCount == 0) // datdata.ItemsDB.SortedKeys.Length == 0
                         continue;
 
                     // Set depot information

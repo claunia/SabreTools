@@ -536,7 +536,8 @@ namespace SabreTools.DatFiles
                         if (datItem.Clone() is not DatItem newDatItem)
                             continue;
 
-                        if (!datFile.Items.TryGetValue(key, out var list) || list == null)
+                        var list = datFile.GetItemsForBucket(key);
+                        if (list.Count == 0)
                             continue;
 
                         if (datFile.Items.ContainsKey(key) && list.Count > 0)
@@ -697,7 +698,8 @@ namespace SabreTools.DatFiles
                 if (useGames)
                 {
                     // If the key is null, keep it
-                    if (!intDat.Items.TryGetValue(key, out var intList) || intList == null)
+                    var intList = intDat.GetItemsForBucket(key);
+                    if (intList.Count == 0)
 #if NET40_OR_GREATER || NETCOREAPP
                         return;
 #else
@@ -705,7 +707,8 @@ namespace SabreTools.DatFiles
 #endif
 
                     // If the base DAT doesn't contain the key, keep it
-                    if (!datFile.Items.TryGetValue(key, out var list) || list == null)
+                    var list = datFile.GetItemsForBucket(key);
+                    if (list.Count == 0)
 #if NET40_OR_GREATER || NETCOREAPP
                         return;
 #else

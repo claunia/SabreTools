@@ -1,5 +1,4 @@
-﻿using System.Collections;
-#if NET40_OR_GREATER || NETCOREAPP
+﻿#if NET40_OR_GREATER || NETCOREAPP
 using System.Collections.Concurrent;
 #endif
 using System.Collections.Generic;
@@ -15,14 +14,13 @@ using SabreTools.Hashing;
 using SabreTools.IO.Logging;
 using SabreTools.Matching.Compare;
 
-// TODO: Remove IDictionary implementation
 namespace SabreTools.DatFiles
 {
     /// <summary>
     /// Item dictionary with statistics, bucketing, and sorting
     /// </summary>
     [JsonObject("items"), XmlRoot("items")]
-    public class ItemDictionary : IDictionary<string, List<DatItem>?>
+    public class ItemDictionary
     {
         #region Private instance variables
 
@@ -110,34 +108,6 @@ namespace SabreTools.DatFiles
         #endregion
 
         #region Accessors
-
-        /// <summary>
-        /// Passthrough to access the file dictionary
-        /// </summary>
-        /// <param name="key">Key in the dictionary to reference</param>
-        public List<DatItem>? this[string key]
-        {
-            get
-            {
-                // Explicit lock for some weird corner cases
-                lock (key)
-                {
-                    // Ensure the key exists
-                    EnsureKey(key);
-
-                    // Now return the value
-                    return _items[key];
-                }
-            }
-            set
-            {
-                Remove(key);
-                if (value == null)
-                    _items[key] = null;
-                else
-                    Add(key, value);
-            }
-        }
 
         /// <summary>
         /// Add a value to the file dictionary
@@ -839,56 +809,6 @@ namespace SabreTools.DatFiles
                     DatStatistics.AddItemStatistics(item);
                 }
             }
-        }
-
-        #endregion
-
-        #region IDictionary Implementations
-
-        public ICollection<List<DatItem>?> Values => ((IDictionary<string, List<DatItem>?>)_items).Values;
-
-        public int Count => ((ICollection<KeyValuePair<string, List<DatItem>?>>)_items).Count;
-
-        public bool IsReadOnly => ((ICollection<KeyValuePair<string, List<DatItem>?>>)_items).IsReadOnly;
-
-        public bool TryGetValue(string key, out List<DatItem>? value)
-        {
-            return ((IDictionary<string, List<DatItem>?>)_items).TryGetValue(key, out value);
-        }
-
-        public void Add(KeyValuePair<string, List<DatItem>?> item)
-        {
-            ((ICollection<KeyValuePair<string, List<DatItem>?>>)_items).Add(item);
-        }
-
-        public void Clear()
-        {
-            ((ICollection<KeyValuePair<string, List<DatItem>?>>)_items).Clear();
-        }
-
-        public bool Contains(KeyValuePair<string, List<DatItem>?> item)
-        {
-            return ((ICollection<KeyValuePair<string, List<DatItem>?>>)_items).Contains(item);
-        }
-
-        public void CopyTo(KeyValuePair<string, List<DatItem>?>[] array, int arrayIndex)
-        {
-            ((ICollection<KeyValuePair<string, List<DatItem>?>>)_items).CopyTo(array, arrayIndex);
-        }
-
-        public bool Remove(KeyValuePair<string, List<DatItem>?> item)
-        {
-            return ((ICollection<KeyValuePair<string, List<DatItem>?>>)_items).Remove(item);
-        }
-
-        public IEnumerator<KeyValuePair<string, List<DatItem>?>> GetEnumerator()
-        {
-            return ((IEnumerable<KeyValuePair<string, List<DatItem>?>>)_items).GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return ((IEnumerable)_items).GetEnumerator();
         }
 
         #endregion

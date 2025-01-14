@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -50,11 +51,9 @@ namespace SabreTools.Test.DatFiles
             rom1.CopyMachineInformation(machine2);
 
             // Setup the dictionary
-            var dict = new ItemDictionary
-            {
-                ["game-1"] = [rom1, rom2],
-                ["game-2"] = [rom3, rom4],
-            };
+            var dict = new ItemDictionary();
+            dict.Add("game-1", [rom1, rom2]);
+            dict.Add("game-2", [rom3, rom4]);
 
             dict.BucketBy(itemKey, DedupeType.None);
             Assert.Equal(expected, dict.Keys.Count);
@@ -64,12 +63,10 @@ namespace SabreTools.Test.DatFiles
         public void ClearEmptyTest()
         {
             // Setup the dictionary
-            var dict = new ItemDictionary
-            {
-                ["game-1"] = [new Rom(),],
-                ["game-2"] = [],
-                ["game-3"] = null,
-            };
+            var dict = new ItemDictionary();
+            dict.Add("game-1", [new Rom()]);
+            dict.Add("game-2", []);
+            dict.Add("game-3", (List<DatItem>?)null);
 
             dict.ClearEmpty();
             Assert.Single(dict.Keys);
@@ -98,16 +95,14 @@ namespace SabreTools.Test.DatFiles
             rom1.CopyMachineInformation(machine1);
 
             // Setup the dictionary
-            var dict = new ItemDictionary
-            {
-                ["game-1"] = [rom1, rom2],
-            };
+            var dict = new ItemDictionary();
+            dict.Add("game-1", [rom1, rom2]);
 
             dict.ClearMarked();
             string key = Assert.Single(dict.Keys);
             Assert.Equal("game-1", key);
-            Assert.NotNull(dict[key]);
-            Assert.Single(dict[key]!);
+            List<DatItem> items = dict.GetItemsForBucket(key);
+            Assert.Single(items);
         }
 
         [Theory]
@@ -132,10 +127,8 @@ namespace SabreTools.Test.DatFiles
             rom1.CopyMachineInformation(machine1);
 
             // Setup the dictionary
-            var dict = new ItemDictionary
-            {
-                ["game-1"] = [rom1, rom2],
-            };
+            var dict = new ItemDictionary();
+            dict.Add("game-1", [rom1, rom2]);
 
             // Setup the test item
             var rom = new Rom();
@@ -170,10 +163,8 @@ namespace SabreTools.Test.DatFiles
             rom1.CopyMachineInformation(machine1);
 
             // Setup the dictionary
-            var dict = new ItemDictionary
-            {
-                ["game-1"] = [rom1, rom2],
-            };
+            var dict = new ItemDictionary();
+            dict.Add("game-1", [rom1, rom2]);
 
             // Setup the test item
             var rom = new Rom();

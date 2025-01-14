@@ -29,7 +29,7 @@ namespace SabreTools.DatFiles
         /// DatItems and related statistics
         /// </summary>
         [JsonProperty("items"), XmlElement("items")]
-        public ItemDictionary Items { get; private set; } = [];
+        public ItemDictionary Items { get; private set; } = new ItemDictionary();
 
         /// <summary>
         /// DatItems and related statistics
@@ -252,7 +252,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         public void ResetDictionary()
         {
-            Items.Clear();
+            Items = new ItemDictionary();
             ItemsDB = new ItemDictionaryDB();
         }
 

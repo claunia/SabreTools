@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using SabreTools.Core.Tools;
@@ -16,7 +15,7 @@ namespace SabreTools.DatFiles
         internal Models.Metadata.MetadataFile? ConvertToMetadata(bool ignoreblanks = false)
         {
             // If we don't have items, we can't do anything
-            if (Items.Count == 0)
+            if (DatStatistics.TotalCount == 0)
                 return null;
 
             // Create an object to hold the data
@@ -41,7 +40,7 @@ namespace SabreTools.DatFiles
         internal Models.Metadata.MetadataFile? ConvertToMetadataDB(bool ignoreblanks = false)
         {
             // If we don't have items, we can't do anything
-            if (ItemsDB.GetItems().Count == 0)
+            if (ItemsDB.DatStatistics.TotalCount == 0)
                 return null;
 
             // Create an object to hold the data

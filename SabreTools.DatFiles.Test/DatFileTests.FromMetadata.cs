@@ -18,7 +18,7 @@ namespace SabreTools.DatFiles.Test
             DatFile datFile = new Formats.Logiqx(null, deprecated: false);
             datFile.ConvertFromMetadata(item, "filename", indexId: 0, keep: true, statsOnly: false);
 
-            Assert.Empty(datFile.Items);
+            Assert.Equal(0, datFile.DatStatistics.TotalCount);
             Assert.Empty(datFile.ItemsDB.GetItems());
         }
 
@@ -30,7 +30,7 @@ namespace SabreTools.DatFiles.Test
             DatFile datFile = new Formats.Logiqx(null, deprecated: false);
             datFile.ConvertFromMetadata(item, "filename", indexId: 0, keep: true, statsOnly: false);
 
-            Assert.Empty(datFile.Items);
+            Assert.Equal(0, datFile.DatStatistics.TotalCount);
             Assert.Empty(datFile.ItemsDB.GetItems());
         }
 
@@ -70,8 +70,8 @@ namespace SabreTools.DatFiles.Test
             ValidateMachine(actualMachine);
 
             // Aggregate for easier validation
-            DatItems.DatItem[] datItems = datFile.Items
-                .SelectMany(kvp => kvp.Value ?? [])
+            DatItems.DatItem[] datItems = datFile.Items.Keys
+                .SelectMany(key => datFile.GetItemsForBucket(key))
                 .ToArray();
 
             Adjuster? adjuster = Array.Find(datItems, item => item is Adjuster) as Adjuster;
