@@ -27,12 +27,12 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Determine the bucketing key for all items
         /// </summary>
-        private ItemKey _bucketedBy;
+        private ItemKey _bucketedBy = ItemKey.NULL;
 
         /// <summary>
         /// Determine merging type for all items
         /// </summary>
-        private DedupeType _mergedBy;
+        private DedupeType _mergedBy = DedupeType.None;
 
         /// <summary>
         /// Internal dictionary for the class
@@ -82,8 +82,6 @@ namespace SabreTools.DatFiles
         /// </summary>
         public ItemDictionary()
         {
-            _bucketedBy = ItemKey.NULL;
-            _mergedBy = DedupeType.None;
             _logger = new Logger(this);
         }
 

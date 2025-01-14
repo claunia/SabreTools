@@ -15,6 +15,7 @@ using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using SabreTools.Hashing;
+using SabreTools.IO.Logging;
 using SabreTools.Matching.Compare;
 
 /*
@@ -128,6 +129,11 @@ namespace SabreTools.DatFiles
         /// </summary>
         private ItemKey _bucketedBy = ItemKey.NULL;
 
+        /// <summary>
+        /// Logging object
+        /// </summary>
+        private readonly Logger _logger;
+
         #endregion
 
         #region Fields
@@ -155,10 +161,17 @@ namespace SabreTools.DatFiles
 
         #endregion
 
+        #region Constructors
+
         /// <summary>
         /// Generic constructor
         /// </summary>
-        public ItemDictionaryDB() { }
+        public ItemDictionaryDB()
+        {
+            _logger = new Logger(this);
+        }
+
+        #endregion
 
         #region Accessors
 
@@ -180,6 +193,7 @@ namespace SabreTools.DatFiles
                     && string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key))
                     && string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)))
                 {
+                    _logger.Verbose($"Incomplete entry for '{disk.GetName()}' will be output as nodump");
                     disk.SetFieldValue<string?>(Models.Metadata.Disk.StatusKey, ItemStatus.Nodump.AsStringValue());
                 }
 
@@ -193,7 +207,7 @@ namespace SabreTools.DatFiles
                     && string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA256Key))
                     && string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SpamSumKey)))
                 {
-                    // No-op as there is no status key for Media
+                    _logger.Verbose($"Incomplete entry for '{media.GetName()}' will be output as nodump");
                 }
 
                 item = media;
@@ -206,6 +220,7 @@ namespace SabreTools.DatFiles
                 if (size == null && !rom.HasHashes())
                 {
                     // No-op, just catch it so it doesn't go further
+                    //logger.Verbose($"{Header.GetStringFieldValue(DatHeader.FileNameKey)}: Entry with only SHA-1 found - '{rom.GetName()}'");
                 }
 
                 // If we have a rom and it's missing size AND the hashes match a 0-byte file, fill in the rest of the info
@@ -227,6 +242,7 @@ namespace SabreTools.DatFiles
                 // If the file has no size and it's not the above case, skip and log
                 else if (rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() != ItemStatus.Nodump && (size == 0 || size == null))
                 {
+                    //logger.Verbose($"{Header.GetStringFieldValue(DatHeader.FileNameKey)}: Incomplete entry for '{rom.GetName()}' will be output as nodump");
                     rom.SetFieldValue<string?>(Models.Metadata.Rom.StatusKey, ItemStatus.Nodump.AsStringValue());
                 }
 
@@ -235,6 +251,7 @@ namespace SabreTools.DatFiles
                     && size != null && size > 0
                     && !rom.HasHashes())
                 {
+                    //logger.Verbose($"{Header.GetStringFieldValue(DatHeader.FileNameKey)}: Incomplete entry for '{rom.GetName()}' will be output as nodump");
                     rom.SetFieldValue<string?>(Models.Metadata.Rom.StatusKey, ItemStatus.Nodump.AsStringValue());
                 }
 
@@ -684,16 +701,21 @@ namespace SabreTools.DatFiles
         {
             // If the sorted type isn't the same, we want to sort the dictionary accordingly
             if (_bucketedBy != bucketBy && bucketBy != ItemKey.NULL)
+            {
+                _logger.User($"Organizing roms by {bucketBy}");
                 PerformBucketing(bucketBy, lower, norename);
+            }
 
             // If the merge type isn't the same, we want to merge the dictionary accordingly
             if (dedupeType != DedupeType.None)
             {
+                _logger.User($"Deduping roms by {dedupeType}");
                 PerformDeduplication(bucketBy, dedupeType);
             }
             // If the merge type is the same, we want to sort the dictionary to be consistent
             else
             {
+                _logger.User($"Sorting roms by {bucketBy}");
                 PerformSorting(norename);
             }
         }
