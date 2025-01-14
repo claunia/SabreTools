@@ -301,6 +301,19 @@ namespace SabreTools.DatFiles
 
         #endregion
 
+        #region Item Dictionary Passthrough - Bucketing
+
+        /// <summary>
+        /// Recalculate the statistics for the Dat
+        /// </summary>
+        public void RecalculateStats()
+        {
+            Items.RecalculateStats();
+            ItemsDB.RecalculateStats();
+        }
+
+        #endregion
+
         #region Parsing
 
         /// <summary>

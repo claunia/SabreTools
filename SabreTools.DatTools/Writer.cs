@@ -136,7 +136,7 @@ namespace SabreTools.DatTools
             long romCount = datFile.DatStatistics.GetItemCount(ItemType.Rom);
 
             if (diskCount + mediaCount + romCount == 0)
-                datFile.Items.RecalculateStats();
+                datFile.RecalculateStats();
 
             datFile.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
@@ -214,8 +214,7 @@ namespace SabreTools.DatTools
         private static bool HasWritable(DatFile datFile)
         {
             // Force a statistics recheck, just in case
-            datFile.Items.RecalculateStats();
-            datFile.ItemsDB.RecalculateStats();
+            datFile.RecalculateStats();
 
             // If there's nothing there, abort
             if (datFile.DatStatistics.TotalCount == 0)
