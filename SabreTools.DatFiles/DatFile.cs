@@ -143,26 +143,6 @@ namespace SabreTools.DatFiles
         #region Item Dictionary Passthrough - Accessors
 
         /// <summary>
-        /// Add a value to the file dictionary
-        /// </summary>
-        /// <param name="key">Key in the dictionary to add to</param>
-        /// <param name="value">Value to add to the dictionary</param>
-        public void Add(string key, DatItem value)
-        {
-            Items.Add(key, value);
-        }
-
-        /// <summary>
-        /// Add a range of values to the file dictionary
-        /// </summary>
-        /// <param name="key">Key in the dictionary to add to</param>
-        /// <param name="value">Value to add to the dictionary</param>
-        public void Add(string key, List<DatItem>? value)
-        {
-            Items.Add(key, value);
-        }
-
-        /// <summary>
         /// Add a DatItem to the dictionary after checking
         /// </summary>
         /// <param name="item">Item data to check against</param>
@@ -242,9 +222,19 @@ namespace SabreTools.DatFiles
         /// Remove a key from the file dictionary if it exists
         /// </summary>
         /// <param name="key">Key in the dictionary to remove</param>
-        public bool Remove(string key)
+        public bool RemoveBucket(string key)
         {
-            return Items.Remove(key);
+            return Items.RemoveBucket(key);
+        }
+
+        /// <summary>
+        /// Remove the first instance of a value from the file dictionary if it exists
+        /// </summary>
+        /// <param name="key">Key in the dictionary to remove from</param>
+        /// <param name="value">Value to remove from the dictionary</param>
+        public bool RemoveItem(string key, DatItem value)
+        {
+            return Items.RemoveItem(key, value);
         }
 
         /// <summary>

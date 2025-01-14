@@ -70,7 +70,7 @@ namespace SabreTools.DatFiles.Test
             ValidateMachine(actualMachine);
 
             // Aggregate for easier validation
-            DatItems.DatItem[] datItems = datFile.Items.Keys
+            DatItems.DatItem[] datItems = datFile.Items.SortedKeys
                 .SelectMany(key => datFile.GetItemsForBucket(key))
                 .ToArray();
 

@@ -102,11 +102,11 @@ namespace SabreTools.DatFiles
             Dictionary<string, string> mapping = [];
 #endif
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(Items.Keys, Globals.ParallelOptions, key =>
+            Parallel.ForEach(Items.SortedKeys, Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
-            Parallel.ForEach(Items.Keys, key =>
+            Parallel.ForEach(Items.SortedKeys, key =>
 #else
-            foreach (var key in Items.Keys)
+            foreach (var key in Items.SortedKeys)
 #endif
             {
                 var items = GetItemsForBucket(key);
@@ -191,7 +191,7 @@ namespace SabreTools.DatFiles
         /// <remarks>Applies to <see cref="Items"/></remarks>
         private void ExecuteFiltersImpl(FilterRunner filterRunner)
         {
-            List<string> keys = [.. Items.Keys];
+            List<string> keys = [.. Items.SortedKeys];
 #if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(keys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
@@ -327,7 +327,7 @@ namespace SabreTools.DatFiles
 
             // Then we want to get a mapping of all machines to parents
             Dictionary<string, List<string>> parents = [];
-            foreach (string key in Items.Keys)
+            foreach (string key in Items.SortedKeys)
             {
                 DatItem item = GetItemsForBucket(key)[0];
 
@@ -389,7 +389,7 @@ namespace SabreTools.DatFiles
                 parents[key].Remove(machine);
 
                 // Remove the rest of the items from this key
-                parents[key].ForEach(k => Remove(k));
+                parents[key].ForEach(k => RemoveBucket(k));
             }
 
             // Finally, strip out the parent tags
@@ -483,11 +483,11 @@ namespace SabreTools.DatFiles
         {
             // For each rom, we want to update the game to be "<game name>/<rom name>"
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(Items.Keys, Globals.ParallelOptions, key =>
+            Parallel.ForEach(Items.SortedKeys, Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
-            Parallel.ForEach(Items.Keys, key =>
+            Parallel.ForEach(Items.SortedKeys, key =>
 #else
-            foreach (var key in Items.Keys)
+            foreach (var key in Items.SortedKeys)
 #endif
             {
                 var items = GetItemsForBucket(key);
@@ -640,11 +640,11 @@ namespace SabreTools.DatFiles
         {
             // Now process all of the roms
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(Items.Keys, Globals.ParallelOptions, key =>
+            Parallel.ForEach(Items.SortedKeys, Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
-            Parallel.ForEach(Items.Keys, key =>
+            Parallel.ForEach(Items.SortedKeys, key =>
 #else
-            foreach (var key in Items.Keys)
+            foreach (var key in Items.SortedKeys)
 #endif
             {
                 var items = GetItemsForBucket(key);
@@ -725,11 +725,11 @@ namespace SabreTools.DatFiles
         private void UpdateMachineNamesFromDescriptions(IDictionary<string, string> mapping)
         {
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(Items.Keys, Globals.ParallelOptions, key =>
+            Parallel.ForEach(Items.SortedKeys, Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
-            Parallel.ForEach(Items.Keys, key =>
+            Parallel.ForEach(Items.SortedKeys, key =>
 #else
-            foreach (var key in Items.Keys)
+            foreach (var key in Items.SortedKeys)
 #endif
             {
                 var items = GetItemsForBucket(key);

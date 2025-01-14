@@ -55,16 +55,6 @@ namespace SabreTools.DatFiles
         #region Keys
 
         /// <summary>
-        /// Get the keys from the file dictionary
-        /// </summary>
-        /// <returns>List of the keys</returns>
-        [JsonIgnore, XmlIgnore]
-        public ICollection<string> Keys
-        {
-            get { return _items.Keys; }
-        }
-
-        /// <summary>
         /// Get the keys in sorted order from the file dictionary
         /// </summary>
         /// <returns>List of the keys in sorted order</returns>
@@ -108,59 +98,6 @@ namespace SabreTools.DatFiles
         #endregion
 
         #region Accessors
-
-        /// <summary>
-        /// Add a value to the file dictionary
-        /// </summary>
-        /// <param name="key">Key in the dictionary to add to</param>
-        /// <param name="value">Value to add to the dictionary</param>
-        public void Add(string key, DatItem value)
-        {
-            // Explicit lock for some weird corner cases
-            lock (key)
-            {
-                // Ensure the key exists
-                EnsureBucketingKey(key);
-
-                // If item is null, don't add it
-                if (value == null)
-                    return;
-
-                // Now add the value
-                _items[key]!.Add(value);
-
-                // Now update the statistics
-                DatStatistics.AddItemStatistics(value);
-            }
-        }
-
-        /// <summary>
-        /// Add a range of values to the file dictionary
-        /// </summary>
-        /// <param name="key">Key in the dictionary to add to</param>
-        /// <param name="value">Value to add to the dictionary</param>
-        public void Add(string key, List<DatItem>? value)
-        {
-            // Explicit lock for some weird corner cases
-            lock (key)
-            {
-                // If the value is null or empty, just return
-                if (value == null || value.Count == 0)
-                    return;
-
-                // Ensure the key exists
-                EnsureBucketingKey(key);
-
-                // Now add the value
-                _items[key]!.AddRange(value);
-
-                // Now update the statistics
-                foreach (DatItem item in value)
-                {
-                    DatStatistics.AddItemStatistics(item);
-                }
-            }
-        }
 
         /// <summary>
         /// Add a DatItem to the dictionary after checking
@@ -256,7 +193,7 @@ namespace SabreTools.DatFiles
             }
             else
             {
-                Add(key, item);
+                AddItem(key, item);
             }
 
             return key;
@@ -267,7 +204,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         internal void ClearEmpty()
         {
-            string[] keys = [.. Keys];
+            string[] keys = [.. SortedKeys];
             foreach (string key in keys)
             {
 #if NET40_OR_GREATER || NETCOREAPP
@@ -303,15 +240,21 @@ namespace SabreTools.DatFiles
         /// </summary>
         internal void ClearMarked()
         {
-            string[] keys = [.. Keys];
+            string[] keys = [.. SortedKeys];
             foreach (string key in keys)
             {
-                // Skip invalid item lists
-                List<DatItem> oldItemList = GetItemsForBucket(key);
-                List<DatItem> newItemList = oldItemList.FindAll(i => i.GetBoolFieldValue(DatItem.RemoveKey) != true);
+                // Perform filtering on items
+                List<DatItem> list = GetItemsForBucket(key, filter: true);
 
-                Remove(key);
-                Add(key, newItemList);
+                // Remove the current list
+                RemoveBucket(key);
+
+                // Add the filtered list back
+#if NET40_OR_GREATER || NETCOREAPP
+                _ = _items.TryAdd(key, list);
+#else
+                _items[key] = list;
+#endif
             }
         }
 
@@ -334,33 +277,6 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Get if the file dictionary contains the key and value
-        /// </summary>
-        /// <param name="key">Key in the dictionary to check</param>
-        /// <param name="value">Value in the dictionary to check</param>
-        /// <returns>True if the key exists, false otherwise</returns>
-        public bool Contains(string key, DatItem value)
-        {
-            // If the key is null, we return false since keys can't be null
-            if (key == null)
-                return false;
-
-            // Explicit lock for some weird corner cases
-            lock (key)
-            {
-#if NET40_OR_GREATER || NETCOREAPP
-                if (_items.TryGetValue(key, out var list) && list != null)
-                    return list.Exists(i => i.Equals(value));
-#else
-                if (_items.ContainsKey(key) && _items[key] != null)
-                    return _items[key]!.Exists(i => i.Equals(value));
-#endif
-            }
-
-            return false;
-        }
-
-        /// <summary>
         /// Ensure the key exists in the items dictionary
         /// </summary>
         /// <param name="key">Key to ensure</param>
@@ -378,6 +294,9 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Get the items associated with a bucket name
         /// </summary>
+        /// <param name="bucketName">Name of the bucket to retrive items for</param>
+        /// <param name="filter">Indicates if RemoveKey filtering is performed</param>
+        /// <returns>List representing the bucket items, empty on missing</returns>
         public List<DatItem> GetItemsForBucket(string? bucketName, bool filter = false)
         {
             if (bucketName == null)
@@ -410,28 +329,27 @@ namespace SabreTools.DatFiles
         /// Remove a key from the file dictionary if it exists
         /// </summary>
         /// <param name="key">Key in the dictionary to remove</param>
-        public bool Remove(string key)
+        public bool RemoveBucket(string key)
         {
-            // Explicit lock for some weird corner cases
-            lock (key)
-            {
-                // If the key doesn't exist, return
-                if (!ContainsKey(key) || _items[key] == null)
-                    return false;
-
-                // Remove the statistics first
-                foreach (DatItem item in _items[key]!)
-                {
-                    DatStatistics.RemoveItemStatistics(item);
-                }
-
-                // Remove the key from the dictionary
 #if NET40_OR_GREATER || NETCOREAPP
-                return _items.TryRemove(key, out _);
+            bool removed = _items.TryRemove(key, out var list);
 #else
-                return _items.Remove(key);
+            if (!_items.ContainsKey(key))
+                return false;
+
+            bool removed = true;
+            var list = _items[key];
+            _items.Remove(key);
 #endif
+            if (list == null)
+                return removed;
+
+            foreach (var item in list)
+            {
+                DatStatistics.RemoveItemStatistics(item);
             }
+
+            return removed;
         }
 
         /// <summary>
@@ -439,41 +357,33 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="key">Key in the dictionary to remove from</param>
         /// <param name="value">Value to remove from the dictionary</param>
-        public bool Remove(string key, DatItem value)
+        public bool RemoveItem(string key, DatItem value)
         {
             // Explicit lock for some weird corner cases
             lock (key)
             {
-                // If the key and value doesn't exist, return
-                if (!Contains(key, value) || _items[key] == null)
+                // If the key doesn't exist, return
+#if NET40_OR_GREATER || NETCOREAPP
+                if (!_items.TryGetValue(key, out var list) || list == null)
+                    return false;
+#else
+                if (!_items.ContainsKey(key))
+                    return false;
+
+                var list = _items[key];
+                if (list == null)
+                    return false;
+#endif
+
+                // If the value doesn't exist in the key, return
+                if (!list.Exists(i => i.Equals(value)))
                     return false;
 
                 // Remove the statistics first
                 DatStatistics.RemoveItemStatistics(value);
 
-                return _items[key]!.Remove(value);
+                return list.Remove(value);
             }
-        }
-
-        /// <summary>
-        /// Reset a key from the file dictionary if it exists
-        /// </summary>
-        /// <param name="key">Key in the dictionary to reset</param>
-        public bool Reset(string key)
-        {
-            // If the key doesn't exist, return
-            if (!ContainsKey(key) || _items[key] == null)
-                return false;
-
-            // Remove the statistics first
-            foreach (DatItem item in _items[key]!)
-            {
-                DatStatistics.RemoveItemStatistics(item);
-            }
-
-            // Remove the key from the dictionary
-            _items[key] = [];
-            return true;
         }
 
         /// <summary>
@@ -483,6 +393,31 @@ namespace SabreTools.DatFiles
         public void SetBucketedBy(ItemKey newBucket)
         {
             _bucketedBy = newBucket;
+        }
+
+        /// <summary>
+        /// Add a value to the file dictionary
+        /// </summary>
+        /// <param name="key">Key in the dictionary to add to</param>
+        /// <param name="value">Value to add to the dictionary</param>
+        internal void AddItem(string key, DatItem value)
+        {
+            // Explicit lock for some weird corner cases
+            lock (key)
+            {
+                // Ensure the key exists
+                EnsureBucketingKey(key);
+
+                // If item is null, don't add it
+                if (value == null)
+                    return;
+
+                // Now add the value
+                _items[key]!.Add(value);
+
+                // Now update the statistics
+                DatStatistics.AddItemStatistics(value);
+            }
         }
 
         #endregion
@@ -532,28 +467,29 @@ namespace SabreTools.DatFiles
         /// <remarks>This also sets the remove flag on any duplicates found</remarks>
         internal List<DatItem> GetDuplicates(DatItem datItem, bool sorted = false)
         {
-            List<DatItem> output = [];
-
             // Check for an empty rom list first
             if (DatStatistics.TotalCount == 0)
-                return output;
+                return [];
 
             // We want to get the proper key for the DatItem
             string key = SortAndGetKey(datItem, sorted);
 
-            // If the key doesn't exist, return the empty list
-            if (!ContainsKey(key))
-                return output;
+            // Get the items for the current key, if possible
+            List<DatItem> roms = GetItemsForBucket(key, filter: false);
+            if (roms.Count == 0)
+                return [];
+
+            // Remove the current key
+            RemoveBucket(key);
 
             // Try to find duplicates
-            List<DatItem> roms = GetItemsForBucket(key);
-            List<DatItem> left = [];
+            List<DatItem> output = [];
             for (int i = 0; i < roms.Count; i++)
             {
                 DatItem other = roms[i];
                 if (other.GetBoolFieldValue(DatItem.RemoveKey) == true)
                 {
-                    left.Add(other);
+                    AddItem(key, other);
                     continue;
                 }
 
@@ -562,16 +498,9 @@ namespace SabreTools.DatFiles
                     other.SetFieldValue<bool?>(DatItem.RemoveKey, true);
                     output.Add(other);
                 }
-                else
-                {
-                    left.Add(other);
-                }
-            }
 
-            // Add back all roms with the proper flags
-            Remove(key);
-            Add(key, output);
-            Add(key, left);
+                AddItem(key, other);
+            }
 
             return output;
         }
@@ -651,7 +580,7 @@ namespace SabreTools.DatFiles
         /// <param name="lower">True if the key should be lowercased, false otherwise</param>
         /// <param name="norename">True if games should only be compared on game and file name, false if system and source are counted</param>
         /// </summary>
-        private string GetBucketKey(DatItem datItem, ItemKey bucketBy, bool lower, bool norename)
+        private static string GetBucketKey(DatItem datItem, ItemKey bucketBy, bool lower, bool norename)
         {
             if (datItem == null)
                 return string.Empty;
@@ -679,7 +608,7 @@ namespace SabreTools.DatFiles
             _mergedBy = DedupeType.None;
 
             // First do the initial sort of all of the roms inplace
-            List<string> oldkeys = [.. Keys];
+            List<string> oldkeys = [.. SortedKeys];
 
 #if NET452_OR_GREATER || NETCOREAPP
             Parallel.For(0, oldkeys.Count, Core.Globals.ParallelOptions, k =>
@@ -691,7 +620,7 @@ namespace SabreTools.DatFiles
             {
                 string key = oldkeys[k];
                 if (GetItemsForBucket(key).Count == 0)
-                    Remove(key);
+                    RemoveBucket(key);
 
                 // Now add each of the roms to their respective keys
                 for (int i = 0; i < GetItemsForBucket(key).Count; i++)
@@ -706,8 +635,8 @@ namespace SabreTools.DatFiles
                     // If the key is different, move the item to the new key
                     if (newkey != key)
                     {
-                        Add(newkey, item);
-                        bool removed = Remove(key, item);
+                        AddItem(newkey, item);
+                        bool removed = RemoveItem(key, item);
                         if (!removed)
                             break;
 
@@ -717,7 +646,7 @@ namespace SabreTools.DatFiles
 
                 // If the key is now empty, remove it
                 if (GetItemsForBucket(key).Count == 0)
-                    Remove(key);
+                    RemoveBucket(key);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
@@ -735,7 +664,7 @@ namespace SabreTools.DatFiles
             // Set the sorted type
             _mergedBy = dedupeType;
 
-            List<string> keys = [.. Keys];
+            List<string> keys = [.. SortedKeys];
 #if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(keys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
@@ -755,8 +684,8 @@ namespace SabreTools.DatFiles
                     sortedList = DatFileTool.Merge(sortedList);
 
                 // Add the list back to the dictionary
-                Reset(key);
-                Add(key, sortedList);
+                RemoveBucket(key);
+                sortedList.ForEach(item => AddItem(key, item));
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
@@ -769,7 +698,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         private void PerformSorting()
         {
-            List<string> keys = [.. Keys];
+            List<string> keys = [.. SortedKeys];
 #if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(keys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
@@ -785,8 +714,8 @@ namespace SabreTools.DatFiles
                 DatFileTool.Sort(ref sortedList, false);
 
                 // Add the list back to the dictionary
-                Reset(key);
-                Add(key, sortedList);
+                RemoveBucket(key);
+                sortedList.ForEach(item => AddItem(key, item));
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else

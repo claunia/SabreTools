@@ -311,7 +311,7 @@ namespace SabreTools.DatFiles
         /// <param name="inputs">List of inputs to use for renaming</param>
         public static void ApplySuperDAT(DatFile datFile, List<ParentablePath> inputs)
         {
-            List<string> keys = [.. datFile.Items.Keys];
+            List<string> keys = [.. datFile.Items.SortedKeys];
 #if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(keys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
@@ -366,8 +366,8 @@ namespace SabreTools.DatFiles
                     newItems.Add(newItem);
                 }
 
-                datFile.Remove(key);
-                datFile.Add(key, newItems);
+                datFile.RemoveBucket(key);
+                newItems.ForEach(item => datFile.AddItem(item, statsOnly: false));
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
@@ -467,11 +467,11 @@ namespace SabreTools.DatFiles
 
                 // Then we do a hashwise comparison against the base DAT
 #if NET452_OR_GREATER || NETCOREAPP
-                Parallel.ForEach(intDat.Items.Keys, Core.Globals.ParallelOptions, key =>
+                Parallel.ForEach(intDat.Items.SortedKeys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
-                Parallel.ForEach(intDat.Items.Keys, key =>
+                Parallel.ForEach(intDat.Items.SortedKeys, key =>
 #else
-                foreach (var key in intDat.Items.Keys)
+                foreach (var key in intDat.Items.SortedKeys)
 #endif
                 {
                     List<DatItem>? datItems = intDat.GetItemsForBucket(key);
@@ -497,8 +497,8 @@ namespace SabreTools.DatFiles
                     }
 
                     // Now add the new list to the key
-                    intDat.Remove(key);
-                    intDat.Add(key, newDatItems);
+                    intDat.RemoveBucket(key);
+                    newDatItems.ForEach(item => intDat.AddItem(item, statsOnly: false));
 #if NET40_OR_GREATER || NETCOREAPP
                 });
 #else
@@ -515,11 +515,11 @@ namespace SabreTools.DatFiles
 
                 // Then we do a namewise comparison against the base DAT
 #if NET452_OR_GREATER || NETCOREAPP
-                Parallel.ForEach(intDat.Items.Keys, Core.Globals.ParallelOptions, key =>
+                Parallel.ForEach(intDat.Items.SortedKeys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
-                Parallel.ForEach(intDat.Items.Keys, key =>
+                Parallel.ForEach(intDat.Items.SortedKeys, key =>
 #else
-                foreach (var key in intDat.Items.Keys)
+                foreach (var key in intDat.Items.SortedKeys)
 #endif
                 {
                     List<DatItem>? datItems = intDat.GetItemsForBucket(key);
@@ -547,8 +547,8 @@ namespace SabreTools.DatFiles
                     }
 
                     // Now add the new list to the key
-                    intDat.Remove(key);
-                    intDat.Add(key, newDatItems);
+                    intDat.RemoveBucket(key);
+                    newDatItems.ForEach(item => intDat.AddItem(item, statsOnly: false));
 #if NET40_OR_GREATER || NETCOREAPP
                 });
 #else
@@ -685,7 +685,7 @@ namespace SabreTools.DatFiles
                 intDat.BucketBy(ItemKey.CRC, DedupeType.Full);
 
             // Then we compare against the base DAT
-            List<string> keys = [.. intDat.Items.Keys];
+            List<string> keys = [.. intDat.Items.SortedKeys];
 #if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(keys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
@@ -737,7 +737,7 @@ namespace SabreTools.DatFiles
 
                     // If we have an exact match, remove the game
                     if (exactMatch)
-                        intDat.Remove(key);
+                        intDat.RemoveBucket(key);
                 }
 
                 // Standard Against uses hashes
@@ -759,8 +759,8 @@ namespace SabreTools.DatFiles
                     }
 
                     // Now add the new list to the key
-                    intDat.Remove(key);
-                    intDat.Add(key, keepDatItems);
+                    intDat.RemoveBucket(key);
+                    keepDatItems.ForEach(item => intDat.AddItem(item, statsOnly: false));
                 }
 #if NET40_OR_GREATER || NETCOREAPP
             });
@@ -859,11 +859,11 @@ namespace SabreTools.DatFiles
             watch.Start("Populating duplicate DAT");
 
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(datFile.Items.Keys, Core.Globals.ParallelOptions, key =>
+            Parallel.ForEach(datFile.Items.SortedKeys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
-            Parallel.ForEach(datFile.Items.Keys, key =>
+            Parallel.ForEach(datFile.Items.SortedKeys, key =>
 #else
-            foreach (var key in datFile.Items.Keys)
+            foreach (var key in datFile.Items.SortedKeys)
 #endif
             {
                 List<DatItem> items = Merge(datFile.GetItemsForBucket(key));
@@ -891,7 +891,7 @@ namespace SabreTools.DatFiles
                         if (item.GetFieldValue<Source?>(DatItem.SourceKey) != null)
                             newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $" ({Path.GetFileNameWithoutExtension(inputs[item.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].CurrentPath)})");
 
-                        dupeData.Add(key, newrom);
+                        dupeData.AddItem(newrom, statsOnly: false);
                     }
                 }
 #if NET40_OR_GREATER || NETCOREAPP
@@ -1084,11 +1084,11 @@ namespace SabreTools.DatFiles
             watch.Start("Populating all individual DATs");
 
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(datFile.Items.Keys, Core.Globals.ParallelOptions, key =>
+            Parallel.ForEach(datFile.Items.SortedKeys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
-            Parallel.ForEach(datFile.Items.Keys, key =>
+            Parallel.ForEach(datFile.Items.SortedKeys, key =>
 #else
-            foreach (var key in datFile.Items.Keys)
+            foreach (var key in datFile.Items.SortedKeys)
 #endif
             {
                 List<DatItem> items = Merge(datFile.GetItemsForBucket(key));
@@ -1112,7 +1112,7 @@ namespace SabreTools.DatFiles
 #else
                     if (item.GetFieldValue<DupeType>(DatItem.DupeTypeKey).HasFlag(DupeType.Internal) || item.GetFieldValue<DupeType>(DatItem.DupeTypeKey) == 0x00)
 #endif
-                        outDats[item.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].Add(key, item);
+                        outDats[item.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].AddItem(item, statsOnly: false);
                 }
 #if NET40_OR_GREATER || NETCOREAPP
             });
@@ -1294,11 +1294,11 @@ namespace SabreTools.DatFiles
             watch.Start("Populating no duplicate DAT");
 
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(datFile.Items.Keys, Core.Globals.ParallelOptions, key =>
+            Parallel.ForEach(datFile.Items.SortedKeys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
-            Parallel.ForEach(datFile.Items.Keys, key =>
+            Parallel.ForEach(datFile.Items.SortedKeys, key =>
 #else
-            foreach (var key in datFile.Items.Keys)
+            foreach (var key in datFile.Items.SortedKeys)
 #endif
             {
                 List<DatItem> items = Merge(datFile.GetItemsForBucket(key));
@@ -1324,7 +1324,7 @@ namespace SabreTools.DatFiles
                             continue;
 
                         newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $" ({Path.GetFileNameWithoutExtension(inputs[newrom.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].CurrentPath)})");
-                        outerDiffData.Add(key, newrom);
+                        outerDiffData.AddItem(newrom, statsOnly: false);
                     }
                 }
 #if NET40_OR_GREATER || NETCOREAPP
@@ -1522,15 +1522,15 @@ namespace SabreTools.DatFiles
         private static void AddFromExisting(DatFile addTo, DatFile addFrom, bool delete = false)
         {
             // Get the list of keys from the DAT
-            List<string> keys = [.. addFrom.Items.Keys];
+            List<string> keys = [.. addFrom.Items.SortedKeys];
             foreach (string key in keys)
             {
                 // Add everything from the key to the internal DAT
-                addTo.Add(key, addFrom.GetItemsForBucket(key));
+                addFrom.GetItemsForBucket(key).ForEach(item => addTo.AddItem(item, statsOnly: false));
 
                 // Now remove the key from the source DAT
                 if (delete)
-                    addFrom.Remove(key);
+                    addFrom.RemoveBucket(key);
             }
 
             // Now remove the file dictionary from the source DAT
@@ -1612,11 +1612,11 @@ namespace SabreTools.DatFiles
         {
             // Loop through and add the items for this index to the output
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(datFile.Items.Keys, Core.Globals.ParallelOptions, key =>
+            Parallel.ForEach(datFile.Items.SortedKeys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
-            Parallel.ForEach(datFile.Items.Keys, key =>
+            Parallel.ForEach(datFile.Items.SortedKeys, key =>
 #else
-            foreach (var key in datFile.Items.Keys)
+            foreach (var key in datFile.Items.SortedKeys)
 #endif
             {
                 List<DatItem> items = Merge(datFile.GetItemsForBucket(key));
@@ -1633,7 +1633,7 @@ namespace SabreTools.DatFiles
                 {
                     var source = item.GetFieldValue<Source?>(DatItem.SourceKey);
                     if (source != null && source.Index == index)
-                        indexDat.Add(key, item);
+                        indexDat.AddItem(item, statsOnly: false);
                 }
 #if NET40_OR_GREATER || NETCOREAPP
             });

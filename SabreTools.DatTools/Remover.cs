@@ -166,7 +166,7 @@ namespace SabreTools.DatTools
             if (itemDictionary == null || (MachineFieldNames.Count == 0 && ItemFieldNames.Count == 0))
                 return;
 
-            foreach (var key in itemDictionary.Keys)
+            foreach (var key in itemDictionary.SortedKeys)
             {
                 List<DatItem>? items = itemDictionary.GetItemsForBucket(key);
                 if (items == null)

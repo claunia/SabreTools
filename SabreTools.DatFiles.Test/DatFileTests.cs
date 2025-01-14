@@ -195,7 +195,7 @@ namespace SabreTools.DatFiles.Test
         {
             DatFile datFile = new Formats.Logiqx(datFile: null, deprecated: false);
             datFile.Header.SetFieldValue(Models.Metadata.Header.NameKey, "name");
-            datFile.Add("key", new Rom());
+            datFile.AddItem(new Rom(), statsOnly: false);
             datFile.AddItemDB(new Rom(), 0, 0, false);
 
             datFile.ResetDictionary();

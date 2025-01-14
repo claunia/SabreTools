@@ -240,7 +240,7 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void AddItemsFromChildrenImpl(bool subfolder, bool skipDedup)
         {
-            List<string> buckets = [.. Items.Keys];
+            List<string> buckets = [.. Items.SortedKeys];
             buckets.Sort();
 
             foreach (string bucket in buckets)
@@ -298,14 +298,14 @@ namespace SabreTools.DatFiles
                             .Contains(mergeTag))
                         {
                             disk.CopyMachineInformation(copyFrom);
-                            Add(cloneOf, disk);
+                            AddItem(disk, statsOnly: false);
                         }
 
                         // If there is no merge tag, add to parent
                         else if (mergeTag == null)
                         {
                             disk.CopyMachineInformation(copyFrom);
-                            Add(cloneOf, disk);
+                            AddItem(disk, statsOnly: false);
                         }
                     }
 
@@ -331,7 +331,7 @@ namespace SabreTools.DatFiles
                                 rom.SetName($"{rom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)}\\{rom.GetName()}");
 
                             rom.CopyMachineInformation(copyFrom);
-                            Add(cloneOf, rom);
+                            AddItem(rom, statsOnly: false);
                         }
 
                         // If the parent doesn't already contain this item, add to subfolder of parent
@@ -341,7 +341,7 @@ namespace SabreTools.DatFiles
                                 rom.SetName($"{item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)}\\{rom.GetName()}");
 
                             rom.CopyMachineInformation(copyFrom);
-                            Add(cloneOf, rom);
+                            AddItem(rom, statsOnly: false);
                         }
                     }
 
@@ -352,12 +352,12 @@ namespace SabreTools.DatFiles
                             item.SetName($"{item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)}\\{item.GetName()}");
 
                         item.CopyMachineInformation(copyFrom);
-                        Add(cloneOf, item);
+                        AddItem(item, statsOnly: false);
                     }
                 }
 
                 // Then, remove the old game so it's not picked up by the writer
-                Remove(bucket);
+                RemoveBucket(bucket);
             }
         }
 
@@ -503,7 +503,7 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void AddItemsFromCloneOfParentImpl()
         {
-            List<string> buckets = [.. Items.Keys];
+            List<string> buckets = [.. Items.SortedKeys];
             buckets.Sort();
 
             foreach (string bucket in buckets)
@@ -533,7 +533,7 @@ namespace SabreTools.DatFiles
                     if (!items.Exists(i => string.Equals(i.GetName(), datItem.GetName(), StringComparison.OrdinalIgnoreCase))
                         && !items.Contains(datItem))
                     {
-                        Add(bucket, datItem);
+                        AddItem(datItem, statsOnly: false);
                     }
                 }
 
@@ -625,7 +625,7 @@ namespace SabreTools.DatFiles
         private bool AddItemsFromDevicesImpl(bool deviceOnly, bool useSlotOptions)
         {
             bool foundnew = false;
-            List<string> buckets = [.. Items.Keys];
+            List<string> buckets = [.. Items.SortedKeys];
             buckets.Sort();
 
             foreach (string bucket in buckets)
@@ -686,7 +686,7 @@ namespace SabreTools.DatFiles
                                 // Clone the item and then add it
                                 DatItem datItem = (DatItem)item.Clone();
                                 datItem.CopyMachineInformation(copyFrom);
-                                Add(bucket, datItem);
+                                AddItem(datItem, statsOnly: false);
                             }
                         }
                     }
@@ -734,7 +734,7 @@ namespace SabreTools.DatFiles
                                 // Clone the item and then add it
                                 DatItem datItem = (DatItem)item.Clone();
                                 datItem.CopyMachineInformation(copyFrom);
-                                Add(bucket, datItem);
+                                AddItem(datItem, statsOnly: false);
                             }
                         }
                     }
@@ -937,7 +937,7 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void AddItemsFromRomOfParentImpl()
         {
-            List<string> buckets = [.. Items.Keys];
+            List<string> buckets = [.. Items.SortedKeys];
             buckets.Sort();
 
             foreach (string bucket in buckets)
@@ -965,7 +965,7 @@ namespace SabreTools.DatFiles
                     DatItem datItem = (DatItem)item.Clone();
                     datItem.CopyMachineInformation(copyFrom);
                     if (!items.Exists(i => i.GetName() == datItem.GetName()) && !items.Contains(datItem))
-                        Add(bucket, datItem);
+                        AddItem(datItem, statsOnly: false);
                 }
             }
         }
@@ -1023,7 +1023,7 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void RemoveBiosAndDeviceSetsImpl()
         {
-            List<string> buckets = [.. Items.Keys];
+            List<string> buckets = [.. Items.SortedKeys];
             buckets.Sort();
 
             foreach (string bucket in buckets)
@@ -1042,7 +1042,7 @@ namespace SabreTools.DatFiles
                 if ((machine.GetBoolFieldValue(Models.Metadata.Machine.IsBiosKey) == true)
                     || (machine.GetBoolFieldValue(Models.Metadata.Machine.IsDeviceKey) == true))
                 {
-                    Remove(bucket);
+                    RemoveBucket(bucket);
                 }
             }
         }
@@ -1093,7 +1093,7 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void RemoveItemsFromCloneOfChildImpl()
         {
-            List<string> buckets = [.. Items.Keys];
+            List<string> buckets = [.. Items.SortedKeys];
             buckets.Sort();
 
             foreach (string bucket in buckets)
@@ -1120,7 +1120,7 @@ namespace SabreTools.DatFiles
                     var matchedItems = items.FindAll(i => i.Equals(item));
                     foreach (var match in matchedItems)
                     {
-                        Items.Remove(bucket, match);
+                        RemoveItem(bucket, match);
                     }
                 }
 
@@ -1200,7 +1200,7 @@ namespace SabreTools.DatFiles
         private void RemoveItemsFromRomOfChildImpl()
         {
             // Loop through the romof tags
-            List<string> buckets = [.. Items.Keys];
+            List<string> buckets = [.. Items.SortedKeys];
             buckets.Sort();
 
             foreach (string bucket in buckets)
@@ -1227,7 +1227,7 @@ namespace SabreTools.DatFiles
                     var matchedItems = items.FindAll(i => i.Equals(item));
                     foreach (var match in matchedItems)
                     {
-                        Items.Remove(bucket, match);
+                        RemoveItem(bucket, match);
                     }
                 }
             }
@@ -1281,7 +1281,7 @@ namespace SabreTools.DatFiles
         /// <remarks>Applies to <see cref="Items"/></remarks>
         private void RemoveMachineRelationshipTagsImpl()
         {
-            List<string> buckets = [.. Items.Keys];
+            List<string> buckets = [.. Items.SortedKeys];
             buckets.Sort();
 
             foreach (string bucket in buckets)

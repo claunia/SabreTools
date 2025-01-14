@@ -28,7 +28,7 @@ namespace SabreTools.DatFiles.Test
 
             DatFile datFile = new Formats.Logiqx(null, deprecated: false);
             datFile.SetHeader(header);
-            datFile.Add("key", new Rom());
+            datFile.AddItem(new Rom(), statsOnly: false);
 
             Models.Metadata.MetadataFile? actual = datFile.ConvertToMetadata();
             Assert.NotNull(actual);
@@ -76,7 +76,7 @@ namespace SabreTools.DatFiles.Test
             ];
 
             DatFile datFile = new Formats.SabreJSON(null);
-            datFile.Add("key", datItems);
+            datItems.ForEach(item => datFile.AddItem(item, statsOnly: false));
 
             Models.Metadata.MetadataFile? actual = datFile.ConvertToMetadata();
             Assert.NotNull(actual);

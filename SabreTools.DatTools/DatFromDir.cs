@@ -230,7 +230,7 @@ namespace SabreTools.DatTools
             {
                 // Add the list if it doesn't exist already
                 Rom rom = baseFile.ConvertToRom();
-                datFile.Add(rom.GetKey(ItemKey.CRC), rom);
+                datFile.AddItem(rom, statsOnly: false);
                 _staticLogger.Verbose($"File added: {Path.GetFileNameWithoutExtension(item)}");
             }
             else
@@ -387,7 +387,7 @@ namespace SabreTools.DatTools
                 blankRom.SetName(romname);
                 blankRom.SetFieldValue<Machine?>(DatItem.MachineKey, blankMachine);
 
-                datFile.Add("null", blankRom);
+                datFile.AddItem(blankRom, statsOnly: false);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
@@ -440,8 +440,7 @@ namespace SabreTools.DatTools
                 SetDatItemInfo(datFile, datItem, item, parent, basepath);
 
                 // Add the file information to the DAT
-                string key = datItem.GetKey(ItemKey.CRC);
-                datFile.Add(key, datItem);
+                datFile.AddItem(datItem, statsOnly: false);
 
                 _staticLogger.Verbose($"File added: {datItem.GetName() ?? string.Empty}");
             }

@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 #if NET40_OR_GREATER || NETCOREAPP
+using System.Net;
 using System.Threading.Tasks;
 #endif
 using SabreTools.Core.Tools;
@@ -66,11 +66,11 @@ namespace SabreTools.DatTools
 
             // Now separate the roms accordingly
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(datFile.Items.Keys, Core.Globals.ParallelOptions, key =>
+            Parallel.ForEach(datFile.Items.SortedKeys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
-            Parallel.ForEach(datFile.Items.Keys, key =>
+            Parallel.ForEach(datFile.Items.SortedKeys, key =>
 #else
-            foreach (var key in datFile.Items.Keys)
+            foreach (var key in datFile.Items.SortedKeys)
 #endif
             {
                 var items = datFile.GetItemsForBucket(key);
@@ -85,16 +85,16 @@ namespace SabreTools.DatTools
                 {
                     if (Array.IndexOf(newExtA, (item.GetName() ?? string.Empty).GetNormalizedExtension()) > -1)
                     {
-                        extADat.Add(key, item);
+                        extADat.AddItem(item, statsOnly: false);
                     }
                     if (Array.IndexOf(newExtB, (item.GetName() ?? string.Empty).GetNormalizedExtension()) > -1)
                     {
-                        extBDat.Add(key, item);
+                        extBDat.AddItem(item, statsOnly: false);
                     }
                     else
                     {
-                        extADat.Add(key, item);
-                        extBDat.Add(key, item);
+                        extADat.AddItem(item, statsOnly: false);
+                        extBDat.AddItem(item, statsOnly: false);
                     }
                 }
 #if NET40_OR_GREATER || NETCOREAPP
@@ -242,11 +242,11 @@ namespace SabreTools.DatTools
 
             // Now populate each of the DAT objects in turn
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(datFile.Items.Keys, Core.Globals.ParallelOptions, key =>
+            Parallel.ForEach(datFile.Items.SortedKeys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
-            Parallel.ForEach(datFile.Items.Keys, key =>
+            Parallel.ForEach(datFile.Items.SortedKeys, key =>
 #else
-            foreach (var key in datFile.Items.Keys)
+            foreach (var key in datFile.Items.SortedKeys)
 #endif
             {
                 var items = datFile.GetItemsForBucket(key);
@@ -263,49 +263,49 @@ namespace SabreTools.DatTools
                     {
                         case Disk disk:
                             if (disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump)
-                                fieldDats[Models.Metadata.Disk.StatusKey].Add(key, item);
+                                fieldDats[Models.Metadata.Disk.StatusKey].AddItem(item, statsOnly: false);
                             else if (!string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)))
-                                fieldDats[Models.Metadata.Disk.SHA1Key].Add(key, item);
+                                fieldDats[Models.Metadata.Disk.SHA1Key].AddItem(item, statsOnly: false);
                             else if (!string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key)))
-                                fieldDats[Models.Metadata.Disk.MD5Key].Add(key, item);
+                                fieldDats[Models.Metadata.Disk.MD5Key].AddItem(item, statsOnly: false);
                             else if (!string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key)))
-                                fieldDats[Models.Metadata.Disk.MD5Key].Add(key, item);
+                                fieldDats[Models.Metadata.Disk.MD5Key].AddItem(item, statsOnly: false);
                             else
-                                fieldDats["null"].Add(key, item);
+                                fieldDats["null"].AddItem(item, statsOnly: false);
                             break;
 
                         case Media media:
                             if (!string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA256Key)))
-                                fieldDats[Models.Metadata.Media.SHA256Key].Add(key, item);
+                                fieldDats[Models.Metadata.Media.SHA256Key].AddItem(item, statsOnly: false);
                             else if (!string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA1Key)))
-                                fieldDats[Models.Metadata.Media.SHA1Key].Add(key, item);
+                                fieldDats[Models.Metadata.Media.SHA1Key].AddItem(item, statsOnly: false);
                             else if (!string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.MD5Key)))
-                                fieldDats[Models.Metadata.Media.MD5Key].Add(key, item);
+                                fieldDats[Models.Metadata.Media.MD5Key].AddItem(item, statsOnly: false);
                             else
-                                fieldDats["null"].Add(key, item);
+                                fieldDats["null"].AddItem(item, statsOnly: false);
                             break;
 
                         case Rom rom:
                             if (rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump)
-                                fieldDats[Models.Metadata.Rom.StatusKey].Add(key, item);
+                                fieldDats[Models.Metadata.Rom.StatusKey].AddItem(item, statsOnly: false);
                             else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA512Key)))
-                                fieldDats[Models.Metadata.Rom.SHA512Key].Add(key, item);
+                                fieldDats[Models.Metadata.Rom.SHA512Key].AddItem(item, statsOnly: false);
                             else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA384Key)))
-                                fieldDats[Models.Metadata.Rom.SHA384Key].Add(key, item);
+                                fieldDats[Models.Metadata.Rom.SHA384Key].AddItem(item, statsOnly: false);
                             else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key)))
-                                fieldDats[Models.Metadata.Rom.SHA256Key].Add(key, item);
+                                fieldDats[Models.Metadata.Rom.SHA256Key].AddItem(item, statsOnly: false);
                             else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key)))
-                                fieldDats[Models.Metadata.Rom.SHA1Key].Add(key, item);
+                                fieldDats[Models.Metadata.Rom.SHA1Key].AddItem(item, statsOnly: false);
                             else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key)))
-                                fieldDats[Models.Metadata.Rom.MD5Key].Add(key, item);
+                                fieldDats[Models.Metadata.Rom.MD5Key].AddItem(item, statsOnly: false);
                             else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.MD4Key)))
-                                fieldDats[Models.Metadata.Rom.MD4Key].Add(key, item);
+                                fieldDats[Models.Metadata.Rom.MD4Key].AddItem(item, statsOnly: false);
                             else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.MD2Key)))
-                                fieldDats[Models.Metadata.Rom.MD2Key].Add(key, item);
+                                fieldDats[Models.Metadata.Rom.MD2Key].AddItem(item, statsOnly: false);
                             else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey)))
-                                fieldDats[Models.Metadata.Rom.CRCKey].Add(key, item);
+                                fieldDats[Models.Metadata.Rom.CRCKey].AddItem(item, statsOnly: false);
                             else
-                                fieldDats["null"].Add(key, item);
+                                fieldDats["null"].AddItem(item, statsOnly: false);
                             break;
 
                         default:
@@ -500,7 +500,7 @@ namespace SabreTools.DatTools
             tempDat.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, null);
 
             // Sort the input keys
-            List<string> keys = [.. datFile.Items.Keys];
+            List<string> keys = [.. datFile.Items.SortedKeys];
             keys.Sort(SplitByLevelSort);
 
             // Then, we loop over the games
@@ -532,7 +532,7 @@ namespace SabreTools.DatTools
                 items.ForEach(item => item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, Path.GetFileName(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey))));
 
                 // Now add the game to the output DAT
-                tempDat.Add(key, items);
+                items.ForEach(item => tempDat.AddItem(item, statsOnly: false));
 
                 // Then set the DAT name to be the parent directory name
                 tempDat.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, Path.GetDirectoryName(key));
@@ -631,11 +631,11 @@ namespace SabreTools.DatTools
 
             // Now populate each of the DAT objects in turn
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(datFile.Items.Keys, Core.Globals.ParallelOptions, key =>
+            Parallel.ForEach(datFile.Items.SortedKeys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
-            Parallel.ForEach(datFile.Items.Keys, key =>
+            Parallel.ForEach(datFile.Items.SortedKeys, key =>
 #else
-            foreach (var key in datFile.Items.Keys)
+            foreach (var key in datFile.Items.SortedKeys)
 #endif
             {
                 List<DatItem>? items = datFile.GetItemsForBucket(key);
@@ -649,19 +649,19 @@ namespace SabreTools.DatTools
                 {
                     // If the file is not a Rom, it automatically goes in the "lesser" dat
                     if (item is not Rom rom)
-                        lessThan.Add(key, item);
+                        lessThan.AddItem(item, statsOnly: false);
 
                     // If the file is a Rom and has no size, put it in the "lesser" dat
                     else if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) == null)
-                        lessThan.Add(key, item);
+                        lessThan.AddItem(item, statsOnly: false);
 
                     // If the file is a Rom and less than the radix, put it in the "lesser" dat
                     else if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) < radix)
-                        lessThan.Add(key, item);
+                        lessThan.AddItem(item, statsOnly: false);
 
                     // If the file is a Rom and greater than or equal to the radix, put it in the "greater" dat
                     else if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) >= radix)
-                        greaterThan.Add(key, item);
+                        greaterThan.AddItem(item, statsOnly: false);
                 }
 #if NET40_OR_GREATER || NETCOREAPP
             });
@@ -838,7 +838,7 @@ namespace SabreTools.DatTools
                 }
 
                 // Add the current machine to the current DatFile
-                currentDat.Add(machine, items);
+                items.ForEach(item => currentDat.AddItem(item, statsOnly: false));
                 currentSize += machineSize;
             }
 
@@ -913,11 +913,11 @@ namespace SabreTools.DatTools
         {
             // Loop through and add the items for this index to the output
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(datFile.Items.Keys, Core.Globals.ParallelOptions, key =>
+            Parallel.ForEach(datFile.Items.SortedKeys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
-            Parallel.ForEach(datFile.Items.Keys, key =>
+            Parallel.ForEach(datFile.Items.SortedKeys, key =>
 #else
-            foreach (var key in datFile.Items.Keys)
+            foreach (var key in datFile.Items.SortedKeys)
 #endif
             {
                 List<DatItem> items = DatFileTool.Merge(datFile.GetItemsForBucket(key));
@@ -933,7 +933,7 @@ namespace SabreTools.DatTools
                 foreach (DatItem item in items)
                 {
                     if (item.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>() == itemType)
-                        indexDat.Add(key, item);
+                        indexDat.AddItem(item, statsOnly: false);
                 }
 #if NET40_OR_GREATER || NETCOREAPP
             });

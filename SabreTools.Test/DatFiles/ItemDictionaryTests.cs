@@ -52,11 +52,13 @@ namespace SabreTools.Test.DatFiles
 
             // Setup the dictionary
             var dict = new ItemDictionary();
-            dict.Add("game-1", [rom1, rom2]);
-            dict.Add("game-2", [rom3, rom4]);
+            dict.AddItem(rom1, statsOnly: false);
+            dict.AddItem(rom2, statsOnly: false);
+            dict.AddItem(rom3, statsOnly: false);
+            dict.AddItem(rom4, statsOnly: false);
 
             dict.BucketBy(itemKey, DedupeType.None);
-            Assert.Equal(expected, dict.Keys.Count);
+            Assert.Equal(expected, dict.SortedKeys.Count);
         }
 
         [Fact]
@@ -64,12 +66,10 @@ namespace SabreTools.Test.DatFiles
         {
             // Setup the dictionary
             var dict = new ItemDictionary();
-            dict.Add("game-1", [new Rom()]);
-            dict.Add("game-2", []);
-            dict.Add("game-3", (List<DatItem>?)null);
+            dict.AddItem("game-1", new Rom());
 
             dict.ClearEmpty();
-            Assert.Single(dict.Keys);
+            Assert.Single(dict.SortedKeys);
         }
 
         [Fact]
@@ -96,10 +96,11 @@ namespace SabreTools.Test.DatFiles
 
             // Setup the dictionary
             var dict = new ItemDictionary();
-            dict.Add("game-1", [rom1, rom2]);
+            dict.AddItem("game-1", rom1);
+            dict.AddItem("game-1", rom2);
 
             dict.ClearMarked();
-            string key = Assert.Single(dict.Keys);
+            string key = Assert.Single(dict.SortedKeys);
             Assert.Equal("game-1", key);
             List<DatItem> items = dict.GetItemsForBucket(key);
             Assert.Single(items);
@@ -128,7 +129,8 @@ namespace SabreTools.Test.DatFiles
 
             // Setup the dictionary
             var dict = new ItemDictionary();
-            dict.Add("game-1", [rom1, rom2]);
+            dict.AddItem("game-1", rom1);
+            dict.AddItem("game-1", rom2);
 
             // Setup the test item
             var rom = new Rom();
@@ -164,7 +166,8 @@ namespace SabreTools.Test.DatFiles
 
             // Setup the dictionary
             var dict = new ItemDictionary();
-            dict.Add("game-1", [rom1, rom2]);
+            dict.AddItem("game-1", rom1);
+            dict.AddItem("game-1", rom2);
 
             // Setup the test item
             var rom = new Rom();
