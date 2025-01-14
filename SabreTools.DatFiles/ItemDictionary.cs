@@ -120,7 +120,7 @@ namespace SabreTools.DatFiles
             lock (key)
             {
                 // Ensure the key exists
-                EnsureKey(key);
+                EnsureBucketingKey(key);
 
                 // If item is null, don't add it
                 if (value == null)
@@ -149,7 +149,7 @@ namespace SabreTools.DatFiles
                     return;
 
                 // Ensure the key exists
-                EnsureKey(key);
+                EnsureBucketingKey(key);
 
                 // Now add the value
                 _items[key]!.AddRange(value);
@@ -251,7 +251,7 @@ namespace SabreTools.DatFiles
             // If only adding statistics, we add an empty key for games and then just item stats
             if (statsOnly)
             {
-                EnsureKey(key);
+                EnsureBucketingKey(key);
                 DatStatistics.AddItemStatistics(item);
             }
             else
@@ -364,13 +364,13 @@ namespace SabreTools.DatFiles
         /// Ensure the key exists in the items dictionary
         /// </summary>
         /// <param name="key">Key to ensure</param>
-        public void EnsureKey(string key)
+        public void EnsureBucketingKey(string key)
         {
             // If the key is missing from the dictionary, add it
-            if (!_items.ContainsKey(key))
 #if NET40_OR_GREATER || NETCOREAPP
-                _items.TryAdd(key, []);
+            _items.GetOrAdd(key, []);
 #else
+            if (!_items.ContainsKey(key))
                 _items[key] = [];
 #endif
         }
@@ -383,10 +383,16 @@ namespace SabreTools.DatFiles
             if (bucketName == null)
                 return [];
 
+#if NET40_OR_GREATER || NETCOREAPP
+            if (!_items.TryGetValue(bucketName, out var items))
+                return [];
+#else
             if (!_items.ContainsKey(bucketName))
                 return [];
 
             var items = _items[bucketName];
+#endif
+
             if (items == null)
                 return [];
 
