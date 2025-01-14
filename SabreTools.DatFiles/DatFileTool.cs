@@ -485,7 +485,7 @@ namespace SabreTools.DatFiles
                     List<DatItem> newDatItems = [];
                     foreach (DatItem datItem in datItems)
                     {
-                        List<DatItem> dupes = datFile.Items.GetDuplicates(datItem, sorted: true);
+                        List<DatItem> dupes = datFile.GetDuplicates(datItem, sorted: true);
                         if (datItem.Clone() is not DatItem newDatItem)
                             continue;
 
