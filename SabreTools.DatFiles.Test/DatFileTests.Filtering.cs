@@ -9,7 +9,54 @@ namespace SabreTools.DatFiles.Test
     {
         #region MachineDescriptionToName
 
-        // TODO: Implement MachineDescriptionToName tests
+        [Fact]
+        public void MachineDescriptionToName_Items()
+        {
+            Source source = new Source(0, source: null);
+
+            Machine machine = new Machine();
+            machine.SetFieldValue(Models.Metadata.Machine.NameKey, "machine");
+            machine.SetFieldValue(Models.Metadata.Machine.DescriptionKey, "description");
+
+            DatItem datItem = new Rom();
+            datItem.SetFieldValue(DatItem.MachineKey, machine);
+            datItem.SetFieldValue(DatItem.SourceKey, source);
+
+            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            datFile.AddItem(datItem, statsOnly: false);
+
+            datFile.MachineDescriptionToName();
+
+            // The name of the bucket is not expected to change
+            DatItem actual = Assert.Single(datFile.GetItemsForBucket("machine"));
+            Machine? actualMachine = actual.GetFieldValue<Machine?>(DatItem.MachineKey);
+            Assert.NotNull(actualMachine);
+            Assert.Equal("description", actualMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("description", actualMachine.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey));
+        }
+
+        [Fact]
+        public void MachineDescriptionToName_ItemsDB()
+        {
+            Source source = new Source(0, source: null);
+
+            Machine machine = new Machine();
+            machine.SetFieldValue(Models.Metadata.Machine.NameKey, "machine");
+            machine.SetFieldValue(Models.Metadata.Machine.DescriptionKey, "description");
+
+            DatItem datItem = new Rom();
+
+            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            long sourceIndex = datFile.AddSourceDB(source);
+            long machineIndex = datFile.AddMachineDB(machine);
+            _ = datFile.AddItemDB(datItem, machineIndex, sourceIndex, statsOnly: false);
+
+            datFile.MachineDescriptionToName();
+
+            Machine actualMachine = Assert.Single(datFile.GetMachinesDB()).Value;
+            Assert.Equal("description", actualMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("description", actualMachine.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey));
+        }
 
         #endregion
 
