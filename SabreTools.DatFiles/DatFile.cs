@@ -301,7 +301,7 @@ namespace SabreTools.DatFiles
 
         #endregion
 
-        #region Item Dictionary Passthrough - Bucketing
+        #region Item Dictionary Passthrough - Statistics
 
         /// <summary>
         /// Recalculate the statistics for the Dat
