@@ -557,20 +557,23 @@ namespace SabreTools.DatFiles
                     continue;
 #endif
 
-                for (int j = 0; j < items.Count; j++)
+                foreach (DatItem item in items)
                 {
-                    DatItem item = items[j];
-                    if (Regex.IsMatch(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!, SceneNamePattern))
-                        item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Regex.Replace(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)!, SceneNamePattern, "$2"));
+                    // Get the current machine
+                    var machine = item.GetFieldValue<Machine>(DatItem.MachineKey);
+                    if (machine == null)
+                        continue;
 
-                    if (Regex.IsMatch(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)!, SceneNamePattern))
-                        item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, Regex.Replace(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)!, SceneNamePattern, "$2"));
+                    // Get the values to check against
+                    string? machineName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    string? machineDesc = machine.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey);
 
-                    items[j] = item;
+                    if (machineName != null && Regex.IsMatch(machineName, SceneNamePattern))
+                        item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Regex.Replace(machineName, SceneNamePattern, "$2"));
+
+                    if (machineDesc != null && Regex.IsMatch(machineDesc, SceneNamePattern))
+                        item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, Regex.Replace(machineDesc, SceneNamePattern, "$2"));
                 }
-
-                Remove(key);
-                Add(key, items);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
@@ -601,11 +604,15 @@ namespace SabreTools.DatFiles
                     continue;
 #endif
 
-                if (Regex.IsMatch(machine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey)!, SceneNamePattern))
-                    machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Regex.Replace(machine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey)!, SceneNamePattern, "$2"));
+                // Get the values to check against
+                string? machineName = machine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                string? machineDesc = machine.Value.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey);
 
-                if (Regex.IsMatch(machine.Value.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)!, SceneNamePattern))
-                    machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, Regex.Replace(machine.Value.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)!, SceneNamePattern, "$2"));
+                if (machineName != null && Regex.IsMatch(machineName, SceneNamePattern))
+                    machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Regex.Replace(machineName, SceneNamePattern, "$2"));
+
+                if (machineDesc != null && Regex.IsMatch(machineDesc, SceneNamePattern))
+                    machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, Regex.Replace(machineDesc, SceneNamePattern, "$2"));
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
