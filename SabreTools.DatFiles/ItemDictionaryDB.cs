@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 #if NET40_OR_GREATER || NETCOREAPP
+using System.Threading;
 using System.Threading.Tasks;
 #endif
 using System.Xml.Serialization;
@@ -240,13 +241,9 @@ namespace SabreTools.DatFiles
                 item = rom;
             }
 
-            // Get the key and add the file
-            string key = item.GetKey(ItemKey.Machine);
-
-            // If only adding statistics, we add an empty key for games and then just item stats
+            // If only adding statistics, we add just item stats
             if (statsOnly)
             {
-                EnsureBucketingKey(key);
                 DatStatistics.AddItemStatistics(item);
                 return -1;
             }
@@ -261,8 +258,15 @@ namespace SabreTools.DatFiles
         /// </summary>
         public long AddMachine(Machine machine)
         {
-            _machines[_machineIndex++] = machine;
-            return _machineIndex - 1;
+#if NET40_OR_GREATER || NETCOREAPP
+            long index = Interlocked.Increment(ref _machineIndex) - 1;
+            _machines.TryAdd(index, machine);
+            return index;
+#else
+            long index = _machineIndex++ - 1;
+            _machines[index] = machine;
+            return index;
+#endif
         }
 
         /// <summary>
@@ -270,8 +274,15 @@ namespace SabreTools.DatFiles
         /// </summary>
         public long AddSource(Source source)
         {
-            _sources[_sourceIndex++] = source;
-            return _sourceIndex - 1;
+#if NET40_OR_GREATER || NETCOREAPP
+            long index = Interlocked.Increment(ref _sourceIndex) - 1;
+            _sources.TryAdd(index, source);
+            return index;
+#else
+            long index = _sourceIndex++ - 1;
+            _sources[index] = source;
+            return index;
+#endif
         }
 
         /// <summary>
@@ -282,12 +293,16 @@ namespace SabreTools.DatFiles
             var keys = Array.FindAll(SortedKeys, k => k != null);
             foreach (string key in keys)
             {
-                // If the key doesn't exist, skip
-                if (!_buckets.ContainsKey(key))
+                // Get items for the bucket
+                var items = GetItemsForBucket(key);
+                if (items == null || items.Count == 0)
                     continue;
 
+                // Convert to list of indices for ease of access
+                List<long> itemsList = [.. items.Keys];
+
                 // If there are no non-blank items, remove
-                else if (!_buckets[key].Exists(i => GetItem(i) != null && GetItem(i) is not Blank))
+                if (!itemsList.Exists(i => GetItem(i) != null && GetItem(i) is not Blank))
 #if NET40_OR_GREATER || NETCOREAPP
                     _buckets.TryRemove(key, out _);
 #else
@@ -304,7 +319,13 @@ namespace SabreTools.DatFiles
             var itemIndices = _items.Keys;
             foreach (long itemIndex in itemIndices)
             {
+#if NET40_OR_GREATER || NETCOREAPP
+                if (!_items.TryGetValue(itemIndex, out var datItem))
+                    continue;
+#else
                 var datItem = _items[itemIndex];
+#endif
+
                 if (datItem == null || datItem.GetBoolFieldValue(DatItem.RemoveKey) != true)
                     continue;
 
@@ -317,10 +338,17 @@ namespace SabreTools.DatFiles
         /// </summary>
         public DatItem? GetItem(long index)
         {
+#if NET40_OR_GREATER || NETCOREAPP
+            if (!_items.TryGetValue(index, out var datItem))
+                return null;
+
+            return datItem;
+#else
             if (!_items.ContainsKey(index))
                 return null;
 
             return _items[index];
+#endif
         }
 
         /// <summary>
@@ -346,20 +374,34 @@ namespace SabreTools.DatFiles
             if (bucketName == null)
                 return [];
 
+#if NET40_OR_GREATER || NETCOREAPP
+            if (!_buckets.TryGetValue(bucketName, out var itemIds))
+                return [];
+#else
             if (!_buckets.ContainsKey(bucketName))
                 return [];
 
             var itemIds = _buckets[bucketName];
+#endif
 
             var datItems = new Dictionary<long, DatItem>();
             foreach (long itemId in itemIds)
             {
                 // Ignore missing IDs
+#if NET40_OR_GREATER || NETCOREAPP
+                if (!_items.TryGetValue(itemId, out var datItem) || datItem == null)
+                    continue;
+#else
                 if (!_items.ContainsKey(itemId))
                     continue;
 
-                if (!filter || _items[itemId].GetBoolFieldValue(DatItem.RemoveKey) != true)
-                    datItems[itemId] = _items[itemId];
+                var datItem = _items[itemId];
+                if (datItem == null)
+                    continue;
+#endif
+
+                if (!filter || datItem.GetBoolFieldValue(DatItem.RemoveKey) != true)
+                    datItems[itemId] = datItem;
             }
 
             return datItems;
@@ -378,11 +420,20 @@ namespace SabreTools.DatFiles
             foreach (long itemId in itemIds)
             {
                 // Ignore missing IDs
+#if NET40_OR_GREATER || NETCOREAPP
+                if (!_items.TryGetValue(itemId, out var datItem) || datItem == null)
+                    continue;
+#else
                 if (!_items.ContainsKey(itemId))
                     continue;
 
-                if (!filter || _items[itemId].GetBoolFieldValue(DatItem.RemoveKey) != true)
-                    datItems[itemId] = _items[itemId];
+                var datItem = _items[itemId];
+                if (datItem == null)
+                    continue;
+#endif
+
+                if (!filter || datItem.GetBoolFieldValue(DatItem.RemoveKey) != true)
+                    datItems[itemId] = datItem;
             }
 
             return datItems;
@@ -401,11 +452,20 @@ namespace SabreTools.DatFiles
             foreach (long itemId in itemIds)
             {
                 // Ignore missing IDs
+#if NET40_OR_GREATER || NETCOREAPP
+                if (!_items.TryGetValue(itemId, out var datItem) || datItem == null)
+                    continue;
+#else
                 if (!_items.ContainsKey(itemId))
                     continue;
 
-                if (!filter || _items[itemId].GetBoolFieldValue(DatItem.RemoveKey) != true)
-                    datItems[itemId] = _items[itemId];
+                var datItem = _items[itemId];
+                if (datItem == null)
+                    continue;
+#endif
+
+                if (!filter || datItem.GetBoolFieldValue(DatItem.RemoveKey) != true)
+                    datItems[itemId] = datItem;
             }
 
             return datItems;
@@ -416,10 +476,17 @@ namespace SabreTools.DatFiles
         /// </summary>
         public Machine? GetMachine(long index)
         {
+#if NET40_OR_GREATER || NETCOREAPP
+            if (!_machines.TryGetValue(index, out var machine))
+                return null;
+
+            return machine;
+#else
             if (!_machines.ContainsKey(index))
                 return null;
 
             return _machines[index];
+#endif
         }
 
         /// <summary>
@@ -440,6 +507,15 @@ namespace SabreTools.DatFiles
         /// </summary>
         public KeyValuePair<long, Machine?> GetMachineForItem(long itemIndex)
         {
+#if NET40_OR_GREATER || NETCOREAPP
+            if (!_itemToMachineMapping.TryGetValue(itemIndex, out long machineIndex))
+                return new KeyValuePair<long, Machine?>(-1, null);
+
+            if (!_machines.TryGetValue(machineIndex, out var machine))
+                return new KeyValuePair<long, Machine?>(-1, null);
+
+            return new KeyValuePair<long, Machine?>(machineIndex, machine);
+#else
             if (!_itemToMachineMapping.ContainsKey(itemIndex))
                 return new KeyValuePair<long, Machine?>(-1, null);
 
@@ -447,7 +523,10 @@ namespace SabreTools.DatFiles
             if (!_machines.ContainsKey(machineIndex))
                 return new KeyValuePair<long, Machine?>(-1, null);
 
-            return new KeyValuePair<long, Machine?>(machineIndex, _machines[machineIndex]);
+            var machine = _machines[machineIndex];
+            return new KeyValuePair<long, Machine?>(machineIndex, machine);
+
+#endif
         }
 
         /// <summary>
@@ -557,23 +636,36 @@ namespace SabreTools.DatFiles
         /// </summary>
         internal long AddItem(DatItem item, long machineIndex, long sourceIndex)
         {
+#if NET40_OR_GREATER || NETCOREAPP
             // Add the item with a new index
-            _items[_itemIndex++] = item;
+            long index = Interlocked.Increment(ref _itemIndex) - 1;
+            _items.TryAdd(index, item);
 
             // Add the machine mapping
-            _itemToMachineMapping[_itemIndex - 1] = machineIndex;
+            _itemToMachineMapping.TryAdd(index, machineIndex);
 
             // Add the source mapping
-            _itemToSourceMapping[_itemIndex - 1] = sourceIndex;
+            _itemToSourceMapping.TryAdd(index, sourceIndex);
+#else
+            // Add the item with a new index
+            long index = _itemIndex++ - 1;
+            _items[index] = item;
+
+            // Add the machine mapping
+            _itemToMachineMapping[index] = machineIndex;
+
+            // Add the source mapping
+            _itemToSourceMapping[index] = sourceIndex;
+#endif
 
             // Add the item statistics
             DatStatistics.AddItemStatistics(item);
 
             // Add the item to the default bucket
-            PerformItemBucketing(_itemIndex - 1, _bucketedBy, lower: true, norename: true);
+            PerformItemBucketing(index, _bucketedBy, lower: true, norename: true);
 
             // Return the used index
-            return _itemIndex - 1;
+            return index - 1;
         }
 
         #endregion
@@ -647,7 +739,11 @@ namespace SabreTools.DatFiles
             }
 
             // Add back all roms with the proper flags
+#if NET40_OR_GREATER || NETCOREAPP
+            _buckets.TryAdd(key, [.. output.Keys, .. left.Keys]);
+#else
             _buckets[key] = [.. output.Keys, .. left.Keys];
+#endif
             return output;
         }
 
@@ -696,7 +792,11 @@ namespace SabreTools.DatFiles
             }
 
             // Add back all roms with the proper flags
+#if NET40_OR_GREATER || NETCOREAPP
+            _buckets.TryAdd(key, [.. output.Keys, .. left.Keys]);
+#else
             _buckets[key] = [.. output.Keys, .. left.Keys];
+#endif
             return output;
         }
 
@@ -879,12 +979,17 @@ namespace SabreTools.DatFiles
         /// </summary>
         private string GetBucketKey(long itemIndex, ItemKey bucketBy, bool lower, bool norename)
         {
+#if NET40_OR_GREATER || NETCOREAPP
+            if (!_items.TryGetValue(itemIndex, out var datItem) || datItem == null)
+                return string.Empty;
+#else
             if (!_items.ContainsKey(itemIndex))
                 return string.Empty;
 
             var datItem = _items[itemIndex];
             if (datItem == null)
                 return string.Empty;
+#endif
 
             var machine = GetMachineForItem(itemIndex);
             if (machine.Value == null)
@@ -897,6 +1002,8 @@ namespace SabreTools.DatFiles
 
             string bucketKey = bucketBy switch
             {
+                // Treat NULL like machine
+                ItemKey.NULL => (norename ? string.Empty : sourceKeyPadded) + machineName,
                 ItemKey.Machine => (norename ? string.Empty : sourceKeyPadded) + machineName,
                 _ => GetBucketHashValue(datItem, bucketBy),
             };
@@ -975,10 +1082,10 @@ namespace SabreTools.DatFiles
         private void EnsureBucketingKey(string key)
         {
             // If the key is missing from the dictionary, add it
-            if (!_buckets.ContainsKey(key))
 #if NET40_OR_GREATER || NETCOREAPP
-                _buckets.TryAdd(key, []);
+            _buckets.GetOrAdd(key, []);
 #else
+            if (!_buckets.ContainsKey(key))
                 _buckets[key] = [];
 #endif
         }
@@ -1024,8 +1131,19 @@ namespace SabreTools.DatFiles
         private void PerformItemBucketing(long itemIndex, ItemKey bucketBy, bool lower, bool norename)
         {
             string? bucketKey = GetBucketKey(itemIndex, bucketBy, lower, norename);
-            EnsureBucketingKey(bucketKey);
-            _buckets[bucketKey].Add(itemIndex);
+            lock (bucketKey)
+            {
+                EnsureBucketingKey(bucketKey);
+
+#if NET40_OR_GREATER || NETCOREAPP
+                if (!_buckets.TryGetValue(bucketKey, out var bucket) || bucket == null)
+                    return;
+
+                bucket.Add(itemIndex);
+#else
+                _buckets[bucketKey].Add(itemIndex);
+#endif
+            }
         }
 
         /// <summary>
@@ -1046,13 +1164,15 @@ namespace SabreTools.DatFiles
             for (int i = 0; i < bucketKeys.Length; i++)
 #endif
             {
-                var itemIndices = _buckets[bucketKeys[i]];
-                if (itemIndices == null || itemIndices.Count == 0)
 #if NET40_OR_GREATER || NETCOREAPP
+                if (!_buckets.TryGetValue(bucketKeys[i], out var itemIndices))
                     return;
 #else
-                    continue;
+                var itemIndices = _buckets[bucketKeys[i]];
 #endif
+
+                if (itemIndices == null || itemIndices.Count == 0)
+                    return;
 
                 var datItems = itemIndices
                     .FindAll(i => _items.ContainsKey(i))
@@ -1065,10 +1185,11 @@ namespace SabreTools.DatFiles
                 if (dedupeType == DedupeType.Full || (dedupeType == DedupeType.Game && bucketBy == ItemKey.Machine))
                     datItems = Merge(datItems);
 
-                _buckets[bucketKeys[i]] = [.. datItems.Select(kvp => kvp.Key)];
 #if NET40_OR_GREATER || NETCOREAPP
+                _buckets.TryAdd(bucketKeys[i], [.. datItems.Select(kvp => kvp.Key)]);
             });
 #else
+                _buckets[bucketKeys[i]] = [.. datItems.Select(kvp => kvp.Key)];
             }
 #endif
         }
@@ -1089,7 +1210,11 @@ namespace SabreTools.DatFiles
             for (int i = 0; i < bucketKeys.Length; i++)
 #endif
             {
+#if NET452_OR_GREATER || NETCOREAPP
+                _buckets.TryGetValue(bucketKeys[i], out var itemIndices);
+#else
                 var itemIndices = _buckets[bucketKeys[i]];
+#endif
                 if (itemIndices == null || itemIndices.Count == 0)
                 {
 #if NET40_OR_GREATER || NETCOREAPP
@@ -1108,10 +1233,11 @@ namespace SabreTools.DatFiles
 
                 Sort(ref datItems, norename);
 
-                _buckets[bucketKeys[i]] = [.. datItems.Select(kvp => kvp.Key)];
 #if NET40_OR_GREATER || NETCOREAPP
+                _buckets.TryAdd(bucketKeys[i], [.. datItems.Select(kvp => kvp.Key)]);
             });
 #else
+                _buckets[bucketKeys[i]] = [.. datItems.Select(kvp => kvp.Key)];
             }
 #endif
         }
