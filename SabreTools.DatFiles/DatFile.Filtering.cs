@@ -223,9 +223,6 @@ namespace SabreTools.DatFiles
         /// <remarks>Applies to <see cref="Items"/></remarks>
         private void SetOneGamePerRegionImpl(List<string> regionList)
         {
-            // If we have null region list, make it empty
-            regionList ??= [];
-
             // For sake of ease, the first thing we want to do is bucket by game
             BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
@@ -307,9 +304,6 @@ namespace SabreTools.DatFiles
         /// <remarks>Applies to <see cref="ItemsDB"/></remarks>
         private void SetOneGamePerRegionImplDB(List<string> regionList)
         {
-            // If we have null region list, make it empty
-            regionList ??= [];
-
             // For sake of ease, the first thing we want to do is bucket by game
             BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
