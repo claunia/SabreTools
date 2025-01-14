@@ -703,9 +703,8 @@ namespace SabreTools.DatItems.Test.Formats
             datItem.SetFieldValue(Models.Metadata.Rom.SHA384Key, "DEADBEEF");
             datItem.SetFieldValue(Models.Metadata.Rom.SHA512Key, "DEADBEEF");
             datItem.SetFieldValue(Models.Metadata.Rom.SpamSumKey, "DEADBEEF");
-            datItem.SetFieldValue(DatItem.MachineKey, machine);
 
-            string actual = datItem.GetKeyDB(bucketedBy, source, lower, norename);
+            string actual = datItem.GetKeyDB(bucketedBy, machine, source, lower, norename);
             Assert.Equal(expected, actual);
         }
 

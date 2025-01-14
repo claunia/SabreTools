@@ -447,14 +447,18 @@ namespace SabreTools.DatItems
         /// Get the dictionary key that should be used for a given item and bucketing type
         /// </summary>
         /// <param name="bucketedBy">ItemKey value representing what key to get</param>
+        /// <param name="machine">Machine associated with the item for renaming</param>
         /// <param name="source">Source associated with the item for renaming</param>
         /// <param name="lower">True if the key should be lowercased (default), false otherwise</param>
         /// <param name="norename">True if games should only be compared on game and file name, false if system and source are counted</param>
         /// <returns>String representing the key to be used for the DatItem</returns>
-        public virtual string GetKeyDB(ItemKey bucketedBy, Source? source, bool lower = true, bool norename = true)
+        public virtual string GetKeyDB(ItemKey bucketedBy, Machine? machine, Source? source, bool lower = true, bool norename = true)
         {
             // Set the output key as the default blank string
             string key = string.Empty;
+
+            string sourceKeyPadded = source?.Index.ToString().PadLeft(10, '0') + '-';
+            string machineName = machine?.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? "Default";
 
             // Now determine what the key should be based on the bucketedBy value
             switch (bucketedBy)
@@ -464,21 +468,7 @@ namespace SabreTools.DatItems
                     break;
 
                 case ItemKey.Machine:
-                    string sourceString = string.Empty;
-                    if (!norename && source != null)
-                        sourceString = source.Index.ToString().PadLeft(10, '0') + "-";
-
-                    // TODO: This will never have a value for DB
-                    string machineString = "Default";
-                    var machine = GetFieldValue<Machine>(DatItem.MachineKey);
-                    if (machine != null)
-                    {
-                        var machineName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey);
-                        if (!string.IsNullOrEmpty(machineName))
-                            machineString = machineName!;
-                    }
-
-                    key = $"{sourceString}{machineString}";
+                    key = (norename ? string.Empty : sourceKeyPadded) + machineName;
                     break;
 
                 case ItemKey.MD2:

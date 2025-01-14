@@ -127,7 +127,7 @@ namespace SabreTools.DatItems.Formats
         }
 
         /// <inheritdoc/>
-        public override string GetKeyDB(ItemKey bucketedBy, Source? source, bool lower = true, bool norename = true)
+        public override string GetKeyDB(ItemKey bucketedBy, Machine? machine, Source? source, bool lower = true, bool norename = true)
         {
             // Set the output key as the default blank string
             string? key;
@@ -153,7 +153,7 @@ namespace SabreTools.DatItems.Formats
 
                 // Let the base handle generic stuff
                 default:
-                    return base.GetKeyDB(bucketedBy, source, lower, norename);
+                    return base.GetKeyDB(bucketedBy, machine, source, lower, norename);
             }
 
             // Double and triple check the key for corner cases

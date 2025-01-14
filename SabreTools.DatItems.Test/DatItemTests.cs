@@ -762,9 +762,8 @@ namespace SabreTools.DatItems.Test
             machine.SetFieldValue(Models.Metadata.Machine.NameKey, "Machine");
 
             DatItem datItem = new Blank();
-            datItem.SetFieldValue(DatItem.MachineKey, machine);
 
-            string actual = datItem.GetKeyDB(bucketedBy, source, lower, norename);
+            string actual = datItem.GetKeyDB(bucketedBy, machine, source, lower, norename);
             Assert.Equal(expected, actual);
         }
 
@@ -821,7 +820,6 @@ namespace SabreTools.DatItems.Test
             machine.SetFieldValue(Models.Metadata.Machine.NameKey, "Machine");
 
             DatItem datItem = new Rom();
-            datItem.SetFieldValue(DatItem.MachineKey, machine);
             datItem.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
             datItem.SetFieldValue(Models.Metadata.Rom.MD2Key, "DEADBEEF");
             datItem.SetFieldValue(Models.Metadata.Rom.MD4Key, "DEADBEEF");
@@ -832,7 +830,7 @@ namespace SabreTools.DatItems.Test
             datItem.SetFieldValue(Models.Metadata.Rom.SHA512Key, "DEADBEEF");
             datItem.SetFieldValue(Models.Metadata.Rom.SpamSumKey, "BASE64");
 
-            string actual = datItem.GetKeyDB(bucketedBy, source, lower, norename);
+            string actual = datItem.GetKeyDB(bucketedBy, machine, source, lower, norename);
             Assert.Equal(expected, actual);
         }
 

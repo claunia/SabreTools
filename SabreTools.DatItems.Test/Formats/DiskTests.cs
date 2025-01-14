@@ -356,11 +356,10 @@ namespace SabreTools.DatItems.Test.Formats
             machine.SetFieldValue(Models.Metadata.Machine.NameKey, "Machine");
 
             DatItem datItem = new Disk();
-            datItem.SetFieldValue(DatItem.MachineKey, machine);
             datItem.SetFieldValue(Models.Metadata.Disk.MD5Key, "DEADBEEF");
             datItem.SetFieldValue(Models.Metadata.Disk.SHA1Key, "DEADBEEF");
 
-            string actual = datItem.GetKeyDB(bucketedBy, source, lower, norename);
+            string actual = datItem.GetKeyDB(bucketedBy, machine, source, lower, norename);
             Assert.Equal(expected, actual);
         }
 

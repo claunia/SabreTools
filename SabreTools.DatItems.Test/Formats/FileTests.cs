@@ -467,9 +467,8 @@ namespace SabreTools.DatItems.Test.Formats
                 SHA1 = "DEADBEEF",
                 SHA256 = "DEADBEEF",
             };
-            datItem.SetFieldValue(DatItem.MachineKey, machine);
 
-            string actual = datItem.GetKeyDB(bucketedBy, source, lower, norename);
+            string actual = datItem.GetKeyDB(bucketedBy, machine, source, lower, norename);
             Assert.Equal(expected, actual);
         }
 

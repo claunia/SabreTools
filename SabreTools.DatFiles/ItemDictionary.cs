@@ -246,7 +246,7 @@ namespace SabreTools.DatFiles
             }
 
             // Get the key and add the file
-            key = item.GetKey(ItemKey.Machine);
+            key = GetBucketKey(item, _bucketedBy, lower: true, norename: true);
 
             // If only adding statistics, we add an empty key for games and then just item stats
             if (statsOnly)
@@ -642,6 +642,26 @@ namespace SabreTools.DatFiles
             // Otherwise, we bucket by CRC
             else
                 return ItemKey.CRC;
+        }
+
+        /// <summary>
+        /// Get the bucketing key for a given item
+        /// <param name="datItem">The current item</param>
+        /// <param name="bucketBy">ItemKey value representing what key to get</param>
+        /// <param name="lower">True if the key should be lowercased, false otherwise</param>
+        /// <param name="norename">True if games should only be compared on game and file name, false if system and source are counted</param>
+        /// </summary>
+        private string GetBucketKey(DatItem datItem, ItemKey bucketBy, bool lower, bool norename)
+        {
+            if (datItem == null)
+                return string.Empty;
+
+            // Treat NULL like machine
+            if (bucketBy == ItemKey.NULL)
+                bucketBy = ItemKey.Machine;
+
+            // Get the bucket key
+            return datItem.GetKey(bucketBy, lower, norename);
         }
 
         /// <summary>

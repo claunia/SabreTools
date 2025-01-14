@@ -288,15 +288,6 @@ namespace SabreTools.DatFiles
         /// <param name="datItem">Item to try to match</param>
         /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
         /// <returns>List of matched DatItem objects</returns>
-        public Dictionary<long, DatItem> GetDuplicatesDB(DatItem datItem, bool sorted = false)
-            => ItemsDB.GetDuplicates(datItem, sorted);
-
-        /// <summary>
-        /// List all duplicates found in a DAT based on a DatItem
-        /// </summary>
-        /// <param name="datItem">Item to try to match</param>
-        /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
-        /// <returns>List of matched DatItem objects</returns>
         public Dictionary<long, DatItem> GetDuplicatesDB(KeyValuePair<long, DatItem> datItem, bool sorted = false)
             => ItemsDB.GetDuplicates(datItem, sorted);
 

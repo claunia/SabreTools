@@ -704,55 +704,6 @@ namespace SabreTools.DatFiles
         /// <param name="datItem">Item to try to match</param>
         /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
         /// <returns>List of matched DatItem objects</returns>
-        internal Dictionary<long, DatItem> GetDuplicates(DatItem datItem, bool sorted = false)
-        {
-            Dictionary<long, DatItem> output = [];
-
-            // Check for an empty rom list first
-            if (DatStatistics.TotalCount == 0)
-                return output;
-
-            // We want to get the proper key for the DatItem
-            string key = SortAndGetKey(datItem, sorted);
-
-            // If the key doesn't exist, return the empty list
-            var roms = GetItemsForBucket(key);
-            if (roms == null || roms.Count == 0)
-                return output;
-
-            // Try to find duplicates
-            Dictionary<long, DatItem> left = [];
-            foreach (var rom in roms)
-            {
-                if (rom.Value.GetBoolFieldValue(DatItem.RemoveKey) == true)
-                    continue;
-
-                if (datItem.Equals(rom.Value))
-                {
-                    rom.Value.SetFieldValue<bool?>(DatItem.RemoveKey, true);
-                    output[rom.Key] = rom.Value;
-                }
-                else
-                {
-                    left[rom.Key] = rom.Value;
-                }
-            }
-
-            // Add back all roms with the proper flags
-#if NET40_OR_GREATER || NETCOREAPP
-            _buckets.TryAdd(key, [.. output.Keys, .. left.Keys]);
-#else
-            _buckets[key] = [.. output.Keys, .. left.Keys];
-#endif
-            return output;
-        }
-
-        /// <summary>
-        /// List all duplicates found in a DAT based on a DatItem
-        /// </summary>
-        /// <param name="datItem">Item to try to match</param>
-        /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
-        /// <returns>List of matched DatItem objects</returns>
         /// <remarks>This also sets the remove flag on any duplicates found</remarks>
         internal Dictionary<long, DatItem> GetDuplicates(KeyValuePair<long, DatItem> datItem, bool sorted = false)
         {
@@ -991,27 +942,18 @@ namespace SabreTools.DatFiles
                 return string.Empty;
 #endif
 
-            var machine = GetMachineForItem(itemIndex);
-            if (machine.Value == null)
-                return string.Empty;
-
             var source = GetSourceForItem(itemIndex);
-
             string sourceKeyPadded = source.Value?.Index.ToString().PadLeft(10, '0') + '-';
-            string machineName = machine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? "Default";
 
-            string bucketKey = bucketBy switch
-            {
-                // Treat NULL like machine
-                ItemKey.NULL => (norename ? string.Empty : sourceKeyPadded) + machineName,
-                ItemKey.Machine => (norename ? string.Empty : sourceKeyPadded) + machineName,
-                _ => datItem.GetKeyDB(bucketBy, source.Value, lower, norename),
-            };
+            var machine = GetMachineForItem(itemIndex);
+            string machineName = machine.Value?.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? "Default";
 
-            if (lower)
-                bucketKey = bucketKey.ToLowerInvariant();
+            // Treat NULL like machine
+            if (bucketBy == ItemKey.NULL)
+                bucketBy = ItemKey.Machine;
 
-            return bucketKey;
+            // Get the bucket key
+            return datItem.GetKeyDB(bucketBy, machine.Value, source.Value, lower, norename);
         }
 
         /// <summary>
@@ -1246,7 +1188,7 @@ namespace SabreTools.DatFiles
                 BucketBy(GetBestAvailable(), DedupeType.None);
 
             // Now that we have the sorted type, we get the proper key
-            return datItem.GetKeyDB(_bucketedBy, null);
+            return datItem.GetKeyDB(_bucketedBy, null, null);
         }
 
         /// <summary>
@@ -1262,8 +1204,9 @@ namespace SabreTools.DatFiles
                 BucketBy(GetBestAvailable(), DedupeType.None);
 
             // Now that we have the sorted type, we get the proper key
+            var machine = GetMachineForItem(datItem.Key);
             var source = GetSourceForItem(datItem.Key);
-            return datItem.Value.GetKeyDB(_bucketedBy, source.Value);
+            return datItem.Value.GetKeyDB(_bucketedBy, machine.Value, source.Value);
         }
 
         #endregion
