@@ -337,10 +337,7 @@ namespace SabreTools.DatFiles
             foreach (string key in keys)
             {
                 // Skip invalid item lists
-                List<DatItem>? oldItemList = this[key];
-                if (oldItemList == null)
-                    return;
-
+                List<DatItem> oldItemList = GetItemsForBucket(key);
                 List<DatItem> newItemList = oldItemList.FindAll(i => i.GetBoolFieldValue(DatItem.RemoveKey) != true);
 
                 Remove(key);
@@ -573,10 +570,7 @@ namespace SabreTools.DatFiles
                 return output;
 
             // Try to find duplicates
-            List<DatItem>? roms = this[key];
-            if (roms == null)
-                return output;
-
+            List<DatItem> roms = GetItemsForBucket(key);
             List<DatItem> left = [];
             for (int i = 0; i < roms.Count; i++)
             {
@@ -626,10 +620,7 @@ namespace SabreTools.DatFiles
                 return false;
 
             // Try to find duplicates
-            List<DatItem>? roms = this[key];
-            if (roms == null)
-                return false;
-
+            List<DatItem> roms = GetItemsForBucket(key);
             return roms.FindIndex(r => datItem.Equals(r)) > -1;
         }
 
@@ -703,13 +694,13 @@ namespace SabreTools.DatFiles
 #endif
             {
                 string key = oldkeys[k];
-                if (this[key] == null)
+                if (GetItemsForBucket(key).Count == 0)
                     Remove(key);
 
                 // Now add each of the roms to their respective keys
-                for (int i = 0; i < this[key]!.Count; i++)
+                for (int i = 0; i < GetItemsForBucket(key).Count; i++)
                 {
-                    DatItem item = this[key]![i];
+                    DatItem item = GetItemsForBucket(key)[i];
                     if (item == null)
                         continue;
 
@@ -726,7 +717,7 @@ namespace SabreTools.DatFiles
                 }
 
                 // If the key is now empty, remove it
-                if (this[key]!.Count == 0)
+                if (GetItemsForBucket(key).Count == 0)
                     Remove(key);
 #if NET40_OR_GREATER || NETCOREAPP
             });
@@ -755,24 +746,18 @@ namespace SabreTools.DatFiles
 #endif
             {
                 // Get the possibly unsorted list
-                List<DatItem>? sortedlist = this[key];
-                if (sortedlist == null)
-#if NET40_OR_GREATER || NETCOREAPP
-                    return;
-#else
-                    continue;
-#endif
+                List<DatItem> sortedList = GetItemsForBucket(key);
 
                 // Sort the list of items to be consistent
-                DatFileTool.Sort(ref sortedlist, false);
+                DatFileTool.Sort(ref sortedList, false);
 
                 // If we're merging the roms, do so
                 if (dedupeType == DedupeType.Full || (dedupeType == DedupeType.Game && bucketBy == ItemKey.Machine))
-                    sortedlist = DatFileTool.Merge(sortedlist);
+                    sortedList = DatFileTool.Merge(sortedList);
 
                 // Add the list back to the dictionary
                 Reset(key);
-                Add(key, sortedlist);
+                Add(key, sortedList);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
@@ -795,11 +780,14 @@ namespace SabreTools.DatFiles
 #endif
             {
                 // Get the possibly unsorted list
-                List<DatItem>? sortedlist = this[key];
+                List<DatItem> sortedList = GetItemsForBucket(key);
 
                 // Sort the list of items to be consistent
-                if (sortedlist != null)
-                    DatFileTool.Sort(ref sortedlist, false);
+                DatFileTool.Sort(ref sortedList, false);
+
+                // Add the list back to the dictionary
+                Reset(key);
+                Add(key, sortedList);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
