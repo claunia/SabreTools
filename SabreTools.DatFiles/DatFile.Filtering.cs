@@ -309,14 +309,8 @@ namespace SabreTools.DatFiles
 
             // Then we want to get a mapping of all machines to parents
             Dictionary<string, List<string>> parents = [];
-            foreach (string key in ItemsDB.SortedKeys)
+            foreach (var machine in GetMachinesDB())
             {
-                var items = GetItemsForBucketDB(key);
-                if (items == null || items.Count == 0)
-                    continue;
-
-                var item = items.First();
-                var machine = ItemsDB.GetMachineForItem(item.Key);
                 if (machine.Value == null)
                     continue;
 
