@@ -120,11 +120,17 @@ namespace SabreTools.DatFiles
                     if (machineName == null || machineDesc == null)
                         continue;
 
+                    // Adjust the description
+                    machineDesc = machineDesc.Replace('/', '_').Replace("\"", "''").Replace(":", " -");
+                    if (machineName == machineDesc)
+                        continue;
+
                     // If the key mapping doesn't exist, add it
 #if NET40_OR_GREATER || NETCOREAPP
-                    mapping.TryAdd(machineName, machineDesc.Replace('/', '_').Replace("\"", "''").Replace(":", " -"));
+                    mapping.TryAdd(machineName, machineDesc);
 #else
-                    mapping[machineName] = machineDesc.Replace('/', '_').Replace("\"", "''").Replace(":", " -");
+                    if (!mapping.ContainsKey(machineName))
+                        mapping[machineName] = machineDesc;
 #endif
                 }
 #if NET40_OR_GREATER || NETCOREAPP
@@ -155,8 +161,14 @@ namespace SabreTools.DatFiles
                 if (machineName == null || machineDesc == null)
                     continue;
 
+                // Adjust the description
+                machineDesc = machineDesc.Replace('/', '_').Replace("\"", "''").Replace(":", " -");
+                if (machineName == machineDesc)
+                    continue;
+
                 // If the key mapping doesn't exist, add it
-                mapping[machineName] = machineDesc.Replace('/', '_').Replace("\"", "''").Replace(":", " -");
+                if (!mapping.ContainsKey(machineName))
+                    mapping[machineName] = machineDesc;
             }
 
             return mapping;
