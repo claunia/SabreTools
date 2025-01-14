@@ -454,7 +454,7 @@ namespace SabreTools.DatFiles
             if (machineName.StartsWith("Default"))
                 machineName = machineName.Substring("Default".Length + 1);
 
-            datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineName);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineName);
             datItem.SetName(Path.GetFileName(datItem.GetName()));
         }
 
