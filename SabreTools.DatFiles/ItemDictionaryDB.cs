@@ -15,7 +15,6 @@ using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using SabreTools.Hashing;
-using SabreTools.IO.Logging;
 using SabreTools.Matching.Compare;
 
 /*
@@ -129,11 +128,6 @@ namespace SabreTools.DatFiles
         /// </summary>
         private ItemKey _bucketedBy = ItemKey.NULL;
 
-        /// <summary>
-        /// Logging object
-        /// </summary>
-        private readonly Logger _logger;
-
         #endregion
 
         #region Fields
@@ -164,10 +158,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Generic constructor
         /// </summary>
-        public ItemDictionaryDB()
-        {
-            _logger = new Logger(this);
-        }
+        public ItemDictionaryDB() { }
 
         #region Accessors
 
