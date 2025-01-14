@@ -1181,22 +1181,6 @@ namespace SabreTools.DatFiles
         /// <param name="datItem">Item to try to match</param>
         /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
         /// <returns>Key to try to use</returns>
-        private string SortAndGetKey(DatItem datItem, bool sorted = false)
-        {
-            // If we're not already sorted, take care of it
-            if (!sorted)
-                BucketBy(GetBestAvailable(), DedupeType.None);
-
-            // Now that we have the sorted type, we get the proper key
-            return datItem.GetKeyDB(_bucketedBy, null, null);
-        }
-
-        /// <summary>
-        /// Sort the input DAT and get the key to be used by the item
-        /// </summary>
-        /// <param name="datItem">Item to try to match</param>
-        /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
-        /// <returns>Key to try to use</returns>
         private string SortAndGetKey(KeyValuePair<long, DatItem> datItem, bool sorted = false)
         {
             // If we're not already sorted, take care of it
