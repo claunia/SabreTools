@@ -209,16 +209,6 @@ namespace SabreTools.DatFiles
         /// Filter a DAT using 1G1R logic given an ordered set of regions
         /// </summary>
         /// <param name="regionList">List of regions in order of priority</param>
-        /// <remarks>
-        /// In the most technical sense, the way that the region list is being used does not
-        /// confine its values to be just regions. Since it's essentially acting like a
-        /// specialized version of the machine name filter, anything that is usually encapsulated
-        /// in parenthesis would be matched on, including disc numbers, languages, editions,
-        /// and anything else commonly used. Please note that, unlike other existing 1G1R 
-        /// solutions, this does not have the ability to contain custom mappings of parent
-        /// to clone sets based on name, nor does it have the ability to match on the 
-        /// Release DatItem type.
-        /// </remarks>
         /// <remarks>Applies to <see cref="Items"/></remarks>
         private void SetOneGamePerRegionImpl(List<string> regionList)
         {
@@ -303,16 +293,6 @@ namespace SabreTools.DatFiles
         /// Filter a DAT using 1G1R logic given an ordered set of regions
         /// </summary>
         /// <param name="regionList">List of regions in order of priority</param>
-        /// <remarks>
-        /// In the most technical sense, the way that the region list is being used does not
-        /// confine its values to be just regions. Since it's essentially acting like a
-        /// specialized version of the machine name filter, anything that is usually encapsulated
-        /// in parenthesis would be matched on, including disc numbers, languages, editions,
-        /// and anything else commonly used. Please note that, unlike other existing 1G1R 
-        /// solutions, this does not have the ability to contain custom mappings of parent
-        /// to clone sets based on name, nor does it have the ability to match on the 
-        /// Release DatItem type.
-        /// </remarks>
         /// <remarks>Applies to <see cref="ItemsDB"/></remarks>
         private void SetOneGamePerRegionImplDB(List<string> regionList)
         {
