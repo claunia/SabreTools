@@ -15,7 +15,6 @@ using System.Linq;
 
 namespace SabreTools.DatFiles
 {
-    // TODO: Write tests for all of these implementations
     public partial class DatFile
     {
         #region Constants
