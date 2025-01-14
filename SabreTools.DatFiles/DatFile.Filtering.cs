@@ -433,8 +433,8 @@ namespace SabreTools.DatFiles
         private static void SetOneRomPerGameImpl(DatItem datItem)
         {
             // If the item name is null
-            string? machineName = datItem.GetName();
-            if (machineName == null)
+            string? itemName = datItem.GetName();
+            if (itemName == null)
                 return;
 
             // Get the current machine
@@ -448,19 +448,23 @@ namespace SabreTools.DatFiles
             // Reassign the item to the new machine
             datItem.SetFieldValue<Machine>(DatItem.MachineKey, machine);
 
-            // Remove extensions from Rom items
-            if (datItem is Rom)
+            // Remove extensions from File and Rom items
+            if (datItem is DatItems.Formats.File || datItem is Rom)
             {
-                string[] splitname = machineName.Split('.');
-                machineName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey)
+                string[] splitname = itemName.Split('.');
+                itemName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey)
                     + $"/{string.Join(".", splitname, 0, splitname.Length > 1 ? splitname.Length - 1 : 1)}";
+            }
+            else
+            {
+                itemName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $"/{itemName}";
             }
 
             // Strip off "Default" prefix only for ORPG
-            if (machineName.StartsWith("Default"))
-                machineName = machineName.Substring("Default".Length + 1);
+            if (itemName.StartsWith("Default"))
+                itemName = itemName.Substring("Default".Length + 1);
 
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineName);
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, itemName);
             datItem.SetName(Path.GetFileName(datItem.GetName()));
         }
 
@@ -506,8 +510,8 @@ namespace SabreTools.DatFiles
         private void SetOneRomPerGameImplDB(KeyValuePair<long, DatItem> datItem)
         {
             // If the item name is null
-            string? machineName = datItem.Value.GetName();
-            if (datItem.Key < 0 || machineName == null)
+            string? itemName = datItem.Value.GetName();
+            if (datItem.Key < 0 || itemName == null)
                 return;
 
             // Get the current machine
@@ -522,21 +526,25 @@ namespace SabreTools.DatFiles
                 return;
 
             // Reassign the item to the new machine
-            ItemsDB._itemToMachineMapping[machine.Key] = newMachineIndex;
+            ItemsDB._itemToMachineMapping[datItem.Key] = newMachineIndex;
 
-            // Remove extensions from Rom items
-            if (datItem.Value is Rom)
+            // Remove extensions from File and Rom items
+            if (datItem.Value is DatItems.Formats.File || datItem.Value is Rom)
             {
-                string[] splitname = machineName.Split('.');
-                machineName = machine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey)
+                string[] splitname = itemName.Split('.');
+                itemName = machine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey)
                     + $"/{string.Join(".", splitname, 0, splitname.Length > 1 ? splitname.Length - 1 : 1)}";
+            }
+            else
+            {
+                itemName = machine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $"/{itemName}";
             }
 
             // Strip off "Default" prefix only for ORPG
-            if (machineName.StartsWith("Default"))
-                machineName = machineName.Substring("Default".Length + 1);
+            if (itemName.StartsWith("Default"))
+                itemName = itemName.Substring("Default".Length + 1);
 
-            machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineName);
+            machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, itemName);
             datItem.Value.SetName(Path.GetFileName(datItem.Value.GetName()));
         }
 
