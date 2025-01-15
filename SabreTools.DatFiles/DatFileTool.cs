@@ -938,8 +938,6 @@ namespace SabreTools.DatFiles
             var datItems = datFile.ItemsDB.GetItems();
             var machines = datFile.GetMachinesDB();
             var sources = datFile.ItemsDB.GetSources();
-            var itemMachineMappings = datFile.ItemsDB.GetItemMachineMappings();
-            var itemSourceMappings = datFile.ItemsDB.GetItemSourceMappings();
 
             // Create mappings from old index to new index
             var machineRemapping = new Dictionary<long, long>();
@@ -969,8 +967,8 @@ namespace SabreTools.DatFiles
 #endif
             {
                 // Get the machine and source index for this item
-                long machineIndex = itemMachineMappings[item.Key];
-                long sourceIndex = itemSourceMappings[item.Key];
+                long machineIndex = datFile.ItemsDB.GetMachineForItem(item.Key).Key;
+                long sourceIndex = datFile.ItemsDB.GetSourceForItem(item.Key).Key;
 
                 // If the current item isn't an external duplicate
 #if NET20 || NET35
@@ -1178,8 +1176,6 @@ namespace SabreTools.DatFiles
             var datItems = datFile.ItemsDB.GetItems();
             var machines = datFile.GetMachinesDB();
             var sources = datFile.ItemsDB.GetSources();
-            var itemMachineMappings = datFile.ItemsDB.GetItemMachineMappings();
-            var itemSourceMappings = datFile.ItemsDB.GetItemSourceMappings();
 
             // Create mappings from old index to new index
             var machineRemapping = new Dictionary<long, long>();
@@ -1219,8 +1215,8 @@ namespace SabreTools.DatFiles
 #endif
             {
                 // Get the machine and source index for this item
-                long machineIndex = itemMachineMappings[item.Key];
-                long sourceIndex = itemSourceMappings[item.Key];
+                long machineIndex = datFile.ItemsDB.GetMachineForItem(item.Key).Key;
+                long sourceIndex = datFile.ItemsDB.GetSourceForItem(item.Key).Key;
 
                 // Get the source associated with the item
                 var source = datFile.ItemsDB.GetSource(sourceIndex);
@@ -1371,8 +1367,6 @@ namespace SabreTools.DatFiles
             var datItems = datFile.ItemsDB.GetItems();
             var machines = datFile.GetMachinesDB();
             var sources = datFile.ItemsDB.GetSources();
-            var itemMachineMappings = datFile.ItemsDB.GetItemMachineMappings();
-            var itemSourceMappings = datFile.ItemsDB.GetItemSourceMappings();
 
             // Create mappings from old index to new index
             var machineRemapping = new Dictionary<long, long>();
@@ -1402,8 +1396,8 @@ namespace SabreTools.DatFiles
 #endif
             {
                 // Get the machine and source index for this item
-                long machineIndex = itemMachineMappings[item.Key];
-                long sourceIndex = itemSourceMappings[item.Key];
+                long machineIndex = datFile.ItemsDB.GetMachineForItem(item.Key).Key;
+                long sourceIndex = datFile.ItemsDB.GetSourceForItem(item.Key).Key;
 
                 // If the current item isn't a duplicate
 #if NET20 || NET35
@@ -1547,8 +1541,6 @@ namespace SabreTools.DatFiles
             var datItems = addFrom.ItemsDB.GetItems();
             var machines = addFrom.GetMachinesDB();
             var sources = addFrom.ItemsDB.GetSources();
-            var itemMachineMappings = addFrom.ItemsDB.GetItemMachineMappings();
-            var itemSourceMappings = addFrom.ItemsDB.GetItemSourceMappings();
 
             // Create mappings from old index to new index
             var machineRemapping = new Dictionary<long, long>();
@@ -1578,8 +1570,8 @@ namespace SabreTools.DatFiles
 #endif
             {
                 // Get the machine and source index for this item
-                long machineIndex = itemMachineMappings[item.Key];
-                long sourceIndex = itemSourceMappings[item.Key];
+                long machineIndex = addFrom.ItemsDB.GetMachineForItem(item.Key).Key;
+                long sourceIndex = addFrom.ItemsDB.GetSourceForItem(item.Key).Key;
 
                 addTo.AddItemDB(item.Value, machineRemapping[machineIndex], sourceRemapping[sourceIndex], statsOnly: false);
 
@@ -1652,8 +1644,6 @@ namespace SabreTools.DatFiles
             var datItems = datFile.ItemsDB.GetItems();
             var machines = datFile.GetMachinesDB();
             var sources = datFile.ItemsDB.GetSources();
-            var itemMachineMappings = datFile.ItemsDB.GetItemMachineMappings();
-            var itemSourceMappings = datFile.ItemsDB.GetItemSourceMappings();
 
             // Create mappings from old index to new index
             var machineRemapping = new Dictionary<long, long>();
@@ -1683,8 +1673,8 @@ namespace SabreTools.DatFiles
 #endif
             {
                 // Get the machine and source index for this item
-                long machineIndex = itemMachineMappings[item.Key];
-                long sourceIndex = itemSourceMappings[item.Key];
+                long machineIndex = datFile.ItemsDB.GetMachineForItem(item.Key).Key;
+                long sourceIndex = datFile.ItemsDB.GetSourceForItem(item.Key).Key;
 
                 // Get the source associated with the item
                 var source = datFile.ItemsDB.GetSource(sourceIndex);

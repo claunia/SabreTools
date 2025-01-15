@@ -369,16 +369,6 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Get all item to machine mappings
-        /// </summary>
-        public IDictionary<long, long> GetItemMachineMappings() => _itemToMachineMapping;
-
-        /// <summary>
-        /// Get all item to source mappings
-        /// </summary>
-        public IDictionary<long, long> GetItemSourceMappings() => _itemToSourceMapping;
-
-        /// <summary>
         /// Get all items and their indicies
         /// </summary>
         public IDictionary<long, DatItem> GetItems() => _items;

@@ -145,8 +145,6 @@ namespace SabreTools.DatTools
             var datItems = datFile.ItemsDB.GetItems();
             var machines = datFile.GetMachinesDB();
             var sources = datFile.ItemsDB.GetSources();
-            var itemMachineMappings = datFile.ItemsDB.GetItemMachineMappings();
-            var itemSourceMappings = datFile.ItemsDB.GetItemSourceMappings();
 
             // Create mappings from old index to new index
             var machineRemapping = new Dictionary<long, long>();
@@ -178,8 +176,8 @@ namespace SabreTools.DatTools
 #endif
             {
                 // Get the machine and source index for this item
-                long machineIndex = itemMachineMappings[item.Key];
-                long sourceIndex = itemSourceMappings[item.Key];
+                long machineIndex = datFile.ItemsDB.GetMachineForItem(item.Key).Key;
+                long sourceIndex = datFile.ItemsDB.GetSourceForItem(item.Key).Key;
 
                 if (newExtA.Contains((item.Value.GetName() ?? string.Empty).GetNormalizedExtension()))
                 {
@@ -361,8 +359,6 @@ namespace SabreTools.DatTools
             var datItems = datFile.ItemsDB.GetItems();
             var machines = datFile.GetMachinesDB();
             var sources = datFile.ItemsDB.GetSources();
-            var itemMachineMappings = datFile.ItemsDB.GetItemMachineMappings();
-            var itemSourceMappings = datFile.ItemsDB.GetItemSourceMappings();
 
             // Create mappings from old index to new index
             var machineRemapping = new Dictionary<long, long>();
@@ -410,8 +406,8 @@ namespace SabreTools.DatTools
 #endif
             {
                 // Get the machine and source index for this item
-                long machineIndex = itemMachineMappings[item.Key];
-                long sourceIndex = itemSourceMappings[item.Key];
+                long machineIndex = datFile.ItemsDB.GetMachineForItem(item.Key).Key;
+                long sourceIndex = datFile.ItemsDB.GetSourceForItem(item.Key).Key;
 
                 // Only process Disk, Media, and Rom
                 switch (item.Value)
@@ -699,8 +695,6 @@ namespace SabreTools.DatTools
             var datItems = datFile.ItemsDB.GetItems();
             var machines = datFile.GetMachinesDB();
             var sources = datFile.ItemsDB.GetSources();
-            var itemMachineMappings = datFile.ItemsDB.GetItemMachineMappings();
-            var itemSourceMappings = datFile.ItemsDB.GetItemSourceMappings();
 
             // Create mappings from old index to new index
             var machineRemapping = new Dictionary<long, long>();
@@ -732,8 +726,8 @@ namespace SabreTools.DatTools
 #endif
             {
                 // Get the machine and source index for this item
-                long machineIndex = itemMachineMappings[item.Key];
-                long sourceIndex = itemSourceMappings[item.Key];
+                long machineIndex = datFile.ItemsDB.GetMachineForItem(item.Key).Key;
+                long sourceIndex = datFile.ItemsDB.GetSourceForItem(item.Key).Key;
 
                 // If the file is not a Rom, it automatically goes in the "lesser" dat
                 if (item.Value is not Rom rom)
@@ -955,8 +949,6 @@ namespace SabreTools.DatTools
             var datItems = datFile.ItemsDB.GetItems();
             var machines = datFile.GetMachinesDB();
             var sources = datFile.ItemsDB.GetSources();
-            var itemMachineMappings = datFile.ItemsDB.GetItemMachineMappings();
-            var itemSourceMappings = datFile.ItemsDB.GetItemSourceMappings();
 
             // Create mappings from old index to new index
             var machineRemapping = new Dictionary<long, long>();
@@ -986,8 +978,8 @@ namespace SabreTools.DatTools
 #endif
             {
                 // Get the machine and source index for this item
-                long machineIndex = itemMachineMappings[item.Key];
-                long sourceIndex = itemSourceMappings[item.Key];
+                long machineIndex = datFile.ItemsDB.GetMachineForItem(item.Key).Key;
+                long sourceIndex = datFile.ItemsDB.GetSourceForItem(item.Key).Key;
 
                 if (item.Value.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>() == itemType)
                     indexDat.AddItemDB(item.Value, machineRemapping[machineIndex], sourceRemapping[sourceIndex], statsOnly: false);
