@@ -1,5 +1,4 @@
-﻿using System;
-#if NET40_OR_GREATER || NETCOREAPP
+﻿#if NET40_OR_GREATER || NETCOREAPP
 using System.Collections.Concurrent;
 #endif
 using System.Collections.Generic;
@@ -305,7 +304,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         public void ClearMarked()
         {
-            var itemIndices = _items.Keys;
+            long[] itemIndices = [.. _items.Keys];
             foreach (long itemIndex in itemIndices)
             {
 #if NET40_OR_GREATER || NETCOREAPP
