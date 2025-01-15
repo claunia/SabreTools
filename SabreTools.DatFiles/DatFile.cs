@@ -129,6 +129,15 @@ namespace SabreTools.DatFiles
         #region Accessors
 
         /// <summary>
+        /// Remove any keys that have null or empty values
+        /// </summary>
+        public void ClearEmpty()
+        {
+            ClearEmptyImpl();
+            ClearEmptyImplDB();
+        }
+
+        /// <summary>
         /// Set the internal header
         /// </summary>
         /// <param name="datHeader">Replacement header to be used</param>
@@ -136,6 +145,42 @@ namespace SabreTools.DatFiles
         {
             // TODO: Figure out why clone loses data here
             Header = datHeader;
+        }
+
+        /// <summary>
+        /// Remove any keys that have null or empty values
+        /// </summary>
+        private void ClearEmptyImpl()
+        {
+            foreach (string key in Items.SortedKeys)
+            {
+                // If the value is empty, remove
+                List<DatItem> value = GetItemsForBucket(key);
+                if (value.Count == 0)
+                    RemoveBucket(key);
+
+                // If there are no non-blank items, remove
+                else if (value.FindIndex(i => i != null && i is not Blank) == -1)
+                    RemoveBucket(key);
+            }
+        }
+
+        /// <summary>
+        /// Remove any keys that have null or empty values
+        /// </summary>
+        private void ClearEmptyImplDB()
+        {
+            foreach (string key in ItemsDB.SortedKeys)
+            {
+                // If the value is empty, remove
+                List<DatItem> value = [.. GetItemsForBucketDB(key).Values];
+                if (value.Count == 0)
+                    RemoveBucketDB(key);
+
+                // If there are no non-blank items, remove
+                else if (value.FindIndex(i => i != null && i is not Blank) == -1)
+                    RemoveBucketDB(key);
+            }
         }
 
         #endregion
@@ -183,15 +228,6 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Remove any keys that have null or empty values
-        /// </summary>
-        public void ClearEmpty()
-        {
-            Items.ClearEmpty();
-            ItemsDB.ClearEmpty();
-        }
-
-        /// <summary>
         /// Remove all items marked for removal
         /// </summary>
         public void ClearMarked()
@@ -225,6 +261,15 @@ namespace SabreTools.DatFiles
         public bool RemoveBucket(string key)
         {
             return Items.RemoveBucket(key);
+        }
+
+        /// <summary>
+        /// Remove a key from the file dictionary if it exists
+        /// </summary>
+        /// <param name="key">Key in the dictionary to remove</param>
+        public bool RemoveBucketDB(string key)
+        {
+            return ItemsDB.RemoveBucket(key);
         }
 
         /// <summary>

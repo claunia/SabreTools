@@ -62,17 +62,6 @@ namespace SabreTools.Test.DatFiles
         }
 
         [Fact]
-        public void ClearEmptyTest()
-        {
-            // Setup the dictionary
-            var dict = new ItemDictionary();
-            dict.AddItem("game-1", new Rom());
-
-            dict.ClearEmpty();
-            Assert.Single(dict.SortedKeys);
-        }
-
-        [Fact]
         public void ClearMarkedTest()
         {
             // Setup the items

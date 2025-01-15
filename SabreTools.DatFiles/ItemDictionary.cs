@@ -191,44 +191,9 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Remove any keys that have null or empty values
-        /// </summary>
-        internal void ClearEmpty()
-        {
-            foreach (string key in SortedKeys)
-            {
-#if NET40_OR_GREATER || NETCOREAPP
-                // If the key doesn't exist, skip
-                if (!_items.TryGetValue(key, out var value))
-                    continue;
-
-                // If the value is null, remove
-                else if (value == null)
-                    _items.TryRemove(key, out _);
-
-                // If there are no non-blank items, remove
-                else if (value!.FindIndex(i => i != null && i is not Blank) == -1)
-                    _items.TryRemove(key, out _);
-#else
-                // If the key doesn't exist, skip
-                if (!_items.ContainsKey(key))
-                    continue;
-
-                // If the value is null, remove
-                else if (_items[key] == null)
-                    _items.Remove(key);
-
-                // If there are no non-blank items, remove
-                else if (_items[key]!.FindIndex(i => i != null && i is not Blank) == -1)
-                    _items.Remove(key);
-#endif
-            }
-        }
-
-        /// <summary>
         /// Remove all items marked for removal
         /// </summary>
-        internal void ClearMarked()
+        public void ClearMarked()
         {
             foreach (string key in SortedKeys)
             {

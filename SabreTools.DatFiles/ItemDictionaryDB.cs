@@ -301,35 +301,9 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Remove any keys that have null or empty values
-        /// </summary>
-        internal void ClearEmpty()
-        {
-            var keys = Array.FindAll(SortedKeys, k => k != null);
-            foreach (string key in keys)
-            {
-                // Get items for the bucket
-                var items = GetItemsForBucket(key);
-                if (items == null || items.Count == 0)
-                    continue;
-
-                // Convert to list of indices for ease of access
-                List<DatItem> itemsList = [.. items.Values];
-
-                // If there are no non-blank items, remove
-                if (!itemsList.Exists(i => i != null && i is not Blank))
-#if NET40_OR_GREATER || NETCOREAPP
-                    _buckets.TryRemove(key, out _);
-#else
-                    _buckets.Remove(key);
-#endif
-            }
-        }
-
-        /// <summary>
         /// Remove all items marked for removal
         /// </summary>
-        internal void ClearMarked()
+        public void ClearMarked()
         {
             var itemIndices = _items.Keys;
             foreach (long itemIndex in itemIndices)
@@ -563,6 +537,24 @@ namespace SabreTools.DatFiles
             {
                 _itemToMachineMapping[itemIndex] = machineIndex;
             }
+        }
+
+        /// <summary>
+        /// Remove a key from the file dictionary if it exists
+        /// </summary>
+        /// <param name="key">Key in the dictionary to remove</param>
+        public bool RemoveBucket(string key)
+        {
+#if NET40_OR_GREATER || NETCOREAPP
+            return _buckets.TryRemove(key, out var list);
+#else
+            if (!_buckets.ContainsKey(key))
+                return false;
+
+            var list = _buckets[key];
+            _buckets.Remove(key);
+            return true;
+#endif
         }
 
         /// <summary>

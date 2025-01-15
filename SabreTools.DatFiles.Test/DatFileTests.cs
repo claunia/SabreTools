@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using SabreTools.DatFiles.Formats;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using SabreTools.Hashing;
@@ -60,6 +61,48 @@ namespace SabreTools.DatFiles.Test
             KeyValuePair<long, DatItem> dbKvp = Assert.Single(created.GetItemsForBucketDB("key"));
             Assert.Equal(0, dbKvp.Key);
             Assert.True(dbKvp.Value is Rom);
+        }
+
+        #endregion
+
+        #region ClearEmpty
+
+        [Fact]
+        public void ClearEmpty_Items()
+        {
+            Source source = new Source(0, source: null);
+
+            Machine machine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "game-1");
+
+            DatItem datItem = new Rom();
+            datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
+            datItem.SetFieldValue<Machine?>(DatItem.MachineKey, machine);
+
+            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            datFile.AddItem(datItem, statsOnly: false);
+
+            datFile.ClearEmpty();
+            Assert.Single(datFile.Items.SortedKeys);
+        }
+
+        [Fact]
+        public void ClearEmpty_ItemsDB()
+        {
+            Source source = new Source(0, source: null);
+
+            Machine machine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "game-1");
+
+            DatItem datItem = new Rom();
+
+            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            long sourceIndex = datFile.AddSourceDB(source);
+            long machineIndex = datFile.AddMachineDB(machine);
+            _ = datFile.AddItemDB(datItem, machineIndex, sourceIndex, statsOnly: false);
+
+            datFile.ClearEmpty();
+            Assert.Single(datFile.ItemsDB.SortedKeys);
         }
 
         #endregion
@@ -188,6 +231,24 @@ namespace SabreTools.DatFiles.Test
 
         #endregion
 
+        #region SetHeader
+
+        [Fact]
+        public void SetHeaderTest()
+        {
+            DatHeader datHeader = new DatHeader();
+            datHeader.SetFieldValue(Models.Metadata.Header.NameKey, "name");
+
+            DatFile? datFile = new Formats.Logiqx(datFile: null, deprecated: false);
+            datFile.Header.SetFieldValue(Models.Metadata.Header.NameKey, "notname");
+
+            datFile.SetHeader(datHeader);
+            Assert.NotNull(datFile.Header);
+            Assert.Equal("name", datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey));
+        }
+
+        #endregion
+
         #region ResetDictionary
 
         [Fact]
@@ -205,24 +266,6 @@ namespace SabreTools.DatFiles.Test
             Assert.Equal(0, datFile.Items.DatStatistics.TotalCount);
             Assert.NotNull(datFile.ItemsDB);
             Assert.Equal(0, datFile.ItemsDB.DatStatistics.TotalCount);
-        }
-
-        #endregion
-
-        #region SetHeader
-
-        [Fact]
-        public void SetHeaderTest()
-        {
-            DatHeader datHeader = new DatHeader();
-            datHeader.SetFieldValue(Models.Metadata.Header.NameKey, "name");
-
-            DatFile? datFile = new Formats.Logiqx(datFile: null, deprecated: false);
-            datFile.Header.SetFieldValue(Models.Metadata.Header.NameKey, "notname");
-
-            datFile.SetHeader(datHeader);
-            Assert.NotNull(datFile.Header);
-            Assert.Equal("name", datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey));
         }
 
         #endregion
@@ -1952,7 +1995,7 @@ namespace SabreTools.DatFiles.Test
         [Fact]
         public void ShouldIgnore_UnsupportedType_True()
         {
-            DatItem? datItem = new SoftwareList();
+            DatItem? datItem = new DatItems.Formats.SoftwareList();
             DatFile datFile = new Formats.Logiqx(null, deprecated: false);
 
             bool actual = datFile.ShouldIgnore(datItem, ignoreBlanks: true);
