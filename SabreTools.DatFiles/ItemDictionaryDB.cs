@@ -308,13 +308,13 @@ namespace SabreTools.DatFiles
             foreach (long itemIndex in itemIndices)
             {
 #if NET40_OR_GREATER || NETCOREAPP
-                if (!_items.TryGetValue(itemIndex, out var datItem))
+                if (!_items.TryGetValue(itemIndex, out var datItem) || datItem == null)
                     continue;
 #else
                 var datItem = _items[itemIndex];
 #endif
 
-                if (datItem == null || datItem.GetBoolFieldValue(DatItem.RemoveKey) != true)
+                if (datItem.GetBoolFieldValue(DatItem.RemoveKey) != true)
                     continue;
 
                 RemoveItem(itemIndex);
@@ -545,15 +545,35 @@ namespace SabreTools.DatFiles
         public bool RemoveBucket(string key)
         {
 #if NET40_OR_GREATER || NETCOREAPP
-            return _buckets.TryRemove(key, out var list);
+            bool removed = _buckets.TryRemove(key, out var list);
 #else
             if (!_buckets.ContainsKey(key))
                 return false;
 
+            bool removed = true;
             var list = _buckets[key];
             _buckets.Remove(key);
-            return true;
 #endif
+            if (list == null)
+                return removed;
+
+            foreach (var index in list)
+            {
+#if NET40_OR_GREATER || NETCOREAPP
+                if (!_items.TryGetValue(index, out var datItem) || datItem == null)
+                    continue;
+#else
+                if (!_items.ContainsKey(index))
+                    continue;
+
+                var datItem = _items[index];
+#endif
+
+                RemoveItem(index);
+                DatStatistics.RemoveItemStatistics(datItem);
+            }
+
+            return removed;
         }
 
         /// <summary>

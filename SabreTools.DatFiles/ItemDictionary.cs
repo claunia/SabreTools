@@ -197,18 +197,16 @@ namespace SabreTools.DatFiles
         {
             foreach (string key in SortedKeys)
             {
-                // Perform filtering on items
-                List<DatItem> list = GetItemsForBucket(key, filter: true);
+                // Get the unfiltered list
+                List<DatItem> list = GetItemsForBucket(key, filter: false);
 
-                // Remove the current list
-                RemoveBucket(key);
+                foreach (DatItem datItem in list)
+                {
+                    if (datItem.GetBoolFieldValue(DatItem.RemoveKey) != true)
+                        continue;
 
-                // Add the filtered list back
-#if NET40_OR_GREATER || NETCOREAPP
-                _ = _items.TryAdd(key, list);
-#else
-                _items[key] = list;
-#endif
+                    RemoveItem(key, datItem);
+                }
             }
         }
 
