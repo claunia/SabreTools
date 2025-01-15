@@ -724,9 +724,13 @@ namespace SabreTools.DatFiles
                 {
                     var nc = new NaturalComparer();
 
+                    // Get the machines
+                    Machine? xMachine = x.GetFieldValue<Machine>(DatItem.MachineKey);
+                    Machine? yMachine = y.GetFieldValue<Machine>(DatItem.MachineKey);
+
                     // If machine names don't match
-                    string? xMachineName = x.GetFieldValue<Machine>(DatItem.MachineKey)?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
-                    string? yMachineName = y.GetFieldValue<Machine>(DatItem.MachineKey)?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    string? xMachineName = xMachine?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    string? yMachineName = yMachine?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
                     if (xMachineName != yMachineName)
                         return nc.Compare(xMachineName, yMachineName);
 
