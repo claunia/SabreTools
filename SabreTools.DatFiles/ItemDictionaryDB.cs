@@ -314,10 +314,10 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // Convert to list of indices for ease of access
-                List<long> itemsList = [.. items.Keys];
+                List<DatItem> itemsList = [.. items.Values];
 
                 // If there are no non-blank items, remove
-                if (!itemsList.Exists(i => GetItem(i) != null && GetItem(i) is not Blank))
+                if (!itemsList.Exists(i => i != null && i is not Blank))
 #if NET40_OR_GREATER || NETCOREAPP
                     _buckets.TryRemove(key, out _);
 #else
