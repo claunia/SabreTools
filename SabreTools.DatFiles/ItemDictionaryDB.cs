@@ -693,11 +693,10 @@ namespace SabreTools.DatFiles
         /// Update the bucketing dictionary
         /// </summary>
         /// <param name="bucketBy">ItemKey enum representing how to bucket the individual items</param>
-        /// <param name="dedupeType">Dedupe type that should be used</param>
         /// <param name="lower">True if the key should be lowercased (default), false otherwise</param>
         /// <param name="norename">True if games should only be compared on game and file name, false if system and source are counted</param>
         /// <returns></returns>
-        public void BucketBy(ItemKey bucketBy, DedupeType dedupeType, bool lower = true, bool norename = true)
+        public void BucketBy(ItemKey bucketBy, bool lower = true, bool norename = true)
         {
             // If the sorted type isn't the same, we want to sort the dictionary accordingly
             if (_bucketedBy != bucketBy && bucketBy != ItemKey.NULL)
@@ -706,18 +705,60 @@ namespace SabreTools.DatFiles
                 PerformBucketing(bucketBy, lower, norename);
             }
 
-            // If the merge type isn't the same, we want to merge the dictionary accordingly
-            if (dedupeType != DedupeType.None)
+            // Sort the dictionary to be consistent
+            _logger.User($"Sorting roms by {bucketBy}");
+            PerformSorting(norename);
+        }
+
+        /// <summary>
+        /// Perform deduplication based on the deduplication type provided
+        /// </summary>
+        /// <param name="dedupeType">Dedupe type that should be used</param>
+        public void Deduplicate(DedupeType dedupeType)
+        {
+            // If no deduplication is requested, just return
+            if (dedupeType == DedupeType.None)
+                return;
+
+            // Get the current list of bucket keys
+            string[] bucketKeys = [.. _buckets.Keys];
+
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.For(0, bucketKeys.Length, Core.Globals.ParallelOptions, i =>
+#elif NET40_OR_GREATER
+            Parallel.For(0, bucketKeys.Length, i =>
+#else
+            for (int i = 0; i < bucketKeys.Length; i++)
+#endif
             {
-                _logger.User($"Deduping roms by {dedupeType}");
-                PerformDeduplication(bucketBy, dedupeType);
+#if NET40_OR_GREATER || NETCOREAPP
+                if (!_buckets.TryGetValue(bucketKeys[i], out var itemIndices))
+                    return;
+#else
+                var itemIndices = _buckets[bucketKeys[i]];
+#endif
+
+                if (itemIndices == null || itemIndices.Count == 0)
+                    return;
+
+                var datItems = itemIndices
+                    .FindAll(i => _items.ContainsKey(i))
+                    .Select(i => new KeyValuePair<long, DatItem>(i, _items[i]))
+                    .ToList();
+
+                Sort(ref datItems, false);
+
+                // If we're merging the roms, do so
+                if (dedupeType == DedupeType.Full || (dedupeType == DedupeType.Game && _bucketedBy == ItemKey.Machine))
+                    datItems = Merge(datItems);
+
+#if NET40_OR_GREATER || NETCOREAPP
+                _buckets.TryAdd(bucketKeys[i], [.. datItems.Select(kvp => kvp.Key)]);
+            });
+#else
+                _buckets[bucketKeys[i]] = [.. datItems.Select(kvp => kvp.Key)];
             }
-            // If the merge type is the same, we want to sort the dictionary to be consistent
-            else
-            {
-                _logger.User($"Sorting roms by {bucketBy}");
-                PerformSorting(norename);
-            }
+#endif
         }
 
         /// <summary>
@@ -1035,54 +1076,6 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Perform deduplication based on the deduplication type provided
-        /// </summary>
-        /// <param name="bucketBy">ItemKey enum representing how to bucket the individual items</param>
-        /// <param name="dedupeType">Dedupe type that should be used</param>
-        private void PerformDeduplication(ItemKey bucketBy, DedupeType dedupeType)
-        {
-            // Get the current list of bucket keys
-            string[] bucketKeys = [.. _buckets.Keys];
-
-#if NET452_OR_GREATER || NETCOREAPP
-            Parallel.For(0, bucketKeys.Length, Core.Globals.ParallelOptions, i =>
-#elif NET40_OR_GREATER
-            Parallel.For(0, bucketKeys.Length, i =>
-#else
-            for (int i = 0; i < bucketKeys.Length; i++)
-#endif
-            {
-#if NET40_OR_GREATER || NETCOREAPP
-                if (!_buckets.TryGetValue(bucketKeys[i], out var itemIndices))
-                    return;
-#else
-                var itemIndices = _buckets[bucketKeys[i]];
-#endif
-
-                if (itemIndices == null || itemIndices.Count == 0)
-                    return;
-
-                var datItems = itemIndices
-                    .FindAll(i => _items.ContainsKey(i))
-                    .Select(i => new KeyValuePair<long, DatItem>(i, _items[i]))
-                    .ToList();
-
-                Sort(ref datItems, false);
-
-                // If we're merging the roms, do so
-                if (dedupeType == DedupeType.Full || (dedupeType == DedupeType.Game && bucketBy == ItemKey.Machine))
-                    datItems = Merge(datItems);
-
-#if NET40_OR_GREATER || NETCOREAPP
-                _buckets.TryAdd(bucketKeys[i], [.. datItems.Select(kvp => kvp.Key)]);
-            });
-#else
-                _buckets[bucketKeys[i]] = [.. datItems.Select(kvp => kvp.Key)];
-            }
-#endif
-        }
-
-        /// <summary>
         /// Sort existing buckets for consistency
         /// </summary>
         private void PerformSorting(bool norename)
@@ -1197,7 +1190,7 @@ namespace SabreTools.DatFiles
         {
             // If we're not already sorted, take care of it
             if (!sorted)
-                BucketBy(GetBestAvailable(), DedupeType.None);
+                BucketBy(GetBestAvailable());
 
             // Now that we have the sorted type, we get the proper key
             return GetBucketKey(datItem.Key, _bucketedBy, lower: true, norename: true);

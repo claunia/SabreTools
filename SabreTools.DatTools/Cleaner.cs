@@ -106,9 +106,15 @@ namespace SabreTools.DatTools
 
                 // Bucket and dedupe according to the flag
                 if (DedupeRoms == DedupeType.Full)
-                    datFile.BucketBy(ItemKey.CRC, DedupeRoms);
+                {
+                    datFile.BucketBy(ItemKey.CRC);
+                    datFile.Deduplicate(DedupeRoms);
+                }
                 else if (DedupeRoms == DedupeType.Game)
-                    datFile.BucketBy(ItemKey.Machine, DedupeRoms);
+                {
+                    datFile.BucketBy(ItemKey.Machine);
+                    datFile.Deduplicate(DedupeRoms);
+                }
 
                 // Process description to machine name
                 if (DescriptionAsName == true)

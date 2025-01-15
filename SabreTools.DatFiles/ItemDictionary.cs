@@ -417,10 +417,9 @@ namespace SabreTools.DatFiles
         /// Take the arbitrarily bucketed Files Dictionary and convert to one bucketed by a user-defined method
         /// </summary>
         /// <param name="bucketBy">ItemKey enum representing how to bucket the individual items</param>
-        /// <param name="dedupeType">Dedupe type that should be used</param>
         /// <param name="lower">True if the key should be lowercased (default), false otherwise</param>
         /// <param name="norename">True if games should only be compared on game and file name, false if system and source are counted</param>
-        public void BucketBy(ItemKey bucketBy, DedupeType dedupeType, bool lower = true, bool norename = true)
+        public void BucketBy(ItemKey bucketBy, bool lower = true, bool norename = true)
         {
             // If we have a situation where there's no dictionary or no keys at all, we skip
             if (_items == null || _items.Count == 0)
@@ -433,18 +432,50 @@ namespace SabreTools.DatFiles
                 PerformBucketing(bucketBy, lower, norename);
             }
 
-            // If the merge type isn't the same, we want to merge the dictionary accordingly
-            if (_mergedBy != dedupeType)
+            // Sort the dictionary to be consistent
+            _logger.User($"Sorting roms by {bucketBy}");
+            PerformSorting();
+        }
+
+        /// <summary>
+        /// Perform deduplication based on the deduplication type provided
+        /// </summary>
+        /// <param name="dedupeType">Dedupe type that should be used</param>
+        public void Deduplicate(DedupeType dedupeType)
+        {
+            // Set the sorted type
+            _mergedBy = dedupeType;
+
+            // If no deduplication is requested, just return
+            if (dedupeType == DedupeType.None)
+                return;
+
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(SortedKeys, Core.Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(SortedKeys, key =>
+#else
+            foreach (var key in SortedKeys)
+#endif
             {
-                _logger.User($"Deduping roms by {dedupeType}");
-                PerformDeduplication(bucketBy, dedupeType);
+                // Get the possibly unsorted list
+                List<DatItem> sortedList = GetItemsForBucket(key);
+
+                // Sort the list of items to be consistent
+                Sort(ref sortedList, false);
+
+                // If we're merging the roms, do so
+                if (dedupeType == DedupeType.Full || (dedupeType == DedupeType.Game && _bucketedBy == ItemKey.Machine))
+                    sortedList = DatFileTool.Merge(sortedList);
+
+                // Add the list back to the dictionary
+                RemoveBucket(key);
+                sortedList.ForEach(item => AddItem(key, item));
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
             }
-            // If the merge type is the same, we want to sort the dictionary to be consistent
-            else
-            {
-                _logger.User($"Sorting roms by {bucketBy}");
-                PerformSorting();
-            }
+#endif
         }
 
         /// <summary>
@@ -639,44 +670,6 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Perform deduplication based on the deduplication type provided
-        /// </summary>
-        /// <param name="bucketBy">ItemKey enum representing how to bucket the individual items</param>
-        /// <param name="dedupeType">Dedupe type that should be used</param>
-        private void PerformDeduplication(ItemKey bucketBy, DedupeType dedupeType)
-        {
-            // Set the sorted type
-            _mergedBy = dedupeType;
-
-#if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(SortedKeys, Core.Globals.ParallelOptions, key =>
-#elif NET40_OR_GREATER
-            Parallel.ForEach(SortedKeys, key =>
-#else
-            foreach (var key in SortedKeys)
-#endif
-            {
-                // Get the possibly unsorted list
-                List<DatItem> sortedList = GetItemsForBucket(key);
-
-                // Sort the list of items to be consistent
-                Sort(ref sortedList, false);
-
-                // If we're merging the roms, do so
-                if (dedupeType == DedupeType.Full || (dedupeType == DedupeType.Game && bucketBy == ItemKey.Machine))
-                    sortedList = DatFileTool.Merge(sortedList);
-
-                // Add the list back to the dictionary
-                RemoveBucket(key);
-                sortedList.ForEach(item => AddItem(key, item));
-#if NET40_OR_GREATER || NETCOREAPP
-            });
-#else
-            }
-#endif
-        }
-
-        /// <summary>
         /// Perform inplace sorting of the dictionary
         /// </summary>
         private void PerformSorting()
@@ -772,7 +765,7 @@ namespace SabreTools.DatFiles
         {
             // If we're not already sorted, take care of it
             if (!sorted)
-                BucketBy(GetBestAvailable(), DedupeType.None);
+                BucketBy(GetBestAvailable());
 
             // Now that we have the sorted type, we get the proper key
             return GetBucketKey(datItem, _bucketedBy, lower: true, norename: true);

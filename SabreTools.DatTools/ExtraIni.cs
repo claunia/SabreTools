@@ -95,7 +95,7 @@ namespace SabreTools.DatTools
             try
             {
                 // Bucket by game first
-                datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+                datFile.BucketBy(ItemKey.Machine);
 
                 // Create mappings based on the extra items
                 var combinedMaps = CombineExtras();
@@ -158,7 +158,7 @@ namespace SabreTools.DatTools
             try
             {
                 // Bucket by game first
-                datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+                datFile.BucketBy(ItemKey.Machine);
 
                 // Create mappings based on the extra items
                 var combinedMaps = CombineExtras();

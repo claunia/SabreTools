@@ -77,7 +77,7 @@ namespace SabreTools.DatTools
             EnsureHeaderFields(datFile);
 
             // Bucket roms by game name, if not already
-            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.BucketBy(ItemKey.Machine);
 
             // Output the number of items we're going to be writing
             _staticLogger.User($"A total of {datFile.DatStatistics.TotalCount - datFile.DatStatistics.RemovedCount} items will be written out to '{datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)}'");
@@ -138,7 +138,7 @@ namespace SabreTools.DatTools
             if (diskCount + mediaCount + romCount == 0)
                 datFile.RecalculateStats();
 
-            datFile.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
+            datFile.BucketBy(ItemKey.Machine, norename: true);
 
             datFile.DatStatistics.DisplayName = datFile.Header.GetStringFieldValue(DatHeader.FileNameKey);
             datFile.DatStatistics.MachineCount = datFile.Items.SortedKeys.Length;

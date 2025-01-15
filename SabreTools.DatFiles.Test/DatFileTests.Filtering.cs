@@ -31,7 +31,7 @@ namespace SabreTools.DatFiles.Test
             DatFile datFile = new Logiqx(datFile: null, deprecated: false);
             datFile.AddItem(datItem, statsOnly: false);
 
-            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.BucketBy(ItemKey.Machine);
             datFile.ExecuteFilters(filterRunner);
 
             var actualDatItems = datFile.GetItemsForBucket("machine");
@@ -61,7 +61,7 @@ namespace SabreTools.DatFiles.Test
             long machineIndex = datFile.AddMachineDB(machine);
             _ = datFile.AddItemDB(datItem, machineIndex, sourceIndex, statsOnly: false);
 
-            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.BucketBy(ItemKey.Machine);
             datFile.ExecuteFilters(filterRunner);
 
             var actualDatItems = datFile.GetItemsForBucketDB("machine");
@@ -142,7 +142,7 @@ namespace SabreTools.DatFiles.Test
             datFile.AddItem(rom, statsOnly: false);
             datFile.AddItem(disk, statsOnly: false);
 
-            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.BucketBy(ItemKey.Machine);
             datFile.SetOneRomPerGame();
 
             var actualDatItems = datFile.GetItemsForBucket("machine");
@@ -179,7 +179,7 @@ namespace SabreTools.DatFiles.Test
             _ = datFile.AddItemDB(rom, machineIndex, sourceIndex, statsOnly: false);
             _ = datFile.AddItemDB(disk, machineIndex, sourceIndex, statsOnly: false);
 
-            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.BucketBy(ItemKey.Machine);
             datFile.SetOneRomPerGame();
 
             var actualDatItems = datFile.GetItemsForBucketDB("machine");

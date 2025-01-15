@@ -254,13 +254,22 @@ namespace SabreTools.DatFiles
         /// Take the arbitrarily bucketed Files Dictionary and convert to one bucketed by a user-defined method
         /// </summary>
         /// <param name="bucketBy">ItemKey enum representing how to bucket the individual items</param>
-        /// <param name="dedupeType">Dedupe type that should be used</param>
         /// <param name="lower">True if the key should be lowercased (default), false otherwise</param>
         /// <param name="norename">True if games should only be compared on game and file name, false if system and source are counted</param>
-        public void BucketBy(ItemKey bucketBy, DedupeType dedupeType, bool lower = true, bool norename = true)
+        public void BucketBy(ItemKey bucketBy, bool lower = true, bool norename = true)
         {
-            Items.BucketBy(bucketBy, dedupeType, lower, norename);
-            ItemsDB.BucketBy(bucketBy, dedupeType, lower, norename);
+            Items.BucketBy(bucketBy, lower, norename);
+            ItemsDB.BucketBy(bucketBy, lower, norename);
+        }
+
+        /// <summary>
+        /// Perform deduplication based on the deduplication type provided
+        /// </summary>
+        /// <param name="dedupeType">Dedupe type that should be used</param>
+        public void Deduplicate(DedupeType dedupeType)
+        {
+            Items.Deduplicate(dedupeType);
+            ItemsDB.Deduplicate(dedupeType);
         }
 
         /// <summary>

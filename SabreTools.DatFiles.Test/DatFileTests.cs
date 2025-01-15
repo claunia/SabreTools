@@ -47,7 +47,7 @@ namespace SabreTools.DatFiles.Test
             datFile.AddItemDB(rom, machineIndex, sourceIndex, statsOnly: false);
 
             DatFile created = new Formats.Logiqx(datFile, deprecated: false);
-            created.BucketBy(ItemKey.Machine, DedupeType.None);
+            created.BucketBy(ItemKey.Machine);
 
             Assert.NotNull(created.Header);
             Assert.Equal("name", created.Header.GetStringFieldValue(Models.Metadata.Header.NameKey));

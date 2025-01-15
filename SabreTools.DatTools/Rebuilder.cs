@@ -106,7 +106,7 @@ namespace SabreTools.DatTools
                 return success;
 
             // Now that we have a list of depots, we want to bucket the input DAT by SHA-1
-            datFile.BucketBy(ItemKey.SHA1, DedupeType.None);
+            datFile.BucketBy(ItemKey.SHA1);
 
             // Then we want to loop through each of the hashes and see if we can rebuild
             foreach (string hash in datFile.Items.SortedKeys)
@@ -450,7 +450,7 @@ namespace SabreTools.DatTools
                 if (outputFormat == OutputFormat.Folder && datFile.Header.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>() == PackingFlag.Partial)
                 {
                     shouldCheck = true;
-                    datFile.BucketBy(ItemKey.Machine, DedupeType.None, lower: false);
+                    datFile.BucketBy(ItemKey.Machine, lower: false);
                 }
 
                 // Now loop through the list and rebuild accordingly

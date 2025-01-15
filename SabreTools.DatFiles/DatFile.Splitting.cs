@@ -19,7 +19,7 @@ namespace SabreTools.DatFiles
             _logger.User("Creating device non-merged sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
-            BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
+            BucketBy(ItemKey.Machine, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
             while (AddItemsFromDevices(false, false)) ;
@@ -38,7 +38,7 @@ namespace SabreTools.DatFiles
             _logger.User("Creating fully merged sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
-            BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
+            BucketBy(ItemKey.Machine, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
             AddItemsFromChildren(true, false);
@@ -59,7 +59,7 @@ namespace SabreTools.DatFiles
             _logger.User("Creating fully non-merged sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
-            BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
+            BucketBy(ItemKey.Machine, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
             while (AddItemsFromDevices(true, true)) ;
@@ -82,7 +82,7 @@ namespace SabreTools.DatFiles
             _logger.User("Creating merged sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
-            BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
+            BucketBy(ItemKey.Machine, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
             AddItemsFromChildren(true, true);
@@ -103,7 +103,7 @@ namespace SabreTools.DatFiles
             _logger.User("Creating non-merged sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
-            BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
+            BucketBy(ItemKey.Machine, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
             AddItemsFromCloneOfParent();
@@ -124,7 +124,7 @@ namespace SabreTools.DatFiles
             _logger.User("Creating split sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
-            BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
+            BucketBy(ItemKey.Machine, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
             RemoveItemsFromCloneOfChild();

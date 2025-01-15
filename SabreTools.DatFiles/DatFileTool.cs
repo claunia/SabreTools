@@ -461,8 +461,9 @@ namespace SabreTools.DatFiles
             if (itemFieldNames.Count > 0)
             {
                 // For comparison's sake, we want to use CRC as the base bucketing
-                datFile.BucketBy(ItemKey.CRC, DedupeType.Full);
-                intDat.BucketBy(ItemKey.CRC, DedupeType.None);
+                datFile.BucketBy(ItemKey.CRC);
+                datFile.Deduplicate(DedupeType.Full);
+                intDat.BucketBy(ItemKey.CRC);
 
                 // Then we do a hashwise comparison against the base DAT
 #if NET452_OR_GREATER || NETCOREAPP
@@ -509,8 +510,9 @@ namespace SabreTools.DatFiles
             if (machineFieldNames.Count > 0)
             {
                 // For comparison's sake, we want to use Machine Name as the base bucketing
-                datFile.BucketBy(ItemKey.Machine, DedupeType.Full);
-                intDat.BucketBy(ItemKey.Machine, DedupeType.None);
+                datFile.BucketBy(ItemKey.Machine);
+                datFile.Deduplicate(DedupeType.Full);
+                intDat.BucketBy(ItemKey.Machine);
 
                 // Then we do a namewise comparison against the base DAT
 #if NET452_OR_GREATER || NETCOREAPP
@@ -579,8 +581,9 @@ namespace SabreTools.DatFiles
             if (itemFieldNames.Count > 0)
             {
                 // For comparison's sake, we want to use CRC as the base bucketing
-                datFile.BucketBy(ItemKey.CRC, DedupeType.Full);
-                intDat.BucketBy(ItemKey.CRC, DedupeType.None);
+                datFile.BucketBy(ItemKey.CRC);
+                datFile.Deduplicate(DedupeType.Full);
+                intDat.BucketBy(ItemKey.CRC);
 
                 // Then we do a hashwise comparison against the base DAT
 #if NET452_OR_GREATER || NETCOREAPP
@@ -620,8 +623,9 @@ namespace SabreTools.DatFiles
             if (machineFieldNames.Count > 0)
             {
                 // For comparison's sake, we want to use Machine Name as the base bucketing
-                datFile.BucketBy(ItemKey.Machine, DedupeType.Full);
-                intDat.BucketBy(ItemKey.Machine, DedupeType.None);
+                datFile.BucketBy(ItemKey.Machine);
+                datFile.Deduplicate(DedupeType.Full);
+                intDat.BucketBy(ItemKey.Machine);
 
                 // Then we do a namewise comparison against the base DAT
 #if NET452_OR_GREATER || NETCOREAPP
@@ -669,19 +673,18 @@ namespace SabreTools.DatFiles
         /// <param name="useGames">True to diff using games, false to use hashes</param>
         public static void DiffAgainst(DatFile datFile, DatFile intDat, bool useGames)
         {
-            // For comparison's sake, we want to use a base ordering
-            if (useGames)
-                datFile.BucketBy(ItemKey.Machine, DedupeType.None);
-            else
-                datFile.BucketBy(ItemKey.CRC, DedupeType.None);
-
             InternalStopwatch watch = new($"Comparing '{intDat.Header.GetStringFieldValue(DatHeader.FileNameKey)}' to base DAT");
 
             // For comparison's sake, we want to a the base bucketing
             if (useGames)
-                intDat.BucketBy(ItemKey.Machine, DedupeType.None);
+            {
+                intDat.BucketBy(ItemKey.Machine);
+            }
             else
-                intDat.BucketBy(ItemKey.CRC, DedupeType.Full);
+            {
+                intDat.BucketBy(ItemKey.CRC);
+                intDat.Deduplicate(DedupeType.Full);
+            }
 
             // Then we compare against the base DAT
 #if NET452_OR_GREATER || NETCOREAPP
@@ -781,7 +784,7 @@ namespace SabreTools.DatFiles
             List<DatFile> outDats = [];
 
             // Ensure the current DatFile is sorted optimally
-            datFile.BucketBy(ItemKey.CRC, DedupeType.None);
+            datFile.BucketBy(ItemKey.CRC);
 
             // Loop through each of the inputs and get or create a new DatData object
             InternalStopwatch watch = new("Initializing and filling all output DATs");

@@ -322,7 +322,7 @@ namespace SabreTools.DatFiles
         private void SetOneGamePerRegionImpl(List<string> regionList)
         {
             // For sake of ease, the first thing we want to do is bucket by game
-            BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
+            BucketBy(ItemKey.Machine, norename: true);
 
             // Then we want to get a mapping of all machines to parents
             Dictionary<string, List<string>> parents = [];

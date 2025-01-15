@@ -4,7 +4,6 @@ using System.Linq;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
-using SabreTools.DatItems.Formats;
 using SabreTools.FileTypes;
 using SabreTools.FileTypes.Archives;
 using SabreTools.Hashing;
@@ -55,7 +54,7 @@ namespace SabreTools.DatTools
                 return success;
 
             // Now that we have a list of depots, we want to bucket the input DAT by SHA-1
-            datFile.BucketBy(ItemKey.SHA1, DedupeType.None);
+            datFile.BucketBy(ItemKey.SHA1);
 
             // Then we want to loop through each of the hashes and see if we can rebuild
             foreach (string hash in datFile.Items.SortedKeys)
@@ -139,7 +138,7 @@ namespace SabreTools.DatTools
                 return success;
 
             // Now that we have a list of depots, we want to bucket the input DAT by SHA-1
-            datFile.BucketBy(ItemKey.SHA1, DedupeType.None);
+            datFile.BucketBy(ItemKey.SHA1);
 
             // Then we want to loop through each of the hashes and see if we can rebuild
             List<string> keys = [.. datFile.ItemsDB.SortedKeys];
@@ -210,9 +209,15 @@ namespace SabreTools.DatTools
             // Force bucketing according to the flags
             datFile.Items.SetBucketedBy(ItemKey.NULL);
             if (hashOnly)
-                datFile.BucketBy(ItemKey.CRC, DedupeType.Full);
+            {
+                datFile.BucketBy(ItemKey.CRC);
+                datFile.Deduplicate(DedupeType.Full);
+            }
             else
-                datFile.BucketBy(ItemKey.Machine, DedupeType.Full);
+            {
+                datFile.BucketBy(ItemKey.Machine);
+                datFile.Deduplicate(DedupeType.Full);
+            }
 
             // Then mark items for removal
             foreach (string key in datFile.Items.SortedKeys)
@@ -254,9 +259,15 @@ namespace SabreTools.DatTools
 
             // Force bucketing according to the flags
             if (hashOnly)
-                datFile.BucketBy(ItemKey.CRC, DedupeType.Full);
+            {
+                datFile.BucketBy(ItemKey.CRC);
+                datFile.Deduplicate(DedupeType.Full);
+            }
             else
-                datFile.BucketBy(ItemKey.Machine, DedupeType.Full);
+            {
+                datFile.BucketBy(ItemKey.Machine);
+                datFile.Deduplicate(DedupeType.Full);
+            }
 
             // Then mark items for removal
             List<string> keys = [.. datFile.ItemsDB.SortedKeys];

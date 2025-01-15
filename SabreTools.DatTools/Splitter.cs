@@ -493,7 +493,7 @@ namespace SabreTools.DatTools
             InternalStopwatch watch = new($"Splitting DAT by level");
 
             // First, bucket by games so that we can do the right thing
-            datFile.BucketBy(ItemKey.Machine, DedupeType.None, lower: false, norename: true);
+            datFile.BucketBy(ItemKey.Machine, lower: false, norename: true);
 
             // Create a temporary DAT to add things to
             DatFile tempDat = DatFileTool.CreateDatFile(datFile.Header);
@@ -777,7 +777,7 @@ namespace SabreTools.DatTools
             InternalStopwatch watch = new($"Splitting DAT by total size");
 
             // Sort the DatFile by machine name
-            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.BucketBy(ItemKey.Machine);
 
             // Get the keys in a known order for easier sorting
             var keys = datFile.Items.SortedKeys;

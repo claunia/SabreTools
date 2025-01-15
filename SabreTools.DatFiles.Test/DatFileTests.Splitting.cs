@@ -48,7 +48,7 @@ namespace SabreTools.DatFiles.Test
             datFile.AddItem(matchChildItem, statsOnly: false);
             datFile.AddItem(noMatchChildItem, statsOnly: false);
 
-            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.BucketBy(ItemKey.Machine);
             datFile.AddItemsFromChildren(subfolder: true, skipDedup: false);
 
             Assert.Equal(2, datFile.GetItemsForBucket("parent").Count);
@@ -93,7 +93,7 @@ namespace SabreTools.DatFiles.Test
             datFile.AddItem(matchChildItem, statsOnly: false);
             datFile.AddItem(noMatchChildItem, statsOnly: false);
 
-            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.BucketBy(ItemKey.Machine);
             datFile.AddItemsFromChildren(subfolder: true, skipDedup: true);
 
             Assert.Equal(3, datFile.GetItemsForBucket("parent").Count);
@@ -141,7 +141,7 @@ namespace SabreTools.DatFiles.Test
             _ = datFile.AddItemDB(matchChildItem, deviceMachineIndex, sourceIndex, statsOnly: false);
             _ = datFile.AddItemDB(noMatchChildItem, deviceMachineIndex, sourceIndex, statsOnly: false);
 
-            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.BucketBy(ItemKey.Machine);
             datFile.AddItemsFromChildren(subfolder: true, skipDedup: false);
 
             Assert.Equal(2, datFile.GetItemsForBucketDB("parent").Count);
@@ -189,7 +189,7 @@ namespace SabreTools.DatFiles.Test
             _ = datFile.AddItemDB(matchChildItem, deviceMachineIndex, sourceIndex, statsOnly: false);
             _ = datFile.AddItemDB(noMatchChildItem, deviceMachineIndex, sourceIndex, statsOnly: false);
 
-            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.BucketBy(ItemKey.Machine);
             datFile.AddItemsFromChildren(subfolder: true, skipDedup: true);
 
             Assert.Equal(3, datFile.GetItemsForBucketDB("parent").Count);
@@ -238,7 +238,7 @@ namespace SabreTools.DatFiles.Test
             datFile.AddItem(matchChildItem, statsOnly: false);
             datFile.AddItem(noMatchChildItem, statsOnly: false);
 
-            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.BucketBy(ItemKey.Machine);
             datFile.AddItemsFromCloneOfParent();
 
             Assert.Equal(2, datFile.GetItemsForBucket("child").Count);
@@ -286,7 +286,7 @@ namespace SabreTools.DatFiles.Test
             _ = datFile.AddItemDB(matchChildItem, deviceMachineIndex, sourceIndex, statsOnly: false);
             _ = datFile.AddItemDB(noMatchChildItem, deviceMachineIndex, sourceIndex, statsOnly: false);
 
-            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.BucketBy(ItemKey.Machine);
             datFile.AddItemsFromCloneOfParent();
 
             Assert.Equal(2, datFile.GetItemsForBucketDB("child").Count);
@@ -349,7 +349,7 @@ namespace SabreTools.DatFiles.Test
             datFile.AddItem(deviceRef, statsOnly: false);
             datFile.AddItem(slotOption, statsOnly: false);
 
-            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.BucketBy(ItemKey.Machine);
             datFile.AddItemsFromDevices(deviceOnly, useSlotOptions);
 
             Assert.Equal(expected, datFile.GetItemsForBucket("machine").Count);
@@ -402,7 +402,7 @@ namespace SabreTools.DatFiles.Test
             _ = datFile.AddItemDB(deviceRef, itemMachineIndex, sourceIndex, statsOnly: false);
             _ = datFile.AddItemDB(slotOption, itemMachineIndex, sourceIndex, statsOnly: false);
 
-            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.BucketBy(ItemKey.Machine);
             datFile.AddItemsFromDevices(deviceOnly, useSlotOptions);
 
             Assert.Equal(expected, datFile.GetItemsForBucketDB("machine").Count);
@@ -451,7 +451,7 @@ namespace SabreTools.DatFiles.Test
             datFile.AddItem(matchChildItem, statsOnly: false);
             datFile.AddItem(noMatchChildItem, statsOnly: false);
 
-            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.BucketBy(ItemKey.Machine);
             datFile.AddItemsFromRomOfParent();
 
             Assert.Equal(2, datFile.GetItemsForBucket("child").Count);
@@ -499,7 +499,7 @@ namespace SabreTools.DatFiles.Test
             _ = datFile.AddItemDB(matchChildItem, deviceMachineIndex, sourceIndex, statsOnly: false);
             _ = datFile.AddItemDB(noMatchChildItem, deviceMachineIndex, sourceIndex, statsOnly: false);
 
-            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.BucketBy(ItemKey.Machine);
             datFile.AddItemsFromRomOfParent();
 
             Assert.Equal(2, datFile.GetItemsForBucketDB("child").Count);
@@ -534,7 +534,7 @@ namespace SabreTools.DatFiles.Test
             datFile.AddItem(biosItem, statsOnly: false);
             datFile.AddItem(deviceItem, statsOnly: false);
 
-            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.BucketBy(ItemKey.Machine);
             datFile.RemoveBiosAndDeviceSets();
 
             Assert.Empty(datFile.GetItemsForBucket("bios"));
@@ -564,7 +564,7 @@ namespace SabreTools.DatFiles.Test
             _ = datFile.AddItemDB(biosItem, biosMachineIndex, sourceIndex, statsOnly: false);
             _ = datFile.AddItemDB(deviceItem, deviceMachineIndex, sourceIndex, statsOnly: false);
 
-            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.BucketBy(ItemKey.Machine);
             datFile.RemoveBiosAndDeviceSets();
 
             Assert.Empty(datFile.GetMachinesDB());
@@ -613,7 +613,7 @@ namespace SabreTools.DatFiles.Test
             datFile.AddItem(matchChildItem, statsOnly: false);
             datFile.AddItem(noMatchChildItem, statsOnly: false);
 
-            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.BucketBy(ItemKey.Machine);
             datFile.RemoveItemsFromCloneOfChild();
 
             Assert.Single(datFile.GetItemsForBucket("parent"));
@@ -666,7 +666,7 @@ namespace SabreTools.DatFiles.Test
             _ = datFile.AddItemDB(matchChildItem, deviceMachineIndex, sourceIndex, statsOnly: false);
             _ = datFile.AddItemDB(noMatchChildItem, deviceMachineIndex, sourceIndex, statsOnly: false);
 
-            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.BucketBy(ItemKey.Machine);
             datFile.RemoveItemsFromCloneOfChild();
 
             Assert.Single(datFile.GetItemsForBucketDB("parent"));
@@ -720,7 +720,7 @@ namespace SabreTools.DatFiles.Test
             datFile.AddItem(matchChildItem, statsOnly: false);
             datFile.AddItem(noMatchChildItem, statsOnly: false);
 
-            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.BucketBy(ItemKey.Machine);
             datFile.RemoveItemsFromRomOfChild();
 
             Assert.Single(datFile.GetItemsForBucket("parent"));
@@ -772,7 +772,7 @@ namespace SabreTools.DatFiles.Test
             _ = datFile.AddItemDB(matchChildItem, deviceMachineIndex, sourceIndex, statsOnly: false);
             _ = datFile.AddItemDB(noMatchChildItem, deviceMachineIndex, sourceIndex, statsOnly: false);
 
-            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.BucketBy(ItemKey.Machine);
             datFile.RemoveItemsFromRomOfChild();
 
             Assert.Single(datFile.GetItemsForBucketDB("parent"));
@@ -804,7 +804,7 @@ namespace SabreTools.DatFiles.Test
             DatFile datFile = new Logiqx(datFile: null, deprecated: false);
             datFile.AddItem(datItem, statsOnly: false);
 
-            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.BucketBy(ItemKey.Machine);
             datFile.RemoveMachineRelationshipTags();
 
             DatItem actualItem = Assert.Single(datFile.GetItemsForBucket("machine"));
@@ -833,7 +833,7 @@ namespace SabreTools.DatFiles.Test
             long sourceIndex = datFile.AddSourceDB(source);
             _ = datFile.AddItemDB(datItem, machineIndex, sourceIndex, statsOnly: false);
 
-            datFile.BucketBy(ItemKey.Machine, DedupeType.None);
+            datFile.BucketBy(ItemKey.Machine);
             datFile.RemoveMachineRelationshipTags();
 
             Machine actual = Assert.Single(datFile.GetMachinesDB()).Value;
