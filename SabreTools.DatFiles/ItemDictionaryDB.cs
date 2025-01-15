@@ -349,24 +349,6 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Get an item based on the index
-        /// </summary>
-        public DatItem? GetItem(long index)
-        {
-#if NET40_OR_GREATER || NETCOREAPP
-            if (!_items.TryGetValue(index, out var datItem))
-                return null;
-
-            return datItem;
-#else
-            if (!_items.ContainsKey(index))
-                return null;
-
-            return _items[index];
-#endif
-        }
-
-        /// <summary>
         /// Get all items and their indicies
         /// </summary>
         public IDictionary<long, DatItem> GetItems() => _items;
