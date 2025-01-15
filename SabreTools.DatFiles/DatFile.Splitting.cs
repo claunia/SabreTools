@@ -240,7 +240,7 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void AddItemsFromChildrenImpl(bool subfolder, bool skipDedup)
         {
-            foreach (string bucket in  Items.SortedKeys)
+            foreach (string bucket in Items.SortedKeys)
             {
                 // If the bucket has no items in it
                 List<DatItem> items = GetItemsForBucket(bucket);
@@ -395,6 +395,9 @@ namespace SabreTools.DatFiles
                 items = GetItemsForBucketDB(bucket);
                 foreach (var item in items)
                 {
+                    // Get the source for the current item
+                    var source = ItemsDB.GetSourceForItem(item.Key);
+
                     // Get the parent items and current machine name
                     Dictionary<long, DatItem> parentItems = GetItemsForBucketDB(cloneOf);
                     if (parentItems.Count == 0)
@@ -423,15 +426,15 @@ namespace SabreTools.DatFiles
                             .Select(i => (i as Disk)!.GetName())
                             .Contains(mergeTag))
                         {
-                            ItemsDB._itemToMachineMapping[item.Key] = cloneOfMachine.Key;
-                            ItemsDB._buckets[cloneOf!].Add(item.Key);
+                            ItemsDB.RemapDatItemToMachine(item.Key, cloneOfMachine.Key);
+                            ItemsDB.AddItem(item.Value, cloneOfMachine.Key, source.Key);
                         }
 
                         // If there is no merge tag, add to parent
                         else if (mergeTag == null)
                         {
-                            ItemsDB._itemToMachineMapping[item.Key] = cloneOfMachine.Key;
-                            ItemsDB._buckets[cloneOf!].Add(item.Key);
+                            ItemsDB.RemapDatItemToMachine(item.Key, cloneOfMachine.Key);
+                            ItemsDB.AddItem(item.Value, cloneOfMachine.Key, source.Key);
                         }
                     }
 
@@ -456,8 +459,8 @@ namespace SabreTools.DatFiles
                             if (subfolder)
                                 rom.SetName($"{machineName}\\{rom.GetName()}");
 
-                            ItemsDB._itemToMachineMapping[item.Key] = cloneOfMachine.Key;
-                            ItemsDB._buckets[cloneOf!].Add(item.Key);
+                            ItemsDB.RemapDatItemToMachine(item.Key, machineIndex: cloneOfMachine.Key);
+                            ItemsDB.AddItem(item.Value, cloneOfMachine.Key, source.Key);
                         }
 
                         // If the parent doesn't already contain this item, add to subfolder of parent
@@ -466,8 +469,8 @@ namespace SabreTools.DatFiles
                             if (subfolder)
                                 rom.SetName($"{machineName}\\{rom.GetName()}");
 
-                            ItemsDB._itemToMachineMapping[item.Key] = cloneOfMachine.Key;
-                            ItemsDB._buckets[cloneOf!].Add(item.Key);
+                            ItemsDB.RemapDatItemToMachine(item.Key, cloneOfMachine.Key);
+                            ItemsDB.AddItem(item.Value, cloneOfMachine.Key, source.Key);
                         }
                     }
 
@@ -477,17 +480,13 @@ namespace SabreTools.DatFiles
                         if (subfolder)
                             item.Value.SetName($"{machineName}\\{item.Value.GetName()}");
 
-                        ItemsDB._itemToMachineMapping[item.Key] = cloneOfMachine.Key;
-                        ItemsDB._buckets[cloneOf!].Add(item.Key);
+                        ItemsDB.RemapDatItemToMachine(item.Key, cloneOfMachine.Key);
+                        ItemsDB.AddItem(item.Value, cloneOfMachine.Key, source.Key);
                     }
-                }
 
-                // Then, remove the old game so it's not picked up by the writer
-#if NET40_OR_GREATER || NETCOREAPP
-                ItemsDB._buckets.TryRemove(bucket, out _);
-#else
-                ItemsDB._buckets.Remove(bucket);
-#endif
+                    // Remove the current item
+                    ItemsDB.RemoveItem(item.Key);
+                }
             }
         }
 
@@ -500,7 +499,7 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void AddItemsFromCloneOfParentImpl()
         {
-            foreach (string bucket in  Items.SortedKeys)
+            foreach (string bucket in Items.SortedKeys)
             {
                 // If the bucket has no items in it
                 List<DatItem> items = GetItemsForBucket(bucket);
@@ -619,7 +618,7 @@ namespace SabreTools.DatFiles
         private bool AddItemsFromDevicesImpl(bool deviceOnly, bool useSlotOptions)
         {
             bool foundnew = false;
-            foreach (string bucket in  Items.SortedKeys)
+            foreach (string bucket in Items.SortedKeys)
             {
                 // If the bucket doesn't have items
                 List<DatItem> datItems = GetItemsForBucket(bucket);
@@ -928,7 +927,7 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void AddItemsFromRomOfParentImpl()
         {
-            foreach (string bucket in  Items.SortedKeys)
+            foreach (string bucket in Items.SortedKeys)
             {
                 // If the bucket has no items in it
                 List<DatItem> items = GetItemsForBucket(bucket);
@@ -1011,7 +1010,7 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void RemoveBiosAndDeviceSetsImpl()
         {
-            foreach (string bucket in  Items.SortedKeys)
+            foreach (string bucket in Items.SortedKeys)
             {
                 // If the bucket has no items in it
                 List<DatItem> items = GetItemsForBucket(bucket);
@@ -1078,7 +1077,7 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void RemoveItemsFromCloneOfChildImpl()
         {
-            foreach (string bucket in  Items.SortedKeys)
+            foreach (string bucket in Items.SortedKeys)
             {
                 // If the bucket has no items in it
                 List<DatItem> items = GetItemsForBucket(bucket);
@@ -1182,7 +1181,7 @@ namespace SabreTools.DatFiles
         private void RemoveItemsFromRomOfChildImpl()
         {
             // Loop through the romof tags
-            foreach (string bucket in  Items.SortedKeys)
+            foreach (string bucket in Items.SortedKeys)
             {
                 // If the bucket has no items in it
                 List<DatItem> items = GetItemsForBucket(bucket);
@@ -1260,7 +1259,7 @@ namespace SabreTools.DatFiles
         /// <remarks>Applies to <see cref="Items"/></remarks>
         private void RemoveMachineRelationshipTagsImpl()
         {
-            foreach (string bucket in  Items.SortedKeys)
+            foreach (string bucket in Items.SortedKeys)
             {
                 // If the bucket has no items in it
                 var items = GetItemsForBucket(bucket);

@@ -95,12 +95,11 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Internal dictionary for item to machine mappings
         /// </summary>
-        /// TODO: Make private when access issues are figured out
         [JsonIgnore, XmlIgnore]
 #if NET40_OR_GREATER || NETCOREAPP
-        internal readonly ConcurrentDictionary<long, long> _itemToMachineMapping = [];
+        private readonly ConcurrentDictionary<long, long> _itemToMachineMapping = [];
 #else
-        internal readonly Dictionary<long, long> _itemToMachineMapping = [];
+        private readonly Dictionary<long, long> _itemToMachineMapping = [];
 #endif
 
         /// <summary>
@@ -116,12 +115,11 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Internal dictionary representing the current buckets
         /// </summary>
-        /// TODO: Make private when access issues are figured out
         [JsonIgnore, XmlIgnore]
 #if NET40_OR_GREATER || NETCOREAPP
-        internal readonly ConcurrentDictionary<string, List<long>> _buckets = [];
+        private readonly ConcurrentDictionary<string, List<long>> _buckets = [];
 #else
-        internal readonly Dictionary<string, List<long>> _buckets = [];
+        private readonly Dictionary<string, List<long>> _buckets = [];
 #endif
 
         /// <summary>
@@ -571,6 +569,19 @@ namespace SabreTools.DatFiles
         /// Get all sources and their indicies
         /// </summary>
         public IDictionary<long, Source> GetSources() => _sources;
+
+        /// <summary>
+        /// Remap an item to a new machine index without validation
+        /// </summary>
+        /// <param name="itemIndex">Current item index</param>
+        /// <param name="machineIndex">New machine index</param>
+        public void RemapDatItemToMachine(long itemIndex, long machineIndex)
+        {
+            lock (_itemToMachineMapping)
+            {
+                _itemToMachineMapping[itemIndex] = machineIndex;
+            }
+        }
 
         /// <summary>
         /// Remove an item, returning if it could be removed

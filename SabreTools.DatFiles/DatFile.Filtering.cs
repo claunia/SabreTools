@@ -609,7 +609,7 @@ namespace SabreTools.DatFiles
                 return;
 
             // Reassign the item to the new machine
-            ItemsDB._itemToMachineMapping[datItem.Key] = newMachineIndex;
+            ItemsDB.RemapDatItemToMachine(datItem.Key, newMachineIndex);
 
             // Remove extensions from File and Rom items
             if (datItem.Value is DatItems.Formats.File || datItem.Value is Rom)
