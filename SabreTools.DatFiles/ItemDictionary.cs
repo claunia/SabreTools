@@ -454,6 +454,7 @@ namespace SabreTools.DatFiles
         /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
         /// <returns>List of matched DatItem objects</returns>
         /// <remarks>This also sets the remove flag on any duplicates found</remarks>
+        /// TODO: Figure out if removal should be a flag or just removed entirely
         internal List<DatItem> GetDuplicates(DatItem datItem, bool sorted = false)
         {
             // Check for an empty rom list first
@@ -464,33 +465,27 @@ namespace SabreTools.DatFiles
             string key = SortAndGetKey(datItem, sorted);
 
             // Get the items for the current key, if possible
-            List<DatItem> roms = GetItemsForBucket(key, filter: false);
-            if (roms.Count == 0)
+            List<DatItem> items = GetItemsForBucket(key, filter: false);
+            if (items.Count == 0)
                 return [];
-
-            // Remove the current key
-            RemoveBucket(key);
 
             // Try to find duplicates
             List<DatItem> output = [];
-            for (int i = 0; i < roms.Count; i++)
+            foreach (DatItem other in items)
             {
-                DatItem other = roms[i];
+                // Skip items marked for removal
                 if (other.GetBoolFieldValue(DatItem.RemoveKey) == true)
-                {
-                    AddItem(key, other);
                     continue;
-                }
 
+                // Mark duplicates for future removal
                 if (datItem.Equals(other))
                 {
                     other.SetFieldValue<bool?>(DatItem.RemoveKey, true);
                     output.Add(other);
                 }
-
-                AddItem(key, other);
             }
 
+            // Return any matching items
             return output;
         }
 

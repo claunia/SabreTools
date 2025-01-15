@@ -727,49 +727,38 @@ namespace SabreTools.DatFiles
         /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
         /// <returns>List of matched DatItem objects</returns>
         /// <remarks>This also sets the remove flag on any duplicates found</remarks>
+        /// TODO: Figure out if removal should be a flag or just removed entirely
         internal Dictionary<long, DatItem> GetDuplicates(KeyValuePair<long, DatItem> datItem, bool sorted = false)
         {
-            Dictionary<long, DatItem> output = [];
-
             // Check for an empty rom list first
             if (DatStatistics.TotalCount == 0)
-                return output;
+                return [];
 
             // We want to get the proper key for the DatItem
             string key = SortAndGetKey(datItem, sorted);
 
             // If the key doesn't exist, return the empty list
-            var roms = GetItemsForBucket(key);
-            if (roms == null || roms.Count == 0)
-                return output;
+            var items = GetItemsForBucket(key);
+            if (items.Count == 0)
+                return [];
 
             // Try to find duplicates
-            Dictionary<long, DatItem> left = [];
-            foreach (var rom in roms)
+            Dictionary<long, DatItem> output = [];
+            foreach (var rom in items)
             {
+                // Skip items marked for removal
                 if (rom.Value.GetBoolFieldValue(DatItem.RemoveKey) == true)
-                {
-                    left[rom.Key] = rom.Value;
                     continue;
-                }
 
+                // Mark duplicates for future removal
                 if (datItem.Value.Equals(rom.Value))
                 {
                     rom.Value.SetFieldValue<bool?>(DatItem.RemoveKey, true);
                     output[rom.Key] = rom.Value;
                 }
-                else
-                {
-                    left[rom.Key] = rom.Value;
-                }
             }
 
-            // Add back all roms with the proper flags
-#if NET40_OR_GREATER || NETCOREAPP
-            _buckets.TryAdd(key, [.. output.Keys, .. left.Keys]);
-#else
-            _buckets[key] = [.. output.Keys, .. left.Keys];
-#endif
+            // Return any matching items
             return output;
         }
 
