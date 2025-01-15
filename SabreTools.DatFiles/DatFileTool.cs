@@ -538,10 +538,7 @@ namespace SabreTools.DatFiles
                             continue;
 
                         var list = datFile.GetItemsForBucket(key);
-                        if (list.Count == 0)
-                            continue;
-
-                        if (datFile.Items.ContainsKey(key) && list.Count > 0)
+                        if (list.Count > 0)
                             Replacer.ReplaceFields(newDatItem.GetFieldValue<Machine>(DatItem.MachineKey)!, list[index: 0].GetFieldValue<Machine>(DatItem.MachineKey)!, machineFieldNames, onlySame);
 
                         newDatItems.Add(newDatItem);

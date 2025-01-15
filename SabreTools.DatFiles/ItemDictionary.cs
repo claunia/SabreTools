@@ -248,24 +248,6 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Get if the file dictionary contains the key
-        /// </summary>
-        /// <param name="key">Key in the dictionary to check</param>
-        /// <returns>True if the key exists, false otherwise</returns>
-        public bool ContainsKey(string key)
-        {
-            // If the key is null, we return false since keys can't be null
-            if (key == null)
-                return false;
-
-            // Explicit lock for some weird corner cases
-            lock (key)
-            {
-                return _items.ContainsKey(key);
-            }
-        }
-
-        /// <summary>
         /// Ensure the key exists in the items dictionary
         /// </summary>
         /// <param name="key">Key to ensure</param>
@@ -535,12 +517,11 @@ namespace SabreTools.DatFiles
             // We want to get the proper key for the DatItem
             string key = SortAndGetKey(datItem, sorted);
 
-            // If the key doesn't exist, return the empty list
-            if (!ContainsKey(key))
-                return false;
-
             // Try to find duplicates
             List<DatItem> roms = GetItemsForBucket(key);
+            if (roms.Count == 0)
+                return false;
+
             return roms.FindIndex(r => datItem.Equals(r)) > -1;
         }
 

@@ -104,13 +104,9 @@ namespace SabreTools.DatTools
                 // Apply the mappings
                 foreach (string machine in machines)
                 {
-                    // If the key doesn't exist, continue
-                    if (!datFile.Items.ContainsKey(machine))
-                        continue;
-
                     // Get the list of DatItems for the machine
-                    var datItems = datFile.GetItemsForBucket(machine);
-                    if (datItems == null)
+                    List<DatItem> datItems = datFile.GetItemsForBucket(machine);
+                    if (datItems.Count == 0)
                         continue;
 
                     // Try to get the map values, if possible
