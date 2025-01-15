@@ -485,7 +485,7 @@ namespace SabreTools.DatFiles
                     }
 
                     // Remove the current item
-                    ItemsDB.RemoveItem(item.Key);
+                    RemoveItemDB(item.Key);
                 }
             }
         }
@@ -1059,12 +1059,12 @@ namespace SabreTools.DatFiles
                 {
                     foreach (var key in items.Keys)
                     {
-                        ItemsDB.RemoveItem(key);
+                        RemoveItemDB(key);
                     }
                 }
 
                 // Remove the machine
-                ItemsDB.RemoveMachine(machine.Key);
+                RemoveMachineDB(machine.Key);
             }
         }
 
@@ -1149,7 +1149,7 @@ namespace SabreTools.DatFiles
                     var matchedItems = items.Where(i => i.Value.Equals(item.Value));
                     foreach (var match in matchedItems)
                     {
-                        ItemsDB.RemoveItem(match.Key);
+                        RemoveItemDB(match.Key);
                     }
                 }
 
@@ -1247,7 +1247,7 @@ namespace SabreTools.DatFiles
                     var matchedItems = items.Where(i => i.Value.Equals(item.Value));
                     foreach (var match in matchedItems)
                     {
-                        ItemsDB.RemoveItem(match.Key);
+                        RemoveItemDB(match.Key);
                     }
                 }
             }

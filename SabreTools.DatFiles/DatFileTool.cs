@@ -1577,7 +1577,7 @@ namespace SabreTools.DatFiles
 
                 // Now remove the key from the source DAT
                 if (delete)
-                    addFrom.ItemsDB.RemoveItem(item.Key);
+                    addFrom.RemoveItemDB(item.Key);
 
 #if NET40_OR_GREATER || NETCOREAPP
             });

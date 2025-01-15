@@ -283,6 +283,30 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Remove an item, returning if it could be removed
+        /// </summary>
+        public bool RemoveItemDB(long itemIndex)
+        {
+            return ItemsDB.RemoveItem(itemIndex);
+        }
+
+        /// <summary>
+        /// Remove a machine, returning if it could be removed
+        /// </summary>
+        public bool RemoveMachineDB(long machineIndex)
+        {
+            return ItemsDB.RemoveMachine(machineIndex);
+        }
+
+        /// <summary>
+        /// Remove a machine, returning if it could be removed
+        /// </summary>
+        public bool RemoveMachineDB(string machineName)
+        {
+            return ItemsDB.RemoveMachine(machineName);
+        }
+
+        /// <summary>
         /// Reset the internal item dictionary
         /// </summary>
         public void ResetDictionary()

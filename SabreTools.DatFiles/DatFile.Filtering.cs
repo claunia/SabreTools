@@ -467,7 +467,7 @@ namespace SabreTools.DatFiles
                 parents[key].Remove(machine);
 
                 // Remove the rest of the items from this key
-                parents[key].ForEach(k => ItemsDB.RemoveMachine(k));
+                parents[key].ForEach(k => RemoveMachineDB(k));
             }
 
             // Finally, strip out the parent tags
