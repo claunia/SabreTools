@@ -96,7 +96,17 @@ namespace SabreTools.DatFiles.Test
 
         #region GetMachine
 
-        // TODO: Add GetMachine tests
+        [Fact]
+        public void GetMachineTest()
+        {
+            Machine machine = new Machine();
+            var dict = new ItemDictionaryDB();
+            long machineIndex = dict.AddMachine(machine);
+
+            Assert.Equal(0, machineIndex);
+            var actual = dict.GetMachine(machineIndex);
+            Assert.NotNull(actual);
+        }
 
         #endregion
 
@@ -108,7 +118,17 @@ namespace SabreTools.DatFiles.Test
 
         #region GetSource
 
-        // TODO: Add GetSource tests
+        [Fact]
+        public void GetSourceTest()
+        {
+            Source source = new Source(0, source: null);
+            var dict = new ItemDictionaryDB();
+            long sourceIndex = dict.AddSource(source);
+
+            Assert.Equal(0, sourceIndex);
+            var actual = dict.GetSource(sourceIndex);
+            Assert.NotNull(actual);
+        }
 
         #endregion
 
