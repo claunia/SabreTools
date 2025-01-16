@@ -122,7 +122,7 @@ namespace SabreTools.DatFiles.Test
             var dict = new ItemDictionaryDB();
             long machineIndex = dict.AddMachine(machine);
             long sourceIndex = dict.AddSource(source);
-            long itemIndex = dict.AddItem(item, machineIndex, sourceIndex);
+            long itemIndex = dict.AddItem(item, machineIndex, sourceIndex, statsOnly: false);
 
             var actual = dict.GetMachineForItem(itemIndex);
             Assert.Equal(0, actual.Key);
@@ -159,7 +159,7 @@ namespace SabreTools.DatFiles.Test
             var dict = new ItemDictionaryDB();
             long machineIndex = dict.AddMachine(machine);
             long sourceIndex = dict.AddSource(source);
-            long itemIndex = dict.AddItem(item, machineIndex, sourceIndex);
+            long itemIndex = dict.AddItem(item, machineIndex, sourceIndex, statsOnly: false);
 
             var actual = dict.GetSourceForItem(itemIndex);
             Assert.Equal(0, actual.Key);
@@ -170,7 +170,32 @@ namespace SabreTools.DatFiles.Test
 
         #region RemapDatItemToMachine
 
-        // TODO: Add RemapDatItemToMachine tests
+        [Fact]
+        public void RemapDatItemToMachineTest()
+        {
+            Source source = new Source(0, source: null);
+
+            Machine origMachine = new Machine();
+            origMachine.SetFieldValue(Models.Metadata.Machine.NameKey, "original");
+
+            Machine newMachine = new Machine();
+            newMachine.SetFieldValue(Models.Metadata.Machine.NameKey, "new");
+
+            DatItem datItem = new Rom();
+
+            var dict = new ItemDictionaryDB();
+            long sourceIndex = dict.AddSource(source);
+            long origMachineIndex = dict.AddMachine(origMachine);
+            long newMachineIndex = dict.AddMachine(newMachine);
+            long itemIndex = dict.AddItem(datItem, origMachineIndex, sourceIndex, statsOnly: false);
+
+            dict.RemapDatItemToMachine(itemIndex, newMachineIndex);
+
+            var actual = dict.GetMachineForItem(itemIndex);
+            Assert.Equal(1, actual.Key);
+            Assert.NotNull(actual.Value);
+            Assert.Equal("new", actual.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+        }
 
         #endregion
 
