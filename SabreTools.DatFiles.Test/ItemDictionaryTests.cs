@@ -73,6 +73,12 @@ namespace SabreTools.DatFiles.Test
 
         #endregion
 
+        #region SetBucketedBy
+
+        // TODO: Add SetBucketedBy tests
+
+        #endregion
+
         #region BucketBy
 
         [Theory]

@@ -213,13 +213,17 @@ namespace SabreTools.DatFiles.Test
 
         #region RemoveMachine
 
-        // TODO: Add RemoveMachine tests
+        [Fact]
+        public void RemoveMachineTest()
+        {
+            Machine machine = new Machine();
+            var dict = new ItemDictionaryDB();
+            long machineIndex = dict.AddMachine(machine);
 
-        #endregion
-
-        #region SetBucketedBy
-
-        // TODO: Add SetBucketedBy tests
+            bool actual = dict.RemoveMachine(machineIndex);
+            Assert.True(actual);
+            Assert.Empty(dict.GetMachines());
+        }
 
         #endregion
 
