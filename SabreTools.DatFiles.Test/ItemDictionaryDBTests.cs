@@ -211,6 +211,12 @@ namespace SabreTools.DatFiles.Test
 
         #endregion
 
+        #region RemoveMachine
+
+        // TODO: Add RemoveMachine tests
+
+        #endregion
+
         #region SetBucketedBy
 
         // TODO: Add SetBucketedBy tests

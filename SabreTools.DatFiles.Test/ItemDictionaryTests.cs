@@ -73,12 +73,6 @@ namespace SabreTools.DatFiles.Test
 
         #endregion
 
-        #region RemoveMachine
-
-        // TODO: Add RemoveMachine tests
-
-        #endregion
-
         #region BucketBy
 
         [Theory]
