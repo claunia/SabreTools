@@ -57,12 +57,107 @@ namespace SabreTools.DatFiles.Test
 
         #region GetItemsForBucket
 
-        // TODO: Add GetItemsForBucket tests
-        // - Null/empty bucket name
-        // - Invalid bucket
-        // - Removed items with filter
-        // - Removed items without filter
-        // - Normal items
+        [Fact]
+        public void GetItemsForBucket_NullBucketName()
+        {
+            Source source = new Source(0, source: null);
+
+            Machine machine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "machine");
+
+            DatItem item = new Rom();
+            item.SetFieldValue<Source?>(DatItem.SourceKey, source);
+            item.SetFieldValue<Machine?>(DatItem.MachineKey, machine);
+
+            var dict = new ItemDictionary();
+            _ = dict.AddItem(item, statsOnly: false);
+
+            var actual = dict.GetItemsForBucket(null, filter: false);
+
+            Assert.Empty(actual);
+        }
+
+        [Fact]
+        public void GetItemsForBucket_InvalidBucketName()
+        {
+            Source source = new Source(0, source: null);
+
+            Machine machine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "machine");
+
+            DatItem item = new Rom();
+            item.SetFieldValue<Source?>(DatItem.SourceKey, source);
+            item.SetFieldValue<Machine?>(DatItem.MachineKey, machine);
+
+            var dict = new ItemDictionary();
+            _ = dict.AddItem(item, statsOnly: false);
+
+            var actual = dict.GetItemsForBucket("INVALID", filter: false);
+
+            Assert.Empty(actual);
+        }
+
+        [Fact]
+        public void GetItemsForBucket_RemovedFilter()
+        {
+            Source source = new Source(0, source: null);
+
+            Machine machine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "machine");
+
+            DatItem item = new Rom();
+            item.SetFieldValue<bool?>(DatItem.RemoveKey, true);
+            item.SetFieldValue<Source?>(DatItem.SourceKey, source);
+            item.SetFieldValue<Machine?>(DatItem.MachineKey, machine);
+
+            var dict = new ItemDictionary();
+            _ = dict.AddItem(item, statsOnly: false);
+
+            var actual = dict.GetItemsForBucket("machine", filter: true);
+
+            Assert.Empty(actual);
+        }
+
+        [Fact]
+        public void GetItemsForBucket_RemovedNoFilter()
+        {
+            Source source = new Source(0, source: null);
+
+            Machine machine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "machine");
+
+            DatItem item = new Rom();
+            item.SetFieldValue<bool?>(DatItem.RemoveKey, true);
+            item.SetFieldValue<Source?>(DatItem.SourceKey, source);
+            item.SetFieldValue<Machine?>(DatItem.MachineKey, machine);
+
+            var dict = new ItemDictionary();
+            _ = dict.AddItem(item, statsOnly: false);
+
+            var actual = dict.GetItemsForBucket("machine", filter: false);
+
+            Assert.Single(actual);
+        }
+
+        [Fact]
+        public void GetItemsForBucket_Standard()
+        {
+            Source source = new Source(0, source: null);
+
+            Machine machine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "machine");
+
+            DatItem item = new Rom();
+            item.SetFieldValue<Source?>(DatItem.SourceKey, source);
+            item.SetFieldValue<Machine?>(DatItem.MachineKey, machine);
+
+            var dict = new ItemDictionary();
+            _ = dict.AddItem(item, statsOnly: false);
+
+            var actual = dict.GetItemsForBucket("machine", filter: false);
+
+            Assert.Single(actual);
+        }
 
         #endregion
 
@@ -222,7 +317,7 @@ namespace SabreTools.DatFiles.Test
         }
 
         #endregion
-    
+
         #region RecalculateStats
 
         // TODO: Add RecalculateStats tests
