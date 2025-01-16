@@ -20,13 +20,31 @@ namespace SabreTools.DatFiles.Test
 
         #region AddMachine
 
-        // TODO: Add AddMachine tests
+        [Fact]
+        public void AddMachineTest()
+        {
+            Machine machine = new Machine();
+            var dict = new ItemDictionaryDB();
+            long machineIndex = dict.AddMachine(machine);
+
+            Assert.Equal(0, machineIndex);
+            Assert.Single(dict.GetMachines());
+        }
 
         #endregion
 
         #region AddSource
 
-        // TODO: Add AddSource tests
+        [Fact]
+        public void AddSourceTest()
+        {
+            Source source = new Source(0, source: null);
+            var dict = new ItemDictionaryDB();
+            long sourceIndex = dict.AddSource(source);
+
+            Assert.Equal(0, sourceIndex);
+            Assert.Single(dict.GetSources());
+        }
 
         #endregion
 
