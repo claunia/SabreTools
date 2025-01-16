@@ -211,21 +211,6 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Ensure the key exists in the items dictionary
-        /// </summary>
-        /// <param name="key">Key to ensure</param>
-        public void EnsureBucketingKey(string key)
-        {
-            // If the key is missing from the dictionary, add it
-#if NET40_OR_GREATER || NETCOREAPP
-            _items.GetOrAdd(key, []);
-#else
-            if (!_items.ContainsKey(key))
-                _items[key] = [];
-#endif
-        }
-
-        /// <summary>
         /// Get the items associated with a bucket name
         /// </summary>
         /// <param name="bucketName">Name of the bucket to retrive items for</param>
@@ -485,7 +470,22 @@ namespace SabreTools.DatFiles
             if (roms.Count == 0)
                 return false;
 
-            return roms.FindIndex(r => datItem.Equals(r)) > -1;
+            return roms.FindIndex(datItem.Equals) > -1;
+        }
+
+        /// <summary>
+        /// Ensure the key exists in the items dictionary
+        /// </summary>
+        /// <param name="key">Key to ensure</param>
+        private void EnsureBucketingKey(string key)
+        {
+            // If the key is missing from the dictionary, add it
+#if NET40_OR_GREATER || NETCOREAPP
+            _items.GetOrAdd(key, []);
+#else
+            if (!_items.ContainsKey(key))
+                _items[key] = [];
+#endif
         }
 
         /// <summary>

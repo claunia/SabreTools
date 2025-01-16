@@ -705,8 +705,9 @@ namespace SabreTools.DatFiles
             if (DatStatistics.TotalCount == 0)
                 return [];
 
-            // We want to get the proper key for the DatItem
-            string key = SortAndGetKey(datItem, sorted);
+            // We want to get the proper key for the DatItem, ignoring the index
+            _ = SortAndGetKey(datItem, sorted);
+            string key = datItem.Value.GetKey(_bucketedBy);
 
             // If the key doesn't exist, return the empty list
             var items = GetItemsForBucket(key);
@@ -745,8 +746,9 @@ namespace SabreTools.DatFiles
             if (DatStatistics.TotalCount == 0)
                 return false;
 
-            // We want to get the proper key for the DatItem
-            string key = SortAndGetKey(datItem, sorted);
+            // We want to get the proper key for the DatItem, ignoring the index
+            _ = SortAndGetKey(datItem, sorted);
+            string key = datItem.Value.GetKey(_bucketedBy);
 
             // If the key doesn't exist
             var roms = GetItemsForBucket(key);
@@ -754,7 +756,7 @@ namespace SabreTools.DatFiles
                 return false;
 
             // Try to find duplicates
-            return roms.Values.Any(r => datItem.Equals(r));
+            return roms.Values.Any(datItem.Value.Equals);
         }
 
         /// <summary>
@@ -860,6 +862,20 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Ensure the key exists in the items dictionary
+        /// </summary>
+        private void EnsureBucketingKey(string key)
+        {
+            // If the key is missing from the dictionary, add it
+#if NET40_OR_GREATER || NETCOREAPP
+            _buckets.GetOrAdd(key, []);
+#else
+            if (!_buckets.ContainsKey(key))
+                _buckets[key] = [];
+#endif
+        }
+
+        /// <summary>
         /// Get the highest-order Field value that represents the statistics
         /// </summary>
         private ItemKey GetBestAvailable()
@@ -933,20 +949,6 @@ namespace SabreTools.DatFiles
 
             // Get the bucket key
             return datItem.GetKeyDB(bucketBy, machine.Value, source.Value, lower, norename);
-        }
-
-        /// <summary>
-        /// Ensure the key exists in the items dictionary
-        /// </summary>
-        private void EnsureBucketingKey(string key)
-        {
-            // If the key is missing from the dictionary, add it
-#if NET40_OR_GREATER || NETCOREAPP
-            _buckets.GetOrAdd(key, []);
-#else
-            if (!_buckets.ContainsKey(key))
-                _buckets[key] = [];
-#endif
         }
 
         /// <summary>
