@@ -421,7 +421,6 @@ namespace SabreTools.DatFiles
 
             var machine = _machines[machineIndex];
             return new KeyValuePair<long, Machine?>(machineIndex, machine);
-
 #endif
         }
 
@@ -446,6 +445,15 @@ namespace SabreTools.DatFiles
         /// </summary>
         public KeyValuePair<long, Source?> GetSourceForItem(long itemIndex)
         {
+#if NET40_OR_GREATER || NETCOREAPP
+            if (!_itemToSourceMapping.TryGetValue(itemIndex, out long sourceIndex))
+                return new KeyValuePair<long, Source?>(-1, null);
+
+            if (!_sources.TryGetValue(sourceIndex, out var source))
+                return new KeyValuePair<long, Source?>(-1, null);
+
+            return new KeyValuePair<long, Source?>(sourceIndex, source);
+#else
             if (!_itemToSourceMapping.ContainsKey(itemIndex))
                 return new KeyValuePair<long, Source?>(-1, null);
 
@@ -453,7 +461,9 @@ namespace SabreTools.DatFiles
             if (!_sources.ContainsKey(sourceIndex))
                 return new KeyValuePair<long, Source?>(-1, null);
 
-            return new KeyValuePair<long, Source?>(sourceIndex, _sources[sourceIndex]);
+            var source = _sources[sourceIndex];
+            return new KeyValuePair<long, Source?>(sourceIndex, source);
+#endif
         }
 
         /// <summary>
@@ -612,7 +622,7 @@ namespace SabreTools.DatFiles
             PerformItemBucketing(index, _bucketedBy, lower: true, norename: true);
 
             // Return the used index
-            return index - 1;
+            return index;
         }
 
         #endregion
