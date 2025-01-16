@@ -516,7 +516,6 @@ namespace SabreTools.DatFiles
 #endif
 
                 RemoveItem(index);
-                DatStatistics.RemoveItemStatistics(datItem);
             }
 
             return removed;
@@ -527,20 +526,36 @@ namespace SabreTools.DatFiles
         /// </summary>
         public bool RemoveItem(long itemIndex)
         {
+            // If the key doesn't exist, return
+#if NET40_OR_GREATER || NETCOREAPP
+            if (!_items.TryRemove(itemIndex, out var datItem))
+                return false;
+#else
             if (!_items.ContainsKey(itemIndex))
                 return false;
 
-#if NET40_OR_GREATER || NETCOREAPP
-            _items.TryRemove(itemIndex, out _);
-#else
+            var datItem = _items[itemIndex];
             _items.Remove(itemIndex);
 #endif
 
-            if (_itemToMachineMapping.ContainsKey(itemIndex))
+            // Remove statistics, if possible
+            if (datItem != null)
+                DatStatistics.RemoveItemStatistics(datItem);
+
+            // Remove the machine mapping
 #if NET40_OR_GREATER || NETCOREAPP
-                _itemToMachineMapping.TryRemove(itemIndex, out _);
+            _itemToMachineMapping.TryRemove(itemIndex, out _);
 #else
+            if (_itemToMachineMapping.ContainsKey(itemIndex))
                 _itemToMachineMapping.Remove(itemIndex);
+#endif
+
+            // Remove the source mapping
+#if NET40_OR_GREATER || NETCOREAPP
+            _itemToSourceMapping.TryRemove(itemIndex, out _);
+#else
+            if (_itemToSourceMapping.ContainsKey(itemIndex))
+                _itemToSourceMapping.Remove(itemIndex);
 #endif
 
             return true;
