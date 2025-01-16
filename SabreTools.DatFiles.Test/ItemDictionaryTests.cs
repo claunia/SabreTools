@@ -58,6 +58,11 @@ namespace SabreTools.DatFiles.Test
         #region GetItemsForBucket
 
         // TODO: Add GetItemsForBucket tests
+        // - Null/empty bucket name
+        // - Invalid bucket
+        // - Removed items with filter
+        // - Removed items without filter
+        // - Normal items
 
         #endregion
 
