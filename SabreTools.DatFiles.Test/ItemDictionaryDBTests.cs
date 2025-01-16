@@ -10,6 +10,11 @@ namespace SabreTools.DatFiles.Test
         #region AddItem
 
         // TODO: Add AddItem tests
+        // - Disk, with/without hashes
+        // - File, with/without hashes
+        // - Media, with/without hashes
+        // - Rom, with/without hashes, with/without size
+        // - Stats only/actual add
 
         #endregion
 
