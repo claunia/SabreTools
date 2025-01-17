@@ -301,7 +301,29 @@ namespace SabreTools.DatFiles.Test
 
         #region RemoveBucket
 
-        // TODO: Add RemoveBucket tests
+        [Fact]
+        public void RemoveBucketTest()
+        {
+            Source source = new Source(0, source: null);
+
+            Machine machine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "game-1");
+
+            DatItem datItem = new Rom();
+            datItem.SetName("rom-1");
+            datItem.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            datItem.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "0000000fbbb37f8488100b1b4697012de631a5e6");
+            datItem.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, "1024");
+
+            var dict = new ItemDictionaryDB();
+            long sourceIndex = dict.AddSource(source);
+            long machineIndex = dict.AddMachine(machine);
+            dict.AddItem(datItem, machineIndex, sourceIndex, statsOnly: false);
+
+            dict.RemoveBucket("game-1");
+
+            Assert.Empty(dict.GetItemsForBucket("game-1"));
+        }
 
         #endregion
 

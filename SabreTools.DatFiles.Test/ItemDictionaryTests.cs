@@ -40,7 +40,7 @@ namespace SabreTools.DatFiles.Test
             rom2.SetFieldValue<bool?>(DatItem.RemoveKey, true);
             rom2.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "000000e948edcb4f7704b8af85a77a3339ecce44");
             rom2.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, "1024");
-            rom1.CopyMachineInformation(machine);
+            rom2.CopyMachineInformation(machine);
 
             // Setup the dictionary
             var dict = new ItemDictionary();
@@ -163,7 +163,27 @@ namespace SabreTools.DatFiles.Test
 
         #region RemoveBucket
 
-        // TODO: Add RemoveBucket tests
+        [Fact]
+        public void RemoveBucketTest()
+        {
+            Machine machine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "game-1");
+
+            DatItem datItem = new Rom();
+            datItem.SetName("rom-1");
+            datItem.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            datItem.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "0000000fbbb37f8488100b1b4697012de631a5e6");
+            datItem.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, "1024");
+            datItem.CopyMachineInformation(machine);
+
+            var dict = new ItemDictionary();
+            dict.AddItem(datItem, statsOnly: false);
+
+            dict.RemoveBucket("game-1");
+
+            Assert.Empty(dict.GetItemsForBucket("default"));
+            Assert.Empty(dict.GetItemsForBucket("game-1"));
+        }
 
         #endregion
 
