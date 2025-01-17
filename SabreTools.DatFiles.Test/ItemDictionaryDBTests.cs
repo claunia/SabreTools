@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
+using SabreTools.Hashing;
 using Xunit;
 
 namespace SabreTools.DatFiles.Test
@@ -521,7 +522,40 @@ namespace SabreTools.DatFiles.Test
 
         #region RecalculateStats
 
-        // TODO: Add RecalculateStats tests
+        [Fact]
+        public void RecalculateStatsTest()
+        {
+            Source source = new Source(0, source: null);
+
+            Machine machine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "machine");
+
+            DatItem item = new Rom();
+            item.SetName("rom");
+            item.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, 12345);
+            item.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "deadbeef");
+
+            var dict = new ItemDictionaryDB();
+            long sourceIndex = dict.AddSource(source);
+            long machineIndex = dict.AddMachine(machine);
+            _ = dict.AddItem(item, machineIndex, sourceIndex, statsOnly: false);
+
+            Assert.Equal(1, dict.DatStatistics.TotalCount);
+            Assert.Equal(1, dict.DatStatistics.ItemCounts[ItemType.Rom]);
+            Assert.Equal(12345, dict.DatStatistics.TotalSize);
+            Assert.Equal(1, dict.DatStatistics.HashCounts[HashType.CRC32]);
+            Assert.Equal(0, dict.DatStatistics.HashCounts[HashType.MD5]);
+
+            item.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, "deadbeef");
+
+            dict.RecalculateStats();
+
+            Assert.Equal(1, dict.DatStatistics.TotalCount);
+            Assert.Equal(1, dict.DatStatistics.ItemCounts[ItemType.Rom]);
+            Assert.Equal(12345, dict.DatStatistics.TotalSize);
+            Assert.Equal(1, dict.DatStatistics.HashCounts[HashType.CRC32]);
+            Assert.Equal(1, dict.DatStatistics.HashCounts[HashType.MD5]);
+        }
 
         #endregion
     }
