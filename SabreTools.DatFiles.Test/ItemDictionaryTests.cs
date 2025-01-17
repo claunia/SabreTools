@@ -189,7 +189,27 @@ namespace SabreTools.DatFiles.Test
 
         #region RemoveItem
 
-        // TODO: Add RemoveItem tests
+        [Fact]
+        public void RemoveItemTest()
+        {
+            Machine machine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "game-1");
+
+            DatItem datItem = new Rom();
+            datItem.SetName("rom-1");
+            datItem.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            datItem.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "0000000fbbb37f8488100b1b4697012de631a5e6");
+            datItem.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, "1024");
+            datItem.CopyMachineInformation(machine);
+
+            var dict = new ItemDictionary();
+            dict.AddItem(datItem, statsOnly: false);
+
+            dict.RemoveItem("game-1", (Rom)datItem.Clone());
+
+            Assert.Empty(dict.GetItemsForBucket("default"));
+            Assert.Empty(dict.GetItemsForBucket("game-1"));
+        }
 
         #endregion
 
