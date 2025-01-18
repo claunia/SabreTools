@@ -100,7 +100,7 @@ namespace SabreTools.DatFiles
         {
             string key;
 
-            // If we have a Disk, Media, or Rom, clean the hash data
+            // If we have a Disk, File, Media, or Rom, clean the hash data
             if (item is Disk disk)
             {
                 // If the file has aboslutely no hashes, skip and log
@@ -114,7 +114,20 @@ namespace SabreTools.DatFiles
 
                 item = disk;
             }
-            if (item is Media media)
+            else if (item is DatItems.Formats.File file)
+            {
+                // If the file has aboslutely no hashes, skip and log
+                if (string.IsNullOrEmpty(file.CRC)
+                    && string.IsNullOrEmpty(file.MD5)
+                    && string.IsNullOrEmpty(file.SHA1)
+                    && string.IsNullOrEmpty(file.SHA256))
+                {
+                    _logger.Verbose($"Incomplete entry for '{file.GetName()}' will be output as nodump");
+                }
+
+                item = file;
+            }
+            else if (item is Media media)
             {
                 // If the file has aboslutely no hashes, skip and log
                 if (string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.MD5Key))
@@ -132,7 +145,7 @@ namespace SabreTools.DatFiles
                 long? size = rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey);
 
                 // If we have the case where there is SHA-1 and nothing else, we don't fill in any other part of the data
-                if (size == null && !rom.HasHashes())
+                if (size == null && !string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key)))
                 {
                     // No-op, just catch it so it doesn't go further
                     //logger.Verbose($"{Header.GetStringFieldValue(DatHeader.FileNameKey)}: Entry with only SHA-1 found - '{rom.GetName()}'");

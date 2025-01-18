@@ -10,12 +10,244 @@ namespace SabreTools.DatFiles.Test
     {
         #region AddItem
 
-        // TODO: Add AddItem tests
-        // - Disk, with/without hashes
-        // - File, with/without hashes
-        // - Media, with/without hashes
-        // - Rom, with/without hashes, with/without size
-        // - Stats only/actual add
+        [Fact]
+        public void AddItem_Disk_WithHashes()
+        {
+            Source source = new Source(0, source: null);
+            Machine machine = new Machine();
+
+            DatItem disk = new Disk();
+            disk.SetName("item");
+            disk.SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, "deadbeef");
+
+            var dict = new ItemDictionaryDB();
+            long sourceIndex = dict.AddSource(source);
+            long machineIndex = dict.AddMachine(machine);
+            _ = dict.AddItem(disk, machineIndex, sourceIndex, statsOnly: false);
+
+            DatItem actual = Assert.Single(dict.GetItemsForBucket("default")).Value;
+            Assert.True(actual is Disk);
+            Assert.Equal("none", actual.GetStringFieldValue(Models.Metadata.Disk.StatusKey));
+        }
+
+        [Fact]
+        public void AddItem_Disk_WithoutHashes()
+        {
+            Source source = new Source(0, source: null);
+            Machine machine = new Machine();
+
+            DatItem disk = new Disk();
+            disk.SetName("item");
+
+            var dict = new ItemDictionaryDB();
+            long sourceIndex = dict.AddSource(source);
+            long machineIndex = dict.AddMachine(machine);
+            _ = dict.AddItem(disk, machineIndex, sourceIndex, statsOnly: false);
+
+            DatItem actual = Assert.Single(dict.GetItemsForBucket("default")).Value;
+            Assert.True(actual is Disk);
+            Assert.Equal("nodump", actual.GetStringFieldValue(Models.Metadata.Disk.StatusKey));
+        }
+
+        [Fact]
+        public void AddItem_File_WithHashes()
+        {
+            Source source = new Source(0, source: null);
+            Machine machine = new Machine();
+
+            var file = new File();
+            file.SetName("item");
+            file.SHA1 = "deadbeef";
+
+            var dict = new ItemDictionaryDB();
+            long sourceIndex = dict.AddSource(source);
+            long machineIndex = dict.AddMachine(machine);
+            _ = dict.AddItem(file, machineIndex, sourceIndex, statsOnly: false);
+
+            DatItem actual = Assert.Single(dict.GetItemsForBucket("default")).Value;
+            Assert.True(actual is File);
+            //Assert.Equal("none", actual.GetStringFieldValue(File.StatusKey));
+        }
+
+        [Fact]
+        public void AddItem_File_WithoutHashes()
+        {
+            Source source = new Source(0, source: null);
+            Machine machine = new Machine();
+
+            DatItem file = new File();
+            file.SetName("item");
+
+            var dict = new ItemDictionaryDB();
+            long sourceIndex = dict.AddSource(source);
+            long machineIndex = dict.AddMachine(machine);
+            _ = dict.AddItem(file, machineIndex, sourceIndex, statsOnly: false);
+
+            DatItem actual = Assert.Single(dict.GetItemsForBucket("default")).Value;
+            Assert.True(actual is File);
+            //Assert.Equal("nodump", actual.GetStringFieldValue(File.StatusKey));
+        }
+
+        [Fact]
+        public void AddItem_Media_WithHashes()
+        {
+            Source source = new Source(0, source: null);
+            Machine machine = new Machine();
+
+            DatItem media = new Media();
+            media.SetName("item");
+            media.SetFieldValue<string?>(Models.Metadata.Media.SHA1Key, "deadbeef");
+
+            var dict = new ItemDictionaryDB();
+            long sourceIndex = dict.AddSource(source);
+            long machineIndex = dict.AddMachine(machine);
+            _ = dict.AddItem(media, machineIndex, sourceIndex, statsOnly: false);
+
+            DatItem actual = Assert.Single(dict.GetItemsForBucket("default")).Value;
+            Assert.True(actual is Media);
+            //Assert.Equal("none", actual.GetStringFieldValue(Models.Metadata.Media.StatusKey));
+        }
+
+        [Fact]
+        public void AddItem_Media_WithoutHashes()
+        {
+            Source source = new Source(0, source: null);
+            Machine machine = new Machine();
+
+            DatItem media = new Media();
+            media.SetName("item");
+
+            var dict = new ItemDictionaryDB();
+            long sourceIndex = dict.AddSource(source);
+            long machineIndex = dict.AddMachine(machine);
+            _ = dict.AddItem(media, machineIndex, sourceIndex, statsOnly: false);
+
+            DatItem actual = Assert.Single(dict.GetItemsForBucket("default")).Value;
+            Assert.True(actual is Media);
+            //Assert.Equal("nodump", actual.GetStringFieldValue(Models.Metadata.Media.StatusKey));
+        }
+
+        [Fact]
+        public void AddItem_Rom_WithHashesWithSize()
+        {
+            Source source = new Source(0, source: null);
+            Machine machine = new Machine();
+
+            DatItem rom = new Rom();
+            rom.SetName("item");
+            rom.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, 12345);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "deadbeef");
+
+            var dict = new ItemDictionaryDB();
+            long sourceIndex = dict.AddSource(source);
+            long machineIndex = dict.AddMachine(machine);
+            _ = dict.AddItem(rom, machineIndex, sourceIndex, statsOnly: false);
+
+            DatItem actual = Assert.Single(dict.GetItemsForBucket("default")).Value;
+            Assert.True(actual is Rom);
+            Assert.Equal(12345, actual.GetInt64FieldValue(Models.Metadata.Rom.SizeKey));
+            Assert.Equal("deadbeef", actual.GetStringFieldValue(Models.Metadata.Rom.SHA1Key));
+            Assert.Equal("none", actual.GetStringFieldValue(Models.Metadata.Rom.StatusKey));
+        }
+
+        [Fact]
+        public void AddItem_Rom_WithoutHashesWithSize()
+        {
+            Source source = new Source(0, source: null);
+            Machine machine = new Machine();
+
+            DatItem rom = new Rom();
+            rom.SetName("item");
+            rom.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, 12345);
+
+            var dict = new ItemDictionaryDB();
+            long sourceIndex = dict.AddSource(source);
+            long machineIndex = dict.AddMachine(machine);
+            _ = dict.AddItem(rom, machineIndex, sourceIndex, statsOnly: false);
+
+            DatItem actual = Assert.Single(dict.GetItemsForBucket("default")).Value;
+            Assert.True(actual is Rom);
+            Assert.Equal(12345, actual.GetInt64FieldValue(Models.Metadata.Rom.SizeKey));
+            Assert.Null(actual.GetStringFieldValue(Models.Metadata.Rom.SHA1Key));
+            Assert.Equal("nodump", actual.GetStringFieldValue(Models.Metadata.Rom.StatusKey));
+        }
+
+        [Fact]
+        public void AddItem_Rom_WithHashesWithoutSize()
+        {
+            Source source = new Source(0, source: null);
+            Machine machine = new Machine();
+
+            DatItem rom = new Rom();
+            rom.SetName("item");
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "deadbeef");
+
+            var dict = new ItemDictionaryDB();
+            long sourceIndex = dict.AddSource(source);
+            long machineIndex = dict.AddMachine(machine);
+            _ = dict.AddItem(rom, machineIndex, sourceIndex, statsOnly: false);
+
+            DatItem actual = Assert.Single(dict.GetItemsForBucket("default")).Value;
+            Assert.True(actual is Rom);
+            Assert.Null(actual.GetInt64FieldValue(Models.Metadata.Rom.SizeKey));
+            Assert.Equal("deadbeef", actual.GetStringFieldValue(Models.Metadata.Rom.SHA1Key));
+            Assert.Equal("none", actual.GetStringFieldValue(Models.Metadata.Rom.StatusKey));
+        }
+
+        [Fact]
+        public void AddItem_Rom_WithoutHashesWithoutSize()
+        {
+            Source source = new Source(0, source: null);
+            Machine machine = new Machine();
+
+            DatItem rom = new Rom();
+            rom.SetName("item");
+
+            var dict = new ItemDictionaryDB();
+            long sourceIndex = dict.AddSource(source);
+            long machineIndex = dict.AddMachine(machine);
+            _ = dict.AddItem(rom, machineIndex, sourceIndex, statsOnly: false);
+
+            DatItem actual = Assert.Single(dict.GetItemsForBucket("default")).Value;
+            Assert.True(actual is Rom);
+            Assert.Equal(0, actual.GetInt64FieldValue(Models.Metadata.Rom.SizeKey));
+            Assert.Equal(ZeroHash.SHA1Str, actual.GetStringFieldValue(Models.Metadata.Rom.SHA1Key));
+            Assert.Equal("none", actual.GetStringFieldValue(Models.Metadata.Rom.StatusKey));
+        }
+
+        [Fact]
+        public void AddItem_StatsOnly()
+        {
+            Source source = new Source(0, source: null);
+            Machine machine = new Machine();
+
+            DatItem item = new Rom();
+            item.SetName("item");
+
+            var dict = new ItemDictionaryDB();
+            long sourceIndex = dict.AddSource(source);
+            long machineIndex = dict.AddMachine(machine);
+            _ = dict.AddItem(item, machineIndex, sourceIndex, statsOnly: true);
+
+            Assert.Empty(dict.GetItemsForBucket("default"));
+        }
+
+        [Fact]
+        public void AddItem_NormalAdd()
+        {
+            Source source = new Source(0, source: null);
+            Machine machine = new Machine();
+
+            DatItem item = new Rom();
+            item.SetName("item");
+
+            var dict = new ItemDictionaryDB();
+            long sourceIndex = dict.AddSource(source);
+            long machineIndex = dict.AddMachine(machine);
+            _ = dict.AddItem(item, machineIndex, sourceIndex, statsOnly: false);
+
+            Assert.Single(dict.GetItemsForBucket("default"));
+        }
 
         #endregion
 
