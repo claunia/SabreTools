@@ -688,43 +688,44 @@ namespace SabreTools.DatFiles
             if (dedupeType == DedupeType.None)
                 return;
 
-            // Get the current list of bucket keys
-            string[] bucketKeys = [.. _buckets.Keys];
-
 #if NET452_OR_GREATER || NETCOREAPP
-            Parallel.For(0, bucketKeys.Length, Core.Globals.ParallelOptions, i =>
+            Parallel.ForEach(SortedKeys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
-            Parallel.For(0, bucketKeys.Length, i =>
+            Parallel.ForEach(SortedKeys, key =>
 #else
-            for (int i = 0; i < bucketKeys.Length; i++)
+            foreach (var key in SortedKeys)
 #endif
             {
-#if NET40_OR_GREATER || NETCOREAPP
-                if (!_buckets.TryGetValue(bucketKeys[i], out var itemIndices))
-                    return;
-#else
-                var itemIndices = _buckets[bucketKeys[i]];
-#endif
+                // Get the possibly unsorted list
+                List<KeyValuePair<long, DatItem>> sortedList = [.. GetItemsForBucket(key)];
 
-                if (itemIndices == null || itemIndices.Count == 0)
-                    return;
-
-                var datItems = itemIndices
-                    .FindAll(i => _items.ContainsKey(i))
-                    .Select(i => new KeyValuePair<long, DatItem>(i, _items[i]))
-                    .ToList();
-
-                Sort(ref datItems, false);
+                // Sort the list of items to be consistent
+                Sort(ref sortedList, false);
 
                 // If we're merging the roms, do so
                 if (dedupeType == DedupeType.Full || (dedupeType == DedupeType.Game && _bucketedBy == ItemKey.Machine))
-                    datItems = Merge(datItems);
+                    sortedList = Merge(sortedList);
+
+                // Get all existing mappings
+                List<ItemMappings> currentMappings = sortedList.ConvertAll(item =>
+                {
+                    return new ItemMappings(
+                        item.Value,
+                        GetMachineForItem(item.Key).Key,
+                        GetSourceForItem(item.Key).Key
+                    );
+                });
+
+                // Add the list back to the dictionary
+                RemoveBucket(key);
+                currentMappings.ForEach(map =>
+                {
+                    AddItem(map.Item, map.MachineId, map.SourceId);
+                });
 
 #if NET40_OR_GREATER || NETCOREAPP
-                _buckets.TryAdd(bucketKeys[i], [.. datItems.Select(kvp => kvp.Key)]);
             });
 #else
-                _buckets[bucketKeys[i]] = [.. datItems.Select(kvp => kvp.Key)];
             }
 #endif
         }
@@ -1164,6 +1165,16 @@ namespace SabreTools.DatFiles
 
             // Now that we have the sorted type, we get the proper key
             return GetBucketKey(datItem.Key, _bucketedBy, lower: true, norename: true);
+        }
+
+        /// <summary>
+        /// Class used during deduplication
+        /// </summary>
+        private struct ItemMappings(DatItem item, long machineId, long sourceId)
+        {
+            public DatItem Item = item;
+            public long MachineId = machineId;
+            public long SourceId = sourceId;
         }
 
         #endregion
