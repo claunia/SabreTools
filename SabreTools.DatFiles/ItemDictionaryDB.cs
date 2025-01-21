@@ -694,10 +694,8 @@ namespace SabreTools.DatFiles
                 // Get the possibly unsorted list
                 List<KeyValuePair<long, DatItem>> sortedList = [.. GetItemsForBucket(key)];
 
-                // Sort the list of items to be consistent
+                // Sort and merge the list
                 Sort(ref sortedList, false);
-
-                // Merge the items
                 sortedList = Merge(sortedList);
 
                 // Get all existing mappings
