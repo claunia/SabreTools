@@ -711,10 +711,7 @@ namespace SabreTools.DatFiles
                 // Add the list back to the dictionary
                 RemoveBucket(key);
                 currentMappings.ForEach(map =>
-                {
-                    AddItem(map.Item, map.MachineId, map.SourceId);
-                });
-
+                    AddItem(map.Item, map.MachineId, map.SourceId));
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
