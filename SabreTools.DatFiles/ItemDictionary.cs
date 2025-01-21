@@ -31,11 +31,6 @@ namespace SabreTools.DatFiles
         private ItemKey _bucketedBy = ItemKey.NULL;
 
         /// <summary>
-        /// Determine merging type for all items
-        /// </summary>
-        private DedupeType _mergedBy = DedupeType.None;
-
-        /// <summary>
         /// Internal dictionary for the class
         /// </summary>
 #if NET40_OR_GREATER || NETCOREAPP
@@ -381,22 +376,10 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Perform deduplication based on the deduplication type provided
+        /// Perform deduplication on the current sorted dictionary
         /// </summary>
-        /// <param name="dedupeType">Dedupe type that should be used</param>
-        public void Deduplicate(DedupeType dedupeType)
+        public void Deduplicate()
         {
-            // Set the sorted type
-            _mergedBy = dedupeType;
-
-            // If no deduplication is requested, just return
-            if (dedupeType == DedupeType.None)
-                return;
-
-            // Ensure Game deduplication is valid
-            if (dedupeType == DedupeType.Game && _bucketedBy != ItemKey.Machine)
-                return;
-
 #if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(SortedKeys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
@@ -578,9 +561,6 @@ namespace SabreTools.DatFiles
         {
             // Set the sorted type
             _bucketedBy = bucketBy;
-
-            // Reset the merged type since this might change the merge
-            _mergedBy = DedupeType.None;
 
             // First do the initial sort of all of the roms inplace
             List<string> oldkeys = [.. SortedKeys];

@@ -462,7 +462,7 @@ namespace SabreTools.DatFiles
             {
                 // For comparison's sake, we want to use CRC as the base bucketing
                 datFile.BucketBy(ItemKey.CRC);
-                datFile.Deduplicate(DedupeType.Full);
+                datFile.Deduplicate();
                 intDat.BucketBy(ItemKey.CRC);
 
                 // Then we do a hashwise comparison against the base DAT
@@ -511,7 +511,7 @@ namespace SabreTools.DatFiles
             {
                 // For comparison's sake, we want to use Machine Name as the base bucketing
                 datFile.BucketBy(ItemKey.Machine);
-                datFile.Deduplicate(DedupeType.Full);
+                datFile.Deduplicate();
                 intDat.BucketBy(ItemKey.Machine);
 
                 // Then we do a namewise comparison against the base DAT
@@ -579,7 +579,7 @@ namespace SabreTools.DatFiles
             {
                 // For comparison's sake, we want to use CRC as the base bucketing
                 datFile.BucketBy(ItemKey.CRC);
-                datFile.Deduplicate(DedupeType.Full);
+                datFile.Deduplicate();
                 intDat.BucketBy(ItemKey.CRC);
 
                 // Then we do a hashwise comparison against the base DAT
@@ -621,7 +621,7 @@ namespace SabreTools.DatFiles
             {
                 // For comparison's sake, we want to use Machine Name as the base bucketing
                 datFile.BucketBy(ItemKey.Machine);
-                datFile.Deduplicate(DedupeType.Full);
+                datFile.Deduplicate();
                 intDat.BucketBy(ItemKey.Machine);
 
                 // Then we do a namewise comparison against the base DAT
@@ -680,7 +680,7 @@ namespace SabreTools.DatFiles
             else
             {
                 intDat.BucketBy(ItemKey.CRC);
-                intDat.Deduplicate(DedupeType.Full);
+                intDat.Deduplicate();
             }
 
             // Then we compare against the base DAT

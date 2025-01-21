@@ -211,12 +211,12 @@ namespace SabreTools.DatTools
             if (hashOnly)
             {
                 datFile.BucketBy(ItemKey.CRC);
-                datFile.Deduplicate(DedupeType.Full);
+                datFile.Deduplicate();
             }
             else
             {
                 datFile.BucketBy(ItemKey.Machine);
-                datFile.Deduplicate(DedupeType.Full);
+                datFile.Deduplicate();
             }
 
             // Then mark items for removal
@@ -261,12 +261,12 @@ namespace SabreTools.DatTools
             if (hashOnly)
             {
                 datFile.BucketBy(ItemKey.CRC);
-                datFile.Deduplicate(DedupeType.Full);
+                datFile.Deduplicate();
             }
             else
             {
                 datFile.BucketBy(ItemKey.Machine);
-                datFile.Deduplicate(DedupeType.Full);
+                datFile.Deduplicate();
             }
 
             // Then mark items for removal

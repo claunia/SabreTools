@@ -108,12 +108,12 @@ namespace SabreTools.DatTools
                 if (DedupeRoms == DedupeType.Full)
                 {
                     datFile.BucketBy(ItemKey.CRC);
-                    datFile.Deduplicate(DedupeRoms);
+                    datFile.Deduplicate();
                 }
                 else if (DedupeRoms == DedupeType.Game)
                 {
                     datFile.BucketBy(ItemKey.Machine);
-                    datFile.Deduplicate(DedupeRoms);
+                    datFile.Deduplicate();
                 }
 
                 // Process description to machine name

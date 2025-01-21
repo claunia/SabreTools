@@ -335,10 +335,10 @@ namespace SabreTools.DatFiles
         /// Perform deduplication based on the deduplication type provided
         /// </summary>
         /// <param name="dedupeType">Dedupe type that should be used</param>
-        public void Deduplicate(DedupeType dedupeType)
+        public void Deduplicate()
         {
-            Items.Deduplicate(dedupeType);
-            ItemsDB.Deduplicate(dedupeType);
+            Items.Deduplicate();
+            ItemsDB.Deduplicate();
         }
 
         /// <summary>
