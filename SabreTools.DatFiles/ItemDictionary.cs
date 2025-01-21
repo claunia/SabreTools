@@ -393,6 +393,10 @@ namespace SabreTools.DatFiles
             if (dedupeType == DedupeType.None)
                 return;
 
+            // Ensure Game deduplication is valid
+            if (dedupeType == DedupeType.Game && _bucketedBy != ItemKey.Machine)
+                return;
+
 #if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(SortedKeys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
@@ -407,9 +411,8 @@ namespace SabreTools.DatFiles
                 // Sort the list of items to be consistent
                 Sort(ref sortedList, false);
 
-                // If we're merging the roms, do so
-                if (dedupeType == DedupeType.Full || (dedupeType == DedupeType.Game && _bucketedBy == ItemKey.Machine))
-                    sortedList = DatFileTool.Merge(sortedList);
+                // Merge the items
+                sortedList = DatFileTool.Merge(sortedList);
 
                 // Add the list back to the dictionary
                 RemoveBucket(key);

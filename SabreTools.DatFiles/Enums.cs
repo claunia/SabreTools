@@ -174,19 +174,22 @@ namespace SabreTools.DatFiles
     /// </summary>
     public enum DedupeType
     {
+        /// <summary>
+        /// No deduplication
+        /// </summary>
         None = 0,
+
+        /// <summary>
+        /// Deduplicate across all available fields
+        /// </summary>
+        /// <remarks>Requires sorting by any hash</remarks>
         Full,
 
-        // Force only deduping with certain types
+        /// <summary>
+        /// Deduplicate on a per-machine basis
+        /// </summary>
+        /// <remarks>Requires sorting by machine</remarks>
         Game,
-        CRC,
-        MD2,
-        MD4,
-        MD5,
-        SHA1,
-        SHA256,
-        SHA384,
-        SHA512,
     }
 
     /// <summary>
