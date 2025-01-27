@@ -378,7 +378,7 @@ namespace SabreTools.Core.Filter
             operation = GetOperation(match.Groups["operation"].Value);
 
             // Only non-zero length values are counted as non-null
-            if (value?.Length > 0)
+            if (match.Groups["value"]?.Value?.Length > 0)
                 value = match.Groups["value"].Value;
 
             return true;
