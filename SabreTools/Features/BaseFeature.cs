@@ -749,7 +749,7 @@ namespace SabreTools.Features
                 return new Feature(
                     OneGamePerRegionValue,
                     new List<string>() { "-1g1r", "--one-game-per-region" },
-                    "Try to ensure one game per user-defined region",
+                    "[EXPERIMENTAL] Try to ensure one game per user-defined region",
                     ParameterType.Flag,
                     longDescription: "This allows users to input a list of regions to use to filter on in order so only one game from each set of parent and clones will be included. This requires either cloneof or romof tags to function properly.");
             }

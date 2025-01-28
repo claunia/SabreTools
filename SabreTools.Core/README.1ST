@@ -353,7 +353,7 @@ Features and Options:
 		  Exclude any valid item or machine field from outputs. Examples
 		  include: romof, publisher, and offset.
 
-	  -1g1r, --one-game-per-region   Try to ensure one game per region
+	  -1g1r, --one-game-per-region   [EXPERIMENTAL] Try to ensure one game per region
 		  This allows users to input a list of regions to use to filter on
 		  in order so only one game from each set of parent and clones will be
 		  included. This requires either cloneof or romof tags to function
@@ -880,7 +880,7 @@ Features and Options:
 		  Exclude any valid item or machine field from outputs. Examples
 		  include: romof, publisher, and offset.
 
-	  -1g1r, --one-game-per-region   Try to ensure one game per region
+	  -1g1r, --one-game-per-region   [EXPERIMENTAL] Try to ensure one game per region
 		  This allows users to input a list of regions to use to filter on
 		  in order so only one game from each set of parent and clones will be
 		  included. This requires either cloneof or romof tags to function
