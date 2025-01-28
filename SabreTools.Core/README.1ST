@@ -397,7 +397,7 @@ Features and Options:
 
 	  -fi=, --filter=             Filter a game/rom field with the given value(s)
 		  Filter any valid item or machine field from inputs. Filters are input
-		  in the form 'key:value' or '!key:value', where the '!' signifies 'not
+		  in the form 'key=value' or 'key!=value', where the '!' signifies 'not
 		  matching'. Numeric values may also prefix the 'value' with '>', '<', or
 		  '=' accordingly. Key examples include: romof, category, and game.
 		  Additionally, the user can specify an exact match or full C#-style
@@ -1094,7 +1094,7 @@ Features and Options:
 
 	  -fi=, --filter=             Filter a game/rom field with the given value(s)
 		  Filter any valid item or machine field from inputs. Filters are input
-		  in the form 'key:value' or '!key:value', where the '!' signifies 'not
+		  in the form 'key=value' or 'key!=value', where the '!' signifies 'not
 		  matching'. Numeric values may also prefix the 'value' with '>', '<', or
 		  '=' accordingly. Key examples include: romof, category, and game.
 		  Additionally, the user can specify an exact match or full C#-style
@@ -1212,7 +1212,7 @@ Features and Options:
 
 	  -fi=, --filter=             Filter a game/rom field with the given value(s)
 		  Filter any valid item or machine field from inputs. Filters are input
-		  in the form 'key:value' or '!key:value', where the '!' signifies 'not
+		  in the form 'key=value' or 'key!=value', where the '!' signifies 'not
 		  matching'. Numeric values may also prefix the 'value' with '>', '<', or
 		  '=' accordingly. Key examples include: romof, category, and game.
 		  Additionally, the user can specify an exact match or full C#-style
