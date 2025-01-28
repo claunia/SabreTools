@@ -39,6 +39,9 @@ namespace SabreTools.Core.Test.Filter
         public void Constructor_FilterString(string filterString, Operation expected)
         {
             FilterObject filterObject = new FilterObject(filterString);
+            Assert.Equal("sample", filterObject.Key.ItemName);
+            Assert.Equal("name", filterObject.Key.FieldName);
+            Assert.Equal("XXXXXX", filterObject.Value);
             Assert.Equal(expected, filterObject.Operation);
         }
 
@@ -61,6 +64,9 @@ namespace SabreTools.Core.Test.Filter
         public void Constructor_TripleString(string itemField, string? value, string? operation, Operation expected)
         {
             FilterObject filterObject = new FilterObject(itemField, value, operation);
+            Assert.Equal("sample", filterObject.Key.ItemName);
+            Assert.Equal("name", filterObject.Key.FieldName);
+            Assert.Equal("XXXXXX", filterObject.Value);
             Assert.Equal(expected, filterObject.Operation);
         }
 
