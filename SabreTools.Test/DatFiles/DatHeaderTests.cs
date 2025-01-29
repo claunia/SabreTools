@@ -1,8 +1,10 @@
 using SabreTools.DatFiles;
+using SabreTools.DatTools;
 using Xunit;
 
 namespace SabreTools.Test.DatFiles
 {
+    // TODO: Migrate tests to WriterTests when available
     public class DatHeaderTests
     {
         [Theory]
@@ -20,7 +22,7 @@ namespace SabreTools.Test.DatFiles
 
             // Invoke the method
             string outDir = "C:\\Test";
-            var actual = DatHeader.CreateOutFileNames(datHeader, outDir, overwrite: true);
+            var actual = Writer.CreateOutFileNames(datHeader, outDir, overwrite: true);
 
             // Check the result
             string expected = $"{outDir}{System.IO.Path.DirectorySeparatorChar}test.{extension}";
@@ -38,7 +40,7 @@ namespace SabreTools.Test.DatFiles
 
             // Invoke the method
             string outDir = "C:\\Test";
-            var actual = DatHeader.CreateOutFileNames(datHeader, outDir, overwrite: true);
+            var actual = Writer.CreateOutFileNames(datHeader, outDir, overwrite: true);
 
             // Check the result
             Assert.Equal(28, actual.Count);
