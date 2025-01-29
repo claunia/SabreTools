@@ -495,7 +495,7 @@ namespace SabreTools.DatFiles
 
             // .xml
             { DatFormat.Logiqx, new string[] { ".xml" } },
-            { DatFormat.LogiqxDeprecated, new string[] { ".xml" } },
+            { DatFormat.LogiqxDeprecated, new string[] { ".xml", ".xml" } }, // Intentional duplicate
             { DatFormat.SabreXML, new string[] { ".xml", ".sd.xml" } },
             { DatFormat.SoftwareList, new string[] { ".xml", ".sl.xml" } },
             { DatFormat.Listxml, new string[] { ".xml", ".mame.xml" } },
@@ -519,484 +519,31 @@ namespace SabreTools.DatFiles
             if (!outDir.EndsWith(Path.DirectorySeparatorChar.ToString()))
                 outDir += Path.DirectorySeparatorChar;
 
-            // Get all used extensions
-            List<string> usedExtensions = [];
-
-            // Get the current format type
+            // Get the current format types
             DatFormat datFormat = GetFieldValue<DatFormat>(DatHeader.DatFormatKey);
+            List<DatFormat> usedFormats = SplitFormats(datFormat);
 
             // Get the extensions from the output type
-
-            #region .csv
-
-            // CSV
-#if NET20 || NET35
-            if ((datFormat & DatFormat.CSV) != 0)
-#else
-            if (datFormat.HasFlag(DatFormat.CSV))
-#endif
+            List<string> usedExtensions = [];
+            foreach (var map in ExtensionMappings)
             {
-                outfileNames.Add(DatFormat.CSV, CreateOutFileNamesHelper(outDir, ".csv", overwrite));
-                usedExtensions.Add(".csv");
+                // Split the pair
+                DatFormat format = map.Key;
+                string[] extensions = map.Value;
+
+                // Ignore unused formats
+                if (!usedFormats.Contains(format))
+                    continue;
+
+                // Get the correct extension, assuming a backup exists
+                string extension = extensions[0];
+                if (usedExtensions.Contains(extension))
+                    extension = extensions[1];
+
+                // Create the filename and set the extension as used
+                outfileNames.Add(format, CreateOutFileNamesHelper(outDir, extension, overwrite));
+                usedExtensions.Add(extension);
             }
-            ;
-
-            #endregion
-
-            #region .dat
-
-            // ClrMamePro
-#if NET20 || NET35
-            if ((datFormat & DatFormat.ClrMamePro) != 0)
-#else
-            if (datFormat.HasFlag(DatFormat.ClrMamePro))
-#endif
-            {
-                outfileNames.Add(DatFormat.ClrMamePro, CreateOutFileNamesHelper(outDir, ".dat", overwrite));
-                usedExtensions.Add(".dat");
-            }
-            ;
-
-            // RomCenter
-#if NET20 || NET35
-            if ((datFormat & DatFormat.RomCenter) != 0)
-#else
-            if (datFormat.HasFlag(DatFormat.RomCenter))
-#endif
-            {
-                if (usedExtensions.Contains(".dat"))
-                {
-                    outfileNames.Add(DatFormat.RomCenter, CreateOutFileNamesHelper(outDir, ".rc.dat", overwrite));
-                    usedExtensions.Add(".rc.dat");
-                }
-                else
-                {
-                    outfileNames.Add(DatFormat.RomCenter, CreateOutFileNamesHelper(outDir, ".dat", overwrite));
-                    usedExtensions.Add(".dat");
-                }
-            }
-
-            // DOSCenter
-#if NET20 || NET35
-            if ((datFormat & DatFormat.DOSCenter) != 0)
-#else
-            if (datFormat.HasFlag(DatFormat.DOSCenter))
-#endif
-            {
-                if (usedExtensions.Contains(".dat"))
-                {
-                    outfileNames.Add(DatFormat.DOSCenter, CreateOutFileNamesHelper(outDir, ".dc.dat", overwrite));
-                    usedExtensions.Add(".dc.dat");
-                }
-                else
-                {
-                    outfileNames.Add(DatFormat.DOSCenter, CreateOutFileNamesHelper(outDir, ".dat", overwrite));
-                    usedExtensions.Add(".dat");
-                }
-            }
-
-            #endregion
-
-            #region .json
-
-            // JSON
-#if NET20 || NET35
-            if ((datFormat & DatFormat.SabreJSON) != 0)
-#else
-            if (datFormat.HasFlag(DatFormat.SabreJSON))
-#endif
-            {
-                outfileNames.Add(DatFormat.SabreJSON, CreateOutFileNamesHelper(outDir, ".json", overwrite));
-                usedExtensions.Add(".json");
-            }
-
-            #endregion
-
-            #region .md2
-
-            // Redump MD2
-#if NET20 || NET35
-            if ((datFormat & DatFormat.RedumpMD2) != 0)
-#else
-            if (datFormat.HasFlag(DatFormat.RedumpMD2))
-#endif
-            {
-                outfileNames.Add(DatFormat.RedumpMD2, CreateOutFileNamesHelper(outDir, ".md2", overwrite));
-                usedExtensions.Add(".md2");
-            }
-            ;
-
-            #endregion
-
-            #region .md4
-
-            // Redump MD4
-#if NET20 || NET35
-            if ((datFormat & DatFormat.RedumpMD4) != 0)
-#else
-            if (datFormat.HasFlag(DatFormat.RedumpMD4))
-#endif
-            {
-                outfileNames.Add(DatFormat.RedumpMD4, CreateOutFileNamesHelper(outDir, ".md4", overwrite));
-                usedExtensions.Add(".md4");
-            }
-            ;
-
-            #endregion
-
-            #region .md5
-
-            // Redump MD5
-#if NET20 || NET35
-            if ((datFormat & DatFormat.RedumpMD5) != 0)
-#else
-            if (datFormat.HasFlag(DatFormat.RedumpMD5))
-#endif
-            {
-                outfileNames.Add(DatFormat.RedumpMD5, CreateOutFileNamesHelper(outDir, ".md5", overwrite));
-                usedExtensions.Add(".md5");
-            }
-            ;
-
-            #endregion
-
-            #region .sfv
-
-            // Redump SFV
-#if NET20 || NET35
-            if ((datFormat & DatFormat.RedumpSFV) != 0)
-#else
-            if (datFormat.HasFlag(DatFormat.RedumpSFV))
-#endif
-            {
-                outfileNames.Add(DatFormat.RedumpSFV, CreateOutFileNamesHelper(outDir, ".sfv", overwrite));
-                usedExtensions.Add(".sfv");
-            }
-            ;
-
-            #endregion
-
-            #region .sha1
-
-            // Redump SHA-1
-#if NET20 || NET35
-            if ((datFormat & DatFormat.RedumpSHA1) != 0)
-#else
-            if (datFormat.HasFlag(DatFormat.RedumpSHA1))
-#endif
-            {
-                outfileNames.Add(DatFormat.RedumpSHA1, CreateOutFileNamesHelper(outDir, ".sha1", overwrite));
-                usedExtensions.Add(".sha1");
-            }
-            ;
-
-            #endregion
-
-            #region .sha256
-
-            // Redump SHA-256
-#if NET20 || NET35
-            if ((datFormat & DatFormat.RedumpSHA256) != 0)
-#else
-            if (datFormat.HasFlag(DatFormat.RedumpSHA256))
-#endif
-            {
-                outfileNames.Add(DatFormat.RedumpSHA256, CreateOutFileNamesHelper(outDir, ".sha256", overwrite));
-                usedExtensions.Add(".sha256");
-            }
-            ;
-
-            #endregion
-
-            #region .sha384
-
-            // Redump SHA-384
-#if NET20 || NET35
-            if ((datFormat & DatFormat.RedumpSHA384) != 0)
-#else
-            if (datFormat.HasFlag(DatFormat.RedumpSHA384))
-#endif
-            {
-                outfileNames.Add(DatFormat.RedumpSHA384, CreateOutFileNamesHelper(outDir, ".sha384", overwrite));
-                usedExtensions.Add(".sha384");
-            }
-            ;
-
-            #endregion
-
-            #region .sha512
-
-            // Redump SHA-512
-#if NET20 || NET35
-            if ((datFormat & DatFormat.RedumpSHA512) != 0)
-#else
-            if (datFormat.HasFlag(DatFormat.RedumpSHA512))
-#endif
-            {
-                outfileNames.Add(DatFormat.RedumpSHA512, CreateOutFileNamesHelper(outDir, ".sha512", overwrite));
-                usedExtensions.Add(".sha512");
-            }
-            ;
-
-            #endregion
-
-            #region .spamsum
-
-            // Redump SpamSum
-#if NET20 || NET35
-            if ((datFormat & DatFormat.RedumpSpamSum) != 0)
-#else
-            if (datFormat.HasFlag(DatFormat.RedumpSpamSum))
-#endif
-            {
-                outfileNames.Add(DatFormat.RedumpSpamSum, CreateOutFileNamesHelper(outDir, ".spamsum", overwrite));
-                usedExtensions.Add(".spamsum");
-            }
-            ;
-
-            #endregion
-
-            #region .ssv
-
-            // SSV
-#if NET20 || NET35
-            if ((datFormat & DatFormat.SSV) != 0)
-#else
-            if (datFormat.HasFlag(DatFormat.SSV))
-#endif
-            {
-                outfileNames.Add(DatFormat.SSV, CreateOutFileNamesHelper(outDir, ".ssv", overwrite));
-                usedExtensions.Add(".ssv");
-            }
-            ;
-
-            #endregion
-
-            #region .tsv
-
-            // TSV
-#if NET20 || NET35
-            if ((datFormat & DatFormat.TSV) != 0)
-#else
-            if (datFormat.HasFlag(DatFormat.TSV))
-#endif
-            {
-                outfileNames.Add(DatFormat.TSV, CreateOutFileNamesHelper(outDir, ".tsv", overwrite));
-                usedExtensions.Add(".tsv");
-            }
-            ;
-
-            #endregion
-
-            #region .txt
-
-            // AttractMode
-#if NET20 || NET35
-            if ((datFormat & DatFormat.AttractMode) != 0)
-#else
-            if (datFormat.HasFlag(DatFormat.AttractMode))
-#endif
-            {
-                outfileNames.Add(DatFormat.AttractMode, CreateOutFileNamesHelper(outDir, ".txt", overwrite));
-                usedExtensions.Add(".txt");
-            }
-
-            // MAME Listroms
-#if NET20 || NET35
-            if ((datFormat & DatFormat.Listrom) != 0)
-#else
-            if (datFormat.HasFlag(DatFormat.Listrom))
-#endif
-            {
-                if (usedExtensions.Contains(".txt"))
-                {
-                    outfileNames.Add(DatFormat.Listrom, CreateOutFileNamesHelper(outDir, ".lr.txt", overwrite));
-                    usedExtensions.Add(".lr.txt");
-                }
-                else
-                {
-                    outfileNames.Add(DatFormat.Listrom, CreateOutFileNamesHelper(outDir, ".txt", overwrite));
-                    usedExtensions.Add(".txt");
-                }
-            }
-
-            // Missfile
-#if NET20 || NET35
-            if ((datFormat & DatFormat.MissFile) != 0)
-#else
-            if (datFormat.HasFlag(DatFormat.MissFile))
-#endif
-            {
-                if (usedExtensions.Contains(".txt"))
-                {
-                    outfileNames.Add(DatFormat.MissFile, CreateOutFileNamesHelper(outDir, ".miss.txt", overwrite));
-                    usedExtensions.Add(".miss.txt");
-                }
-                else
-                {
-                    outfileNames.Add(DatFormat.MissFile, CreateOutFileNamesHelper(outDir, ".txt", overwrite));
-                    usedExtensions.Add(".txt");
-                }
-            }
-
-            // Everdrive SMDB
-#if NET20 || NET35
-            if ((datFormat & DatFormat.EverdriveSMDB) != 0)
-#else
-            if (datFormat.HasFlag(DatFormat.EverdriveSMDB))
-#endif
-            {
-                if (usedExtensions.Contains(".txt"))
-                {
-                    outfileNames.Add(DatFormat.EverdriveSMDB, CreateOutFileNamesHelper(outDir, ".smdb.txt", overwrite));
-                    usedExtensions.Add(".smdb.txt");
-                }
-                else
-                {
-                    outfileNames.Add(DatFormat.EverdriveSMDB, CreateOutFileNamesHelper(outDir, ".txt", overwrite));
-                    usedExtensions.Add(".txt");
-                }
-            }
-
-            #endregion
-
-            #region .xml
-
-            // Logiqx XML
-#if NET20 || NET35
-            if ((datFormat & DatFormat.Logiqx) != 0)
-#else
-            if (datFormat.HasFlag(DatFormat.Logiqx))
-#endif
-            {
-                outfileNames.Add(DatFormat.Logiqx, CreateOutFileNamesHelper(outDir, ".xml", overwrite));
-                usedExtensions.Add(".xml");
-            }
-#if NET20 || NET35
-            if ((datFormat & DatFormat.LogiqxDeprecated) != 0)
-#else
-            if (datFormat.HasFlag(DatFormat.LogiqxDeprecated))
-#endif
-            {
-                outfileNames.Add(DatFormat.LogiqxDeprecated, CreateOutFileNamesHelper(outDir, ".xml", overwrite));
-                usedExtensions.Add(".xml");
-            }
-
-            // SabreDAT
-#if NET20 || NET35
-            if ((datFormat & DatFormat.SabreXML) != 0)
-#else
-            if (datFormat.HasFlag(DatFormat.SabreXML))
-#endif
-            {
-                if (usedExtensions.Contains(".xml"))
-                {
-                    outfileNames.Add(DatFormat.SabreXML, CreateOutFileNamesHelper(outDir, ".sd.xml", overwrite));
-                    usedExtensions.Add(".sd.xml");
-                }
-                else
-                {
-                    outfileNames.Add(DatFormat.SabreXML, CreateOutFileNamesHelper(outDir, ".xml", overwrite));
-                    usedExtensions.Add(".xml");
-                }
-            }
-
-            // Software List
-#if NET20 || NET35
-            if ((datFormat & DatFormat.SoftwareList) != 0)
-#else
-            if (datFormat.HasFlag(DatFormat.SoftwareList))
-#endif
-            {
-                if (usedExtensions.Contains(".xml"))
-                {
-                    outfileNames.Add(DatFormat.SoftwareList, CreateOutFileNamesHelper(outDir, ".sl.xml", overwrite));
-                    usedExtensions.Add(".sl.xml");
-                }
-                else
-                {
-                    outfileNames.Add(DatFormat.SoftwareList, CreateOutFileNamesHelper(outDir, ".xml", overwrite));
-                    usedExtensions.Add(".xml");
-                }
-            }
-
-            // MAME Listxml
-#if NET20 || NET35
-            if ((datFormat & DatFormat.Listxml) != 0)
-#else
-            if (datFormat.HasFlag(DatFormat.Listxml))
-#endif
-            {
-                if (usedExtensions.Contains(".xml"))
-                {
-                    outfileNames.Add(DatFormat.Listxml, CreateOutFileNamesHelper(outDir, ".mame.xml", overwrite));
-                    usedExtensions.Add(".mame.xml");
-                }
-                else
-                {
-                    outfileNames.Add(DatFormat.Listxml, CreateOutFileNamesHelper(outDir, ".xml", overwrite));
-                    usedExtensions.Add(".xml");
-                }
-            }
-
-            // OfflineList
-#if NET20 || NET35
-            if ((datFormat & DatFormat.OfflineList) != 0)
-#else
-            if (datFormat.HasFlag(DatFormat.OfflineList))
-#endif
-            {
-                if (usedExtensions.Contains(".xml"))
-                {
-                    outfileNames.Add(DatFormat.OfflineList, CreateOutFileNamesHelper(outDir, ".ol.xml", overwrite));
-                    usedExtensions.Add(".ol.xml");
-                }
-                else
-                {
-                    outfileNames.Add(DatFormat.OfflineList, CreateOutFileNamesHelper(outDir, ".xml", overwrite));
-                    usedExtensions.Add(".xml");
-                }
-            }
-
-            // openMSX
-#if NET20 || NET35
-            if ((datFormat & DatFormat.OpenMSX) != 0)
-#else
-            if (datFormat.HasFlag(DatFormat.OpenMSX))
-#endif
-            {
-                if (usedExtensions.Contains(".xml"))
-                {
-                    outfileNames.Add(DatFormat.OpenMSX, CreateOutFileNamesHelper(outDir, ".msx.xml", overwrite));
-                    usedExtensions.Add(".msx.xml");
-                }
-                else
-                {
-                    outfileNames.Add(DatFormat.OpenMSX, CreateOutFileNamesHelper(outDir, ".xml", overwrite));
-                    usedExtensions.Add(".xml");
-                }
-            }
-
-            // Archive.org
-#if NET20 || NET35
-            if ((datFormat & DatFormat.ArchiveDotOrg) != 0)
-#else
-            if (datFormat.HasFlag(DatFormat.ArchiveDotOrg))
-#endif
-            {
-                if (usedExtensions.Contains(".xml"))
-                {
-                    outfileNames.Add(DatFormat.ArchiveDotOrg, CreateOutFileNamesHelper(outDir, ".ado.xml", overwrite));
-                    usedExtensions.Add(".ado.xml");
-                }
-                else
-                {
-                    outfileNames.Add(DatFormat.ArchiveDotOrg, CreateOutFileNamesHelper(outDir, ".xml", overwrite));
-                    usedExtensions.Add(".xml");
-                }
-            }
-
-            #endregion
 
             return outfileNames;
         }
@@ -1033,6 +580,135 @@ namespace SabreTools.DatFiles
             }
 
             return outfile;
+        }
+
+        /// <summary>
+        /// Split a format flag into multiple distinct values
+        /// </summary>
+        /// <param name="datFormat">Combined DatFormat value to split</param>
+        /// <returns>List representing the individual flag values set</returns>
+        /// TODO: Consider making DatFormat a non-flag enum so this doesn't need to happen
+        private List<DatFormat> SplitFormats(DatFormat datFormat)
+        {
+            List<DatFormat> usedFormats = [];
+
+#if NET20 || NET35
+            if ((datFormat & DatFormat.ArchiveDotOrg) != 0)
+                usedFormats.Add(DatFormat.ArchiveDotOrg);
+            if ((datFormat & DatFormat.AttractMode) != 0)
+                usedFormats.Add(DatFormat.AttractMode);
+            if ((datFormat & DatFormat.ClrMamePro) != 0)
+                usedFormats.Add(DatFormat.ClrMamePro);
+            if ((datFormat & DatFormat.CSV) != 0)
+                usedFormats.Add(DatFormat.CSV);
+            if ((datFormat & DatFormat.DOSCenter) != 0)
+                usedFormats.Add(DatFormat.DOSCenter);
+            if ((datFormat & DatFormat.EverdriveSMDB) != 0)
+                usedFormats.Add(DatFormat.EverdriveSMDB);
+            if ((datFormat & DatFormat.Listrom) != 0)
+                usedFormats.Add(DatFormat.Listrom);
+            if ((datFormat & DatFormat.Listxml) != 0)
+                usedFormats.Add(DatFormat.Listxml);
+            if ((datFormat & DatFormat.Logiqx) != 0)
+                usedFormats.Add(DatFormat.Logiqx);
+            if ((datFormat & DatFormat.LogiqxDeprecated) != 0)
+                usedFormats.Add(DatFormat.LogiqxDeprecated);
+            if ((datFormat & DatFormat.MissFile) != 0)
+                usedFormats.Add(DatFormat.MissFile);
+            if ((datFormat & DatFormat.OfflineList) != 0)
+                usedFormats.Add(DatFormat.OfflineList);
+            if ((datFormat & DatFormat.OpenMSX) != 0)
+                usedFormats.Add(DatFormat.OpenMSX);
+            if ((datFormat & DatFormat.RedumpMD2) != 0)
+                usedFormats.Add(DatFormat.RedumpMD2);
+            if ((datFormat & DatFormat.RedumpMD4) != 0)
+                usedFormats.Add(DatFormat.RedumpMD4);
+            if ((datFormat & DatFormat.RedumpMD5) != 0)
+                usedFormats.Add(DatFormat.RedumpMD5);
+            if ((datFormat & DatFormat.RedumpSFV) != 0)
+                usedFormats.Add(DatFormat.RedumpSFV);
+            if ((datFormat & DatFormat.RedumpSHA1) != 0)
+                usedFormats.Add(DatFormat.RedumpSHA1);
+            if ((datFormat & DatFormat.RedumpSHA256) != 0)
+                usedFormats.Add(DatFormat.RedumpSHA256);
+            if ((datFormat & DatFormat.RedumpSHA384) != 0)
+                usedFormats.Add(DatFormat.RedumpSHA384);
+            if ((datFormat & DatFormat.RedumpSHA512) != 0)
+                usedFormats.Add(DatFormat.RedumpSHA512);
+            if ((datFormat & DatFormat.RedumpSpamSum) != 0)
+                usedFormats.Add(DatFormat.RedumpSpamSum);
+            if ((datFormat & DatFormat.RomCenter) != 0)
+                usedFormats.Add(DatFormat.RomCenter);
+            if ((datFormat & DatFormat.SabreJSON) != 0)
+                usedFormats.Add(DatFormat.SabreJSON);
+            if ((datFormat & DatFormat.SabreXML) != 0)
+                usedFormats.Add(DatFormat.SabreXML);
+            if ((datFormat & DatFormat.SoftwareList) != 0)
+                usedFormats.Add(DatFormat.SoftwareList);
+            if ((datFormat & DatFormat.SSV) != 0)
+                usedFormats.Add(DatFormat.SSV);
+            if ((datFormat & DatFormat.TSV) != 0)
+                usedFormats.Add(DatFormat.TSV);
+#else
+            if (datFormat.HasFlag(DatFormat.ArchiveDotOrg))
+                usedFormats.Add(DatFormat.ArchiveDotOrg);
+            if (datFormat.HasFlag(DatFormat.AttractMode))
+                usedFormats.Add(DatFormat.AttractMode);
+            if (datFormat.HasFlag(DatFormat.ClrMamePro))
+                usedFormats.Add(DatFormat.ClrMamePro);
+            if (datFormat.HasFlag(DatFormat.CSV))
+                usedFormats.Add(DatFormat.CSV);
+            if (datFormat.HasFlag(DatFormat.DOSCenter))
+                usedFormats.Add(DatFormat.DOSCenter);
+            if (datFormat.HasFlag(DatFormat.EverdriveSMDB))
+                usedFormats.Add(DatFormat.EverdriveSMDB);
+            if (datFormat.HasFlag(DatFormat.Listrom))
+                usedFormats.Add(DatFormat.Listrom);
+            if (datFormat.HasFlag(DatFormat.Listxml))
+                usedFormats.Add(DatFormat.Listxml);
+            if (datFormat.HasFlag(DatFormat.Logiqx))
+                usedFormats.Add(DatFormat.Logiqx);
+            if (datFormat.HasFlag(DatFormat.LogiqxDeprecated))
+                usedFormats.Add(DatFormat.LogiqxDeprecated);
+            if (datFormat.HasFlag(DatFormat.MissFile))
+                usedFormats.Add(DatFormat.MissFile);
+            if (datFormat.HasFlag(DatFormat.OfflineList))
+                usedFormats.Add(DatFormat.OfflineList);
+            if (datFormat.HasFlag(DatFormat.OpenMSX))
+                usedFormats.Add(DatFormat.OpenMSX);
+            if (datFormat.HasFlag(DatFormat.RedumpMD2))
+                usedFormats.Add(DatFormat.RedumpMD2);
+            if (datFormat.HasFlag(DatFormat.RedumpMD4))
+                usedFormats.Add(DatFormat.RedumpMD4);
+            if (datFormat.HasFlag(DatFormat.RedumpMD5))
+                usedFormats.Add(DatFormat.RedumpMD5);
+            if (datFormat.HasFlag(DatFormat.RedumpSFV))
+                usedFormats.Add(DatFormat.RedumpSFV);
+            if (datFormat.HasFlag(DatFormat.RedumpSHA1))
+                usedFormats.Add(DatFormat.RedumpSHA1);
+            if (datFormat.HasFlag(DatFormat.RedumpSHA256))
+                usedFormats.Add(DatFormat.RedumpSHA256);
+            if (datFormat.HasFlag(DatFormat.RedumpSHA384))
+                usedFormats.Add(DatFormat.RedumpSHA384);
+            if (datFormat.HasFlag(DatFormat.RedumpSHA512))
+                usedFormats.Add(DatFormat.RedumpSHA512);
+            if (datFormat.HasFlag(DatFormat.RedumpSpamSum))
+                usedFormats.Add(DatFormat.RedumpSpamSum);
+            if (datFormat.HasFlag(DatFormat.RomCenter))
+                usedFormats.Add(DatFormat.RomCenter);
+            if (datFormat.HasFlag(DatFormat.SabreJSON))
+                usedFormats.Add(DatFormat.SabreJSON);
+            if (datFormat.HasFlag(DatFormat.SabreXML))
+                usedFormats.Add(DatFormat.SabreXML);
+            if (datFormat.HasFlag(DatFormat.SoftwareList))
+                usedFormats.Add(DatFormat.SoftwareList);
+            if (datFormat.HasFlag(DatFormat.SSV))
+                usedFormats.Add(DatFormat.SSV);
+            if (datFormat.HasFlag(DatFormat.TSV))
+                usedFormats.Add(DatFormat.TSV);
+#endif
+
+            return usedFormats;
         }
 
         #endregion
