@@ -515,6 +515,15 @@ namespace SabreTools.DatFiles
             // Create the output dictionary
             Dictionary<DatFormat, string> outfileNames = [];
 
+            // Get the filename to use
+            string? filename = string.IsNullOrEmpty(GetStringFieldValue(DatHeader.FileNameKey))
+                ? GetStringFieldValue(Models.Metadata.Header.DescriptionKey)
+                : GetStringFieldValue(DatHeader.FileNameKey);
+
+            // Strip off the extension if it's a holdover from the DAT
+            if (Utilities.HasValidDatExtension(filename))
+                filename = Path.GetFileNameWithoutExtension(filename);
+
             // Double check the outDir for the end delim
             if (!outDir.EndsWith(Path.DirectorySeparatorChar.ToString()))
                 outDir += Path.DirectorySeparatorChar;
@@ -541,7 +550,7 @@ namespace SabreTools.DatFiles
                     extension = extensions[1];
 
                 // Create the filename and set the extension as used
-                outfileNames.Add(format, CreateOutFileNamesHelper(outDir, extension, overwrite));
+                outfileNames.Add(format, CreateOutFileNamesHelper(filename, outDir, extension, overwrite));
                 usedExtensions.Add(extension);
             }
 
@@ -551,20 +560,13 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Help generating the outfile name
         /// </summary>
+        /// <param name="filename">Base filename to use</param>
         /// <param name="outDir">Output directory</param>
         /// <param name="extension">Extension to use for the file</param>
         /// <param name="overwrite">True if we ignore existing files, false otherwise</param>
         /// <returns>String containing the new filename</returns>
-        private string CreateOutFileNamesHelper(string outDir, string extension, bool overwrite)
+        private static string CreateOutFileNamesHelper(string? filename, string outDir, string extension, bool overwrite)
         {
-            string? filename = string.IsNullOrEmpty(GetStringFieldValue(DatHeader.FileNameKey))
-                ? GetStringFieldValue(Models.Metadata.Header.DescriptionKey)
-                : GetStringFieldValue(DatHeader.FileNameKey);
-
-            // Strip off the extension if it's a holdover from the DAT
-            if (Utilities.HasValidDatExtension(filename))
-                filename = Path.GetFileNameWithoutExtension(filename);
-
             string outfile = $"{outDir}{filename}{extension}";
             outfile = outfile.Replace($"{Path.DirectorySeparatorChar}{Path.DirectorySeparatorChar}", Path.DirectorySeparatorChar.ToString());
 
@@ -588,7 +590,7 @@ namespace SabreTools.DatFiles
         /// <param name="datFormat">Combined DatFormat value to split</param>
         /// <returns>List representing the individual flag values set</returns>
         /// TODO: Consider making DatFormat a non-flag enum so this doesn't need to happen
-        private List<DatFormat> SplitFormats(DatFormat datFormat)
+        private static List<DatFormat> SplitFormats(DatFormat datFormat)
         {
             List<DatFormat> usedFormats = [];
 
