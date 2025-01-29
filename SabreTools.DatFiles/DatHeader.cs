@@ -439,6 +439,72 @@ namespace SabreTools.DatFiles
         #region Writing
 
         /// <summary>
+        /// Map of all formats to extensions, including "backup" extensions
+        /// </summary>
+        private static readonly Dictionary<DatFormat, string[]> ExtensionMappings = new()
+        {
+            // .csv
+            { DatFormat.CSV, new string[] { ".csv" } },
+
+            // .dat
+            { DatFormat.ClrMamePro, new string[] { ".dat" } },
+            { DatFormat.RomCenter, new string[] { ".dat", ".rc.dat" } },
+            { DatFormat.DOSCenter, new string[] { ".dat", ".dc.dat" } },
+
+            // .json
+            { DatFormat.SabreJSON, new string[] { ".json" } },
+
+            // .md2
+            { DatFormat.RedumpMD2, new string[] { ".md2" } },
+
+            // .md4
+            { DatFormat.RedumpMD4, new string[] { ".md4" } },
+
+            // .md5
+            { DatFormat.RedumpMD5, new string[] { ".md5" } },
+
+            // .sfv
+            { DatFormat.RedumpSFV, new string[] { ".sfv" } },
+
+            // .sha1
+            { DatFormat.RedumpSHA1, new string[] { ".sha1" } },
+
+            // .sha256
+            { DatFormat.RedumpSHA256, new string[] { ".sha256" } },
+
+            // .sha384
+            { DatFormat.RedumpSHA384, new string[] { ".sha384" } },
+
+            // .sha512
+            { DatFormat.RedumpSHA512, new string[] { ".sha512" } },
+
+            // .spamsum
+            { DatFormat.RedumpSpamSum, new string[] { ".spamsum" } },
+
+            // .ssv
+            { DatFormat.SSV, new string[] { ".ssv" } },
+
+            // .tsv
+            { DatFormat.TSV, new string[] { ".tsv" } },
+
+            // .txt
+            { DatFormat.AttractMode, new string[] { ".txt" } },
+            { DatFormat.Listrom, new string[] { ".txt", ".lr.txt" } },
+            { DatFormat.MissFile, new string[] { ".txt", ".miss.txt" } },
+            { DatFormat.EverdriveSMDB, new string[] { ".txt", ".smdb.txt" } },
+
+            // .xml
+            { DatFormat.Logiqx, new string[] { ".xml" } },
+            { DatFormat.LogiqxDeprecated, new string[] { ".xml" } },
+            { DatFormat.SabreXML, new string[] { ".xml", ".sd.xml" } },
+            { DatFormat.SoftwareList, new string[] { ".xml", ".sl.xml" } },
+            { DatFormat.Listxml, new string[] { ".xml", ".mame.xml" } },
+            { DatFormat.OfflineList, new string[] { ".xml", ".ol.xml" } },
+            { DatFormat.OpenMSX, new string[] { ".xml", ".msx.xml" } },
+            { DatFormat.ArchiveDotOrg, new string[] { ".xml", ".ado.xml" } },
+        };
+
+        /// <summary>
         /// Generate a proper outfile name based on a DAT and output directory
         /// </summary>
         /// <param name="outDir">Output directory</param>
@@ -472,7 +538,8 @@ namespace SabreTools.DatFiles
             {
                 outfileNames.Add(DatFormat.CSV, CreateOutFileNamesHelper(outDir, ".csv", overwrite));
                 usedExtensions.Add(".csv");
-            };
+            }
+            ;
 
             #endregion
 
@@ -487,7 +554,8 @@ namespace SabreTools.DatFiles
             {
                 outfileNames.Add(DatFormat.ClrMamePro, CreateOutFileNamesHelper(outDir, ".dat", overwrite));
                 usedExtensions.Add(".dat");
-            };
+            }
+            ;
 
             // RomCenter
 #if NET20 || NET35
@@ -555,7 +623,8 @@ namespace SabreTools.DatFiles
             {
                 outfileNames.Add(DatFormat.RedumpMD2, CreateOutFileNamesHelper(outDir, ".md2", overwrite));
                 usedExtensions.Add(".md2");
-            };
+            }
+            ;
 
             #endregion
 
@@ -570,7 +639,8 @@ namespace SabreTools.DatFiles
             {
                 outfileNames.Add(DatFormat.RedumpMD4, CreateOutFileNamesHelper(outDir, ".md4", overwrite));
                 usedExtensions.Add(".md4");
-            };
+            }
+            ;
 
             #endregion
 
@@ -585,7 +655,8 @@ namespace SabreTools.DatFiles
             {
                 outfileNames.Add(DatFormat.RedumpMD5, CreateOutFileNamesHelper(outDir, ".md5", overwrite));
                 usedExtensions.Add(".md5");
-            };
+            }
+            ;
 
             #endregion
 
@@ -600,7 +671,8 @@ namespace SabreTools.DatFiles
             {
                 outfileNames.Add(DatFormat.RedumpSFV, CreateOutFileNamesHelper(outDir, ".sfv", overwrite));
                 usedExtensions.Add(".sfv");
-            };
+            }
+            ;
 
             #endregion
 
@@ -615,7 +687,8 @@ namespace SabreTools.DatFiles
             {
                 outfileNames.Add(DatFormat.RedumpSHA1, CreateOutFileNamesHelper(outDir, ".sha1", overwrite));
                 usedExtensions.Add(".sha1");
-            };
+            }
+            ;
 
             #endregion
 
@@ -630,7 +703,8 @@ namespace SabreTools.DatFiles
             {
                 outfileNames.Add(DatFormat.RedumpSHA256, CreateOutFileNamesHelper(outDir, ".sha256", overwrite));
                 usedExtensions.Add(".sha256");
-            };
+            }
+            ;
 
             #endregion
 
@@ -645,7 +719,8 @@ namespace SabreTools.DatFiles
             {
                 outfileNames.Add(DatFormat.RedumpSHA384, CreateOutFileNamesHelper(outDir, ".sha384", overwrite));
                 usedExtensions.Add(".sha384");
-            };
+            }
+            ;
 
             #endregion
 
@@ -660,7 +735,8 @@ namespace SabreTools.DatFiles
             {
                 outfileNames.Add(DatFormat.RedumpSHA512, CreateOutFileNamesHelper(outDir, ".sha512", overwrite));
                 usedExtensions.Add(".sha512");
-            };
+            }
+            ;
 
             #endregion
 
@@ -675,7 +751,8 @@ namespace SabreTools.DatFiles
             {
                 outfileNames.Add(DatFormat.RedumpSpamSum, CreateOutFileNamesHelper(outDir, ".spamsum", overwrite));
                 usedExtensions.Add(".spamsum");
-            };
+            }
+            ;
 
             #endregion
 
@@ -690,7 +767,8 @@ namespace SabreTools.DatFiles
             {
                 outfileNames.Add(DatFormat.SSV, CreateOutFileNamesHelper(outDir, ".ssv", overwrite));
                 usedExtensions.Add(".ssv");
-            };
+            }
+            ;
 
             #endregion
 
@@ -705,7 +783,8 @@ namespace SabreTools.DatFiles
             {
                 outfileNames.Add(DatFormat.TSV, CreateOutFileNamesHelper(outDir, ".tsv", overwrite));
                 usedExtensions.Add(".tsv");
-            };
+            }
+            ;
 
             #endregion
 
