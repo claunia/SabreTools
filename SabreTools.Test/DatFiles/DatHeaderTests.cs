@@ -20,7 +20,7 @@ namespace SabreTools.Test.DatFiles
 
             // Invoke the method
             string outDir = "C:\\Test";
-            var actual = datHeader.CreateOutFileNames(outDir, overwrite: true);
+            var actual = DatHeader.CreateOutFileNames(datHeader, outDir, overwrite: true);
 
             // Check the result
             string expected = $"{outDir}{System.IO.Path.DirectorySeparatorChar}test.{extension}";
@@ -38,7 +38,7 @@ namespace SabreTools.Test.DatFiles
 
             // Invoke the method
             string outDir = "C:\\Test";
-            var actual = datHeader.CreateOutFileNames(outDir, overwrite: true);
+            var actual = DatHeader.CreateOutFileNames(datHeader, outDir, overwrite: true);
 
             // Check the result
             Assert.Equal(28, actual.Count);

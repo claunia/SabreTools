@@ -507,18 +507,19 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Generate a proper outfile name based on a DAT and output directory
         /// </summary>
+        /// <param name="datHeader">DatHeader value to pull information from</param>
         /// <param name="outDir">Output directory</param>
         /// <param name="overwrite">True if we ignore existing files (default), false otherwise</param>
         /// <returns>Dictionary of output formats mapped to file names</returns>
-        public Dictionary<DatFormat, string> CreateOutFileNames(string outDir, bool overwrite = true)
+        public static Dictionary<DatFormat, string> CreateOutFileNames(DatHeader datHeader, string outDir, bool overwrite = true)
         {
             // Create the output dictionary
             Dictionary<DatFormat, string> outfileNames = [];
 
             // Get the filename to use
-            string? filename = string.IsNullOrEmpty(GetStringFieldValue(DatHeader.FileNameKey))
-                ? GetStringFieldValue(Models.Metadata.Header.DescriptionKey)
-                : GetStringFieldValue(DatHeader.FileNameKey);
+            string? filename = string.IsNullOrEmpty(datHeader.GetStringFieldValue(DatHeader.FileNameKey))
+                ? datHeader.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)
+                : datHeader.GetStringFieldValue(DatHeader.FileNameKey);
 
             // Strip off the extension if it's a holdover from the DAT
             if (Utilities.HasValidDatExtension(filename))
@@ -529,7 +530,7 @@ namespace SabreTools.DatFiles
                 outDir += Path.DirectorySeparatorChar;
 
             // Get the current format types
-            DatFormat datFormat = GetFieldValue<DatFormat>(DatHeader.DatFormatKey);
+            DatFormat datFormat = datHeader.GetFieldValue<DatFormat>(DatHeader.DatFormatKey);
             List<DatFormat> usedFormats = SplitFormats(datFormat);
 
             // Get the extensions from the output type

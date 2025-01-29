@@ -16,6 +16,76 @@ namespace SabreTools.DatTools
     /// </summary>
     public class Writer
     {
+        #region Private Constants
+
+        /// <summary>
+        /// Map of all formats to extensions, including "backup" extensions
+        /// </summary>
+        private static readonly Dictionary<DatFormat, string[]> ExtensionMappings = new()
+        {
+            // .csv
+            { DatFormat.CSV, new string[] { ".csv" } },
+
+            // .dat
+            { DatFormat.ClrMamePro, new string[] { ".dat" } },
+            { DatFormat.RomCenter, new string[] { ".dat", ".rc.dat" } },
+            { DatFormat.DOSCenter, new string[] { ".dat", ".dc.dat" } },
+
+            // .json
+            { DatFormat.SabreJSON, new string[] { ".json" } },
+
+            // .md2
+            { DatFormat.RedumpMD2, new string[] { ".md2" } },
+
+            // .md4
+            { DatFormat.RedumpMD4, new string[] { ".md4" } },
+
+            // .md5
+            { DatFormat.RedumpMD5, new string[] { ".md5" } },
+
+            // .sfv
+            { DatFormat.RedumpSFV, new string[] { ".sfv" } },
+
+            // .sha1
+            { DatFormat.RedumpSHA1, new string[] { ".sha1" } },
+
+            // .sha256
+            { DatFormat.RedumpSHA256, new string[] { ".sha256" } },
+
+            // .sha384
+            { DatFormat.RedumpSHA384, new string[] { ".sha384" } },
+
+            // .sha512
+            { DatFormat.RedumpSHA512, new string[] { ".sha512" } },
+
+            // .spamsum
+            { DatFormat.RedumpSpamSum, new string[] { ".spamsum" } },
+
+            // .ssv
+            { DatFormat.SSV, new string[] { ".ssv" } },
+
+            // .tsv
+            { DatFormat.TSV, new string[] { ".tsv" } },
+
+            // .txt
+            { DatFormat.AttractMode, new string[] { ".txt" } },
+            { DatFormat.Listrom, new string[] { ".txt", ".lr.txt" } },
+            { DatFormat.MissFile, new string[] { ".txt", ".miss.txt" } },
+            { DatFormat.EverdriveSMDB, new string[] { ".txt", ".smdb.txt" } },
+
+            // .xml
+            { DatFormat.Logiqx, new string[] { ".xml" } },
+            { DatFormat.LogiqxDeprecated, new string[] { ".xml", ".xml" } }, // Intentional duplicate
+            { DatFormat.SabreXML, new string[] { ".xml", ".sd.xml" } },
+            { DatFormat.SoftwareList, new string[] { ".xml", ".sl.xml" } },
+            { DatFormat.Listxml, new string[] { ".xml", ".mame.xml" } },
+            { DatFormat.OfflineList, new string[] { ".xml", ".ol.xml" } },
+            { DatFormat.OpenMSX, new string[] { ".xml", ".msx.xml" } },
+            { DatFormat.ArchiveDotOrg, new string[] { ".xml", ".ado.xml" } },
+        };
+
+        #endregion
+
         #region Logging
 
         /// <summary>
@@ -83,7 +153,7 @@ namespace SabreTools.DatTools
             _staticLogger.User($"A total of {datFile.DatStatistics.TotalCount - datFile.DatStatistics.RemovedCount} items will be written out to '{datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)}'");
 
             // Get the outfile names
-            Dictionary<DatFormat, string> outfiles = datFile.Header.CreateOutFileNames(outDir!, overwrite);
+            Dictionary<DatFormat, string> outfiles = DatHeader.CreateOutFileNames(datFile.Header, outDir!, overwrite);
 
             try
             {
