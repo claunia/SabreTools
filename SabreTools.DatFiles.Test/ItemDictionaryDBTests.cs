@@ -664,7 +664,35 @@ namespace SabreTools.DatFiles.Test
 
         #region Deduplicate
 
-        // TODO: Add Deduplicate tests
+        [Fact]
+        public void DeduplicateTest()
+        {
+            // Setup the items
+            Source source = new Source(0, source: null);
+
+            Machine machine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "game-1");
+
+            DatItem rom1 = new Rom();
+            rom1.SetName("rom-1");
+            rom1.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "0000000fbbb37f8488100b1b4697012de631a5e6");
+            rom1.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, "1024");
+
+            DatItem rom2 = new Rom();
+            rom2.SetName("rom-2");
+            rom2.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "0000000fbbb37f8488100b1b4697012de631a5e6");
+            rom2.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, "1024");
+
+            // Setup the dictionary
+            var dict = new ItemDictionaryDB();
+            long sourceIndex = dict.AddSource(source);
+            long machineIndex = dict.AddMachine(machine);
+            dict.AddItem(rom1, machineIndex, sourceIndex, statsOnly: false);
+            dict.AddItem(rom2, machineIndex, sourceIndex, statsOnly: false);
+
+            dict.Deduplicate();
+            Assert.Equal(1, dict.DatStatistics.TotalCount);
+        }
 
         #endregion
 

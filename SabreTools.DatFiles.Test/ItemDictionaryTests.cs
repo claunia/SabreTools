@@ -505,7 +505,33 @@ namespace SabreTools.DatFiles.Test
 
         #region Deduplicate
 
-        // TODO: Add Deduplicate tests
+        [Fact]
+        public void DeduplicateTest()
+        {
+            // Setup the items
+            Machine machine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "game-1");
+
+            DatItem rom1 = new Rom();
+            rom1.SetName("rom-1");
+            rom1.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "0000000fbbb37f8488100b1b4697012de631a5e6");
+            rom1.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, "1024");
+            rom1.CopyMachineInformation(machine);
+
+            DatItem rom2 = new Rom();
+            rom2.SetName("rom-2");
+            rom2.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "0000000fbbb37f8488100b1b4697012de631a5e6");
+            rom2.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, "1024");
+            rom2.CopyMachineInformation(machine);
+
+            // Setup the dictionary
+            var dict = new ItemDictionary();
+            dict.AddItem(rom1, statsOnly: false);
+            dict.AddItem(rom2, statsOnly: false);
+
+            dict.Deduplicate();
+            Assert.Equal(1, dict.DatStatistics.TotalCount);
+        }
 
         #endregion
 
@@ -530,7 +556,7 @@ namespace SabreTools.DatFiles.Test
             rom2.SetName("rom-2");
             rom2.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "000000e948edcb4f7704b8af85a77a3339ecce44");
             rom2.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, "1024");
-            rom1.CopyMachineInformation(machine);
+            rom2.CopyMachineInformation(machine);
 
             // Setup the dictionary
             var dict = new ItemDictionary();
@@ -542,7 +568,7 @@ namespace SabreTools.DatFiles.Test
             rom.SetName("rom-1");
             rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, "0000000fbbb37f8488100b1b4697012de631a5e6");
             rom.SetFieldValue<string?>(Models.Metadata.Rom.SizeKey, hasDuplicate ? "1024" : "2048");
-            rom1.CopyMachineInformation(machine);
+            rom.CopyMachineInformation(machine);
 
             var actual = dict.GetDuplicates(rom);
             Assert.Equal(expected, actual.Count);
