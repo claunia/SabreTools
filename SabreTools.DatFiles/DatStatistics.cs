@@ -134,6 +134,12 @@ namespace SabreTools.DatFiles
                         AddStatusCount(ItemStatus.Nodump, disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump ? 1 : 0);
                         AddStatusCount(ItemStatus.Verified, disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Verified ? 1 : 0);
                         break;
+                    case DatItems.Formats.File file:
+                        AddHashCount(HashType.CRC32, string.IsNullOrEmpty(file.CRC) ? 0 : 1);
+                        AddHashCount(HashType.MD5, string.IsNullOrEmpty(file.MD5) ? 0 : 1);
+                        AddHashCount(HashType.SHA1, string.IsNullOrEmpty(file.SHA1) ? 0 : 1);
+                        AddHashCount(HashType.SHA256, string.IsNullOrEmpty(file.SHA256) ? 0 : 1);
+                        break;
                     case Media media:
                         AddHashCount(HashType.MD5, string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.MD5Key)) ? 0 : 1);
                         AddHashCount(HashType.SHA1, string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA1Key)) ? 0 : 1);
@@ -281,6 +287,12 @@ namespace SabreTools.DatFiles
                         RemoveStatusCount(ItemStatus.Good, disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Good ? 1 : 0);
                         RemoveStatusCount(ItemStatus.Nodump, disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump ? 1 : 0);
                         RemoveStatusCount(ItemStatus.Verified, disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Verified ? 1 : 0);
+                        break;
+                    case DatItems.Formats.File file:
+                        RemoveHashCount(HashType.CRC32, string.IsNullOrEmpty(file.CRC) ? 0 : 1);
+                        RemoveHashCount(HashType.MD5, string.IsNullOrEmpty(file.MD5) ? 0 : 1);
+                        RemoveHashCount(HashType.SHA1, string.IsNullOrEmpty(file.SHA1) ? 0 : 1);
+                        RemoveHashCount(HashType.SHA256, string.IsNullOrEmpty(file.SHA256) ? 0 : 1);
                         break;
                     case Media media:
                         RemoveHashCount(HashType.MD5, string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.MD5Key)) ? 0 : 1);
