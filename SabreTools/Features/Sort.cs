@@ -69,8 +69,8 @@ namespace SabreTools.Features
             var outputFormat = GetOutputFormat(features);
 
             // Get the depots
-            var inputDepot = Header!.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey);
-            var outputDepot = Header!.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey);
+            var inputDepot = Modifiers!.InputDepot;
+            var outputDepot = Modifiers.OutputDepot;
 
             // If we have the romba flag
             if (outputDepot?.IsActive == true)
@@ -101,11 +101,11 @@ namespace SabreTools.Features
                         continue;
 
                     // Set depot information
-                    datdata.Header.SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey, inputDepot?.Clone() as DepotInformation);
-                    datdata.Header.SetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey, outputDepot?.Clone() as DepotInformation);
+                    datdata.Modifiers.InputDepot = inputDepot?.Clone() as DepotInformation;
+                    datdata.Modifiers.OutputDepot = outputDepot?.Clone() as DepotInformation;
 
                     // If we have overridden the header skipper, set it now
-                    if (!string.IsNullOrEmpty(Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey)))
+                    if (!string.IsNullOrEmpty(Header!.GetStringFieldValue(Models.Metadata.Header.HeaderKey)))
                         datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey));
 
                     // If we have the depot flag, respect it
@@ -140,11 +140,11 @@ namespace SabreTools.Features
                 }
 
                 // Set depot information
-                datdata.Header.SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey, inputDepot?.Clone() as DepotInformation);
-                datdata.Header.SetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey, outputDepot?.Clone() as DepotInformation);
+                datdata.Modifiers.InputDepot = inputDepot?.Clone() as DepotInformation;
+                datdata.Modifiers.OutputDepot = outputDepot?.Clone() as DepotInformation;
 
                 // If we have overridden the header skipper, set it now
-                string? headerSkpper = Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey);
+                string? headerSkpper = Header!.GetStringFieldValue(Models.Metadata.Header.HeaderKey);
                 if (!string.IsNullOrEmpty(headerSkpper))
                     datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, headerSkpper);
 

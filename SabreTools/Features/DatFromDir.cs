@@ -71,7 +71,7 @@ namespace SabreTools.Features
                 Remover!.PopulateExclusionsFromList(["DatItem.Date"]);
 
             // Create a new DATFromDir object and process the inputs
-            DatFile basedat = DatFileTool.CreateDatFile(Header!);
+            DatFile basedat = DatFileTool.CreateDatFile(Header!, Modifiers!);
             basedat.Header.SetFieldValue<string?>(Models.Metadata.Header.DateKey, DateTime.Now.ToString("yyyy-MM-dd"));
 
             // Update the cleaner based on certain flags
@@ -84,7 +84,7 @@ namespace SabreTools.Features
                 if (Directory.Exists(path) || File.Exists(path))
                 {
                     // Clone the base Dat for information
-                    DatFile datdata = DatFileTool.CreateDatFile(basedat.Header);
+                    DatFile datdata = DatFileTool.CreateDatFile(basedat.Header, basedat.Modifiers);
 
                     // Get the base path and fill the header, if needed
                     string basePath = Path.GetFullPath(path);

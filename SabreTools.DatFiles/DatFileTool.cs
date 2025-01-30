@@ -79,11 +79,13 @@ namespace SabreTools.DatFiles
         /// Create a new DatFile from an existing DatHeader
         /// </summary>
         /// <param name="datHeader">DatHeader to get the values from</param>
-        public static DatFile CreateDatFile(DatHeader datHeader)
+        /// <param name="datModifiers">DatModifiers to get the values from</param>
+        public static DatFile CreateDatFile(DatHeader datHeader, DatModifiers datModifiers)
         {
             DatFormat format = datHeader.GetFieldValue<DatFormat>(DatHeader.DatFormatKey);
             DatFile datFile = CreateDatFile(format);
             datFile.SetHeader(datHeader);
+            datFile.SetModifiers(datModifiers);
             return datFile;
         }
 
@@ -796,7 +798,7 @@ namespace SabreTools.DatFiles
             for (int j = 0; j < datHeaders.Count; j++)
 #endif
             {
-                DatFile diffData = CreateDatFile(datHeaders[j]);
+                DatFile diffData = CreateDatFile(datHeaders[j], new DatModifiers());
                 diffData.ResetDictionary();
                 FillWithSourceIndex(datFile, diffData, j);
                 FillWithSourceIndexDB(datFile, diffData, j);
@@ -845,7 +847,7 @@ namespace SabreTools.DatFiles
                 datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, "datFile.All DATs");
 
             string post = " (Duplicates)";
-            DatFile dupeData = CreateDatFile(datFile.Header);
+            DatFile dupeData = CreateDatFile(datFile.Header, datFile.Modifiers);
             dupeData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, dupeData.Header.GetStringFieldValue(DatHeader.FileNameKey) + post);
             dupeData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, dupeData.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + post);
             dupeData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, dupeData.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + post);
@@ -923,7 +925,7 @@ namespace SabreTools.DatFiles
                 datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, "datFile.All DATs");
 
             string post = " (Duplicates)";
-            DatFile dupeData = CreateDatFile(datFile.Header);
+            DatFile dupeData = CreateDatFile(datFile.Header, datFile.Modifiers);
             dupeData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, dupeData.Header.GetStringFieldValue(DatHeader.FileNameKey) + post);
             dupeData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, dupeData.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + post);
             dupeData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, dupeData.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + post);
@@ -1059,7 +1061,7 @@ namespace SabreTools.DatFiles
 #endif
             {
                 string innerpost = $" ({j} - {inputs[j].GetNormalizedFileName(true)} Only)";
-                DatFile diffData = CreateDatFile(datFile.Header);
+                DatFile diffData = CreateDatFile(datFile.Header, datFile.Modifiers);
                 diffData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, diffData.Header.GetStringFieldValue(DatHeader.FileNameKey) + innerpost);
                 diffData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, diffData.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + innerpost);
                 diffData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, diffData.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + innerpost);
@@ -1152,7 +1154,7 @@ namespace SabreTools.DatFiles
 #endif
             {
                 string innerpost = $" ({j} - {inputs[j].GetNormalizedFileName(true)} Only)";
-                DatFile diffData = CreateDatFile(datFile.Header);
+                DatFile diffData = CreateDatFile(datFile.Header, datFile.Modifiers);
                 diffData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, diffData.Header.GetStringFieldValue(DatHeader.FileNameKey) + innerpost);
                 diffData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, diffData.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + innerpost);
                 diffData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, diffData.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + innerpost);
@@ -1276,7 +1278,7 @@ namespace SabreTools.DatFiles
                 datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, "All DATs");
 
             string post = " (No Duplicates)";
-            DatFile outerDiffData = CreateDatFile(datFile.Header);
+            DatFile outerDiffData = CreateDatFile(datFile.Header, datFile.Modifiers);
             outerDiffData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, outerDiffData.Header.GetStringFieldValue(DatHeader.FileNameKey) + post);
             outerDiffData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, outerDiffData.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + post);
             outerDiffData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, outerDiffData.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + post);
@@ -1352,7 +1354,7 @@ namespace SabreTools.DatFiles
                 datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, "All DATs");
 
             string post = " (No Duplicates)";
-            DatFile outerDiffData = CreateDatFile(datFile.Header);
+            DatFile outerDiffData = CreateDatFile(datFile.Header, datFile.Modifiers);
             outerDiffData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, outerDiffData.Header.GetStringFieldValue(DatHeader.FileNameKey) + post);
             outerDiffData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, outerDiffData.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + post);
             outerDiffData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, outerDiffData.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + post);
@@ -1483,7 +1485,7 @@ namespace SabreTools.DatFiles
             {
                 var input = inputs[i];
                 _staticLogger.User($"Adding DAT: {input.CurrentPath}");
-                datFiles[i] = CreateDatFile(datFile.Header.CloneFiltering());
+                datFiles[i] = CreateDatFile(datFile.Header.CloneFiltering(), datFile.Modifiers);
                 Parser.ParseInto(datFiles[i], input, i, keep: true);
 #if NET40_OR_GREATER || NETCOREAPP
             });

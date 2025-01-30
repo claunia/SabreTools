@@ -1803,6 +1803,12 @@ Some special strings that can be used:
         public DatHeader? Header { get; set; }
 
         /// <summary>
+        /// Pre-configured DatModifiers
+        /// </summary>
+        /// <remarks>Public because it's an indicator something went wrong</remarks>
+        protected DatModifiers? Modifiers { get; set; }
+
+        /// <summary>
         /// Lowest log level for output
         /// </summary>
         public LogLevel LogLevel { get; protected set; }
@@ -1907,6 +1913,7 @@ Some special strings that can be used:
             Extras = GetExtras(features);
             FilterRunner = GetFilterRunner(features);
             Header = GetDatHeader(features);
+            Modifiers = GetDatModifiers(features);
             LogLevel = GetString(features, LogLevelStringValue).AsLogLevel();
             OutputDir = GetString(features, OutputDirStringValue)?.Trim('"');
             Remover = GetRemover(features);
@@ -1921,6 +1928,8 @@ Some special strings that can be used:
 
             // Failure conditions
             if (Header == null)
+                return false;
+            if (Modifiers == null)
                 return false;
 
             return true;
@@ -2171,16 +2180,7 @@ Some special strings that can be used:
         /// </summary>
         private DatHeader? GetDatHeader(Dictionary<string, Feature?> features)
         {
-            // Get the depot information
-            var inputDepot = new DepotInformation(
-                GetBoolean(features, DepotValue),
-                GetInt32(features, DepotDepthInt32Value));
-            var outputDepot = new DepotInformation(
-                GetBoolean(features, RombaValue),
-                GetInt32(features, RombaDepthInt32Value));
-
             var datHeader = new DatHeader();
-            datHeader.SetFieldValue<string?>(DatHeader.AddExtensionKey, GetString(features, AddExtensionStringValue));
             datHeader.SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, GetString(features, AuthorStringValue));
             datHeader.SetFieldValue<string?>(Models.Metadata.Header.CategoryKey, GetString(features, CategoryStringValue));
             datHeader.SetFieldValue<string?>(Models.Metadata.Header.CommentKey, GetString(features, CommentStringValue));
@@ -2191,18 +2191,9 @@ Some special strings that can be used:
             datHeader.SetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey, GetString(features, ForceMergingStringValue).AsEnumValue<MergingFlag>());
             datHeader.SetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey, GetString(features, ForceNodumpStringValue).AsEnumValue<NodumpFlag>());
             datHeader.SetFieldValue<PackingFlag>(Models.Metadata.Header.ForceNodumpKey, GetString(features, ForcePackingStringValue).AsEnumValue<PackingFlag>());
-            datHeader.SetFieldValue<bool>(DatHeader.GameNameKey, GetBoolean(features, GamePrefixValue));
             datHeader.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, GetString(features, HeaderStringValue));
             datHeader.SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, GetString(features, HomepageStringValue));
-            datHeader.SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey, inputDepot);
             datHeader.SetFieldValue<string?>(Models.Metadata.Header.NameKey, GetString(features, NameStringValue));
-            datHeader.SetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey, outputDepot);
-            datHeader.SetFieldValue<string?>(DatHeader.PostfixKey, GetString(features, PostfixStringValue));
-            datHeader.SetFieldValue<string?>(DatHeader.PrefixKey, GetString(features, PrefixStringValue));
-            datHeader.SetFieldValue<bool>(DatHeader.QuotesKey, GetBoolean(features, QuotesValue));
-            datHeader.SetFieldValue<bool>(DatHeader.RemoveExtensionKey, GetBoolean(features, RemoveExtensionsValue));
-            datHeader.SetFieldValue<string?>(DatHeader.ReplaceExtensionKey, GetString(features, ReplaceExtensionStringValue));
-            datHeader.SetFieldValue<bool>(DatHeader.UseRomNameKey, GetBoolean(features, RomsValue));
             datHeader.SetFieldValue<string?>(Models.Metadata.Header.RootDirKey, GetString(features, RootStringValue));
             datHeader.SetFieldValue<string?>(Models.Metadata.Header.TypeKey, GetBoolean(features, SuperdatValue) ? "SuperDAT" : null);
             datHeader.SetFieldValue<string?>(Models.Metadata.Header.UrlKey, GetString(features, UrlStringValue));
@@ -2227,6 +2218,35 @@ Some special strings that can be used:
             }
 
             return datHeader;
+        }
+
+        /// <summary>
+        /// Get DatModifiers from feature list
+        /// </summary>
+        private DatModifiers? GetDatModifiers(Dictionary<string, Feature?> features)
+        {
+            // Get the depot information
+            var inputDepot = new DepotInformation(
+                GetBoolean(features, DepotValue),
+                GetInt32(features, DepotDepthInt32Value));
+            var outputDepot = new DepotInformation(
+                GetBoolean(features, RombaValue),
+                GetInt32(features, RombaDepthInt32Value));
+
+            var datModifiers = new DatModifiers();
+
+            datModifiers.Prefix = GetString(features, PrefixStringValue);
+            datModifiers.Postfix = GetString(features, PostfixStringValue);
+            datModifiers.AddExtension = GetString(features, AddExtensionStringValue);
+            datModifiers.RemoveExtension = GetBoolean(features, RemoveExtensionsValue);
+            datModifiers.ReplaceExtension = GetString(features, ReplaceExtensionStringValue);
+            datModifiers.GameName = GetBoolean(features, GamePrefixValue);
+            datModifiers.Quotes = GetBoolean(features, QuotesValue);
+            datModifiers.UseRomName = GetBoolean(features, RomsValue);
+            datModifiers.InputDepot = inputDepot;
+            datModifiers.OutputDepot = outputDepot;
+
+            return datModifiers;
         }
 
         /// <summary>

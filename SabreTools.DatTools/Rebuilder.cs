@@ -118,7 +118,7 @@ namespace SabreTools.DatTools
                 _staticLogger.User($"Checking hash '{hash}'");
 
                 // Get the extension path for the hash
-                string? subpath = Utilities.GetDepotPath(hash, datFile.Header.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.Depth ?? 0);
+                string? subpath = Utilities.GetDepotPath(hash, datFile.Modifiers.InputDepot?.Depth ?? 0);
                 if (subpath == null)
                     continue;
 
@@ -681,7 +681,7 @@ namespace SabreTools.DatTools
                 // Get the proper output path
                 string sha1 = (datItem as Rom)!.GetStringFieldValue(Models.Metadata.Rom.SHA1Key) ?? string.Empty;
                 if (outputFormat == OutputFormat.TorrentGzipRomba)
-                    outDir = Path.Combine(outDir, Utilities.GetDepotPath(sha1, datFile.Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.Depth ?? 0) ?? string.Empty);
+                    outDir = Path.Combine(outDir, Utilities.GetDepotPath(sha1, datFile.Modifiers.OutputDepot?.Depth ?? 0) ?? string.Empty);
                 else
                     outDir = Path.Combine(outDir, sha1 + ".gz");
 
@@ -727,7 +727,7 @@ namespace SabreTools.DatTools
                 // Get the proper output path
                 string sha1 = (datItem as Rom)!.GetStringFieldValue(Models.Metadata.Rom.SHA1Key) ?? string.Empty;
                 if (outputFormat == OutputFormat.TorrentXZRomba)
-                    outDir = Path.Combine(outDir, Utilities.GetDepotPath(sha1, datFile.Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.Depth ?? 0) ?? string.Empty).Replace(".gz", ".xz");
+                    outDir = Path.Combine(outDir, Utilities.GetDepotPath(sha1, datFile.Modifiers.OutputDepot?.Depth ?? 0) ?? string.Empty).Replace(".gz", ".xz");
                 else
                     outDir = Path.Combine(outDir, sha1 + ".xz");
 
@@ -832,9 +832,9 @@ namespace SabreTools.DatTools
 
             // Set the depth fields where appropriate
             if (outputArchive is GZipArchive gzipArchive)
-                gzipArchive.Depth = datFile.Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.Depth ?? 0;
+                gzipArchive.Depth = datFile.Modifiers.OutputDepot?.Depth ?? 0;
             else if (outputArchive is XZArchive xzArchive)
-                xzArchive.Depth = datFile.Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.Depth ?? 0;
+                xzArchive.Depth = datFile.Modifiers.OutputDepot?.Depth ?? 0;
 
             return outputArchive;
         }

@@ -16,11 +16,6 @@ namespace SabreTools.DatFiles
         #region Constants
 
         /// <summary>
-        /// Add a new extension to all items
-        /// </summary>
-        public const string AddExtensionKey = "ADDEXTENSION";
-
-        /// <summary>
         /// Read or write format
         /// </summary>
         public const string DatFormatKey = "DATFORMAT";
@@ -29,51 +24,6 @@ namespace SabreTools.DatFiles
         /// External name of the DAT
         /// </summary>
         public const string FileNameKey = "FILENAME";
-
-        /// <summary>
-        /// Output the machine name
-        /// </summary>
-        public const string GameNameKey = "GAMENAME";
-
-        /// <summary>
-        /// Input depot information
-        /// </summary>
-        public const string InputDepotKey = "INPUTDEPOT";
-
-        /// <summary>
-        /// Output depot information
-        /// </summary>
-        public const string OutputDepotKey = "OUTPUTDEPOT";
-
-        /// <summary>
-        /// Text to append to all outputted lines
-        /// </summary>
-        public const string PostfixKey = "POSTFIX";
-
-        /// <summary>
-        /// Text to prepend to all outputted lines
-        /// </summary>
-        public const string PrefixKey = "PREFIX";
-
-        /// <summary>
-        /// Wrap quotes around the entire line, sans prefix and postfix
-        /// </summary>
-        public const string QuotesKey = "QUOTES";
-
-        /// <summary>
-        /// Remove all item extensions
-        /// </summary>
-        public const string RemoveExtensionKey = "REMOVEEXTENSION";
-
-        /// <summary>
-        /// Replace all item extensions
-        /// </summary>
-        public const string ReplaceExtensionKey = "REPLACEEXTENSION";
-
-        /// <summary>
-        /// Output the item name
-        /// </summary>
-        public const string UseRomNameKey = "USEROMNAME";
 
         #endregion
 
@@ -220,28 +170,8 @@ namespace SabreTools.DatFiles
         public DatHeader CloneFiltering()
         {
             var header = new DatHeader();
-            header.SetFieldValue<string?>(DatHeader.AddExtensionKey,
-                GetStringFieldValue(DatHeader.AddExtensionKey));
             header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey,
                 GetFieldValue<DatFormat>(DatHeader.DatFormatKey));
-            header.SetFieldValue<bool?>(DatHeader.GameNameKey,
-                GetBoolFieldValue(DatHeader.GameNameKey));
-            header.SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey,
-                GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.Clone() as DepotInformation);
-            header.SetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey,
-                GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.Clone() as DepotInformation);
-            header.SetFieldValue<string?>(DatHeader.PostfixKey,
-                GetStringFieldValue(DatHeader.PostfixKey));
-            header.SetFieldValue<string?>(DatHeader.PrefixKey,
-                GetStringFieldValue(DatHeader.PrefixKey));
-            header.SetFieldValue<bool?>(DatHeader.RemoveExtensionKey,
-                GetBoolFieldValue(DatHeader.RemoveExtensionKey));
-            header.SetFieldValue<string?>(DatHeader.ReplaceExtensionKey,
-                GetStringFieldValue(DatHeader.ReplaceExtensionKey));
-            header.SetFieldValue<bool?>(DatHeader.QuotesKey,
-                GetBoolFieldValue(DatHeader.QuotesKey));
-            header.SetFieldValue<bool?>(DatHeader.UseRomNameKey,
-                GetBoolFieldValue(DatHeader.UseRomNameKey));
 
             return header;
         }
@@ -356,35 +286,6 @@ namespace SabreTools.DatFiles
             if (datHeader.GetFieldValue<DatFormat>(DatHeader.DatFormatKey) != 0x00)
                 SetFieldValue<DatFormat>(DatHeader.DatFormatKey,
                     datHeader.GetFieldValue<DatFormat>(DatHeader.DatFormatKey));
-
-            if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(DatHeader.PrefixKey)))
-                SetFieldValue<string?>(DatHeader.PrefixKey,
-                    datHeader.GetStringFieldValue(DatHeader.PrefixKey));
-
-            if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(DatHeader.PostfixKey)))
-                SetFieldValue<string?>(DatHeader.PostfixKey,
-                    datHeader.GetStringFieldValue(DatHeader.PostfixKey));
-
-            if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(DatHeader.AddExtensionKey)))
-                SetFieldValue<string?>(DatHeader.AddExtensionKey,
-                    datHeader.GetStringFieldValue(DatHeader.AddExtensionKey));
-
-            if (!string.IsNullOrEmpty(datHeader.GetStringFieldValue(DatHeader.ReplaceExtensionKey)))
-                SetFieldValue<string?>(DatHeader.ReplaceExtensionKey,
-                    datHeader.GetStringFieldValue(DatHeader.ReplaceExtensionKey));
-
-            SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey,
-                datHeader.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.Clone() as DepotInformation);
-            SetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey,
-                datHeader.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.Clone() as DepotInformation);
-            SetFieldValue<bool?>(DatHeader.GameNameKey,
-                datHeader.GetBoolFieldValue(DatHeader.GameNameKey));
-            SetFieldValue<bool?>(DatHeader.QuotesKey,
-                datHeader.GetBoolFieldValue(DatHeader.QuotesKey));
-            SetFieldValue<bool?>(DatHeader.RemoveExtensionKey,
-                datHeader.GetBoolFieldValue(DatHeader.RemoveExtensionKey));
-            SetFieldValue<bool?>(DatHeader.UseRomNameKey,
-                datHeader.GetBoolFieldValue(DatHeader.UseRomNameKey));
         }
 
         #endregion

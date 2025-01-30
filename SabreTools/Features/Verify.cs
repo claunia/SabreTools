@@ -74,11 +74,11 @@ namespace SabreTools.Features
                     Remover!.ApplyRemovals(datdata);
 
                     // Set depot information
-                    var inputDepot = Header!.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey);
-                    datdata.Header.SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey, inputDepot?.Clone() as DepotInformation);
+                    var inputDepot = Modifiers!.InputDepot;
+                    datdata.Modifiers.InputDepot = inputDepot?.Clone() as DepotInformation;
 
                     // If we have overridden the header skipper, set it now
-                    string? headerSkipper = Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey);
+                    string? headerSkipper = Header!.GetStringFieldValue(Models.Metadata.Header.HeaderKey);
                     if (!string.IsNullOrEmpty(headerSkipper))
                         datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, headerSkipper);
 
@@ -126,11 +126,11 @@ namespace SabreTools.Features
                 Remover!.ApplyRemovals(datdata);
 
                 // Set depot information
-                var inputDepot = Header!.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey);
-                datdata.Header.SetFieldValue<DepotInformation?>(DatHeader.InputDepotKey, inputDepot?.Clone() as DepotInformation);
+                var inputDepot = Modifiers!.InputDepot;
+                datdata.Modifiers.InputDepot = inputDepot?.Clone() as DepotInformation;
 
                 // If we have overridden the header skipper, set it now
-                string? headerSkipper = Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey);
+                string? headerSkipper = Header!.GetStringFieldValue(Models.Metadata.Header.HeaderKey);
                 if (!string.IsNullOrEmpty(headerSkipper))
                     datdata.Header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, headerSkipper);
 

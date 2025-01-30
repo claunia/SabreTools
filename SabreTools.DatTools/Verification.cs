@@ -66,7 +66,7 @@ namespace SabreTools.DatTools
                 _staticLogger.User($"Checking hash '{hash}'");
 
                 // Get the extension path for the hash
-                string? subpath = Utilities.GetDepotPath(hash, datFile.Header.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.Depth ?? 0);
+                string? subpath = Utilities.GetDepotPath(hash, datFile.Modifiers.InputDepot?.Depth ?? 0);
                 if (subpath == null)
                     continue;
 
@@ -151,7 +151,7 @@ namespace SabreTools.DatTools
                 _staticLogger.User($"Checking hash '{hash}'");
 
                 // Get the extension path for the hash
-                string? subpath = Utilities.GetDepotPath(hash, datFile.Header.GetFieldValue<DepotInformation?>(DatHeader.InputDepotKey)?.Depth ?? 0);
+                string? subpath = Utilities.GetDepotPath(hash, datFile.Modifiers.InputDepot?.Depth ?? 0);
                 if (subpath == null)
                     continue;
 

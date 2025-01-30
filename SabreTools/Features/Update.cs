@@ -95,12 +95,12 @@ namespace SabreTools.Features
             var updateMode = GetUpdateMode(features);
 
             // Normalize the extensions
-            Header!.SetFieldValue<string?>(DatHeader.AddExtensionKey, (string.IsNullOrEmpty(Header.GetStringFieldValue(DatHeader.AddExtensionKey)) || Header.GetStringFieldValue(DatHeader.AddExtensionKey)!.StartsWith(".")
-                ? Header.GetStringFieldValue(DatHeader.AddExtensionKey)
-                : $".{Header.GetStringFieldValue(DatHeader.AddExtensionKey)}"));
-            Header.SetFieldValue<string?>(DatHeader.ReplaceExtensionKey, (string.IsNullOrEmpty(Header.GetStringFieldValue(DatHeader.ReplaceExtensionKey)) || Header.GetStringFieldValue(DatHeader.ReplaceExtensionKey)!.StartsWith(".")
-                ? Header.GetStringFieldValue(DatHeader.ReplaceExtensionKey)
-                : $".{Header.GetStringFieldValue(DatHeader.ReplaceExtensionKey)}"));
+            Modifiers!.AddExtension = string.IsNullOrEmpty(Modifiers.AddExtension) || Modifiers.AddExtension!.StartsWith(".")
+                ? Modifiers.AddExtension
+                : $".{Modifiers.AddExtension}";
+            Modifiers.ReplaceExtension = string.IsNullOrEmpty(Modifiers.ReplaceExtension) || Modifiers.ReplaceExtension!.StartsWith(".")
+                ? Modifiers.ReplaceExtension
+                : $".{Modifiers.ReplaceExtension}";
 
             // If we're in a non-replacement special update mode and the names aren't set, set defaults
             if (updateMode != 0
@@ -111,7 +111,7 @@ namespace SabreTools.Features
 #endif
             {
                 // Get the values that will be used
-                if (string.IsNullOrEmpty(Header.GetStringFieldValue(Models.Metadata.Header.DateKey)))
+                if (string.IsNullOrEmpty(Header!.GetStringFieldValue(Models.Metadata.Header.DateKey)))
                     Header.SetFieldValue<string?>(Models.Metadata.Header.DateKey, DateTime.Now.ToString("yyyy-MM-dd"));
 
                 if (string.IsNullOrEmpty(Header.GetStringFieldValue(Models.Metadata.Header.NameKey)))
@@ -168,7 +168,7 @@ namespace SabreTools.Features
 #endif
                 {
                     // Create a new base DatFile
-                    DatFile datFile = DatFileTool.CreateDatFile(Header);
+                    DatFile datFile = DatFileTool.CreateDatFile(Header!, Modifiers);
                     _logger.User($"Processing '{Path.GetFileName(inputPath.CurrentPath)}'");
 
                     // Check the current format
@@ -228,7 +228,7 @@ namespace SabreTools.Features
             }
 
             // Create a DAT to capture inputs
-            DatFile userInputDat = DatFileTool.CreateDatFile(Header);
+            DatFile userInputDat = DatFileTool.CreateDatFile(Header!, Modifiers);
 
             // Populate using the correct set
             List<DatHeader> datHeaders;
@@ -391,7 +391,7 @@ namespace SabreTools.Features
 #endif
                 {
                     // Parse the path to a new DatFile
-                    DatFile repDat = DatFileTool.CreateDatFile(Header);
+                    DatFile repDat = DatFileTool.CreateDatFile(Header!, Modifiers);
                     Parser.ParseInto(repDat, inputPath, indexId: 1, keep: true);
 
                     // Perform additional processing steps
@@ -432,7 +432,7 @@ namespace SabreTools.Features
 #endif
                 {
                     // Parse the path to a new DatFile
-                    DatFile repDat = DatFileTool.CreateDatFile(Header);
+                    DatFile repDat = DatFileTool.CreateDatFile(Header!, Modifiers);
                     Parser.ParseInto(repDat, inputPath, indexId: 1, keep: true);
 
                     // Perform additional processing steps

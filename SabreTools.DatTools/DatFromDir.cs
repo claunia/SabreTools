@@ -218,7 +218,7 @@ namespace SabreTools.DatTools
         private static bool CheckDepotFile(DatFile datFile, string item)
         {
             // If we're not in Depot mode, return false
-            if (datFile.Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.IsActive != true)
+            if (datFile.Modifiers.OutputDepot?.IsActive != true)
                 return false;
 
             // Check the file as if it were in a depot
@@ -329,7 +329,7 @@ namespace SabreTools.DatTools
         private static void ProcessDirectoryBlanks(DatFile datFile, string? basePath)
         {
             // If we're in depot mode, we don't process blanks
-            if (datFile.Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey)?.IsActive == true)
+            if (datFile.Modifiers.OutputDepot?.IsActive == true)
                 return;
 
             List<string> empties = basePath.ListEmpty() ?? [];

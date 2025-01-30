@@ -26,6 +26,13 @@ namespace SabreTools.DatFiles
         public DatHeader Header { get; private set; } = new DatHeader();
 
         /// <summary>
+        /// Modifier values
+        /// </summary>
+        /// TODO: Make this private set
+        [JsonProperty("modifiers"), XmlElement("modifiers")]
+        public DatModifiers Modifiers { get; set; } = new DatModifiers();
+
+        /// <summary>
         /// DatItems and related statistics
         /// </summary>
         [JsonProperty("items"), XmlElement("items")]
@@ -73,6 +80,7 @@ namespace SabreTools.DatFiles
             if (datFile != null)
             {
                 Header = (DatHeader)datFile.Header.Clone();
+                Modifiers = (DatModifiers)datFile.Modifiers.Clone();
                 Items = datFile.Items;
                 ItemsDB = datFile.ItemsDB;
             }
@@ -145,6 +153,15 @@ namespace SabreTools.DatFiles
         {
             // TODO: Figure out why clone loses data here
             Header = datHeader;
+        }
+
+        /// <summary>
+        /// Set the internal header
+        /// </summary>
+        /// <param name="datHeader">Replacement header to be used</param>
+        public void SetModifiers(DatModifiers datModifers)
+        {
+            Modifiers = (DatModifiers)datModifers.Clone();
         }
 
         /// <summary>
@@ -431,18 +448,28 @@ namespace SabreTools.DatFiles
         /// <param name="item">DatItem to update</param>
         /// <param name="forceRemoveQuotes">True if the Quotes flag should be ignored, false otherwise</param>
         /// <param name="forceRomName">True if the UseRomName should be always on, false otherwise</param>
+        /// <remarks>
+        /// There are some unique interactions that can occur because of the large number of effective
+        /// inputs into this method.
+        /// - If both a replacement extension is set and the remove extension flag is enabled,
+        ///   the replacement extension will be overridden by the remove extension flag.
+        /// - Extension addition, removal, and replacement are not done at all if the output
+        ///   depot is specified. Only prefix and postfix logic is applied.
+        /// - Both methods of using the item name are overridden if the output depot is specified.
+        ///   Instead, the name is always set based on the SHA-1 hash.
+        /// </remarks>
         protected internal void ProcessItemName(DatItem item, Machine? machine, bool forceRemoveQuotes, bool forceRomName)
         {
             // Get the relevant processing values
-            bool quotes = forceRemoveQuotes ? false : Header.GetBoolFieldValue(DatHeader.QuotesKey) ?? false;
-            bool useRomName = forceRomName ? true : Header.GetBoolFieldValue(DatHeader.UseRomNameKey) ?? false;
+            bool quotes = forceRemoveQuotes ? false : Modifiers.Quotes;
+            bool useRomName = forceRomName ? true : Modifiers.UseRomName;
 
             // Create the full Prefix
-            string pre = Header.GetStringFieldValue(DatHeader.PrefixKey) + (quotes ? "\"" : string.Empty);
+            string pre = Modifiers.Prefix + (quotes ? "\"" : string.Empty);
             pre = FormatPrefixPostfix(item, machine, pre);
 
             // Create the full Postfix
-            string post = (quotes ? "\"" : string.Empty) + Header.GetStringFieldValue(DatHeader.PostfixKey);
+            string post = (quotes ? "\"" : string.Empty) + Modifiers.Postfix;
             post = FormatPrefixPostfix(item, machine, post);
 
             // Get the name to update
@@ -451,8 +478,7 @@ namespace SabreTools.DatFiles
                 : machine?.GetStringFieldValue(Models.Metadata.Machine.NameKey)) ?? string.Empty;
 
             // If we're in Depot mode, take care of that instead
-            var outputDepot = Header.GetFieldValue<DepotInformation?>(DatHeader.OutputDepotKey);
-            if (outputDepot?.IsActive == true)
+            if (Modifiers.OutputDepot?.IsActive == true)
             {
                 if (item is Disk disk)
                 {
@@ -460,7 +486,7 @@ namespace SabreTools.DatFiles
                     string? sha1 = disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key);
                     if (!string.IsNullOrEmpty(sha1))
                     {
-                        name = Utilities.GetDepotPath(sha1, outputDepot.Depth)?.Replace('\\', '/');
+                        name = Utilities.GetDepotPath(sha1, Modifiers.OutputDepot.Depth)?.Replace('\\', '/');
                         item.SetName($"{pre}{name}{post}");
                     }
                 }
@@ -470,7 +496,7 @@ namespace SabreTools.DatFiles
                     string? sha1 = file.SHA1;
                     if (!string.IsNullOrEmpty(sha1))
                     {
-                        name = Utilities.GetDepotPath(sha1, outputDepot.Depth)?.Replace('\\', '/');
+                        name = Utilities.GetDepotPath(sha1, Modifiers.OutputDepot.Depth)?.Replace('\\', '/');
                         item.SetName($"{pre}{name}{post}");
                     }
                 }
@@ -480,7 +506,7 @@ namespace SabreTools.DatFiles
                     string? sha1 = media.GetStringFieldValue(Models.Metadata.Media.SHA1Key);
                     if (!string.IsNullOrEmpty(sha1))
                     {
-                        name = Utilities.GetDepotPath(sha1, outputDepot.Depth)?.Replace('\\', '/');
+                        name = Utilities.GetDepotPath(sha1, Modifiers.OutputDepot.Depth)?.Replace('\\', '/');
                         item.SetName($"{pre}{name}{post}");
                     }
                 }
@@ -490,7 +516,7 @@ namespace SabreTools.DatFiles
                     string? sha1 = rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key);
                     if (!string.IsNullOrEmpty(sha1))
                     {
-                        name = Utilities.GetDepotPath(sha1, outputDepot.Depth)?.Replace('\\', '/');
+                        name = Utilities.GetDepotPath(sha1, Modifiers.OutputDepot.Depth)?.Replace('\\', '/');
                         item.SetName($"{pre}{name}{post}");
                     }
                 }
@@ -498,34 +524,31 @@ namespace SabreTools.DatFiles
                 return;
             }
 
-            string? replaceExtension = Header.GetStringFieldValue(DatHeader.ReplaceExtensionKey);
-            bool? removeExtension = Header.GetBoolFieldValue(DatHeader.RemoveExtensionKey);
-            if (!string.IsNullOrEmpty(replaceExtension) || removeExtension == true)
+            if (!string.IsNullOrEmpty(Modifiers.ReplaceExtension) || Modifiers.RemoveExtension)
             {
-                if (removeExtension == true)
-                    Header.SetFieldValue<string?>(DatHeader.ReplaceExtensionKey, string.Empty);
+                if (Modifiers.RemoveExtension)
+                    Modifiers.ReplaceExtension = string.Empty;
 
                 string? dir = Path.GetDirectoryName(name);
                 if (dir != null)
                 {
                     dir = dir.TrimStart(Path.DirectorySeparatorChar);
-                    name = Path.Combine(dir, Path.GetFileNameWithoutExtension(name) + replaceExtension);
+                    name = Path.Combine(dir, Path.GetFileNameWithoutExtension(name) + Modifiers.ReplaceExtension);
                 }
             }
 
-            string? addExtension = Header.GetStringFieldValue(DatHeader.AddExtensionKey);
-            if (!string.IsNullOrEmpty(addExtension))
-                name += addExtension;
+            if (!string.IsNullOrEmpty(Modifiers.AddExtension))
+                name += Modifiers.AddExtension;
 
-            if (useRomName && Header.GetBoolFieldValue(DatHeader.GameNameKey) == true)
+            if (useRomName && Modifiers.GameName)
                 name = Path.Combine(machine?.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty, name);
 
             // Now assign back the formatted name
             name = $"{pre}{name}{post}";
             if (useRomName)
                 item.SetName(name);
-            else if (machine != null)
-                machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, name);
+            else
+                machine?.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, name);
         }
 
         /// <summary>
