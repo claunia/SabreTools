@@ -246,60 +246,6 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Increment the hash count for a given hash type
-        /// </summary>
-        /// <param name="hashType">Hash type to increment</param>
-        /// <param name="interval">Amount to increment by, defaults to 1</param>
-        private void AddHashCount(HashType hashType, long interval = 1)
-        {
-            lock (_hashCounts)
-            {
-                if (!_hashCounts.ContainsKey(hashType))
-                    _hashCounts[hashType] = 0;
-
-                _hashCounts[hashType] += interval;
-                if (_hashCounts[hashType] < 0)
-                    _hashCounts[hashType] = 0;
-            }
-        }
-
-        /// <summary>
-        /// Increment the item count for a given item type
-        /// </summary>
-        /// <param name="itemType">Item type to increment</param>
-        /// <param name="interval">Amount to increment by, defaults to 1</param>
-        private void AddItemCount(ItemType itemType, long interval = 1)
-        {
-            lock (_itemCounts)
-            {
-                if (!_itemCounts.ContainsKey(itemType))
-                    _itemCounts[itemType] = 0;
-
-                _itemCounts[itemType] += interval;
-                if (_itemCounts[itemType] < 0)
-                    _itemCounts[itemType] = 0;
-            }
-        }
-
-        /// <summary>
-        /// Increment the item count for a given item status
-        /// </summary>
-        /// <param name="itemStatus">Item type to increment</param>
-        /// <param name="interval">Amount to increment by, defaults to 1</param>
-        private void AddStatusCount(ItemStatus itemStatus, long interval = 1)
-        {
-            lock (_statusCounts)
-            {
-                if (!_statusCounts.ContainsKey(itemStatus))
-                    _statusCounts[itemStatus] = 0;
-
-                _statusCounts[itemStatus] += interval;
-                if (_statusCounts[itemStatus] < 0)
-                    _statusCounts[itemStatus] = 0;
-            }
-        }
-
-        /// <summary>
         /// Remove from the statistics given a DatItem
         /// </summary>
         /// <param name="item">Item to remove info for</param>
@@ -378,6 +324,60 @@ namespace SabreTools.DatFiles
             _hashCounts.Clear();
             _statusCounts.Clear();
             RemovedCount = 0;
+        }
+
+        /// <summary>
+        /// Increment the hash count for a given hash type
+        /// </summary>
+        /// <param name="hashType">Hash type to increment</param>
+        /// <param name="interval">Amount to increment by, defaults to 1</param>
+        private void AddHashCount(HashType hashType, long interval = 1)
+        {
+            lock (_hashCounts)
+            {
+                if (!_hashCounts.ContainsKey(hashType))
+                    _hashCounts[hashType] = 0;
+
+                _hashCounts[hashType] += interval;
+                if (_hashCounts[hashType] < 0)
+                    _hashCounts[hashType] = 0;
+            }
+        }
+
+        /// <summary>
+        /// Increment the item count for a given item type
+        /// </summary>
+        /// <param name="itemType">Item type to increment</param>
+        /// <param name="interval">Amount to increment by, defaults to 1</param>
+        private void AddItemCount(ItemType itemType, long interval = 1)
+        {
+            lock (_itemCounts)
+            {
+                if (!_itemCounts.ContainsKey(itemType))
+                    _itemCounts[itemType] = 0;
+
+                _itemCounts[itemType] += interval;
+                if (_itemCounts[itemType] < 0)
+                    _itemCounts[itemType] = 0;
+            }
+        }
+
+        /// <summary>
+        /// Increment the item count for a given item status
+        /// </summary>
+        /// <param name="itemStatus">Item type to increment</param>
+        /// <param name="interval">Amount to increment by, defaults to 1</param>
+        private void AddStatusCount(ItemStatus itemStatus, long interval = 1)
+        {
+            lock (_statusCounts)
+            {
+                if (!_statusCounts.ContainsKey(itemStatus))
+                    _statusCounts[itemStatus] = 0;
+
+                _statusCounts[itemStatus] += interval;
+                if (_statusCounts[itemStatus] < 0)
+                    _statusCounts[itemStatus] = 0;
+            }
         }
 
         /// <summary>
