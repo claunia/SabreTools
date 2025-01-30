@@ -112,6 +112,12 @@ namespace SabreTools.DatFiles.Test
 
         #endregion
 
+        #region Constructor
+
+        // TODO: Add Constructor from model tests
+
+        #endregion
+
         #region Clone
 
         [Fact]
