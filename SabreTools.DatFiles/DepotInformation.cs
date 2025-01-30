@@ -36,7 +36,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="name">Set active state</param>
+        /// <param name="name">Identifier for the depot</param>
         /// <param name="isActive">Set active state</param>
         /// <param name="depth">Set depth between 0 and SHA-1's byte length</param>
         public DepotInformation(string? name, bool isActive, int depth = 4)
