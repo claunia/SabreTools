@@ -165,11 +165,12 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Clone the filtering parts of the current header
+        /// Clone just the format from the current header
         /// </summary>
-        public DatHeader CloneFiltering()
+        public DatHeader CloneFormat()
         {
             var header = new DatHeader();
+
             header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey,
                 GetFieldValue<DatFormat>(DatHeader.DatFormatKey));
 

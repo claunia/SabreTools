@@ -1485,7 +1485,7 @@ namespace SabreTools.DatFiles
             {
                 var input = inputs[i];
                 _staticLogger.User($"Adding DAT: {input.CurrentPath}");
-                datFiles[i] = CreateDatFile(datFile.Header.CloneFiltering(), datFile.Modifiers);
+                datFiles[i] = CreateDatFile(datFile.Header.CloneFormat(), datFile.Modifiers);
                 Parser.ParseInto(datFiles[i], input, i, keep: true);
 #if NET40_OR_GREATER || NETCOREAPP
             });
