@@ -119,52 +119,6 @@ namespace SabreTools.DatFiles
         public object Clone() => new DatHeader(GetInternalClone());
 
         /// <summary>
-        /// Clone the standard parts of the current header
-        /// </summary>
-        public DatHeader CloneStandard()
-        {
-            var header = new DatHeader();
-            header.SetFieldValue<string?>(Models.Metadata.Header.AuthorKey,
-                GetStringFieldValue(Models.Metadata.Header.AuthorKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.CategoryKey,
-                GetStringFieldValue(Models.Metadata.Header.CategoryKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.CommentKey,
-                GetStringFieldValue(Models.Metadata.Header.CommentKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.DateKey,
-                GetStringFieldValue(Models.Metadata.Header.DateKey));
-            header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey,
-                GetFieldValue<DatFormat>(DatHeader.DatFormatKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey,
-                GetStringFieldValue(Models.Metadata.Header.DescriptionKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.EmailKey,
-                GetStringFieldValue(Models.Metadata.Header.EmailKey));
-            header.SetFieldValue<string?>(DatHeader.FileNameKey,
-                GetStringFieldValue(DatHeader.FileNameKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.ForceMergingKey,
-                GetStringFieldValue(Models.Metadata.Header.ForceMergingKey).AsEnumValue<MergingFlag>().AsStringValue());
-            header.SetFieldValue<string?>(Models.Metadata.Header.ForceNodumpKey,
-                GetStringFieldValue(Models.Metadata.Header.ForceNodumpKey).AsEnumValue<NodumpFlag>().AsStringValue());
-            header.SetFieldValue<string?>(Models.Metadata.Header.ForcePackingKey,
-                GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>().AsStringValue());
-            header.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey,
-                GetStringFieldValue(Models.Metadata.Header.HeaderKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.HomepageKey,
-                GetStringFieldValue(Models.Metadata.Header.HomepageKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.NameKey,
-                GetStringFieldValue(Models.Metadata.Header.NameKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.RootDirKey,
-                GetStringFieldValue(Models.Metadata.Header.RootDirKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.TypeKey,
-                GetStringFieldValue(Models.Metadata.Header.TypeKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.UrlKey,
-                GetStringFieldValue(Models.Metadata.Header.UrlKey));
-            header.SetFieldValue<string?>(Models.Metadata.Header.VersionKey,
-                GetStringFieldValue(Models.Metadata.Header.VersionKey));
-
-            return header;
-        }
-
-        /// <summary>
         /// Clone just the format from the current header
         /// </summary>
         public DatHeader CloneFormat()
