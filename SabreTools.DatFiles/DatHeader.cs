@@ -109,6 +109,18 @@ namespace SabreTools.DatFiles
                         _internal[fieldName] = header[fieldName];
                 }
             }
+
+            // Get all no-filter fields
+            if (header.ContainsKey(Models.Metadata.Header.CanOpenKey))
+                _internal[Models.Metadata.Header.CanOpenKey] = header[Models.Metadata.Header.CanOpenKey];
+            if (header.ContainsKey(Models.Metadata.Header.ImagesKey))
+                _internal[Models.Metadata.Header.ImagesKey] = header[Models.Metadata.Header.ImagesKey];
+            if (header.ContainsKey(Models.Metadata.Header.InfosKey))
+                _internal[Models.Metadata.Header.InfosKey] = header[Models.Metadata.Header.InfosKey];
+            if (header.ContainsKey(Models.Metadata.Header.NewDatKey))
+                _internal[Models.Metadata.Header.NewDatKey] = header[Models.Metadata.Header.NewDatKey];
+            if (header.ContainsKey(Models.Metadata.Header.SearchKey))
+                _internal[Models.Metadata.Header.SearchKey] = header[Models.Metadata.Header.SearchKey];
         }
 
         #endregion

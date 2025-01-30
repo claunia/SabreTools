@@ -28,9 +28,8 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Modifier values
         /// </summary>
-        /// TODO: Make this private set
         [JsonProperty("modifiers"), XmlElement("modifiers")]
-        public DatModifiers Modifiers { get; set; } = new DatModifiers();
+        public DatModifiers Modifiers { get; private set; } = new DatModifiers();
 
         /// <summary>
         /// DatItems and related statistics
@@ -151,9 +150,8 @@ namespace SabreTools.DatFiles
         /// <param name="datHeader">Replacement header to be used</param>
         public void SetHeader(DatHeader? datHeader)
         {
-            // TODO: Figure out why clone loses data here
             if (datHeader != null)
-                Header = datHeader;
+                Header = (DatHeader)datHeader.Clone();
         }
 
         /// <summary>
