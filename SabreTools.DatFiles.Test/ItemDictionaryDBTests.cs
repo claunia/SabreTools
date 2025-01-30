@@ -803,8 +803,8 @@ namespace SabreTools.DatFiles.Test
             Assert.Equal(1, dict.DatStatistics.TotalCount);
             Assert.Equal(1, dict.DatStatistics.GetItemCount(ItemType.Rom));
             Assert.Equal(12345, dict.DatStatistics.TotalSize);
-            Assert.Equal(1, dict.DatStatistics.HashCounts[HashType.CRC32]);
-            Assert.Equal(0, dict.DatStatistics.HashCounts[HashType.MD5]);
+            Assert.Equal(1, dict.DatStatistics.GetHashCount(HashType.CRC32));
+            Assert.Equal(0, dict.DatStatistics.GetHashCount(HashType.MD5));
 
             item.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, "deadbeef");
 
@@ -813,8 +813,8 @@ namespace SabreTools.DatFiles.Test
             Assert.Equal(1, dict.DatStatistics.TotalCount);
             Assert.Equal(1, dict.DatStatistics.GetItemCount(ItemType.Rom));
             Assert.Equal(12345, dict.DatStatistics.TotalSize);
-            Assert.Equal(1, dict.DatStatistics.HashCounts[HashType.CRC32]);
-            Assert.Equal(1, dict.DatStatistics.HashCounts[HashType.MD5]);
+            Assert.Equal(1, dict.DatStatistics.GetHashCount(HashType.CRC32));
+            Assert.Equal(1, dict.DatStatistics.GetHashCount(HashType.MD5));
         }
 
         #endregion

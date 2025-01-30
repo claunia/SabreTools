@@ -14,9 +14,19 @@ namespace SabreTools.DatFiles
         #region Private instance variables
 
         /// <summary>
+        /// Number of items for each hash type
+        /// </summary>
+        private readonly Dictionary<HashType, long> _hashCounts = [];
+
+        /// <summary>
         /// Number of items for each item type
         /// </summary>
         private readonly Dictionary<ItemType, long> _itemCounts = [];
+
+        /// <summary>
+        /// Number of items for each item status
+        /// </summary>
+        private readonly Dictionary<ItemStatus, long> _statusCounts = [];
 
         /// <summary>
         /// Lock for statistics calculation
@@ -42,16 +52,6 @@ namespace SabreTools.DatFiles
         /// Total uncompressed size
         /// </summary>
         public long TotalSize { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of items for each hash type
-        /// </summary>
-        public Dictionary<HashType, long> HashCounts { get; } = [];
-
-        /// <summary>
-        /// Number of items for each item status
-        /// </summary>
-        public Dictionary<ItemStatus, long> StatusCounts { get; } = [];
 
         /// <summary>
         /// Number of items with the remove flag
@@ -183,13 +183,13 @@ namespace SabreTools.DatFiles
             TotalSize += stats.TotalSize;
 
             // Individual hash counts
-            foreach (var hashCountKvp in stats.HashCounts)
+            foreach (var hashCountKvp in stats._hashCounts)
             {
                 AddHashCount(hashCountKvp.Key, hashCountKvp.Value);
             }
 
             // Individual status counts
-            foreach (var statusCountKvp in stats.StatusCounts)
+            foreach (var statusCountKvp in stats._statusCounts)
             {
                 AddStatusCount(statusCountKvp.Key, statusCountKvp.Value);
             }
@@ -204,12 +204,12 @@ namespace SabreTools.DatFiles
         /// <returns>The number of items with that hash, if it exists</returns>
         public long GetHashCount(HashType hashType)
         {
-            lock (HashCounts)
+            lock (_hashCounts)
             {
-                if (!HashCounts.ContainsKey(hashType))
+                if (!_hashCounts.ContainsKey(hashType))
                     return 0;
 
-                return HashCounts[hashType];
+                return _hashCounts[hashType];
             }
         }
 
@@ -236,12 +236,12 @@ namespace SabreTools.DatFiles
         /// <returns>The number of items of that type, if it exists</returns>
         public long GetStatusCount(ItemStatus itemStatus)
         {
-            lock (StatusCounts)
+            lock (_statusCounts)
             {
-                if (!StatusCounts.ContainsKey(itemStatus))
+                if (!_statusCounts.ContainsKey(itemStatus))
                     return 0;
 
-                return StatusCounts[itemStatus];
+                return _statusCounts[itemStatus];
             }
         }
 
@@ -252,14 +252,14 @@ namespace SabreTools.DatFiles
         /// <param name="interval">Amount to increment by, defaults to 1</param>
         private void AddHashCount(HashType hashType, long interval = 1)
         {
-            lock (HashCounts)
+            lock (_hashCounts)
             {
-                if (!HashCounts.ContainsKey(hashType))
-                    HashCounts[hashType] = 0;
+                if (!_hashCounts.ContainsKey(hashType))
+                    _hashCounts[hashType] = 0;
 
-                HashCounts[hashType] += interval;
-                if (HashCounts[hashType] < 0)
-                    HashCounts[hashType] = 0;
+                _hashCounts[hashType] += interval;
+                if (_hashCounts[hashType] < 0)
+                    _hashCounts[hashType] = 0;
             }
         }
 
@@ -288,14 +288,14 @@ namespace SabreTools.DatFiles
         /// <param name="interval">Amount to increment by, defaults to 1</param>
         private void AddStatusCount(ItemStatus itemStatus, long interval = 1)
         {
-            lock (StatusCounts)
+            lock (_statusCounts)
             {
-                if (!StatusCounts.ContainsKey(itemStatus))
-                    StatusCounts[itemStatus] = 0;
+                if (!_statusCounts.ContainsKey(itemStatus))
+                    _statusCounts[itemStatus] = 0;
 
-                StatusCounts[itemStatus] += interval;
-                if (StatusCounts[itemStatus] < 0)
-                    StatusCounts[itemStatus] = 0;
+                _statusCounts[itemStatus] += interval;
+                if (_statusCounts[itemStatus] < 0)
+                    _statusCounts[itemStatus] = 0;
             }
         }
 
@@ -375,8 +375,8 @@ namespace SabreTools.DatFiles
             _itemCounts.Clear();
             GameCount = 0;
             TotalSize = 0;
-            HashCounts.Clear();
-            StatusCounts.Clear();
+            _hashCounts.Clear();
+            _statusCounts.Clear();
             RemovedCount = 0;
         }
 
@@ -387,14 +387,14 @@ namespace SabreTools.DatFiles
         /// <param name="interval">Amount to increment by, defaults to 1</param>
         private void RemoveHashCount(HashType hashType, long interval = 1)
         {
-            lock (HashCounts)
+            lock (_hashCounts)
             {
-                if (!HashCounts.ContainsKey(hashType))
+                if (!_hashCounts.ContainsKey(hashType))
                     return;
 
-                HashCounts[hashType] -= interval;
-                if (HashCounts[hashType] < 0)
-                    HashCounts[hashType] = 0;
+                _hashCounts[hashType] -= interval;
+                if (_hashCounts[hashType] < 0)
+                    _hashCounts[hashType] = 0;
             }
         }
 
@@ -423,14 +423,14 @@ namespace SabreTools.DatFiles
         /// <param name="interval">Amount to increment by, defaults to 1</param>
         private void RemoveStatusCount(ItemStatus itemStatus, long interval = 1)
         {
-            lock (StatusCounts)
+            lock (_statusCounts)
             {
-                if (!StatusCounts.ContainsKey(itemStatus))
+                if (!_statusCounts.ContainsKey(itemStatus))
                     return;
 
-                StatusCounts[itemStatus] -= interval;
-                if (StatusCounts[itemStatus] < 0)
-                    StatusCounts[itemStatus] = 0;
+                _statusCounts[itemStatus] -= interval;
+                if (_statusCounts[itemStatus] < 0)
+                    _statusCounts[itemStatus] = 0;
             }
         }
 
