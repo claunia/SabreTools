@@ -6,31 +6,109 @@ namespace SabreTools.DatFiles.Test
     {
         #region CanOpenSpecified
 
-        // TODO: Implement CanOpenSpecified tests
+        [Fact]
+        public void CanOpenSpecified_Missing()
+        {
+            DatHeader header = new DatHeader();
+            header.SetFieldValue<string[]>(Models.Metadata.Header.CanOpenKey, null);
+            Assert.False(header.CanOpenSpecified);
+        }
+
+        [Fact]
+        public void CanOpenSpecified_Empty()
+        {
+            DatHeader header = new DatHeader();
+            header.SetFieldValue<string[]>(Models.Metadata.Header.CanOpenKey, []);
+            Assert.False(header.CanOpenSpecified);
+        }
+
+        [Fact]
+        public void CanOpenSpecified_Exists()
+        {
+            DatHeader header = new DatHeader();
+            header.SetFieldValue<string[]>(Models.Metadata.Header.CanOpenKey, ["value"]);
+            Assert.True(header.CanOpenSpecified);
+        }
 
         #endregion
 
         #region ImagesSpecified
 
-        // TODO: Implement ImagesSpecified tests
+        [Fact]
+        public void ImagesSpecified_Missing()
+        {
+            DatHeader header = new DatHeader();
+            header.SetFieldValue<Models.OfflineList.Images>(Models.Metadata.Header.ImagesKey, null);
+            Assert.False(header.ImagesSpecified);
+        }
+
+        [Fact]
+        public void ImagesSpecified_Exists()
+        {
+            DatHeader header = new DatHeader();
+            header.SetFieldValue<Models.OfflineList.Images>(Models.Metadata.Header.ImagesKey, new());
+            Assert.True(header.ImagesSpecified);
+        }
 
         #endregion
 
         #region InfosSpecified
 
-        // TODO: Implement InfosSpecified tests
+        [Fact]
+        public void InfosSpecified_Missing()
+        {
+            DatHeader header = new DatHeader();
+            header.SetFieldValue<Models.OfflineList.Infos>(Models.Metadata.Header.InfosKey, null);
+            Assert.False(header.InfosSpecified);
+        }
+
+        [Fact]
+        public void InfosSpecified_Exists()
+        {
+            DatHeader header = new DatHeader();
+            header.SetFieldValue<Models.OfflineList.Infos>(Models.Metadata.Header.InfosKey, new());
+            Assert.True(header.InfosSpecified);
+        }
 
         #endregion
 
         #region NewDatSpecified
 
-        // TODO: Implement NewDatSpecified tests
+        [Fact]
+        public void NewDatSpecified_Missing()
+        {
+            DatHeader header = new DatHeader();
+            header.SetFieldValue<Models.OfflineList.NewDat>(Models.Metadata.Header.NewDatKey, null);
+            Assert.False(header.NewDatSpecified);
+        }
+
+        [Fact]
+        public void NewDatSpecified_Exists()
+        {
+            DatHeader header = new DatHeader();
+            header.SetFieldValue<Models.OfflineList.NewDat>(Models.Metadata.Header.NewDatKey, new());
+            Assert.True(header.NewDatSpecified);
+        }
 
         #endregion
 
         #region SearchSpecified
 
-        // TODO: Implement SearchSpecified tests
+        [Fact]
+        public void SearchSpecified_Missing()
+        {
+            DatHeader header = new DatHeader();
+            header.SetFieldValue<Models.OfflineList.Search>(Models.Metadata.Header.SearchKey, null);
+            Assert.False(header.SearchSpecified);
+        }
+
+        [Fact]
+        public void SearchSpecified_Exists()
+        {
+            DatHeader header = new DatHeader();
+            header.SetFieldValue<Models.OfflineList.Search>(Models.Metadata.Header.SearchKey, new());
+            Assert.True(header.SearchSpecified);
+        }
 
         #endregion
 
@@ -39,10 +117,10 @@ namespace SabreTools.DatFiles.Test
         [Fact]
         public void CloneTest()
         {
-            DatHeader item = new DatHeader();
-            item.SetFieldValue(Models.Metadata.Header.NameKey, "name");
+            DatHeader header = new DatHeader();
+            header.SetFieldValue(Models.Metadata.Header.NameKey, "name");
 
-            object clone = item.Clone();
+            object clone = header.Clone();
             DatHeader? actual = clone as DatHeader;
             Assert.NotNull(actual);
             Assert.Equal("name", actual.GetStringFieldValue(Models.Metadata.Header.NameKey));
@@ -55,10 +133,10 @@ namespace SabreTools.DatFiles.Test
         [Fact]
         public void CloneFormatTest()
         {
-            DatHeader item = new DatHeader();
-            item.SetFieldValue(DatHeader.DatFormatKey, DatFormat.Logiqx);
+            DatHeader header = new DatHeader();
+            header.SetFieldValue(DatHeader.DatFormatKey, DatFormat.Logiqx);
 
-            object clone = item.Clone();
+            object clone = header.Clone();
             DatHeader? actual = clone as DatHeader;
             Assert.NotNull(actual);
             Assert.Equal(DatFormat.Logiqx, actual.GetFieldValue<DatFormat>(DatHeader.DatFormatKey));
@@ -71,10 +149,10 @@ namespace SabreTools.DatFiles.Test
         [Fact]
         public void GetInternalCloneTest()
         {
-            DatHeader item = new DatHeader();
-            item.SetFieldValue(Models.Metadata.Header.NameKey, "name");
+            DatHeader header = new DatHeader();
+            header.SetFieldValue(Models.Metadata.Header.NameKey, "name");
 
-            Models.Metadata.Header actual = item.GetInternalClone();
+            Models.Metadata.Header actual = header.GetInternalClone();
             Assert.Equal("name", actual[Models.Metadata.Header.NameKey]);
         }
 
