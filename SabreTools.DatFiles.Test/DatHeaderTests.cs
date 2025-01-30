@@ -4,7 +4,35 @@ namespace SabreTools.DatFiles.Test
 {
     public class DatHeaderTests
     {
-        // TODO: Specified tests?
+        #region CanOpenSpecified
+
+        // TODO: Implement CanOpenSpecified tests
+
+        #endregion
+
+        #region ImagesSpecified
+
+        // TODO: Implement ImagesSpecified tests
+
+        #endregion
+
+        #region InfosSpecified
+
+        // TODO: Implement InfosSpecified tests
+
+        #endregion
+
+        #region NewDatSpecified
+
+        // TODO: Implement NewDatSpecified tests
+
+        #endregion
+
+        #region SearchSpecified
+
+        // TODO: Implement SearchSpecified tests
+
+        #endregion
 
         #region Clone
 
