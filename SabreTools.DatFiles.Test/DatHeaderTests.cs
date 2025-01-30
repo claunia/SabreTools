@@ -158,12 +158,6 @@ namespace SabreTools.DatFiles.Test
 
         #endregion
 
-        #region ConditionalCopy
-
-        // TODO: Implement ConditionalCopy tests
-
-        #endregion
-
         #region Equals
 
         [Fact]

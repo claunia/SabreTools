@@ -66,7 +66,7 @@ namespace SabreTools.DatFiles.Formats
                         case "header":
                             XmlSerializer xs = new(typeof(DatHeader));
                             DatHeader? header = xs.Deserialize(xtr.ReadSubtree()) as DatHeader;
-                            Header.ConditionalCopy(header);
+                            SetHeader(header);
                             xtr.Skip();
                             break;
 

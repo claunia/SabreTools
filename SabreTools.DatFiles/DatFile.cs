@@ -149,10 +149,11 @@ namespace SabreTools.DatFiles
         /// Set the internal header
         /// </summary>
         /// <param name="datHeader">Replacement header to be used</param>
-        public void SetHeader(DatHeader datHeader)
+        public void SetHeader(DatHeader? datHeader)
         {
             // TODO: Figure out why clone loses data here
-            Header = datHeader;
+            if (datHeader != null)
+                Header = datHeader;
         }
 
         /// <summary>

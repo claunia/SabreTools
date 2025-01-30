@@ -98,7 +98,7 @@ namespace SabreTools.DatFiles.Formats
             jtr.Read();
             JsonSerializer js = new();
             DatHeader? header = js.Deserialize<DatHeader>(jtr);
-            Header.ConditionalCopy(header);
+            SetHeader(header);
         }
 
         /// <summary>
