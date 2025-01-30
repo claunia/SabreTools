@@ -14,6 +14,11 @@ namespace SabreTools.DatFiles
         #region Private instance variables
 
         /// <summary>
+        /// Number of items for each item type
+        /// </summary>
+        private readonly Dictionary<ItemType, long> _itemCounts = [];
+
+        /// <summary>
         /// Lock for statistics calculation
         /// </summary>
         private readonly object statsLock = new();
@@ -26,11 +31,6 @@ namespace SabreTools.DatFiles
         /// Overall item count
         /// </summary>
         public long TotalCount { get; private set; } = 0;
-
-        /// <summary>
-        /// Number of items for each item type
-        /// </summary>
-        public Dictionary<ItemType, long> ItemCounts { get; } = [];
 
         /// <summary>
         /// Number of machines
@@ -173,7 +173,7 @@ namespace SabreTools.DatFiles
             TotalCount += stats.TotalCount;
 
             // Loop through and add stats for all items
-            foreach (var itemCountKvp in stats.ItemCounts)
+            foreach (var itemCountKvp in stats._itemCounts)
             {
                 AddItemCount(itemCountKvp.Key, itemCountKvp.Value);
             }
@@ -220,12 +220,12 @@ namespace SabreTools.DatFiles
         /// <returns>The number of items of that type, if it exists</returns>
         public long GetItemCount(ItemType itemType)
         {
-            lock (ItemCounts)
+            lock (_itemCounts)
             {
-                if (!ItemCounts.ContainsKey(itemType))
+                if (!_itemCounts.ContainsKey(itemType))
                     return 0;
 
-                return ItemCounts[itemType];
+                return _itemCounts[itemType];
             }
         }
 
@@ -270,14 +270,14 @@ namespace SabreTools.DatFiles
         /// <param name="interval">Amount to increment by, defaults to 1</param>
         private void AddItemCount(ItemType itemType, long interval = 1)
         {
-            lock (ItemCounts)
+            lock (_itemCounts)
             {
-                if (!ItemCounts.ContainsKey(itemType))
-                    ItemCounts[itemType] = 0;
+                if (!_itemCounts.ContainsKey(itemType))
+                    _itemCounts[itemType] = 0;
 
-                ItemCounts[itemType] += interval;
-                if (ItemCounts[itemType] < 0)
-                    ItemCounts[itemType] = 0;
+                _itemCounts[itemType] += interval;
+                if (_itemCounts[itemType] < 0)
+                    _itemCounts[itemType] = 0;
             }
         }
 
@@ -372,7 +372,7 @@ namespace SabreTools.DatFiles
         public void ResetStatistics()
         {
             TotalCount = 0;
-            ItemCounts.Clear();
+            _itemCounts.Clear();
             GameCount = 0;
             TotalSize = 0;
             HashCounts.Clear();
@@ -405,14 +405,14 @@ namespace SabreTools.DatFiles
         /// <param name="interval">Amount to increment by, defaults to 1</param>
         private void RemoveItemCount(ItemType itemType, long interval = 1)
         {
-            lock (ItemCounts)
+            lock (_itemCounts)
             {
-                if (!ItemCounts.ContainsKey(itemType))
+                if (!_itemCounts.ContainsKey(itemType))
                     return;
 
-                ItemCounts[itemType] -= interval;
-                if (ItemCounts[itemType] < 0)
-                    ItemCounts[itemType] = 0;
+                _itemCounts[itemType] -= interval;
+                if (_itemCounts[itemType] < 0)
+                    _itemCounts[itemType] = 0;
             }
         }
 
