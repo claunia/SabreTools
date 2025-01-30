@@ -83,29 +83,31 @@ namespace SabreTools.DatFiles
 
         public DatHeader(Models.Metadata.Header header)
         {
+            // Create a new internal model
+            _internal = new Models.Metadata.Header();
+
             // Get all fields to automatically copy without processing
             var nonItemFields = TypeHelper.GetConstants(typeof(Models.Metadata.Header));
-            if (nonItemFields == null)
-                return;
-
-            // Populate the internal machine from non-filter fields
-            _internal = new Models.Metadata.Header();
-            foreach (string fieldName in nonItemFields)
+            if (nonItemFields != null)
             {
-                if (header.ContainsKey(fieldName))
-                    _internal[fieldName] = header[fieldName];
+                // Populate the internal machine from non-filter fields
+                foreach (string fieldName in nonItemFields)
+                {
+                    if (header.ContainsKey(fieldName))
+                        _internal[fieldName] = header[fieldName];
+                }
             }
 
             // Get all fields specific to the DatFiles implementation
             var nonStandardFields = TypeHelper.GetConstants(typeof(DatHeader));
-            if (nonStandardFields == null)
-                return;
-
-            // Populate the internal machine from filter fields
-            foreach (string fieldName in nonStandardFields)
+            if (nonStandardFields != null)
             {
-                if (header.ContainsKey(fieldName))
-                    _internal[fieldName] = header[fieldName];
+                // Populate the internal machine from filter fields
+                foreach (string fieldName in nonStandardFields)
+                {
+                    if (header.ContainsKey(fieldName))
+                        _internal[fieldName] = header[fieldName];
+                }
             }
         }
 
