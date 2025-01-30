@@ -2,10 +2,9 @@ using SabreTools.DatFiles;
 using SabreTools.DatTools;
 using Xunit;
 
-namespace SabreTools.Test.DatFiles
+namespace SabreTools.Test.DatTools
 {
-    // TODO: Migrate tests to WriterTests when available
-    public class DatHeaderTests
+    public class WriterTests
     {
         [Theory]
         [InlineData(DatFormat.CSV, "csv")]
