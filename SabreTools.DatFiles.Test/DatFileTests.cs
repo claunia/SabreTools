@@ -249,6 +249,24 @@ namespace SabreTools.DatFiles.Test
 
         #endregion
 
+        #region SetModifiers
+
+        [Fact]
+        public void SetModifiersTest()
+        {
+            DatModifiers datModifiers = new DatModifiers();
+            datModifiers.AddExtension = ".new";
+
+            DatFile? datFile = new Formats.Logiqx(datFile: null, deprecated: false);
+            datFile.Modifiers.AddExtension = ".old";
+
+            datFile.SetModifiers(datModifiers);
+            Assert.NotNull(datFile.Modifiers);
+            Assert.Equal(".new", datFile.Modifiers.AddExtension);
+        }
+
+        #endregion
+
         #region ResetDictionary
 
         [Fact]
