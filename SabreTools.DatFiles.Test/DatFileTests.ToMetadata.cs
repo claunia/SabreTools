@@ -15,7 +15,7 @@ namespace SabreTools.DatFiles.Test
         [Fact]
         public void ConvertToMetadata_Empty()
         {
-            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(null, useGame: false);
 
             Models.Metadata.MetadataFile? actual = datFile.ConvertToMetadata();
             Assert.Null(actual);
@@ -26,7 +26,7 @@ namespace SabreTools.DatFiles.Test
         {
             DatHeader header = CreateHeader();
 
-            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(null, useGame: false);
             datFile.SetHeader(header);
             datFile.AddItem(new Rom(), statsOnly: false);
 

@@ -28,7 +28,7 @@ namespace SabreTools.DatFiles.Test
             datItem.SetFieldValue(DatItem.MachineKey, machine);
             datItem.SetFieldValue(DatItem.SourceKey, source);
 
-            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Logiqx(datFile: null, useGame: false);
             datFile.AddItem(datItem, statsOnly: false);
 
             datFile.BucketBy(ItemKey.Machine);
@@ -56,7 +56,7 @@ namespace SabreTools.DatFiles.Test
             datItem.SetFieldValue(DatItem.MachineKey, machine);
             datItem.SetFieldValue(DatItem.SourceKey, source);
 
-            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Logiqx(datFile: null, useGame: false);
             long sourceIndex = datFile.AddSourceDB(source);
             long machineIndex = datFile.AddMachineDB(machine);
             _ = datFile.AddItemDB(datItem, machineIndex, sourceIndex, statsOnly: false);
@@ -86,7 +86,7 @@ namespace SabreTools.DatFiles.Test
             datItem.SetFieldValue(DatItem.MachineKey, machine);
             datItem.SetFieldValue(DatItem.SourceKey, source);
 
-            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Logiqx(datFile: null, useGame: false);
             datFile.AddItem(datItem, statsOnly: false);
 
             datFile.MachineDescriptionToName();
@@ -106,7 +106,7 @@ namespace SabreTools.DatFiles.Test
             machine.SetFieldValue(Models.Metadata.Machine.NameKey, "machine");
             machine.SetFieldValue(Models.Metadata.Machine.DescriptionKey, "description");
 
-            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Logiqx(datFile: null, useGame: false);
             _ = datFile.AddMachineDB(machine);
 
             datFile.MachineDescriptionToName();
@@ -138,7 +138,7 @@ namespace SabreTools.DatFiles.Test
             disk.SetFieldValue(DatItem.MachineKey, machine);
             disk.SetFieldValue(DatItem.SourceKey, source);
 
-            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Logiqx(datFile: null, useGame: false);
             datFile.AddItem(rom, statsOnly: false);
             datFile.AddItem(disk, statsOnly: false);
 
@@ -173,7 +173,7 @@ namespace SabreTools.DatFiles.Test
             DatItem disk = new Disk();
             disk.SetName("disk");
 
-            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Logiqx(datFile: null, useGame: false);
             long sourceIndex = datFile.AddSourceDB(source);
             long machineIndex = datFile.AddMachineDB(machine);
             _ = datFile.AddItemDB(rom, machineIndex, sourceIndex, statsOnly: false);
@@ -218,7 +218,7 @@ namespace SabreTools.DatFiles.Test
             worldRom.SetName("rom.nib");
             worldRom.SetFieldValue(DatItem.MachineKey, worldMachine);
 
-            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Logiqx(datFile: null, useGame: false);
             datFile.AddItem(nowhereRom, statsOnly: false);
             datFile.AddItem(worldRom, statsOnly: false);
 
@@ -244,7 +244,7 @@ namespace SabreTools.DatFiles.Test
             worldMachine.SetFieldValue(Models.Metadata.Machine.NameKey, "machine (World)");
             worldMachine.SetFieldValue(Models.Metadata.Machine.CloneOfKey, "machine (Nowhere)");
 
-            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Logiqx(datFile: null, useGame: false);
             _ = datFile.AddMachineDB(nowhereMachine);
             _ = datFile.AddMachineDB(worldMachine);
 
@@ -272,7 +272,7 @@ namespace SabreTools.DatFiles.Test
             datItem.SetFieldValue(DatItem.MachineKey, machine);
             datItem.SetFieldValue(DatItem.SourceKey, source);
 
-            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Logiqx(datFile: null, useGame: false);
             datFile.AddItem(datItem, statsOnly: false);
 
             datFile.StripSceneDatesFromItems();
@@ -290,7 +290,7 @@ namespace SabreTools.DatFiles.Test
             Machine machine = new Machine();
             machine.SetFieldValue(Models.Metadata.Machine.NameKey, "10.10.10-machine-name");
 
-            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Logiqx(datFile: null, useGame: false);
             _ = datFile.AddMachineDB(machine);
 
             datFile.StripSceneDatesFromItems();

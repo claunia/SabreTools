@@ -238,7 +238,7 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         /// Indicates if game should be used instead of machine
         /// </summary>
-        private readonly bool _deprecated;
+        private readonly bool _useGame;
 
         #endregion
 
@@ -246,10 +246,10 @@ namespace SabreTools.DatFiles.Formats
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
-        /// <param name="deprecated">True if the output uses "game", false if the output uses "machine"</param>
-        public Logiqx(DatFile? datFile, bool deprecated) : base(datFile)
+        /// <param name="useGame">True if the output uses "game", false if the output uses "machine"</param>
+        public Logiqx(DatFile? datFile, bool useGame) : base(datFile)
         {
-            _deprecated = deprecated;
+            _useGame = useGame;
         }
 
         /// <inheritdoc/>
@@ -359,7 +359,7 @@ namespace SabreTools.DatFiles.Formats
 
                 // Serialize the input file
                 var metadata = ConvertToMetadata(ignoreblanks);
-                var datafile = new Serialization.CrossModel.Logiqx().Deserialize(metadata, _deprecated);
+                var datafile = new Serialization.CrossModel.Logiqx().Deserialize(metadata, _useGame);
 
                 // TODO: Reenable doctype writing
                 // Only write the doctype if we don't have No-Intro data

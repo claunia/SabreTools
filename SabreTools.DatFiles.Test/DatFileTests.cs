@@ -16,7 +16,7 @@ namespace SabreTools.DatFiles.Test
         public void Constructor_Null()
         {
             DatFile? datFile = null;
-            DatFile created = new Formats.Logiqx(datFile, deprecated: false);
+            DatFile created = new Formats.Logiqx(datFile, useGame: false);
 
             Assert.NotNull(created.Header);
             Assert.NotNull(created.Items);
@@ -39,7 +39,7 @@ namespace SabreTools.DatFiles.Test
             rom.SetFieldValue(DatItem.SourceKey, source);
             rom.SetFieldValue(DatItem.MachineKey, machine);
 
-            DatFile? datFile = new Formats.Logiqx(datFile: null, deprecated: false);
+            DatFile? datFile = new Formats.Logiqx(datFile: null, useGame: false);
             datFile.Header.SetFieldValue(Models.Metadata.Header.NameKey, "name");
             datFile.AddItem(rom, statsOnly: false);
 
@@ -47,7 +47,7 @@ namespace SabreTools.DatFiles.Test
             long machineIndex = datFile.AddMachineDB(machine);
             datFile.AddItemDB(rom, machineIndex, sourceIndex, statsOnly: false);
 
-            DatFile created = new Formats.Logiqx(datFile, deprecated: false);
+            DatFile created = new Formats.Logiqx(datFile, useGame: false);
             created.BucketBy(ItemKey.Machine);
 
             Assert.NotNull(created.Header);
@@ -79,7 +79,7 @@ namespace SabreTools.DatFiles.Test
             datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
             datItem.SetFieldValue<Machine?>(DatItem.MachineKey, machine);
 
-            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Logiqx(datFile: null, useGame: false);
             datFile.AddItem(datItem, statsOnly: false);
 
             datFile.ClearEmpty();
@@ -96,7 +96,7 @@ namespace SabreTools.DatFiles.Test
 
             DatItem datItem = new Rom();
 
-            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Logiqx(datFile: null, useGame: false);
             long sourceIndex = datFile.AddSourceDB(source);
             long machineIndex = datFile.AddMachineDB(machine);
             _ = datFile.AddItemDB(datItem, machineIndex, sourceIndex, statsOnly: false);
@@ -112,7 +112,7 @@ namespace SabreTools.DatFiles.Test
         [Fact]
         public void FillHeaderFromPath_NoNameNoDesc_NotBare()
         {
-            DatFile datFile = new Formats.Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(datFile: null, useGame: false);
             datFile.Header.SetFieldValue(Models.Metadata.Header.NameKey, string.Empty);
             datFile.Header.SetFieldValue(Models.Metadata.Header.DescriptionKey, string.Empty);
             datFile.Header.SetFieldValue(Models.Metadata.Header.DateKey, "1980-01-01");
@@ -127,7 +127,7 @@ namespace SabreTools.DatFiles.Test
         [Fact]
         public void FillHeaderFromPath_NoNameNoDesc_Bare()
         {
-            DatFile datFile = new Formats.Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(datFile: null, useGame: false);
             datFile.Header.SetFieldValue(Models.Metadata.Header.NameKey, string.Empty);
             datFile.Header.SetFieldValue(Models.Metadata.Header.DescriptionKey, string.Empty);
             datFile.Header.SetFieldValue(Models.Metadata.Header.DateKey, "1980-01-01");
@@ -142,7 +142,7 @@ namespace SabreTools.DatFiles.Test
         [Fact]
         public void FillHeaderFromPath_NoNameDesc_NotBare()
         {
-            DatFile datFile = new Formats.Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(datFile: null, useGame: false);
             datFile.Header.SetFieldValue(Models.Metadata.Header.NameKey, string.Empty);
             datFile.Header.SetFieldValue(Models.Metadata.Header.DescriptionKey, "Description");
             datFile.Header.SetFieldValue(Models.Metadata.Header.DateKey, "1980-01-01");
@@ -157,7 +157,7 @@ namespace SabreTools.DatFiles.Test
         [Fact]
         public void FillHeaderFromPath_NoNameDesc_Bare()
         {
-            DatFile datFile = new Formats.Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(datFile: null, useGame: false);
             datFile.Header.SetFieldValue(Models.Metadata.Header.NameKey, string.Empty);
             datFile.Header.SetFieldValue(Models.Metadata.Header.DescriptionKey, "Description");
             datFile.Header.SetFieldValue(Models.Metadata.Header.DateKey, "1980-01-01");
@@ -172,7 +172,7 @@ namespace SabreTools.DatFiles.Test
         [Fact]
         public void FillHeaderFromPath_NameNoDesc_NotBare()
         {
-            DatFile datFile = new Formats.Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(datFile: null, useGame: false);
             datFile.Header.SetFieldValue(Models.Metadata.Header.NameKey, "Name");
             datFile.Header.SetFieldValue(Models.Metadata.Header.DescriptionKey, string.Empty);
             datFile.Header.SetFieldValue(Models.Metadata.Header.DateKey, "1980-01-01");
@@ -187,7 +187,7 @@ namespace SabreTools.DatFiles.Test
         [Fact]
         public void FillHeaderFromPath_NameNoDesc_Bare()
         {
-            DatFile datFile = new Formats.Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(datFile: null, useGame: false);
             datFile.Header.SetFieldValue(Models.Metadata.Header.NameKey, "Name");
             datFile.Header.SetFieldValue(Models.Metadata.Header.DescriptionKey, string.Empty);
             datFile.Header.SetFieldValue(Models.Metadata.Header.DateKey, "1980-01-01");
@@ -202,7 +202,7 @@ namespace SabreTools.DatFiles.Test
         [Fact]
         public void FillHeaderFromPath_NameDesc_NotBare()
         {
-            DatFile datFile = new Formats.Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(datFile: null, useGame: false);
             datFile.Header.SetFieldValue(Models.Metadata.Header.NameKey, "Name");
             datFile.Header.SetFieldValue(Models.Metadata.Header.DescriptionKey, "Description");
             datFile.Header.SetFieldValue(Models.Metadata.Header.DateKey, "1980-01-01");
@@ -217,7 +217,7 @@ namespace SabreTools.DatFiles.Test
         [Fact]
         public void FillHeaderFromPath_NameDesc_Bare()
         {
-            DatFile datFile = new Formats.Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(datFile: null, useGame: false);
             datFile.Header.SetFieldValue(Models.Metadata.Header.NameKey, "Name ");
             datFile.Header.SetFieldValue(Models.Metadata.Header.DescriptionKey, "Description ");
             datFile.Header.SetFieldValue(Models.Metadata.Header.DateKey, "1980-01-01");
@@ -239,7 +239,7 @@ namespace SabreTools.DatFiles.Test
             DatHeader datHeader = new DatHeader();
             datHeader.SetFieldValue(Models.Metadata.Header.NameKey, "name");
 
-            DatFile? datFile = new Formats.Logiqx(datFile: null, deprecated: false);
+            DatFile? datFile = new Formats.Logiqx(datFile: null, useGame: false);
             datFile.Header.SetFieldValue(Models.Metadata.Header.NameKey, "notname");
 
             datFile.SetHeader(datHeader);
@@ -257,7 +257,7 @@ namespace SabreTools.DatFiles.Test
             DatModifiers datModifiers = new DatModifiers();
             datModifiers.AddExtension = ".new";
 
-            DatFile? datFile = new Formats.Logiqx(datFile: null, deprecated: false);
+            DatFile? datFile = new Formats.Logiqx(datFile: null, useGame: false);
             datFile.Modifiers.AddExtension = ".old";
 
             datFile.SetModifiers(datModifiers);
@@ -272,7 +272,7 @@ namespace SabreTools.DatFiles.Test
         [Fact]
         public void ResetDictionaryTest()
         {
-            DatFile datFile = new Formats.Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(datFile: null, useGame: false);
             datFile.Header.SetFieldValue(Models.Metadata.Header.NameKey, "name");
             datFile.AddItem(new Rom(), statsOnly: false);
             datFile.AddItemDB(new Rom(), 0, 0, false);
@@ -1335,7 +1335,7 @@ namespace SabreTools.DatFiles.Test
             item.SetFieldValue(Models.Metadata.Rom.NameKey, "name");
             item.SetFieldValue(Models.Metadata.Rom.SHA1Key, ZeroHash.SHA1Str);
 
-            DatFile? datFile = new Formats.Logiqx(datFile: null, deprecated: false);
+            DatFile? datFile = new Formats.Logiqx(datFile: null, useGame: false);
             datFile.Modifiers.Prefix = fix;
             datFile.Modifiers.Postfix = fix;
             datFile.Modifiers.AddExtension = addExtension;
@@ -1588,7 +1588,7 @@ namespace SabreTools.DatFiles.Test
         public void ContainsWritable_Empty_True()
         {
             List<DatItem> datItems = [];
-            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(null, useGame: false);
 
             bool actual = datFile.ContainsWritable(datItems);
             Assert.True(actual);
@@ -1598,7 +1598,7 @@ namespace SabreTools.DatFiles.Test
         public void ContainsWritable_NoWritable_False()
         {
             List<DatItem> datItems = [new Blank()];
-            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(null, useGame: false);
 
             bool actual = datFile.ContainsWritable(datItems);
             Assert.False(actual);
@@ -1608,7 +1608,7 @@ namespace SabreTools.DatFiles.Test
         public void ContainsWritable_Writable_True()
         {
             List<DatItem> datItems = [new Rom()];
-            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(null, useGame: false);
 
             bool actual = datFile.ContainsWritable(datItems);
             Assert.True(actual);
@@ -1623,7 +1623,7 @@ namespace SabreTools.DatFiles.Test
         {
             List<DatItem> datItems = [];
 
-            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(null, useGame: false);
 
             List<DatItem> actual = datFile.ResolveNames(datItems);
             Assert.Empty(actual);
@@ -1646,7 +1646,7 @@ namespace SabreTools.DatFiles.Test
 
             List<DatItem> datItems = [romA];
 
-            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(null, useGame: false);
 
             List<DatItem> actual = datFile.ResolveNames(datItems);
             DatItem actualItemA = Assert.Single(actual);
@@ -1681,7 +1681,7 @@ namespace SabreTools.DatFiles.Test
 
             List<DatItem> datItems = [romA, romB];
 
-            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(null, useGame: false);
 
             List<DatItem> actual = datFile.ResolveNames(datItems);
             Assert.Equal(2, actual.Count);
@@ -1723,7 +1723,7 @@ namespace SabreTools.DatFiles.Test
 
             List<DatItem> datItems = [romA, romB];
 
-            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(null, useGame: false);
 
             List<DatItem> actual = datFile.ResolveNames(datItems);
             DatItem actualItemA = Assert.Single(actual);
@@ -1758,7 +1758,7 @@ namespace SabreTools.DatFiles.Test
 
             List<DatItem> datItems = [romA, romB];
 
-            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(null, useGame: false);
 
             List<DatItem> actual = datFile.ResolveNames(datItems);
             Assert.Equal(2, actual.Count);
@@ -1785,7 +1785,7 @@ namespace SabreTools.DatFiles.Test
         {
             List<KeyValuePair<long, DatItem>> mappings = [];
 
-            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(null, useGame: false);
 
             List<KeyValuePair<long, DatItem>> actual = datFile.ResolveNamesDB(mappings);
             Assert.Empty(actual);
@@ -1810,7 +1810,7 @@ namespace SabreTools.DatFiles.Test
             [
                 new KeyValuePair<long, DatItem>(0, romA),
             ];
-            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(null, useGame: false);
 
             List<KeyValuePair<long, DatItem>> actual = datFile.ResolveNamesDB(mappings);
             KeyValuePair<long, DatItem> actualItemA = Assert.Single(actual);
@@ -1848,7 +1848,7 @@ namespace SabreTools.DatFiles.Test
                 new KeyValuePair<long, DatItem>(0, romA),
                 new KeyValuePair<long, DatItem>(1, romB),
             ];
-            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(null, useGame: false);
 
             List<KeyValuePair<long, DatItem>> actual = datFile.ResolveNamesDB(mappings);
             Assert.Equal(2, actual.Count);
@@ -1893,7 +1893,7 @@ namespace SabreTools.DatFiles.Test
                 new KeyValuePair<long, DatItem>(0, romA),
                 new KeyValuePair<long, DatItem>(1, romB),
             ];
-            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(null, useGame: false);
 
             List<KeyValuePair<long, DatItem>> actual = datFile.ResolveNamesDB(mappings);
             KeyValuePair<long, DatItem> actualItemA = Assert.Single(actual);
@@ -1931,7 +1931,7 @@ namespace SabreTools.DatFiles.Test
                 new KeyValuePair<long, DatItem>(0, romA),
                 new KeyValuePair<long, DatItem>(1, romB),
             ];
-            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(null, useGame: false);
 
             List<KeyValuePair<long, DatItem>> actual = datFile.ResolveNamesDB(mappings);
             Assert.Equal(2, actual.Count);
@@ -1957,7 +1957,7 @@ namespace SabreTools.DatFiles.Test
         public void ShouldIgnore_NullItem_True()
         {
             DatItem? datItem = null;
-            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(null, useGame: false);
 
             bool actual = datFile.ShouldIgnore(datItem, ignoreBlanks: true);
             Assert.True(actual);
@@ -1968,7 +1968,7 @@ namespace SabreTools.DatFiles.Test
         {
             DatItem? datItem = new Rom();
             datItem.SetFieldValue(DatItem.RemoveKey, true);
-            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(null, useGame: false);
 
             bool actual = datFile.ShouldIgnore(datItem, ignoreBlanks: true);
             Assert.True(actual);
@@ -1978,7 +1978,7 @@ namespace SabreTools.DatFiles.Test
         public void ShouldIgnore_Blank_True()
         {
             DatItem? datItem = new Blank();
-            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(null, useGame: false);
 
             bool actual = datFile.ShouldIgnore(datItem, ignoreBlanks: true);
             Assert.True(actual);
@@ -1988,7 +1988,7 @@ namespace SabreTools.DatFiles.Test
         public void ShouldIgnore_IgnoreBlanksZeroRom_True()
         {
             DatItem? datItem = new Rom();
-            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(null, useGame: false);
 
             bool actual = datFile.ShouldIgnore(datItem, ignoreBlanks: true);
             Assert.True(actual);
@@ -2001,7 +2001,7 @@ namespace SabreTools.DatFiles.Test
             datItem.SetFieldValue(Models.Metadata.Rom.NameKey, "name");
             datItem.SetFieldValue(Models.Metadata.Rom.SizeKey, 12345);
             datItem.SetFieldValue(Models.Metadata.Rom.CRCKey, "crc");
-            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(null, useGame: false);
 
             bool actual = datFile.ShouldIgnore(datItem, ignoreBlanks: false);
             Assert.False(actual);
@@ -2011,7 +2011,7 @@ namespace SabreTools.DatFiles.Test
         public void ShouldIgnore_UnsupportedType_True()
         {
             DatItem? datItem = new DatItems.Formats.SoftwareList();
-            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(null, useGame: false);
 
             bool actual = datFile.ShouldIgnore(datItem, ignoreBlanks: true);
             Assert.True(actual);
@@ -2023,7 +2023,7 @@ namespace SabreTools.DatFiles.Test
             DatItem? datItem = new Rom();
             datItem.SetFieldValue(Models.Metadata.Rom.NameKey, "name");
             datItem.SetFieldValue(Models.Metadata.Rom.SizeKey, 12345);
-            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(null, useGame: false);
 
             bool actual = datFile.ShouldIgnore(datItem, ignoreBlanks: true);
             Assert.True(actual);
@@ -2042,7 +2042,7 @@ namespace SabreTools.DatFiles.Test
             datItem.SetFieldValue(Models.Metadata.Rom.SHA384Key, "crc");
             datItem.SetFieldValue(Models.Metadata.Rom.SHA512Key, "crc");
             datItem.SetFieldValue(Models.Metadata.Rom.SpamSumKey, "crc");
-            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(null, useGame: false);
 
             bool actual = datFile.ShouldIgnore(datItem, ignoreBlanks: true);
             Assert.False(actual);

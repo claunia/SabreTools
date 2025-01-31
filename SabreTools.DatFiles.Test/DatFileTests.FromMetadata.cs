@@ -15,7 +15,7 @@ namespace SabreTools.DatFiles.Test
         {
             Models.Metadata.MetadataFile? item = null;
 
-            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(null, useGame: false);
             datFile.ConvertFromMetadata(item, "filename", indexId: 0, keep: true, statsOnly: false);
 
             Assert.Equal(0, datFile.Items.DatStatistics.TotalCount);
@@ -27,7 +27,7 @@ namespace SabreTools.DatFiles.Test
         {
             Models.Metadata.MetadataFile? item = new Models.Metadata.MetadataFile();
 
-            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(null, useGame: false);
             datFile.ConvertFromMetadata(item, "filename", indexId: 0, keep: true, statsOnly: false);
 
             Assert.Equal(0, datFile.Items.DatStatistics.TotalCount);
@@ -45,7 +45,7 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.MetadataFile.MachineKey] = machines,
             };
 
-            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(null, useGame: false);
             datFile.ConvertFromMetadata(item, "filename", indexId: 0, keep: true, statsOnly: false);
 
             ValidateHeader(datFile.Header);
@@ -63,7 +63,7 @@ namespace SabreTools.DatFiles.Test
                 [Models.Metadata.MetadataFile.MachineKey] = machines,
             };
 
-            DatFile datFile = new Formats.Logiqx(null, deprecated: false);
+            DatFile datFile = new Formats.Logiqx(null, useGame: false);
             datFile.ConvertFromMetadata(item, "filename", indexId: 0, keep: true, statsOnly: false);
 
             DatItems.Machine actualMachine = Assert.Single(datFile.ItemsDB.GetMachines()).Value;

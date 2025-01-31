@@ -43,7 +43,7 @@ namespace SabreTools.DatFiles.Test
             noMatchChildItem.SetFieldValue<Machine>(DatItem.MachineKey, childMachine);
             noMatchChildItem.SetFieldValue<Source>(DatItem.SourceKey, source);
 
-            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Logiqx(datFile: null, useGame: false);
             datFile.AddItem(parentItem, statsOnly: false);
             datFile.AddItem(matchChildItem, statsOnly: false);
             datFile.AddItem(noMatchChildItem, statsOnly: false);
@@ -88,7 +88,7 @@ namespace SabreTools.DatFiles.Test
             noMatchChildItem.SetFieldValue<Machine>(DatItem.MachineKey, childMachine);
             noMatchChildItem.SetFieldValue<Source>(DatItem.SourceKey, source);
 
-            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Logiqx(datFile: null, useGame: false);
             datFile.AddItem(parentItem, statsOnly: false);
             datFile.AddItem(matchChildItem, statsOnly: false);
             datFile.AddItem(noMatchChildItem, statsOnly: false);
@@ -133,7 +133,7 @@ namespace SabreTools.DatFiles.Test
             noMatchChildItem.SetFieldValue<Machine>(DatItem.MachineKey, childMachine);
             noMatchChildItem.SetFieldValue<Source>(DatItem.SourceKey, source);
 
-            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Logiqx(datFile: null, useGame: false);
             long biosMachineIndex = datFile.AddMachineDB(parentMachine);
             long deviceMachineIndex = datFile.AddMachineDB(childMachine);
             long sourceIndex = datFile.AddSourceDB(source);
@@ -181,7 +181,7 @@ namespace SabreTools.DatFiles.Test
             noMatchChildItem.SetFieldValue<Machine>(DatItem.MachineKey, childMachine);
             noMatchChildItem.SetFieldValue<Source>(DatItem.SourceKey, source);
 
-            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Logiqx(datFile: null, useGame: false);
             long biosMachineIndex = datFile.AddMachineDB(parentMachine);
             long deviceMachineIndex = datFile.AddMachineDB(childMachine);
             long sourceIndex = datFile.AddSourceDB(source);
@@ -233,7 +233,7 @@ namespace SabreTools.DatFiles.Test
             noMatchChildItem.SetFieldValue<Machine>(DatItem.MachineKey, childMachine);
             noMatchChildItem.SetFieldValue<Source>(DatItem.SourceKey, source);
 
-            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Logiqx(datFile: null, useGame: false);
             datFile.AddItem(parentItem, statsOnly: false);
             datFile.AddItem(matchChildItem, statsOnly: false);
             datFile.AddItem(noMatchChildItem, statsOnly: false);
@@ -278,7 +278,7 @@ namespace SabreTools.DatFiles.Test
             noMatchChildItem.SetFieldValue<Machine>(DatItem.MachineKey, childMachine);
             noMatchChildItem.SetFieldValue<Source>(DatItem.SourceKey, source);
 
-            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Logiqx(datFile: null, useGame: false);
             long biosMachineIndex = datFile.AddMachineDB(parentMachine);
             long deviceMachineIndex = datFile.AddMachineDB(childMachine);
             long sourceIndex = datFile.AddSourceDB(source);
@@ -342,7 +342,7 @@ namespace SabreTools.DatFiles.Test
             slotOption.SetFieldValue<Machine>(DatItem.MachineKey, itemMachine);
             slotOption.SetFieldValue<Source>(DatItem.SourceKey, source);
 
-            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Logiqx(datFile: null, useGame: false);
             datFile.AddItem(deviceItem, statsOnly: false);
             datFile.AddItem(slotOptionItem, statsOnly: false);
             datFile.AddItem(datItem, statsOnly: false);
@@ -391,7 +391,7 @@ namespace SabreTools.DatFiles.Test
             DatItem slotOption = new SlotOption();
             slotOption.SetName("slotoption");
 
-            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Logiqx(datFile: null, useGame: false);
             long deviceMachineIndex = datFile.AddMachineDB(deviceMachine);
             long slotOptionMachineIndex = datFile.AddMachineDB(slotOptionMachine);
             long itemMachineIndex = datFile.AddMachineDB(itemMachine);
@@ -446,7 +446,7 @@ namespace SabreTools.DatFiles.Test
             noMatchChildItem.SetFieldValue<Machine>(DatItem.MachineKey, childMachine);
             noMatchChildItem.SetFieldValue<Source>(DatItem.SourceKey, source);
 
-            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Logiqx(datFile: null, useGame: false);
             datFile.AddItem(parentItem, statsOnly: false);
             datFile.AddItem(matchChildItem, statsOnly: false);
             datFile.AddItem(noMatchChildItem, statsOnly: false);
@@ -491,7 +491,7 @@ namespace SabreTools.DatFiles.Test
             noMatchChildItem.SetFieldValue<Machine>(DatItem.MachineKey, childMachine);
             noMatchChildItem.SetFieldValue<Source>(DatItem.SourceKey, source);
 
-            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Logiqx(datFile: null, useGame: false);
             long biosMachineIndex = datFile.AddMachineDB(parentMachine);
             long deviceMachineIndex = datFile.AddMachineDB(childMachine);
             long sourceIndex = datFile.AddSourceDB(source);
@@ -530,7 +530,7 @@ namespace SabreTools.DatFiles.Test
             deviceItem.SetFieldValue<Machine>(DatItem.MachineKey, deviceMachine);
             deviceItem.SetFieldValue<Source>(DatItem.SourceKey, source);
 
-            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Logiqx(datFile: null, useGame: false);
             datFile.AddItem(biosItem, statsOnly: false);
             datFile.AddItem(deviceItem, statsOnly: false);
 
@@ -557,7 +557,7 @@ namespace SabreTools.DatFiles.Test
             DatItem biosItem = new Rom();
             DatItem deviceItem = new Rom();
 
-            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Logiqx(datFile: null, useGame: false);
             long biosMachineIndex = datFile.AddMachineDB(biosMachine);
             long deviceMachineIndex = datFile.AddMachineDB(deviceMachine);
             long sourceIndex = datFile.AddSourceDB(source);
@@ -608,7 +608,7 @@ namespace SabreTools.DatFiles.Test
             noMatchChildItem.SetFieldValue<Machine>(DatItem.MachineKey, childMachine);
             noMatchChildItem.SetFieldValue<Source>(DatItem.SourceKey, source);
 
-            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Logiqx(datFile: null, useGame: false);
             datFile.AddItem(parentItem, statsOnly: false);
             datFile.AddItem(matchChildItem, statsOnly: false);
             datFile.AddItem(noMatchChildItem, statsOnly: false);
@@ -658,7 +658,7 @@ namespace SabreTools.DatFiles.Test
             noMatchChildItem.SetFieldValue<Machine>(DatItem.MachineKey, childMachine);
             noMatchChildItem.SetFieldValue<Source>(DatItem.SourceKey, source);
 
-            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Logiqx(datFile: null, useGame: false);
             long biosMachineIndex = datFile.AddMachineDB(parentMachine);
             long deviceMachineIndex = datFile.AddMachineDB(childMachine);
             long sourceIndex = datFile.AddSourceDB(source);
@@ -715,7 +715,7 @@ namespace SabreTools.DatFiles.Test
             noMatchChildItem.SetFieldValue<Machine>(DatItem.MachineKey, childMachine);
             noMatchChildItem.SetFieldValue<Source>(DatItem.SourceKey, source);
 
-            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Logiqx(datFile: null, useGame: false);
             datFile.AddItem(parentItem, statsOnly: false);
             datFile.AddItem(matchChildItem, statsOnly: false);
             datFile.AddItem(noMatchChildItem, statsOnly: false);
@@ -764,7 +764,7 @@ namespace SabreTools.DatFiles.Test
             noMatchChildItem.SetFieldValue<Machine>(DatItem.MachineKey, childMachine);
             noMatchChildItem.SetFieldValue<Source>(DatItem.SourceKey, source);
 
-            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Logiqx(datFile: null, useGame: false);
             long biosMachineIndex = datFile.AddMachineDB(parentMachine);
             long deviceMachineIndex = datFile.AddMachineDB(childMachine);
             long sourceIndex = datFile.AddSourceDB(source);
@@ -801,7 +801,7 @@ namespace SabreTools.DatFiles.Test
             datItem.SetFieldValue<Machine>(DatItem.MachineKey, machine);
             datItem.SetFieldValue<Source>(DatItem.SourceKey, source);
 
-            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Logiqx(datFile: null, useGame: false);
             datFile.AddItem(datItem, statsOnly: false);
 
             datFile.BucketBy(ItemKey.Machine);
@@ -828,7 +828,7 @@ namespace SabreTools.DatFiles.Test
 
             DatItem datItem = new Rom();
 
-            DatFile datFile = new Logiqx(datFile: null, deprecated: false);
+            DatFile datFile = new Logiqx(datFile: null, useGame: false);
             long machineIndex = datFile.AddMachineDB(machine);
             long sourceIndex = datFile.AddSourceDB(source);
             _ = datFile.AddItemDB(datItem, machineIndex, sourceIndex, statsOnly: false);
