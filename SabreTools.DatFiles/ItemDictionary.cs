@@ -722,7 +722,7 @@ namespace SabreTools.DatFiles
             DatStatistics.ResetStatistics();
 
             // If we have a blank Dat in any way, return
-            if (_items == null)
+            if (_items == null || _items.Count == 0)
                 return;
 
             // Loop through and add
