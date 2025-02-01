@@ -24,23 +24,6 @@ namespace SabreTools.DatFiles
         #endregion
 
         /// <summary>
-        /// Create a DatFile and parse a file into it
-        /// </summary>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
-        public static DatFile CreateAndParse(string? filename, bool statsOnly = false, bool throwOnError = false)
-        {
-            // Null filenames are invalid
-            if (filename == null)
-                return DatFileTool.CreateDatFile();
-
-            DatFile datFile = DatFileTool.CreateDatFile();
-            ParseInto(datFile, new ParentablePath(filename), statsOnly: statsOnly, throwOnError: throwOnError);
-            return datFile;
-        }
-
-        /// <summary>
         /// Parse a DAT and return all found games and roms within
         /// </summary>
         /// <param name="datFile">Current DatFile object to add to</param>
@@ -117,6 +100,22 @@ namespace SabreTools.DatFiles
             }
 
             watch.Stop();
+        }
+
+        /// <summary>
+        /// Create a DatFile and parse statistics into it
+        /// </summary>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        public static DatFile ParseStatistics(string? filename, bool throwOnError = false)
+        {
+            // Null filenames are invalid
+            if (filename == null)
+                return DatFileTool.CreateDatFile();
+
+            DatFile datFile = DatFileTool.CreateDatFile();
+            ParseInto(datFile, new ParentablePath(filename), statsOnly: true, throwOnError: throwOnError);
+            return datFile;
         }
 
         /// <summary>

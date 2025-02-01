@@ -76,7 +76,7 @@ namespace SabreTools.DatTools
                 InternalStopwatch watch = new($"Collecting statistics for '{file.CurrentPath}'");
 
                 List<string> machines = [];
-                DatFile datdata = Parser.CreateAndParse(file.CurrentPath, statsOnly: true, throwOnError: throwOnError);
+                DatFile datdata = Parser.ParseStatistics(file.CurrentPath, throwOnError: throwOnError);
 
                 // Add single DAT stats (if asked)
                 if (single)
