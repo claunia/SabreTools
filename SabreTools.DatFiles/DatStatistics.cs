@@ -329,12 +329,13 @@ namespace SabreTools.DatFiles
         /// </summary>
         public void ResetStatistics()
         {
-            TotalCount = 0;
+            _hashCounts.Clear();
             _itemCounts.Clear();
+            _statusCounts.Clear();
+
+            TotalCount = 0;
             GameCount = 0;
             TotalSize = 0;
-            _hashCounts.Clear();
-            _statusCounts.Clear();
             RemovedCount = 0;
         }
 
