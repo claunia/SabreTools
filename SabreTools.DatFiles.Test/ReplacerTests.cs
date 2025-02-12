@@ -1,15 +1,15 @@
 using System.Collections.Generic;
-using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using Xunit;
 
-namespace SabreTools.Test.Filtering
+namespace SabreTools.DatFiles.Test
 {
+    // TODO: Add tests for 4 special items and one generic item
     public class ReplacerTests
     {
         [Fact]
-        public void ReplaceFieldsDatItemTest()
+        public void ReplaceFields_DatItem()
         {
             var datItem = CreateDatItem();
             var repDatItem = CreateDatItem();
@@ -18,19 +18,29 @@ namespace SabreTools.Test.Filtering
             {
                 ["item"] = [Models.Metadata.Rom.NameKey]
             };
+
             Replacer.ReplaceFields(datItem, repDatItem, fields);
+
             Assert.Equal("bar", datItem.GetName());
         }
 
         [Fact]
-        public void ReplaceFieldsMachineTest()
+        public void ReplaceFields_Machine()
         {
             var datItem = CreateDatItem();
+            var machine = datItem.GetFieldValue<Machine>(DatItem.MachineKey);
+            Assert.NotNull(machine);
+
             var repDatItem = CreateDatItem();
-            repDatItem.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "foo");
+            var repMachine = repDatItem.GetFieldValue<Machine>(DatItem.MachineKey);
+            Assert.NotNull(repMachine);
+            
+            repMachine!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "foo");
             List<string> fields = [Models.Metadata.Machine.NameKey];
-            Replacer.ReplaceFields(datItem.GetFieldValue<Machine>(DatItem.MachineKey)!, repDatItem.GetFieldValue<Machine>(DatItem.MachineKey)!, fields, false);
-            Assert.Equal("foo", datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+
+            Replacer.ReplaceFields(machine, repMachine, fields, false);
+
+            Assert.Equal("foo", machine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
         }
 
         /// <summary>

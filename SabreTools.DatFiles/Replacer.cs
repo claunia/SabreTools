@@ -87,6 +87,7 @@ namespace SabreTools.DatFiles
             switch (datItem, repDatItem)
             {
                 case (Disk disk, Disk repDisk): ReplaceFields(disk, repDisk, [.. fieldNames]); break;
+                case (DatItems.Formats.File file, DatItems.Formats.File repFile): ReplaceFields(file, repFile, [.. fieldNames]); break;
                 case (Media media, Media repMedia): ReplaceFields(media, repMedia, [.. fieldNames]); break;
                 case (Rom rom, Rom repRom): ReplaceFields(rom, repRom, [.. fieldNames]); break;
             }
@@ -112,6 +113,39 @@ namespace SabreTools.DatFiles
             {
                 if (string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)) && !string.IsNullOrEmpty(newItem.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)))
                     disk.SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, newItem.GetStringFieldValue(Models.Metadata.Disk.SHA1Key));
+            }
+        }
+
+        /// <summary>
+        /// Replace fields with given values
+        /// </summary>
+        /// <param name="file">File to remove replace fields in</param>
+        /// <param name="newItem">File to pull new information from</param>
+        /// <param name="datItemFields">List of fields representing what should be updated</param>
+        private static void ReplaceFields(DatItems.Formats.File file, DatItems.Formats.File newItem, List<string> datItemFields)
+        {
+            if (datItemFields.Contains(Models.Metadata.Rom.CRCKey))
+            {
+                if (string.IsNullOrEmpty(file.CRC) && !string.IsNullOrEmpty(newItem.CRC))
+                    file.CRC = newItem.CRC;
+            }
+
+            if (datItemFields.Contains(Models.Metadata.Rom.MD5Key))
+            {
+                if (string.IsNullOrEmpty(file.MD5) && !string.IsNullOrEmpty(newItem.MD5))
+                    file.MD5 = newItem.MD5;
+            }
+
+            if (datItemFields.Contains(Models.Metadata.Rom.SHA1Key))
+            {
+                if (string.IsNullOrEmpty(file.SHA1) && !string.IsNullOrEmpty(newItem.SHA1))
+                    file.SHA1 = newItem.SHA1;
+            }
+
+            if (datItemFields.Contains(Models.Metadata.Rom.SHA256Key))
+            {
+                if (string.IsNullOrEmpty(file.SHA256) && !string.IsNullOrEmpty(newItem.SHA256))
+                    file.SHA256 = newItem.SHA256;
             }
         }
 
