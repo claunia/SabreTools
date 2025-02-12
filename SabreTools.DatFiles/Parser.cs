@@ -52,11 +52,13 @@ namespace SabreTools.DatFiles
                     : Path.GetFileNameWithoutExtension(filename))
                 : datFile.Header.GetStringFieldValue(DatHeader.FileNameKey));
 
-            // If the output type isn't set already, get the internal output type
-            DatFormat datFormat = GetDatFormat(filename);
-            datFile.Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, datFile.Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey) == 0
-                ? datFormat
-                : datFile.Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey));
+            // If the output type isn't set already, try to derive one
+            DatFormat datFormat = datFile.Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey);
+            if (datFormat == 0)
+                datFormat = GetDatFormat(filename);
+
+            // Set the output type back to the header and set bucketing
+            datFile.Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, datFormat);
             datFile.Items.SetBucketedBy(ItemKey.CRC); // Setting this because it can reduce issues later
 
             InternalStopwatch watch = new($"Parsing '{filename}' into internal DAT");
