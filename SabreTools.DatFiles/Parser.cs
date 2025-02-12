@@ -60,7 +60,7 @@ namespace SabreTools.DatFiles
             datFile.Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, datFormat);
             datFile.Items.SetBucketedBy(ItemKey.CRC); // Setting this because it can reduce issues later
 
-            InternalStopwatch watch = new($"Parsing '{filename}' into internal DAT");
+            var watch = new InternalStopwatch($"Parsing '{filename}' into internal DAT");
 
             // Now parse the correct type of DAT
             try
