@@ -3,7 +3,6 @@ using System.IO;
 using System.Text.RegularExpressions;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
-using SabreTools.IO;
 using SabreTools.IO.Extensions;
 using SabreTools.IO.Logging;
 
