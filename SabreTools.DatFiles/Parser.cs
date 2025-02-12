@@ -210,7 +210,7 @@ namespace SabreTools.DatFiles
             for (int i = 0; i < inputs.Count; i++)
             {
                 AddFromExisting(datFile, datFiles[i], true);
-                //AddFromExistingDB(datFile, datFiles[i], true);
+                AddFromExistingDB(datFile, datFiles[i], true);
             }
 
             watch.Stop();
