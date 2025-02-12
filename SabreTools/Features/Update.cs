@@ -507,9 +507,9 @@ namespace SabreTools.Features
 #else
             if (updateMode.HasFlag(UpdateMode.DiffAgainst) || updateMode.HasFlag(UpdateMode.BaseReplace))
 #endif
-                return DatFileTool.PopulateUserData(userInputDat, basePaths);
+                return Parser.PopulateUserData(userInputDat, basePaths);
             else
-                return DatFileTool.PopulateUserData(userInputDat, inputPaths);
+                return Parser.PopulateUserData(userInputDat, inputPaths);
         }
 
         /// <summary>

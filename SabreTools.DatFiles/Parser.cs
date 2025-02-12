@@ -1,8 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+#if NET40_OR_GREATER || NETCOREAPP
+using System.Threading.Tasks;
+#endif
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
+using SabreTools.IO;
 using SabreTools.IO.Extensions;
 using SabreTools.IO.Logging;
 
@@ -93,6 +98,147 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Populate from multiple paths while returning the invividual headers
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to use for updating</param>
+        /// <param name="inputs">Paths to DATs to parse</param>
+        /// <returns>List of DatHeader objects representing headers</returns>
+        public static List<DatHeader> PopulateUserData(DatFile datFile, List<string> inputs)
+        {
+            List<ParentablePath> paths = inputs.ConvertAll(i => new ParentablePath(i));
+            return PopulateUserData(datFile, paths);
+        }
+
+        /// <summary>
+        /// Populate from multiple paths while returning the invividual headers
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to use for updating</param>
+        /// <param name="inputs">Paths to DATs to parse</param>
+        /// <returns>List of DatHeader objects representing headers</returns>
+        public static List<DatHeader> PopulateUserData(DatFile datFile, List<ParentablePath> inputs)
+        {
+            DatFile[] datFiles = new DatFile[inputs.Count];
+            InternalStopwatch watch = new("Processing individual DATs");
+
+            // Parse all of the DATs into their own DatFiles in the array
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.For(0, inputs.Count, Core.Globals.ParallelOptions, i =>
+#elif NET40_OR_GREATER
+            Parallel.For(0, inputs.Count, i =>
+#else
+            for (int i = 0; i < inputs.Count; i++)
+#endif
+            {
+                var input = inputs[i];
+                _staticLogger.User($"Adding DAT: {input.CurrentPath}");
+                datFiles[i] = DatFileTool.CreateDatFile(datFile.Header.CloneFormat(), datFile.Modifiers);
+                ParseInto(datFiles[i], input.CurrentPath, i, keep: true);
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
+
+            watch.Stop();
+
+            watch.Start("Populating internal DAT");
+            for (int i = 0; i < inputs.Count; i++)
+            {
+                AddFromExisting(datFile, datFiles[i], true);
+                //AddFromExistingDB(datFile, datFiles[i], true);
+            }
+
+            watch.Stop();
+
+            return [.. Array.ConvertAll(datFiles, d => d.Header)];
+        }
+
+        /// <summary>
+        /// Add items from another DatFile to the existing DatFile
+        /// </summary>
+        /// <param name="addTo">DatFile to add to</param>
+        /// <param name="addFrom">DatFile to add from</param>
+        /// <param name="delete">If items should be deleted from the source DatFile</param>
+        private static void AddFromExisting(DatFile addTo, DatFile addFrom, bool delete = false)
+        {
+            // Get the list of keys from the DAT
+            foreach (string key in addFrom.Items.SortedKeys)
+            {
+                // Add everything from the key to the internal DAT
+                addFrom.GetItemsForBucket(key).ForEach(item => addTo.AddItem(item, statsOnly: false));
+
+                // Now remove the key from the source DAT
+                if (delete)
+                    addFrom.RemoveBucket(key);
+            }
+
+            // Now remove the file dictionary from the source DAT
+            if (delete)
+                addFrom.ResetDictionary();
+        }
+
+        /// <summary>
+        /// Add items from another DatFile to the existing DatFile
+        /// </summary>
+        /// <param name="addTo">DatFile to add to</param>
+        /// <param name="addFrom">DatFile to add from</param>
+        /// <param name="delete">If items should be deleted from the source DatFile</param>
+        private static void AddFromExistingDB(DatFile addTo, DatFile addFrom, bool delete = false)
+        {
+            // Get all current items, machines, and mappings
+            var datItems = addFrom.ItemsDB.GetItems();
+            var machines = addFrom.GetMachinesDB();
+            var sources = addFrom.ItemsDB.GetSources();
+
+            // Create mappings from old index to new index
+            var machineRemapping = new Dictionary<long, long>();
+            var sourceRemapping = new Dictionary<long, long>();
+
+            // Loop through and add all sources
+            foreach (var source in sources)
+            {
+                long newSourceIndex = addTo.AddSourceDB(source.Value);
+                sourceRemapping[source.Key] = newSourceIndex;
+            }
+
+            // Loop through and add all machines
+            foreach (var machine in machines)
+            {
+                long newMachineIndex = addTo.AddMachineDB(machine.Value);
+                machineRemapping[machine.Key] = newMachineIndex;
+            }
+
+            // Loop through and add the items
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(datItems, Core.Globals.ParallelOptions, item =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(datItems, item =>
+#else
+            foreach (var item in datItems)
+#endif
+            {
+                // Get the machine and source index for this item
+                long machineIndex = addFrom.ItemsDB.GetMachineForItem(item.Key).Key;
+                long sourceIndex = addFrom.ItemsDB.GetSourceForItem(item.Key).Key;
+
+                addTo.AddItemDB(item.Value, machineRemapping[machineIndex], sourceRemapping[sourceIndex], statsOnly: false);
+
+                // Now remove the key from the source DAT
+                if (delete)
+                    addFrom.RemoveItemDB(item.Key);
+
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
+
+            // Now remove the file dictionary from the source DAT
+            if (delete)
+                addFrom.ResetDictionary();
+        }
+
+        /// <summary>
         /// Get what type of DAT the input file is
         /// </summary>
         /// <param name="filename">Name of the file to be parsed</param>
@@ -107,7 +253,7 @@ namespace SabreTools.DatFiles
             string? ext = filename.GetNormalizedExtension();
 
             // Check if file exists
-            if (!File.Exists(filename))
+            if (!System.IO.File.Exists(filename))
                 return 0;
 
             // Some formats should only require the extension to know
@@ -147,7 +293,7 @@ namespace SabreTools.DatFiles
 
             try
             {
-                using StreamReader sr = File.OpenText(filename);
+                using StreamReader sr = System.IO.File.OpenText(filename);
                 first = FindNextLine(sr);
                 second = FindNextLine(sr);
             }
