@@ -12,7 +12,7 @@ namespace SabreTools.DatFiles
     /// <summary>
     /// Helper methods for parsing into DatFiles
     /// </summary>
-    public class Parser
+    public static class Parser
     {
         #region Logging
 
