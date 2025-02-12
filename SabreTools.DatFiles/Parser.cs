@@ -29,12 +29,18 @@ namespace SabreTools.DatFiles
         #endregion
 
         /// <summary>
+        /// Create a generic DatFile to be used
+        /// </summary>
+        /// <returns>Empty, default DatFile implementation</returns>
+        public static DatFile CreateDatFile() => CreateDatFile(DatFormat.Logiqx, baseDat: null);
+
+        /// <summary>
         /// Create a specific type of DatFile to be used based on a format and a base DAT
         /// </summary>
-        /// <param name="datFormat">Format of the DAT to be created, default is <see cref="DatFormat.Logiqx"/> </param>
-        /// <param name="baseDat">DatFile containing the information to use in specific operations, default is null</param>
+        /// <param name="datFormat">Format of the DAT to be created</param>
+        /// <param name="baseDat">DatFile containing the information to use in specific operations</param>
         /// <returns>DatFile of the specific internal type that corresponds to the inputs</returns>
-        public static DatFile CreateDatFile(DatFormat datFormat = DatFormat.Logiqx, DatFile? baseDat = null)
+        public static DatFile CreateDatFile(DatFormat datFormat, DatFile? baseDat)
         {
             return datFormat switch
             {
@@ -80,7 +86,7 @@ namespace SabreTools.DatFiles
         public static DatFile CreateDatFile(DatHeader datHeader, DatModifiers datModifiers)
         {
             DatFormat format = datHeader.GetFieldValue<DatFormat>(DatHeader.DatFormatKey);
-            DatFile datFile = CreateDatFile(format);
+            DatFile datFile = CreateDatFile(format, baseDat: null);
             datFile.SetHeader(datHeader);
             datFile.SetModifiers(datModifiers);
             return datFile;
