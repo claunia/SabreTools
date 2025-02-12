@@ -10,7 +10,25 @@ namespace SabreTools.DatFiles.Test
     {
         #region Constructor
 
-        // TODO: Write Constructor tests
+        [Fact]
+        public void DefaultConstructorTest()
+        {
+            var stats = new DatStatistics();
+
+            Assert.Null(stats.DisplayName);
+            Assert.Equal(0, stats.MachineCount);
+            Assert.False(stats.IsDirectory);
+        }
+
+        [Fact]
+        public void NamedConstructorTest()
+        {
+            var stats = new DatStatistics("name", isDirectory: true);
+
+            Assert.Equal("name", stats.DisplayName);
+            Assert.Equal(0, stats.MachineCount);
+            Assert.True(stats.IsDirectory);
+        }
 
         #endregion
 
@@ -69,7 +87,7 @@ namespace SabreTools.DatFiles.Test
             Assert.Equal(1, stats.GetItemCount(ItemType.Rom));
             Assert.Equal(1, stats.GetItemCount(ItemType.Sample));
             Assert.Equal(2, stats.GetStatusCount(ItemStatus.Good));
-        
+
             // RemoveItemStatistics
             stats.RemoveItemStatistics(disk);
             stats.RemoveItemStatistics(file);
@@ -148,7 +166,7 @@ namespace SabreTools.DatFiles.Test
             Assert.Equal(1, stats.GetItemCount(ItemType.Rom));
             Assert.Equal(1, stats.GetItemCount(ItemType.Sample));
             Assert.Equal(2, stats.GetStatusCount(ItemStatus.Good));
-        
+
             // ResetStatistics
             stats.ResetStatistics();
 
