@@ -256,8 +256,8 @@ namespace SabreTools.Features
             if (updateMode.HasFlag(UpdateMode.DiffDupesOnly))
 #endif
             {
-                DatFile dupeData = DatFileTool.DiffDuplicates(userInputDat, inputPaths);
-                //DatFile dupeData = DatFileTool.DiffDuplicatesDB(userInputDat, inputPaths);
+                DatFile dupeData = Diffing.Duplicates(userInputDat, inputPaths);
+                //DatFile dupeData = Diffing.DuplicatesDB(userInputDat, inputPaths);
 
                 InternalStopwatch watch = new("Outputting duplicate DAT");
                 Writer.Write(dupeData, OutputDir, overwrite: false);
@@ -271,8 +271,8 @@ namespace SabreTools.Features
             if (updateMode.HasFlag(UpdateMode.DiffNoDupesOnly))
 #endif
             {
-                DatFile outerDiffData = DatFileTool.DiffNoDuplicates(userInputDat, inputPaths);
-                //DatFile outerDiffData = DatFileTool.DiffNoDuplicatesDB(userInputDat, inputPaths);
+                DatFile outerDiffData = Diffing.NoDuplicates(userInputDat, inputPaths);
+                //DatFile outerDiffData = Diffing.NoDuplicatesDB(userInputDat, inputPaths);
 
                 InternalStopwatch watch = new("Outputting no duplicate DAT");
                 Writer.Write(outerDiffData, OutputDir, overwrite: false);
@@ -287,8 +287,8 @@ namespace SabreTools.Features
 #endif
             {
                 // Get all of the output DatFiles
-                List<DatFile> datFiles = DatFileTool.DiffIndividuals(userInputDat, inputPaths);
-                //List<DatFile> datFiles = DatFileTool.DiffIndividualsDB(userInputDat, inputPaths);
+                List<DatFile> datFiles = Diffing.Individuals(userInputDat, inputPaths);
+                //List<DatFile> datFiles = Diffing.IndividualsDB(userInputDat, inputPaths);
 
                 // Loop through and output the new DatFiles
                 InternalStopwatch watch = new("Outputting all individual DATs");
@@ -347,7 +347,7 @@ namespace SabreTools.Features
 #endif
 
                 // Get all of the output DatFiles
-                List<DatFile> datFiles = DatFileTool.DiffCascade(userInputDat, datHeaders);
+                List<DatFile> datFiles = Diffing.Cascade(userInputDat, datHeaders);
 
                 // Loop through and output the new DatFiles
                 InternalStopwatch watch = new("Outputting all created DATs");
@@ -403,7 +403,7 @@ namespace SabreTools.Features
                     Remover.ApplyRemovals(repDat);
 
                     // Now replace the fields from the base DatFile
-                    DatFileTool.DiffAgainst(userInputDat, repDat, GetBoolean(Features, ByGameValue));
+                    Diffing.Against(userInputDat, repDat, GetBoolean(Features, ByGameValue));
 
                     // Finally output the diffed DatFile
                     string interOutDir = inputPath.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue))!;
