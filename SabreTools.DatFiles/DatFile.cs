@@ -8,6 +8,7 @@ using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using SabreTools.Hashing;
 using SabreTools.IO.Logging;
+using SabreTools.Matching.Compare;
 
 namespace SabreTools.DatFiles
 {
@@ -723,7 +724,7 @@ namespace SabreTools.DatFiles
             List<DatItem> output = [];
 
             // First we want to make sure the list is in alphabetical order
-            DatFileTool.Sort(ref datItems, true);
+            Sort(ref datItems, true);
 
             // Now we want to loop through and check names
             DatItem? lastItem = null;
@@ -802,7 +803,7 @@ namespace SabreTools.DatFiles
             }
 
             // One last sort to make sure this is ordered
-            DatFileTool.Sort(ref output, true);
+            Sort(ref output, true);
 
             return output;
         }
@@ -822,7 +823,7 @@ namespace SabreTools.DatFiles
             List<KeyValuePair<long, DatItem>> output = [];
 
             // First we want to make sure the list is in alphabetical order
-            DatFileTool.SortDB(ref mappings, true);
+            SortDB(ref mappings, true);
 
             // Now we want to loop through and check names
             DatItem? lastItem = null;
@@ -898,7 +899,7 @@ namespace SabreTools.DatFiles
             }
 
             // One last sort to make sure this is ordered
-            DatFileTool.SortDB(ref output, true);
+            SortDB(ref output, true);
 
             return output;
         }
@@ -970,6 +971,114 @@ namespace SabreTools.DatFiles
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Sort a list of DatItem objects by SourceID, Game, and Name (in order)
+        /// </summary>
+        /// <param name="items">List of DatItem objects representing the items to be sorted</param>
+        /// <param name="norename">True if files are not renamed, false otherwise</param>
+        /// <returns>True if it sorted correctly, false otherwise</returns>
+        private static bool Sort(ref List<DatItem> items, bool norename)
+        {
+            items.Sort(delegate (DatItem x, DatItem y)
+            {
+                try
+                {
+                    var nc = new NaturalComparer();
+
+                    // If machine names don't match
+                    string? xMachineName = x.GetFieldValue<Machine>(DatItem.MachineKey)?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    string? yMachineName = y.GetFieldValue<Machine>(DatItem.MachineKey)?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    if (xMachineName != yMachineName)
+                        return nc.Compare(xMachineName, yMachineName);
+
+                    // If types don't match
+                    string? xType = x.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
+                    string? yType = y.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
+                    if (xType != yType)
+                        return xType.AsEnumValue<ItemType>() - yType.AsEnumValue<ItemType>();
+
+                    // If directory names don't match
+                    string? xDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty));
+                    string? yDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty));
+                    if (xDirectoryName != yDirectoryName)
+                        return nc.Compare(xDirectoryName, yDirectoryName);
+
+                    // If item names don't match
+                    string? xName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty));
+                    string? yName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty));
+                    if (xName != yName)
+                        return nc.Compare(xName, yName);
+
+                    // Otherwise, compare on machine or source, depending on the flag
+                    int? xSourceIndex = x.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
+                    int? ySourceIndex = y.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
+                    return (norename ? nc.Compare(xMachineName, yMachineName) : (xSourceIndex - ySourceIndex) ?? 0);
+                }
+                catch
+                {
+                    // Absorb the error
+                    return 0;
+                }
+            });
+
+            return true;
+        }
+
+        /// <summary>
+        /// Sort a list of DatItem objects by SourceID, Game, and Name (in order)
+        /// </summary>
+        /// <param name="mappings">List of item ID to DatItem mappings representing the items to be sorted</param>
+        /// <param name="norename">True if files are not renamed, false otherwise</param>
+        /// <returns>True if it sorted correctly, false otherwise</returns>
+        private static bool SortDB(ref List<KeyValuePair<long, DatItem>> mappings, bool norename)
+        {
+            mappings.Sort(delegate (KeyValuePair<long, DatItem> x, KeyValuePair<long, DatItem> y)
+            {
+                try
+                {
+                    var nc = new NaturalComparer();
+
+                    // TODO: Fix this since DB uses an external map for machines
+
+                    // If machine names don't match
+                    string? xMachineName = x.Value.GetFieldValue<Machine>(DatItem.MachineKey)?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    string? yMachineName = y.Value.GetFieldValue<Machine>(DatItem.MachineKey)?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    if (xMachineName != yMachineName)
+                        return nc.Compare(xMachineName, yMachineName);
+
+                    // If types don't match
+                    string? xType = x.Value.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
+                    string? yType = y.Value.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
+                    if (xType != yType)
+                        return xType.AsEnumValue<ItemType>() - yType.AsEnumValue<ItemType>();
+
+                    // If directory names don't match
+                    string? xDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(x.Value.GetName() ?? string.Empty));
+                    string? yDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(y.Value.GetName() ?? string.Empty));
+                    if (xDirectoryName != yDirectoryName)
+                        return nc.Compare(xDirectoryName, yDirectoryName);
+
+                    // If item names don't match
+                    string? xName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(x.Value.GetName() ?? string.Empty));
+                    string? yName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(y.Value.GetName() ?? string.Empty));
+                    if (xName != yName)
+                        return nc.Compare(xName, yName);
+
+                    // Otherwise, compare on machine or source, depending on the flag
+                    int? xSourceIndex = x.Value.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
+                    int? ySourceIndex = y.Value.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
+                    return (norename ? nc.Compare(xMachineName, yMachineName) : (xSourceIndex - ySourceIndex) ?? 0);
+                }
+                catch
+                {
+                    // Absorb the error
+                    return 0;
+                }
+            });
+
+            return true;
         }
 
         #endregion
