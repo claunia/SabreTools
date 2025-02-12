@@ -335,6 +335,7 @@ namespace SabreTools.DatFiles
         /// <param name="file">Item to add info from</param>
         private void AddItemStatistics(DatItems.Formats.File file)
         {
+            TotalSize += file.Size ?? 0;
             AddHashCount(HashType.CRC32, string.IsNullOrEmpty(file.CRC) ? 0 : 1);
             AddHashCount(HashType.MD5, string.IsNullOrEmpty(file.MD5) ? 0 : 1);
             AddHashCount(HashType.SHA1, string.IsNullOrEmpty(file.SHA1) ? 0 : 1);
@@ -457,6 +458,7 @@ namespace SabreTools.DatFiles
         /// <param name="file">Item to remove info for</param>
         private void RemoveItemStatistics(DatItems.Formats.File file)
         {
+            TotalSize -= file.Size ?? 0;
             RemoveHashCount(HashType.CRC32, string.IsNullOrEmpty(file.CRC) ? 0 : 1);
             RemoveHashCount(HashType.MD5, string.IsNullOrEmpty(file.MD5) ? 0 : 1);
             RemoveHashCount(HashType.SHA1, string.IsNullOrEmpty(file.SHA1) ? 0 : 1);

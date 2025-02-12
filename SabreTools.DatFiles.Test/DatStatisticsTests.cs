@@ -1,6 +1,4 @@
-using System.Collections.Generic;
-using System.IO;
-using SabreTools.DatFiles.Formats;
+using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using SabreTools.Hashing;
@@ -16,9 +14,161 @@ namespace SabreTools.DatFiles.Test
 
         #endregion
 
-        #region AddItemStatistics
+        #region End to End
 
-        // TODO: Write AddItemStatistics tests
+        [Fact]
+        public void AddRemoveStatisticsTest()
+        {
+            // Get items for testing
+            var disk = CreateDisk();
+            var file = CreateFile();
+            var media = CreateMedia();
+            var rom = CreateRom();
+            var sample = CreateSample();
+
+            // Create an empty stats object
+            var stats = new DatStatistics();
+
+            // Validate pre-add values
+            Assert.Equal(0, stats.TotalCount);
+            Assert.Equal(0, stats.TotalSize);
+            Assert.Equal(0, stats.GetHashCount(HashType.CRC32));
+            Assert.Equal(0, stats.GetHashCount(HashType.MD5));
+            Assert.Equal(0, stats.GetHashCount(HashType.SHA1));
+            Assert.Equal(0, stats.GetHashCount(HashType.SHA256));
+            Assert.Equal(0, stats.GetHashCount(HashType.SHA384));
+            Assert.Equal(0, stats.GetHashCount(HashType.SHA512));
+            Assert.Equal(0, stats.GetHashCount(HashType.SpamSum));
+            Assert.Equal(0, stats.GetItemCount(ItemType.Disk));
+            Assert.Equal(0, stats.GetItemCount(ItemType.File));
+            Assert.Equal(0, stats.GetItemCount(ItemType.Media));
+            Assert.Equal(0, stats.GetItemCount(ItemType.Rom));
+            Assert.Equal(0, stats.GetItemCount(ItemType.Sample));
+            Assert.Equal(0, stats.GetStatusCount(ItemStatus.Good));
+
+            // AddItemStatistics
+            stats.AddItemStatistics(disk);
+            stats.AddItemStatistics(file);
+            stats.AddItemStatistics(media);
+            stats.AddItemStatistics(rom);
+            stats.AddItemStatistics(sample);
+
+            // Validate post-add values
+            Assert.Equal(5, stats.TotalCount);
+            Assert.Equal(2, stats.TotalSize);
+            Assert.Equal(2, stats.GetHashCount(HashType.CRC32));
+            Assert.Equal(4, stats.GetHashCount(HashType.MD5));
+            Assert.Equal(4, stats.GetHashCount(HashType.SHA1));
+            Assert.Equal(3, stats.GetHashCount(HashType.SHA256));
+            Assert.Equal(1, stats.GetHashCount(HashType.SHA384));
+            Assert.Equal(1, stats.GetHashCount(HashType.SHA512));
+            Assert.Equal(2, stats.GetHashCount(HashType.SpamSum));
+            Assert.Equal(1, stats.GetItemCount(ItemType.Disk));
+            Assert.Equal(1, stats.GetItemCount(ItemType.File));
+            Assert.Equal(1, stats.GetItemCount(ItemType.Media));
+            Assert.Equal(1, stats.GetItemCount(ItemType.Rom));
+            Assert.Equal(1, stats.GetItemCount(ItemType.Sample));
+            Assert.Equal(2, stats.GetStatusCount(ItemStatus.Good));
+        
+            // RemoveItemStatistics
+            stats.RemoveItemStatistics(disk);
+            stats.RemoveItemStatistics(file);
+            stats.RemoveItemStatistics(media);
+            stats.RemoveItemStatistics(rom);
+            stats.RemoveItemStatistics(sample);
+
+            // Validate post-remove values
+            Assert.Equal(0, stats.TotalCount);
+            Assert.Equal(0, stats.TotalSize);
+            Assert.Equal(0, stats.GetHashCount(HashType.CRC32));
+            Assert.Equal(0, stats.GetHashCount(HashType.MD5));
+            Assert.Equal(0, stats.GetHashCount(HashType.SHA1));
+            Assert.Equal(0, stats.GetHashCount(HashType.SHA256));
+            Assert.Equal(0, stats.GetHashCount(HashType.SHA384));
+            Assert.Equal(0, stats.GetHashCount(HashType.SHA512));
+            Assert.Equal(0, stats.GetHashCount(HashType.SpamSum));
+            Assert.Equal(0, stats.GetItemCount(ItemType.Disk));
+            Assert.Equal(0, stats.GetItemCount(ItemType.File));
+            Assert.Equal(0, stats.GetItemCount(ItemType.Media));
+            Assert.Equal(0, stats.GetItemCount(ItemType.Rom));
+            Assert.Equal(0, stats.GetItemCount(ItemType.Sample));
+            Assert.Equal(0, stats.GetStatusCount(ItemStatus.Good));
+        }
+
+        [Fact]
+        public void ResetStatisticsTest()
+        {
+            // Get items for testing
+            var disk = CreateDisk();
+            var file = CreateFile();
+            var media = CreateMedia();
+            var rom = CreateRom();
+            var sample = CreateSample();
+
+            // Create an empty stats object
+            var stats = new DatStatistics();
+
+            // Validate pre-add values
+            Assert.Equal(0, stats.TotalCount);
+            Assert.Equal(0, stats.TotalSize);
+            Assert.Equal(0, stats.GetHashCount(HashType.CRC32));
+            Assert.Equal(0, stats.GetHashCount(HashType.MD5));
+            Assert.Equal(0, stats.GetHashCount(HashType.SHA1));
+            Assert.Equal(0, stats.GetHashCount(HashType.SHA256));
+            Assert.Equal(0, stats.GetHashCount(HashType.SHA384));
+            Assert.Equal(0, stats.GetHashCount(HashType.SHA512));
+            Assert.Equal(0, stats.GetHashCount(HashType.SpamSum));
+            Assert.Equal(0, stats.GetItemCount(ItemType.Disk));
+            Assert.Equal(0, stats.GetItemCount(ItemType.File));
+            Assert.Equal(0, stats.GetItemCount(ItemType.Media));
+            Assert.Equal(0, stats.GetItemCount(ItemType.Rom));
+            Assert.Equal(0, stats.GetItemCount(ItemType.Sample));
+            Assert.Equal(0, stats.GetStatusCount(ItemStatus.Good));
+
+            // AddItemStatistics
+            stats.AddItemStatistics(disk);
+            stats.AddItemStatistics(file);
+            stats.AddItemStatistics(media);
+            stats.AddItemStatistics(rom);
+            stats.AddItemStatistics(sample);
+
+            // Validate post-add values
+            Assert.Equal(5, stats.TotalCount);
+            Assert.Equal(2, stats.TotalSize);
+            Assert.Equal(2, stats.GetHashCount(HashType.CRC32));
+            Assert.Equal(4, stats.GetHashCount(HashType.MD5));
+            Assert.Equal(4, stats.GetHashCount(HashType.SHA1));
+            Assert.Equal(3, stats.GetHashCount(HashType.SHA256));
+            Assert.Equal(1, stats.GetHashCount(HashType.SHA384));
+            Assert.Equal(1, stats.GetHashCount(HashType.SHA512));
+            Assert.Equal(2, stats.GetHashCount(HashType.SpamSum));
+            Assert.Equal(1, stats.GetItemCount(ItemType.Disk));
+            Assert.Equal(1, stats.GetItemCount(ItemType.File));
+            Assert.Equal(1, stats.GetItemCount(ItemType.Media));
+            Assert.Equal(1, stats.GetItemCount(ItemType.Rom));
+            Assert.Equal(1, stats.GetItemCount(ItemType.Sample));
+            Assert.Equal(2, stats.GetStatusCount(ItemStatus.Good));
+        
+            // ResetStatistics
+            stats.ResetStatistics();
+
+            // Validate post-reset values
+            Assert.Equal(0, stats.TotalCount);
+            Assert.Equal(0, stats.TotalSize);
+            Assert.Equal(0, stats.GetHashCount(HashType.CRC32));
+            Assert.Equal(0, stats.GetHashCount(HashType.MD5));
+            Assert.Equal(0, stats.GetHashCount(HashType.SHA1));
+            Assert.Equal(0, stats.GetHashCount(HashType.SHA256));
+            Assert.Equal(0, stats.GetHashCount(HashType.SHA384));
+            Assert.Equal(0, stats.GetHashCount(HashType.SHA512));
+            Assert.Equal(0, stats.GetHashCount(HashType.SpamSum));
+            Assert.Equal(0, stats.GetItemCount(ItemType.Disk));
+            Assert.Equal(0, stats.GetItemCount(ItemType.File));
+            Assert.Equal(0, stats.GetItemCount(ItemType.Media));
+            Assert.Equal(0, stats.GetItemCount(ItemType.Rom));
+            Assert.Equal(0, stats.GetItemCount(ItemType.Sample));
+            Assert.Equal(0, stats.GetStatusCount(ItemStatus.Good));
+        }
 
         #endregion
 
@@ -28,33 +178,77 @@ namespace SabreTools.DatFiles.Test
 
         #endregion
 
-        #region GetHashCount
+        #region Helpers
 
-        // TODO: Write GetHashCount tests
+        /// <summary>
+        /// Create a Disk for testing
+        /// </summary>
+        private static Disk CreateDisk()
+        {
+            var disk = new Disk();
 
-        #endregion
+            disk.SetFieldValue<string?>(Models.Metadata.Disk.StatusKey, ItemStatus.Good.AsStringValue());
+            disk.SetFieldValue<string?>(Models.Metadata.Disk.MD5Key, ZeroHash.MD5Str);
+            disk.SetFieldValue<string?>(Models.Metadata.Disk.SHA1Key, ZeroHash.SHA1Str);
 
-        #region GetItemCount
+            return disk;
+        }
 
-        // TODO: Write GetItemCount tests
+        /// <summary>
+        /// Create a File for testing
+        /// </summary>
+        private static DatItems.Formats.File CreateFile()
+        {
+            var file = new DatItems.Formats.File();
 
-        #endregion
+            file.Size = 1;
+            file.CRC = ZeroHash.CRC32Str;
+            file.MD5 = ZeroHash.MD5Str;
+            file.SHA1 = ZeroHash.SHA1Str;
+            file.SHA256 = ZeroHash.SHA256Str;
 
-        #region GetStatusCount
+            return file;
+        }
 
-        // TODO: Write GetStatusCount tests
+        /// <summary>
+        /// Create a Media for testing
+        /// </summary>
+        private static Media CreateMedia()
+        {
+            var media = new Media();
 
-        #endregion
+            media.SetFieldValue<string?>(Models.Metadata.Media.MD5Key, ZeroHash.MD5Str);
+            media.SetFieldValue<string?>(Models.Metadata.Media.SHA1Key, ZeroHash.SHA1Str);
+            media.SetFieldValue<string?>(Models.Metadata.Media.SHA256Key, ZeroHash.SHA256Str);
+            media.SetFieldValue<string?>(Models.Metadata.Media.SpamSumKey, ZeroHash.SpamSumStr);
 
-        #region RemoveItemStatistics
+            return media;
+        }
 
-        // TODO: Write RemoveItemStatistics tests
+        /// <summary>
+        /// Create a Rom for testing
+        /// </summary>
+        private static Rom CreateRom()
+        {
+            var rom = new Rom();
 
-        #endregion
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.StatusKey, ItemStatus.Good.AsStringValue());
+            rom.SetFieldValue<long>(Models.Metadata.Rom.SizeKey, 1);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.CRCKey, ZeroHash.CRC32Str);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.MD5Key, ZeroHash.MD5Str);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA1Key, ZeroHash.SHA1Str);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA256Key, ZeroHash.SHA256Str);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA384Key, ZeroHash.SHA384Str);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key, ZeroHash.SHA512Str);
+            rom.SetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey, ZeroHash.SpamSumStr);
 
-        #region ResetStatistics
+            return rom;
+        }
 
-        // TODO: Write ResetStatistics tests
+        /// <summary>
+        /// Create a Sample for testing
+        /// </summary>
+        private static Sample CreateSample() => new();
 
         #endregion
     }
