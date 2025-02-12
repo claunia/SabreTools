@@ -111,6 +111,8 @@ namespace SabreTools.Core.Tools
                 "csv" => true,
                 "dat" => true,
                 "json" => true,
+                "md2" => true,
+                "md4" => true,
                 "md5" => true,
                 "sfv" => true,
                 "sha1" => true,
