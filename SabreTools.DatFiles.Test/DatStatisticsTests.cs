@@ -192,7 +192,28 @@ namespace SabreTools.DatFiles.Test
 
         #region AddStatistics
 
-        // TODO: Write AddStatistics tests
+        [Fact]
+        public void AddStatisticsTest()
+        {
+            var rom = CreateRom();
+            var origStats = new DatStatistics();
+            origStats.AddItemStatistics(rom);
+
+            var newStats = new DatStatistics();
+            newStats.AddStatistics(origStats);
+
+            Assert.Equal(1, newStats.TotalCount);
+            Assert.Equal(1, newStats.TotalSize);
+            Assert.Equal(1, newStats.GetHashCount(HashType.CRC32));
+            Assert.Equal(1, newStats.GetHashCount(HashType.MD5));
+            Assert.Equal(1, newStats.GetHashCount(HashType.SHA1));
+            Assert.Equal(1, newStats.GetHashCount(HashType.SHA256));
+            Assert.Equal(1, newStats.GetHashCount(HashType.SHA384));
+            Assert.Equal(1, newStats.GetHashCount(HashType.SHA512));
+            Assert.Equal(1, newStats.GetHashCount(HashType.SpamSum));
+            Assert.Equal(1, newStats.GetItemCount(ItemType.Rom));
+            Assert.Equal(1, newStats.GetStatusCount(ItemStatus.Good));
+        }
 
         #endregion
 
