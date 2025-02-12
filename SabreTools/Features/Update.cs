@@ -147,7 +147,7 @@ namespace SabreTools.Features
             }
 
             // Create a DAT to capture inputs
-            DatFile userInputDat = DatFileTool.CreateDatFile(Header!, Modifiers);
+            DatFile userInputDat = Parser.CreateDatFile(Header!, Modifiers);
 
             // Populate using the correct set
             List<DatHeader> datHeaders = GetDatHeaders(updateMode, inputPaths, basePaths, userInputDat);
@@ -301,7 +301,7 @@ namespace SabreTools.Features
 #endif
                 {
                     // Parse the path to a new DatFile
-                    DatFile repDat = DatFileTool.CreateDatFile(Header!, Modifiers);
+                    DatFile repDat = Parser.CreateDatFile(Header!, Modifiers);
                     Parser.ParseInto(repDat, inputPath.CurrentPath, indexId: 1, keep: true);
 
                     // Perform additional processing steps
@@ -337,7 +337,7 @@ namespace SabreTools.Features
 #endif
                 {
                     // Parse the path to a new DatFile
-                    DatFile repDat = DatFileTool.CreateDatFile(Header!, Modifiers);
+                    DatFile repDat = Parser.CreateDatFile(Header!, Modifiers);
                     Parser.ParseInto(repDat, inputPath.CurrentPath, indexId: 1, keep: true);
 
                     // Perform additional processing steps
@@ -460,7 +460,7 @@ namespace SabreTools.Features
 #endif
             {
                 // Create a new base DatFile
-                DatFile datFile = DatFileTool.CreateDatFile(Header!, Modifiers!);
+                DatFile datFile = Parser.CreateDatFile(Header!, Modifiers!);
                 _logger.User($"Processing '{Path.GetFileName(inputPath.CurrentPath)}'");
 
                 // Check the current format

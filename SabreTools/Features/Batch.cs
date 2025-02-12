@@ -895,7 +895,7 @@ Reset the internal state:           reset();";
         /// </summary>
         private class BatchState
         {
-            public DatFile DatFile { get; set; } = DatFileTool.CreateDatFile();
+            public DatFile DatFile { get; set; } = Parser.CreateDatFile();
             public int Index { get; set; } = 0;
             public string? OutputDirectory { get; set; } = null;
 
@@ -905,7 +905,7 @@ Reset the internal state:           reset();";
             public void Reset()
             {
                 Index = 0;
-                DatFile = DatFileTool.CreateDatFile();
+                DatFile = Parser.CreateDatFile();
                 OutputDirectory = null;
             }
         }

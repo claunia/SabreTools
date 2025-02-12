@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 #endif
 using SabreTools.Core.Tools;
+using SabreTools.DatFiles.Formats;
 using SabreTools.DatItems;
 using SabreTools.IO;
 using SabreTools.IO.Extensions;
@@ -26,6 +27,64 @@ namespace SabreTools.DatFiles
         private static readonly Logger _staticLogger = new();
 
         #endregion
+
+        /// <summary>
+        /// Create a specific type of DatFile to be used based on a format and a base DAT
+        /// </summary>
+        /// <param name="datFormat">Format of the DAT to be created, default is <see cref="DatFormat.Logiqx"/> </param>
+        /// <param name="baseDat">DatFile containing the information to use in specific operations, default is null</param>
+        /// <returns>DatFile of the specific internal type that corresponds to the inputs</returns>
+        public static DatFile CreateDatFile(DatFormat datFormat = DatFormat.Logiqx, DatFile? baseDat = null)
+        {
+            return datFormat switch
+            {
+                DatFormat.ArchiveDotOrg => new ArchiveDotOrg(baseDat),
+                DatFormat.AttractMode => new AttractMode(baseDat),
+                DatFormat.ClrMamePro => new ClrMamePro(baseDat),
+                DatFormat.CSV => new CommaSeparatedValue(baseDat),
+                DatFormat.DOSCenter => new DosCenter(baseDat),
+                DatFormat.EverdriveSMDB => new EverdriveSMDB(baseDat),
+                DatFormat.Listrom => new Listrom(baseDat),
+                DatFormat.Listxml => new Listxml(baseDat),
+                DatFormat.Logiqx => new Logiqx(baseDat, false),
+                DatFormat.LogiqxDeprecated => new Logiqx(baseDat, true),
+                DatFormat.MissFile => new Missfile(baseDat),
+                DatFormat.OfflineList => new OfflineList(baseDat),
+                DatFormat.OpenMSX => new OpenMSX(baseDat),
+                DatFormat.RedumpMD2 => new Md2File(baseDat),
+                DatFormat.RedumpMD4 => new Md4File(baseDat),
+                DatFormat.RedumpMD5 => new Md5File(baseDat),
+                DatFormat.RedumpSFV => new SfvFile(baseDat),
+                DatFormat.RedumpSHA1 => new Sha1File(baseDat),
+                DatFormat.RedumpSHA256 => new Sha256File(baseDat),
+                DatFormat.RedumpSHA384 => new Sha384File(baseDat),
+                DatFormat.RedumpSHA512 => new Sha512File(baseDat),
+                DatFormat.RedumpSpamSum => new SpamSumFile(baseDat),
+                DatFormat.RomCenter => new RomCenter(baseDat),
+                DatFormat.SabreJSON => new SabreJSON(baseDat),
+                DatFormat.SabreXML => new SabreXML(baseDat),
+                DatFormat.SoftwareList => new Formats.SoftwareList(baseDat),
+                DatFormat.SSV => new SemicolonSeparatedValue(baseDat),
+                DatFormat.TSV => new TabSeparatedValue(baseDat),
+
+                // We use new-style Logiqx as a backup for generic DatFile
+                _ => new Logiqx(baseDat, false),
+            };
+        }
+
+        /// <summary>
+        /// Create a new DatFile from an existing DatHeader
+        /// </summary>
+        /// <param name="datHeader">DatHeader to get the values from</param>
+        /// <param name="datModifiers">DatModifiers to get the values from</param>
+        public static DatFile CreateDatFile(DatHeader datHeader, DatModifiers datModifiers)
+        {
+            DatFormat format = datHeader.GetFieldValue<DatFormat>(DatHeader.DatFormatKey);
+            DatFile datFile = CreateDatFile(format);
+            datFile.SetHeader(datHeader);
+            datFile.SetModifiers(datModifiers);
+            return datFile;
+        }
 
         /// <summary>
         /// Parse a DAT and return all found games and roms within
@@ -70,7 +129,7 @@ namespace SabreTools.DatFiles
             // Now parse the correct type of DAT
             try
             {
-                DatFile parsingDatFile = DatFileTool.CreateDatFile(datFormat, datFile);
+                DatFile parsingDatFile = CreateDatFile(datFormat, datFile);
                 parsingDatFile.ParseFile(filename, indexId, keep, statsOnly: statsOnly, throwOnError: throwOnError);
             }
             catch (Exception ex) when (!throwOnError)
@@ -90,9 +149,9 @@ namespace SabreTools.DatFiles
         {
             // Null filenames are invalid
             if (filename == null)
-                return DatFileTool.CreateDatFile();
+                return CreateDatFile();
 
-            DatFile datFile = DatFileTool.CreateDatFile();
+            DatFile datFile = CreateDatFile();
             ParseInto(datFile, filename, statsOnly: true, throwOnError: throwOnError);
             return datFile;
         }
@@ -131,7 +190,7 @@ namespace SabreTools.DatFiles
             {
                 var input = inputs[i];
                 _staticLogger.User($"Adding DAT: {input.CurrentPath}");
-                datFiles[i] = DatFileTool.CreateDatFile(datFile.Header.CloneFormat(), datFile.Modifiers);
+                datFiles[i] = CreateDatFile(datFile.Header.CloneFormat(), datFile.Modifiers);
                 ParseInto(datFiles[i], input.CurrentPath, i, keep: true);
 #if NET40_OR_GREATER || NETCOREAPP
             });

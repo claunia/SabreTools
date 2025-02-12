@@ -64,7 +64,7 @@ namespace SabreTools.Features
             foreach (ParentablePath file in files)
             {
                 // Create and fill the new DAT
-                DatFile internalDat = DatFileTool.CreateDatFile(Header!, Modifiers!);
+                DatFile internalDat = Parser.CreateDatFile(Header!, Modifiers!);
                 Parser.ParseInto(internalDat, file.CurrentPath);
 
                 // Get the output directory

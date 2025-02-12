@@ -171,7 +171,7 @@ namespace SabreTools.DatTools
                     string outfile = outfiles[datFormat];
                     try
                     {
-                        DatFile writingDatFile = DatFileTool.CreateDatFile(datFormat, datFile);
+                        DatFile writingDatFile = Parser.CreateDatFile(datFormat, datFile);
                         writingDatFile.WriteToFile(outfile, ignoreblanks: true, throwOnError);
                     }
                     catch (Exception ex) when (!throwOnError)
