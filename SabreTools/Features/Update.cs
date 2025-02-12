@@ -183,7 +183,7 @@ namespace SabreTools.Features
                         || currentFormat.HasFlag(DatFormat.TSV);
 #endif
 
-                    Parser.ParseInto(datFile, inputPath, keep: true, keepext: isSeparatedFile);
+                    Parser.ParseInto(datFile, inputPath.CurrentPath, keep: true, keepext: isSeparatedFile);
 
                     // Perform additional processing steps
                     Extras!.ApplyExtras(datFile);
@@ -392,7 +392,7 @@ namespace SabreTools.Features
                 {
                     // Parse the path to a new DatFile
                     DatFile repDat = DatFileTool.CreateDatFile(Header!, Modifiers);
-                    Parser.ParseInto(repDat, inputPath, indexId: 1, keep: true);
+                    Parser.ParseInto(repDat, inputPath.CurrentPath, indexId: 1, keep: true);
 
                     // Perform additional processing steps
                     Extras.ApplyExtras(repDat);
@@ -433,7 +433,7 @@ namespace SabreTools.Features
                 {
                     // Parse the path to a new DatFile
                     DatFile repDat = DatFileTool.CreateDatFile(Header!, Modifiers);
-                    Parser.ParseInto(repDat, inputPath, indexId: 1, keep: true);
+                    Parser.ParseInto(repDat, inputPath.CurrentPath, indexId: 1, keep: true);
 
                     // Perform additional processing steps
                     Extras.ApplyExtras(repDat);

@@ -42,61 +42,35 @@ namespace SabreTools.DatFiles
             bool statsOnly = false,
             bool throwOnError = false)
         {
-            var path = new ParentablePath(filename.Trim('"'));
-            ParseInto(datFile, path, indexId, keep, keepext, statsOnly, throwOnError);
-        }
-
-        /// <summary>
-        /// Parse a DAT and return all found games and roms within
-        /// </summary>
-        /// <param name="datFile">Current DatFile object to add to</param>
-        /// <param name="input">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
-        /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        /// <param name="keepext">True if original extension should be kept, false otherwise (default)</param>
-        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
-        public static void ParseInto(
-            DatFile datFile,
-            ParentablePath input,
-            int indexId = 0,
-            bool keep = false,
-            bool keepext = false,
-            bool statsOnly = false,
-            bool throwOnError = false)
-        {
-            // Get the current path from the filename
-            string currentPath = input.CurrentPath;
-
             // Check the file extension first as a safeguard
-            if (!Utilities.HasValidDatExtension(currentPath))
+            if (!Utilities.HasValidDatExtension(filename))
                 return;
 
             // If the output filename isn't set already, get the internal filename
             datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey, string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(DatHeader.FileNameKey))
                 ? (keepext
-                    ? Path.GetFileName(currentPath)
-                    : Path.GetFileNameWithoutExtension(currentPath))
+                    ? Path.GetFileName(filename)
+                    : Path.GetFileNameWithoutExtension(filename))
                 : datFile.Header.GetStringFieldValue(DatHeader.FileNameKey));
 
             // If the output type isn't set already, get the internal output type
-            DatFormat datFormat = GetDatFormat(currentPath);
+            DatFormat datFormat = GetDatFormat(filename);
             datFile.Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, datFile.Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey) == 0
                 ? datFormat
                 : datFile.Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey));
             datFile.Items.SetBucketedBy(ItemKey.CRC); // Setting this because it can reduce issues later
 
-            InternalStopwatch watch = new($"Parsing '{currentPath}' into internal DAT");
+            InternalStopwatch watch = new($"Parsing '{filename}' into internal DAT");
 
             // Now parse the correct type of DAT
             try
             {
                 DatFile parsingDatFile = DatFileTool.CreateDatFile(datFormat, datFile);
-                parsingDatFile.ParseFile(currentPath, indexId, keep, statsOnly: statsOnly, throwOnError: throwOnError);
+                parsingDatFile.ParseFile(filename, indexId, keep, statsOnly: statsOnly, throwOnError: throwOnError);
             }
             catch (Exception ex) when (!throwOnError)
             {
-                _staticLogger.Error(ex, $"Error with file '{currentPath}'");
+                _staticLogger.Error(ex, $"Error with file '{filename}'");
             }
 
             watch.Stop();
@@ -114,7 +88,7 @@ namespace SabreTools.DatFiles
                 return DatFileTool.CreateDatFile();
 
             DatFile datFile = DatFileTool.CreateDatFile();
-            ParseInto(datFile, new ParentablePath(filename), statsOnly: true, throwOnError: throwOnError);
+            ParseInto(datFile, filename, statsOnly: true, throwOnError: throwOnError);
             return datFile;
         }
 

@@ -65,7 +65,7 @@ namespace SabreTools.Features
             {
                 // Create and fill the new DAT
                 DatFile internalDat = DatFileTool.CreateDatFile(Header!, Modifiers!);
-                Parser.ParseInto(internalDat, file);
+                Parser.ParseInto(internalDat, file.CurrentPath);
 
                 // Get the output directory
                 OutputDir = OutputDir.Ensure();
