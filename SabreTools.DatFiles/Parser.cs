@@ -46,18 +46,17 @@ namespace SabreTools.DatFiles
                 return;
 
             // If the output filename isn't set already, get the internal filename
-            datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey, string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(DatHeader.FileNameKey))
-                ? (keepext
-                    ? Path.GetFileName(filename)
-                    : Path.GetFileNameWithoutExtension(filename))
-                : datFile.Header.GetStringFieldValue(DatHeader.FileNameKey));
+            string? outputFilename = datFile.Header.GetStringFieldValue(DatHeader.FileNameKey);
+            if (string.IsNullOrEmpty(outputFilename))
+                outputFilename = keepext ? Path.GetFileName(filename) : Path.GetFileNameWithoutExtension(filename);
 
             // If the output type isn't set already, try to derive one
             DatFormat datFormat = datFile.Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey);
             if (datFormat == 0)
                 datFormat = GetDatFormat(filename);
 
-            // Set the output type back to the header and set bucketing
+            // Set values back to the header and set bucketing
+            datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey, outputFilename);
             datFile.Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, datFormat);
             datFile.Items.SetBucketedBy(ItemKey.CRC); // Setting this because it can reduce issues later
 
