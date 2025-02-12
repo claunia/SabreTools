@@ -5,15 +5,99 @@ using Xunit;
 
 namespace SabreTools.DatFiles.Test
 {
-    // TODO: Add tests for 4 special items and one generic item
     public class ReplacerTests
     {
+        #region ReplaceFields
+
         [Fact]
-        public void ReplaceFields_DatItem()
+        public void ReplaceFields_Machine()
         {
-            var datItem = CreateDatItem();
-            var repDatItem = CreateDatItem();
+            var machine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "bar");
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, "bar");
+
+            var repMachine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "foo");
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, "bar");
+
+            List<string> fields = [Models.Metadata.Machine.NameKey];
+
+            Replacer.ReplaceFields(machine, repMachine, fields, false);
+
+            Assert.Equal("foo", machine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+        }
+
+        // TODO: Check more fields for replacement
+        [Fact]
+        public void ReplaceFields_Disk()
+        {
+            var datItem = new Disk();
+            datItem.SetName("foo");
+
+            var repDatItem = new Disk();
             repDatItem.SetName("bar");
+
+            var fields = new Dictionary<string, List<string>>
+            {
+                ["item"] = [Models.Metadata.Disk.NameKey]
+            };
+
+            Replacer.ReplaceFields(datItem, repDatItem, fields);
+
+            Assert.Equal("bar", datItem.GetName());
+        }
+
+        // TODO: Check more fields for replacement
+        [Fact]
+        public void ReplaceFields_File()
+        {
+            var datItem = new DatItems.Formats.File();
+            datItem.SetName("foo");
+
+            var repDatItem = new DatItems.Formats.File();
+            repDatItem.SetName("bar");
+
+            var fields = new Dictionary<string, List<string>>
+            {
+                ["item"] = [Models.Metadata.Rom.NameKey]
+            };
+
+            Replacer.ReplaceFields(datItem, repDatItem, fields);
+
+            // TODO: There is no name field for File type
+            //Assert.Equal("bar", datItem.GetName());
+        }
+
+        // TODO: Check more fields for replacement
+        [Fact]
+        public void ReplaceFields_Media()
+        {
+            var datItem = new Media();
+            datItem.SetName("foo");
+
+            var repDatItem = new Media();
+            repDatItem.SetName("bar");
+
+            var fields = new Dictionary<string, List<string>>
+            {
+                ["item"] = [Models.Metadata.Media.NameKey]
+            };
+
+            Replacer.ReplaceFields(datItem, repDatItem, fields);
+
+            Assert.Equal("bar", datItem.GetName());
+        }
+
+        // TODO: Check more fields for replacement
+        [Fact]
+        public void ReplaceFields_Rom()
+        {
+            var datItem = new Rom();
+            datItem.SetName("foo");
+
+            var repDatItem = new Rom();
+            repDatItem.SetName("bar");
+
             var fields = new Dictionary<string, List<string>>
             {
                 ["item"] = [Models.Metadata.Rom.NameKey]
@@ -25,38 +109,24 @@ namespace SabreTools.DatFiles.Test
         }
 
         [Fact]
-        public void ReplaceFields_Machine()
+        public void ReplaceFields_Sample()
         {
-            var datItem = CreateDatItem();
-            var machine = datItem.GetFieldValue<Machine>(DatItem.MachineKey);
-            Assert.NotNull(machine);
+            var datItem = new Sample();
+            datItem.SetName("foo");
 
-            var repDatItem = CreateDatItem();
-            var repMachine = repDatItem.GetFieldValue<Machine>(DatItem.MachineKey);
-            Assert.NotNull(repMachine);
-            
-            repMachine!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "foo");
-            List<string> fields = [Models.Metadata.Machine.NameKey];
+            var repDatItem = new Sample();
+            repDatItem.SetName("bar");
 
-            Replacer.ReplaceFields(machine, repMachine, fields, false);
+            var fields = new Dictionary<string, List<string>>
+            {
+                ["item"] = [Models.Metadata.Rom.NameKey]
+            };
 
-            Assert.Equal("foo", machine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Replacer.ReplaceFields(datItem, repDatItem, fields);
+
+            Assert.Equal("bar", datItem.GetName());
         }
 
-        /// <summary>
-        /// Generate a consistent DatItem for testing
-        /// </summary>
-        private static DatItem CreateDatItem()
-        {
-            var machine = new Machine();
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "bar");
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, "bar");
-
-            var rom = new Rom();
-            rom.SetName("foo");
-            rom.SetFieldValue<Machine>(DatItem.MachineKey, machine);
-
-            return rom;
-        }
+        #endregion
     }
 }
