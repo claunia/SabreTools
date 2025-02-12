@@ -444,8 +444,8 @@ namespace SabreTools.Features
                     Remover.ApplyRemovals(repDat);
 
                     // Now replace the fields from the base DatFile
-                    DatFileTool.BaseReplace(
-                    //DatFileTool.BaseReplaceDB(
+                    Replacer.BaseReplace(
+                    //Replacer.BaseReplaceDB(
                         userInputDat,
                         repDat,
                         updateMachineFieldNames,
