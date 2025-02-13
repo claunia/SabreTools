@@ -50,8 +50,8 @@ namespace SabreTools.DatFiles
                 Depth = 4;
             else if (Depth < 0)
                 Depth = 0;
-            else if (Depth > ZeroHash.SHA1Str.Length)
-                Depth = ZeroHash.SHA1Str.Length;
+            else if (Depth > ZeroHash.SHA1Arr.Length)
+                Depth = ZeroHash.SHA1Arr.Length;
         }
 
         #region Cloning
