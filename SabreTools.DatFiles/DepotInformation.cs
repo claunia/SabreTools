@@ -28,7 +28,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="isActive">Set active state</param>
         /// <param name="depth">Set depth between 0 and SHA-1's byte length</param>
-        public DepotInformation(bool isActive, int depth = 4)
+        public DepotInformation(bool isActive, int depth)
             : this(null, isActive, depth)
         {
         }
@@ -39,7 +39,7 @@ namespace SabreTools.DatFiles
         /// <param name="name">Identifier for the depot</param>
         /// <param name="isActive">Set active state</param>
         /// <param name="depth">Set depth between 0 and SHA-1's byte length</param>
-        public DepotInformation(string? name, bool isActive, int depth = 4)
+        public DepotInformation(string? name, bool isActive, int depth)
         {
             Name = name;
             IsActive = isActive;
