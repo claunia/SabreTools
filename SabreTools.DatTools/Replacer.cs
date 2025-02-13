@@ -4,11 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 #endif
 using SabreTools.Core.Tools;
+using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using SabreTools.IO.Logging;
 
-namespace SabreTools.DatFiles
+namespace SabreTools.DatTools
 {
     /// <summary>
     /// Replace fields in DatItems
