@@ -6,13 +6,14 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 #endif
 using SabreTools.Core.Tools;
+using SabreTools.DatFiles;
 using SabreTools.DatFiles.Formats;
 using SabreTools.DatItems;
 using SabreTools.IO;
 using SabreTools.IO.Extensions;
 using SabreTools.IO.Logging;
 
-namespace SabreTools.DatFiles
+namespace SabreTools.DatTools
 {
     /// <summary>
     /// Helper methods for parsing into DatFiles

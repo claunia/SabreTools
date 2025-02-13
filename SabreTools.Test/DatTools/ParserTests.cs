@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using SabreTools.DatFiles;
+using SabreTools.DatTools;
 using Xunit;
 
 namespace SabreTools.Test.DatTools
