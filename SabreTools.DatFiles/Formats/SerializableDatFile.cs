@@ -2,7 +2,7 @@
 using SabreTools.Models.Metadata;
 using SabreTools.Serialization.Interfaces;
 
-namespace SabreTools.DatFiles
+namespace SabreTools.DatFiles.Formats
 {
     /// <summary>
     /// Represents a DAT that can be serialized
