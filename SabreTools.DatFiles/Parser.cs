@@ -69,7 +69,7 @@ namespace SabreTools.DatFiles
                 DatFormat.RomCenter => new RomCenter(baseDat),
                 DatFormat.SabreJSON => new SabreJSON(baseDat),
                 DatFormat.SabreXML => new SabreXML(baseDat),
-                DatFormat.SoftwareList => new Formats.SoftwareList(baseDat),
+                DatFormat.SoftwareList => new SoftwareList(baseDat),
                 DatFormat.SSV => new SemicolonSeparatedValue(baseDat),
                 DatFormat.TSV => new TabSeparatedValue(baseDat),
 
