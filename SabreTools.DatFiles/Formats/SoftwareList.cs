@@ -8,7 +8,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents parsing and writing of a SoftwareList
     /// </summary>
-    internal sealed class SoftwareList : SerializableDatFile<Models.SoftwareList.SoftwareList, Serialization.Deserializers.SoftwareList, Serialization.Serializers.SoftwareList, Serialization.CrossModel.SoftwareList>
+    public sealed class SoftwareList : SerializableDatFile<Models.SoftwareList.SoftwareList, Serialization.Deserializers.SoftwareList, Serialization.Serializers.SoftwareList, Serialization.CrossModel.SoftwareList>
     {
         #region Constants
 

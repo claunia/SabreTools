@@ -5,7 +5,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents a Archive.org file list
     /// </summary>
-    internal sealed class ArchiveDotOrg : SerializableDatFile<Models.ArchiveDotOrg.Files, Serialization.Deserializers.ArchiveDotOrg, Serialization.Serializers.ArchiveDotOrg, Serialization.CrossModel.ArchiveDotOrg>
+    public sealed class ArchiveDotOrg : SerializableDatFile<Models.ArchiveDotOrg.Files, Serialization.Deserializers.ArchiveDotOrg, Serialization.Serializers.ArchiveDotOrg, Serialization.CrossModel.ArchiveDotOrg>
     {
         /// <inheritdoc/>
         public override ItemType[] SupportedTypes

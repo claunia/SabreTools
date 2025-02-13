@@ -9,7 +9,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents a MAME/M1 XML DAT
     /// </summary>
-    internal sealed class Listxml : SerializableDatFile<Models.Listxml.Mame, Serialization.Deserializers.Listxml, Serialization.Serializers.Listxml, Serialization.CrossModel.Listxml>
+    public sealed class Listxml : SerializableDatFile<Models.Listxml.Mame, Serialization.Deserializers.Listxml, Serialization.Serializers.Listxml, Serialization.CrossModel.Listxml>
     {
         #region Constants
 

@@ -7,7 +7,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents parsing and writing of an Everdrive SMDB file
     /// </summary>
-    internal sealed class EverdriveSMDB : SerializableDatFile<Models.EverdriveSMDB.MetadataFile, Serialization.Deserializers.EverdriveSMDB, Serialization.Serializers.EverdriveSMDB, Serialization.CrossModel.EverdriveSMDB>
+    public sealed class EverdriveSMDB : SerializableDatFile<Models.EverdriveSMDB.MetadataFile, Serialization.Deserializers.EverdriveSMDB, Serialization.Serializers.EverdriveSMDB, Serialization.CrossModel.EverdriveSMDB>
     {
         /// <inheritdoc/>
         public override ItemType[] SupportedTypes

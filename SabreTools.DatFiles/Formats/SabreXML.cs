@@ -12,7 +12,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents parsing and writing of a SabreDAT XML
     /// </summary>
-    internal class SabreXML : DatFile
+    public sealed class SabreXML : DatFile
     {
         /// <inheritdoc/>
         public override ItemType[] SupportedTypes

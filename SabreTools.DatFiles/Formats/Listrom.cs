@@ -7,7 +7,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents a MAME Listrom file
     /// </summary>
-    internal sealed class Listrom : SerializableDatFile<Models.Listrom.MetadataFile, Serialization.Deserializers.Listrom, Serialization.Serializers.Listrom, Serialization.CrossModel.Listrom>
+    public sealed class Listrom : SerializableDatFile<Models.Listrom.MetadataFile, Serialization.Deserializers.Listrom, Serialization.Serializers.Listrom, Serialization.CrossModel.Listrom>
     {
         /// <inheritdoc/>
         public override ItemType[] SupportedTypes

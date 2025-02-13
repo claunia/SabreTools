@@ -7,7 +7,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents a RomCenter INI file
     /// </summary>
-    internal sealed class RomCenter : SerializableDatFile<Models.RomCenter.MetadataFile, Serialization.Deserializers.RomCenter, Serialization.Serializers.RomCenter, Serialization.CrossModel.RomCenter>
+    public sealed class RomCenter : SerializableDatFile<Models.RomCenter.MetadataFile, Serialization.Deserializers.RomCenter, Serialization.Serializers.RomCenter, Serialization.CrossModel.RomCenter>
     {
         /// <inheritdoc/>
         public override ItemType[] SupportedTypes

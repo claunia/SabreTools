@@ -7,7 +7,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents parsing and writing of a DosCenter DAT
     /// </summary>
-    internal sealed class DosCenter : SerializableDatFile<Models.DosCenter.MetadataFile, Serialization.Deserializers.DosCenter, Serialization.Serializers.DosCenter, Serialization.CrossModel.DosCenter>
+    public sealed class DosCenter : SerializableDatFile<Models.DosCenter.MetadataFile, Serialization.Deserializers.DosCenter, Serialization.Serializers.DosCenter, Serialization.CrossModel.DosCenter>
     {
         /// <inheritdoc/>
         public override ItemType[] SupportedTypes

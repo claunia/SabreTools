@@ -6,7 +6,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents an AttractMode DAT
     /// </summary>
-    internal sealed class AttractMode : SerializableDatFile<Models.AttractMode.MetadataFile, Serialization.Deserializers.AttractMode, Serialization.Serializers.AttractMode, Serialization.CrossModel.AttractMode>
+    public sealed class AttractMode : SerializableDatFile<Models.AttractMode.MetadataFile, Serialization.Deserializers.AttractMode, Serialization.Serializers.AttractMode, Serialization.CrossModel.AttractMode>
     {
         /// <inheritdoc/>
         public override ItemType[] SupportedTypes

@@ -7,7 +7,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents an OfflineList XML DAT
     /// </summary>
-    internal sealed class OfflineList : SerializableDatFile<Models.OfflineList.Dat, Serialization.Deserializers.OfflineList, Serialization.Serializers.OfflineList, Serialization.CrossModel.OfflineList>
+    public sealed class OfflineList : SerializableDatFile<Models.OfflineList.Dat, Serialization.Deserializers.OfflineList, Serialization.Serializers.OfflineList, Serialization.CrossModel.OfflineList>
     {
         /// <inheritdoc/>
         public override ItemType[] SupportedTypes

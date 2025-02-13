@@ -9,7 +9,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents a hashfile such as an SFV, MD5, or SHA-1 file
     /// </summary>
-    internal abstract class Hashfile : SerializableDatFile<Models.Hashfile.Hashfile, Serialization.Deserializers.Hashfile, Serialization.Serializers.Hashfile, Serialization.CrossModel.Hashfile>
+    public abstract class Hashfile : SerializableDatFile<Models.Hashfile.Hashfile, Serialization.Deserializers.Hashfile, Serialization.Serializers.Hashfile, Serialization.CrossModel.Hashfile>
     {
         #region Fields
 
@@ -244,7 +244,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents an SFV (CRC-32) hashfile
     /// </summary>
-    internal sealed class SfvFile : Hashfile
+    public sealed class SfvFile : Hashfile
     {
         /// <summary>
         /// Constructor designed for casting a base DatFile
@@ -259,7 +259,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents an MD2 hashfile
     /// </summary>
-    internal sealed class Md2File : Hashfile
+    public sealed class Md2File : Hashfile
     {
         /// <summary>
         /// Constructor designed for casting a base DatFile
@@ -274,7 +274,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents an MD4 hashfile
     /// </summary>
-    internal sealed class Md4File : Hashfile
+    public sealed class Md4File : Hashfile
     {
         /// <summary>
         /// Constructor designed for casting a base DatFile
@@ -289,7 +289,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents an MD5 hashfile
     /// </summary>
-    internal sealed class Md5File : Hashfile
+    public sealed class Md5File : Hashfile
     {
         /// <summary>
         /// Constructor designed for casting a base DatFile
@@ -304,7 +304,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents an SHA-1 hashfile
     /// </summary>
-    internal sealed class Sha1File : Hashfile
+    public sealed class Sha1File : Hashfile
     {
         /// <summary>
         /// Constructor designed for casting a base DatFile
@@ -319,7 +319,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents an SHA-256 hashfile
     /// </summary>
-    internal sealed class Sha256File : Hashfile
+    public sealed class Sha256File : Hashfile
     {
         /// <summary>
         /// Constructor designed for casting a base DatFile
@@ -334,7 +334,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents an SHA-384 hashfile
     /// </summary>
-    internal sealed class Sha384File : Hashfile
+    public sealed class Sha384File : Hashfile
     {
         /// <summary>
         /// Constructor designed for casting a base DatFile
@@ -349,7 +349,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents an SHA-512 hashfile
     /// </summary>
-    internal sealed class Sha512File : Hashfile
+    public sealed class Sha512File : Hashfile
     {
         /// <summary>
         /// Constructor designed for casting a base DatFile
@@ -364,7 +364,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents an SpamSum hashfile
     /// </summary>
-    internal sealed class SpamSumFile : Hashfile
+    public sealed class SpamSumFile : Hashfile
     {
         /// <summary>
         /// Constructor designed for casting a base DatFile

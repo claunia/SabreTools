@@ -9,7 +9,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents a Logiqx-derived DAT
     /// </summary>
-    internal sealed class Logiqx : SerializableDatFile<Models.Logiqx.Datafile, Serialization.Deserializers.Logiqx, Serialization.Serializers.Logiqx, Serialization.CrossModel.Logiqx>
+    public sealed class Logiqx : SerializableDatFile<Models.Logiqx.Datafile, Serialization.Deserializers.Logiqx, Serialization.Serializers.Logiqx, Serialization.CrossModel.Logiqx>
     {
         #region Constants
 

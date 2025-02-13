@@ -9,7 +9,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents a ClrMamePro DAT
     /// </summary>
-    internal sealed class ClrMamePro : SerializableDatFile<Models.ClrMamePro.MetadataFile, Serialization.Deserializers.ClrMamePro, Serialization.Serializers.ClrMamePro, Serialization.CrossModel.ClrMamePro>
+    public sealed class ClrMamePro : SerializableDatFile<Models.ClrMamePro.MetadataFile, Serialization.Deserializers.ClrMamePro, Serialization.Serializers.ClrMamePro, Serialization.CrossModel.ClrMamePro>
     {
         #region Fields
 

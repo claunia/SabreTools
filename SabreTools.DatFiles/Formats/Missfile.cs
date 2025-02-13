@@ -9,7 +9,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents a Missfile
     /// </summary>
-    internal sealed class Missfile : DatFile
+    public sealed class Missfile : DatFile
     {
         /// <inheritdoc/>
         public override ItemType[] SupportedTypes

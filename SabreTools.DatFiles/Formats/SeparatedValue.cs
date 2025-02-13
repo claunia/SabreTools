@@ -8,7 +8,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents a value-separated DAT
     /// </summary>
-    internal abstract class SeparatedValue : SerializableDatFile<Models.SeparatedValue.MetadataFile, Serialization.Deserializers.SeparatedValue, Serialization.Serializers.SeparatedValue, Serialization.CrossModel.SeparatedValue>
+    public abstract class SeparatedValue : SerializableDatFile<Models.SeparatedValue.MetadataFile, Serialization.Deserializers.SeparatedValue, Serialization.Serializers.SeparatedValue, Serialization.CrossModel.SeparatedValue>
     {
         #region Fields
 
@@ -122,7 +122,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents a comma-separated value file
     /// </summary>
-    internal sealed class CommaSeparatedValue : SeparatedValue
+    public sealed class CommaSeparatedValue : SeparatedValue
     {
         /// <summary>
         /// Constructor designed for casting a base DatFile
@@ -137,7 +137,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents a semicolon-separated value file
     /// </summary>
-    internal sealed class SemicolonSeparatedValue : SeparatedValue
+    public sealed class SemicolonSeparatedValue : SeparatedValue
     {
         /// <summary>
         /// Constructor designed for casting a base DatFile
@@ -152,7 +152,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents a tab-separated value file
     /// </summary>
-    internal sealed class TabSeparatedValue : SeparatedValue
+    public sealed class TabSeparatedValue : SeparatedValue
     {
         /// <summary>
         /// Constructor designed for casting a base DatFile

@@ -7,7 +7,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents an openMSX softawre list XML DAT
     /// </summary>
-    internal sealed class OpenMSX : SerializableDatFile<Models.OpenMSX.SoftwareDb, Serialization.Deserializers.OpenMSX, Serialization.Serializers.OpenMSX, Serialization.CrossModel.OpenMSX>
+    public sealed class OpenMSX : SerializableDatFile<Models.OpenMSX.SoftwareDb, Serialization.Deserializers.OpenMSX, Serialization.Serializers.OpenMSX, Serialization.CrossModel.OpenMSX>
     {
         #region Constants
 

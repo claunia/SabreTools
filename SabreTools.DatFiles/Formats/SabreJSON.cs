@@ -15,7 +15,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents parsing and writing of a reference SabreDAT JSON
     /// </summary>
-    internal class SabreJSON : DatFile
+    public sealed class SabreJSON : DatFile
     {
         /// <inheritdoc/>
         public override ItemType[] SupportedTypes
