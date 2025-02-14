@@ -53,7 +53,7 @@ namespace SabreTools.DatFiles.Formats
                     break;
             }
 
-            return null;
+            return missingFields;
         }
     }
 }

@@ -356,7 +356,7 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case Device device:
-                    if (device.GetStringFieldValue(Models.Metadata.Device.DeviceTypeKey).AsEnumValue<DeviceType>() != DeviceType.NULL)
+                    if (device.GetStringFieldValue(Models.Metadata.Device.DeviceTypeKey).AsEnumValue<DeviceType>() == DeviceType.NULL)
                         missingFields.Add(Models.Metadata.Device.DeviceTypeKey);
                     break;
 

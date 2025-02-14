@@ -228,11 +228,14 @@ namespace SabreTools.DatFiles.Formats
             => [
                 ItemType.Archive,
                 ItemType.BiosSet,
+                ItemType.DeviceRef,
                 ItemType.Disk,
+                ItemType.Driver,
                 ItemType.Media,
                 ItemType.Release,
                 ItemType.Rom,
                 ItemType.Sample,
+                ItemType.SoftwareList,
             ];
 
         /// <summary>

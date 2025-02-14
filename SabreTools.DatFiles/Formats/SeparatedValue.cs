@@ -73,6 +73,16 @@ namespace SabreTools.DatFiles.Formats
                     }
                     break;
 
+                case Media media:
+                    if (string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.MD5Key))
+                        && string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA1Key))
+                        && string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA256Key))
+                        && string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SpamSumKey)))
+                    {
+                        missingFields.Add(Models.Metadata.Media.SHA1Key);
+                    }
+                    break;
+
                 case Rom rom:
                     if (rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) == null || rom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey) < 0)
                         missingFields.Add(Models.Metadata.Rom.SizeKey);
@@ -102,7 +112,7 @@ namespace SabreTools.DatFiles.Formats
                 // Serialize the input file
                 var metadata = ConvertToMetadata(ignoreblanks);
                 var metadataFile = new Serialization.CrossModel.SeparatedValue().Deserialize(metadata);
-                if (!(Serialization.Serializers.SeparatedValue.SerializeFile(metadataFile, outfile, _delim)))
+                if (!Serialization.Serializers.SeparatedValue.SerializeFile(metadataFile, outfile, _delim))
                 {
                     _logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
                     return false;

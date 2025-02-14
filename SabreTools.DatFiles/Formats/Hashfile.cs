@@ -13,14 +13,6 @@ namespace SabreTools.DatFiles.Formats
     {
         #region Fields
 
-        /// <inheritdoc/>
-        public override ItemType[] SupportedTypes
-            => [
-                ItemType.Disk,
-                ItemType.Media,
-                ItemType.Rom,
-            ];
-
         // Private instance variables specific to Hashfile DATs
         protected HashType _hash;
 
@@ -54,167 +46,6 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <inheritdoc/>
-        protected internal override List<string>? GetMissingRequiredFields(DatItem datItem)
-        {
-            List<string> missingFields = [];
-
-            // Check item name
-            if (string.IsNullOrEmpty(datItem.GetName()))
-                missingFields.Add(Models.Metadata.Rom.NameKey);
-
-            // Check hash linked to specific Hashfile type
-            switch (_hash)
-            {
-                case HashType.CRC32:
-                case HashType.CRC32_AIXM:
-                case HashType.CRC32_AUTOSAR:
-                case HashType.CRC32_BASE91D:
-                case HashType.CRC32_BZIP2:
-                case HashType.CRC32_CDROMEDC:
-                case HashType.CRC32_CKSUM:
-                case HashType.CRC32_ISCSI:
-                case HashType.CRC32_ISOHDLC:
-                case HashType.CRC32_JAMCRC:
-                case HashType.CRC32_MEF:
-                case HashType.CRC32_MPEG2:
-                case HashType.CRC32_XFER:
-                    switch (datItem)
-                    {
-                        case Rom rom:
-                            if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey)))
-                                missingFields.Add(Models.Metadata.Rom.CRCKey);
-                            break;
-                        default:
-                            missingFields.Add(Models.Metadata.Rom.CRCKey);
-                            break;
-                    }
-                    break;
-                case HashType.MD2:
-                    switch (datItem)
-                    {
-                        case Rom rom:
-                            if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.MD2Key)))
-                                missingFields.Add(Models.Metadata.Rom.MD2Key);
-                            break;
-                        default:
-                            missingFields.Add(Models.Metadata.Rom.MD2Key);
-                            break;
-                    }
-                    break;
-                case HashType.MD4:
-                    switch (datItem)
-                    {
-                        case Rom rom:
-                            if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.MD4Key)))
-                                missingFields.Add(Models.Metadata.Rom.MD4Key);
-                            break;
-                        default:
-                            missingFields.Add(Models.Metadata.Rom.MD4Key);
-                            break;
-                    }
-                    break;
-                case HashType.MD5:
-                    switch (datItem)
-                    {
-                        case Disk disk:
-                            if (string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key)))
-                                missingFields.Add(Models.Metadata.Disk.MD5Key);
-                            break;
-                        case Media medium:
-                            if (string.IsNullOrEmpty(medium.GetStringFieldValue(Models.Metadata.Media.MD5Key)))
-                                missingFields.Add(Models.Metadata.Media.MD5Key);
-                            break;
-                        case Rom rom:
-                            if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key)))
-                                missingFields.Add(Models.Metadata.Rom.MD5Key);
-                            break;
-                        default:
-                            missingFields.Add(Models.Metadata.Rom.MD5Key);
-                            break;
-                    }
-                    break;
-                case HashType.SHA1:
-                    switch (datItem)
-                    {
-                        case Disk disk:
-                            if (string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)))
-                                missingFields.Add(Models.Metadata.Disk.SHA1Key);
-                            break;
-                        case Media medium:
-                            if (string.IsNullOrEmpty(medium.GetStringFieldValue(Models.Metadata.Media.SHA1Key)))
-                                missingFields.Add(Models.Metadata.Media.SHA1Key);
-                            break;
-                        case Rom rom:
-                            if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key)))
-                                missingFields.Add(Models.Metadata.Rom.SHA1Key);
-                            break;
-                        default:
-                            missingFields.Add(Models.Metadata.Rom.SHA1Key);
-                            break;
-                    }
-                    break;
-                case HashType.SHA256:
-                    switch (datItem)
-                    {
-                        case Media medium:
-                            if (string.IsNullOrEmpty(medium.GetStringFieldValue(Models.Metadata.Media.SHA256Key)))
-                                missingFields.Add(Models.Metadata.Media.SHA256Key);
-                            break;
-                        case Rom rom:
-                            if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key)))
-                                missingFields.Add(Models.Metadata.Rom.SHA256Key);
-                            break;
-                        default:
-                            missingFields.Add(Models.Metadata.Rom.SHA256Key);
-                            break;
-                    }
-                    break;
-                case HashType.SHA384:
-                    switch (datItem)
-                    {
-                        case Rom rom:
-                            if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA384Key)))
-                                missingFields.Add(Models.Metadata.Rom.SHA384Key);
-                            break;
-                        default:
-                            missingFields.Add(Models.Metadata.Rom.SHA384Key);
-                            break;
-                    }
-                    break;
-                case HashType.SHA512:
-                    switch (datItem)
-                    {
-                        case Rom rom:
-                            if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA512Key)))
-                                missingFields.Add(Models.Metadata.Rom.SHA512Key);
-                            break;
-                        default:
-                            missingFields.Add(Models.Metadata.Rom.SHA512Key);
-                            break;
-                    }
-                    break;
-                case HashType.SpamSum:
-                    switch (datItem)
-                    {
-                        case Media medium:
-                            if (string.IsNullOrEmpty(medium.GetStringFieldValue(Models.Metadata.Media.SpamSumKey)))
-                                missingFields.Add(Models.Metadata.Media.SpamSumKey);
-                            break;
-                        case Rom rom:
-                            if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SpamSumKey)))
-                                missingFields.Add(Models.Metadata.Rom.SpamSumKey);
-                            break;
-                        default:
-                            missingFields.Add(Models.Metadata.Rom.SpamSumKey);
-                            break;
-                    }
-                    break;
-            }
-
-            return missingFields;
-        }
-
-        /// <inheritdoc/>
         public override bool WriteToFile(string outfile, bool ignoreblanks = false, bool throwOnError = false)
         {
             try
@@ -224,7 +55,7 @@ namespace SabreTools.DatFiles.Formats
                 // Serialize the input file
                 var metadata = ConvertToMetadata(ignoreblanks);
                 var hashfile = new Serialization.CrossModel.Hashfile().Deserialize(metadata, _hash);
-                if (!(Serialization.Serializers.Hashfile.SerializeFile(hashfile, outfile, _hash)))
+                if (!Serialization.Serializers.Hashfile.SerializeFile(hashfile, outfile, _hash))
                 {
                     _logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
                     return false;
@@ -246,6 +77,12 @@ namespace SabreTools.DatFiles.Formats
     /// </summary>
     public sealed class SfvFile : Hashfile
     {
+        /// <inheritdoc/>
+        public override ItemType[] SupportedTypes
+            => [
+                ItemType.Rom,
+            ];
+
         /// <summary>
         /// Constructor designed for casting a base DatFile
         /// </summary>
@@ -254,6 +91,26 @@ namespace SabreTools.DatFiles.Formats
         {
             _hash = HashType.CRC32;
         }
+
+        /// <inheritdoc/>
+        protected internal override List<string>? GetMissingRequiredFields(DatItem datItem)
+        {
+            List<string> missingFields = [];
+
+            // Check item name
+            if (string.IsNullOrEmpty(datItem.GetName()))
+                missingFields.Add(Models.Metadata.Rom.NameKey);
+
+            switch (datItem)
+            {
+                case Rom rom:
+                    if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.CRCKey)))
+                        missingFields.Add(Models.Metadata.Rom.CRCKey);
+                    break;
+            }
+
+            return missingFields;
+        }
     }
 
     /// <summary>
@@ -261,6 +118,12 @@ namespace SabreTools.DatFiles.Formats
     /// </summary>
     public sealed class Md2File : Hashfile
     {
+        /// <inheritdoc/>
+        public override ItemType[] SupportedTypes
+            => [
+                ItemType.Rom,
+            ];
+
         /// <summary>
         /// Constructor designed for casting a base DatFile
         /// </summary>
@@ -269,6 +132,26 @@ namespace SabreTools.DatFiles.Formats
         {
             _hash = HashType.MD2;
         }
+
+        /// <inheritdoc/>
+        protected internal override List<string>? GetMissingRequiredFields(DatItem datItem)
+        {
+            List<string> missingFields = [];
+
+            // Check item name
+            if (string.IsNullOrEmpty(datItem.GetName()))
+                missingFields.Add(Models.Metadata.Rom.NameKey);
+
+            switch (datItem)
+            {
+                case Rom rom:
+                    if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.MD2Key)))
+                        missingFields.Add(Models.Metadata.Rom.MD2Key);
+                    break;
+            }
+
+            return missingFields;
+        }
     }
 
     /// <summary>
@@ -276,6 +159,12 @@ namespace SabreTools.DatFiles.Formats
     /// </summary>
     public sealed class Md4File : Hashfile
     {
+        /// <inheritdoc/>
+        public override ItemType[] SupportedTypes
+            => [
+                ItemType.Rom,
+            ];
+
         /// <summary>
         /// Constructor designed for casting a base DatFile
         /// </summary>
@@ -284,6 +173,26 @@ namespace SabreTools.DatFiles.Formats
         {
             _hash = HashType.MD4;
         }
+
+        /// <inheritdoc/>
+        protected internal override List<string>? GetMissingRequiredFields(DatItem datItem)
+        {
+            List<string> missingFields = [];
+
+            // Check item name
+            if (string.IsNullOrEmpty(datItem.GetName()))
+                missingFields.Add(Models.Metadata.Rom.NameKey);
+
+            switch (datItem)
+            {
+                case Rom rom:
+                    if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.MD4Key)))
+                        missingFields.Add(Models.Metadata.Rom.MD4Key);
+                    break;
+            }
+
+            return missingFields;
+        }
     }
 
     /// <summary>
@@ -291,6 +200,14 @@ namespace SabreTools.DatFiles.Formats
     /// </summary>
     public sealed class Md5File : Hashfile
     {
+        /// <inheritdoc/>
+        public override ItemType[] SupportedTypes
+            => [
+                ItemType.Disk,
+                ItemType.Media,
+                ItemType.Rom,
+            ];
+
         /// <summary>
         /// Constructor designed for casting a base DatFile
         /// </summary>
@@ -299,6 +216,36 @@ namespace SabreTools.DatFiles.Formats
         {
             _hash = HashType.MD5;
         }
+
+        /// <inheritdoc/>
+        protected internal override List<string>? GetMissingRequiredFields(DatItem datItem)
+        {
+            List<string> missingFields = [];
+
+            // Check item name
+            if (string.IsNullOrEmpty(datItem.GetName()))
+                missingFields.Add(Models.Metadata.Rom.NameKey);
+
+            switch (datItem)
+            {
+                case Disk disk:
+                    if (string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key)))
+                        missingFields.Add(Models.Metadata.Disk.MD5Key);
+                    break;
+
+                case Media medium:
+                    if (string.IsNullOrEmpty(medium.GetStringFieldValue(Models.Metadata.Media.MD5Key)))
+                        missingFields.Add(Models.Metadata.Media.MD5Key);
+                    break;
+
+                case Rom rom:
+                    if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.MD5Key)))
+                        missingFields.Add(Models.Metadata.Rom.MD5Key);
+                    break;
+            }
+
+            return missingFields;
+        }
     }
 
     /// <summary>
@@ -306,6 +253,14 @@ namespace SabreTools.DatFiles.Formats
     /// </summary>
     public sealed class Sha1File : Hashfile
     {
+        /// <inheritdoc/>
+        public override ItemType[] SupportedTypes
+            => [
+                ItemType.Disk,
+                ItemType.Media,
+                ItemType.Rom,
+            ];
+
         /// <summary>
         /// Constructor designed for casting a base DatFile
         /// </summary>
@@ -314,6 +269,36 @@ namespace SabreTools.DatFiles.Formats
         {
             _hash = HashType.SHA1;
         }
+
+        /// <inheritdoc/>
+        protected internal override List<string>? GetMissingRequiredFields(DatItem datItem)
+        {
+            List<string> missingFields = [];
+
+            // Check item name
+            if (string.IsNullOrEmpty(datItem.GetName()))
+                missingFields.Add(Models.Metadata.Rom.NameKey);
+
+            switch (datItem)
+            {
+                case Disk disk:
+                    if (string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)))
+                        missingFields.Add(Models.Metadata.Disk.SHA1Key);
+                    break;
+
+                case Media medium:
+                    if (string.IsNullOrEmpty(medium.GetStringFieldValue(Models.Metadata.Media.SHA1Key)))
+                        missingFields.Add(Models.Metadata.Media.SHA1Key);
+                    break;
+
+                case Rom rom:
+                    if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA1Key)))
+                        missingFields.Add(Models.Metadata.Rom.SHA1Key);
+                    break;
+            }
+
+            return missingFields;
+        }
     }
 
     /// <summary>
@@ -321,6 +306,13 @@ namespace SabreTools.DatFiles.Formats
     /// </summary>
     public sealed class Sha256File : Hashfile
     {
+        /// <inheritdoc/>
+        public override ItemType[] SupportedTypes
+            => [
+                ItemType.Media,
+                ItemType.Rom,
+            ];
+
         /// <summary>
         /// Constructor designed for casting a base DatFile
         /// </summary>
@@ -329,6 +321,31 @@ namespace SabreTools.DatFiles.Formats
         {
             _hash = HashType.SHA256;
         }
+
+        /// <inheritdoc/>
+        protected internal override List<string>? GetMissingRequiredFields(DatItem datItem)
+        {
+            List<string> missingFields = [];
+
+            // Check item name
+            if (string.IsNullOrEmpty(datItem.GetName()))
+                missingFields.Add(Models.Metadata.Rom.NameKey);
+
+            switch (datItem)
+            {
+                case Media medium:
+                    if (string.IsNullOrEmpty(medium.GetStringFieldValue(Models.Metadata.Media.SHA256Key)))
+                        missingFields.Add(Models.Metadata.Media.SHA256Key);
+                    break;
+
+                case Rom rom:
+                    if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA256Key)))
+                        missingFields.Add(Models.Metadata.Rom.SHA256Key);
+                    break;
+            }
+
+            return missingFields;
+        }
     }
 
     /// <summary>
@@ -336,6 +353,12 @@ namespace SabreTools.DatFiles.Formats
     /// </summary>
     public sealed class Sha384File : Hashfile
     {
+        /// <inheritdoc/>
+        public override ItemType[] SupportedTypes
+            => [
+                ItemType.Rom,
+            ];
+
         /// <summary>
         /// Constructor designed for casting a base DatFile
         /// </summary>
@@ -344,6 +367,26 @@ namespace SabreTools.DatFiles.Formats
         {
             _hash = HashType.SHA384;
         }
+
+        /// <inheritdoc/>
+        protected internal override List<string>? GetMissingRequiredFields(DatItem datItem)
+        {
+            List<string> missingFields = [];
+
+            // Check item name
+            if (string.IsNullOrEmpty(datItem.GetName()))
+                missingFields.Add(Models.Metadata.Rom.NameKey);
+
+            switch (datItem)
+            {
+                case Rom rom:
+                    if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA384Key)))
+                        missingFields.Add(Models.Metadata.Rom.SHA384Key);
+                    break;
+            }
+
+            return missingFields;
+        }
     }
 
     /// <summary>
@@ -351,6 +394,12 @@ namespace SabreTools.DatFiles.Formats
     /// </summary>
     public sealed class Sha512File : Hashfile
     {
+        /// <inheritdoc/>
+        public override ItemType[] SupportedTypes
+            => [
+                ItemType.Rom,
+            ];
+
         /// <summary>
         /// Constructor designed for casting a base DatFile
         /// </summary>
@@ -359,6 +408,26 @@ namespace SabreTools.DatFiles.Formats
         {
             _hash = HashType.SHA512;
         }
+
+        /// <inheritdoc/>
+        protected internal override List<string>? GetMissingRequiredFields(DatItem datItem)
+        {
+            List<string> missingFields = [];
+
+            // Check item name
+            if (string.IsNullOrEmpty(datItem.GetName()))
+                missingFields.Add(Models.Metadata.Rom.NameKey);
+
+            switch (datItem)
+            {
+                case Rom rom:
+                    if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA512Key)))
+                        missingFields.Add(Models.Metadata.Rom.SHA512Key);
+                    break;
+            }
+
+            return missingFields;
+        }
     }
 
     /// <summary>
@@ -366,6 +435,13 @@ namespace SabreTools.DatFiles.Formats
     /// </summary>
     public sealed class SpamSumFile : Hashfile
     {
+        /// <inheritdoc/>
+        public override ItemType[] SupportedTypes
+            => [
+                ItemType.Media,
+                ItemType.Rom,
+            ];
+
         /// <summary>
         /// Constructor designed for casting a base DatFile
         /// </summary>
@@ -373,6 +449,31 @@ namespace SabreTools.DatFiles.Formats
         public SpamSumFile(DatFile? datFile) : base(datFile)
         {
             _hash = HashType.SpamSum;
+        }
+
+        /// <inheritdoc/>
+        protected internal override List<string>? GetMissingRequiredFields(DatItem datItem)
+        {
+            List<string> missingFields = [];
+
+            // Check item name
+            if (string.IsNullOrEmpty(datItem.GetName()))
+                missingFields.Add(Models.Metadata.Rom.NameKey);
+
+            switch (datItem)
+            {
+                case Media medium:
+                    if (string.IsNullOrEmpty(medium.GetStringFieldValue(Models.Metadata.Media.SpamSumKey)))
+                        missingFields.Add(Models.Metadata.Media.SpamSumKey);
+                    break;
+
+                case Rom rom:
+                    if (string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SpamSumKey)))
+                        missingFields.Add(Models.Metadata.Rom.SpamSumKey);
+                    break;
+            }
+
+            return missingFields;
         }
     }
 }

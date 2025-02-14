@@ -197,9 +197,6 @@ namespace SabreTools.DatFiles.Formats
                     if (string.IsNullOrEmpty(sharedFeat.GetName()))
                         missingFields.Add(Models.Metadata.SharedFeat.NameKey);
                     break;
-                default:
-                    // Unsupported ItemTypes should be caught already
-                    return null;
             }
 
             return missingFields;
