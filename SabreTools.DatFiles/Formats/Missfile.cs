@@ -176,8 +176,8 @@ namespace SabreTools.DatFiles.Formats
             // Romba mode automatically uses item name
             if (Modifiers.OutputDepot?.IsActive == true || Modifiers.UseRomName)
                 sw.Write($"{datItem.GetName() ?? string.Empty}\n");
-            else if (!Modifiers.UseRomName && datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) != lastgame)
-                sw.Write($"{datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty}\n");
+            else if (!Modifiers.UseRomName && machine!.GetStringFieldValue(Models.Metadata.Machine.NameKey) != lastgame)
+                sw.Write($"{machine!.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty}\n");
 
             sw.Flush();
         }
@@ -191,21 +191,16 @@ namespace SabreTools.DatFiles.Formats
         private void WriteDatItemDB(StreamWriter sw, KeyValuePair<long, DatItem> datItem, string? lastgame)
         {
             // Get the machine for the item
-            var machine = ItemsDB.GetMachineForItem(datItem.Key);
+            var machine = ItemsDB.GetMachineForItem(datItem.Key).Value;
 
             // Process the item name
-            ProcessItemName(datItem.Value, machine.Value, forceRemoveQuotes: false, forceRomName: false);
+            ProcessItemName(datItem.Value, machine, forceRemoveQuotes: false, forceRomName: false);
 
             // Romba mode automatically uses item name
             if (Modifiers.OutputDepot?.IsActive == true || Modifiers.UseRomName)
-            {
                 sw.Write($"{datItem.Value.GetName() ?? string.Empty}\n");
-            }
-            else if (!Modifiers.UseRomName
-                && machine.Value!.GetStringFieldValue(Models.Metadata.Machine.NameKey) != lastgame)
-            {
-                sw.Write($"{machine.Value!.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty}\n");
-            }
+            else if (!Modifiers.UseRomName && machine!.GetStringFieldValue(Models.Metadata.Machine.NameKey) != lastgame)
+                sw.Write($"{machine!.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty}\n");
 
             sw.Flush();
         }
