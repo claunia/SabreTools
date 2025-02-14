@@ -12,6 +12,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents parsing and writing of a SabreDAT XML
     /// </summary>
+    /// TODO: Transform this into direct serialization and deserialization of the Metadata type
     public sealed class SabreXML : DatFile
     {
         /// <inheritdoc/>

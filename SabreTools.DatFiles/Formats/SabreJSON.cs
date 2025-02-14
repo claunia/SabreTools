@@ -15,6 +15,7 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents parsing and writing of a reference SabreDAT JSON
     /// </summary>
+    /// TODO: Transform this into direct serialization and deserialization of the Metadata type
     public sealed class SabreJSON : DatFile
     {
         /// <inheritdoc/>

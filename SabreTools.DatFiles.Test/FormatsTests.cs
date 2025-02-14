@@ -1196,6 +1196,13 @@ namespace SabreTools.DatFiles.Test
             Assert.True(actual.SequenceEqual(AllTypes));
         }
 
+        [Fact]
+        public void Missfile_ParseFile_Throws()
+        {
+            var datFile = new Missfile(null);
+            Assert.Throws<NotImplementedException>(() => datFile.ParseFile("path", 0, true));
+        }
+
         #endregion
 
         #region OfflineList
