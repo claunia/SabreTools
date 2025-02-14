@@ -167,19 +167,8 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="lastgame">The name of the last game to be output</param>
         private void WriteDatItem(StreamWriter sw, DatItem datItem, string? lastgame)
         {
-            // Get the machine for the item
             var machine = datItem.GetFieldValue<Machine>(DatItem.MachineKey);
-
-            // Process the item name
-            ProcessItemName(datItem, machine, forceRemoveQuotes: false, forceRomName: false);
-
-            // Romba mode automatically uses item name
-            if (Modifiers.OutputDepot?.IsActive == true || Modifiers.UseRomName)
-                sw.Write($"{datItem.GetName() ?? string.Empty}\n");
-            else if (!Modifiers.UseRomName && machine!.GetStringFieldValue(Models.Metadata.Machine.NameKey) != lastgame)
-                sw.Write($"{machine!.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty}\n");
-
-            sw.Flush();
+            WriteDatItemImpl(sw, datItem, machine!, lastgame);
         }
 
         /// <summary>
@@ -190,15 +179,25 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="lastgame">The name of the last game to be output</param>
         private void WriteDatItemDB(StreamWriter sw, KeyValuePair<long, DatItem> datItem, string? lastgame)
         {
-            // Get the machine for the item
             var machine = ItemsDB.GetMachineForItem(datItem.Key).Value;
-
+            WriteDatItemImpl(sw, datItem.Value, machine!, lastgame);
+        }
+    
+        /// <summary>
+        /// Write out DatItem using the supplied StreamWriter
+        /// </summary>
+        /// <param name="sw">StreamWriter to output to</param>
+        /// <param name="datItem">DatItem object to be output</param>
+        /// <param name="machine">Machine object representing the set the item is in</param>
+        /// <param name="lastgame">The name of the last game to be output</param>
+        private void WriteDatItemImpl(StreamWriter sw, DatItem datItem, Machine machine, string? lastgame)
+        {
             // Process the item name
-            ProcessItemName(datItem.Value, machine, forceRemoveQuotes: false, forceRomName: false);
+            ProcessItemName(datItem, machine, forceRemoveQuotes: false, forceRomName: false);
 
             // Romba mode automatically uses item name
             if (Modifiers.OutputDepot?.IsActive == true || Modifiers.UseRomName)
-                sw.Write($"{datItem.Value.GetName() ?? string.Empty}\n");
+                sw.Write($"{datItem.GetName() ?? string.Empty}\n");
             else if (!Modifiers.UseRomName && machine!.GetStringFieldValue(Models.Metadata.Machine.NameKey) != lastgame)
                 sw.Write($"{machine!.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty}\n");
 
