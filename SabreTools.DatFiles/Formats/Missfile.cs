@@ -171,7 +171,7 @@ namespace SabreTools.DatFiles.Formats
             var machine = datItem.GetFieldValue<Machine>(DatItem.MachineKey);
 
             // Process the item name
-            ProcessItemName(datItem, machine, false, forceRomName: false);
+            ProcessItemName(datItem, machine, forceRemoveQuotes: false, forceRomName: false);
 
             // Romba mode automatically uses item name
             if (Modifiers.OutputDepot?.IsActive == true || Modifiers.UseRomName)
