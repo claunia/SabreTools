@@ -87,7 +87,7 @@ namespace SabreTools.Reports.Formats
         /// <param name="stat">DatStatistics object to write out</param>
         /// <param name="baddumpCol">True if baddumps should be included in output, false otherwise</param>
         /// <param name="nodumpCol">True if nodumps should be included in output, false otherwise</param>
-        private void WriteIndividual(StreamWriter sw, DatStatistics stat, bool baddumpCol, bool nodumpCol)
+        private static void WriteIndividual(StreamWriter sw, DatStatistics stat, bool baddumpCol, bool nodumpCol)
         {
             string line = @"'" + stat.DisplayName + @"':
 --------------------------------------------------
@@ -119,7 +119,7 @@ namespace SabreTools.Reports.Formats
         /// Write out the footer-separator to the stream, if any exists
         /// </summary>
         /// <param name="sw">StreamWriter to write to</param>
-        private void WriteFooterSeparator(StreamWriter sw)
+        private static void WriteFooterSeparator(StreamWriter sw)
         {
             sw.Write("\n");
             sw.Flush();

@@ -105,7 +105,7 @@ namespace SabreTools.Reports.Formats
         /// <param name="xtw">XmlTextWriter to write to</param>
         /// <param name="baddumpCol">True if baddumps should be included in output, false otherwise</param>
         /// <param name="nodumpCol">True if nodumps should be included in output, false otherwise</param>
-        private void WriteHeader(XmlTextWriter xtw, bool baddumpCol, bool nodumpCol)
+        private static void WriteHeader(XmlTextWriter xtw, bool baddumpCol, bool nodumpCol)
         {
             xtw.WriteDocType("html", null, null, null);
             xtw.WriteStartElement("html");
@@ -141,7 +141,7 @@ body {
         /// <param name="xtw">XmlTextWriter to write to</param>
         /// <param name="baddumpCol">True if baddumps should be included in output, false otherwise</param>
         /// <param name="nodumpCol">True if nodumps should be included in output, false otherwise</param>
-        private void WriteMidHeader(XmlTextWriter xtw, bool baddumpCol, bool nodumpCol)
+        private static void WriteMidHeader(XmlTextWriter xtw, bool baddumpCol, bool nodumpCol)
         {
             xtw.WriteStartElement("tr");
             xtw.WriteAttributeString("bgcolor", "gray");
@@ -215,7 +215,7 @@ body {
         /// <param name="stat">DatStatistics object to write out</param>
         /// <param name="baddumpCol">True if baddumps should be included in output, false otherwise</param>
         /// <param name="nodumpCol">True if nodumps should be included in output, false otherwise</param>
-        private void WriteIndividual(XmlTextWriter xtw, DatStatistics stat, bool baddumpCol, bool nodumpCol)
+        private static void WriteIndividual(XmlTextWriter xtw, DatStatistics stat, bool baddumpCol, bool nodumpCol)
         {
             bool isDirectory = stat.DisplayName!.StartsWith("DIR: ");
 
@@ -295,7 +295,7 @@ body {
         /// <param name="xtw">XmlTextWriter to write to</param>
         /// <param name="baddumpCol">True if baddumps should be included in output, false otherwise</param>
         /// <param name="nodumpCol">True if nodumps should be included in output, false otherwise</param>
-        private void WriteMidSeparator(XmlTextWriter xtw, bool baddumpCol, bool nodumpCol)
+        private static void WriteMidSeparator(XmlTextWriter xtw, bool baddumpCol, bool nodumpCol)
         {
             xtw.WriteStartElement("tr");
 
@@ -313,7 +313,7 @@ body {
         /// <param name="xtw">XmlTextWriter to write to</param>
         /// <param name="baddumpCol">True if baddumps should be included in output, false otherwise</param>
         /// <param name="nodumpCol">True if nodumps should be included in output, false otherwise</param>
-        private void WriteFooterSeparator(XmlTextWriter xtw, bool baddumpCol, bool nodumpCol)
+        private static void WriteFooterSeparator(XmlTextWriter xtw, bool baddumpCol, bool nodumpCol)
         {
             xtw.WriteStartElement("tr");
             xtw.WriteAttributeString("border", "0");
@@ -330,7 +330,7 @@ body {
         /// Write out the footer to the stream, if any exists
         /// </summary>
         /// <param name="xtw">XmlTextWriter to write to</param>
-        private void WriteFooter(XmlTextWriter xtw)
+        private static void WriteFooter(XmlTextWriter xtw)
         {
             xtw.WriteEndElement(); // table
             xtw.WriteEndElement(); // body
