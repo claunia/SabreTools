@@ -67,7 +67,7 @@ namespace SabreTools.Reports
         /// <param name="input"></param>
         /// <returns>Human-readable file size</returns>
         /// <link>http://www.somacon.com/p576.php</link>
-        protected static string GetBytesReadable(long input)
+        protected internal static string GetBytesReadable(long input)
         {
             // Get absolute value
             long absolute_i = (input < 0 ? -input : input);
