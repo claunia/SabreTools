@@ -85,11 +85,7 @@ namespace SabreTools.DatTools
                 _staticLogger.Verbose($"Folder found: {basePath}");
 
                 // Get a list of all files to process
-#if NET20 || NET35
-                List<string> files = [.. Directory.GetFiles(basePath, "*")];
-#else
-                List<string> files = [.. Directory.EnumerateFiles(basePath, "*", SearchOption.AllDirectories)];
-#endif
+                string[] files = IOExtensions.SafeGetFiles(basePath, "*", SearchOption.AllDirectories);
 
                 // Loop through and add the file sizes
 #if NET452_OR_GREATER || NETCOREAPP
