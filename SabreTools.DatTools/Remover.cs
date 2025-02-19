@@ -211,7 +211,7 @@ namespace SabreTools.DatTools
         /// <summary>
         /// Remove machine fields with given values
         /// </summary>
-        private void RemoveFields(Machine? machine)
+        internal void RemoveFields(Machine? machine)
         {
             // If we have an invalid input, return
             if (machine == null || MachineFieldNames.Count == 0)
@@ -227,7 +227,7 @@ namespace SabreTools.DatTools
         /// Remove fields with given values
         /// </summary>
         /// <param name="datItem">DatItem to remove fields from</param>
-        private void RemoveFields(DatItem? datItem)
+        internal void RemoveFields(DatItem? datItem)
         {
             if (datItem == null)
                 return;

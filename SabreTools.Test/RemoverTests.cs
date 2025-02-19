@@ -1,45 +1,37 @@
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
+using SabreTools.DatTools;
+using Xunit;
 
 namespace SabreTools.Test
 {
-    // TODO: Reenable tests when there's a reasonable way of doing so
     public class RemoverTests
     {
-        //[Fact]
-        //public void RemoveFieldsDatItemTest()
-        //{
-        //    var datItem = CreateDatItem();
-        //    var remover = new Remover();
-        //    remover.PopulateExclusions("DatItem.Name");
-        //    remover.RemoveFields(datItem);
-        //    Assert.Null(datItem.GetName());
-        //}
-
-        //[Fact]
-        //public void RemoveFieldsMachineTest()
-        //{
-        //    var datItem = CreateDatItem();
-        //    var remover = new Remover();
-        //    remover.PopulateExclusions("Machine.Name");
-        //    remover.RemoveFields(datItem);
-        //    Assert.Null(datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey));
-        //}
-
-        /// <summary>
-        /// Generate a consistent DatItem for testing
-        /// </summary>
-        private static DatItem CreateDatItem()
+        [Fact]
+        public void RemoveFieldsDatItemTest()
         {
-           var machine = new Machine();
+            var datItem = new Rom();
+            datItem.SetName("foo");
+
+            var remover = new Remover();
+            remover.PopulateExclusions("DatItem.Name");
+            remover.RemoveFields(datItem);
+
+            Assert.Null(datItem.GetName());
+        }
+
+        [Fact]
+        public void RemoveFieldsMachineTest()
+        {
+            var machine = new Machine();
             machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "bar");
             machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, "bar");
 
-            var rom = new Rom();
-            rom.SetName("foo");
-            rom.SetFieldValue<Machine>(DatItem.MachineKey, machine);
+            var remover = new Remover();
+            remover.PopulateExclusions("Machine.Name");
+            remover.RemoveFields(machine);
 
-            return rom;
+            Assert.Null(machine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
         }
     }
 }
