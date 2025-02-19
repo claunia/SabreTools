@@ -174,6 +174,11 @@ namespace SabreTools.DatTools
 
                 for (int j = 0; j < items.Count; j++)
                 {
+                    // Handle machine removals
+                    var machine = items[j].GetFieldValue<Machine>(DatItem.MachineKey);
+                    RemoveFields(machine);
+
+                    // Handle item removals
                     RemoveFields(items[j]);
                 }
             }
@@ -233,11 +238,6 @@ namespace SabreTools.DatTools
                 return;
 
             #region Common
-
-            // Handle Machine fields
-            var machine = datItem.GetFieldValue<Machine>(DatItem.MachineKey);
-            if (MachineFieldNames.Count > 0 && machine != null)
-                RemoveFields(machine);
 
             // If there are no field names, return
             if (ItemFieldNames == null || ItemFieldNames.Count == 0)

@@ -1,11 +1,14 @@
 using System.Collections.Generic;
-using SabreTools.DatTools;
+using SabreTools.DatItems;
+using SabreTools.DatItems.Formats;
 using Xunit;
 
-namespace SabreTools.Test
+namespace SabreTools.DatTools.Test
 {
-    public class PopulationTests
+    public class RemoverTests
     {
+        #region PopulateExclusionsFromList
+
         [Fact]
         public void PopulateExclusionsFromList_Null()
         {
@@ -94,5 +97,40 @@ namespace SabreTools.Test
             Assert.Empty(remover.MachineFieldNames);
             Assert.Single(remover.ItemFieldNames);
         }
+    
+        #endregion
+
+        #region RemoveFields
+
+        // TODO: Add RemoveFields_DatHeader test
+
+        [Fact]
+        public void RemoveFields_DatItem()
+        {
+            var datItem = new Rom();
+            datItem.SetName("foo");
+
+            var remover = new Remover();
+            remover.PopulateExclusions("DatItem.Name");
+            remover.RemoveFields(datItem);
+
+            Assert.Null(datItem.GetName());
+        }
+
+        [Fact]
+        public void RemoveFields_Machine()
+        {
+            var machine = new Machine();
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "bar");
+            machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, "bar");
+
+            var remover = new Remover();
+            remover.PopulateExclusions("Machine.Name");
+            remover.RemoveFields(machine);
+
+            Assert.Null(machine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+        }
+    
+        #endregion
     }
 }
