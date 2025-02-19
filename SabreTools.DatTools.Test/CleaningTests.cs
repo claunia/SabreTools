@@ -1,9 +1,8 @@
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
-using SabreTools.DatTools;
 using Xunit;
 
-namespace SabreTools.Test
+namespace SabreTools.DatTools.Test
 {
     public class CleaningTests
     {

@@ -23,6 +23,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <InternalsVisibleTo Include="SabreTools.DatTools.Test" />
         <InternalsVisibleTo Include="SabreTools.Test" />
     </ItemGroup>
 
