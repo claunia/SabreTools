@@ -4,7 +4,7 @@ using SabreTools.DatFiles;
 using SabreTools.DatTools;
 using Xunit;
 
-namespace SabreTools.Test.DatTools
+namespace SabreTools.Test
 {
     public class ParserTests
     {

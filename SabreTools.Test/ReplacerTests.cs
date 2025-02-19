@@ -6,7 +6,7 @@ using SabreTools.DatTools;
 using SabreTools.Hashing;
 using Xunit;
 
-namespace SabreTools.Test.DatFiles
+namespace SabreTools.Test
 {
     public class ReplacerTests
     {

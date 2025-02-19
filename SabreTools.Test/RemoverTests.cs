@@ -1,7 +1,7 @@
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 
-namespace SabreTools.Test.Filtering
+namespace SabreTools.Test
 {
     // TODO: Reenable tests when there's a reasonable way of doing so
     public class RemoverTests

@@ -3,7 +3,7 @@ using SabreTools.DatItems.Formats;
 using SabreTools.DatTools;
 using Xunit;
 
-namespace SabreTools.Test.Filtering
+namespace SabreTools.Test
 {
     public class CleaningTests
     {

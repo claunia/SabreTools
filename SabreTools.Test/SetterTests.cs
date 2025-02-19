@@ -4,7 +4,7 @@ using SabreTools.DatItems.Formats;
 using SabreTools.DatTools;
 using Xunit;
 
-namespace SabreTools.Test.DatFiles
+namespace SabreTools.Test
 {
     public class SetterTests
     {
