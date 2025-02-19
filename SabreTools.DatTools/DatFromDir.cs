@@ -52,9 +52,9 @@ namespace SabreTools.DatTools
 
         #region Constructors
 
-        public DatFromDir(HashType[]? hashes, SkipFileType skipFileType, bool addBlanks)
+        public DatFromDir(HashType[] hashes, SkipFileType skipFileType, bool addBlanks)
         {
-            _hashes = hashes ?? [HashType.CRC32, HashType.MD5, HashType.SHA1];
+            _hashes = hashes;
             _skipFileType = skipFileType;
             _addBlanks = addBlanks;
         }
