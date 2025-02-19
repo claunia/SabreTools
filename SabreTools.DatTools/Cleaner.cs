@@ -171,8 +171,13 @@ namespace SabreTools.DatTools
                     if (item == null)
                         continue;
 
+                    // Get the machine associated with the item, if possible
+                    var machine = item.GetFieldValue<Machine>(DatItem.MachineKey);
+                    if (machine == null)
+                        continue;
+
                     // Run cleaning per item
-                    CleanDatItem(item);
+                    CleanDatItem(item, machine);
                 }
             }
         }
@@ -196,8 +201,13 @@ namespace SabreTools.DatTools
                     if (item.Value == null)
                         continue;
 
+                    // Get the machine associated with the item, if possible
+                    var machine = datFile.ItemsDB.GetMachineForItem(item.Key);
+                    if (machine.Value == null)
+                        continue;
+
                     // Run cleaning per item
-                    CleanDatItemDB(datFile.ItemsDB, item);
+                    CleanDatItem(item.Value, machine.Value);
                 }
             }
         }
@@ -206,13 +216,9 @@ namespace SabreTools.DatTools
         /// Clean a DatItem according to the cleaner
         /// </summary>
         /// <param name="datItem">DatItem to clean</param>
-        internal void CleanDatItem(DatItem datItem)
+        /// <param name="machine">Machine related to the DatItem to clean</param>
+        internal void CleanDatItem(DatItem datItem, Machine machine)
         {
-            // Get the machine associated with the item, if possible
-            var machine = datItem.GetFieldValue<Machine>(DatItem.MachineKey);
-            if (machine == null)
-                return;
-
             // Get the fields for processing
             string? machineName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey);
             string? machineDesc = machine.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey);
@@ -256,63 +262,6 @@ namespace SabreTools.DatTools
             machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineName);
             machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, machineDesc);
             datItem.SetName(datItemName);
-        }
-
-        /// <summary>
-        /// Clean a DatItem according to the cleaner
-        /// </summary>
-        /// <param name="db">ItemDictionaryDB to get machine information from</param>
-        /// <param name="datItem">DatItem to clean</param>
-        internal void CleanDatItemDB(ItemDictionaryDB db, KeyValuePair<long, DatItem> datItem)
-        {
-            // Get the machine associated with the item, if possible
-            var machine = db.GetMachineForItem(datItem.Key);
-            if (machine.Value == null)
-                return;
-
-            // Get the fields for processing
-            string? machineName = machine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey);
-            string? machineDesc = machine.Value.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey);
-            string? datItemName = datItem.Value.GetName();
-
-            // If we're stripping unicode characters, strip machine name and description
-            if (RemoveUnicode)
-            {
-                machineName = TextHelper.RemoveUnicodeCharacters(machineName);
-                machineDesc = TextHelper.RemoveUnicodeCharacters(machineDesc);
-                datItemName = TextHelper.RemoveUnicodeCharacters(datItemName);
-            }
-
-            // If we're in normalization mode, sanitize machine name and description
-            if (Normalize)
-            {
-                machineName = TextHelper.NormalizeCharacters(machineName);
-                machineDesc = TextHelper.NormalizeCharacters(machineDesc);
-            }
-
-            // If we are in single game mode, rename the machine
-            if (Single)
-            {
-                machineName = "!";
-                machineDesc = "!";
-            }
-
-            // If we are in NTFS trim mode, trim the item name
-            if (Trim && datItemName != null)
-            {
-                // Windows max name length is 260
-                int usableLength = 260 - (machineName?.Length ?? 0) - (Root?.Length ?? 0);
-                if (datItemName.Length > usableLength)
-                {
-                    string ext = Path.GetExtension(datItemName);
-                    datItemName = datItemName.Substring(0, usableLength - ext.Length) + ext;
-                }
-            }
-
-            // Set the fields back, if necessary
-            machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineName);
-            machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, machineDesc);
-            datItem.Value.SetName(datItemName);
         }
 
         #endregion

@@ -8,63 +8,43 @@ namespace SabreTools.Test
     public class CleaningTests
     {
         [Fact]
-        public void CleanDatItemRemoveUnicodeTest()
+        public void CleanDatItem_Normalize()
         {
-            // Setup cleaner
-            var cleaner = new Cleaner
-            {
-                RemoveUnicode = true,
-            };
+            var datItem = CreateDatItem("name");
+            var machine = CreateMachine("\"ÁБ\"", "ä|/Ж");
 
-            // Setup DatItem
-            var datItem = CreateDatItem("nam诶", "nam诶-2", "nam诶-3");
+            var cleaner = new Cleaner { Normalize = true };
+            cleaner.CleanDatItem(datItem, machine);
 
-            // Run cleaning
-            cleaner.CleanDatItem(datItem);
-
-            // Check the fields
-            Assert.Equal("nam", datItem.GetName());
-            Assert.Equal("nam-2", datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey));
-            Assert.Equal("nam-3", datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey));
-        }
-    
-        [Fact]
-        public void CleanDatItemCleanTest()
-        {
-            // Setup cleaner
-            var cleaner = new Cleaner
-            {
-                Normalize = true,
-            };
-
-            // Setup DatItem
-            var datItem = CreateDatItem("name", "\"ÁБ\"", "ä|/Ж");
-
-            // Run cleaning
-            cleaner.CleanDatItem(datItem);
-
-            // Check the fields
             Assert.Equal("name", datItem.GetName());
             Assert.Equal("'AB'", datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey));
             Assert.Equal("ae-Zh", datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey));
         }
-    
+
         [Fact]
-        public void CleanDatItemSingleTest()
+        public void CleanDatItem_RemoveUnicode()
         {
-            // Setup cleaner
-            var cleaner = new Cleaner
-            {
-                Single = true,
-            };
+            var datItem = CreateDatItem("nam诶");
+            var machine = CreateMachine("nam诶-2", "nam诶-3");
 
-            // Setup DatItem
-            var datItem = CreateDatItem("name", "name-2", "name-3");
 
-            // Run cleaning
-            cleaner.CleanDatItem(datItem);
+            var cleaner = new Cleaner { RemoveUnicode = true };
+            cleaner.CleanDatItem(datItem, machine);
 
-            // Check the fields
+            Assert.Equal("nam", datItem.GetName());
+            Assert.Equal("nam-2", datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("nam-3", datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey));
+        }
+
+        [Fact]
+        public void CleanDatItem_Single()
+        {
+            var datItem = CreateDatItem("name");
+            var machine = CreateMachine("name-2", "name-3");
+
+            var cleaner = new Cleaner { Single = true };
+            cleaner.CleanDatItem(datItem, machine);
+
             Assert.Equal("name", datItem.GetName());
             Assert.Equal("!", datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey));
             Assert.Equal("!", datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey));
@@ -75,22 +55,18 @@ namespace SabreTools.Test
         [InlineData("", "name")]
         [InlineData("C:\\Normal\\Depth\\Path", "name")]
         [InlineData("C:\\AbnormalFolderLengthPath\\ThatReallyPushesTheLimit\\OfHowLongYou\\ReallyShouldNameThings\\AndItGetsEvenWorse\\TheMoreSubfoldersThatYouTraverse\\BecauseWhyWouldYouStop\\AtSomethingReasonable\\LikeReallyThisIsGettingDumb\\AndIKnowItsJustATest\\ButNotAsMuchAsMe", "nam")]
-        public void CleanDatItemTrimTest(string? root, string expected)
+        public void CleanDatItem_TrimRoot(string? root, string expected)
         {
-            // Setup cleaner
+            var datItem = CreateDatItem("name");
+            var machine = CreateMachine("name-2", "name-3");
+
             var cleaner = new Cleaner
             {
                 Trim = true,
                 Root = root,
             };
+            cleaner.CleanDatItem(datItem, machine);
 
-            // Setup DatItem
-            var datItem = CreateDatItem("name", "name-2", "name-3");
-
-            // Run cleaning
-            cleaner.CleanDatItem(datItem);
-
-            // Check the fields
             Assert.Equal(expected, datItem.GetName());
             Assert.Equal("name-2", datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey));
             Assert.Equal("name-3", datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey));
@@ -99,17 +75,26 @@ namespace SabreTools.Test
         /// <summary>
         /// Generate a consistent DatItem for testing
         /// </summary>
-        private static DatItem CreateDatItem(string name, string machName, string desc)
+        private static DatItem CreateDatItem(string name)
+        {
+            var rom = new Rom();
+
+            rom.SetName(name);
+
+            return rom;
+        }
+
+        /// <summary>
+        /// Generate a consistent Machine for testing
+        /// </summary>
+        private static Machine CreateMachine(string machName, string desc)
         {
             var machine = new Machine();
+
             machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machName);
             machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, desc);
 
-            var rom = new Rom();
-            rom.SetName(name);
-            rom.SetFieldValue<Machine>(DatItem.MachineKey, machine);
-
-            return rom;
+            return machine;
         }
     }
 }
