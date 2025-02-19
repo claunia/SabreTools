@@ -108,6 +108,7 @@ namespace SabreTools.DatTools
                 long totalCount = 1;
                 _staticLogger.User(totalCount, 0);
 
+                // Process the input file
                 string? parentPath = Path.GetDirectoryName(Path.GetDirectoryName(basePath));
                 CheckFileForHashes(datFile, basePath, parentPath, asFile);
 
