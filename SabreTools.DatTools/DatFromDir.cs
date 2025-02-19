@@ -114,6 +114,10 @@ namespace SabreTools.DatTools
 
                 _staticLogger.User(totalCount, totalCount, basePath);
             }
+            else
+            {
+                _staticLogger.Verbose($"Invalid path found: {basePath}");
+            }
 
             watch.Stop();
             return true;
