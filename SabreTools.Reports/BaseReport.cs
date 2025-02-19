@@ -18,7 +18,10 @@ namespace SabreTools.Reports
 
         #endregion
 
-        public List<DatStatistics> Statistics { get; }
+        /// <summary>
+        /// Set of DatStatistics objects to use for formatting
+        /// </summary>
+        protected List<DatStatistics> _statistics;
 
         /// <summary>
         /// Create a new report from the filename
@@ -26,7 +29,7 @@ namespace SabreTools.Reports
         /// <param name="statsList">List of statistics objects to set</param>
         public BaseReport(List<DatStatistics> statsList)
         {
-            Statistics = statsList;
+            _statistics = statsList;
         }
 
         /// <summary>

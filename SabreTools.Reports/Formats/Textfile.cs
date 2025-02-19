@@ -42,10 +42,10 @@ namespace SabreTools.Reports.Formats
                 StreamWriter sw = new(fs);
 
                 // Now process each of the statistics
-                for (int i = 0; i < Statistics.Count; i++)
+                for (int i = 0; i < _statistics.Count; i++)
                 {
                     // Get the current statistic
-                    DatStatistics stat = Statistics[i];
+                    DatStatistics stat = _statistics[i];
 
                     // If we have a directory statistic
                     if (stat.IsDirectory)
@@ -53,7 +53,7 @@ namespace SabreTools.Reports.Formats
                         WriteIndividual(sw, stat, baddumpCol, nodumpCol);
 
                         // If we have anything but the last value, write the separator
-                        if (i < Statistics.Count - 1)
+                        if (i < _statistics.Count - 1)
                             WriteFooterSeparator(sw);
                     }
 
