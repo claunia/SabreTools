@@ -16,11 +16,6 @@ namespace SabreTools.DatTools
         #region Fields
 
         /// <summary>
-        /// Clean all names to WoD standards
-        /// </summary>
-        public bool Clean { get; set; }
-
-        /// <summary>
         /// Deduplicate items using the given method
         /// </summary>
         public DedupeType DedupeRoms { get; set; }
@@ -34,6 +29,11 @@ namespace SabreTools.DatTools
         /// Keep machines that don't contain any items
         /// </summary>
         public bool KeepEmptyGames { get; set; }
+
+        /// <summary>
+        /// Normalize all names to WoD standards
+        /// </summary>
+        public bool Normalize { get; set; }
 
         /// <summary>
         /// Enable "One Rom, One Region (1G1R)" mode
@@ -226,8 +226,8 @@ namespace SabreTools.DatTools
                 datItemName = TextHelper.RemoveUnicodeCharacters(datItemName);
             }
 
-            // If we're in cleaning mode, sanitize machine name and description
-            if (Clean)
+            // If we're in normalization mode, sanitize machine name and description
+            if (Normalize)
             {
                 machineName = TextHelper.NormalizeCharacters(machineName);
                 machineDesc = TextHelper.NormalizeCharacters(machineDesc);
@@ -283,8 +283,8 @@ namespace SabreTools.DatTools
                 datItemName = TextHelper.RemoveUnicodeCharacters(datItemName);
             }
 
-            // If we're in cleaning mode, sanitize machine name and description
-            if (Clean)
+            // If we're in normalization mode, sanitize machine name and description
+            if (Normalize)
             {
                 machineName = TextHelper.NormalizeCharacters(machineName);
                 machineDesc = TextHelper.NormalizeCharacters(machineDesc);

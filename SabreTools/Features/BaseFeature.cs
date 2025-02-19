@@ -2158,7 +2158,7 @@ Some special strings that can be used:
         {
             Cleaner cleaner = new()
             {
-                Clean = GetBoolean(features, CleanValue),
+                Normalize = GetBoolean(features, CleanValue),
                 DedupeRoms = GetDedupeType(features),
                 DescriptionAsName = GetBoolean(features, DescriptionAsNameValue),
                 KeepEmptyGames = GetBoolean(features, KeepEmptyGamesValue),

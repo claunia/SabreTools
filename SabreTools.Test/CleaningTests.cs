@@ -34,7 +34,7 @@ namespace SabreTools.Test
             // Setup cleaner
             var cleaner = new Cleaner
             {
-                Clean = true,
+                Normalize = true,
             };
 
             // Setup DatItem
