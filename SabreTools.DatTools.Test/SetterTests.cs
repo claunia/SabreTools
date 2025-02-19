@@ -1,13 +1,16 @@
 using SabreTools.Core.Filter;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
-using SabreTools.DatTools;
 using Xunit;
 
-namespace SabreTools.Test
+namespace SabreTools.DatTools.Test
 {
     public class SetterTests
     {
+        #region SetFields
+
+        // TODO: Add SetFields_DatHeader test
+
         [Fact]
         public void SetFields_DatItem()
         {
@@ -34,5 +37,7 @@ namespace SabreTools.Test
 
             Assert.Equal("foo", machine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
         }
+
+        #endregion
     }
 }
