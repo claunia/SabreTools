@@ -15,7 +15,9 @@ namespace SabreTools.Reports.Formats
     /// </summary>
     public abstract class SeparatedValue : BaseReport
     {
-        // Private instance variables specific to Hashfile DATs
+        /// <summary>
+        /// Represents the delimiter between fields
+        /// </summary>
         protected char _delim;
 
         /// <summary>

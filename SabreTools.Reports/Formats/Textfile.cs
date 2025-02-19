@@ -13,6 +13,9 @@ namespace SabreTools.Reports.Formats
     /// </summary>
     public class Textfile : BaseReport
     {
+        /// <summary>
+        /// Represents if the output goes to console or to a file
+        /// </summary>
         protected bool _writeToConsole = false;
 
         /// <summary>
