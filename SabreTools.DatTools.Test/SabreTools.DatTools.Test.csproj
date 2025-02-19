@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\SabreTools.Core\SabreTools.Core.csproj" />
         <ProjectReference Include="..\SabreTools.DatItems\SabreTools.DatItems.csproj" />
         <ProjectReference Include="..\SabreTools.DatTools\SabreTools.DatTools.csproj" />
     </ItemGroup>
@@ -18,6 +19,7 @@
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+        <PackageReference Include="SabreTools.Hashing" Version="1.4.2" />
         <PackageReference Include="xunit" Version="2.9.2" />
         <PackageReference Include="xunit.runner.visualstudio" Version="3.0.0">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

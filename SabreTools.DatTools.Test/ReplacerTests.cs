@@ -2,11 +2,10 @@ using System.Collections.Generic;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
-using SabreTools.DatTools;
 using SabreTools.Hashing;
 using Xunit;
 
-namespace SabreTools.Test
+namespace SabreTools.DatTools.Test
 {
     public class ReplacerTests
     {
@@ -63,13 +62,13 @@ namespace SabreTools.Test
         [Fact]
         public void ReplaceFields_File()
         {
-            var datItem = new DatItems.Formats.File();
+            var datItem = new File();
             datItem.CRC = ZeroHash.CRC32Str;
             datItem.MD5 = ZeroHash.MD5Str;
             datItem.SHA1 = ZeroHash.SHA1Str;
             datItem.SHA256 = ZeroHash.SHA256Str;
 
-            var repDatItem = new DatItems.Formats.File();
+            var repDatItem = new File();
             repDatItem.CRC = TextHelper.NormalizeCRC32("deadbeef");
             repDatItem.MD5 = TextHelper.NormalizeMD5("deadbeef");
             repDatItem.SHA1 = TextHelper.NormalizeSHA1("deadbeef");
