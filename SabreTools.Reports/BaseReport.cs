@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using SabreTools.DatFiles;
 using SabreTools.IO.Logging;
-using SabreTools.Reports.Formats;
 
 namespace SabreTools.Reports
 {
@@ -28,26 +27,6 @@ namespace SabreTools.Reports
         public BaseReport(List<DatStatistics> statsList)
         {
             Statistics = statsList;
-        }
-
-        /// <summary>
-        /// Create a specific type of BaseReport to be used based on a format and user inputs
-        /// </summary>
-        /// <param name="statReportFormat">Format of the Statistics Report to be created</param>
-        /// <param name="statsList">List of statistics objects to set</param>
-        /// <returns>BaseReport of the specific internal type that corresponds to the inputs</returns>
-        public static BaseReport? Create(StatReportFormat statReportFormat, List<DatStatistics> statsList)
-        {
-            return statReportFormat switch
-            {
-                StatReportFormat.None => new ConsoleOutput(statsList),
-                StatReportFormat.Textfile => new Textfile(statsList),
-                StatReportFormat.CSV => new CommaSeparatedValue(statsList),
-                StatReportFormat.HTML => new Html(statsList),
-                StatReportFormat.SSV => new SemicolonSeparatedValue(statsList),
-                StatReportFormat.TSV => new TabSeparatedValue(statsList),
-                _ => null,
-            };
         }
 
         /// <summary>

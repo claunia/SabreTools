@@ -13,7 +13,7 @@ namespace SabreTools.Reports.Formats
     /// <summary>
     /// Separated-Value report format
     /// </summary>
-    internal abstract class SeparatedValue : BaseReport
+    public abstract class SeparatedValue : BaseReport
     {
         // Private instance variables specific to Hashfile DATs
         protected char _delim;
@@ -161,7 +161,7 @@ namespace SabreTools.Reports.Formats
     /// <summary>
     /// Represents a comma-separated value file
     /// </summary>
-    internal sealed class CommaSeparatedValue : SeparatedValue
+    public sealed class CommaSeparatedValue : SeparatedValue
     {
         /// <summary>
         /// Create a new report from the filename
@@ -176,7 +176,7 @@ namespace SabreTools.Reports.Formats
     /// <summary>
     /// Represents a semicolon-separated value file
     /// </summary>
-    internal sealed class SemicolonSeparatedValue : SeparatedValue
+    public sealed class SemicolonSeparatedValue : SeparatedValue
     {
         /// <summary>
         /// Create a new report from the filename
@@ -191,7 +191,7 @@ namespace SabreTools.Reports.Formats
     /// <summary>
     /// Represents a tab-separated value file
     /// </summary>
-    internal sealed class TabSeparatedValue : SeparatedValue
+    public sealed class TabSeparatedValue : SeparatedValue
     {
         /// <summary>
         /// Create a new report from the filename

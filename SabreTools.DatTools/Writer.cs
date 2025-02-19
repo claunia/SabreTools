@@ -219,7 +219,7 @@ namespace SabreTools.DatTools
             [
                 datFile.DatStatistics,
             ];
-            var consoleOutput = BaseReport.Create(StatReportFormat.None, statsList);
+            var consoleOutput = Parser.Create(StatReportFormat.None, statsList);
             consoleOutput!.WriteToFile(null, true, true);
         }
 

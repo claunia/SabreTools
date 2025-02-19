@@ -12,6 +12,7 @@ using SabreTools.DatItems;
 using SabreTools.IO;
 using SabreTools.IO.Extensions;
 using SabreTools.IO.Logging;
+using SabreTools.Reports;
 
 namespace SabreTools.DatTools
 {
@@ -28,6 +29,8 @@ namespace SabreTools.DatTools
         private static readonly Logger _staticLogger = new();
 
         #endregion
+
+        #region DatFile
 
         /// <summary>
         /// Create a generic DatFile to be used
@@ -508,5 +511,31 @@ namespace SabreTools.DatTools
 
             return line ?? string.Empty;
         }
+    
+        #endregion
+
+        #region BaseReport
+
+        /// <summary>
+        /// Create a specific type of BaseReport to be used based on a format and user inputs
+        /// </summary>
+        /// <param name="statReportFormat">Format of the Statistics Report to be created</param>
+        /// <param name="statsList">List of statistics objects to set</param>
+        /// <returns>BaseReport of the specific internal type that corresponds to the inputs</returns>
+        public static BaseReport? Create(StatReportFormat statReportFormat, List<DatStatistics> statsList)
+        {
+            return statReportFormat switch
+            {
+                StatReportFormat.None => new Reports.Formats.ConsoleOutput(statsList),
+                StatReportFormat.Textfile => new Reports.Formats.Textfile(statsList),
+                StatReportFormat.CSV => new Reports.Formats.CommaSeparatedValue(statsList),
+                StatReportFormat.HTML => new Reports.Formats.Html(statsList),
+                StatReportFormat.SSV => new Reports.Formats.SemicolonSeparatedValue(statsList),
+                StatReportFormat.TSV => new Reports.Formats.TabSeparatedValue(statsList),
+                _ => null,
+            };
+        }
+
+        #endregion
     }
 }

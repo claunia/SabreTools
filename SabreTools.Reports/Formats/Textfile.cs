@@ -11,7 +11,7 @@ namespace SabreTools.Reports.Formats
     /// <summary>
     /// Textfile report format
     /// </summary>
-    internal class Textfile : BaseReport
+    public class Textfile : BaseReport
     {
         protected bool _writeToConsole = false;
 
@@ -129,7 +129,7 @@ namespace SabreTools.Reports.Formats
     /// <summary>
     /// Console report format
     /// </summary>
-    internal sealed class ConsoleOutput : Textfile
+    public sealed class ConsoleOutput : Textfile
     {
         /// <summary>
         /// Create a new report from the filename
