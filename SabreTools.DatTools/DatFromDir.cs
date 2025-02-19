@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
 #endif
@@ -73,10 +72,6 @@ namespace SabreTools.DatTools
         /// <param name="asFile">TreatAsFile representing CHD and Archive scanning</param>
         public bool PopulateFromDir(DatFile datFile, string basePath, TreatAsFile asFile = 0x00)
         {
-            // Set the progress variables
-            long totalSize = 0;
-            long currentSize = 0;
-
             InternalStopwatch watch = new($"Populating DAT from {basePath}");
 
             // Process the input
@@ -87,30 +82,18 @@ namespace SabreTools.DatTools
                 // Get a list of all files to process
                 string[] files = IOExtensions.SafeGetFiles(basePath, "*", SearchOption.AllDirectories);
 
-                // Loop through and add the file sizes
-#if NET452_OR_GREATER || NETCOREAPP
-                Parallel.ForEach(files, Core.Globals.ParallelOptions, item =>
-#elif NET40_OR_GREATER
-                Parallel.ForEach(files, item =>
-#else
-                foreach (var item in files)
-#endif
-                {
-                    Interlocked.Add(ref totalSize, new FileInfo(item).Length);
-#if NET40_OR_GREATER || NETCOREAPP
-                });
-#else
-                }
-#endif
+                // Set intiial progress values
+                long totalCount = files.Length;
+                long currentCount = 0;
+                _staticLogger.User(totalCount, currentCount);
 
                 // Process the files in the main folder or any subfolder
-                _staticLogger.User(totalSize, currentSize);
                 foreach (string item in files)
                 {
-                    currentSize += new FileInfo(item).Length;
-
+                    currentCount++;
                     CheckFileForHashes(datFile, item, basePath, asFile);
-                    _staticLogger.User(totalSize, currentSize, item);
+
+                    _staticLogger.User(totalCount, currentCount, item);
                 }
 
                 // Now find all folders that are empty, if we are supposed to
@@ -121,12 +104,14 @@ namespace SabreTools.DatTools
             {
                 _staticLogger.Verbose($"File found: {basePath}");
 
-                totalSize = new FileInfo(basePath).Length;
-                _staticLogger.User(totalSize, currentSize);
+                // Set intiial progress values
+                long totalCount = 1;
+                _staticLogger.User(totalCount, 0);
 
                 string? parentPath = Path.GetDirectoryName(Path.GetDirectoryName(basePath));
                 CheckFileForHashes(datFile, basePath, parentPath, asFile);
-                _staticLogger.User(totalSize, totalSize, basePath);
+
+                _staticLogger.User(totalCount, totalCount, basePath);
             }
 
             watch.Stop();
