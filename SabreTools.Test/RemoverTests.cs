@@ -8,7 +8,7 @@ namespace SabreTools.Test
     public class RemoverTests
     {
         [Fact]
-        public void RemoveFieldsDatItemTest()
+        public void RemoveFields_DatItem()
         {
             var datItem = new Rom();
             datItem.SetName("foo");
@@ -21,7 +21,7 @@ namespace SabreTools.Test
         }
 
         [Fact]
-        public void RemoveFieldsMachineTest()
+        public void RemoveFields_Machine()
         {
             var machine = new Machine();
             machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "bar");

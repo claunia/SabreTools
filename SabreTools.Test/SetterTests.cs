@@ -9,39 +9,30 @@ namespace SabreTools.Test
     public class SetterTests
     {
         [Fact]
-        public void SetFieldsDatItemTest()
+        public void SetFields_DatItem()
         {
-            var datItem = CreateDatItem();
+            var datItem = new Rom();
+            datItem.SetName("foo");
+
             var setter = new Setter();
             setter.PopulateSetters(new FilterKey("datitem", "name"), "bar");
             setter.SetFields(datItem);
+
             Assert.Equal("bar", datItem.GetName());
         }
 
         [Fact]
-        public void SetFieldsMachineTest()
-        {
-            var datItem = CreateDatItem();
-            var setter = new Setter();
-            setter.PopulateSetters(new FilterKey("machine", "name"), "foo");
-            setter.SetFields(datItem.GetFieldValue<Machine>(DatItem.MachineKey));
-            Assert.Equal("foo", datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey));
-        }
-
-        /// <summary>
-        /// Generate a consistent DatItem for testing
-        /// </summary>
-        private static DatItem CreateDatItem()
+        public void SetFields_Machine()
         {
             var machine = new Machine();
             machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "bar");
             machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, "bar");
 
-            var rom = new Rom();
-            rom.SetFieldValue<Machine>(DatItem.MachineKey, machine);
-            rom.SetName("foo");
+            var setter = new Setter();
+            setter.PopulateSetters(new FilterKey("machine", "name"), "foo");
+            setter.SetFields(machine);
 
-            return rom;
+            Assert.Equal("foo", machine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
         }
     }
 }
