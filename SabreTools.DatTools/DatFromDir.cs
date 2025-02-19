@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
@@ -54,6 +55,9 @@ namespace SabreTools.DatTools
 
         public DatFromDir(HashType[] hashes, SkipFileType skipFileType, bool addBlanks)
         {
+            if (hashes.Length == 0)
+                throw new ArgumentException($"{nameof(hashes)} must contain at least one valid HashType");
+
             _hashes = hashes;
             _skipFileType = skipFileType;
             _addBlanks = addBlanks;
