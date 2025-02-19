@@ -21,8 +21,8 @@ namespace SabreTools.Test
             cleaner.CleanDatItem(datItem, machine);
 
             Assert.Equal("name", datItem.GetName());
-            Assert.Equal("'AB'", datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey));
-            Assert.Equal("ae-Zh", datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey));
+            Assert.Equal("'AB'", machine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("ae-Zh", machine.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey));
         }
 
         [Fact]
@@ -39,8 +39,8 @@ namespace SabreTools.Test
             cleaner.CleanDatItem(datItem, machine);
 
             Assert.Equal("nam", datItem.GetName());
-            Assert.Equal("nam-2", datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey));
-            Assert.Equal("nam-3", datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey));
+            Assert.Equal("nam-2", machine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("nam-3", machine.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey));
         }
 
         [Fact]
@@ -57,8 +57,8 @@ namespace SabreTools.Test
             cleaner.CleanDatItem(datItem, machine);
 
             Assert.Equal("name", datItem.GetName());
-            Assert.Equal("!", datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey));
-            Assert.Equal("!", datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey));
+            Assert.Equal("!", machine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("!", machine.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey));
         }
 
         [Theory]
@@ -83,8 +83,8 @@ namespace SabreTools.Test
             cleaner.CleanDatItem(datItem, machine);
 
             Assert.Equal(expected, datItem.GetName());
-            Assert.Equal("name-2", datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey));
-            Assert.Equal("name-3", datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey));
+            Assert.Equal("name-2", machine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("name-3", machine.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey));
         }
     }
 }
