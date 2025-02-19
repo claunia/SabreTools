@@ -7,7 +7,7 @@ namespace SabreTools.Test
     public class PopulationTests
     {
         [Fact]
-        public void PopulateExclusionNullListTest()
+        public void PopulateExclusionsFromList_Null()
         {
             // Setup the list
             List<string>? exclusions = null;
@@ -23,7 +23,7 @@ namespace SabreTools.Test
         }
 
         [Fact]
-        public void PopulateExclusionEmptyListTest()
+        public void PopulateExclusionsFromList_Empty()
         {
             // Setup the list
             List<string> exclusions = [];
@@ -39,7 +39,7 @@ namespace SabreTools.Test
         }
 
         [Fact]
-        public void PopulateExclusionHeaderFieldTest()
+        public void PopulateExclusionsFromList_HeaderField()
         {
             // Setup the list
             List<string> exclusions =
@@ -58,7 +58,7 @@ namespace SabreTools.Test
         }
 
         [Fact]
-        public void PopulateExclusionMachineFieldTest()
+        public void PopulateExclusionsFromList_MachineField()
         {
             // Setup the list
             List<string> exclusions =
@@ -77,7 +77,7 @@ namespace SabreTools.Test
         }
 
         [Fact]
-        public void PopulateExclusionDatItemFieldTest()
+        public void PopulateExclusionsFromList_ItemField()
         {
             // Setup the list
             List<string> exclusions =
