@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using SabreTools.Core.Filter;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
+using SabreTools.DatItems;
 using SabreTools.DatTools;
 using SabreTools.Hashing;
 using SabreTools.Help;
@@ -271,7 +272,7 @@ Reset the internal state:           reset();";
             public override void Process(BatchState batchState)
             {
                 HashType[] hashes = [HashType.CRC32, HashType.MD5, HashType.SHA1];
-                var dfd = new DatTools.DatFromDir(hashes, SkipFileType.None, addBlanks: false);
+                var dfd = new DatTools.DatFromDir(hashes, SkipFileType.None, (TreatAsFile)0x00, addBlanks: false);
 
                 // Assume there could be multiple
                 foreach (string input in Arguments)

@@ -60,11 +60,11 @@ namespace SabreTools.Features
             // Get feature flags
             bool addBlankFiles = GetBoolean(features, AddBlankFilesValue);
             bool addFileDates = GetBoolean(features, AddDateValue);
-            TreatAsFile asFile = GetTreatAsFile(features);
+            TreatAsFile treatAsFile = GetTreatAsFile(features);
             bool noAutomaticDate = GetBoolean(features, NoAutomaticDateValue);
             var includeInScan = GetIncludeInScan(features);
             var skipFileType = GetSkipFileType(features);
-            var dfd = new DatTools.DatFromDir(includeInScan, skipFileType, addBlankFiles);
+            var dfd = new DatTools.DatFromDir(includeInScan, skipFileType, treatAsFile, addBlankFiles);
 
             // Apply the specialized field removals to the cleaner
             if (!addFileDates)
@@ -91,7 +91,7 @@ namespace SabreTools.Features
                     datdata.FillHeaderFromPath(basePath, noAutomaticDate);
 
                     // Now populate from the path
-                    bool success = dfd.PopulateFromDir(datdata, basePath, asFile);
+                    bool success = dfd.PopulateFromDir(datdata, basePath);
                     if (success)
                     {
                         // Perform additional processing steps

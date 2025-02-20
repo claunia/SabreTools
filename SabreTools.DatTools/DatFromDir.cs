@@ -35,6 +35,11 @@ namespace SabreTools.DatTools
         private readonly SkipFileType _skipFileType;
 
         /// <summary>
+        /// TreatAsFile representing CHD and Archive scanning</param>
+        /// </summary>
+        private readonly TreatAsFile _treatAsFile;
+
+        /// <summary>
         /// Indicates if blank items should be created for empty folders
         /// </summary>
         private readonly bool _addBlanks;
@@ -52,13 +57,14 @@ namespace SabreTools.DatTools
 
         #region Constructors
 
-        public DatFromDir(HashType[] hashes, SkipFileType skipFileType, bool addBlanks)
+        public DatFromDir(HashType[] hashes, SkipFileType skipFileType, TreatAsFile treatAsFile, bool addBlanks)
         {
             if (hashes.Length == 0)
                 throw new ArgumentException($"{nameof(hashes)} must contain at least one valid HashType");
 
             _hashes = hashes;
             _skipFileType = skipFileType;
+            _treatAsFile = treatAsFile;
             _addBlanks = addBlanks;
         }
 
@@ -69,8 +75,7 @@ namespace SabreTools.DatTools
         /// </summary>
         /// <param name="datFile">Current DatFile object to add to</param>
         /// <param name="basePath">Base folder to be used in creating the DAT</param>
-        /// <param name="asFile">TreatAsFile representing CHD and Archive scanning</param>
-        public bool PopulateFromDir(DatFile datFile, string basePath, TreatAsFile asFile = 0x00)
+        public bool PopulateFromDir(DatFile datFile, string basePath)
         {
             InternalStopwatch watch = new($"Populating DAT from {basePath}");
 
@@ -91,7 +96,7 @@ namespace SabreTools.DatTools
                 foreach (string item in files)
                 {
                     currentCount++;
-                    CheckFileForHashes(datFile, item, basePath, asFile);
+                    CheckFileForHashes(datFile, item, basePath);
 
                     _staticLogger.User(totalCount, currentCount, item);
                 }
@@ -110,7 +115,7 @@ namespace SabreTools.DatTools
 
                 // Process the input file
                 string? parentPath = Path.GetDirectoryName(Path.GetDirectoryName(basePath));
-                CheckFileForHashes(datFile, basePath, parentPath, asFile);
+                CheckFileForHashes(datFile, basePath, parentPath);
 
                 _staticLogger.User(totalCount, totalCount, basePath);
             }
@@ -130,7 +135,7 @@ namespace SabreTools.DatTools
         /// <param name="item">Filename of the item to be checked</param>
         /// <param name="basePath">Base folder to be used in creating the DAT</param>
         /// <param name="asFile">TreatAsFile representing CHD and Archive scanning</param>
-        private void CheckFileForHashes(DatFile datFile, string item, string? basePath, TreatAsFile asFile)
+        private void CheckFileForHashes(DatFile datFile, string item, string? basePath)
         {
             // If we're in depot mode, process it separately
             if (CheckDepotFile(datFile, item))
@@ -147,9 +152,9 @@ namespace SabreTools.DatTools
 
                 // Skip if we're treating archives as files and skipping files
 #if NET20 || NET35
-                if ((asFile & TreatAsFile.Archive) != 0 && _skipFileType == SkipFileType.File)
+                if ((_treatAsFile & TreatAsFile.Archive) != 0 && _skipFileType == SkipFileType.File)
 #else
-                if (asFile.HasFlag(TreatAsFile.Archive) && _skipFileType == SkipFileType.File)
+                if (_treatAsFile.HasFlag(TreatAsFile.Archive) && _skipFileType == SkipFileType.File)
 #endif
                 {
                     return;
@@ -163,9 +168,9 @@ namespace SabreTools.DatTools
 
                 // Process as archive if we're not treating archives as files
 #if NET20 || NET35
-                else if ((asFile & TreatAsFile.Archive) == 0)
+                else if ((_treatAsFile & TreatAsFile.Archive) == 0)
 #else
-                else if (!asFile.HasFlag(TreatAsFile.Archive))
+                else if (!_treatAsFile.HasFlag(TreatAsFile.Archive))
 #endif
                 {
                     var extracted = archive.GetChildren();
@@ -182,7 +187,7 @@ namespace SabreTools.DatTools
                 // Process as file if we're treating archives as files
                 else
                 {
-                    ProcessFile(datFile, item, basePath, asFile);
+                    ProcessFile(datFile, item, basePath);
                 }
             }
 
@@ -195,7 +200,7 @@ namespace SabreTools.DatTools
 
                 // Process as file
                 else
-                    ProcessFile(datFile, item, basePath, asFile);
+                    ProcessFile(datFile, item, basePath);
             }
         }
 
@@ -392,12 +397,12 @@ namespace SabreTools.DatTools
         /// <param name="item">File to be added</param>
         /// <param name="basePath">Path the represents the parent directory</param>
         /// <param name="asFile">TreatAsFile representing CHD and Archive scanning</param>
-        private void ProcessFile(DatFile datFile, string item, string? basePath, TreatAsFile asFile)
+        private void ProcessFile(DatFile datFile, string item, string? basePath)
         {
             _staticLogger.Verbose($"'{Path.GetFileName(item)}' treated like a file");
             var header = datFile.Header.GetStringFieldValue(Models.Metadata.Header.HeaderKey);
             BaseFile? baseFile = FileTypeTool.GetInfo(item, _hashes, header);
-            DatItem? datItem = DatItemTool.CreateDatItem(baseFile, asFile);
+            DatItem? datItem = DatItemTool.CreateDatItem(baseFile, _treatAsFile);
             if (datItem != null)
                 ProcessFileHelper(datFile, item, datItem, basePath, string.Empty);
         }
