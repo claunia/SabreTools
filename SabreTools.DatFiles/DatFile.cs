@@ -275,13 +275,13 @@ namespace SabreTools.DatFiles
         /// Get the index and machine associated with an item index
         /// </summary>
         public KeyValuePair<long, Machine?> GetMachineForItemDB(long itemIndex)
-            => GetMachineForItemDB(itemIndex);
+            => ItemsDB.GetMachineForItem(itemIndex);
 
         /// <summary>
         /// Get the index and source associated with an item index
         /// </summary>
         public KeyValuePair<long, Source?> GetSourceForItemDB(long itemIndex)
-            => GetSourceForItemDB(itemIndex);
+            => ItemsDB.GetSourceForItem(itemIndex);
 
         /// <summary>
         /// Remove a key from the file dictionary if it exists
