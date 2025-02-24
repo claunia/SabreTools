@@ -215,18 +215,18 @@ namespace SabreTools.DatTools
             // Handle nested sets
             switch (datItem)
             {
-                case Adjuster adjuster: SetFields(adjuster); break;
-                case Configuration condition: SetFields(condition); break;
-                case ConfSetting confSetting: SetFields(confSetting); break;
-                case Device device: SetFields(device); break;
-                case DipSwitch dipSwitch: SetFields(dipSwitch); break;
-                case DipValue dipValue: SetFields(dipValue); break;
-                case Disk disk: SetFields(disk); break;
-                case Input input: SetFields(input); break;
-                case Part part: SetFields(part); break;
-                case Port port: SetFields(port); break;
-                case Rom rom: SetFields(rom); break;
-                case Slot slot: SetFields(slot); break;
+                case Adjuster adjuster: SetNestedFields(adjuster); break;
+                case Configuration condition: SetNestedFields(condition); break;
+                case ConfSetting confSetting: SetNestedFields(confSetting); break;
+                case Device device: SetNestedFields(device); break;
+                case DipSwitch dipSwitch: SetNestedFields(dipSwitch); break;
+                case DipValue dipValue: SetNestedFields(dipValue); break;
+                case Disk disk: SetNestedFields(disk); break;
+                case Input input: SetNestedFields(input); break;
+                case Part part: SetNestedFields(part); break;
+                case Port port: SetNestedFields(port); break;
+                case Rom rom: SetNestedFields(rom); break;
+                case Slot slot: SetNestedFields(slot); break;
             }
 
             #endregion
@@ -236,7 +236,7 @@ namespace SabreTools.DatTools
         /// Set fields with given values
         /// </summary>
         /// <param name="adjuster">Adjuster to remove replace fields in</param>
-        private void SetFields(Adjuster adjuster)
+        private void SetNestedFields(Adjuster adjuster)
         {
             // Field.DatItem_Conditions does not apply here
             if (adjuster.ConditionsSpecified)
@@ -252,7 +252,7 @@ namespace SabreTools.DatTools
         /// Set fields with given values
         /// </summary>
         /// <param name="configuration">Configuration to remove replace fields in</param>
-        private void SetFields(Configuration configuration)
+        private void SetNestedFields(Configuration configuration)
         {
             if (configuration.ConditionsSpecified)
             {
@@ -283,7 +283,7 @@ namespace SabreTools.DatTools
         /// Set fields with given values
         /// </summary>
         /// <param name="confSetting">ConfSetting to remove replace fields in</param>
-        private void SetFields(ConfSetting confSetting)
+        private void SetNestedFields(ConfSetting confSetting)
         {
             if (confSetting.ConditionsSpecified)
             {
@@ -298,7 +298,7 @@ namespace SabreTools.DatTools
         /// Set fields with given values
         /// </summary>
         /// <param name="device">Device to remove replace fields in</param>
-        private void SetFields(Device device)
+        private void SetNestedFields(Device device)
         {
             if (device.ExtensionsSpecified)
             {
@@ -321,7 +321,7 @@ namespace SabreTools.DatTools
         /// Set fields with given values
         /// </summary>
         /// <param name="dipSwitch">DipSwitch to remove replace fields in</param>
-        private void SetFields(DipSwitch dipSwitch)
+        private void SetNestedFields(DipSwitch dipSwitch)
         {
             if (dipSwitch.ConditionsSpecified)
             {
@@ -357,7 +357,7 @@ namespace SabreTools.DatTools
         /// Set fields with given values
         /// </summary>
         /// <param name="dipValue">DipValue to remove replace fields in</param>
-        private void SetFields(DipValue dipValue)
+        private void SetNestedFields(DipValue dipValue)
         {
             if (dipValue.ConditionsSpecified)
             {
@@ -372,7 +372,7 @@ namespace SabreTools.DatTools
         /// Set fields with given values
         /// </summary>
         /// <param name="disk">Disk to remove replace fields in</param>
-        private void SetFields(Disk disk)
+        private void SetNestedFields(Disk disk)
         {
             if (!disk.DiskAreaSpecified)
                 disk.SetFieldValue<DiskArea?>(Disk.DiskAreaKey, new DiskArea());
@@ -389,7 +389,7 @@ namespace SabreTools.DatTools
         /// Set fields with given values
         /// </summary>
         /// <param name="input">Input to remove replace fields in</param>
-        private void SetFields(Input input)
+        private void SetNestedFields(Input input)
         {
             if (input.ControlsSpecified)
             {
@@ -404,7 +404,7 @@ namespace SabreTools.DatTools
         /// Set fields with given values
         /// </summary>
         /// <param name="part">Part to remove replace fields in</param>
-        private void SetFields(Part part)
+        private void SetNestedFields(Part part)
         {
             if (part.FeaturesSpecified)
             {
@@ -419,7 +419,7 @@ namespace SabreTools.DatTools
         /// Set fields with given values
         /// </summary>
         /// <param name="port">Port to remove replace fields in</param>
-        private void SetFields(Port port)
+        private void SetNestedFields(Port port)
         {
             if (port.AnalogsSpecified)
             {
@@ -434,7 +434,7 @@ namespace SabreTools.DatTools
         /// Set fields with given values
         /// </summary>
         /// <param name="rom">Rom to remove replace fields in</param>
-        private void SetFields(Rom rom)
+        private void SetNestedFields(Rom rom)
         {
             if (!rom.DataAreaSpecified)
                 rom.SetFieldValue<DataArea?>(Rom.DataAreaKey, new DataArea());
@@ -451,7 +451,7 @@ namespace SabreTools.DatTools
         /// Set fields with given values
         /// </summary>
         /// <param name="slot">Slot to remove replace fields in</param>
-        private void SetFields(Slot slot)
+        private void SetNestedFields(Slot slot)
         {
             if (slot.SlotOptionsSpecified)
             {
