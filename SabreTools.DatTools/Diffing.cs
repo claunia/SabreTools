@@ -288,6 +288,104 @@ namespace SabreTools.DatTools
             return outDats;
         }
 
+        /// <summary>
+        /// Fill a DatFile with all items with a particular source index ID
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to use for updating</param>
+        /// <param name="indexDat">DatFile to add found items to</param>
+        /// <param name="index">Source index ID to retrieve items for</param>
+        /// <returns>DatFile containing all items with the source index ID/returns>
+        private static void FillWithSourceIndex(DatFile datFile, DatFile indexDat, int index)
+        {
+            // Loop through and add the items for this index to the output
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(datFile.Items.SortedKeys, Core.Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(datFile.Items.SortedKeys, key =>
+#else
+            foreach (var key in datFile.Items.SortedKeys)
+#endif
+            {
+                List<DatItem> items = ItemDictionary.Merge(datFile.GetItemsForBucket(key));
+
+                // If the rom list is empty or null, just skip it
+                if (items == null || items.Count == 0)
+#if NET40_OR_GREATER || NETCOREAPP
+                    return;
+#else
+                    continue;
+#endif
+
+                foreach (DatItem item in items)
+                {
+                    var source = item.GetFieldValue<Source?>(DatItem.SourceKey);
+                    if (source != null && source.Index == index)
+                        indexDat.AddItem(item, statsOnly: false);
+                }
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
+        }
+
+        /// <summary>
+        /// Fill a DatFile with all items with a particular source index ID
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to use for updating</param>
+        /// <param name="indexDat">DatFile to add found items to</param>
+        /// <param name="index">Source index ID to retrieve items for</param>
+        /// <returns>DatFile containing all items with the source index ID/returns>
+        private static void FillWithSourceIndexDB(DatFile datFile, DatFile indexDat, int index)
+        {
+            // Get all current items, machines, and mappings
+            var datItems = datFile.ItemsDB.GetItems();
+            var machines = datFile.GetMachinesDB();
+            var sources = datFile.ItemsDB.GetSources();
+
+            // Create mappings from old index to new index
+            var machineRemapping = new Dictionary<long, long>();
+            var sourceRemapping = new Dictionary<long, long>();
+
+            // Loop through and add all sources
+            foreach (var source in sources)
+            {
+                long newSourceIndex = indexDat.AddSourceDB(source.Value);
+                sourceRemapping[source.Key] = newSourceIndex;
+            }
+
+            // Loop through and add all machines
+            foreach (var machine in machines)
+            {
+                long newMachineIndex = indexDat.AddMachineDB(machine.Value);
+                machineRemapping[machine.Key] = newMachineIndex;
+            }
+
+            // Loop through and add the items
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(datItems, Core.Globals.ParallelOptions, item =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(datItems, item =>
+#else
+            foreach (var item in datItems)
+#endif
+            {
+                // Get the machine and source index for this item
+                long machineIndex = datFile.GetMachineForItemDB(item.Key).Key;
+                long sourceIndex = datFile.GetSourceForItemDB(item.Key).Key;
+
+                // Get the source associated with the item
+                var source = datFile.ItemsDB.GetSource(sourceIndex);
+
+                if (source != null && source.Index == index)
+                    indexDat.AddItemDB(item.Value, machineRemapping[machineIndex], sourceRemapping[sourceIndex], statsOnly: false);
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
+        }
+
         #endregion
 
         #region Duplicates
@@ -879,108 +977,6 @@ namespace SabreTools.DatTools
                 }
 
                 outerDiffData.AddItemDB(item.Value, renamedMachine.Key, sourceRemapping[sourceIndex], statsOnly: false);
-#if NET40_OR_GREATER || NETCOREAPP
-            });
-#else
-            }
-#endif
-        }
-
-        #endregion
-
-        #region Helpers
-
-        /// <summary>
-        /// Fill a DatFile with all items with a particular source index ID
-        /// </summary>
-        /// <param name="datFile">Current DatFile object to use for updating</param>
-        /// <param name="indexDat">DatFile to add found items to</param>
-        /// <param name="index">Source index ID to retrieve items for</param>
-        /// <returns>DatFile containing all items with the source index ID/returns>
-        private static void FillWithSourceIndex(DatFile datFile, DatFile indexDat, int index)
-        {
-            // Loop through and add the items for this index to the output
-#if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(datFile.Items.SortedKeys, Core.Globals.ParallelOptions, key =>
-#elif NET40_OR_GREATER
-            Parallel.ForEach(datFile.Items.SortedKeys, key =>
-#else
-            foreach (var key in datFile.Items.SortedKeys)
-#endif
-            {
-                List<DatItem> items = ItemDictionary.Merge(datFile.GetItemsForBucket(key));
-
-                // If the rom list is empty or null, just skip it
-                if (items == null || items.Count == 0)
-#if NET40_OR_GREATER || NETCOREAPP
-                    return;
-#else
-                    continue;
-#endif
-
-                foreach (DatItem item in items)
-                {
-                    var source = item.GetFieldValue<Source?>(DatItem.SourceKey);
-                    if (source != null && source.Index == index)
-                        indexDat.AddItem(item, statsOnly: false);
-                }
-#if NET40_OR_GREATER || NETCOREAPP
-            });
-#else
-            }
-#endif
-        }
-
-        /// <summary>
-        /// Fill a DatFile with all items with a particular source index ID
-        /// </summary>
-        /// <param name="datFile">Current DatFile object to use for updating</param>
-        /// <param name="indexDat">DatFile to add found items to</param>
-        /// <param name="index">Source index ID to retrieve items for</param>
-        /// <returns>DatFile containing all items with the source index ID/returns>
-        private static void FillWithSourceIndexDB(DatFile datFile, DatFile indexDat, int index)
-        {
-            // Get all current items, machines, and mappings
-            var datItems = datFile.ItemsDB.GetItems();
-            var machines = datFile.GetMachinesDB();
-            var sources = datFile.ItemsDB.GetSources();
-
-            // Create mappings from old index to new index
-            var machineRemapping = new Dictionary<long, long>();
-            var sourceRemapping = new Dictionary<long, long>();
-
-            // Loop through and add all sources
-            foreach (var source in sources)
-            {
-                long newSourceIndex = indexDat.AddSourceDB(source.Value);
-                sourceRemapping[source.Key] = newSourceIndex;
-            }
-
-            // Loop through and add all machines
-            foreach (var machine in machines)
-            {
-                long newMachineIndex = indexDat.AddMachineDB(machine.Value);
-                machineRemapping[machine.Key] = newMachineIndex;
-            }
-
-            // Loop through and add the items
-#if NET452_OR_GREATER || NETCOREAPP
-            Parallel.ForEach(datItems, Core.Globals.ParallelOptions, item =>
-#elif NET40_OR_GREATER
-            Parallel.ForEach(datItems, item =>
-#else
-            foreach (var item in datItems)
-#endif
-            {
-                // Get the machine and source index for this item
-                long machineIndex = datFile.GetMachineForItemDB(item.Key).Key;
-                long sourceIndex = datFile.GetSourceForItemDB(item.Key).Key;
-
-                // Get the source associated with the item
-                var source = datFile.ItemsDB.GetSource(sourceIndex);
-
-                if (source != null && source.Index == index)
-                    indexDat.AddItemDB(item.Value, machineRemapping[machineIndex], sourceRemapping[sourceIndex], statsOnly: false);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
