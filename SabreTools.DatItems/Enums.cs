@@ -4,21 +4,6 @@ using SabreTools.Core;
 namespace SabreTools.DatItems
 {
     /// <summary>
-    /// Determines what sort of files only use external hashes
-    /// </summary>
-    /// TODO: Can FileType be used instead?
-    [Flags]
-    public enum TreatAsFile
-    {
-        CHD = 1 << 0,
-        Archive = 1 << 1,
-        AaruFormat = 1 << 2,
-
-        NonArchive = CHD | AaruFormat,
-        All = CHD | Archive | AaruFormat,
-    }
-
-    /// <summary>
     /// Determine the chip type
     /// </summary>
     [Flags]

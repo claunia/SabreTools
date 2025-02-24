@@ -1,5 +1,6 @@
 using System.Text;
 using SabreTools.Core.Tools;
+using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using SabreTools.FileTypes;
 using SabreTools.FileTypes.Aaru;
@@ -8,7 +9,7 @@ using SabreTools.FileTypes.CHD;
 using SabreTools.IO.Extensions;
 using Xunit;
 
-namespace SabreTools.DatItems.Test
+namespace SabreTools.DatTools.Test
 {
     public class DatItemToolTests
     {
@@ -275,7 +276,7 @@ namespace SabreTools.DatItems.Test
             string sha1 = TextHelper.NormalizeSHA1("1234abcd")!;
             string sha256 = TextHelper.NormalizeSHA256("1234abcd")!;
 
-            File file = new File
+            DatItems.Formats.File file = new DatItems.Formats.File
             {
                 CRC = crc,
                 MD5 = md5,

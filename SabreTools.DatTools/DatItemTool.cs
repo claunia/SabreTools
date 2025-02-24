@@ -1,11 +1,12 @@
 using SabreTools.Core.Tools;
+using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using SabreTools.FileTypes;
 using SabreTools.FileTypes.Aaru;
 using SabreTools.FileTypes.CHD;
 using SabreTools.IO.Extensions;
 
-namespace SabreTools.DatItems
+namespace SabreTools.DatTools
 {
     public static class DatItemTool
     {
@@ -80,9 +81,9 @@ namespace SabreTools.DatItems
         /// </summary>
         /// <param name="baseFile">BaseFile to convert</param>
         /// <returns>File containing original BaseFile information</returns>
-        public static Formats.File ConvertToFile(this BaseFile baseFile)
+        public static DatItems.Formats.File ConvertToFile(this BaseFile baseFile)
         {
-            var file = new Formats.File();
+            var file = new DatItems.Formats.File();
 
             file.CRC = baseFile.CRC.ToHexString();
             file.MD5 = baseFile.MD5.ToHexString();
@@ -181,7 +182,7 @@ namespace SabreTools.DatItems
         /// </summary>
         /// <param name="file">File to convert</param>
         /// <returns>BaseFile containing original File information</returns>
-        public static BaseFile ConvertToBaseFile(this Formats.File file)
+        public static BaseFile ConvertToBaseFile(this DatItems.Formats.File file)
         {
             string? machineName = null;
             var machine = file.GetFieldValue<Machine>(DatItem.MachineKey);
