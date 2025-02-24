@@ -144,7 +144,6 @@ namespace SabreTools.Features
 #endif
                 {
                     (DatFile lessThan, DatFile greaterThan) = DatTools.Splitter.SplitBySize(internalDat, GetInt64(features, RadixInt64Value));
-                    //(DatFile lessThan, DatFile greaterThan) = DatTools.Splitter.SplitBySizeDB(internalDat, GetInt64(features, RadixInt64Value));
 
                     var watch = new InternalStopwatch("Outputting size-split DATs");
 

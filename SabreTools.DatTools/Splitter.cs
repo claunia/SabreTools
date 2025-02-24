@@ -622,17 +622,47 @@ namespace SabreTools.DatTools
             // Create each of the respective output DATs
             InternalStopwatch watch = new($"Splitting DAT by size");
 
-            DatFile lessThan = Parser.CreateDatFile((DatHeader)datFile.Header.Clone(), datFile.Modifiers);
+            // Initialize the outputs
+            SplitBySizeInit(datFile, radix, out DatFile lessThan, out DatFile greaterThan);
+
+            // Now populate each of the DAT objects in turn
+            SplitBySizeImpl(datFile, radix, lessThan, greaterThan);
+            SplitBySizeDBImpl(datFile, radix, lessThan, greaterThan);
+
+            // Then return both DatFiles
+            watch.Stop();
+            return (lessThan, greaterThan);
+        }
+
+        /// <summary>
+        /// Initialize splitting by size
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to split</param>
+        /// <param name="radix">Size to use as the radix between the outputs</param>
+        /// <param name="lessThan">DatFile representing items less than <paramref name="radix"/></param>
+        /// <param name="greaterThan">DatFile representing items greater than or equal to <paramref name="radix"/></param>
+        private static void SplitBySizeInit(DatFile datFile, long radix, out DatFile lessThan, out DatFile greaterThan)
+        {
+            lessThan = Parser.CreateDatFile((DatHeader)datFile.Header.Clone(), datFile.Modifiers);
             lessThan.Header.SetFieldValue<string?>(DatHeader.FileNameKey, lessThan.Header.GetStringFieldValue(DatHeader.FileNameKey) + $" (less than {radix})");
             lessThan.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, lessThan.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $" (less than {radix})");
             lessThan.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, lessThan.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" (less than {radix})");
 
-            DatFile greaterThan = Parser.CreateDatFile((DatHeader)datFile.Header.Clone(), datFile.Modifiers);
+            greaterThan = Parser.CreateDatFile((DatHeader)datFile.Header.Clone(), datFile.Modifiers);
             greaterThan.Header.SetFieldValue<string?>(DatHeader.FileNameKey, greaterThan.Header.GetStringFieldValue(DatHeader.FileNameKey) + $" (equal-greater than {radix})");
             greaterThan.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, greaterThan.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $" (equal-greater than {radix})");
             greaterThan.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, greaterThan.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" (equal-greater than {radix})");
+        }
 
-            // Now populate each of the DAT objects in turn
+        /// <summary>
+        /// Split a DAT by size of Rom
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to split</param>
+        /// <param name="radix">Size to use as the radix between the outputs</param>
+        /// <param name="lessThan">DatFile representing items less than <paramref name="radix"/></param>
+        /// <param name="greaterThan">DatFile representing items greater than or equal to <paramref name="radix"/></param>
+        private static void SplitBySizeImpl(DatFile datFile, long radix, DatFile lessThan, DatFile greaterThan)
+        {
 #if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(datFile.Items.SortedKeys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
@@ -671,33 +701,17 @@ namespace SabreTools.DatTools
 #else
             }
 #endif
-
-            // Then return both DatFiles
-            watch.Stop();
-            return (lessThan, greaterThan);
         }
 
         /// <summary>
         /// Split a DAT by size of Rom
         /// </summary>
         /// <param name="datFile">Current DatFile object to split</param>
-        /// <param name="radix">Long value representing the split point</param>
-        /// <returns>Less Than and Greater Than DatFiles</returns>
-        public static (DatFile lessThan, DatFile greaterThan) SplitBySizeDB(DatFile datFile, long radix)
+        /// <param name="radix">Size to use as the radix between the outputs</param>
+        /// <param name="lessThan">DatFile representing items less than <paramref name="radix"/></param>
+        /// <param name="greaterThan">DatFile representing items greater than or equal to <paramref name="radix"/></param>
+        private static void SplitBySizeDBImpl(DatFile datFile, long radix, DatFile lessThan, DatFile greaterThan)
         {
-            // Create each of the respective output DATs
-            var watch = new InternalStopwatch($"Splitting DAT by size");
-
-            DatFile lessThan = Parser.CreateDatFile((DatHeader)datFile.Header.Clone(), datFile.Modifiers);
-            lessThan.Header.SetFieldValue<string?>(DatHeader.FileNameKey, lessThan.Header.GetStringFieldValue(DatHeader.FileNameKey) + $" (less than {radix})");
-            lessThan.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, lessThan.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $" (less than {radix})");
-            lessThan.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, lessThan.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" (less than {radix})");
-
-            DatFile greaterThan = Parser.CreateDatFile((DatHeader)datFile.Header.Clone(), datFile.Modifiers);
-            greaterThan.Header.SetFieldValue<string?>(DatHeader.FileNameKey, greaterThan.Header.GetStringFieldValue(DatHeader.FileNameKey) + $" (equal-greater than {radix})");
-            greaterThan.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, greaterThan.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $" (equal-greater than {radix})");
-            greaterThan.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, greaterThan.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" (equal-greater than {radix})");
-
             // Get all current items, machines, and mappings
             var datItems = datFile.ItemsDB.GetItems();
             var machines = datFile.GetMachinesDB();
@@ -756,11 +770,11 @@ namespace SabreTools.DatTools
 #else
             }
 #endif
-
-            // Then return both DatFiles
-            watch.Stop();
-            return (lessThan, greaterThan);
         }
+
+        #endregion
+
+        #region Total Size
 
         /// <summary>
         /// Split a DAT by size of Rom
@@ -768,6 +782,7 @@ namespace SabreTools.DatTools
         /// <param name="datFile">Current DatFile object to split</param>
         /// <param name="chunkSize">Long value representing the total size to split at</param>
         /// <returns>Less Than and Greater Than DatFiles</returns>
+        /// TODO: Create DB version of this method
         public static List<DatFile> SplitByTotalSize(DatFile datFile, long chunkSize)
         {
             // If the size is invalid, just return
