@@ -31,6 +31,8 @@ namespace SabreTools.DatTools
 
         #endregion
 
+        #region Extension
+
         /// <summary>
         /// Split a DAT by input extensions
         /// </summary>
@@ -202,6 +204,10 @@ namespace SabreTools.DatTools
             watch.Stop();
             return (extADat, extBDat);
         }
+
+        #endregion
+
+        #region Hash
 
         /// <summary>
         /// Split a DAT by best available hashes
@@ -476,6 +482,10 @@ namespace SabreTools.DatTools
             return fieldDats;
         }
 
+        #endregion
+
+        #region Level
+
         /// <summary>
         /// Split a SuperDAT by lowest available directory level
         /// </summary>
@@ -603,6 +613,10 @@ namespace SabreTools.DatTools
             // Write out the temporary DAT to the proper directory
             Writer.Write(newDatFile, outDir);
         }
+
+        #endregion
+
+        #region Size
 
         /// <summary>
         /// Split a DAT by size of Rom
@@ -844,6 +858,10 @@ namespace SabreTools.DatTools
             return datFiles;
         }
 
+        #endregion
+
+        #region Type
+
         /// <summary>
         /// Split a DAT by type of DatItem
         /// </summary>
@@ -989,5 +1007,7 @@ namespace SabreTools.DatTools
             }
 #endif
         }
+    
+        #endregion
     }
 }
