@@ -17,6 +17,8 @@ namespace SabreTools.DatTools
     /// TODO: Add tests for BaseReplace methods
     public static class Replacer
     {
+        #region BaseReplace
+
         /// <summary>
         /// Replace item values from the base set represented by the current DAT
         /// </summary>
@@ -35,101 +37,12 @@ namespace SabreTools.DatTools
             InternalStopwatch watch = new($"Replacing items in '{intDat.Header.GetStringFieldValue(DatHeader.FileNameKey)}' from the base DAT");
 
             // If we are matching based on DatItem fields of any sort
-            if (itemFieldNames.Count > 0)
-            {
-                // For comparison's sake, we want to use CRC as the base bucketing
-                datFile.BucketBy(ItemKey.CRC);
-                datFile.Deduplicate();
-                intDat.BucketBy(ItemKey.CRC);
-
-                // Then we do a hashwise comparison against the base DAT
-#if NET452_OR_GREATER || NETCOREAPP
-                Parallel.ForEach(intDat.Items.SortedKeys, Core.Globals.ParallelOptions, key =>
-#elif NET40_OR_GREATER
-                Parallel.ForEach(intDat.Items.SortedKeys, key =>
-#else
-                foreach (var key in intDat.Items.SortedKeys)
-#endif
-                {
-                    List<DatItem>? datItems = intDat.GetItemsForBucket(key);
-                    if (datItems == null)
-#if NET40_OR_GREATER || NETCOREAPP
-                        return;
-#else
-                        continue;
-#endif
-
-                    List<DatItem> newDatItems = [];
-                    foreach (DatItem datItem in datItems)
-                    {
-                        List<DatItem> dupes = datFile.GetDuplicates(datItem, sorted: true);
-                        if (datItem.Clone() is not DatItem newDatItem)
-                            continue;
-
-                        // Replace fields from the first duplicate, if we have one
-                        if (dupes.Count > 0)
-                            Replacer.ReplaceFields(newDatItem, dupes[0], itemFieldNames);
-
-                        newDatItems.Add(newDatItem);
-                    }
-
-                    // Now add the new list to the key
-                    intDat.RemoveBucket(key);
-                    newDatItems.ForEach(item => intDat.AddItem(item, statsOnly: false));
-#if NET40_OR_GREATER || NETCOREAPP
-                });
-#else
-                }
-#endif
-            }
+            BaseReplaceItemsImpl(datFile, intDat, itemFieldNames);
+            BaseReplaceItemsDBImpl(datFile, intDat, itemFieldNames);
 
             // If we are matching based on Machine fields of any sort
-            if (machineFieldNames.Count > 0)
-            {
-                // For comparison's sake, we want to use Machine Name as the base bucketing
-                datFile.BucketBy(ItemKey.Machine);
-                datFile.Deduplicate();
-                intDat.BucketBy(ItemKey.Machine);
-
-                // Then we do a namewise comparison against the base DAT
-#if NET452_OR_GREATER || NETCOREAPP
-                Parallel.ForEach(intDat.Items.SortedKeys, Core.Globals.ParallelOptions, key =>
-#elif NET40_OR_GREATER
-                Parallel.ForEach(intDat.Items.SortedKeys, key =>
-#else
-                foreach (var key in intDat.Items.SortedKeys)
-#endif
-                {
-                    List<DatItem>? datItems = intDat.GetItemsForBucket(key);
-                    if (datItems == null)
-#if NET40_OR_GREATER || NETCOREAPP
-                        return;
-#else
-                        continue;
-#endif
-
-                    List<DatItem> newDatItems = [];
-                    foreach (DatItem datItem in datItems)
-                    {
-                        if (datItem.Clone() is not DatItem newDatItem)
-                            continue;
-
-                        var list = datFile.GetItemsForBucket(key);
-                        if (list.Count > 0)
-                            Replacer.ReplaceFields(newDatItem.GetFieldValue<Machine>(DatItem.MachineKey)!, list[index: 0].GetFieldValue<Machine>(DatItem.MachineKey)!, machineFieldNames, onlySame);
-
-                        newDatItems.Add(newDatItem);
-                    }
-
-                    // Now add the new list to the key
-                    intDat.RemoveBucket(key);
-                    newDatItems.ForEach(item => intDat.AddItem(item, statsOnly: false));
-#if NET40_OR_GREATER || NETCOREAPP
-                });
-#else
-                }
-#endif
-            }
+            BaseReplaceMachinesImpl(datFile, intDat, machineFieldNames, onlySame);
+            BaseReplaceMachinesDBImpl(datFile, intDat, machineFieldNames, onlySame);
 
             watch.Stop();
         }
@@ -139,101 +52,234 @@ namespace SabreTools.DatTools
         /// </summary>
         /// <param name="datFile">Current DatFile object to use for updating</param>
         /// <param name="intDat">DatFile to replace the values in</param>
-        /// <param name="machineFieldNames">List of machine field names representing what should be updated</param>
         /// <param name="itemFieldNames">List of item field names representing what should be updated</param>
+        private static void BaseReplaceItemsImpl(
+            DatFile datFile,
+            DatFile intDat,
+            Dictionary<string, List<string>> itemFieldNames)
+        {
+            // Check for field names
+            if (itemFieldNames.Count == 0)
+                return;
+
+            // For comparison's sake, we want to use CRC as the base bucketing
+            datFile.BucketBy(ItemKey.CRC);
+            datFile.Deduplicate();
+            intDat.BucketBy(ItemKey.CRC);
+
+            // Then we do a hashwise comparison against the base DAT
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(intDat.Items.SortedKeys, Core.Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(intDat.Items.SortedKeys, key =>
+#else
+            foreach (var key in intDat.Items.SortedKeys)
+#endif
+            {
+                List<DatItem>? datItems = intDat.GetItemsForBucket(key);
+                if (datItems == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                    return;
+#else
+                    continue;
+#endif
+
+                List<DatItem> newDatItems = [];
+                foreach (DatItem datItem in datItems)
+                {
+                    List<DatItem> dupes = datFile.GetDuplicates(datItem, sorted: true);
+                    if (datItem.Clone() is not DatItem newDatItem)
+                        continue;
+
+                    // Replace fields from the first duplicate, if we have one
+                    if (dupes.Count > 0)
+                        ReplaceFields(newDatItem, dupes[0], itemFieldNames);
+
+                    newDatItems.Add(newDatItem);
+                }
+
+                // Now add the new list to the key
+                intDat.RemoveBucket(key);
+                newDatItems.ForEach(item => intDat.AddItem(item, statsOnly: false));
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
+        }
+
+        /// <summary>
+        /// Replace item values from the base set represented by the current DAT
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to use for updating</param>
+        /// <param name="intDat">DatFile to replace the values in</param>
+        /// <param name="itemFieldNames">List of item field names representing what should be updated</param>
+        private static void BaseReplaceItemsDBImpl(
+            DatFile datFile,
+            DatFile intDat,
+            Dictionary<string, List<string>> itemFieldNames)
+        {
+            // Check for field names
+            if (itemFieldNames.Count == 0)
+                return;
+
+            // For comparison's sake, we want to use CRC as the base bucketing
+            datFile.BucketBy(ItemKey.CRC);
+            datFile.Deduplicate();
+            intDat.BucketBy(ItemKey.CRC);
+
+            // Then we do a hashwise comparison against the base DAT
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(intDat.ItemsDB.SortedKeys, Core.Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(intDat.ItemsDB.SortedKeys, key =>
+#else
+            foreach (var key in intDat.ItemsDB.SortedKeys)
+#endif
+            {
+                var datItems = intDat.GetItemsForBucketDB(key);
+                if (datItems == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                    return;
+#else
+                    continue;
+#endif
+
+                foreach (var datItem in datItems)
+                {
+                    var dupes = datFile.GetDuplicatesDB(datItem, sorted: true);
+                    if (datItem.Value.Clone() is not DatItem newDatItem)
+                        continue;
+
+                    // Replace fields from the first duplicate, if we have one
+                    if (dupes.Count > 0)
+                        ReplaceFields(datItem.Value, dupes.First().Value, itemFieldNames);
+                }
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
+        }
+
+        /// <summary>
+        /// Replace machine values from the base set represented by the current DAT
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to use for updating</param>
+        /// <param name="intDat">DatFile to replace the values in</param>
+        /// <param name="machineFieldNames">List of machine field names representing what should be updated</param>
         /// <param name="onlySame">True if descriptions should only be replaced if the game name is the same, false otherwise</param>
-        public static void BaseReplaceDB(
+        private static void BaseReplaceMachinesImpl(
             DatFile datFile,
             DatFile intDat,
             List<string> machineFieldNames,
-            Dictionary<string, List<string>> itemFieldNames,
             bool onlySame)
         {
-            InternalStopwatch watch = new($"Replacing items in '{intDat.Header.GetStringFieldValue(DatHeader.FileNameKey)}' from the base DAT");
+            // Check for field names
+            if (machineFieldNames.Count == 0)
+                return;
 
-            // If we are matching based on DatItem fields of any sort
-            if (itemFieldNames.Count > 0)
-            {
-                // For comparison's sake, we want to use CRC as the base bucketing
-                datFile.BucketBy(ItemKey.CRC);
-                datFile.Deduplicate();
-                intDat.BucketBy(ItemKey.CRC);
+            // For comparison's sake, we want to use Machine Name as the base bucketing
+            datFile.BucketBy(ItemKey.Machine);
+            datFile.Deduplicate();
+            intDat.BucketBy(ItemKey.Machine);
 
-                // Then we do a hashwise comparison against the base DAT
+            // Then we do a namewise comparison against the base DAT
 #if NET452_OR_GREATER || NETCOREAPP
-                Parallel.ForEach(intDat.ItemsDB.SortedKeys, Core.Globals.ParallelOptions, key =>
+            Parallel.ForEach(intDat.Items.SortedKeys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
-                Parallel.ForEach(intDat.ItemsDB.SortedKeys, key =>
+            Parallel.ForEach(intDat.Items.SortedKeys, key =>
 #else
-                foreach (var key in intDat.ItemsDB.SortedKeys)
+            foreach (var key in intDat.Items.SortedKeys)
 #endif
-                {
-                    var datItems = intDat.GetItemsForBucketDB(key);
-                    if (datItems == null)
-#if NET40_OR_GREATER || NETCOREAPP
-                        return;
-#else
-                        continue;
-#endif
-
-                    foreach (var datItem in datItems)
-                    {
-                        var dupes = datFile.GetDuplicatesDB(datItem, sorted: true);
-                        if (datItem.Value.Clone() is not DatItem newDatItem)
-                            continue;
-
-                        // Replace fields from the first duplicate, if we have one
-                        if (dupes.Count > 0)
-                            Replacer.ReplaceFields(datItem.Value, dupes.First().Value, itemFieldNames);
-                    }
-#if NET40_OR_GREATER || NETCOREAPP
-                });
-#else
-                }
-#endif
-            }
-
-            // If we are matching based on Machine fields of any sort
-            if (machineFieldNames.Count > 0)
             {
-                // For comparison's sake, we want to use Machine Name as the base bucketing
-                datFile.BucketBy(ItemKey.Machine);
-                datFile.Deduplicate();
-                intDat.BucketBy(ItemKey.Machine);
-
-                // Then we do a namewise comparison against the base DAT
-#if NET452_OR_GREATER || NETCOREAPP
-                Parallel.ForEach(intDat.ItemsDB.SortedKeys, Core.Globals.ParallelOptions, key =>
-#elif NET40_OR_GREATER
-                Parallel.ForEach(intDat.ItemsDB.SortedKeys, key =>
+                List<DatItem>? datItems = intDat.GetItemsForBucket(key);
+                if (datItems == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                    return;
 #else
-                foreach (var key in intDat.ItemsDB.SortedKeys)
+                    continue;
 #endif
+
+                List<DatItem> newDatItems = [];
+                foreach (DatItem datItem in datItems)
                 {
-                    var datItems = intDat.GetItemsForBucketDB(key);
-                    if (datItems == null)
-#if NET40_OR_GREATER || NETCOREAPP
-                        return;
-#else
+                    if (datItem.Clone() is not DatItem newDatItem)
                         continue;
-#endif
 
-                    foreach (var datItem in datItems)
-                    {
-                        var datMachine = datFile.GetMachineForItemDB(datFile.GetItemsForBucketDB(key)!.First().Key);
-                        var intMachine = intDat.GetMachineForItemDB(datItem.Key);
-                        if (datMachine.Value != null && intMachine.Value != null)
-                            Replacer.ReplaceFields(intMachine.Value, datMachine.Value, machineFieldNames, onlySame);
-                    }
-#if NET40_OR_GREATER || NETCOREAPP
-                });
-#else
+                    var list = datFile.GetItemsForBucket(key);
+                    if (list.Count > 0)
+                        ReplaceFields(newDatItem.GetFieldValue<Machine>(DatItem.MachineKey)!, list[index: 0].GetFieldValue<Machine>(DatItem.MachineKey)!, machineFieldNames, onlySame);
+
+                    newDatItems.Add(newDatItem);
                 }
-#endif
-            }
 
-            watch.Stop();
+                // Now add the new list to the key
+                intDat.RemoveBucket(key);
+                newDatItems.ForEach(item => intDat.AddItem(item, statsOnly: false));
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
         }
+
+        /// <summary>
+        /// Replace machine values from the base set represented by the current DAT
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to use for updating</param>
+        /// <param name="intDat">DatFile to replace the values in</param>
+        /// <param name="machineFieldNames">List of machine field names representing what should be updated</param>
+        /// <param name="onlySame">True if descriptions should only be replaced if the game name is the same, false otherwise</param>
+        private static void BaseReplaceMachinesDBImpl(
+            DatFile datFile,
+            DatFile intDat,
+            List<string> machineFieldNames,
+            bool onlySame)
+        {
+            // Check for field names
+            if (machineFieldNames.Count == 0)
+                return;
+
+            // For comparison's sake, we want to use Machine Name as the base bucketing
+            datFile.BucketBy(ItemKey.Machine);
+            datFile.Deduplicate();
+            intDat.BucketBy(ItemKey.Machine);
+
+            // Then we do a namewise comparison against the base DAT
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(intDat.ItemsDB.SortedKeys, Core.Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(intDat.ItemsDB.SortedKeys, key =>
+#else
+            foreach (var key in intDat.ItemsDB.SortedKeys)
+#endif
+            {
+                var datItems = intDat.GetItemsForBucketDB(key);
+                if (datItems == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                    return;
+#else
+                    continue;
+#endif
+
+                foreach (var datItem in datItems)
+                {
+                    var datMachine = datFile.GetMachineForItemDB(datFile.GetItemsForBucketDB(key)!.First().Key);
+                    var intMachine = intDat.GetMachineForItemDB(datItem.Key);
+                    if (datMachine.Value != null && intMachine.Value != null)
+                        ReplaceFields(intMachine.Value, datMachine.Value, machineFieldNames, onlySame);
+                }
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
+        }
+
+        #endregion
+
+        #region ReplaceFields
 
         /// <summary>
         /// Replace fields with given values
@@ -469,5 +515,7 @@ namespace SabreTools.DatTools
                     rom.SetFieldValue<string?>(Models.Metadata.Rom.SpamSumKey, newItem.GetStringFieldValue(Models.Metadata.Rom.SpamSumKey));
             }
         }
+
+        #endregion
     }
 }

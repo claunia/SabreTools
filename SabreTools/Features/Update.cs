@@ -163,7 +163,6 @@ namespace SabreTools.Features
 #endif
             {
                 DatFile dupeData = Diffing.Duplicates(userInputDat, inputPaths);
-                //DatFile dupeData = Diffing.DuplicatesDB(userInputDat, inputPaths);
 
                 InternalStopwatch watch = new("Outputting duplicate DAT");
                 Writer.Write(dupeData, OutputDir, overwrite: false);
@@ -178,7 +177,6 @@ namespace SabreTools.Features
 #endif
             {
                 DatFile outerDiffData = Diffing.NoDuplicates(userInputDat, inputPaths);
-                //DatFile outerDiffData = Diffing.NoDuplicatesDB(userInputDat, inputPaths);
 
                 InternalStopwatch watch = new("Outputting no duplicate DAT");
                 Writer.Write(outerDiffData, OutputDir, overwrite: false);
@@ -194,7 +192,6 @@ namespace SabreTools.Features
             {
                 // Get all of the output DatFiles
                 List<DatFile> datFiles = Diffing.Individuals(userInputDat, inputPaths);
-                //List<DatFile> datFiles = Diffing.IndividualsDB(userInputDat, inputPaths);
 
                 // Loop through and output the new DatFiles
                 InternalStopwatch watch = new("Outputting all individual DATs");
@@ -345,7 +342,6 @@ namespace SabreTools.Features
 
                     // Now replace the fields from the base DatFile
                     Replacer.BaseReplace(
-                    //Replacer.BaseReplaceDB(
                         userInputDat,
                         repDat,
                         updateMachineFieldNames,
