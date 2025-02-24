@@ -219,6 +219,24 @@ namespace SabreTools.DatTools
             // Create each of the respective output DATs
             var watch = new InternalStopwatch($"Splitting DAT by best available hashes");
 
+            // Initialize the outputs
+            Dictionary<string, DatFile> fieldDats = SplitByHashInit(datFile);
+
+            // Now populate each of the DAT objects in turn
+            SplitByHashImpl(datFile, fieldDats);
+            SplitByHashDBImpl(datFile, fieldDats);
+
+            watch.Stop();
+            return fieldDats;
+        }
+
+        /// <summary>
+        /// Initialize splitting by hash
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to split</param>
+        /// <returns>Dictionary of hash-specific DatFiles</returns>
+        private static Dictionary<string, DatFile> SplitByHashInit(DatFile datFile)
+        {
             // Create mapping of keys to suffixes
             var mappings = new Dictionary<string, string>
             {
@@ -244,7 +262,16 @@ namespace SabreTools.DatTools
                 fieldDats[kvp.Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[kvp.Key].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + kvp.Value);
             }
 
-            // Now populate each of the DAT objects in turn
+            return fieldDats;
+        }
+
+        /// <summary>
+        /// Split a DAT by best available hashes
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to split</param>
+        /// <param name="fieldDats">Dictionary of hash-specific DatFiles</param>
+        private static void SplitByHashImpl(DatFile datFile, Dictionary<string, DatFile> fieldDats)
+        {
 #if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(datFile.Items.SortedKeys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
@@ -321,46 +348,15 @@ namespace SabreTools.DatTools
 #else
             }
 #endif
-
-            watch.Stop();
-            return fieldDats;
         }
 
         /// <summary>
         /// Split a DAT by best available hashes
         /// </summary>
         /// <param name="datFile">Current DatFile object to split</param>
-        /// <returns>Dictionary of Field to DatFile mappings</returns>
-        public static Dictionary<string, DatFile> SplitByHashDB(DatFile datFile)
+        /// <param name="fieldDats">Dictionary of hash-specific DatFiles</param>
+        private static void SplitByHashDBImpl(DatFile datFile, Dictionary<string, DatFile> fieldDats)
         {
-            // Create each of the respective output DATs
-            var watch = new InternalStopwatch($"Splitting DAT by best available hashes");
-
-            // Create mapping of keys to suffixes
-            var mappings = new Dictionary<string, string>
-            {
-                [Models.Metadata.Rom.StatusKey] = " (Nodump)",
-                [Models.Metadata.Rom.SHA512Key] = " (SHA-512)",
-                [Models.Metadata.Rom.SHA384Key] = " (SHA-384)",
-                [Models.Metadata.Rom.SHA256Key] = " (SHA-256)",
-                [Models.Metadata.Rom.SHA1Key] = " (SHA-1)",
-                [Models.Metadata.Rom.MD5Key] = " (MD5)",
-                [Models.Metadata.Rom.MD4Key] = " (MD4)",
-                [Models.Metadata.Rom.MD2Key] = " (MD2)",
-                [Models.Metadata.Rom.CRCKey] = " (CRC)",
-                ["null"] = " (Other)",
-            };
-
-            // Create the set of field-to-dat mappings
-            Dictionary<string, DatFile> fieldDats = [];
-            foreach (var kvp in mappings)
-            {
-                fieldDats[kvp.Key] = Parser.CreateDatFile((DatHeader)datFile.Header.Clone(), datFile.Modifiers);
-                fieldDats[kvp.Key].Header.SetFieldValue<string?>(DatHeader.FileNameKey, fieldDats[kvp.Key].Header.GetStringFieldValue(DatHeader.FileNameKey) + kvp.Value);
-                fieldDats[kvp.Key].Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, fieldDats[kvp.Key].Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + kvp.Value);
-                fieldDats[kvp.Key].Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, fieldDats[kvp.Key].Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + kvp.Value);
-            }
-
             // Get all current items, machines, and mappings
             var datItems = datFile.ItemsDB.GetItems();
             var machines = datFile.GetMachinesDB();
@@ -477,9 +473,6 @@ namespace SabreTools.DatTools
 #else
             }
 #endif
-
-            watch.Stop();
-            return fieldDats;
         }
 
         #endregion

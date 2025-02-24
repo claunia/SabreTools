@@ -79,7 +79,6 @@ namespace SabreTools.Features
 #endif
                 {
                     (DatFile? extADat, DatFile? extBDat) = DatTools.Splitter.SplitByExtension(internalDat, GetList(features, ExtAListValue), GetList(features, ExtBListValue));
-                    //(DatFile? extADat, DatFile? extBDat) = DatTools.Splitter.SplitByExtensionDB(internalDat, GetList(features, ExtAListValue), GetList(features, ExtBListValue));
                     if (extADat != null && extBDat != null)
                     {
                         var watch = new InternalStopwatch("Outputting extension-split DATs");
@@ -100,7 +99,6 @@ namespace SabreTools.Features
 #endif
                 {
                     Dictionary<string, DatFile> typeDats = DatTools.Splitter.SplitByHash(internalDat);
-                    //Dictionary<string, DatFile> typeDats = DatTools.Splitter.SplitByHashDB(internalDat);
 
                     var watch = new InternalStopwatch("Outputting hash-split DATs");
 
