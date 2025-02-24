@@ -370,7 +370,7 @@ namespace SabreTools.Features
                 if (string.Equals(userInputDat.Header.GetStringFieldValue(Models.Metadata.Header.TypeKey), "SuperDAT", StringComparison.OrdinalIgnoreCase))
                 {
                     MergeSplit.ApplySuperDAT(userInputDat, inputPaths);
-                    //MergeSplit.ApplySuperDATDB(userInputDat, inputPaths);
+                    MergeSplit.ApplySuperDATDB(userInputDat, inputPaths);
                 }
 
                 Writer.Write(userInputDat, OutputDir);
