@@ -48,25 +48,56 @@ namespace SabreTools.DatTools
 
             InternalStopwatch watch = new($"Splitting DAT by extension");
 
-            // Make sure all of the extensions don't have a dot at the beginning
-            var newExtA = extA.ConvertAll(s => s.TrimStart('.').ToLowerInvariant()).ToArray();
-            string newExtAString = string.Join(",", newExtA);
-
-            var newExtB = extB.ConvertAll(s => s.TrimStart('.').ToLowerInvariant()).ToArray();
-            string newExtBString = string.Join(",", newExtB);
-
-            // Set all of the appropriate outputs for each of the subsets
-            DatFile extADat = Parser.CreateDatFile((DatHeader)datFile.Header.Clone(), datFile.Modifiers);
-            extADat.Header.SetFieldValue<string?>(DatHeader.FileNameKey, extADat.Header.GetStringFieldValue(DatHeader.FileNameKey) + $" ({newExtAString})");
-            extADat.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, extADat.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $" ({newExtAString})");
-            extADat.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, extADat.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" ({newExtAString})");
-
-            DatFile extBDat = Parser.CreateDatFile((DatHeader)datFile.Header.Clone(), datFile.Modifiers);
-            extBDat.Header.SetFieldValue<string?>(DatHeader.FileNameKey, extBDat.Header.GetStringFieldValue(DatHeader.FileNameKey) + $" ({newExtBString})");
-            extBDat.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, extBDat.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $" ({newExtBString})");
-            extBDat.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, extBDat.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" ({newExtBString})");
+            // Initialize the outputs
+            SplitByExtensionInit(datFile, extA, extB, out DatFile extADat, out DatFile extBDat);
 
             // Now separate the roms accordingly
+            SplitByExtensionImpl(datFile, extA, extB, extADat, extBDat);
+            SplitByExtensionDBImpl(datFile, extA, extB, extADat, extBDat);
+
+            // Then return both DatFiles
+            watch.Stop();
+            return (extADat, extBDat);
+        }
+
+        /// <summary>
+        /// Initialize splitting by extension
+        /// </summary>
+        /// <param name="datFile">DatFile representing the data to split</param>
+        /// <param name="extA">Set of extensions to go in the first DatFile</param>
+        /// <param name="extB">Set of extensions to go in the second DatFile</param>
+        /// <param name="extADat">Header-initialized DatFile representing the first set</param>
+        /// <param name="extBDat">Header-initialized DatFile representing the second set</param>
+        private static void SplitByExtensionInit(DatFile datFile, List<string> extA, List<string> extB, out DatFile extADat, out DatFile extBDat)
+        {
+            // Make sure all of the extensions don't have a dot at the beginning
+            extA = extA.ConvertAll(s => s.TrimStart('.').ToLowerInvariant());
+            extB = extB.ConvertAll(s => s.TrimStart('.').ToLowerInvariant());
+
+            // Set all of the appropriate outputs for each of the subsets
+            string extAString = string.Join(",", [.. extA]);
+            extADat = Parser.CreateDatFile((DatHeader)datFile.Header.Clone(), datFile.Modifiers);
+            extADat.Header.SetFieldValue<string?>(DatHeader.FileNameKey, extADat.Header.GetStringFieldValue(DatHeader.FileNameKey) + $" ({extAString})");
+            extADat.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, extADat.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $" ({extAString})");
+            extADat.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, extADat.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" ({extAString})");
+
+            string extBString = string.Join(",", extB);
+            extBDat = Parser.CreateDatFile((DatHeader)datFile.Header.Clone(), datFile.Modifiers);
+            extBDat.Header.SetFieldValue<string?>(DatHeader.FileNameKey, extBDat.Header.GetStringFieldValue(DatHeader.FileNameKey) + $" ({extBString})");
+            extBDat.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, extBDat.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $" ({extBString})");
+            extBDat.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, extBDat.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" ({extBString})");
+        }
+
+        /// <summary>
+        /// Split a DAT by input extensions
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to split</param>
+        /// <param name="extA">List of extensions to split on (first DAT)</param>
+        /// <param name="extB">List of extensions to split on (second DAT)</param>
+        /// <param name="extADat">Header-initialized DatFile representing the first set</param>
+        /// <param name="extBDat">Header-initialized DatFile representing the second set</param>
+        private static void SplitByExtensionImpl(DatFile datFile, List<string> extA, List<string> extB, DatFile extADat, DatFile extBDat)
+        {
 #if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(datFile.Items.SortedKeys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
@@ -85,11 +116,11 @@ namespace SabreTools.DatTools
 
                 foreach (DatItem item in items)
                 {
-                    if (Array.IndexOf(newExtA, (item.GetName() ?? string.Empty).GetNormalizedExtension()) > -1)
+                    if (extA.Contains(item.GetName().GetNormalizedExtension() ?? string.Empty))
                     {
                         extADat.AddItem(item, statsOnly: false);
                     }
-                    if (Array.IndexOf(newExtB, (item.GetName() ?? string.Empty).GetNormalizedExtension()) > -1)
+                    else if (extB.Contains(item.GetName().GetNormalizedExtension() ?? string.Empty))
                     {
                         extBDat.AddItem(item, statsOnly: false);
                     }
@@ -104,10 +135,6 @@ namespace SabreTools.DatTools
 #else
             }
 #endif
-
-            // Then return both DatFiles
-            watch.Stop();
-            return (extADat, extBDat);
         }
 
         /// <summary>
@@ -116,33 +143,10 @@ namespace SabreTools.DatTools
         /// <param name="datFile">Current DatFile object to split</param>
         /// <param name="extA">List of extensions to split on (first DAT)</param>
         /// <param name="extB">List of extensions to split on (second DAT)</param>
-        /// <returns>Extension Set A and Extension Set B DatFiles</returns>
-        public static (DatFile? extADat, DatFile? extBDat) SplitByExtensionDB(DatFile datFile, List<string> extA, List<string> extB)
+        /// <param name="extADat">Header-initialized DatFile representing the first set</param>
+        /// <param name="extBDat">Header-initialized DatFile representing the second set</param>
+        private static void SplitByExtensionDBImpl(DatFile datFile, List<string> extA, List<string> extB, DatFile extADat, DatFile extBDat)
         {
-            // If roms is empty, return false
-            if (datFile.ItemsDB.DatStatistics.TotalCount == 0)
-                return (null, null);
-
-            InternalStopwatch watch = new($"Splitting DAT by extension");
-
-            // Make sure all of the extensions don't have a dot at the beginning
-            var newExtA = extA.ConvertAll(s => s.TrimStart('.').ToLowerInvariant()).ToArray();
-            string newExtAString = string.Join(",", newExtA);
-
-            var newExtB = extB.ConvertAll(s => s.TrimStart('.').ToLowerInvariant()).ToArray();
-            string newExtBString = string.Join(",", newExtB);
-
-            // Set all of the appropriate outputs for each of the subsets
-            DatFile extADat = Parser.CreateDatFile((DatHeader)datFile.Header.Clone(), datFile.Modifiers);
-            extADat.Header.SetFieldValue<string?>(DatHeader.FileNameKey, extADat.Header.GetStringFieldValue(DatHeader.FileNameKey) + $" ({newExtAString})");
-            extADat.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, extADat.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $" ({newExtAString})");
-            extADat.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, extADat.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" ({newExtAString})");
-
-            DatFile extBDat = Parser.CreateDatFile((DatHeader)datFile.Header.Clone(), datFile.Modifiers);
-            extBDat.Header.SetFieldValue<string?>(DatHeader.FileNameKey, extBDat.Header.GetStringFieldValue(DatHeader.FileNameKey) + $" ({newExtBString})");
-            extBDat.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, extBDat.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + $" ({newExtBString})");
-            extBDat.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, extBDat.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + $" ({newExtBString})");
-
             // Get all current items, machines, and mappings
             var datItems = datFile.ItemsDB.GetItems();
             var machines = datFile.GetMachinesDB();
@@ -181,11 +185,11 @@ namespace SabreTools.DatTools
                 long machineIndex = datFile.GetMachineForItemDB(item.Key).Key;
                 long sourceIndex = datFile.GetSourceForItemDB(item.Key).Key;
 
-                if (newExtA.Contains((item.Value.GetName() ?? string.Empty).GetNormalizedExtension()))
+                if (extA.Contains(item.Value.GetName().GetNormalizedExtension() ?? string.Empty))
                 {
                     extADat.AddItemDB(item.Value, machineRemapping[machineIndex], sourceRemapping[sourceIndex], statsOnly: false);
                 }
-                else if (newExtB.Contains((item.Value.GetName() ?? string.Empty).GetNormalizedExtension()))
+                else if (extB.Contains(item.Value.GetName().GetNormalizedExtension() ?? string.Empty))
                 {
                     extBDat.AddItemDB(item.Value, machineRemapping[machineIndex], sourceRemapping[sourceIndex], statsOnly: false);
                 }
@@ -199,10 +203,6 @@ namespace SabreTools.DatTools
 #else
             }
 #endif
-
-            // Then return both DatFiles
-            watch.Stop();
-            return (extADat, extBDat);
         }
 
         #endregion
@@ -1007,7 +1007,7 @@ namespace SabreTools.DatTools
             }
 #endif
         }
-    
+
         #endregion
     }
 }
