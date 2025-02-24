@@ -15,6 +15,8 @@ namespace SabreTools.DatTools
     /// </summary>
     public class Diffing
     {
+        #region Against
+
         /// <summary>
         /// Output diffs against a base set represented by the current DAT
         /// </summary>
@@ -122,6 +124,10 @@ namespace SabreTools.DatTools
             watch.Stop();
         }
 
+        #endregion
+
+        #region Cascade
+
         /// <summary>
         /// Output cascading diffs
         /// </summary>
@@ -166,6 +172,10 @@ namespace SabreTools.DatTools
             return outDats;
         }
 
+        #endregion
+
+        #region Duplicates
+
         /// <summary>
         /// Output duplicate item diff
         /// </summary>
@@ -175,7 +185,6 @@ namespace SabreTools.DatTools
         {
             List<ParentablePath> paths = inputs.ConvertAll(i => new ParentablePath(i));
             return Duplicates(datFile, paths);
-            //return DuplicatesDB(datFile, paths);
         }
 
         /// <summary>
@@ -185,7 +194,25 @@ namespace SabreTools.DatTools
         /// <param name="inputs">List of inputs to write out from</param>
         public static DatFile Duplicates(DatFile datFile, List<ParentablePath> inputs)
         {
-            InternalStopwatch watch = new("Initializing duplicate DAT");
+            // Initialize duplicate data
+            DatFile dupeData = DuplicatesInit(datFile);
+
+            // Now, loop through the dictionary and populate the correct DATs
+            var watch = new InternalStopwatch("Populating duplicate DAT");
+            DuplicatesImpl(datFile, inputs, dupeData);
+            DuplicatesDBImpl(datFile, inputs, dupeData);
+            watch.Stop();
+
+            return dupeData;
+        }
+
+        /// <summary>
+        /// Create a duplicate data DatFile based on an input DatFile
+        /// </summary>
+        /// <param name="datFile">DatFile containing header and modifier information</param>
+        private static DatFile DuplicatesInit(DatFile datFile)
+        {
+            var watch = new InternalStopwatch("Initializing duplicate DAT");
 
             // Fill in any information not in the base DAT
             if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)))
@@ -205,10 +232,17 @@ namespace SabreTools.DatTools
             dupeData.ResetDictionary();
 
             watch.Stop();
+            return dupeData;
+        }
 
-            // Now, loop through the dictionary and populate the correct DATs
-            watch.Start("Populating duplicate DAT");
-
+        /// <summary>
+        /// Populate duplicates data from inputs
+        /// </summary>
+        /// <param name="datFile">Source DatFile to process</param>
+        /// <param name="inputs">Set of input paths for naming</param>
+        /// <param name="dupeData">Duplicate data DatFile</param>
+        private static void DuplicatesImpl(DatFile datFile, List<ParentablePath> inputs, DatFile dupeData)
+        {
 #if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(datFile.Items.SortedKeys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
@@ -250,43 +284,16 @@ namespace SabreTools.DatTools
 #else
             }
 #endif
-
-            watch.Stop();
-
-            return dupeData;
         }
 
         /// <summary>
-        /// Output duplicate item diff
+        /// Populate duplicates data from inputs
         /// </summary>
-        /// <param name="datFile">Current DatFile object to use for updating</param>
-        /// <param name="inputs">List of inputs to write out from</param>
-        public static DatFile DuplicatesDB(DatFile datFile, List<ParentablePath> inputs)
+        /// <param name="datFile">Source DatFile to process</param>
+        /// <param name="inputs">Set of input paths for naming</param>
+        /// <param name="dupeData">Duplicate data DatFile</param>
+        private static void DuplicatesDBImpl(DatFile datFile, List<ParentablePath> inputs, DatFile dupeData)
         {
-            var watch = new InternalStopwatch("Initializing duplicate DAT");
-
-            // Fill in any information not in the base DAT
-            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)))
-                datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey, "All DATs");
-
-            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)))
-                datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, "datFile.All DATs");
-
-            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)))
-                datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, "datFile.All DATs");
-
-            string post = " (Duplicates)";
-            DatFile dupeData = Parser.CreateDatFile(datFile.Header, datFile.Modifiers);
-            dupeData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, dupeData.Header.GetStringFieldValue(DatHeader.FileNameKey) + post);
-            dupeData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, dupeData.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + post);
-            dupeData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, dupeData.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + post);
-            dupeData.ResetDictionary();
-
-            watch.Stop();
-
-            // Now, loop through the dictionary and populate the correct DATs
-            watch.Start("Populating duplicate DAT");
-
             // Get all current items, machines, and mappings
             var datItems = datFile.ItemsDB.GetItems();
             var machines = datFile.GetMachinesDB();
@@ -363,11 +370,11 @@ namespace SabreTools.DatTools
 #else
             }
 #endif
-
-            watch.Stop();
-
-            return dupeData;
         }
+
+        #endregion
+
+        #region Individuals
 
         /// <summary>
         /// Output non-cascading diffs
@@ -378,7 +385,6 @@ namespace SabreTools.DatTools
         {
             List<ParentablePath> paths = inputs.ConvertAll(i => new ParentablePath(i));
             return Individuals(datFile, paths);
-            //return IndividualsDB(datFile, paths);
         }
 
         /// <summary>
@@ -388,7 +394,26 @@ namespace SabreTools.DatTools
         /// <param name="inputs">List of inputs to write out from</param>
         public static List<DatFile> Individuals(DatFile datFile, List<ParentablePath> inputs)
         {
-            InternalStopwatch watch = new("Initializing all individual DATs");
+            // Create a set of DatData objects representing individual output files
+            DatFile[] outDats = IndividualsInit(datFile, inputs);
+
+            // Now, loop through the dictionary and populate the correct DATs
+            var watch = new InternalStopwatch("Populating all individual DATs");
+            IndividualsImpl(datFile, outDats);
+            IndividualsDBImpl(datFile, outDats);
+            watch.Stop();
+
+            return [.. outDats];
+        }
+
+        /// <summary>
+        /// Create an individual data DatFile based on an input DatFile
+        /// </summary>
+        /// <param name="datFile">DatFile containing header and modifier information</param>
+        /// <param name="inputs">List of inputs to write out from</param>
+        private static DatFile[] IndividualsInit(DatFile datFile, List<ParentablePath> inputs)
+        {
+            var watch = new InternalStopwatch("Initializing all individual DATs");
 
             // Fill in any information not in the base DAT
             if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)))
@@ -423,15 +448,17 @@ namespace SabreTools.DatTools
 #else
             }
 #endif
-
-            // Create a list of DatData objects representing individual output files
-            List<DatFile> outDats = [.. outDatsArray];
-
             watch.Stop();
+            return outDatsArray;
+        }
 
-            // Now, loop through the dictionary and populate the correct DATs
-            watch.Start("Populating all individual DATs");
-
+        /// <summary>
+        /// Populate individuals data from inputs
+        /// </summary>
+        /// <param name="datFile">Source DatFile to process</param>
+        /// <param name="outDats">Individual data DatFiles</param>
+        private static void IndividualsImpl(DatFile datFile, DatFile[] outDats)
+        {
 #if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(datFile.Items.SortedKeys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
@@ -468,63 +495,15 @@ namespace SabreTools.DatTools
 #else
             }
 #endif
-
-            watch.Stop();
-
-            return [.. outDats];
         }
 
         /// <summary>
-        /// Output non-cascading diffs
+        /// Populate individuals data from inputs
         /// </summary>
-        /// <param name="datFile">Current DatFile object to use for updating</param>
-        /// <param name="inputs">List of inputs to write out from</param>
-        public static List<DatFile> IndividualsDB(DatFile datFile, List<ParentablePath> inputs)
+        /// <param name="datFile">Source DatFile to process</param>
+        /// <param name="outDats">Individual data DatFiles</param>
+        private static void IndividualsDBImpl(DatFile datFile, DatFile[] outDats)
         {
-            InternalStopwatch watch = new("Initializing all individual DATs");
-
-            // Fill in any information not in the base DAT
-            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)))
-                datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey, "All DATs");
-
-            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)))
-                datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, "All DATs");
-
-            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)))
-                datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, "All DATs");
-
-            // Loop through each of the inputs and get or create a new DatData object
-            DatFile[] outDatsArray = new DatFile[inputs.Count];
-
-#if NET452_OR_GREATER || NETCOREAPP
-            Parallel.For(0, inputs.Count, Core.Globals.ParallelOptions, j =>
-#elif NET40_OR_GREATER
-            Parallel.For(0, inputs.Count, j =>
-#else
-            for (int j = 0; j < inputs.Count; j++)
-#endif
-            {
-                string innerpost = $" ({j} - {inputs[j].GetNormalizedFileName(true)} Only)";
-                DatFile diffData = Parser.CreateDatFile(datFile.Header, datFile.Modifiers);
-                diffData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, diffData.Header.GetStringFieldValue(DatHeader.FileNameKey) + innerpost);
-                diffData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, diffData.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + innerpost);
-                diffData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, diffData.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + innerpost);
-                diffData.ResetDictionary();
-                outDatsArray[j] = diffData;
-#if NET40_OR_GREATER || NETCOREAPP
-            });
-#else
-            }
-#endif
-
-            // Create a list of DatData objects representing individual output files
-            List<DatFile> outDats = [.. outDatsArray];
-
-            watch.Stop();
-
-            // Now, loop through the dictionary and populate the correct DATs
-            watch.Start("Populating all individual DATs");
-
             // Get all current items, machines, and mappings
             var datItems = datFile.ItemsDB.GetItems();
             var machines = datFile.GetMachinesDB();
@@ -540,7 +519,7 @@ namespace SabreTools.DatTools
                 long newSourceIndex = outDats[0].AddSourceDB(source.Value);
                 sourceRemapping[source.Key] = newSourceIndex;
 
-                for (int i = 1; i < outDats.Count; i++)
+                for (int i = 1; i < outDats.Length; i++)
                 {
                     _ = outDats[i].AddSourceDB(source.Value);
                 }
@@ -552,7 +531,7 @@ namespace SabreTools.DatTools
                 long newMachineIndex = outDats[0].AddMachineDB(machine.Value);
                 machineRemapping[machine.Key] = newMachineIndex;
 
-                for (int i = 1; i < outDats.Count; i++)
+                for (int i = 1; i < outDats.Length; i++)
                 {
                     _ = outDats[i].AddMachineDB(machine.Value);
                 }
@@ -591,11 +570,11 @@ namespace SabreTools.DatTools
 #else
             }
 #endif
-
-            watch.Stop();
-
-            return [.. outDats];
         }
+
+        #endregion
+
+        #region NoDuplicates
 
         /// <summary>
         /// Output non-duplicate item diff
@@ -606,7 +585,6 @@ namespace SabreTools.DatTools
         {
             List<ParentablePath> paths = inputs.ConvertAll(i => new ParentablePath(i));
             return NoDuplicates(datFile, paths);
-            //return NoDuplicatesDB(datFile, paths);
         }
 
         /// <summary>
@@ -616,7 +594,25 @@ namespace SabreTools.DatTools
         /// <param name="inputs">List of inputs to write out from</param>
         public static DatFile NoDuplicates(DatFile datFile, List<ParentablePath> inputs)
         {
-            InternalStopwatch watch = new("Initializing no duplicate DAT");
+            // Initialize no duplicate data
+            DatFile outerDiffData = NoDuplicatesInit(datFile);
+
+            // Now, loop through the dictionary and populate the correct DATs
+            var watch = new InternalStopwatch("Populating no duplicate DAT");
+            NoDuplicatesImpl(datFile, inputs, outerDiffData);
+            NoDuplicatesDBImpl(datFile, inputs, outerDiffData);
+            watch.Stop();
+
+            return outerDiffData;
+        }
+
+        /// <summary>
+        /// Create a no duplicate data DatFile based on an input DatFile
+        /// </summary>
+        /// <param name="datFile">DatFile containing header and modifier information</param>
+        private static DatFile NoDuplicatesInit(DatFile datFile)
+        {
+            var watch = new InternalStopwatch("Initializing no duplicate DAT");
 
             // Fill in any information not in the base DAT
             if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)))
@@ -636,10 +632,17 @@ namespace SabreTools.DatTools
             outerDiffData.ResetDictionary();
 
             watch.Stop();
+            return outerDiffData;
+        }
 
-            // Now, loop through the dictionary and populate the correct DATs
-            watch.Start("Populating no duplicate DAT");
-
+        /// <summary>
+        /// Populate no duplicates data from inputs
+        /// </summary>
+        /// <param name="datFile">Source DatFile to process</param>
+        /// <param name="inputs">Set of input paths for naming</param>
+        /// <param name="outerDiffData">No duplicate data DatFile</param>
+        private static void NoDuplicatesImpl(DatFile datFile, List<ParentablePath> inputs, DatFile outerDiffData)
+        {
 #if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(datFile.Items.SortedKeys, Core.Globals.ParallelOptions, key =>
 #elif NET40_OR_GREATER
@@ -679,43 +682,16 @@ namespace SabreTools.DatTools
 #else
             }
 #endif
-
-            watch.Stop();
-
-            return outerDiffData;
         }
 
         /// <summary>
-        /// Output non-duplicate item diff
+        /// Populate no duplicates data from inputs
         /// </summary>
-        /// <param name="datFile">Current DatFile object to use for updating</param>
-        /// <param name="inputs">List of inputs to write out from</param>
-        public static DatFile NoDuplicatesDB(DatFile datFile, List<ParentablePath> inputs)
+        /// <param name="datFile">Source DatFile to process</param>
+        /// <param name="inputs">Set of input paths for naming</param>
+        /// <param name="outerDiffData">No duplicate data DatFile</param>
+        private static void NoDuplicatesDBImpl(DatFile datFile, List<ParentablePath> inputs, DatFile outerDiffData)
         {
-            var watch = new InternalStopwatch("Initializing no duplicate DAT");
-
-            // Fill in any information not in the base DAT
-            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(DatHeader.FileNameKey)))
-                datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey, "All DATs");
-
-            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)))
-                datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, "All DATs");
-
-            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)))
-                datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, "All DATs");
-
-            string post = " (No Duplicates)";
-            DatFile outerDiffData = Parser.CreateDatFile(datFile.Header, datFile.Modifiers);
-            outerDiffData.Header.SetFieldValue<string?>(DatHeader.FileNameKey, outerDiffData.Header.GetStringFieldValue(DatHeader.FileNameKey) + post);
-            outerDiffData.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, outerDiffData.Header.GetStringFieldValue(Models.Metadata.Header.NameKey) + post);
-            outerDiffData.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, outerDiffData.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey) + post);
-            outerDiffData.ResetDictionary();
-
-            watch.Stop();
-
-            // Now, loop through the dictionary and populate the correct DATs
-            watch.Start("Populating no duplicate DAT");
-
             // Get all current items, machines, and mappings
             var datItems = datFile.ItemsDB.GetItems();
             var machines = datFile.GetMachinesDB();
@@ -792,11 +768,11 @@ namespace SabreTools.DatTools
 #else
             }
 #endif
-
-            watch.Stop();
-
-            return outerDiffData;
         }
+
+        #endregion
+
+        #region Helpers
 
         /// <summary>
         /// Fill a DatFile with all items with a particular source index ID
@@ -895,5 +871,7 @@ namespace SabreTools.DatTools
             }
 #endif
         }
+
+        #endregion
     }
 }
