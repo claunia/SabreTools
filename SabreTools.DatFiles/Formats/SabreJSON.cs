@@ -489,7 +489,7 @@ namespace SabreTools.DatFiles.Formats
                     foreach (var kvp in items)
                     {
                         // Get the machine for the item
-                        var machine = ItemsDB.GetMachineForItem(kvp.Key);
+                        var machine = GetMachineForItemDB(kvp.Key);
 
                         // If we have a different game and we're not at the start of the list, output the end of last item
                         if (lastgame != null && !string.Equals(lastgame, machine.Value!.GetStringFieldValue(Models.Metadata.Machine.NameKey), StringComparison.OrdinalIgnoreCase))
@@ -621,7 +621,7 @@ namespace SabreTools.DatFiles.Formats
         private void WriteDatItemDB(JsonTextWriter jtw, KeyValuePair<long, DatItem> datItem)
         {
             // Get the machine for the item
-            var machine = ItemsDB.GetMachineForItem(datItem.Key);
+            var machine = GetMachineForItemDB(datItem.Key);
 
             // Pre-process the item name
             ProcessItemName(datItem.Value, machine.Value, forceRemoveQuotes: true, forceRomName: false);

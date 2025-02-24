@@ -280,7 +280,7 @@ namespace SabreTools.DatTools
                 foreach (var item in items)
                 {
                     // Get the source associated with the item
-                    var source = datFile.ItemsDB.GetSourceForItem(item.Key);
+                    var source = datFile.GetSourceForItemDB(item.Key);
 
                     // Unmatched items will have a source ID of int.MaxValue, remove all others
                     if (source.Value?.Index != int.MaxValue)

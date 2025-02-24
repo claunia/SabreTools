@@ -1156,16 +1156,6 @@ namespace SabreTools.DatFiles
             return GetBucketKey(datItem.Key, _bucketedBy, lower: true, norename: true);
         }
 
-        /// <summary>
-        /// Class used during deduplication
-        /// </summary>
-        private struct ItemMappings(DatItem item, long machineId, long sourceId)
-        {
-            public DatItem Item = item;
-            public long MachineId = machineId;
-            public long SourceId = sourceId;
-        }
-
         #endregion
 
         #region Statistics

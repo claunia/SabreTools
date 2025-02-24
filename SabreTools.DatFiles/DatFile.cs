@@ -272,6 +272,18 @@ namespace SabreTools.DatFiles
             => ItemsDB.GetMachines();
 
         /// <summary>
+        /// Get the index and machine associated with an item index
+        /// </summary>
+        public KeyValuePair<long, Machine?> GetMachineForItemDB(long itemIndex)
+            => GetMachineForItemDB(itemIndex);
+
+        /// <summary>
+        /// Get the index and source associated with an item index
+        /// </summary>
+        public KeyValuePair<long, Source?> GetSourceForItemDB(long itemIndex)
+            => GetSourceForItemDB(itemIndex);
+
+        /// <summary>
         /// Remove a key from the file dictionary if it exists
         /// </summary>
         /// <param name="key">Key in the dictionary to remove</param>

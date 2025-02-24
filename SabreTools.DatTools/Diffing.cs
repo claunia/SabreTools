@@ -38,6 +38,19 @@ namespace SabreTools.DatTools
                 intDat.Deduplicate();
             }
 
+            AgainstImpl(datFile, intDat, useGames);
+            AgainstDBImpl(datFile, intDat, useGames);
+            watch.Stop();
+        }
+
+        /// <summary>
+        /// Output diffs against a base set represented by the current DAT
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to use for updating</param>
+        /// <param name="intDat">DatFile to replace the values in</param>
+        /// <param name="useGames">True to diff using games, false to use hashes</param>
+        private static void AgainstImpl(DatFile datFile, DatFile intDat, bool useGames)
+        {
             // Then we compare against the base DAT
 #if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(intDat.Items.SortedKeys, Core.Globals.ParallelOptions, key =>
@@ -96,8 +109,8 @@ namespace SabreTools.DatTools
                 // Standard Against uses hashes
                 else
                 {
-                    List<DatItem>? datItems = intDat.GetItemsForBucket(key);
-                    if (datItems == null)
+                    List<DatItem> datItems = intDat.GetItemsForBucket(key);
+                    if (datItems.Count == 0)
 #if NET40_OR_GREATER || NETCOREAPP
                         return;
 #else
@@ -120,8 +133,111 @@ namespace SabreTools.DatTools
 #else
             }
 #endif
+        }
 
-            watch.Stop();
+        /// <summary>
+        /// Output diffs against a base set represented by the current DAT
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to use for updating</param>
+        /// <param name="intDat">DatFile to replace the values in</param>
+        /// <param name="useGames">True to diff using games, false to use hashes</param>
+        private static void AgainstDBImpl(DatFile datFile, DatFile intDat, bool useGames)
+        {
+            // Then we compare against the base DAT
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(intDat.ItemsDB.SortedKeys, Core.Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(intDat.ItemsDB.SortedKeys, key =>
+#else
+            foreach (var key in intDat.ItemsDB.SortedKeys)
+#endif
+            {
+                // Game Against uses game names
+                if (useGames)
+                {
+                    // If the key is null, keep it
+                    var intList = intDat.GetItemsForBucketDB(key);
+                    if (intList.Count == 0)
+#if NET40_OR_GREATER || NETCOREAPP
+                        return;
+#else
+                        continue;
+#endif
+
+                    // If the base DAT doesn't contain the key, keep it
+                    List<DatItem> list = [.. datFile.GetItemsForBucketDB(key).Values];
+                    if (list.Count == 0)
+#if NET40_OR_GREATER || NETCOREAPP
+                        return;
+#else
+                        continue;
+#endif
+
+                    // If the number of items is different, then keep it
+                    if (list.Count != intList.Count)
+#if NET40_OR_GREATER || NETCOREAPP
+                        return;
+#else
+                        continue;
+#endif
+
+                    // 
+
+                    // Otherwise, compare by name and hash the remaining files
+                    bool exactMatch = true;
+                    foreach (KeyValuePair<long, DatItem> item in intList)
+                    {
+                        // TODO: Make this granular to name as well
+                        if (!list.Contains(item.Value))
+                        {
+                            exactMatch = false;
+                            break;
+                        }
+                    }
+
+                    // If we have an exact match, remove the game
+                    if (exactMatch)
+                        intDat.RemoveBucket(key);
+                }
+
+                // Standard Against uses hashes
+                else
+                {
+                    Dictionary<long, DatItem> datItems = intDat.GetItemsForBucketDB(key);
+                    if (datItems == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                        return;
+#else
+                        continue;
+#endif
+
+                    List<KeyValuePair<long, DatItem>> keepDatItems = [];
+                    foreach (KeyValuePair<long, DatItem> datItem in datItems)
+                    {
+                        if (!datFile.HasDuplicates(datItem, true))
+                            keepDatItems.Add(datItem);
+                    }
+
+                    // Get all existing mappings
+                    List<ItemMappings> currentMappings = keepDatItems.ConvertAll(item =>
+                    {
+                        return new ItemMappings(
+                            item.Value,
+                            intDat.GetMachineForItemDB(item.Key).Key,
+                            intDat.GetSourceForItemDB(item.Key).Key
+                        );
+                    });
+
+                    // Now add the new list to the key
+                    intDat.RemoveBucketDB(key);
+                    currentMappings.ForEach(map =>
+                        intDat.AddItemDB(map.Item, map.MachineId, map.SourceId, statsOnly: false));
+                }
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
+            }
+#endif
         }
 
         #endregion
@@ -327,8 +443,8 @@ namespace SabreTools.DatTools
 #endif
             {
                 // Get the machine and source index for this item
-                long machineIndex = datFile.ItemsDB.GetMachineForItem(item.Key).Key;
-                long sourceIndex = datFile.ItemsDB.GetSourceForItem(item.Key).Key;
+                long machineIndex = datFile.GetMachineForItemDB(item.Key).Key;
+                long sourceIndex = datFile.GetSourceForItemDB(item.Key).Key;
 
                 // If the current item isn't an external duplicate
 #if NET20 || NET35
@@ -547,8 +663,8 @@ namespace SabreTools.DatTools
 #endif
             {
                 // Get the machine and source index for this item
-                long machineIndex = datFile.ItemsDB.GetMachineForItem(item.Key).Key;
-                long sourceIndex = datFile.ItemsDB.GetSourceForItem(item.Key).Key;
+                long machineIndex = datFile.GetMachineForItemDB(item.Key).Key;
+                long sourceIndex = datFile.GetSourceForItemDB(item.Key).Key;
 
                 // Get the source associated with the item
                 var source = datFile.ItemsDB.GetSource(sourceIndex);
@@ -725,8 +841,8 @@ namespace SabreTools.DatTools
 #endif
             {
                 // Get the machine and source index for this item
-                long machineIndex = datFile.ItemsDB.GetMachineForItem(item.Key).Key;
-                long sourceIndex = datFile.ItemsDB.GetSourceForItem(item.Key).Key;
+                long machineIndex = datFile.GetMachineForItemDB(item.Key).Key;
+                long sourceIndex = datFile.GetSourceForItemDB(item.Key).Key;
 
                 // If the current item isn't a duplicate
 #if NET20 || NET35
@@ -857,8 +973,8 @@ namespace SabreTools.DatTools
 #endif
             {
                 // Get the machine and source index for this item
-                long machineIndex = datFile.ItemsDB.GetMachineForItem(item.Key).Key;
-                long sourceIndex = datFile.ItemsDB.GetSourceForItem(item.Key).Key;
+                long machineIndex = datFile.GetMachineForItemDB(item.Key).Key;
+                long sourceIndex = datFile.GetSourceForItemDB(item.Key).Key;
 
                 // Get the source associated with the item
                 var source = datFile.ItemsDB.GetSource(sourceIndex);

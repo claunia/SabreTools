@@ -287,8 +287,8 @@ namespace SabreTools.DatTools
 #endif
             {
                 // Get the machine and source index for this item
-                long machineIndex = addFrom.ItemsDB.GetMachineForItem(item.Key).Key;
-                long sourceIndex = addFrom.ItemsDB.GetSourceForItem(item.Key).Key;
+                long machineIndex = addFrom.GetMachineForItemDB(item.Key).Key;
+                long sourceIndex = addFrom.GetSourceForItemDB(item.Key).Key;
 
                 addTo.AddItemDB(item.Value, machineRemapping[machineIndex], sourceRemapping[sourceIndex], statsOnly: false);
 

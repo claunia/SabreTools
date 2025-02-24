@@ -598,7 +598,7 @@ namespace SabreTools.DatFiles
                 return;
 
             // Get the current machine
-            var machine = ItemsDB.GetMachineForItem(datItem.Key);
+            var machine = GetMachineForItemDB(datItem.Key);
             if (machine.Value == null)
                 return;
 

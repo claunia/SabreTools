@@ -202,7 +202,7 @@ namespace SabreTools.DatTools
                         continue;
 
                     // Get the machine associated with the item, if possible
-                    var machine = datFile.ItemsDB.GetMachineForItem(item.Key);
+                    var machine = datFile.GetMachineForItemDB(item.Key);
                     if (machine.Value == null)
                         continue;
 

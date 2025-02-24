@@ -220,8 +220,8 @@ namespace SabreTools.DatTools
 
                     foreach (var datItem in datItems)
                     {
-                        var datMachine = datFile.ItemsDB.GetMachineForItem(datFile.GetItemsForBucketDB(key)!.First().Key);
-                        var intMachine = intDat.ItemsDB.GetMachineForItem(datItem.Key);
+                        var datMachine = datFile.GetMachineForItemDB(datFile.GetItemsForBucketDB(key)!.First().Key);
+                        var intMachine = intDat.GetMachineForItemDB(datItem.Key);
                         if (datMachine.Value != null && intMachine.Value != null)
                             Replacer.ReplaceFields(intMachine.Value, datMachine.Value, machineFieldNames, onlySame);
                     }

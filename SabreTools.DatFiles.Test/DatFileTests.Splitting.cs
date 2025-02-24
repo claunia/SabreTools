@@ -671,7 +671,7 @@ namespace SabreTools.DatFiles.Test
 
             Assert.Single(datFile.GetItemsForBucketDB("parent"));
             long actual = Assert.Single(datFile.GetItemsForBucketDB("child")).Key;
-            Machine? actualMachine = datFile.ItemsDB.GetMachineForItem(actual).Value;
+            Machine? actualMachine = datFile.GetMachineForItemDB(actual).Value;
             Assert.NotNull(actualMachine);
             Assert.Equal("child", actualMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
             Assert.Equal("romof", actualMachine.GetStringFieldValue(Models.Metadata.Machine.RomOfKey));
@@ -777,7 +777,7 @@ namespace SabreTools.DatFiles.Test
 
             Assert.Single(datFile.GetItemsForBucketDB("parent"));
             long actual = Assert.Single(datFile.GetItemsForBucketDB("child")).Key;
-            Machine? actualMachine = datFile.ItemsDB.GetMachineForItem(actual).Value;
+            Machine? actualMachine = datFile.GetMachineForItemDB(actual).Value;
             Assert.NotNull(actualMachine);
             Assert.Equal("child", actualMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
         }

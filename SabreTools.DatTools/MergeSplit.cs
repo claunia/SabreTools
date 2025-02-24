@@ -189,11 +189,11 @@ namespace SabreTools.DatTools
 
                 foreach (var item in items)
                 {
-                    var source = datFile.ItemsDB.GetSourceForItem(item.Key);
+                    var source = datFile.GetSourceForItemDB(item.Key);
                     if (source.Value == null)
                         continue;
 
-                    var machine = datFile.ItemsDB.GetMachineForItem(item.Key);
+                    var machine = datFile.GetMachineForItemDB(item.Key);
                     if (machine.Value == null)
                         continue;
 
