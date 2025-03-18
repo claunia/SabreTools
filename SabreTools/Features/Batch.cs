@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 using SabreTools.Core.Filter;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
-using SabreTools.DatItems;
 using SabreTools.DatTools;
 using SabreTools.Hashing;
 using SabreTools.Help;
