@@ -145,11 +145,15 @@ namespace SabreTools.DatTools
                     if (machine == null)
                         continue;
 
-                    machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Path.GetDirectoryName(filename)
+                    string machineName = Path.GetDirectoryName(filename)
                         + Path.DirectorySeparatorChar
                         + Path.GetFileNameWithoutExtension(filename)
                         + Path.DirectorySeparatorChar
-                        + machine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+                        + machine.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    if (machineName.Length == 0)
+                        machineName = "Default";
+
+                    machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineName);
 
                     newItems.Add(newItem);
                 }
@@ -214,9 +218,15 @@ namespace SabreTools.DatTools
 
                     filename = filename.Remove(0, rootpath.Length);
 
-                    machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Path.GetDirectoryName(filename) + Path.DirectorySeparatorChar
-                        + Path.GetFileNameWithoutExtension(filename) + Path.DirectorySeparatorChar
-                        + machine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+                    string machineName = Path.GetDirectoryName(filename)
+                        + Path.DirectorySeparatorChar
+                        + Path.GetFileNameWithoutExtension(filename)
+                        + Path.DirectorySeparatorChar
+                        + machine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    if (machineName.Length == 0)
+                        machineName = "Default";
+
+                    machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineName);
                 }
 #if NET40_OR_GREATER || NETCOREAPP
             });
