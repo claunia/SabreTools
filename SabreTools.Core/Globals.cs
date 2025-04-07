@@ -14,7 +14,25 @@ namespace SabreTools.Core
         /// <summary>
         /// The current toolset version to be used by all child applications
         /// </summary>
-        public readonly static string? Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
+        public static string? Version
+        {
+            get
+            {
+                try
+                {
+                    var assembly = Assembly.GetEntryAssembly();
+                    if (assembly == null)
+                        return null;
+
+                    var assemblyVersion = Attribute.GetCustomAttribute(assembly, typeof(AssemblyInformationalVersionAttribute)) as AssemblyInformationalVersionAttribute;
+                    return assemblyVersion?.InformationalVersion;
+                }
+                catch (Exception ex)
+                {
+                    return ex.ToString();
+                }
+            }
+        }
 
 #if NET452_OR_GREATER || NETCOREAPP
         /// <summary>
