@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 
 namespace SabreTools.Core.Tools
 {
@@ -156,11 +155,19 @@ namespace SabreTools.Core.Tools
             if (value.Length == 0)
                 return false;
 
+            // Otherwise, make sure that every character is a proper match
+            for (int i = 0; i < value.Length; i++)
+            {
+                char c = value[i];
 #if NET7_0_OR_GREATER
-            return value.All(c => char.IsAsciiHexDigit(c) || c == '.' || c == ',');
+                if (!char.IsAsciiHexDigit(c) && c != '.' && c != ',')
 #else
-            return value.All(c => c.IsAsciiHexDigit() || c == '.' || c == ',');
+                if (!c.IsAsciiHexDigit() && c != '.' && c != ',')
 #endif
+                    return false;
+            }
+
+            return true;
         }
 
 #if NETFRAMEWORK || NETCOREAPP3_1 || NET5_0 || NET6_0

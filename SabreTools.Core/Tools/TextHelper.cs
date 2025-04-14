@@ -1,5 +1,5 @@
+using System;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 using SabreTools.Hashing;
 
@@ -107,7 +107,7 @@ namespace SabreTools.Core.Tools
             if (string.IsNullOrEmpty(input))
                 return string.Empty;
 
-            return new string(input!.Where(c => c <= 255).ToArray());
+            return new string(Array.FindAll(input!.ToCharArray(), c => c <= 255));
         }
 
         #endregion
@@ -195,12 +195,19 @@ namespace SabreTools.Core.Tools
             hash = hash.ToLowerInvariant();
 
             // Otherwise, make sure that every character is a proper match
+            for (int i = 0; i < hash.Length; i++)
+            {
+                char c = hash[i];
 #if NET7_0_OR_GREATER
-            if (hash.Any(c => !char.IsAsciiHexDigit(c)))
+                if (!char.IsAsciiHexDigit(c))
 #else
-            if (hash.Any(c => !c.IsAsciiHexDigit()))
+                if (!c.IsAsciiHexDigit())
 #endif
-                hash = string.Empty;
+                {
+                    hash = string.Empty;
+                    break;
+                }
+            }
 
             return hash;
         }

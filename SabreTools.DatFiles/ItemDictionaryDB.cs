@@ -1069,16 +1069,15 @@ namespace SabreTools.DatFiles
 
                 var datItems = itemIndices
                     .FindAll(i => _items.ContainsKey(i))
-                    .Select(i => new KeyValuePair<long, DatItem>(i, _items[i]))
-                    .ToList();
+                    .ConvertAll(i => new KeyValuePair<long, DatItem>(i, _items[i]));
 
                 Sort(ref datItems, norename);
 
 #if NET40_OR_GREATER || NETCOREAPP
-                _buckets.TryAdd(bucketKeys[i], [.. datItems.Select(kvp => kvp.Key)]);
+                _buckets.TryAdd(bucketKeys[i], datItems.ConvertAll(kvp => kvp.Key));
             });
 #else
-                _buckets[bucketKeys[i]] = [.. datItems.Select(kvp => kvp.Key)];
+                _buckets[bucketKeys[i]] = datItems.ConvertAll(kvp => kvp.Key);
             }
 #endif
         }

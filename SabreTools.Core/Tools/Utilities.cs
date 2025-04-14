@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using SabreTools.Hashing;
 using SabreTools.IO.Extensions;
 
@@ -25,7 +24,7 @@ namespace SabreTools.Core.Tools
                 return false;
 
             // Otherwise, they need to match exactly
-            return firstHash.SequenceEqual(secondHash);
+            return Matching.Extensions.EqualsExactly(firstHash, secondHash);
         }
 
         /// <summary>
