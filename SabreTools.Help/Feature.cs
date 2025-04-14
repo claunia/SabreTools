@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SabreTools.Help
 {
@@ -493,7 +492,10 @@ namespace SabreTools.Help
 
             // If we haven't found a valid flag and we're not looking for just this feature, check to see if any of the subfeatures are valid
             if (!valid && !exact)
-                valid = Features.Keys.Any(k => Features[k]!.ValidateInput(input));
+            {
+                string[] featureKeys = [.. Features.Keys];
+                valid = Array.Exists(featureKeys, k => Features[k]!.ValidateInput(input));
+            }
 
             return valid;
         }
