@@ -1,8 +1,7 @@
 using SabreTools.DatFiles;
-using SabreTools.DatTools;
 using Xunit;
 
-namespace SabreTools.Test
+namespace SabreTools.DatTools.Test
 {
     public class WriterTests
     {
@@ -40,7 +39,7 @@ namespace SabreTools.Test
             // Create the empty DatHeader
             var datHeader = new DatHeader();
             datHeader.SetFieldValue<string?>(DatHeader.FileNameKey, "test.dat");
-            datHeader.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, datFormat);
+            datHeader.SetFieldValue(DatHeader.DatFormatKey, datFormat);
 
             // Invoke the method
             string outDir = "C:\\Test";
@@ -58,7 +57,7 @@ namespace SabreTools.Test
             // Create the empty DatHeader
             var datHeader = new DatHeader();
             datHeader.SetFieldValue<string?>(DatHeader.FileNameKey, "test.dat");
-            datHeader.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, DatFormat.ALL);
+            datHeader.SetFieldValue(DatHeader.DatFormatKey, DatFormat.ALL);
 
             // Invoke the method
             string outDir = "C:\\Test";
