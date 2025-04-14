@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using SabreTools.Hashing;
 using SabreTools.Models.Metadata;
@@ -148,9 +149,9 @@ namespace SabreTools.Core
                 return false;
 
             // If any keys are missing on either side, they can't match
-            if (self.Keys.Except(other.Keys).Any())
-                return false;
-            if (other.Keys.Except(self.Keys).Any())
+            var selfKeys = new HashSet<string>(self.Keys);
+            var otherKeys = new HashSet<string>(other.Keys);
+            if (!selfKeys.SetEquals(otherKeys))
                 return false;
 
             // Check all pairs to see if they're equal
@@ -687,7 +688,8 @@ namespace SabreTools.Core
                 case (Rom romSelf, Rom romOther):
                     romSelf.FillMissingHashes(romOther);
                     break;
-            };
+            }
+            ;
         }
 
         /// <summary>
