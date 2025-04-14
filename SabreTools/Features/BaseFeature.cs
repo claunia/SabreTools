@@ -1313,7 +1313,7 @@ namespace SabreTools.Features
                     new List<string>() { "-fi", "--filter" },
                     "Filter a game/rom field with the given value(s)",
                     ParameterType.List,
-                    longDescription: "Filter any valid item or machine field from inputs. Filters are input in the form 'key=value' or 'key!=value', where the '!' signifies 'not matching'. Numeric values may also prefix the 'value' with '>', '<', or '=' accordingly. Key examples include: romof, category, and game. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
+                    longDescription: "Filter any valid item or machine field from inputs. Filters are input in the form 'type.key=value' or 'type.key!=value', where the '!' signifies 'not matching'. Numeric values may also use extra operations, namely '>', '>=', '<', and '<='. Key examples include: item.romof, machine.category, and game.name. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
             }
         }
 
