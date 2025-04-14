@@ -8,6 +8,142 @@ namespace SabreTools.Test
 {
     public class ParserTests
     {
+        [Fact]
+        public void CreateDatFile_Default_Logiqx()
+        {
+            var datFile = Parser.CreateDatFile();
+            Assert.Equal(DatFormat.Logiqx, datFile.Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey));
+            Assert.Equal(0, datFile.Items.DatStatistics.TotalCount);
+            Assert.Equal(0, datFile.ItemsDB.DatStatistics.TotalCount);
+        }
+
+        [Theory]
+        [InlineData((DatFormat)0x00, DatFormat.Logiqx)]
+        [InlineData(DatFormat.Logiqx, DatFormat.Logiqx)]
+        [InlineData(DatFormat.LogiqxDeprecated, DatFormat.LogiqxDeprecated)]
+        [InlineData(DatFormat.SoftwareList, DatFormat.SoftwareList)]
+        [InlineData(DatFormat.Listxml, DatFormat.Listxml)]
+        [InlineData(DatFormat.OfflineList, DatFormat.OfflineList)]
+        [InlineData(DatFormat.SabreXML, DatFormat.SabreXML)]
+        [InlineData(DatFormat.OpenMSX, DatFormat.OpenMSX)]
+        [InlineData(DatFormat.ArchiveDotOrg, DatFormat.ArchiveDotOrg)]
+        [InlineData(DatFormat.ClrMamePro, DatFormat.ClrMamePro)]
+        [InlineData(DatFormat.RomCenter, DatFormat.RomCenter)]
+        [InlineData(DatFormat.DOSCenter, DatFormat.DOSCenter)]
+        [InlineData(DatFormat.AttractMode, DatFormat.AttractMode)]
+        [InlineData(DatFormat.MissFile, DatFormat.MissFile)]
+        [InlineData(DatFormat.CSV, DatFormat.CSV)]
+        [InlineData(DatFormat.SSV, DatFormat.SSV)]
+        [InlineData(DatFormat.TSV, DatFormat.TSV)]
+        [InlineData(DatFormat.Listrom, DatFormat.Listrom)]
+        [InlineData(DatFormat.EverdriveSMDB, DatFormat.EverdriveSMDB)]
+        [InlineData(DatFormat.SabreJSON, DatFormat.SabreJSON)]
+        [InlineData(DatFormat.RedumpSFV, DatFormat.RedumpSFV)]
+        [InlineData(DatFormat.RedumpMD2, DatFormat.RedumpMD2)]
+        [InlineData(DatFormat.RedumpMD4, DatFormat.RedumpMD4)]
+        [InlineData(DatFormat.RedumpMD5, DatFormat.RedumpMD5)]
+        [InlineData(DatFormat.RedumpSHA1, DatFormat.RedumpSHA1)]
+        [InlineData(DatFormat.RedumpSHA256, DatFormat.RedumpSHA256)]
+        [InlineData(DatFormat.RedumpSHA384, DatFormat.RedumpSHA384)]
+        [InlineData(DatFormat.RedumpSHA512, DatFormat.RedumpSHA512)]
+        [InlineData(DatFormat.RedumpSpamSum, DatFormat.RedumpSpamSum)]
+        public void CreateDatFile_Format_NoBaseDat(DatFormat datFormat, DatFormat expected)
+        {
+            var datFile = Parser.CreateDatFile(datFormat, baseDat: null);
+            Assert.Equal(expected, datFile.Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey));
+            Assert.Equal(0, datFile.Items.DatStatistics.TotalCount);
+            Assert.Equal(0, datFile.ItemsDB.DatStatistics.TotalCount);
+        }
+
+        [Theory]
+        [InlineData((DatFormat)0x00, DatFormat.Logiqx)]
+        [InlineData(DatFormat.Logiqx, DatFormat.Logiqx)]
+        [InlineData(DatFormat.LogiqxDeprecated, DatFormat.LogiqxDeprecated)]
+        [InlineData(DatFormat.SoftwareList, DatFormat.SoftwareList)]
+        [InlineData(DatFormat.Listxml, DatFormat.Listxml)]
+        [InlineData(DatFormat.OfflineList, DatFormat.OfflineList)]
+        [InlineData(DatFormat.SabreXML, DatFormat.SabreXML)]
+        [InlineData(DatFormat.OpenMSX, DatFormat.OpenMSX)]
+        [InlineData(DatFormat.ArchiveDotOrg, DatFormat.ArchiveDotOrg)]
+        [InlineData(DatFormat.ClrMamePro, DatFormat.ClrMamePro)]
+        [InlineData(DatFormat.RomCenter, DatFormat.RomCenter)]
+        [InlineData(DatFormat.DOSCenter, DatFormat.DOSCenter)]
+        [InlineData(DatFormat.AttractMode, DatFormat.AttractMode)]
+        [InlineData(DatFormat.MissFile, DatFormat.MissFile)]
+        [InlineData(DatFormat.CSV, DatFormat.CSV)]
+        [InlineData(DatFormat.SSV, DatFormat.SSV)]
+        [InlineData(DatFormat.TSV, DatFormat.TSV)]
+        [InlineData(DatFormat.Listrom, DatFormat.Listrom)]
+        [InlineData(DatFormat.EverdriveSMDB, DatFormat.EverdriveSMDB)]
+        [InlineData(DatFormat.SabreJSON, DatFormat.SabreJSON)]
+        [InlineData(DatFormat.RedumpSFV, DatFormat.RedumpSFV)]
+        [InlineData(DatFormat.RedumpMD2, DatFormat.RedumpMD2)]
+        [InlineData(DatFormat.RedumpMD4, DatFormat.RedumpMD4)]
+        [InlineData(DatFormat.RedumpMD5, DatFormat.RedumpMD5)]
+        [InlineData(DatFormat.RedumpSHA1, DatFormat.RedumpSHA1)]
+        [InlineData(DatFormat.RedumpSHA256, DatFormat.RedumpSHA256)]
+        [InlineData(DatFormat.RedumpSHA384, DatFormat.RedumpSHA384)]
+        [InlineData(DatFormat.RedumpSHA512, DatFormat.RedumpSHA512)]
+        [InlineData(DatFormat.RedumpSpamSum, DatFormat.RedumpSpamSum)]
+        public void CreateDatFile_Format_BaseDat(DatFormat datFormat, DatFormat expected)
+        {
+            var baseDat = Parser.CreateDatFile();
+            baseDat.Header.SetFieldValue<string?>(DatHeader.FileNameKey, "filename");
+
+            var datFile = Parser.CreateDatFile(datFormat, baseDat);
+            Assert.Equal(expected, datFile.Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey));
+            Assert.Equal("filename", datFile.Header.GetFieldValue<string?>(DatHeader.FileNameKey));
+            Assert.Equal(0, datFile.Items.DatStatistics.TotalCount);
+            Assert.Equal(0, datFile.ItemsDB.DatStatistics.TotalCount);
+        }
+
+        [Theory]
+        [InlineData((DatFormat)0x00, (DatFormat)0x00)] // I think this is a bug
+        [InlineData(DatFormat.Logiqx, DatFormat.Logiqx)]
+        [InlineData(DatFormat.LogiqxDeprecated, DatFormat.LogiqxDeprecated)]
+        [InlineData(DatFormat.SoftwareList, DatFormat.SoftwareList)]
+        [InlineData(DatFormat.Listxml, DatFormat.Listxml)]
+        [InlineData(DatFormat.OfflineList, DatFormat.OfflineList)]
+        [InlineData(DatFormat.SabreXML, DatFormat.SabreXML)]
+        [InlineData(DatFormat.OpenMSX, DatFormat.OpenMSX)]
+        [InlineData(DatFormat.ArchiveDotOrg, DatFormat.ArchiveDotOrg)]
+        [InlineData(DatFormat.ClrMamePro, DatFormat.ClrMamePro)]
+        [InlineData(DatFormat.RomCenter, DatFormat.RomCenter)]
+        [InlineData(DatFormat.DOSCenter, DatFormat.DOSCenter)]
+        [InlineData(DatFormat.AttractMode, DatFormat.AttractMode)]
+        [InlineData(DatFormat.MissFile, DatFormat.MissFile)]
+        [InlineData(DatFormat.CSV, DatFormat.CSV)]
+        [InlineData(DatFormat.SSV, DatFormat.SSV)]
+        [InlineData(DatFormat.TSV, DatFormat.TSV)]
+        [InlineData(DatFormat.Listrom, DatFormat.Listrom)]
+        [InlineData(DatFormat.EverdriveSMDB, DatFormat.EverdriveSMDB)]
+        [InlineData(DatFormat.SabreJSON, DatFormat.SabreJSON)]
+        [InlineData(DatFormat.RedumpSFV, DatFormat.RedumpSFV)]
+        [InlineData(DatFormat.RedumpMD2, DatFormat.RedumpMD2)]
+        [InlineData(DatFormat.RedumpMD4, DatFormat.RedumpMD4)]
+        [InlineData(DatFormat.RedumpMD5, DatFormat.RedumpMD5)]
+        [InlineData(DatFormat.RedumpSHA1, DatFormat.RedumpSHA1)]
+        [InlineData(DatFormat.RedumpSHA256, DatFormat.RedumpSHA256)]
+        [InlineData(DatFormat.RedumpSHA384, DatFormat.RedumpSHA384)]
+        [InlineData(DatFormat.RedumpSHA512, DatFormat.RedumpSHA512)]
+        [InlineData(DatFormat.RedumpSpamSum, DatFormat.RedumpSpamSum)]
+        public void CreateDatFile_Format_FromHeader(DatFormat datFormat, DatFormat expected)
+        {
+            DatHeader datHeader = new DatHeader();
+            datHeader.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, datFormat);
+            datHeader.SetFieldValue<string?>(DatHeader.FileNameKey, "filename");
+
+            DatModifiers datModifiers = new DatModifiers();
+            datModifiers.Quotes = true;
+
+            var datFile = Parser.CreateDatFile(datHeader, datModifiers);
+            Assert.Equal(expected, datFile.Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey));
+            Assert.Equal("filename", datFile.Header.GetFieldValue<string?>(DatHeader.FileNameKey));
+            Assert.True(datFile.Modifiers.Quotes);
+            Assert.Equal(0, datFile.Items.DatStatistics.TotalCount);
+            Assert.Equal(0, datFile.ItemsDB.DatStatistics.TotalCount);
+        }
+
         [Theory]
         [InlineData(null, (DatFormat)0x00, 0)]
         [InlineData("test-logiqx.xml", DatFormat.Logiqx, 6)]
@@ -43,7 +179,7 @@ namespace SabreTools.Test
             // For all filenames, add the local path for test data
             if (filename != null)
                 filename = Path.Combine(Environment.CurrentDirectory, "TestData", filename);
-        
+
             var datFile = Parser.ParseStatistics(filename, throwOnError: true);
             Assert.Equal(datFormat, datFile.Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey));
             Assert.Equal(totalCount, datFile.Items.DatStatistics.TotalCount);

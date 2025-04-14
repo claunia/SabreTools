@@ -90,6 +90,7 @@ namespace SabreTools.DatFiles.Formats
         public SfvFile(DatFile? datFile) : base(datFile)
         {
             _hash = HashType.CRC32;
+            Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, DatFormat.RedumpSFV);
         }
 
         /// <inheritdoc/>
@@ -131,6 +132,7 @@ namespace SabreTools.DatFiles.Formats
         public Md2File(DatFile? datFile) : base(datFile)
         {
             _hash = HashType.MD2;
+            Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, DatFormat.RedumpMD2);
         }
 
         /// <inheritdoc/>
@@ -172,6 +174,7 @@ namespace SabreTools.DatFiles.Formats
         public Md4File(DatFile? datFile) : base(datFile)
         {
             _hash = HashType.MD4;
+            Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, DatFormat.RedumpMD4);
         }
 
         /// <inheritdoc/>
@@ -215,6 +218,7 @@ namespace SabreTools.DatFiles.Formats
         public Md5File(DatFile? datFile) : base(datFile)
         {
             _hash = HashType.MD5;
+            Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, DatFormat.RedumpMD5);
         }
 
         /// <inheritdoc/>
@@ -268,6 +272,7 @@ namespace SabreTools.DatFiles.Formats
         public Sha1File(DatFile? datFile) : base(datFile)
         {
             _hash = HashType.SHA1;
+            Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, DatFormat.RedumpSHA1);
         }
 
         /// <inheritdoc/>
@@ -320,6 +325,7 @@ namespace SabreTools.DatFiles.Formats
         public Sha256File(DatFile? datFile) : base(datFile)
         {
             _hash = HashType.SHA256;
+            Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, DatFormat.RedumpSHA256);
         }
 
         /// <inheritdoc/>
@@ -366,6 +372,7 @@ namespace SabreTools.DatFiles.Formats
         public Sha384File(DatFile? datFile) : base(datFile)
         {
             _hash = HashType.SHA384;
+            Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, DatFormat.RedumpSHA384);
         }
 
         /// <inheritdoc/>
@@ -407,6 +414,7 @@ namespace SabreTools.DatFiles.Formats
         public Sha512File(DatFile? datFile) : base(datFile)
         {
             _hash = HashType.SHA512;
+            Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, DatFormat.RedumpSHA512);
         }
 
         /// <inheritdoc/>
@@ -449,6 +457,7 @@ namespace SabreTools.DatFiles.Formats
         public SpamSumFile(DatFile? datFile) : base(datFile)
         {
             _hash = HashType.SpamSum;
+            Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, DatFormat.RedumpSpamSum);
         }
 
         /// <inheritdoc/>

@@ -19,6 +19,7 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="datFile">Parent DatFile to copy from</param>
         public ArchiveDotOrg(DatFile? datFile) : base(datFile)
         {
+            Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, DatFormat.ArchiveDotOrg);
         }
     }
 }

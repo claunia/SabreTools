@@ -141,6 +141,7 @@ namespace SabreTools.DatFiles.Formats
         public CommaSeparatedValue(DatFile? datFile) : base(datFile)
         {
             _delim = ',';
+            Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, DatFormat.CSV);
         }
     }
 
@@ -156,6 +157,7 @@ namespace SabreTools.DatFiles.Formats
         public SemicolonSeparatedValue(DatFile? datFile) : base(datFile)
         {
             _delim = ';';
+            Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, DatFormat.SSV);
         }
     }
 
@@ -171,6 +173,7 @@ namespace SabreTools.DatFiles.Formats
         public TabSeparatedValue(DatFile? datFile) : base(datFile)
         {
             _delim = '\t';
+            Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, DatFormat.TSV);
         }
     }
 }

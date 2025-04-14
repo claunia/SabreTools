@@ -21,6 +21,7 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="datFile">Parent DatFile to copy from</param>
         public Missfile(DatFile? datFile) : base(datFile)
         {
+            Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, DatFormat.MissFile);
         }
 
         /// <inheritdoc/>

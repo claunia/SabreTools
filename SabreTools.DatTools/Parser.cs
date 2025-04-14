@@ -155,13 +155,23 @@ namespace SabreTools.DatTools
         /// </summary>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        /// <remarks>
+        /// Code must remove the existing format in order to ensure the format is derived
+        /// from the input file instead. This should be addressed later by either always
+        /// deriving the format, or by setting a flag for this to be done automatically.
+        // </remarks>
         public static DatFile ParseStatistics(string? filename, bool throwOnError = false)
         {
             // Null filenames are invalid
             if (filename == null)
-                return CreateDatFile();
+            {
+                DatFile empty = CreateDatFile();
+                empty.Header.RemoveField(DatHeader.DatFormatKey);
+                return empty;
+            }
 
             DatFile datFile = CreateDatFile();
+            datFile.Header.RemoveField(DatHeader.DatFormatKey);
             ParseInto(datFile, filename, statsOnly: true, throwOnError: throwOnError);
             return datFile;
         }

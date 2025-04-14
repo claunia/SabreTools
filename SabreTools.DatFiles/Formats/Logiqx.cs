@@ -253,6 +253,10 @@ namespace SabreTools.DatFiles.Formats
         public Logiqx(DatFile? datFile, bool useGame) : base(datFile)
         {
             _useGame = useGame;
+            if (useGame)
+                Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, DatFormat.LogiqxDeprecated);
+            else
+                Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, DatFormat.Logiqx);
         }
 
         /// <inheritdoc/>
