@@ -172,7 +172,7 @@ namespace SabreTools.DatTools
                     string outfile = outfiles[reportFormat];
                     try
                     {
-                        Parser.Create(reportFormat, stats)?.WriteToFile(outfile, baddumpCol, nodumpCol, throwOnError);
+                        Parser.CreateReport(reportFormat, stats)?.WriteToFile(outfile, baddumpCol, nodumpCol, throwOnError);
                     }
                     catch (Exception ex) when (!throwOnError)
                     {

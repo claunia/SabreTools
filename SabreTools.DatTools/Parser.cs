@@ -532,7 +532,7 @@ namespace SabreTools.DatTools
         /// <param name="statReportFormat">Format of the Statistics Report to be created</param>
         /// <param name="statsList">List of statistics objects to set</param>
         /// <returns>BaseReport of the specific internal type that corresponds to the inputs</returns>
-        public static BaseReport? Create(StatReportFormat statReportFormat, List<DatStatistics> statsList)
+        public static BaseReport? CreateReport(StatReportFormat statReportFormat, List<DatStatistics> statsList)
         {
             return statReportFormat switch
             {
