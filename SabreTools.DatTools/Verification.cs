@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
@@ -94,8 +93,8 @@ namespace SabreTools.DatTools
                     continue;
 
                 // Now we want to remove all duplicates from the DAT
-                datFile.GetDuplicates(fileinfo.ConvertToRom())
-                    .AddRange(datFile.GetDuplicates(fileinfo.ConvertToDisk()));
+                _ = datFile.GetDuplicates(fileinfo.ConvertToRom());
+                _ = datFile.GetDuplicates(fileinfo.ConvertToDisk());
             }
 
             watch.Stop();
@@ -179,8 +178,8 @@ namespace SabreTools.DatTools
                     continue;
 
                 // Now we want to remove all duplicates from the DAT
-                datFile.GetDuplicatesDB(new KeyValuePair<long, DatItem>(-1, fileinfo.ConvertToRom()))
-                    .Concat(datFile.GetDuplicatesDB(new KeyValuePair<long, DatItem>(-1, fileinfo.ConvertToDisk())));
+                _ = datFile.GetDuplicatesDB(new KeyValuePair<long, DatItem>(-1, fileinfo.ConvertToRom()));
+                _ = datFile.GetDuplicatesDB(new KeyValuePair<long, DatItem>(-1, fileinfo.ConvertToDisk()));
             }
 
             watch.Stop();
