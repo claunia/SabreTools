@@ -1,11 +1,10 @@
 using System;
 using System.IO;
 using SabreTools.DatFiles;
-using SabreTools.DatTools;
 using SabreTools.Reports;
 using Xunit;
 
-namespace SabreTools.Test
+namespace SabreTools.DatTools.Test
 {
     public class ParserTests
     {
@@ -131,7 +130,7 @@ namespace SabreTools.Test
         public void CreateDatFile_Format_FromHeader(DatFormat datFormat, DatFormat expected)
         {
             DatHeader datHeader = new DatHeader();
-            datHeader.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, datFormat);
+            datHeader.SetFieldValue(DatHeader.DatFormatKey, datFormat);
             datHeader.SetFieldValue<string?>(DatHeader.FileNameKey, "filename");
 
             DatModifiers datModifiers = new DatModifiers();
