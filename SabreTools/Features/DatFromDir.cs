@@ -24,6 +24,8 @@ namespace SabreTools.Features
 
             // Hash Features
             AddFeature(IncludeCrcFlag);
+            AddFeature(IncludeMd2Flag);
+            AddFeature(IncludeMd4Flag);
             AddFeature(IncludeMd5Flag);
             AddFeature(IncludeSha1Flag);
             AddFeature(IncludeSha256Flag);
