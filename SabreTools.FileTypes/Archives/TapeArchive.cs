@@ -188,8 +188,12 @@ namespace SabreTools.FileTypes.Archives
             try
             {
                 TarArchive ta = TarArchive.Open(File.Open(Filename!, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
-                foreach (TarArchiveEntry entry in ta.Entries.Where(e => e != null && !e.IsDirectory))
+                foreach (TarArchiveEntry entry in ta.Entries)
                 {
+                    // Skip invalid entries
+                    if (entry == null || entry.IsDirectory)
+                        continue;
+
                     // Create a blank item for the entry
                     BaseFile tarEntryRom = new();
 

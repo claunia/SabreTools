@@ -195,8 +195,12 @@ namespace SabreTools.FileTypes.Archives
             try
             {
                 SharpCompress.Archives.Rar.RarArchive ra = SharpCompress.Archives.Rar.RarArchive.Open(File.Open(Filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
-                foreach (RarArchiveEntry entry in ra.Entries.Where(e => e != null && !e.IsDirectory))
+                foreach (RarArchiveEntry entry in ra.Entries)
                 {
+                    // Skip invalid entries
+                    if (entry == null || entry.IsDirectory)
+                        continue;
+
                     // Create a blank item for the entry
                     BaseFile rarEntryRom = new();
 
