@@ -6,7 +6,6 @@ using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.Hashing;
-using SabreTools.IO.Logging;
 
 namespace SabreTools.Reports.Formats
 {
@@ -15,11 +14,6 @@ namespace SabreTools.Reports.Formats
     /// </summary>
     public class Textfile : BaseReport
     {
-        /// <summary>
-        /// Represents if the output goes to console or to a file
-        /// </summary>
-        protected bool _writeToConsole = false;
-
         /// <summary>
         /// Create a new report from the filename
         /// </summary>
@@ -30,21 +24,11 @@ namespace SabreTools.Reports.Formats
         }
 
         /// <inheritdoc/>
-        public override bool WriteToFile(string? outfile, bool baddumpCol, bool nodumpCol, bool throwOnError = false)
+        public override bool WriteToStream(Stream stream, bool baddumpCol, bool nodumpCol, bool throwOnError = false)
         {
-            InternalStopwatch watch = new($"Writing statistics to '{outfile}");
-
             try
             {
-                // Try to create the output file
-                Stream fs = _writeToConsole ? Console.OpenStandardOutput() : File.Create(outfile ?? string.Empty);
-                if (fs == null)
-                {
-                    _logger.Warning($"File '{outfile}' could not be created for writing! Please check to see if the file is writable");
-                    return false;
-                }
-
-                StreamWriter sw = new(fs);
+                StreamWriter sw = new(stream);
 
                 // Now process each of the statistics
                 for (int i = 0; i < _statistics.Count; i++)
@@ -70,16 +54,11 @@ namespace SabreTools.Reports.Formats
                 }
 
                 sw.Dispose();
-                fs.Dispose();
             }
             catch (Exception ex) when (!throwOnError)
             {
                 _logger.Error(ex);
                 return false;
-            }
-            finally
-            {
-                watch.Stop();
             }
 
             return true;
@@ -131,21 +110,6 @@ namespace SabreTools.Reports.Formats
         {
             sw.Write("\n");
             sw.Flush();
-        }
-    }
-
-    /// <summary>
-    /// Console report format
-    /// </summary>
-    public sealed class ConsoleOutput : Textfile
-    {
-        /// <summary>
-        /// Create a new report from the filename
-        /// </summary>
-        /// <param name="statsList">List of statistics objects to set</param>
-        public ConsoleOutput(List<DatStatistics> statsList) : base(statsList)
-        {
-            _writeToConsole = true;
         }
     }
 }

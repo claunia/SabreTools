@@ -5,7 +5,6 @@ using System.Text;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.Hashing;
-using SabreTools.IO.Logging;
 using SabreTools.IO.Writers;
 
 namespace SabreTools.Reports.Formats
@@ -30,21 +29,11 @@ namespace SabreTools.Reports.Formats
         }
 
         /// <inheritdoc/>
-        public override bool WriteToFile(string? outfile, bool baddumpCol, bool nodumpCol, bool throwOnError = false)
+        public override bool WriteToStream(Stream stream, bool baddumpCol, bool nodumpCol, bool throwOnError = false)
         {
-            InternalStopwatch watch = new($"Writing statistics to '{outfile}");
-
             try
             {
-                // Try to create the output file
-                FileStream fs = File.Create(outfile ?? string.Empty);
-                if (fs == null)
-                {
-                    _logger.Warning($"File '{outfile}' could not be created for writing! Please check to see if the file is writable");
-                    return false;
-                }
-
-                SeparatedValueWriter svw = new(fs, Encoding.UTF8)
+                SeparatedValueWriter svw = new(stream, Encoding.UTF8)
                 {
                     Separator = _delim,
                     Quotes = true,
@@ -77,16 +66,11 @@ namespace SabreTools.Reports.Formats
                 }
 
                 svw.Dispose();
-                fs.Dispose();
             }
             catch (Exception ex) when (!throwOnError)
             {
                 _logger.Error(ex);
                 return false;
-            }
-            finally
-            {
-                watch.Stop();
             }
 
             return true;

@@ -234,13 +234,13 @@ namespace SabreTools.DatTools.Test
         }
 
         [Theory]
-        [InlineData(StatReportFormat.None, typeof(Reports.Formats.ConsoleOutput))]
+        [InlineData(StatReportFormat.None, typeof(Reports.Formats.Textfile))]
         [InlineData(StatReportFormat.Textfile, typeof(Reports.Formats.Textfile))]
         [InlineData(StatReportFormat.CSV, typeof(Reports.Formats.CommaSeparatedValue))]
         [InlineData(StatReportFormat.HTML, typeof(Reports.Formats.Html))]
         [InlineData(StatReportFormat.SSV, typeof(Reports.Formats.SemicolonSeparatedValue))]
         [InlineData(StatReportFormat.TSV, typeof(Reports.Formats.TabSeparatedValue))]
-        [InlineData((StatReportFormat)0xFF, typeof(Reports.Formats.ConsoleOutput))]
+        [InlineData((StatReportFormat)0xFF, typeof(Reports.Formats.Textfile))]
         public void CreateReportTest(StatReportFormat reportFormat, Type expected)
         {
             var report = Parser.CreateReport(reportFormat, []);

@@ -220,7 +220,7 @@ namespace SabreTools.DatTools
                 datFile.DatStatistics,
             ];
             var consoleOutput = Parser.CreateReport(StatReportFormat.None, statsList);
-            consoleOutput!.WriteToFile(null, true, true);
+            consoleOutput!.WriteToStream(Console.OpenStandardOutput(), true, true);
         }
 
         /// <summary>

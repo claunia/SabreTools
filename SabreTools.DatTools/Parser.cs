@@ -536,15 +536,15 @@ namespace SabreTools.DatTools
         {
             return statReportFormat switch
             {
-                StatReportFormat.None => new Reports.Formats.ConsoleOutput(statsList),
+                StatReportFormat.None => new Reports.Formats.Textfile(statsList),
                 StatReportFormat.Textfile => new Reports.Formats.Textfile(statsList),
                 StatReportFormat.CSV => new Reports.Formats.CommaSeparatedValue(statsList),
                 StatReportFormat.HTML => new Reports.Formats.Html(statsList),
                 StatReportFormat.SSV => new Reports.Formats.SemicolonSeparatedValue(statsList),
                 StatReportFormat.TSV => new Reports.Formats.TabSeparatedValue(statsList),
                 
-                // We use console output as a backup for generic BaseReport
-                _ => new Reports.Formats.ConsoleOutput(statsList),
+                // We use textfile output as a backup for generic BaseReport
+                _ => new Reports.Formats.Textfile(statsList),
             };
         }
 
