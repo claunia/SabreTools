@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.Hashing;
@@ -94,7 +95,7 @@ namespace SabreTools.Reports.Formats
         {
             string line = @"'" + stat.DisplayName + @"':
 --------------------------------------------------
-    Uncompressed size:       " + GetBytesReadable(stat!.TotalSize) + @"
+    Uncompressed size:       " + NumberHelper.GetBytesReadable(stat!.TotalSize) + @"
     Games found:             " + stat.MachineCount + @"
     Roms found:              " + stat.GetItemCount(ItemType.Rom) + @"
     Disks found:             " + stat.GetItemCount(ItemType.Disk) + @"

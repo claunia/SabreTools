@@ -6,6 +6,7 @@ using System.Net;
 #endif
 using System.Text;
 using System.Xml;
+using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.Hashing;
@@ -231,7 +232,7 @@ body {
 
             xtw.WriteStartElement("td");
             xtw.WriteAttributeString("align", "right");
-            xtw.WriteString(GetBytesReadable(stat.TotalSize));
+            xtw.WriteString(NumberHelper.GetBytesReadable(stat.TotalSize));
             xtw.WriteEndElement(); // td
 
             xtw.WriteStartElement("td");

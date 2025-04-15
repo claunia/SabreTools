@@ -102,5 +102,31 @@ namespace SabreTools.Core.Test.Tools
         }
 
         #endregion
+    
+        #region GetBytesReadable
+
+        [Theory]
+        [InlineData(0, "0 B")]
+        [InlineData(1, "1 B")]
+        [InlineData(-1, "-1 B")]
+        [InlineData(0x400, "1 KB")]
+        [InlineData(-0x400, "-1 KB")]
+        [InlineData(1_234, "1.205 KB")]
+        [InlineData(-1_234, "-1.205 KB")]
+        [InlineData(0x10_0000, "1 MB")]
+        [InlineData(-0x10_0000, "-1 MB")]
+        [InlineData(0x4000_0000, "1 GB")]
+        [InlineData(-0x4000_0000, "-1 GB")]
+        [InlineData(0x100_0000_0000, "1 TB")]
+        [InlineData(-0x100_0000_0000, "-1 TB")]
+        [InlineData(0x4_0000_0000_0000, "1 PB")]
+        [InlineData(-0x4_0000_0000_0000, "-1 PB")]
+        public void GetBytesReadableTest(long input, string expected)
+        {
+            string actual = NumberHelper.GetBytesReadable(input);
+            Assert.Equal(expected, actual);
+        }
+
+        #endregion
     }
 }
