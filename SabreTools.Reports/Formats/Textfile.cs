@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
@@ -93,29 +94,32 @@ namespace SabreTools.Reports.Formats
         /// <param name="nodumpCol">True if nodumps should be included in output, false otherwise</param>
         private static void WriteIndividual(StreamWriter sw, DatStatistics stat, bool baddumpCol, bool nodumpCol)
         {
-            string line = @"'" + stat.DisplayName + @"':
---------------------------------------------------
-    Uncompressed size:       " + NumberHelper.GetBytesReadable(stat!.TotalSize) + @"
-    Games found:             " + stat.MachineCount + @"
-    Roms found:              " + stat.GetItemCount(ItemType.Rom) + @"
-    Disks found:             " + stat.GetItemCount(ItemType.Disk) + @"
-    Roms with CRC:           " + stat.GetHashCount(HashType.CRC32) + @"
-    Roms with MD5:           " + stat.GetHashCount(HashType.MD5) + @"
-    Roms with SHA-1:         " + stat.GetHashCount(HashType.SHA1) + @"
-    Roms with SHA-256:       " + stat.GetHashCount(HashType.SHA256) + @"
-    Roms with SHA-384:       " + stat.GetHashCount(HashType.SHA384) + @"
-    Roms with SHA-512:       " + stat.GetHashCount(HashType.SHA512) + "\n";
+            var line = new StringBuilder();
+
+            line.AppendLine($"'{stat.DisplayName}':");
+            line.AppendLine($"--------------------------------------------------");
+            line.AppendLine($"    Uncompressed size:       {NumberHelper.GetBytesReadable(stat!.TotalSize)}");
+            line.AppendLine($"    Games found:             {stat.MachineCount}");
+            line.AppendLine($"    Roms found:              {stat.GetItemCount(ItemType.Rom)}");
+            line.AppendLine($"    Disks found:             {stat.GetItemCount(ItemType.Disk)}");
+            line.AppendLine($"    Roms with CRC:           {stat.GetHashCount(HashType.CRC32)}");
+            line.AppendLine($"    Roms with MD5:           {stat.GetHashCount(HashType.MD5)}");
+            line.AppendLine($"    Roms with SHA-1:         {stat.GetHashCount(HashType.SHA1)}");
+            line.AppendLine($"    Roms with SHA-256:       {stat.GetHashCount(HashType.SHA256)}");
+            line.AppendLine($"    Roms with SHA-384:       {stat.GetHashCount(HashType.SHA384)}");
+            line.AppendLine($"    Roms with SHA-512:       {stat.GetHashCount(HashType.SHA512)}");
 
             if (baddumpCol)
-                line += "	Roms with BadDump status: " + stat.GetStatusCount(ItemStatus.BadDump) + "\n";
+                line.AppendLine($"    Roms with BadDump status: {stat.GetStatusCount(ItemStatus.BadDump)}");
 
             if (nodumpCol)
-                line += "	Roms with Nodump status: " + stat.GetStatusCount(ItemStatus.Nodump) + "\n";
+                line.AppendLine($"    Roms with Nodump status: {stat.GetStatusCount(ItemStatus.Nodump)}");
 
             // For spacing between DATs
-            line += "\n\n";
+            line.AppendLine();
+            line.AppendLine();
 
-            sw.Write(line);
+            sw.Write(line.ToString());
             sw.Flush();
         }
 
