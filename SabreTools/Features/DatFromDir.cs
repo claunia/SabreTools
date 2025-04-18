@@ -82,35 +82,36 @@ namespace SabreTools.Features
             // For each input directory, create a DAT
             foreach (string path in Inputs)
             {
-                if (Directory.Exists(path) || File.Exists(path))
+                // TODO: Should this be logged?
+                if (!Directory.Exists(path) && !File.Exists(path))
+                    continue;
+
+                // Clone the base Dat for information
+                DatFile datdata = Parser.CreateDatFile(basedat.Header, basedat.Modifiers);
+
+                // Get the base path and fill the header, if needed
+                string basePath = Path.GetFullPath(path);
+                datdata.FillHeaderFromPath(basePath, noAutomaticDate);
+
+                // Now populate from the path
+                bool success = dfd.PopulateFromDir(datdata, basePath);
+                if (success)
                 {
-                    // Clone the base Dat for information
-                    DatFile datdata = Parser.CreateDatFile(basedat.Header, basedat.Modifiers);
+                    // Perform additional processing steps
+                    Extras!.ApplyExtras(datdata);
+                    Extras!.ApplyExtrasDB(datdata);
+                    Splitter!.ApplySplitting(datdata, useTags: false);
+                    datdata.ExecuteFilters(FilterRunner!);
+                    Cleaner!.ApplyCleaning(datdata);
+                    Remover!.ApplyRemovals(datdata);
 
-                    // Get the base path and fill the header, if needed
-                    string basePath = Path.GetFullPath(path);
-                    datdata.FillHeaderFromPath(basePath, noAutomaticDate);
-
-                    // Now populate from the path
-                    bool success = dfd.PopulateFromDir(datdata, basePath);
-                    if (success)
-                    {
-                        // Perform additional processing steps
-                        Extras!.ApplyExtras(datdata);
-                        Extras!.ApplyExtrasDB(datdata);
-                        Splitter!.ApplySplitting(datdata, useTags: false);
-                        datdata.ExecuteFilters(FilterRunner!);
-                        Cleaner!.ApplyCleaning(datdata);
-                        Remover!.ApplyRemovals(datdata);
-
-                        // Write out the file
-                        Writer.Write(datdata, OutputDir);
-                    }
-                    else
-                    {
-                        Console.WriteLine();
-                        OutputRecursive(0);
-                    }
+                    // Write out the file
+                    Writer.Write(datdata, OutputDir);
+                }
+                else
+                {
+                    Console.WriteLine();
+                    OutputRecursive(0);
                 }
             }
 
