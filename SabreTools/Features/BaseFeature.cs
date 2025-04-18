@@ -11,7 +11,7 @@ using SabreTools.Reports;
 
 namespace SabreTools.Features
 {
-    internal class BaseFeature : TopLevel
+    internal abstract class BaseFeature : TopLevel
     {
         #region Logging
 
@@ -22,643 +22,578 @@ namespace SabreTools.Features
 
         #endregion
 
+        #region Constructors
+
+        public BaseFeature(string name, string flag, string description, string? longDescription = null)
+            : base(name, flag, description, longDescription)
+        {
+        }
+
+        public BaseFeature(string name, string[] flags, string description, string? longDescription = null)
+            : base(name, flags, description, longDescription)
+        {
+        }
+
+        #endregion
+
         #region Features
 
         #region Flag features
 
         internal const string AaruFormatsAsFilesValue = "aaruformats-as-files";
-        internal static Feature AaruFormatsAsFilesFlag => new(
+        internal static FlagFeature AaruFormatsAsFilesFlag => new(
             AaruFormatsAsFilesValue,
             ["-caf", "--aaruformats-as-files"],
             "Treat AaruFormats as files",
-            ParameterType.Flag,
             longDescription: "Normally, AaruFormats would be processed using their internal hash to compare against the input DATs. This flag forces all AaruFormats to be treated like regular files.");
 
         internal const string AddBlankFilesValue = "add-blank-files";
-        internal static Feature AddBlankFilesFlag => new(
+        internal static FlagFeature AddBlankFilesFlag => new(
             AddBlankFilesValue,
             ["-ab", "--add-blank-files"],
             "Output blank files for folders",
-            ParameterType.Flag,
             longDescription: "If this flag is set, then blank entries will be created for each of the empty directories in the source. This is useful for tools that require all folders be accounted for in the output DAT.");
 
         internal const string AddDateValue = "add-date";
-        internal static Feature AddDateFlag => new(
+        internal static FlagFeature AddDateFlag => new(
             AddDateValue,
             ["-ad", "--add-date"],
             "Add dates to items, where possible",
-            ParameterType.Flag,
             longDescription: "If this flag is set, then the Date will be appended to each file information in the output DAT. The output format is standardized as \"yyyy/MM/dd HH:mm:ss\".");
 
         internal const string ArchivesAsFilesValue = "archives-as-files";
-        internal static Feature ArchivesAsFilesFlag => new(
+        internal static FlagFeature ArchivesAsFilesFlag => new(
             ArchivesAsFilesValue,
             ["-aaf", "--archives-as-files"],
             "Treat archives as files",
-            ParameterType.Flag,
             longDescription: "Instead of trying to enumerate the files within archives, treat the archives as files themselves. This is good for uncompressed sets that include archives that should be read as-is.");
 
         internal const string BaddumpColumnValue = "baddump-column";
-        internal static Feature BaddumpColumnFlag => new(
+        internal static FlagFeature BaddumpColumnFlag => new(
             BaddumpColumnValue,
             ["-bc", "--baddump-column"],
             "Add baddump stats to output",
-            ParameterType.Flag,
             longDescription: "Add a new column or field for counting the number of baddumps in the DAT.");
 
         internal const string BaseValue = "base";
-        internal static Feature BaseFlag => new(
+        internal static FlagFeature BaseFlag => new(
             BaseValue,
             ["-ba", "--base"],
             "Use source DAT as base name for outputs",
-            ParameterType.Flag,
             longDescription: "If splitting an entire folder of DATs, some output files may be normally overwritten since the names would be the same. With this flag, the original DAT name is used in the output name, in the format of \"Original Name(Dir - Name)\". This can be used in conjunction with --short to output in the format of \"Original Name (Name)\" instead.");
 
         internal const string BaseReplaceValue = "base-replace";
-        internal static Feature BaseReplaceFlag => new(
+        internal static FlagFeature BaseReplaceFlag => new(
             BaseReplaceValue,
             ["-br", "--base-replace"],
             "Replace from base DATs in order",
-            ParameterType.Flag,
             longDescription: "By default, no item names are changed except when there is a merge occurring. This flag enables users to define a DAT or set of base DATs to use as \"replacements\" for all input DATs. Note that the first found instance of an item in the base DAT(s) will be used and all others will be discarded. If no additional flag is given, it will default to updating names.");
 
         internal const string ByGameValue = "by-game";
-        internal static Feature ByGameFlag => new(
+        internal static FlagFeature ByGameFlag => new(
             ByGameValue,
             ["-bg", "--by-game"],
             "Diff against by game instead of hashes",
-            ParameterType.Flag,
             longDescription: "By default, diffing against uses hashes to determine similar files. This flag enables using using each game as a comparision point instead.");
 
         internal const string ChdsAsFilesValue = "chds-as-files";
-        internal static Feature ChdsAsFilesFlag => new(
+        internal static FlagFeature ChdsAsFilesFlag => new(
             ChdsAsFilesValue,
             ["-ic", "--chds-as-files"],
             "Treat CHDs as regular files",
-            ParameterType.Flag,
             longDescription: "Normally, CHDs would be processed using their internal hash to compare against the input DATs. This flag forces all CHDs to be treated like regular files.");
 
         internal const string CleanValue = "clean";
-        internal static Feature CleanFlag => new(
+        internal static FlagFeature CleanFlag => new(
             CleanValue,
             ["-clean", "--clean"],
             "Clean game names according to WoD standards",
-            ParameterType.Flag,
             longDescription: "Game names will be sanitized to remove what the original WoD standards deemed as unneeded information, such as parenthesized or bracketed strings.");
 
         internal const string DatDeviceNonMergedValue = "dat-device-non-merged";
-        internal static Feature DatDeviceNonMergedFlag => new(
+        internal static FlagFeature DatDeviceNonMergedFlag => new(
             DatDeviceNonMergedValue,
             ["-dnd", "--dat-device-non-merged"],
             "Create device non-merged sets",
-            ParameterType.Flag,
             longDescription: "Preprocess the DAT to have child sets contain all items from the device references. This is incompatible with the other --dat-X flags.");
 
         internal const string DatFullMergedValue = "dat-full-merged";
-        internal static Feature DatFullMergedFlag => new(
+        internal static FlagFeature DatFullMergedFlag => new(
             DatFullMergedValue,
             ["-dfm", "--dat-full-merged"],
             "Create fully merged sets",
-            ParameterType.Flag,
             longDescription: "Preprocess the DAT to have parent sets contain all items from the children based on the cloneof tag while also performing deduplication within a parent. This is incompatible with the other --dat-X flags.");
 
         internal const string DatFullNonMergedValue = "dat-full-non-merged";
-        internal static Feature DatFullNonMergedFlag => new(
+        internal static FlagFeature DatFullNonMergedFlag => new(
             DatFullNonMergedValue,
             ["-df", "--dat-full-non-merged"],
             "Create fully non-merged sets",
-            ParameterType.Flag,
             longDescription: "Preprocess the DAT to have child sets contain all items from the parent sets based on the cloneof and romof tags as well as device references. This is incompatible with the other --dat-X flags.");
 
         internal const string DatMergedValue = "dat-merged";
-        internal static Feature DatMergedFlag => new(
+        internal static FlagFeature DatMergedFlag => new(
             DatMergedValue,
             ["-dm", "--dat-merged"],
             "Force creating merged sets",
-            ParameterType.Flag,
             longDescription: "Preprocess the DAT to have parent sets contain all items from the children based on the cloneof tag. This is incompatible with the other --dat-X flags.");
 
         internal const string DatNonMergedValue = "dat-non-merged";
-        internal static Feature DatNonMergedFlag => new(
+        internal static FlagFeature DatNonMergedFlag => new(
             DatNonMergedValue,
             ["-dnm", "--dat-non-merged"],
             "Force creating non-merged sets",
-            ParameterType.Flag,
             longDescription: "Preprocess the DAT to have child sets contain all items from the parent set based on the romof and cloneof tags. This is incompatible with the other --dat-X flags.");
 
         internal const string DatSplitValue = "dat-split";
-        internal static Feature DatSplitFlag => new(
+        internal static FlagFeature DatSplitFlag => new(
             DatSplitValue,
             ["-ds", "--dat-split"],
             "Force creating split sets",
-            ParameterType.Flag,
             longDescription: "Preprocess the DAT to remove redundant files between parents and children based on the romof and cloneof tags. This is incompatible with the other --dat-X flags.");
 
         internal const string DedupValue = "dedup";
-        internal static Feature DedupFlag => new(
+        internal static FlagFeature DedupFlag => new(
             DedupValue,
             ["-dd", "--dedup"],
             "Enable deduping in the created DAT",
-            ParameterType.Flag,
             longDescription: "For all outputted DATs, allow for hash deduping. This makes sure that there are effectively no duplicates in the output files. Cannot be used with game dedup.");
 
         internal const string DeleteValue = "delete";
-        internal static Feature DeleteFlag => new(
+        internal static FlagFeature DeleteFlag => new(
             DeleteValue,
             ["-del", "--delete"],
             "Delete fully rebuilt input files",
-            ParameterType.Flag,
             longDescription: "Optionally, the input files, once processed and fully matched, can be deleted. This can be useful when the original file structure is no longer needed or if there is limited space on the source drive.");
 
         internal const string DepotValue = "depot";
-        internal static Feature DepotFlag => new(
+        internal static FlagFeature DepotFlag => new(
             DepotValue,
             ["-dep", "--depot"],
             "Assume directories are Romba depots",
-            ParameterType.Flag,
             longDescription: "Normally, input directories will be treated with no special format. If this flag is used, all input directories will be assumed to be Romba-style depots.");
 
         internal const string DeprecatedValue = "deprecated";
-        internal static Feature DeprecatedFlag => new(
+        internal static FlagFeature DeprecatedFlag => new(
             DeprecatedValue,
             ["-dpc", "--deprecated"],
             "Output 'game' instead of 'machine'",
-            ParameterType.Flag,
             longDescription: "By default, Logiqx XML DATs output with the more modern \"machine\" tag for each set. This flag allows users to output the older \"game\" tag instead, for compatibility reasons. [Logiqx only]");
 
         internal const string DescriptionAsNameValue = "description-as-name";
-        internal static Feature DescriptionAsNameFlag => new(
+        internal static FlagFeature DescriptionAsNameFlag => new(
             DescriptionAsNameValue,
             ["-dan", "--description-as-name"],
             "Use description instead of machine name",
-            ParameterType.Flag,
             longDescription: "By default, all DATs are converted exactly as they are input. Enabling this flag allows for the machine names in the DAT to be replaced by the machine description instead. In most cases, this will result in no change in the output DAT, but a notable example would be a software list DAT where the machine names are generally DOS-friendly while the description is more complete.");
 
         internal const string DiffAgainstValue = "diff-against";
-        internal static Feature DiffAgainstFlag => new(
+        internal static FlagFeature DiffAgainstFlag => new(
             DiffAgainstValue,
             ["-dag", "--diff-against"],
             "Diff all inputs against a set of base DATs",
-            ParameterType.Flag,
             "This flag will enable a special type of diffing in which a set of base DATs are used as a comparison point for each of the input DATs. This allows users to get a slightly different output to cascaded diffing, which may be more useful in some cases. This is heavily influenced by the diffing model used by Romba.");
 
         internal const string DiffAllValue = "diff-all";
-        internal static Feature DiffAllFlag => new(
+        internal static FlagFeature DiffAllFlag => new(
             DiffAllValue,
             ["-di", "--diff-all"],
             "Create diffdats from inputs (all standard outputs)",
-            ParameterType.Flag,
             longDescription: "By default, all DATs are processed individually with the user-specified flags. With this flag enabled, input DATs are diffed against each other to find duplicates, no duplicates, and only in individuals.");
 
         internal const string DiffCascadeValue = "diff-cascade";
-        internal static Feature DiffCascadeFlag => new(
+        internal static FlagFeature DiffCascadeFlag => new(
             DiffCascadeValue,
             ["-dc", "--diff-cascade"],
             "Enable cascaded diffing",
-            ParameterType.Flag,
             longDescription: "This flag allows for a special type of diffing in which the first DAT is considered a base, and for each additional input DAT, it only leaves the files that are not in one of the previous DATs. This can allow for the creation of rollback sets or even just reduce the amount of duplicates across multiple sets.");
 
         internal const string DiffDuplicatesValue = "diff-duplicates";
-        internal static Feature DiffDuplicatesFlag => new(
+        internal static FlagFeature DiffDuplicatesFlag => new(
             DiffDuplicatesValue,
             ["-did", "--diff-duplicates"],
             "Create diffdat containing just duplicates",
-            ParameterType.Flag,
             longDescription: "All files that have duplicates outside of the original DAT are included.");
 
         internal const string DiffIndividualsValue = "diff-individuals";
-        internal static Feature DiffIndividualsFlag => new(
+        internal static FlagFeature DiffIndividualsFlag => new(
             DiffIndividualsValue,
             ["-dii", "--diff-individuals"],
             "Create diffdats for individual DATs",
-            ParameterType.Flag,
             longDescription: "All files that have no duplicates outside of the original DATs are put into DATs that are named after the source DAT.");
 
         internal const string DiffNoDuplicatesValue = "diff-no-duplicates";
-        internal static Feature DiffNoDuplicatesFlag => new(
+        internal static FlagFeature DiffNoDuplicatesFlag => new(
             DiffNoDuplicatesValue,
             ["-din", "--diff-no-duplicates"],
             "Create diffdat containing no duplicates",
-            ParameterType.Flag,
             longDescription: "All files that have no duplicates outside of the original DATs are included.");
 
         internal const string DiffReverseCascadeValue = "diff-reverse-cascade";
-        internal static Feature DiffReverseCascadeFlag => new(
+        internal static FlagFeature DiffReverseCascadeFlag => new(
             DiffReverseCascadeValue,
             ["-drc", "--diff-reverse-cascade"],
             "Enable reverse cascaded diffing",
-            ParameterType.Flag,
             longDescription: "This flag allows for a special type of diffing in which the last DAT is considered a base, and for each additional input DAT, it only leaves the files that are not in one of the previous DATs. This can allow for the creation of rollback sets or even just reduce the amount of duplicates across multiple sets.");
 
         internal const string ExtensionValue = "extension";
-        internal static Feature ExtensionFlag => new(
+        internal static FlagFeature ExtensionFlag => new(
             ExtensionValue,
             ["-es", "--extension"],
             "Split DAT(s) by two file extensions",
-            ParameterType.Flag,
             longDescription: "For a DAT, or set of DATs, allow for splitting based on a list of input extensions. This can allow for combined DAT files, such as those combining two separate systems, to be split. Files with any extensions not listed in the input lists will be included in both outputted DAT files.");
 
         internal const string GameDedupValue = "game-dedup";
-        internal static Feature GameDedupFlag => new(
+        internal static FlagFeature GameDedupFlag => new(
             GameDedupValue,
             ["-gdd", "--game-dedup"],
             "Enable deduping within games in the created DAT",
-            ParameterType.Flag,
             longDescription: "For all outputted DATs, allow for hash deduping but only within the games, and not across the entire DAT. This makes sure that there are effectively no duplicates within each of the output sets. Cannot be used with standard dedup.");
 
         internal const string GamePrefixValue = "game-prefix";
-        internal static Feature GamePrefixFlag => new(
+        internal static FlagFeature GamePrefixFlag => new(
             GamePrefixValue,
             ["-gp", "--game-prefix"],
             "Add game name as a prefix",
-            ParameterType.Flag,
             longDescription: "This flag allows for the name of the game to be used as a prefix to each file.");
 
         internal const string HashValue = "hash";
-        internal static Feature HashFlag => new(
+        internal static FlagFeature HashFlag => new(
             HashValue,
             ["-hs", "--hash"],
             "Split DAT(s) or folder by best-available hashes",
-            ParameterType.Flag,
             longDescription: "For a DAT, or set of DATs, allow for splitting based on the best available hash for each file within. The order of preference for the outputted DATs is as follows: Nodump, SHA-512, SHA-384, SHA-256, SHA-1, MD5, MD4, MD2, CRC (or worse).");
 
         internal const string HashOnlyValue = "hash-only";
-        internal static Feature HashOnlyFlag => new(
+        internal static FlagFeature HashOnlyFlag => new(
             HashOnlyValue,
             ["-ho", "--hash-only"],
             "Check files by hash only",
-            ParameterType.Flag,
             longDescription: "This sets a mode where files are not checked based on name but rather hash alone. This allows verification of (possibly) incorrectly named folders and sets to be verified without worrying about the proper set structure to be there.");
 
         internal const string IncludeCrcValue = "include-crc";
-        internal static Feature IncludeCrcFlag => new(
+        internal static FlagFeature IncludeCrcFlag => new(
             IncludeCrcValue,
             ["-crc", "--include-crc"],
             "Include CRC32 in output",
-            ParameterType.Flag,
             longDescription: "This enables CRC32 calculation for each of the files. Adding this flag overrides the default hashing behavior of including CRC32, MD5, and SHA-1 hashes.");
 
         internal const string IncludeMd2Value = "include-md2";
-        internal static Feature IncludeMd2Flag => new(
+        internal static FlagFeature IncludeMd2Flag => new(
             IncludeMd2Value,
             ["-md2", "--include-md2"],
             "Include MD2 in output",
-            ParameterType.Flag,
             longDescription: "This enables MD2 calculation for each of the files. Adding this flag overrides the default hashing behavior of including CRC32, MD5, and SHA-1 hashes.");
 
         internal const string IncludeMd4Value = "include-md4";
-        internal static Feature IncludeMd4Flag => new(
+        internal static FlagFeature IncludeMd4Flag => new(
             IncludeMd4Value,
             ["-md4", "--include-md4"],
             "Include MD4 in output",
-            ParameterType.Flag,
             longDescription: "This enables MD4 calculation for each of the files. Adding this flag overrides the default hashing behavior of including CRC32, MD5, and SHA-1 hashes.");
 
         internal const string IncludeMd5Value = "include-md5";
-        internal static Feature IncludeMd5Flag => new(
+        internal static FlagFeature IncludeMd5Flag => new(
             IncludeMd5Value,
             ["-md5", "--include-md5"],
             "Include MD5 in output",
-            ParameterType.Flag,
             longDescription: "This enables MD5 calculation for each of the files. Adding this flag overrides the default hashing behavior of including CRC32, MD5, and SHA-1 hashes.");
 
         internal const string IncludeSha1Value = "include-sha1";
-        internal static Feature IncludeSha1Flag => new(
+        internal static FlagFeature IncludeSha1Flag => new(
             IncludeSha1Value,
             ["-sha1", "--include-sha1"],
             "Include SHA-1 in output",
-            ParameterType.Flag,
             longDescription: "This enables SHA-1 calculation for each of the files. Adding this flag overrides the default hashing behavior of including CRC32, MD5, and SHA-1 hashes.");
 
         internal const string IncludeSha256Value = "include-sha256";
-        internal static Feature IncludeSha256Flag => new(
+        internal static FlagFeature IncludeSha256Flag => new(
             IncludeSha256Value,
             ["-sha256", "--include-sha256"],
             "Include SHA-256 in output",
-            ParameterType.Flag,
             longDescription: "This enables SHA-256 calculation for each of the files. Adding this flag overrides the default hashing behavior of including CRC32, MD5, and SHA-1 hashes.");
 
         internal const string IncludeSha384Value = "include-sha384";
-        internal static Feature IncludeSha384Flag => new(
+        internal static FlagFeature IncludeSha384Flag => new(
             IncludeSha384Value,
             ["-sha384", "--include-sha384"],
             "Include SHA-384 in output",
-            ParameterType.Flag,
             longDescription: "This enables SHA-384 calculation for each of the files. Adding this flag overrides the default hashing behavior of including CRC32, MD5, and SHA-1 hashes.");
 
         internal const string IncludeSha512Value = "include-sha512";
-        internal static Feature IncludeSha512Flag => new(
+        internal static FlagFeature IncludeSha512Flag => new(
             IncludeSha512Value,
             ["-sha512", "--include-sha512"],
             "Include SHA-512 in output",
-            ParameterType.Flag,
             longDescription: "This enables SHA-512 calculation for each of the files. Adding this flag overrides the default hashing behavior of including CRC32, MD5, and SHA-1 hashes.");
 
         internal const string IncludeSpamSumValue = "include-spamsum";
-        internal static Feature IncludeSpamSumFlag => new(
+        internal static FlagFeature IncludeSpamSumFlag => new(
             IncludeSpamSumValue,
             ["-spamsum", "--include-spamsum"],
             "Include SpamSum in output",
-            ParameterType.Flag,
             longDescription: "This enables SpamSum calculation for each of the files. Adding this flag overrides the default hashing behavior of including CRC32, MD5, and SHA-1 hashes.");
 
         internal const string IndividualValue = "individual";
-        internal static Feature IndividualFlag => new(
+        internal static FlagFeature IndividualFlag => new(
             IndividualValue,
             ["-ind", "--individual"],
             "Process input DATs individually",
-            ParameterType.Flag,
             longDescription: "In cases where DATs would be processed in bulk, this flag allows them to be processed on their own instead.");
 
         internal const string InplaceValue = "inplace";
-        internal static Feature InplaceFlag => new(
+        internal static FlagFeature InplaceFlag => new(
             InplaceValue,
             ["-ip", "--inplace"],
             "Write to the input directories, where possible",
-            ParameterType.Flag,
             longDescription: "By default, files are written to the runtime directory (or the output directory, if set). This flag enables users to write out to the directory that the DATs originated from.");
 
         internal const string InverseValue = "inverse";
-        internal static Feature InverseFlag => new(
+        internal static FlagFeature InverseFlag => new(
             InverseValue,
             ["-in", "--inverse"],
             "Rebuild only files not in DAT",
-            ParameterType.Flag,
             longDescription: "Instead of the normal behavior of rebuilding using a DAT, this flag allows the user to use the DAT as a filter instead. All files that are found in the DAT will be skipped and everything else will be output in the selected format.");
 
         internal const string KeepEmptyGamesValue = "keep-empty-games";
-        internal static Feature KeepEmptyGamesFlag => new(
+        internal static FlagFeature KeepEmptyGamesFlag => new(
             KeepEmptyGamesValue,
             ["-keg", "--keep-empty-games"],
             "Keep originally empty sets from the input(s)",
-            ParameterType.Flag,
             longDescription: "Normally, any sets that are considered empty will not be included in the output, this flag allows these empty sets to be added to the output.");
 
         internal const string LevelValue = "level";
-        internal static Feature LevelFlag => new(
+        internal static FlagFeature LevelFlag => new(
             LevelValue,
             ["-ls", "--level"],
             "Split a SuperDAT or folder by lowest available level",
-            ParameterType.Flag,
             longDescription: "For a DAT, or set of DATs, allow for splitting based on the lowest available level of game name. That is, if a game name is top/mid/last, then it will create an output DAT for the parent directory \"mid\" in a folder called \"top\" with a game called \"last\".");
 
         internal const string MatchOfTagsValue = "match-of-tags";
-        internal static Feature MatchOfTagsFlag => new(
+        internal static FlagFeature MatchOfTagsFlag => new(
             MatchOfTagsValue,
             ["-ofg", "--match-of-tags"],
             "Allow cloneof and romof tags to match game name filters",
-            ParameterType.Flag,
             longDescription: "If filter or exclude by game name is used, this flag will allow those filters to be checked against the romof and cloneof tags as well. This can allow for more advanced set-building, especially in arcade-based sets.");
 
         internal const string MergeValue = "merge";
-        internal static Feature MergeFlag => new(
+        internal static FlagFeature MergeFlag => new(
             MergeValue,
             ["-m", "--merge"],
             "Merge the input DATs",
-            ParameterType.Flag,
             longDescription: "By default, all DATs are processed individually with the user-specified flags. With this flag enabled, all of the input DATs are merged into a single output. This is best used with the dedup flag.");
 
         internal const string NoAutomaticDateValue = "no-automatic-date";
-        internal static Feature NoAutomaticDateFlag => new(
+        internal static FlagFeature NoAutomaticDateFlag => new(
             NoAutomaticDateValue,
             ["-b", "--no-automatic-date"],
             "Don't include date in file name",
-            ParameterType.Flag,
             longDescription: "Normally, the DAT will be created with the date in the file name in brackets. This flag removes that instead of the default.");
 
         internal const string NodumpColumnValue = "nodump-column";
-        internal static Feature NodumpColumnFlag => new(
+        internal static FlagFeature NodumpColumnFlag => new(
             NodumpColumnValue,
             ["-nc", "--nodump-column"],
             "Add statistics for nodumps to output",
-            ParameterType.Flag,
             longDescription: "Add a new column or field for counting the number of nodumps in the DAT.");
 
         internal const string OneGamePerRegionValue = "one-game-per-region";
-        internal static Feature OneGamePerRegionFlag => new(
+        internal static FlagFeature OneGamePerRegionFlag => new(
             OneGamePerRegionValue,
             ["-1g1r", "--one-game-per-region"],
             "[EXPERIMENTAL] Try to ensure one game per user-defined region",
-            ParameterType.Flag,
             longDescription: "This allows users to input a list of regions to use to filter on in order so only one game from each set of parent and clones will be included. This requires either cloneof or romof tags to function properly.");
 
         internal const string OneRomPerGameValue = "one-rom-per-game";
-        internal static Feature OneRomPerGameFlag => new(
+        internal static FlagFeature OneRomPerGameFlag => new(
             OneRomPerGameValue,
             ["-orpg", "--one-rom-per-game"],
             "Try to ensure each rom has its own game",
-            ParameterType.Flag,
             longDescription: "In some cases, it is beneficial to have every rom put into its own output set as a subfolder of the original parent. This flag enables outputting each rom to its own game for this purpose.");
 
         internal const string OnlySameValue = "only-same";
-        internal static Feature OnlySameFlag => new(
+        internal static FlagFeature OnlySameFlag => new(
             OnlySameValue,
             ["-ons", "--only-same"],
             "Only update description if machine name matches description",
-            ParameterType.Flag,
             longDescription: "Normally, updating the description will always overwrite if the machine names are the same. With this flag, descriptions will only be overwritten if they are the same as the machine names.");
 
         internal const string QuickValue = "quick";
-        internal static Feature QuickFlag => new(
+        internal static FlagFeature QuickFlag => new(
             QuickValue,
             ["-qs", "--quick"],
             "Enable quick scanning of archives",
-            ParameterType.Flag,
             longDescription: "For all archives, if this flag is enabled, it will only use the header information to get the archive entries' file information. The upside to this is that it is the fastest option. On the downside, it can only get the CRC and size from most archive formats, leading to possible issues.");
 
         internal const string QuotesValue = "quotes";
-        internal static Feature QuotesFlag => new(
+        internal static FlagFeature QuotesFlag => new(
             QuotesValue,
             ["-q", "--quotes"],
             "Double-quote each item",
-            ParameterType.Flag,
             longDescription: "This flag surrounds the item by double-quotes, not including the prefix or postfix.");
 
         internal const string RemoveExtensionsValue = "remove-extensions";
-        internal static Feature RemoveExtensionsFlag => new(
+        internal static FlagFeature RemoveExtensionsFlag => new(
             RemoveExtensionsValue,
             ["-rme", "--remove-extensions"],
             "Remove all extensions from all items",
-            ParameterType.Flag,
             longDescription: "For each item, remove the extension.");
 
         internal const string RemoveUnicodeValue = "remove-unicode";
-        internal static Feature RemoveUnicodeFlag => new(
+        internal static FlagFeature RemoveUnicodeFlag => new(
             RemoveUnicodeValue,
             ["-ru", "--remove-unicode"],
             "Remove unicode characters from names",
-            ParameterType.Flag,
             longDescription: "By default, the character set from the original file(s) will be used for item naming. This flag removes all Unicode characters from the item names, machine names, and machine descriptions.");
 
         internal const string ReverseBaseReplaceValue = "reverse-base-replace";
-        internal static Feature ReverseBaseReplaceFlag => new(
+        internal static FlagFeature ReverseBaseReplaceFlag => new(
             ReverseBaseReplaceValue,
             ["-rbr", "--reverse-base-replace"],
             "Replace item names from base DATs in reverse",
-            ParameterType.Flag,
             longDescription: "By default, no item names are changed except when there is a merge occurring. This flag enables users to define a DAT or set of base DATs to use as \"replacements\" for all input DATs. Note that the first found instance of an item in the last base DAT(s) will be used and all others will be discarded. If no additional flag is given, it will default to updating names.");
 
         internal const string RombaValue = "romba";
-        internal static Feature RombaFlag => new(
+        internal static FlagFeature RombaFlag => new(
             RombaValue,
             ["-ro", "--romba"],
             "Treat like a Romba depot (requires SHA-1)",
-            ParameterType.Flag,
             longDescription: "This flag allows reading and writing of DATs and output files to and from a Romba-style depot. This also implies TorrentGZ input and output for physical files. Where appropriate, Romba depot files will be created as well.");
 
         internal const string RomsValue = "roms";
-        internal static Feature RomsFlag => new(
+        internal static FlagFeature RomsFlag => new(
             RomsValue,
             ["-r", "--roms"],
             "Output roms to miss instead of sets",
-            ParameterType.Flag,
             longDescription: "By default, the outputted file will include the name of the game so this flag allows for the name of the rom to be output instead. [Missfile only]");
 
         internal const string SceneDateStripValue = "scene-date-strip";
-        internal static Feature SceneDateStripFlag => new(
+        internal static FlagFeature SceneDateStripFlag => new(
             SceneDateStripValue,
             ["-sds", "--scene-date-strip"],
             "Remove date from scene-named sets",
-            ParameterType.Flag,
             longDescription: "If this flag is enabled, sets with \"scene\" names will have the date removed from the beginning. For example \"01.01.01-Game_Name-GROUP\" would become \"Game_Name-Group\".");
 
         internal const string ScriptValue = "script";
-        internal static Feature ScriptFlag => new(
+        internal static FlagFeature ScriptFlag => new(
             ScriptValue,
             ["-sc", "--script"],
             "Enable script mode (no clear screen)",
-            ParameterType.Flag,
             "For times when SabreTools is being used in a scripted environment, the user may not want the screen to be cleared every time that it is called. This flag allows the user to skip clearing the screen on run just like if the console was being redirected.");
 
         internal const string ShortValue = "short";
-        internal static Feature ShortFlag => new(
+        internal static FlagFeature ShortFlag => new(
             ShortValue,
             ["-s", "--short"],
             "Use short output names",
-            ParameterType.Flag,
             longDescription: "Instead of using ClrMamePro-style long names for DATs, use just the name of the folder as the name of the DAT. This can be used in conjunction with --base to output in the format of \"Original Name (Name)\" instead.");
 
         internal const string SingleSetValue = "single-set";
-        internal static Feature SingleSetFlag => new(
+        internal static FlagFeature SingleSetFlag => new(
             SingleSetValue,
             ["-si", "--single-set"],
             "All game names replaced by '!'",
-            ParameterType.Flag,
             longDescription: "This is useful for keeping all roms in a DAT in the same archive or folder.");
 
         internal const string SizeValue = "size";
-        internal static Feature SizeFlag => new(
+        internal static FlagFeature SizeFlag => new(
             SizeValue,
             ["-szs", "--size"],
             "Split DAT(s) or folder by file sizes",
-            ParameterType.Flag,
             longDescription: "For a DAT, or set of DATs, allow for splitting based on the sizes of the files, specifically if the type is a Rom (most item types don't have sizes).");
 
         internal const string SkipArchivesValue = "skip-archives";
-        internal static Feature SkipArchivesFlag => new(
+        internal static FlagFeature SkipArchivesFlag => new(
             SkipArchivesValue,
             ["-ska", "--skip-archives"],
             "Skip all archives",
-            ParameterType.Flag,
             longDescription: "Skip any files that are treated like archives");
 
         internal const string SkipFilesValue = "skip-files";
-        internal static Feature SkipFilesFlag => new(
+        internal static FlagFeature SkipFilesFlag => new(
             SkipFilesValue,
             ["-skf", "--skip-files"],
             "Skip all non-archives",
-            ParameterType.Flag,
             longDescription: "Skip any files that are not treated like archives");
 
         internal const string SkipFirstOutputValue = "skip-first-output";
-        internal static Feature SkipFirstOutputFlag => new(
+        internal static FlagFeature SkipFirstOutputFlag => new(
             SkipFirstOutputValue,
             ["-sf", "--skip-first-output"],
             "Skip output of first DAT",
-            ParameterType.Flag,
             longDescription: "In times where the first DAT does not need to be written out a second time, this will skip writing it. This can often speed up the output process.");
 
         // TODO: Should this just skip the item instead of the entire DAT?
         // The rationale behind skipping the entire DAT is that if one thing is missing, likely a lot more is missing
         // TDOO: Add to documentation
         internal const string StrictValue = "strict";
-        internal static Feature StrictFlag => new(
+        internal static FlagFeature StrictFlag => new(
             StrictValue,
             ["-str", "--strict"],
             "Enable strict DAT creation",
-            ParameterType.Flag,
             longDescription: "Instead of writing empty strings for null values when set as required, cancel writing the DAT entirely.");
 
         internal const string SuperdatValue = "superdat";
-        internal static Feature SuperdatFlag => new(
+        internal static FlagFeature SuperdatFlag => new(
             SuperdatValue,
             ["-sd", "--superdat"],
             "Enable SuperDAT creation",
-            ParameterType.Flag,
             longDescription: "Set the type flag to \"SuperDAT\" for the output DAT as well as preserving the directory structure of the inputted folder, if applicable.");
 
         internal const string TarValue = "tar";
-        internal static Feature TarFlag => new(
+        internal static FlagFeature TarFlag => new(
             TarValue,
             ["-tar", "--tar"],
             "Enable Tape ARchive output",
-            ParameterType.Flag,
             longDescription: "Instead of outputting the files to folder, files will be rebuilt to Tape ARchive (TAR) files. This format is a standardized storage archive without any compression, usually used with other compression formats around it. It is widely used in backup applications and source code archives.");
 
         internal const string Torrent7zipValue = "torrent-7zip";
-        internal static Feature Torrent7zipFlag => new(
+        internal static FlagFeature Torrent7zipFlag => new(
             Torrent7zipValue,
             ["-t7z", "--torrent-7zip"],
             "Enable Torrent7Zip output",
-            ParameterType.Flag,
             longDescription: "Instead of outputting the files to folder, files will be rebuilt to Torrent7Zip (T7Z) files. This format is based on the LZMA container format 7Zip, but with custom header information. This is currently unused by any major application. Currently does not produce proper Torrent-compatible outputs.");
 
         internal const string TorrentGzipValue = "torrent-gzip";
-        internal static Feature TorrentGzipFlag => new(
+        internal static FlagFeature TorrentGzipFlag => new(
             TorrentGzipValue,
             ["-tgz", "--torrent-gzip"],
             "Enable Torrent GZip output",
-            ParameterType.Flag,
             longDescription: "Instead of outputting the files to folder, files will be rebuilt to TorrentGZ (TGZ) files. This format is based on the GZip archive format, but with custom header information and a file name replaced by the SHA-1 of the file inside. This is primarily used by external tool Romba (https://github.com/uwedeportivo/romba), but may be used more widely in the future.");
 
         internal const string TorrentZipValue = "torrent-zip";
-        internal static Feature TorrentZipFlag => new(
+        internal static FlagFeature TorrentZipFlag => new(
             TorrentZipValue,
             ["-tzip", "--torrent-zip"],
             "Enable Torrent Zip output",
-            ParameterType.Flag,
             longDescription: "Instead of outputting files to folder, files will be rebuilt to TorrentZip (TZip) files. This format is based on the ZIP archive format, but with custom header information. This is primarily used by external tool RomVault (http://www.romvault.com/) and is already widely used.");
 
         internal const string TotalSizeValue = "total-size";
-        internal static Feature TotalSizeFlag => new(
+        internal static FlagFeature TotalSizeFlag => new(
             TotalSizeValue,
             ["-tis", "--total-size"],
             "Split DAT(s) or folder by total game sizes",
-            ParameterType.Flag,
             longDescription: "For a DAT, or set of DATs, allow for splitting based on the combined sizes of the games, splitting into individual chunks.");
 
         internal const string TrimValue = "trim";
-        internal static Feature TrimFlag => new(
+        internal static FlagFeature TrimFlag => new(
             TrimValue,
             ["-trim", "--trim"],
             "Trim file names to fit NTFS length",
-            ParameterType.Flag,
             longDescription: "In the cases where files will have too long a name, this allows for trimming the name of the files to the NTFS maximum length at most.");
 
         internal const string TypeValue = "type";
-        internal static Feature TypeFlag => new(
+        internal static FlagFeature TypeFlag => new(
             TypeValue,
             ["-ts", "--type"],
             "Split DAT(s) or folder by file types (rom/disk)",
-            ParameterType.Flag,
             longDescription: "For a DAT, or set of DATs, allow for splitting based on the types of the files, specifically if the type is a rom or a disk.");
 
         internal const string UpdateDatValue = "update-dat";
-        internal static Feature UpdateDatFlag => new(
+        internal static FlagFeature UpdateDatFlag => new(
             UpdateDatValue,
             ["-ud", "--update-dat"],
             "Output updated DAT to output directory",
-            ParameterType.Flag,
             longDescription: "Once the files that were able to rebuilt are taken care of, a DAT of the files that could not be matched will be output to the output directory.");
 
         #endregion
@@ -666,28 +601,25 @@ namespace SabreTools.Features
         #region Int32 features
 
         internal const string DepotDepthInt32Value = "depot-depth";
-        internal static Feature DepotDepthInt32Input => new(
+        internal static Int32Feature DepotDepthInt32Input => new(
             DepotDepthInt32Value,
             ["-depd", "--depot-depth"],
             "Set depth of depot for inputs",
-            ParameterType.Int32,
             longDescription: "Optionally, set the depth of input depots. Defaults to 4 deep otherwise.");
 
         internal const string RombaDepthInt32Value = "romba-depth";
-        internal static Feature RombaDepthInt32Input => new(
+        internal static Int32Feature RombaDepthInt32Input => new(
             RombaDepthInt32Value,
             ["-depr", "--romba-depth"],
             "Set depth of depot for outputs",
-            ParameterType.Int32,
             longDescription: "Optionally, set the depth of output depots. Defaults to 4 deep otherwise.");
 
 #if NET452_OR_GREATER || NETCOREAPP
         internal const string ThreadsInt32Value = "threads";
-        internal static Feature ThreadsInt32Input => new(
+        internal static Int32Feature ThreadsInt32Input => new(
             ThreadsInt32Value,
             ["-mt", "--threads"],
             "Amount of threads to use (default = # cores)",
-            ParameterType.Int32,
             longDescription: "Optionally, set the number of threads to use for the multithreaded operations. The default is the number of available machine threads; -1 means unlimited threads created.");
 #endif
 
@@ -696,19 +628,17 @@ namespace SabreTools.Features
         #region Int64 features
 
         internal const string ChunkSizeInt64Value = "chunk-size";
-        internal static Feature ChunkSizeInt64Input => new(
+        internal static Int64Feature ChunkSizeInt64Input => new(
             ChunkSizeInt64Value,
             ["-cs", "--chunk-size"],
             "Set a chunk size to output",
-            ParameterType.Int64,
             longDescription: "Set the total game size to cut off at for each chunked DAT. It is recommended to use a sufficiently large size such as 1GB or else you may run into issues, especially if a single game could be larger than the size provided.");
 
         internal const string RadixInt64Value = "radix";
-        internal static Feature RadixInt64Input => new(
+        internal static Int64Feature RadixInt64Input => new(
             RadixInt64Value,
             ["-rad", "--radix"],
             "Set the midpoint to split at",
-            ParameterType.Int64,
             longDescription: "Set the size at which all roms less than the size are put in the first DAT, and everything greater than or equal goes in the second.");
 
         #endregion
@@ -716,67 +646,59 @@ namespace SabreTools.Features
         #region List<string> features
 
         internal const string BaseDatListValue = "base-dat";
-        internal static Feature BaseDatListInput => new(
+        internal static ListFeature BaseDatListInput => new(
             BaseDatListValue,
             ["-bd", "--base-dat"],
             "Add a base DAT for processing",
-            ParameterType.List,
             longDescription: "Add a DAT or folder of DATs to the base set to be used for all operations. Multiple instances of this flag are allowed.");
 
         internal const string DatListValue = "dat";
-        internal static Feature DatListInput => new(
+        internal static ListFeature DatListInput => new(
             DatListValue,
             ["-dat", "--dat"],
             "Input DAT to be used",
-            ParameterType.List,
             longDescription: "User-supplied DAT for use in all operations. Multiple instances of this flag are allowed.");
 
         internal const string ExcludeFieldListValue = "exclude-field";
-        internal static Feature ExcludeFieldListInput => new(
+        internal static ListFeature ExcludeFieldListInput => new(
             ExcludeFieldListValue,
             ["-ef", "--exclude-field"],
             "Exclude a game/rom field from outputs",
-            ParameterType.List,
             longDescription: "Exclude any valid item or machine field from outputs. Examples include: romof, publisher, and offset.");
 
         internal const string ExtAListValue = "exta";
-        internal static Feature ExtaListInput => new(
+        internal static ListFeature ExtaListInput => new(
             ExtAListValue,
             ["-exta", "--exta"],
             "Set extension to be included in first DAT",
-            ParameterType.List,
             longDescription: "Set the extension to be used to populate the first DAT. Multiple instances of this flag are allowed.");
 
         internal const string ExtBListValue = "extb";
-        internal static Feature ExtbListInput => new(
+        internal static ListFeature ExtbListInput => new(
             ExtBListValue,
             ["-extb", "--extb"],
             "Set extension to be included in second DAT",
-            ParameterType.List,
             longDescription: "Set the extension to be used to populate the second DAT. Multiple instances of this flag are allowed.");
 
         internal const string ExtraIniListValue = "extra-ini";
-        internal static Feature ExtraIniListInput => new(
+        internal static ListFeature ExtraIniListInput => new(
             ExtraIniListValue,
             ["-ini", "--extra-ini"],
             "Apply a MAME INI for given field(s)",
-            ParameterType.List,
             longDescription: "Apply any valid MAME INI for any valid field in the DatFile. Inputs are of the form 'Field:path\\to\\ini'. Multiple instances of this flag are allowed.");
 
         internal const string FilterListValue = "filter";
-        internal static Feature FilterListInput => new(
+        internal static ListFeature FilterListInput => new(
             FilterListValue,
             ["-fi", "--filter"],
             "Filter a game/rom field with the given value(s)",
-            ParameterType.List,
             longDescription: "Filter any valid item or machine field from inputs. Filters are input in the form 'type.key=value' or 'type.key!=value', where the '!' signifies 'not matching'. Numeric values may also use extra operations, namely '>', '>=', '<', and '<='. Key examples include: item.romof, machine.category, and game.name. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
 
         internal const string OutputTypeListValue = "output-type";
-        internal static Feature OutputTypeListInput => new(
+        internal static ListFeature OutputTypeListInput => new(
             OutputTypeListValue,
             ["-ot", "--output-type"],
             "Output DATs to a specified format",
-            ParameterType.List,
             longDescription: @"Add outputting the created DAT to known format. Multiple instances of this flag are allowed.
 
 Possible values are:
@@ -810,19 +732,17 @@ Possible values are:
     xml, logiqx      - Logiqx XML");
 
         internal const string RegionListValue = "region";
-        internal static Feature RegionListInput => new(
+        internal static ListFeature RegionListInput => new(
             RegionListValue,
             ["-reg", "--region"],
             "Add a region for 1G1R",
-            ParameterType.List,
             longDescription: "Add a region (in order) for use with 1G1R filtering. If this is not supplied, then by default, only parent sets will be included in the output. Multiple instances of this flag are allowed.");
 
         internal const string ReportTypeListValue = "report-type";
-        internal static Feature ReportTypeListInput => new(
+        internal static ListFeature ReportTypeListInput => new(
             ReportTypeListValue,
             ["-srt", "--report-type"],
             "Output statistics to a specified format",
-            ParameterType.List,
             longDescription: @"Add outputting the created DAT to known format. Multiple instances of this flag are allowed.
 
 Possible values are:
@@ -834,11 +754,10 @@ Possible values are:
     tsv              - Standardized Tab-Separated Value");
 
         internal const string UpdateFieldListValue = "update-field";
-        internal static Feature UpdateFieldListInput => new(
+        internal static ListFeature UpdateFieldListInput => new(
             UpdateFieldListValue,
             ["-uf", "--update-field"],
             "Update a game/rom field from base DATs",
-            ParameterType.List,
             longDescription: "Update any valid item or machine field from base DAT(s). Examples include: romof, publisher, and offset.");
 
         #endregion
@@ -846,143 +765,126 @@ Possible values are:
         #region String features
 
         internal const string AddExtensionStringValue = "add-extension";
-        internal static Feature AddExtensionStringInput => new(
+        internal static StringFeature AddExtensionStringInput => new(
             AddExtensionStringValue,
             ["-ae", "--add-extension"],
             "Add an extension to each item",
-            ParameterType.String,
             longDescription: "Add a postfix extension to each full item name.");
 
         internal const string AuthorStringValue = "author";
-        internal static Feature AuthorStringInput => new(
+        internal static StringFeature AuthorStringInput => new(
             AuthorStringValue,
             ["-au", "--author"],
             "Set the author of the DAT",
-            ParameterType.String,
             longDescription: "Set the author header field for the output DAT(s)");
 
         internal const string CategoryStringValue = "category";
-        internal static Feature CategoryStringInput => new(
+        internal static StringFeature CategoryStringInput => new(
             CategoryStringValue,
             ["-c", "--category"],
             "Set the category of the DAT",
-            ParameterType.String,
             longDescription: "Set the category header field for the output DAT(s)");
 
         internal const string CommentStringValue = "comment";
-        internal static Feature CommentStringInput => new(
+        internal static StringFeature CommentStringInput => new(
             CommentStringValue,
             ["-co", "--comment"],
             "Set a new comment of the DAT",
-            ParameterType.String,
             longDescription: "Set the comment header field for the output DAT(s)");
 
         internal const string DateStringValue = "date";
-        internal static Feature DateStringInput => new(
+        internal static StringFeature DateStringInput => new(
             DateStringValue,
             ["-da", "--date"],
             "Set a new date",
-            ParameterType.String,
             longDescription: "Set the date header field for the output DAT(s)");
 
         internal const string DescriptionStringValue = "description";
-        internal static Feature DescriptionStringInput => new(
+        internal static StringFeature DescriptionStringInput => new(
             DescriptionStringValue,
             ["-de", "--description"],
             "Set the description of the DAT",
-            ParameterType.String,
             longDescription: "Set the description header field for the output DAT(s)");
 
         internal const string EmailStringValue = "email";
-        internal static Feature EmailStringInput => new(
+        internal static StringFeature EmailStringInput => new(
             EmailStringValue,
             ["-em", "--email"],
             "Set a new email of the DAT",
-            ParameterType.String,
             longDescription: "Set the email header field for the output DAT(s)");
 
         internal const string FilenameStringValue = "filename";
-        internal static Feature FilenameStringInput => new(
+        internal static StringFeature FilenameStringInput => new(
             FilenameStringValue,
             ["-f", "--filename"],
             "Set the external name of the DAT",
-            ParameterType.String,
             longDescription: "Set the external filename for the output DAT(s)");
 
         internal const string ForceMergingStringValue = "forcemerging";
-        internal static Feature ForceMergingStringInput => new(
+        internal static StringFeature ForceMergingStringInput => new(
             ForceMergingStringValue,
             ["-fm", "--forcemerging"],
             "Set force merging",
-            ParameterType.String,
             longDescription: @"Set the forcemerging tag to the given value.
 Possible values are: None, Split, Device, Merged, Nonmerged, Full");
 
         internal const string ForceNodumpStringValue = "forcenodump";
-        internal static Feature ForceNodumpStringInput => new(
+        internal static StringFeature ForceNodumpStringInput => new(
             ForceNodumpStringValue,
             ["-fn", "--forcenodump"],
             "Set force nodump",
-            ParameterType.String,
             longDescription: @"Set the forcenodump tag to the given value.
 Possible values are: None, Obsolete, Required, Ignore");
 
         internal const string ForcePackingStringValue = "forcepacking";
-        internal static Feature ForcePackingStringInput => new(
+        internal static StringFeature ForcePackingStringInput => new(
             ForcePackingStringValue,
             ["-fp", "--forcepacking"],
             "Set force packing",
-            ParameterType.String,
             longDescription: @"Set the forcepacking tag to the given value.
 Possible values are: None, Zip, Unzip, Partial, Flat");
 
         internal const string HeaderStringValue = "header";
-        internal static Feature HeaderStringInput => new(
+        internal static StringFeature HeaderStringInput => new(
             HeaderStringValue,
             ["-h", "--header"],
             "Set a header skipper to use, blank means all",
-            ParameterType.String,
             longDescription: "Set the header special field for the output DAT(s). In file rebuilding, this flag allows for either all copier headers (using \"\") or specific copier headers by name (such as \"fds.xml\") to determine if a file matches or not.");
 
         internal const string HomepageStringValue = "homepage";
-        internal static Feature HomepageStringInput => new(
+        internal static StringFeature HomepageStringInput => new(
             HomepageStringValue,
             ["-hp", "--homepage"],
             "Set a new homepage of the DAT",
-            ParameterType.String,
             longDescription: "Set the homepage header field for the output DAT(s)");
 
         internal const string LogLevelStringValue = "log-level";
-        internal static Feature LogLevelStringInput => new(
+        internal static StringFeature LogLevelStringInput => new(
             LogLevelStringValue,
             ["-ll", "--log-level"],
             "Set the lowest log level for output",
-            ParameterType.String,
             longDescription: @"Set the lowest log level for output.
 Possible values are: Verbose, User, Warning, Error");
 
         internal const string NameStringValue = "name";
-        internal static Feature NameStringInput => new(
+        internal static StringFeature NameStringInput => new(
             NameStringValue,
             ["-n", "--name"],
             "Set the internal name of the DAT",
-            ParameterType.String,
             longDescription: "Set the name header field for the output DAT(s)");
 
         internal const string OutputDirStringValue = "output-dir";
-        internal static Feature OutputDirStringInput => new(
+        internal static StringFeature OutputDirStringInput => new(
             OutputDirStringValue,
             ["-out", "--output-dir"],
             "Set output directory",
-            ParameterType.String,
             longDescription: "This sets an output folder to be used when the files are created. If a path is not defined, the runtime directory is used instead.");
 
         internal const string PostfixStringValue = "postfix";
-        internal static Feature PostfixStringInput => new(
+        internal static StringFeature PostfixStringInput => new(
             PostfixStringValue,
             ["-post", "--postfix"],
             "Set postfix for all lines",
-            ParameterType.String,
             longDescription: @"Set a generic postfix to be appended to all outputted lines.
 
 Some special strings that can be used:
@@ -1002,11 +904,10 @@ Some special strings that can be used:
 - %size% - Replaced with the size");
 
         internal const string PrefixStringValue = "prefix";
-        internal static Feature PrefixStringInput => new(
+        internal static StringFeature PrefixStringInput => new(
             PrefixStringValue,
             ["-pre", "--prefix"],
             "Set prefix for all lines",
-            ParameterType.String,
             longDescription: @"Set a generic prefix to be prepended to all outputted lines.
 
 Some special strings that can be used:
@@ -1026,43 +927,38 @@ Some special strings that can be used:
 - %size% - Replaced with the size");
 
         internal const string ReplaceExtensionStringValue = "replace-extension";
-        internal static Feature ReplaceExtensionStringInput => new(
+        internal static StringFeature ReplaceExtensionStringInput => new(
             ReplaceExtensionStringValue,
             ["-rep", "--replace-extension"],
             "Replace all extensions with specified",
-            ParameterType.String,
             longDescription: "When an extension exists, replace it with the provided instead.");
 
         internal const string RootStringValue = "root";
-        internal static Feature RootStringInput => new(
+        internal static StringFeature RootStringInput => new(
             RootStringValue,
             ["-r", "--root"],
             "Set a new rootdir",
-            ParameterType.String,
             longDescription: "Set the rootdir (as used by SuperDAT mode) for the output DAT(s).");
 
         internal const string RootDirStringValue = "root-dir";
-        internal static Feature RootDirStringInput => new(
+        internal static StringFeature RootDirStringInput => new(
             RootDirStringValue,
             ["-rd", "--root-dir"],
             "Set the root directory for calc",
-            ParameterType.String,
             longDescription: "In the case that the files will not be stored from the root directory, a new root can be set for path length calculations.");
 
         internal const string UrlStringValue = "url";
-        internal static Feature UrlStringInput => new(
+        internal static StringFeature UrlStringInput => new(
             UrlStringValue,
             ["-u", "--url"],
             "Set a new URL of the DAT",
-            ParameterType.String,
             longDescription: "Set the URL header field for the output DAT(s)");
 
         internal const string VersionStringValue = "version";
-        internal static Feature VersionStringInput => new(
+        internal static StringFeature VersionStringInput => new(
             VersionStringValue,
             ["-v", "--version"],
             "Set the version of the DAT",
-            ParameterType.String,
             longDescription: "Set the version header field for the output DAT(s)");
 
         #endregion

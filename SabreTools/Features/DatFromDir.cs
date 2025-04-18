@@ -9,16 +9,17 @@ namespace SabreTools.Features
 {
     internal class DatFromDir : BaseFeature
     {
-        public const string Value = "DATFromDir";
+        public const string DisplayName = "DATFromDir";
+
+        private static readonly string[] _flags = ["d", "d2d", "dfd"];
+
+        private const string _description = "Create DAT(s) from an input directory";
+        
+        private const string _longDescription = "Create a DAT file from an input directory or set of files. By default, this will output a DAT named based on the input directory and the current date. It will also treat all archives as possible games and add all three hashes (CRC, MD5, SHA-1) for each file.";
 
         public DatFromDir()
+            : base(DisplayName, _flags, _description, _longDescription)
         {
-            Name = Value;
-            Flags.AddRange(["d", "d2d", "dfd"]);
-            Description = "Create DAT(s) from an input directory";
-            _featureType = ParameterType.Flag;
-            LongDescription = "Create a DAT file from an input directory or set of files. By default, this will output a DAT named based on the input directory and the current date. It will also treat all archives as possible games and add all three hashes (CRC, MD5, SHA-1) for each file.";
-
             // Common Features
             AddCommonFeatures();
 

@@ -4,15 +4,17 @@ namespace SabreTools.Features
 {
     internal class DisplayHelp : BaseFeature
     {
-        public const string Value = "Help";
+        public const string DisplayName = "Help";
+
+        private static readonly string[] _flags = ["?", "h", "help"];
+
+        private const string _description = "Show this help";
+
+        private const string _longDescription = "Built-in to most of the programs is a basic help text.";
 
         public DisplayHelp()
+            : base(DisplayName, _flags, _description, _longDescription)
         {
-            Name = Value;
-            Flags.AddRange(["?", "h", "help"]);
-            Description = "Show this help";
-            _featureType = ParameterType.Flag;
-            LongDescription = "Built-in to most of the programs is a basic help text.";
         }
 
         public override bool ProcessArgs(string[] args, FeatureSet help)

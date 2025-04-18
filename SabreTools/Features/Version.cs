@@ -6,16 +6,17 @@ namespace SabreTools.Features
 {
     internal class Version : BaseFeature
     {
-        public const string Value = "Version";
+        public const string DisplayName = "Version";
+
+        private static readonly string[] _flags = ["v", "version"];
+
+        private const string _description = "Prints version";
+
+        private const string _longDescription = "Prints current program version.";
 
         public Version()
+            : base(DisplayName, _flags, _description, _longDescription)
         {
-            Name = Value;
-            Flags.AddRange(["v", "version"]);
-            Description = "Prints version";
-            _featureType = ParameterType.Flag;
-            LongDescription = "Prints current program version.";
-
             // Common Features
             AddCommonFeatures();
         }

@@ -10,16 +10,17 @@ namespace SabreTools.Features
 {
     internal class Verify : BaseFeature
     {
-        public const string Value = "Verify";
+        public const string DisplayName = "Verify";
+
+        private static readonly string[] _flags = ["ve", "verify"];
+
+        private const string _description = "Verify a folder against DATs";
+
+        private const string _longDescription = "When used, this will use an input DAT or set of DATs to blindly check against an input folder. The base of the folder is considered the base for the combined DATs and games are either the directories or archives within. This will only do a direct verification of the items within and will create a fixdat afterwards for missing files.";
 
         public Verify()
+            : base(DisplayName, _flags, _description, _longDescription)
         {
-            Name = Value;
-            Flags.AddRange(["ve", "verify"]);
-            Description = "Verify a folder against DATs";
-            _featureType = ParameterType.Flag;
-            LongDescription = "When used, this will use an input DAT or set of DATs to blindly check against an input folder. The base of the folder is considered the base for the combined DATs and games are either the directories or archives within. This will only do a direct verification of the items within and will create a fixdat afterwards for missing files.";
-
             // Common Features
             AddCommonFeatures();
 

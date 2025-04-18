@@ -56,7 +56,7 @@ namespace SabreTools.Core
         public static void SetConsoleHeader(string program)
         {
             // Dynamically create the header string, adapted from http://stackoverflow.com/questions/8200661/how-to-align-string-in-fixed-length-string
-            int width = Console.WindowWidth - 3;
+            int width = (Console.WindowWidth == 0 ? 80 : Console.WindowWidth) - 3;
             string border = $"+{new string('-', width)}+";
             string mid = $"{program} {Globals.Version}";
             mid = $"|{mid.PadLeft(((width - mid.Length) / 2) + mid.Length).PadRight(width)}|";

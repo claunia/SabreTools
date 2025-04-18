@@ -7,15 +7,13 @@ namespace SabreTools.Features
 {
     internal class Stats : BaseFeature
     {
-        public const string Value = "Stats";
+        public const string DisplayName = "Stats";
 
-        public Stats()
-        {
-            Name = Value;
-            Flags.AddRange(["st", "stats"]);
-            Description = "Get statistics on all input DATs";
-            _featureType = ParameterType.Flag;
-            LongDescription = @"This will output by default the combined statistics for all input DAT files.
+        private static readonly string[] _flags = ["st", "stats"];
+
+        private const string _description = "Get statistics on all input DATs";
+
+        private const string _longDescription = @"This will output by default the combined statistics for all input DAT files.
 
 The stats that are outputted are as follows:
 - Total uncompressed size
@@ -30,6 +28,9 @@ The stats that are outputted are as follows:
 - Items that include a SHA-512
 - Items with Nodump status";
 
+        public Stats()
+            : base(DisplayName, _flags, _description, _longDescription)
+        {
             // Common Features
             AddCommonFeatures();
 

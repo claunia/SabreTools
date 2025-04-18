@@ -14,16 +14,17 @@ namespace SabreTools.Features
 {
     internal class Update : BaseFeature
     {
-        public const string Value = "Update";
+        public const string DisplayName = "Update";
+
+        private static readonly string[] _flags = ["ud", "update"];
+
+        private const string _description = "Update and manipulate DAT(s)";
+
+        private const string _longDescription = "This is the multitool part of the program, allowing for almost every manipulation to a DAT, or set of DATs. This is also a combination of many different programs that performed DAT manipulation that work better together.";
 
         public Update()
+            : base(DisplayName, _flags, _description, _longDescription)
         {
-            Name = Value;
-            Flags.AddRange(["ud", "update"]);
-            Description = "Update and manipulate DAT(s)";
-            _featureType = ParameterType.Flag;
-            LongDescription = "This is the multitool part of the program, allowing for almost every manipulation to a DAT, or set of DATs. This is also a combination of many different programs that performed DAT manipulation that work better together.";
-
             // Common Features
             AddCommonFeatures();
 

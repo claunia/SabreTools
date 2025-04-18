@@ -1,49 +1,61 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace SabreTools.Help
 {
-    public class Feature
+    public abstract class Feature
     {
-        #region Protected instance variables
+        #region Fields
 
-        protected ParameterType _featureType;
+        // <summary>
+        /// Indicates if the feature has been seen already
+        /// </summary>
         protected bool _foundOnce = false;
-        protected object? _value = null;
 
         #endregion
 
-        #region Publicly facing variables
+        #region Properties
 
-        public string? Name { get; protected set; }
+        /// <summary>
+        /// Display name for the feature
+        /// </summary>
+        public string Name { get; protected set; }
+
+        /// <summary>
+        /// Set of flags associated with the feature
+        /// </summary>
         public readonly List<string> Flags = [];
-        public string? Description { get; protected set; }
+
+        /// <summary>
+        /// Short description of the feature
+        /// </summary>
+        public string Description { get; protected set; }
+
+        /// <summary>
+        /// Optional long description of the feature
+        /// </summary>
         public string? LongDescription { get; protected set; }
+
+        /// <summary>
+        /// Set of subfeatures associated with this feature
+        /// </summary>
         public readonly Dictionary<string, Feature?> Features = [];
 
         #endregion
 
         #region Constructors
 
-        /// <summary>
-        /// Only used by inheriting classes
-        /// </summary>
-        protected Feature()
+        internal Feature(string name, string flag, string description, string? longDescription = null)
         {
-        }
-
-        public Feature(string name, string flag, string description, ParameterType featureType, string? longDescription = null)
-        {
-            _featureType = featureType;
             Name = name;
             Flags.Add(flag);
             Description = description;
             LongDescription = longDescription;
         }
 
-        public Feature(string name, List<string> flags, string description, ParameterType featureType, string? longDescription = null)
+        internal Feature(string name, string[] flags, string description, string? longDescription = null)
         {
-            _featureType = featureType;
             Name = name;
             Flags.AddRange(flags);
             Description = description;
@@ -66,9 +78,9 @@ namespace SabreTools.Help
         /// <summary>
         /// Directly address a given subfeature
         /// </summary>
-        public Feature? this[Feature? subfeature]
+        public Feature? this[Feature subfeature]
         {
-            get { return Features.ContainsKey(subfeature?.Name ?? string.Empty) ? Features[subfeature?.Name ?? string.Empty] : null; }
+            get { return Features.ContainsKey(subfeature.Name) ? Features[subfeature.Name] : null; }
             set { Features[subfeature?.Name ?? string.Empty] = value; }
         }
 
@@ -81,30 +93,6 @@ namespace SabreTools.Help
             lock (Features)
             {
                 Features[feature.Name ?? string.Empty] = feature;
-            }
-        }
-
-        /// <summary>
-        /// Add a new flag for this feature
-        /// </summary>
-        /// <param name="flag">Flag to add for this feature</param>
-        public void AddFlag(string flag)
-        {
-            lock (Flags)
-            {
-                Flags.Add(flag);
-            }
-        }
-
-        /// <summary>
-        /// Add a set of new flags for this feature
-        /// </summary>
-        /// <param name="flags">List of flags to add to this feature</param>
-        public void AddFlags(List<string> flags)
-        {
-            lock (Flags)
-            {
-                Flags.AddRange(flags);
             }
         }
 
@@ -144,54 +132,39 @@ namespace SabreTools.Help
             List<string> outputList = [];
 
             // Build the output string first
-            string output = string.Empty;
+            var output = new StringBuilder();
 
             // Add the pre-space first
-            output += CreatePadding(pre);
+            output.Append(CreatePadding(pre));
 
-            // Preprocess the flags, if necessary
-            string[] newflags = new string[Flags.Count];
-            Flags.CopyTo(newflags);
-            switch (_featureType)
-            {
-                case ParameterType.Int32:
-                case ParameterType.Int64:
-                case ParameterType.List:
-                case ParameterType.String:
-                    for (int i = 0; i < newflags.Length; i++)
-                    {
-                        newflags[i] += "=";
-                    }
-                    break;
-                case ParameterType.Flag:
-                default:
-                    // No-op
-                    break;
-            }
-
-            // Now add all flags
-            output += string.Join(", ", newflags);
+            // Preprocess and add the flags
+            output.Append(FormatFlags());
 
             // If we have a midpoint set, check to see if the string needs padding
-            if (midpoint > 0 && output.Length < midpoint)
-                output += CreatePadding(midpoint - output.Length);
+            if (midpoint > 0 && output.ToString().Length < midpoint)
+                output.Append(CreatePadding(midpoint - output.ToString().Length));
             else
-                output += " ";
+                output.Append(" ");
 
             // Append the description
-            output += Description;
+            output.Append(Description);
 
             // Now append it to the list
-            outputList.Add(output);
+            outputList.Add(output.ToString());
 
             // If we are outputting the long description, format it and then add it as well
             if (includeLongDescription)
             {
                 // Get the width of the console for wrapping reference
-                int width = Console.WindowWidth - 1;
+                int width = (Console.WindowWidth == 0 ? 80 : Console.WindowWidth) - 1;
 
                 // Prepare the output string
-                output = CreatePadding(pre + 4);
+#if NET20 || NET35
+                output = new();
+#else
+                output.Clear();
+#endif
+                output.Append(CreatePadding(pre + 4));
 
                 // Now split the input description and start processing
                 string[]? split = LongDescription?.Split(' ');
@@ -207,56 +180,56 @@ namespace SabreTools.Help
                         for (int j = 0; j < subsplit.Length - 1; j++)
                         {
                             // Add the next word only if the total length doesn't go above the width of the screen
-                            if (output.Length + subsplit[j].Length < width)
+                            if (output.ToString().Length + subsplit[j].Length < width)
                             {
-                                output += (output.Length == pre + 4 ? string.Empty : " ") + subsplit[j];
+                                output.Append((output.ToString().Length == pre + 4 ? string.Empty : " ") + subsplit[j]);
                             }
                             // Otherwise, we want to cache the line to output and create a new blank string
                             else
                             {
-                                outputList.Add(output);
-                                output = CreatePadding(pre + 4);
-                                output += (output.Length == pre + 4 ? string.Empty : " ") + subsplit[j];
+                                outputList.Add(output.ToString());
+#if NET20 || NET35
+                                output = new();
+#else
+                                output.Clear();
+#endif
+                                output.Append(CreatePadding(pre + 4));
+                                output.Append((output.ToString().Length == pre + 4 ? string.Empty : " ") + subsplit[j]);
                             }
 
-                            outputList.Add(output);
-                            output = CreatePadding(pre + 4);
+                            outputList.Add(output.ToString());
+#if NET20 || NET35
+                            output = new();
+#else
+                            output.Clear();
+#endif
+                            output.Append(CreatePadding(pre + 4));
                         }
 
-                        output += subsplit[subsplit.Length - 1];
+                        output.Append(subsplit[subsplit.Length - 1]);
                         continue;
                     }
 
                     // Add the next word only if the total length doesn't go above the width of the screen
-                    if (output.Length + split[i].Length < width)
+                    if (output.ToString().Length + split[i].Length < width)
                     {
-                        output += (output.Length == pre + 4 ? string.Empty : " ") + split[i];
+                        output.Append((output.ToString().Length == pre + 4 ? string.Empty : " ") + split[i]);
                     }
                     // Otherwise, we want to cache the line to output and create a new blank string
                     else
                     {
-                        outputList.Add(output);
-                        output = CreatePadding(pre + 4);
-                        output += (output.Length == pre + 4 ? string.Empty : " ") + split[i];
+                        outputList.Add(output.ToString());
+                        output.Append(CreatePadding(pre + 4));
+                        output.Append((output.ToString().Length == pre + 4 ? string.Empty : " ") + split[i]);
                     }
                 }
 
                 // Add the last created output and a blank line for clarity
-                outputList.Add(output);
+                outputList.Add(output.ToString());
                 outputList.Add(string.Empty);
             }
 
             return outputList;
-        }
-
-        /// <summary>
-        /// Create a padding space based on the given length
-        /// </summary>
-        /// <param name="spaces">Number of padding spaces to add</param>
-        /// <returns>String with requested number of blank spaces</returns>
-        private static string CreatePadding(int spaces)
-        {
-            return string.Empty.PadRight(spaces);
         }
 
         /// <summary>
@@ -272,7 +245,7 @@ namespace SabreTools.Help
             List<string> outputList = [];
 
             // Build the output string first
-            string output = string.Empty;
+            var output = new StringBuilder();
 
             // Normalize based on the tab level
             int preAdjusted = pre;
@@ -284,51 +257,36 @@ namespace SabreTools.Help
             }
 
             // Add the pre-space first
-            output += CreatePadding(preAdjusted);
+            output.Append(CreatePadding(preAdjusted));
 
-            // Preprocess the flags, if necessary
-            string[] newflags = new string[Flags.Count];
-            Flags.CopyTo(newflags);
-            switch (_featureType)
-            {
-                case ParameterType.Int32:
-                case ParameterType.Int64:
-                case ParameterType.List:
-                case ParameterType.String:
-                    for (int i = 0; i < newflags.Length; i++)
-                    {
-                        newflags[i] += "=";
-                    }
-                    break;
-                case ParameterType.Flag:
-                default:
-                    // No-op
-                    break;
-            }
-
-            // Now add all flags
-            output += string.Join(", ", newflags);
+            // Preprocess and add the flags
+            output.Append(FormatFlags());
 
             // If we have a midpoint set, check to see if the string needs padding
-            if (midpoint > 0 && output.Length < midpointAdjusted)
-                output += CreatePadding(midpointAdjusted - output.Length);
+            if (midpoint > 0 && output.ToString().Length < midpointAdjusted)
+                output.Append(CreatePadding(midpointAdjusted - output.ToString().Length));
             else
-                output += " ";
+                output.Append(" ");
 
             // Append the description
-            output += Description;
+            output.Append(Description);
 
             // Now append it to the list
-            outputList.Add(output);
+            outputList.Add(output.ToString());
 
             // If we are outputting the long description, format it and then add it as well
             if (includeLongDescription)
             {
                 // Get the width of the console for wrapping reference
-                int width = Console.WindowWidth - 1;
+                int width = (Console.WindowWidth == 0 ? 80 : Console.WindowWidth) - 1;
 
                 // Prepare the output string
-                output = CreatePadding(preAdjusted + 4);
+#if NET20 || NET35
+                output = new();
+#else
+                output.Clear();
+#endif
+                output.Append(CreatePadding(preAdjusted + 4));
 
                 // Now split the input description and start processing
                 string[]? split = LongDescription?.Split(' ');
@@ -344,42 +302,57 @@ namespace SabreTools.Help
                         for (int j = 0; j < subsplit.Length - 1; j++)
                         {
                             // Add the next word only if the total length doesn't go above the width of the screen
-                            if (output.Length + subsplit[j].Length < width)
+                            if (output.ToString().Length + subsplit[j].Length < width)
                             {
-                                output += (output.Length == preAdjusted + 4 ? string.Empty : " ") + subsplit[j];
+                                output.Append((output.ToString().Length == preAdjusted + 4 ? string.Empty : " ") + subsplit[j]);
                             }
                             // Otherwise, we want to cache the line to output and create a new blank string
                             else
                             {
-                                outputList.Add(output);
-                                output = CreatePadding(preAdjusted + 4);
-                                output += (output.Length == preAdjusted + 4 ? string.Empty : " ") + subsplit[j];
+                                outputList.Add(output.ToString());
+#if NET20 || NET35
+                                output = new();
+#else
+                                output.Clear();
+#endif
+                                output.Append(CreatePadding(preAdjusted + 4));
+                                output.Append((output.ToString().Length == preAdjusted + 4 ? string.Empty : " ") + subsplit[j]);
                             }
 
-                            outputList.Add(output);
-                            output = CreatePadding(preAdjusted + 4);
+                            outputList.Add(output.ToString());
+#if NET20 || NET35
+                            output = new();
+#else
+                            output.Clear();
+#endif
+                            output.Append(CreatePadding(preAdjusted + 4));
                         }
 
-                        output += subsplit[subsplit.Length - 1];
+                        output.Append(subsplit[subsplit.Length - 1]);
                         continue;
                     }
 
                     // Add the next word only if the total length doesn't go above the width of the screen
-                    if (output.Length + split[i].Length < width)
+                    if (output.ToString().Length + split[i].Length < width)
                     {
-                        output += (output.Length == preAdjusted + 4 ? string.Empty : " ") + split[i];
+                        output.Append((output.ToString().Length == preAdjusted + 4 ? string.Empty : " ") + split[i]);
                     }
                     // Otherwise, we want to cache the line to output and create a new blank string
                     else
                     {
-                        outputList.Add(output);
-                        output = CreatePadding(preAdjusted + 4);
-                        output += (output.Length == preAdjusted + 4 ? string.Empty : " ") + split[i];
+                        outputList.Add(output.ToString());
+#if NET20 || NET35
+                        output = new();
+#else
+                        output.Clear();
+#endif
+                        output.Append(CreatePadding(preAdjusted + 4));
+                        output.Append((output.ToString().Length == preAdjusted + 4 ? string.Empty : " ") + split[i]);
                     }
                 }
 
                 // Add the last created output and a blank line for clarity
-                outputList.Add(output);
+                outputList.Add(output.ToString());
                 outputList.Add(string.Empty);
             }
 
@@ -399,178 +372,57 @@ namespace SabreTools.Help
         /// <param name="exact">True if just this feature should be checked, false if all subfeatures are checked as well</param>
         /// <param name="ignore">True if the existing flag should be ignored, false otherwise</param>
         /// <returns>True if the flag was valid, false otherwise</returns>
-        public bool ValidateInput(string input, bool exact = false, bool ignore = false)
-        {
-            bool valid = false;
-
-            // Pre-split the input for efficiency
-            string[] splitInput = input.Split('=');
-
-            // Determine what we should be looking for
-            switch (_featureType)
-            {
-                // If we have a flag, make sure it doesn't have an equal sign in it 
-                case ParameterType.Flag:
-                    valid = !input.Contains("=") && Flags.Contains(input);
-                    if (valid)
-                    {
-                        _value = true;
-
-                        // If we've already found this feature before
-                        if (_foundOnce && !ignore)
-                            valid = false;
-
-                        _foundOnce = true;
-                    }
-
-                    break;
-
-                // If we have an Int32, try to parse it if at all possible
-                case ParameterType.Int32:
-                    valid = input.Contains("=") && Flags.Contains(splitInput[0]);
-                    if (valid)
-                    {
-                        if (!Int32.TryParse(splitInput[1], out int value))
-                            value = Int32.MinValue;
-
-                        _value = value;
-
-                        // If we've already found this feature before
-                        if (_foundOnce && !ignore)
-                            valid = false;
-
-                        _foundOnce = true;
-                    }
-
-                    break;
-
-                // If we have an Int32, try to parse it if at all possible
-                case ParameterType.Int64:
-                    valid = input.Contains("=") && Flags.Contains(splitInput[0]);
-                    if (valid)
-                    {
-                        if (!Int64.TryParse(splitInput[1], out long value))
-                            value = Int64.MinValue;
-
-                        _value = value;
-
-                        // If we've already found this feature before
-                        if (_foundOnce && !ignore)
-                            valid = false;
-
-                        _foundOnce = true;
-                    }
-
-                    break;
-
-                // If we have an input, make sure it has an equals sign in it
-                case ParameterType.List:
-                    valid = input.Contains("=") && Flags.Contains(splitInput[0]);
-                    if (valid)
-                    {
-                        _value ??= new List<string>();
-                        (_value as List<string>)?.Add(string.Join("=", splitInput, 1, splitInput.Length - 1));
-                    }
-
-                    break;
-
-                case ParameterType.String:
-                    valid = input.Contains("=") && Flags.Contains(input.Split('=')[0]);
-                    if (valid)
-                    {
-                        _value = string.Join("=", splitInput, 1, splitInput.Length - 1);
-
-                        // If we've already found this feature before
-                        if (_foundOnce && !ignore)
-                            valid = false;
-
-                        _foundOnce = true;
-                    }
-
-                    break;
-            }
-
-            // If we haven't found a valid flag and we're not looking for just this feature, check to see if any of the subfeatures are valid
-            if (!valid && !exact)
-            {
-                string[] featureKeys = [.. Features.Keys];
-                valid = Array.Exists(featureKeys, k => Features[k]!.ValidateInput(input));
-            }
-
-            return valid;
-        }
-
-        /// <summary>
-        /// Get the boolean value associated with this feature
-        /// </summary>
-        public bool GetBoolValue()
-        {
-            if (_featureType != ParameterType.Flag)
-                throw new ArgumentException("Feature is not a flag");
-
-            return (_value as bool?) ?? false;
-        }
-
-        /// <summary>
-        /// Get the string value associated with this feature
-        /// </summary>
-        public string? GetStringFieldValue()
-        {
-            if (_featureType != ParameterType.String)
-                throw new ArgumentException("Feature is not a string");
-
-            return _value as string;
-        }
-
-        /// <summary>
-        /// Get the Int32 value associated with this feature
-        /// </summary>
-        public int GetInt32Value()
-        {
-            if (_featureType != ParameterType.Int32)
-                throw new ArgumentException("Feature is not an int");
-
-            return (_value as int?) ?? int.MinValue;
-        }
-
-        /// <summary>
-        /// Get the Int64 value associated with this feature
-        /// </summary>
-        public long GetInt64Value()
-        {
-            if (_featureType != ParameterType.Int64)
-                throw new ArgumentException("Feature is not a long");
-
-            return (_value as long?) ?? long.MinValue;
-        }
-
-        /// <summary>
-        /// Get the List\<string\> value associated with this feature
-        /// </summary>
-        public List<string> GetListValue()
-        {
-            if (_featureType != ParameterType.List)
-                throw new ArgumentException("Feature is not a list");
-
-            return (_value as List<string>) ?? [];
-        }
+        public abstract bool ValidateInput(string input, bool exact = false, bool ignore = false);
 
         /// <summary>
         /// Returns if this feature has a valid value or not
         /// </summary>
         /// <returns>True if the feature is enabled, false otherwise</returns>
-        public bool IsEnabled()
+        public abstract bool IsEnabled();
+
+        /// <summary>
+        /// Pre-format the flags for output
+        /// </summary>
+        protected abstract string FormatFlags();
+
+        /// <summary>
+        /// Create a padding space based on the given length
+        /// </summary>
+        /// <param name="spaces">Number of padding spaces to add</param>
+        /// <returns>String with requested number of blank spaces</returns>
+        private static string CreatePadding(int spaces) => string.Empty.PadRight(spaces);
+
+        #endregion
+    }
+
+    public abstract class Feature<T> : Feature
+    {
+        public T? Value { get; protected set; }
+
+        #region Constructors
+
+        internal Feature(string name, string flag, string description, string? longDescription = null)
+            : base(name, flag, description, longDescription)
         {
-            return _featureType switch
-            {
-                ParameterType.Flag => (_value as bool?) == true,
-                ParameterType.String => (_value as string) != null,
-                ParameterType.Int32 => (_value as int?).HasValue && (_value as int?)!.Value != int.MinValue,
-                ParameterType.Int64 => (_value as long?).HasValue && (_value as long?)!.Value != long.MinValue,
-                ParameterType.List => (_value as List<string>) != null,
-                _ => false,
-            };
         }
+
+        internal Feature(string name, string[] flags, string description, string? longDescription = null)
+            : base(name, flags, description, longDescription)
+        {
+        }
+
+        #endregion
+
+        #region Instance Methods
+
+        /// <inheritdoc/>
+        public override abstract bool ValidateInput(string input, bool exact = false, bool ignore = false);
+
+        /// <inheritdoc/>
+        public override abstract bool IsEnabled();
+
+        /// <inheritdoc/>
+        protected override abstract string FormatFlags();
 
         #endregion
     }

@@ -8,7 +8,7 @@ namespace SabreTools.Help
     /// <summary>
     /// Represents an actionable top-level feature
     /// </summary>
-    public abstract class TopLevel : Feature
+    public abstract class TopLevel : FlagFeature
     {
         #region Fields
 
@@ -30,10 +30,14 @@ namespace SabreTools.Help
 
         #region Constructors
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public TopLevel()
+        public TopLevel(string name, string flag, string description, string? longDescription = null)
+            : base(name, flag, description, longDescription)
+        {
+            _logger = new Logger(this);
+        }
+
+        public TopLevel(string name, string[] flags, string description, string? longDescription = null)
+            : base(name, flags, description, longDescription)
         {
             _logger = new Logger(this);
         }
@@ -109,9 +113,12 @@ namespace SabreTools.Help
         protected static int GetInt32(Dictionary<string, Feature?> features, string key)
         {
             if (!features.ContainsKey(key))
-                return Int32.MinValue;
+                return int.MinValue;
 
-            return features[key]!.GetInt32Value();
+            if (features[key] is not Int32Feature i)
+                throw new ArgumentException("Feature is not an int");
+
+            return i.Value;
         }
 
         /// <summary>
@@ -120,9 +127,12 @@ namespace SabreTools.Help
         protected static long GetInt64(Dictionary<string, Feature?> features, string key)
         {
             if (!features.ContainsKey(key))
-                return Int64.MinValue;
+                return long.MinValue;
 
-            return features[key]!.GetInt64Value();
+            if (features[key] is not Int64Feature l)
+                throw new ArgumentException("Feature is not a long");
+
+            return l.Value;
         }
 
         /// <summary>
@@ -133,7 +143,10 @@ namespace SabreTools.Help
             if (!features.ContainsKey(key))
                 return [];
 
-            return features[key]!.GetListValue() ?? [];
+            if (features[key] is not ListFeature l)
+                throw new ArgumentException("Feature is not a list");
+
+            return l.Value ?? [];
         }
 
         /// <summary>
@@ -144,7 +157,10 @@ namespace SabreTools.Help
             if (!features.ContainsKey(key))
                 return null;
 
-            return features[key]!.GetStringFieldValue();
+            if (features[key] is not StringFeature s)
+                throw new ArgumentException("Feature is not a string");
+
+            return s.Value;
         }
 
         #endregion

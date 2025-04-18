@@ -12,16 +12,17 @@ namespace SabreTools.Features
 {
     internal class Split : BaseFeature
     {
-        public const string Value = "Split";
+        public const string DisplayName = "Split";
+
+        private static readonly string[] _flags = ["sp", "split"];
+
+        private const string _description = "Split input DATs by a given criteria";
+
+        private const string _longDescription = "This feature allows the user to split input DATs by a number of different possible criteria. See the individual input information for details. More than one split type is allowed at a time.";
 
         public Split()
+            : base(DisplayName, _flags, _description, _longDescription)
         {
-            Name = Value;
-            Flags.AddRange(["sp", "split"]);
-            Description = "Split input DATs by a given criteria";
-            _featureType = ParameterType.Flag;
-            LongDescription = "This feature allows the user to split input DATs by a number of different possible criteria. See the individual input information for details. More than one split type is allowed at a time.";
-
             // Common Features
             AddCommonFeatures();
 

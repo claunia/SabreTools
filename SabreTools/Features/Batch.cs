@@ -16,15 +16,13 @@ namespace SabreTools.Features
     // TODO: Should the private classes here be split into a new namespace?
     internal class Batch : BaseFeature
     {
-        public const string Value = "Batch";
+        public const string DisplayName = "Batch";
 
-        public Batch()
-        {
-            Name = Value;
-            Flags.AddRange(["bt", "batch"]);
-            Description = "Enable batch mode";
-            _featureType = ParameterType.Flag;
-            LongDescription = @"Run a special mode that takes input files as lists of batch commands to run sequentially. Each command has to be its own line and must be followed by a semicolon (`;`). Commented lines may start with either `REM` or `#`. Multiple batch files are allowed but they will be run independently from each other.
+        private static readonly string[] _flags = ["bt", "batch"];
+
+        private const string _description = "Enable batch mode";
+
+        private const string _longDescription = @"Run a special mode that takes input files as lists of batch commands to run sequentially. Each command has to be its own line and must be followed by a semicolon (`;`). Commented lines may start with either `REM` or `#`. Multiple batch files are allowed but they will be run independently from each other.
 
 The following commands are currently implemented:
 
@@ -44,6 +42,9 @@ Set the output directory:           output(outdir);
 Write the internal items:           write([overwrite = true]);
 Reset the internal state:           reset();";
 
+        public Batch()
+            : base(DisplayName, _flags, _description, _longDescription)
+        {
             // Common Features
             AddCommonFeatures();
         }

@@ -92,7 +92,7 @@ namespace SabreTools
             BaseFeature feature = (_help[featureName] as BaseFeature)!;
 
             // If we had the help feature first
-            if (featureName == DisplayHelp.Value || featureName == DisplayHelpDetailed.Value)
+            if (featureName == DisplayHelp.DisplayName || featureName == DisplayHelpDetailed.DisplayName)
             {
                 feature.ProcessArgs(args, _help);
                 LoggerImpl.Close();
@@ -124,24 +124,24 @@ namespace SabreTools
             switch (featureName)
             {
                 // No-op as these should be caught
-                case DisplayHelp.Value:
-                case DisplayHelpDetailed.Value:
+                case DisplayHelp.DisplayName:
+                case DisplayHelpDetailed.DisplayName:
                     break;
 
                 // Require input verification
-                case Batch.Value:
-                case DatFromDir.Value:
-                case Split.Value:
-                case Stats.Value:
-                case Update.Value:
-                case Verify.Value:
+                case Batch.DisplayName:
+                case DatFromDir.DisplayName:
+                case Split.DisplayName:
+                case Stats.DisplayName:
+                case Update.DisplayName:
+                case Verify.DisplayName:
                     VerifyInputs(feature.Inputs, feature);
                     success = feature.ProcessFeatures(features);
                     break;
 
                 // Requires no input verification
-                case Sort.Value:
-                case Features.Version.Value:
+                case Sort.DisplayName:
+                case Features.Version.DisplayName:
                     success = feature.ProcessFeatures(features);
                     break;
 
