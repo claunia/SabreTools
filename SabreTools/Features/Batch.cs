@@ -281,7 +281,7 @@ Reset the internal state:           reset();";
 
                 // TODO: We might not want to remove dates in the future
                 Remover dfdRemover = new();
-                dfdRemover.PopulateExclusionsFromList(new List<string> { "DatItem.Date" });
+                dfdRemover.PopulateExclusionsFromList(["DatItem.Date"]);
                 dfdRemover.ApplyRemovals(batchState.DatFile);
             }
         }
