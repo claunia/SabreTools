@@ -689,7 +689,6 @@ namespace SabreTools.Core
                     romSelf.FillMissingHashes(romOther);
                     break;
             }
-            ;
         }
 
         /// <summary>
