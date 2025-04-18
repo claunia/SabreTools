@@ -11,11 +11,13 @@ namespace SabreTools.Help
         public ListFeature(string name, string flag, string description, string? longDescription = null)
             : base(name, flag, description, longDescription)
         {
+            Value = null;
         }
 
         public ListFeature(string name, string[] flags, string description, string? longDescription = null)
             : base(name, flags, description, longDescription)
         {
+            Value = null;
         }
 
         #endregion

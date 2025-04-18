@@ -10,11 +10,13 @@ namespace SabreTools.Help
         public Int64Feature(string name, string flag, string description, string? longDescription = null)
             : base(name, flag, description, longDescription)
         {
+            Value = long.MinValue;
         }
 
         public Int64Feature(string name, string[] flags, string description, string? longDescription = null)
             : base(name, flags, description, longDescription)
         {
+            Value = long.MinValue;
         }
 
         #endregion
