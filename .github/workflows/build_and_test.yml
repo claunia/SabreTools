@@ -33,7 +33,6 @@ jobs:
         allowUpdates: True
         artifacts: "*.nupkg,*.snupkg,*.zip"
         body: 'Last built commit: ${{ github.sha }}'
-        commit: "main"
         name: 'Rolling Release'
         prerelease: True
         replacesArtifacts: True
