@@ -463,16 +463,19 @@ namespace SabreTools.Features
                 // Check the current format
                 DatFormat currentFormat = datFile.Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey);
 #if NET20 || NET35
-                    bool isSeparatedFile = (currentFormat & DatFormat.CSV) != 0
-                        || (currentFormat & DatFormat.SSV) != 0
-                        || (currentFormat & DatFormat.TSV) != 0;
+                bool isSeparatedFile = (currentFormat & DatFormat.CSV) != 0
+                    || (currentFormat & DatFormat.SSV) != 0
+                    || (currentFormat & DatFormat.TSV) != 0;
 #else
                 bool isSeparatedFile = currentFormat.HasFlag(DatFormat.CSV)
                     || currentFormat.HasFlag(DatFormat.SSV)
                     || currentFormat.HasFlag(DatFormat.TSV);
 #endif
 
+                // Clear format and parse
+                datFile.Header.RemoveField(DatHeader.DatFormatKey);
                 Parser.ParseInto(datFile, inputPath.CurrentPath, keep: true, keepext: isSeparatedFile);
+                datFile.Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, currentFormat);
 
                 // Perform additional processing steps
                 AdditionalProcessing(datFile);
