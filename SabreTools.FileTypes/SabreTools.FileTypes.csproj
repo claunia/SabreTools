@@ -12,7 +12,7 @@
         <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <Version>1.1.2</Version>
+        <Version>1.2.0</Version>
         <WarningsNotAsErrors>CA2200;CA2022;CS0168;CS0618;CS8600;CS8602;CS8603;CS8604;CS8618;CS8625</WarningsNotAsErrors>
 
         <!-- Package Properties -->
