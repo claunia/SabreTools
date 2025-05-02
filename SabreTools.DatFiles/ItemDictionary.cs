@@ -716,10 +716,10 @@ namespace SabreTools.DatFiles
                     RemoveBucket(key);
 
                 // Now add each of the roms to their respective keys
-                for (int i = 0; i < GetItemsForBucket(key, filter: true).Count; i++)
+                for (int i = 0; i < GetItemsForBucket(key).Count; i++)
                 {
-                    DatItem item = GetItemsForBucket(key, filter: true)[i];
-                    if (item == null)
+                    DatItem item = GetItemsForBucket(key)[i];
+                    if (item == null || item.GetBoolFieldValue(DatItem.RemoveKey) == true)
                         continue;
 
                     // We want to get the key most appropriate for the given sorting type
