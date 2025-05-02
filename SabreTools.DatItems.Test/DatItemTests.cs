@@ -20,7 +20,6 @@ namespace SabreTools.DatItems.Test
         /// </summary>
         private class TestDatItem : DatItem<TestDatItemModel>
         {
-            protected override string? NameKey => _nameKey;
             private readonly string? _nameKey;
 
             protected override ItemType ItemType => ItemType.Blank;
@@ -28,6 +27,16 @@ namespace SabreTools.DatItems.Test
             public TestDatItem() => _nameKey = TestDatItemModel.NameKey;
 
             public TestDatItem(string? nameKey) => _nameKey = nameKey;
+
+            /// <inheritdoc/>
+            public override string? GetName() => _nameKey != null ? _internal.ReadString(_nameKey) : null;
+
+            /// <inheritdoc/>
+            public override void SetName(string? name)
+            {
+                if (_nameKey != null)
+                    _internal[_nameKey] = name;
+            }
         }
 
         #endregion
