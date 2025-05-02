@@ -15,6 +15,11 @@ namespace SabreTools.Core.Filter
         /// </summary>
         public readonly FilterObject[] Filters;
 
+        /// <summary>
+        /// Cached item type names for filter selection
+        /// </summary>
+        private readonly string[] _datItemTypeNames = TypeHelper.GetDatItemTypeNames();
+
         public FilterRunner(FilterObject[] filters)
         {
             Filters = filters;
@@ -54,7 +59,7 @@ namespace SabreTools.Core.Filter
             foreach (var filter in Filters)
             {
                 // Skip filters not applicable to the item
-                if (filter.Key.ItemName == "item" && Array.IndexOf(TypeHelper.GetDatItemTypeNames(), itemName) == -1)
+                if (filter.Key.ItemName == "item" && Array.IndexOf(_datItemTypeNames, itemName) == -1)
                     continue;
                 else if (filter.Key.ItemName != "item" && filter.Key.ItemName != itemName)
                     continue;

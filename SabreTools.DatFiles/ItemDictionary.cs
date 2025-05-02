@@ -203,19 +203,23 @@ namespace SabreTools.DatFiles
         /// </summary>
         public void ClearMarked()
         {
-            foreach (string key in SortedKeys)
+            string[] keys = [.. SortedKeys];
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(keys, Core.Globals.ParallelOptions, key =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(keys, key =>
+#else
+            foreach (var key in keys)
+#endif
             {
-                // Get the unfiltered list
-                List<DatItem> list = GetItemsForBucket(key, filter: false);
-
-                foreach (DatItem datItem in list)
-                {
-                    if (datItem.GetBoolFieldValue(DatItem.RemoveKey) != true)
-                        continue;
-
-                    RemoveItem(key, datItem);
-                }
+                var list = GetItemsForBucket(key, filter: true);
+                RemoveBucket(key);
+                list.ForEach(item => AddItem(key, item));
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
             }
+#endif
         }
 
         /// <summary>
