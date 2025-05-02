@@ -13,25 +13,6 @@ namespace SabreTools.DatItems
     [JsonObject("machine"), XmlRoot("machine")]
     public sealed class Machine : ModelBackedItem<Models.Metadata.Machine>, ICloneable, IEquatable<Machine>
     {
-        #region Constants
-
-        /// <summary>
-        /// Trurip/EmuArc Machine developer
-        /// </summary>
-        public const string DeveloperKey = "DEVELOPER";
-
-        /// <summary>
-        /// Trurip/EmuArc Game genre
-        /// </summary>
-        public const string GenreKey = "GENRE";
-
-        /// <summary>
-        /// Trurip/EmuArc Title ID
-        /// </summary>
-        public const string TitleIDKey = "TITLEID";
-
-        #endregion
-
         #region Constructors
 
         public Machine()
