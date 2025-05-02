@@ -370,7 +370,7 @@ namespace SabreTools.Core.Filter
                 filterString = filterString.Substring(1, filterString.Length - 2);
 
             // Split the string using regex
-            var match = Regex.Match(filterString, @"^(?<itemField>[a-zA-Z.]+)(?<operation>[=!:><]{1,2})(?<value>.*)$");
+            var match = Regex.Match(filterString, @"^(?<itemField>[a-zA-Z._]+)(?<operation>[=!:><]{1,2})(?<value>.*)$");
             if (!match.Success)
                 return false;
 
