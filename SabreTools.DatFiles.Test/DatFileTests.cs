@@ -1869,31 +1869,32 @@ namespace SabreTools.DatFiles.Test
         [Fact]
         public void ResolveNamesDB_AllDuplicate_Single()
         {
+            DatFile datFile = new Formats.Logiqx(null, useGame: false);
+
             Machine machine = new Machine();
             machine.SetFieldValue(Models.Metadata.Machine.NameKey, "machine");
+            long machineIndex = datFile.AddMachineDB(machine);
 
             Source source = new Source(0);
+            long sourceIndex = datFile.AddSourceDB(source);
 
             Rom romA = new Rom();
             romA.SetName("rom");
             romA.SetFieldValue(Models.Metadata.Rom.SizeKey, 12345);
             romA.SetFieldValue(Models.Metadata.Rom.CRCKey, "crc");
-            romA.SetFieldValue(DatItem.MachineKey, (Machine)machine.Clone());
-            romA.SetFieldValue(DatItem.SourceKey, (Source)source.Clone());
+            long romAIndex = datFile.AddItemDB(romA, machineIndex, sourceIndex, statsOnly: false);
 
             Rom romB = new Rom();
             romB.SetName("rom");
             romB.SetFieldValue(Models.Metadata.Rom.SizeKey, 12345);
             romB.SetFieldValue(Models.Metadata.Rom.CRCKey, "crc");
-            romB.SetFieldValue(DatItem.MachineKey, (Machine)machine.Clone());
-            romB.SetFieldValue(DatItem.SourceKey, (Source)source.Clone());
+            long romBIndex = datFile.AddItemDB(romB, machineIndex, sourceIndex, statsOnly: false);
 
             List<KeyValuePair<long, DatItem>> mappings =
             [
-                new KeyValuePair<long, DatItem>(0, romA),
-                new KeyValuePair<long, DatItem>(1, romB),
+                new KeyValuePair<long, DatItem>(romAIndex, romA),
+                new KeyValuePair<long, DatItem>(romBIndex, romB),
             ];
-            DatFile datFile = new Formats.Logiqx(null, useGame: false);
 
             List<KeyValuePair<long, DatItem>> actual = datFile.ResolveNamesDB(mappings);
             KeyValuePair<long, DatItem> actualItemA = Assert.Single(actual);

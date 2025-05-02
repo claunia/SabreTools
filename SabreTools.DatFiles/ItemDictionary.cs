@@ -448,6 +448,61 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Return the duplicate status of two items
+        /// </summary>
+        /// <param name="self">Current DatItem</param>
+        /// <param name="last">DatItem to check against</param>
+        /// <returns>The DupeType corresponding to the relationship between the two</returns>
+        public DupeType GetDuplicateStatus(DatItem? self, DatItem? last)
+        {
+            DupeType output = 0x00;
+
+            // If either item is null
+            if (self == null || last == null)
+                return output;
+
+            // If we don't have a duplicate at all, return none
+            if (!self.Equals(last))
+                return output;
+
+            // Get the sources for comparison
+            var selfSource = self.GetFieldValue<Source?>(DatItem.SourceKey);
+            var lastSource = last.GetFieldValue<Source?>(DatItem.SourceKey);
+
+            // Get the machines for comparison
+            var selfMachine = self.GetMachine();
+            string? selfMachineName = selfMachine?.GetName();
+            var lastMachine = last.GetMachine();
+            string? lastMachineName = lastMachine?.GetName();
+
+            // If the duplicate is external already
+#if NET20 || NET35
+            if ((last.GetFieldValue<DupeType>(DatItem.DupeTypeKey) & DupeType.External) != 0)
+#else
+            if (last.GetFieldValue<DupeType>(DatItem.DupeTypeKey).HasFlag(DupeType.External))
+#endif
+                output |= DupeType.External;
+
+            // If the duplicate should be external
+            else if (lastSource?.Index != selfSource?.Index)
+                output |= DupeType.External;
+
+            // Otherwise, it's considered an internal dupe
+            else
+                output |= DupeType.Internal;
+
+            // If the item and machine names match
+            if (lastMachineName == selfMachineName && last.GetName() == self.GetName())
+                output |= DupeType.All;
+
+            // Otherwise, hash match is assumed
+            else
+                output |= DupeType.Hash;
+
+            return output;
+        }
+
+        /// <summary>
         /// Merge an arbitrary set of DatItems based on the supplied information
         /// </summary>
         /// <param name="items">List of DatItem objects representing the items to be merged</param>
@@ -458,6 +513,9 @@ namespace SabreTools.DatFiles
             // Check for null or blank inputs first
             if (items == null || items.Count == 0)
                 return [];
+
+            // Create placeholder object for checking duplicates
+            var dupDict = new ItemDictionary();
 
             // Create output list
             List<DatItem> output = [];
@@ -492,7 +550,7 @@ namespace SabreTools.DatFiles
                 }
 
                 // Find the index of the first duplicate, if one exists
-                int pos = output.FindIndex(lastItem => datItem.GetDuplicateStatus(lastItem) != 0x00);
+                int pos = output.FindIndex(lastItem => dupDict.GetDuplicateStatus(datItem, lastItem) != 0x00);
                 if (pos < 0)
                 {
                     output.Add(datItem);
@@ -501,7 +559,7 @@ namespace SabreTools.DatFiles
 
                 // Get the duplicate item
                 DatItem savedItem = output[pos];
-                DupeType dupetype = datItem.GetDuplicateStatus(savedItem);
+                DupeType dupetype = dupDict.GetDuplicateStatus(datItem, savedItem);
 
                 // Disks, File, Media, and Roms have more information to fill
                 if (datItem is Disk diskItem && savedItem is Disk savedDisk)

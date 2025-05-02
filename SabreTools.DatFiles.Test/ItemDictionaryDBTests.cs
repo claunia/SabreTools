@@ -696,6 +696,209 @@ namespace SabreTools.DatFiles.Test
 
         #endregion
 
+        #region GetDuplicateStatus
+
+        [Fact]
+        public void GetDuplicateStatus_NullOther_NoDupe()
+        {
+            var dict = new ItemDictionaryDB();
+
+            Source? selfSource = null;
+            Source? lastSource = null;
+
+            KeyValuePair<long, DatItem>? item = new KeyValuePair<long, DatItem>(0, new Rom());
+            KeyValuePair<long, DatItem>? lastItem = null;
+
+            var actual = dict.GetDuplicateStatus(item, selfSource, lastItem, lastSource);
+            Assert.Equal((DupeType)0x00, actual);
+        }
+
+        [Fact]
+        public void GetDuplicateStatus_DifferentTypes_NoDupe()
+        {
+            var dict = new ItemDictionaryDB();
+
+            Source? selfSource = null;
+            Source? lastSource = null;
+
+            KeyValuePair<long, DatItem>? rom = new KeyValuePair<long, DatItem>(0, new Rom());
+            KeyValuePair<long, DatItem>? lastItem = new KeyValuePair<long, DatItem>(1, new Disk());
+            var actual = dict.GetDuplicateStatus(rom, selfSource, lastItem, lastSource);
+            Assert.Equal((DupeType)0x00, actual);
+        }
+
+        [Fact]
+        public void GetDuplicateStatus_MismatchedHashes_NoDupe()
+        {
+            var dict = new ItemDictionaryDB();
+
+            Source? sourceA = new Source(0);
+            long sourceAIndex = dict.AddSource(sourceA);
+            Source? sourceB = new Source(1);
+            long sourceBIndex = dict.AddSource(sourceB);
+
+            Machine? machineA = new Machine();
+            machineA.SetName("name-same");
+            long machineAIndex = dict.AddMachine(machineA);
+
+            Machine? machineB = new Machine();
+            machineB.SetName("name-same");
+            long machineBIndex = dict.AddMachine(machineB);
+
+            var romA = new Rom();
+            romA.SetName("same-name");
+            romA.SetFieldValue(Models.Metadata.Rom.CRCKey, "BEEFDEAD");
+            long romAIndex = dict.AddItem(romA, machineAIndex, sourceAIndex);
+            KeyValuePair<long, DatItem>? romAPair = new KeyValuePair<long, DatItem>(romAIndex, romA);
+
+            var romB = new Rom();
+            romB.SetName("same-name");
+            romB.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            long romBIndex = dict.AddItem(romB, machineBIndex, sourceBIndex);
+            KeyValuePair<long, DatItem>? romBPair = new KeyValuePair<long, DatItem>(romBIndex, romB);
+
+            var actual = dict.GetDuplicateStatus(romAPair, sourceA, romBPair, sourceB);
+            Assert.Equal((DupeType)0x00, actual);
+        }
+
+        [Fact]
+        public void GetDuplicateStatus_DifferentSource_NameMatch_ExternalAll()
+        {
+            var dict = new ItemDictionaryDB();
+
+            Source? sourceA = new Source(0);
+            long sourceAIndex = dict.AddSource(sourceA);
+            Source? sourceB = new Source(1);
+            long sourceBIndex = dict.AddSource(sourceB);
+
+            Machine? machineA = new Machine();
+            machineA.SetName("name-same");
+            long machineAIndex = dict.AddMachine(machineA);
+
+            Machine? machineB = new Machine();
+            machineB.SetName("name-same");
+            long machineBIndex = dict.AddMachine(machineB);
+
+            var romA = new Rom();
+            romA.SetName("same-name");
+            romA.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            long romAIndex = dict.AddItem(romA, machineAIndex, sourceAIndex);
+            KeyValuePair<long, DatItem>? romAPair = new KeyValuePair<long, DatItem>(romAIndex, romA);
+
+            var romB = new Rom();
+            romB.SetName("same-name");
+            romB.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            long romBIndex = dict.AddItem(romB, machineBIndex, sourceBIndex);
+            KeyValuePair<long, DatItem>? romBPair = new KeyValuePair<long, DatItem>(romBIndex, romB);
+
+            var actual = dict.GetDuplicateStatus(romAPair, sourceA, romBPair, sourceB);
+            Assert.Equal(DupeType.External | DupeType.All, actual);
+        }
+
+        [Fact]
+        public void GetDuplicateStatus_DifferentSource_NoNameMatch_ExternalHash()
+        {
+            var dict = new ItemDictionaryDB();
+
+            Source? sourceA = new Source(0);
+            long sourceAIndex = dict.AddSource(sourceA);
+            Source? sourceB = new Source(1);
+            long sourceBIndex = dict.AddSource(sourceB);
+
+            Machine? machineA = new Machine();
+            machineA.SetName("name-same");
+            long machineAIndex = dict.AddMachine(machineA);
+
+            Machine? machineB = new Machine();
+            machineB.SetName("not-name-same");
+            long machineBIndex = dict.AddMachine(machineB);
+
+            var romA = new Rom();
+            romA.SetName("same-name");
+            romA.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            long romAIndex = dict.AddItem(romA, machineAIndex, sourceAIndex);
+            KeyValuePair<long, DatItem>? romAPair = new KeyValuePair<long, DatItem>(romAIndex, romA);
+
+            var romB = new Rom();
+            romB.SetName("same-name");
+            romB.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            long romBIndex = dict.AddItem(romB, machineBIndex, sourceBIndex);
+            KeyValuePair<long, DatItem>? romBPair = new KeyValuePair<long, DatItem>(romBIndex, romB);
+
+            var actual = dict.GetDuplicateStatus(romAPair, sourceA, romBPair, sourceB);
+            Assert.Equal(DupeType.External | DupeType.Hash, actual);
+        }
+
+        [Fact]
+        public void GetDuplicateStatus_SameSource_NameMatch_InternalAll()
+        {
+            var dict = new ItemDictionaryDB();
+
+            Source? sourceA = new Source(0);
+            long sourceAIndex = dict.AddSource(sourceA);
+            Source? sourceB = new Source(0);
+            long sourceBIndex = dict.AddSource(sourceB);
+
+            Machine? machineA = new Machine();
+            machineA.SetName("name-same");
+            long machineAIndex = dict.AddMachine(machineA);
+
+            Machine? machineB = new Machine();
+            machineB.SetName("name-same");
+            long machineBIndex = dict.AddMachine(machineB);
+
+            var romA = new Rom();
+            romA.SetName("same-name");
+            romA.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            long romAIndex = dict.AddItem(romA, machineAIndex, sourceAIndex);
+            KeyValuePair<long, DatItem>? romAPair = new KeyValuePair<long, DatItem>(romAIndex, romA);
+
+            var romB = new Rom();
+            romB.SetName("same-name");
+            romB.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            long romBIndex = dict.AddItem(romB, machineBIndex, sourceBIndex);
+            KeyValuePair<long, DatItem>? romBPair = new KeyValuePair<long, DatItem>(romBIndex, romB);
+
+            var actual = dict.GetDuplicateStatus(romAPair, sourceA, romBPair, sourceB);
+            Assert.Equal(DupeType.Internal | DupeType.All, actual);
+        }
+
+        [Fact]
+        public void GetDuplicateStatus_SameSource_NoNameMatch_InternalHash()
+        {
+            var dict = new ItemDictionaryDB();
+
+            Source? sourceA = new Source(0);
+            long sourceAIndex = dict.AddSource(sourceA);
+            Source? sourceB = new Source(0);
+            long sourceBIndex = dict.AddSource(sourceB);
+
+            Machine? machineA = new Machine();
+            machineA.SetName("name-same");
+            long machineAIndex = dict.AddMachine(machineA);
+
+            Machine? machineB = new Machine();
+            machineB.SetName("not-name-same");
+            long machineBIndex = dict.AddMachine(machineB);
+
+            var romA = new Rom();
+            romA.SetName("same-name");
+            romA.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            long romAIndex = dict.AddItem(romA, machineAIndex, sourceAIndex);
+            KeyValuePair<long, DatItem>? romAPair = new KeyValuePair<long, DatItem>(romAIndex, romA);
+
+            var romB = new Rom();
+            romB.SetName("same-name");
+            romB.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
+            long romBIndex = dict.AddItem(romB, machineBIndex, sourceBIndex);
+            KeyValuePair<long, DatItem>? romBPair = new KeyValuePair<long, DatItem>(romBIndex, romB);
+
+            var actual = dict.GetDuplicateStatus(romAPair, sourceA, romBPair, sourceB);
+            Assert.Equal(DupeType.Internal | DupeType.Hash, actual);
+        }
+
+        #endregion
+
         #region GetDuplicates
 
         [Theory]

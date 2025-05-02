@@ -766,9 +766,9 @@ namespace SabreTools.DatFiles
 
                 // If the current item exactly matches the last item, then we don't add it
 #if NET20 || NET35
-                if ((datItem.GetDuplicateStatus(lastItem) & DupeType.All) != 0)
+                if ((Items.GetDuplicateStatus(datItem, lastItem) & DupeType.All) != 0)
 #else
-                if (datItem.GetDuplicateStatus(lastItem).HasFlag(DupeType.All))
+                if (Items.GetDuplicateStatus(datItem, lastItem).HasFlag(DupeType.All))
 #endif
                 {
                     _logger.Verbose($"Exact duplicate found for '{datItemName}'");
@@ -838,7 +838,7 @@ namespace SabreTools.DatFiles
             SortDB(ref mappings, true);
 
             // Now we want to loop through and check names
-            DatItem? lastItem = null;
+            KeyValuePair<long, DatItem>? lastItem = null;
             string? lastrenamed = null;
             int lastid = 0;
             foreach (var datItem in mappings)
@@ -847,13 +847,13 @@ namespace SabreTools.DatFiles
                 if (lastItem == null)
                 {
                     output.Add(datItem);
-                    lastItem = datItem.Value;
+                    lastItem = datItem;
                     continue;
                 }
 
                 // Get the last item name, if applicable
-                string lastItemName = lastItem.GetName()
-                    ?? lastItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue()
+                string lastItemName = lastItem.Value.Value.GetName()
+                    ?? lastItem.Value.Value.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue()
                     ?? string.Empty;
 
                 // Get the current item name, if applicable
@@ -861,11 +861,15 @@ namespace SabreTools.DatFiles
                     ?? datItem.Value.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue()
                     ?? string.Empty;
 
+                // Get sources for both items
+                var datItemSource = ItemsDB.GetSourceForItem(datItem.Key);
+                var lastItemSource = ItemsDB.GetSourceForItem(lastItem.Value.Key);
+
                 // If the current item exactly matches the last item, then we don't add it
 #if NET20 || NET35
-                if ((datItem.Value.GetDuplicateStatus(lastItem) & DupeType.All) != 0)
+                if ((ItemsDB.GetDuplicateStatus(datItem, datItemSource.Value, lastItem, lastItemSource.Value) & DupeType.All) != 0)
 #else
-                if (datItem.Value.GetDuplicateStatus(lastItem).HasFlag(DupeType.All))
+                if (ItemsDB.GetDuplicateStatus(datItem, datItemSource.Value, lastItem, lastItemSource.Value).HasFlag(DupeType.All))
 #endif
                 {
                     _logger.Verbose($"Exact duplicate found for '{datItemName}'");
@@ -904,7 +908,7 @@ namespace SabreTools.DatFiles
                 else
                 {
                     output.Add(datItem);
-                    lastItem = datItem.Value;
+                    lastItem = datItem;
                     lastrenamed = null;
                     lastid = 0;
                 }
