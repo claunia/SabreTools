@@ -337,76 +337,8 @@ namespace SabreTools.DatItems.Test.Formats
 
         #endregion
 
-        #region GetKey
-
-        [Theory]
-        [InlineData(ItemKey.NULL, false, false, "")]
-        [InlineData(ItemKey.NULL, false, true, "")]
-        [InlineData(ItemKey.NULL, true, false, "")]
-        [InlineData(ItemKey.NULL, true, true, "")]
-        [InlineData(ItemKey.Machine, false, false, "0000000000-Machine")]
-        [InlineData(ItemKey.Machine, false, true, "Machine")]
-        [InlineData(ItemKey.Machine, true, false, "0000000000-machine")]
-        [InlineData(ItemKey.Machine, true, true, "machine")]
-        [InlineData(ItemKey.CRC, false, false, "deadbeef")]
-        [InlineData(ItemKey.CRC, false, true, "deadbeef")]
-        [InlineData(ItemKey.CRC, true, false, "deadbeef")]
-        [InlineData(ItemKey.CRC, true, true, "deadbeef")]
-        [InlineData(ItemKey.MD2, false, false, "8350e5a3e24c153df2275c9f80692773")]
-        [InlineData(ItemKey.MD2, false, true, "8350e5a3e24c153df2275c9f80692773")]
-        [InlineData(ItemKey.MD2, true, false, "8350e5a3e24c153df2275c9f80692773")]
-        [InlineData(ItemKey.MD2, true, true, "8350e5a3e24c153df2275c9f80692773")]
-        [InlineData(ItemKey.MD4, false, false, "31d6cfe0d16ae931b73c59d7e0c089c0")]
-        [InlineData(ItemKey.MD4, false, true, "31d6cfe0d16ae931b73c59d7e0c089c0")]
-        [InlineData(ItemKey.MD4, true, false, "31d6cfe0d16ae931b73c59d7e0c089c0")]
-        [InlineData(ItemKey.MD4, true, true, "31d6cfe0d16ae931b73c59d7e0c089c0")]
-        [InlineData(ItemKey.MD5, false, false, "000000000000000000000000deadbeef")]
-        [InlineData(ItemKey.MD5, false, true, "000000000000000000000000deadbeef")]
-        [InlineData(ItemKey.MD5, true, false, "000000000000000000000000deadbeef")]
-        [InlineData(ItemKey.MD5, true, true, "000000000000000000000000deadbeef")]
-        [InlineData(ItemKey.SHA1, false, false, "00000000000000000000000000000000deadbeef")]
-        [InlineData(ItemKey.SHA1, false, true, "00000000000000000000000000000000deadbeef")]
-        [InlineData(ItemKey.SHA1, true, false, "00000000000000000000000000000000deadbeef")]
-        [InlineData(ItemKey.SHA1, true, true, "00000000000000000000000000000000deadbeef")]
-        [InlineData(ItemKey.SHA256, false, false, "00000000000000000000000000000000000000000000000000000000deadbeef")]
-        [InlineData(ItemKey.SHA256, false, true, "00000000000000000000000000000000000000000000000000000000deadbeef")]
-        [InlineData(ItemKey.SHA256, true, false, "00000000000000000000000000000000000000000000000000000000deadbeef")]
-        [InlineData(ItemKey.SHA256, true, true, "00000000000000000000000000000000000000000000000000000000deadbeef")]
-        [InlineData(ItemKey.SHA384, false, false, "38b060a751ac96384cd9327eb1b1e36a21fdb71114be07434c0cc7bf63f6e1da274edebfe76f65fbd51ad2f14898b95b")]
-        [InlineData(ItemKey.SHA384, false, true, "38b060a751ac96384cd9327eb1b1e36a21fdb71114be07434c0cc7bf63f6e1da274edebfe76f65fbd51ad2f14898b95b")]
-        [InlineData(ItemKey.SHA384, true, false, "38b060a751ac96384cd9327eb1b1e36a21fdb71114be07434c0cc7bf63f6e1da274edebfe76f65fbd51ad2f14898b95b")]
-        [InlineData(ItemKey.SHA384, true, true, "38b060a751ac96384cd9327eb1b1e36a21fdb71114be07434c0cc7bf63f6e1da274edebfe76f65fbd51ad2f14898b95b")]
-        [InlineData(ItemKey.SHA512, false, false, "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e")]
-        [InlineData(ItemKey.SHA512, false, true, "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e")]
-        [InlineData(ItemKey.SHA512, true, false, "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e")]
-        [InlineData(ItemKey.SHA512, true, true, "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e")]
-        [InlineData(ItemKey.SpamSum, false, false, "3::")]
-        [InlineData(ItemKey.SpamSum, false, true, "3::")]
-        [InlineData(ItemKey.SpamSum, true, false, "3::")]
-        [InlineData(ItemKey.SpamSum, true, true, "3::")]
-        public void GetKeyTest(ItemKey bucketedBy, bool lower, bool norename, string expected)
-        {
-            Machine machine = new Machine();
-            machine.SetFieldValue(Models.Metadata.Machine.NameKey, "Machine");
-
-            DatItem datItem = new File
-            {
-                CRC = "DEADBEEF",
-                MD5 = "DEADBEEF",
-                SHA1 = "DEADBEEF",
-                SHA256 = "DEADBEEF",
-            };
-            datItem.SetFieldValue(DatItem.SourceKey, new Source(0));
-            datItem.SetFieldValue(DatItem.MachineKey, machine);
-
-            string actual = datItem.GetKey(bucketedBy, lower, norename);
-            Assert.Equal(expected, actual);
-        }
-
-        #endregion
-
         // TODO: Change when Machine retrieval gets fixed
-        #region GetKeyDB
+        #region GetKey
 
         [Theory]
         [InlineData(ItemKey.NULL, false, false, "")]
@@ -468,7 +400,7 @@ namespace SabreTools.DatItems.Test.Formats
                 SHA256 = "DEADBEEF",
             };
 
-            string actual = datItem.GetKeyDB(bucketedBy, machine, source, lower, norename);
+            string actual = datItem.GetKey(bucketedBy, machine, source, lower, norename);
             Assert.Equal(expected, actual);
         }
 

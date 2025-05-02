@@ -735,7 +735,9 @@ namespace SabreTools.DatFiles
 
             // We want to get the proper key for the DatItem, ignoring the index
             _ = SortAndGetKey(datItem, sorted);
-            string key = datItem.Value.GetKey(_bucketedBy);
+            var machine = GetMachineForItem(datItem.Key);
+            var source = GetSourceForItem(datItem.Key);
+            string key = datItem.Value.GetKey(_bucketedBy, machine.Value, source.Value);
 
             // If the key doesn't exist, return the empty list
             var items = GetItemsForBucket(key);
@@ -776,7 +778,9 @@ namespace SabreTools.DatFiles
 
             // We want to get the proper key for the DatItem, ignoring the index
             _ = SortAndGetKey(datItem, sorted);
-            string key = datItem.Value.GetKey(_bucketedBy);
+            var machine = GetMachineForItem(datItem.Key);
+            var source = GetSourceForItem(datItem.Key);
+            string key = datItem.Value.GetKey(_bucketedBy, machine.Value, source.Value);
 
             // If the key doesn't exist
             var roms = GetItemsForBucket(key);
@@ -976,7 +980,7 @@ namespace SabreTools.DatFiles
                 bucketBy = ItemKey.Machine;
 
             // Get the bucket key
-            return datItem.GetKeyDB(bucketBy, machine.Value, source.Value, lower, norename);
+            return datItem.GetKey(bucketBy, machine.Value, source.Value, lower, norename);
         }
 
         /// <summary>

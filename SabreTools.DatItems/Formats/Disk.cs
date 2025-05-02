@@ -142,7 +142,7 @@ namespace SabreTools.DatItems.Formats
         #region Sorting and Merging
 
         /// <inheritdoc/>
-        public override string GetKey(ItemKey bucketedBy, bool lower = true, bool norename = true)
+        public override string GetKey(ItemKey bucketedBy, Machine? machine, Source? source, bool lower = true, bool norename = true)
         {
             // Set the output key as the default blank string
             string? key;
@@ -160,37 +160,7 @@ namespace SabreTools.DatItems.Formats
 
                 // Let the base handle generic stuff
                 default:
-                    return base.GetKey(bucketedBy, lower, norename);
-            }
-
-            // Double and triple check the key for corner cases
-            key ??= string.Empty;
-            if (lower)
-                key = key.ToLowerInvariant();
-
-            return key;
-        }
-
-        /// <inheritdoc/>
-        public override string GetKeyDB(ItemKey bucketedBy, Machine? machine, Source? source, bool lower = true, bool norename = true)
-        {
-            // Set the output key as the default blank string
-            string? key;
-
-            // Now determine what the key should be based on the bucketedBy value
-            switch (bucketedBy)
-            {
-                case ItemKey.MD5:
-                    key = GetStringFieldValue(Models.Metadata.Disk.MD5Key);
-                    break;
-
-                case ItemKey.SHA1:
-                    key = GetStringFieldValue(Models.Metadata.Disk.SHA1Key);
-                    break;
-
-                // Let the base handle generic stuff
-                default:
-                    return base.GetKeyDB(bucketedBy, machine, source, lower, norename);
+                    return base.GetKey(bucketedBy, machine, source, lower, norename);
             }
 
             // Double and triple check the key for corner cases

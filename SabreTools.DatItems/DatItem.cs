@@ -366,93 +366,12 @@ namespace SabreTools.DatItems
         /// Get the dictionary key that should be used for a given item and bucketing type
         /// </summary>
         /// <param name="bucketedBy">ItemKey value representing what key to get</param>
-        /// <param name="lower">True if the key should be lowercased (default), false otherwise</param>
-        /// <param name="norename">True if games should only be compared on game and file name, false if system and source are counted</param>
-        /// <returns>String representing the key to be used for the DatItem</returns>
-        public virtual string GetKey(ItemKey bucketedBy, bool lower = true, bool norename = true)
-        {
-            // Set the output key as the default blank string
-            string key = string.Empty;
-
-            // Now determine what the key should be based on the bucketedBy value
-            switch (bucketedBy)
-            {
-                case ItemKey.CRC:
-                    key = ZeroHash.CRC32Str;
-                    break;
-
-                case ItemKey.Machine:
-                    string sourceString = string.Empty;
-                    if (!norename)
-                    {
-                        var source = GetFieldValue<Source?>(DatItem.SourceKey);
-                        if (source != null)
-                            sourceString = source.Index.ToString().PadLeft(10, '0') + "-";
-                    }
-
-                    string machineString = "Default";
-                    var machine = GetFieldValue<Machine>(DatItem.MachineKey);
-                    if (machine != null)
-                    {
-                        var machineName = machine.GetName();
-                        if (!string.IsNullOrEmpty(machineName))
-                            machineString = machineName!;
-                    }
-
-                    key = $"{sourceString}{machineString}";
-                    break;
-
-                case ItemKey.MD2:
-                    key = ZeroHash.GetString(HashType.MD2);
-                    break;
-
-                case ItemKey.MD4:
-                    key = ZeroHash.GetString(HashType.MD4);
-                    break;
-
-                case ItemKey.MD5:
-                    key = ZeroHash.MD5Str;
-                    break;
-
-                case ItemKey.SHA1:
-                    key = ZeroHash.SHA1Str;
-                    break;
-
-                case ItemKey.SHA256:
-                    key = ZeroHash.SHA256Str;
-                    break;
-
-                case ItemKey.SHA384:
-                    key = ZeroHash.SHA384Str;
-                    break;
-
-                case ItemKey.SHA512:
-                    key = ZeroHash.SHA512Str;
-                    break;
-
-                case ItemKey.SpamSum:
-                    key = ZeroHash.SpamSumStr;
-                    break;
-            }
-
-            // Double and triple check the key for corner cases
-            key ??= string.Empty;
-            if (lower)
-                key = key.ToLowerInvariant();
-
-            return key;
-        }
-
-        /// <summary>
-        /// Get the dictionary key that should be used for a given item and bucketing type
-        /// </summary>
-        /// <param name="bucketedBy">ItemKey value representing what key to get</param>
         /// <param name="machine">Machine associated with the item for renaming</param>
         /// <param name="source">Source associated with the item for renaming</param>
         /// <param name="lower">True if the key should be lowercased (default), false otherwise</param>
         /// <param name="norename">True if games should only be compared on game and file name, false if system and source are counted</param>
         /// <returns>String representing the key to be used for the DatItem</returns>
-        public virtual string GetKeyDB(ItemKey bucketedBy, Machine? machine, Source? source, bool lower = true, bool norename = true)
+        public virtual string GetKey(ItemKey bucketedBy, Machine? machine, Source? source, bool lower = true, bool norename = true)
         {
             // Set the output key as the default blank string
             string key = string.Empty;

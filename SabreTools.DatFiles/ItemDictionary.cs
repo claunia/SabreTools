@@ -689,8 +689,12 @@ namespace SabreTools.DatFiles
             if (bucketBy == ItemKey.NULL)
                 bucketBy = ItemKey.Machine;
 
+            // Get the machine and source
+            var machine = datItem.GetFieldValue<Machine>(DatItem.MachineKey);
+            var source = datItem.GetFieldValue<Source?>(DatItem.SourceKey);
+
             // Get the bucket key
-            return datItem.GetKey(bucketBy, lower, norename);
+            return datItem.GetKey(bucketBy, machine, source, lower, norename);
         }
 
         /// <summary>
@@ -726,8 +730,12 @@ namespace SabreTools.DatFiles
                     if (item == null || item.GetBoolFieldValue(DatItem.RemoveKey) == true)
                         continue;
 
+                    // Get the machine and source
+                    var machine = item.GetFieldValue<Machine>(DatItem.MachineKey);
+                    var source = item.GetFieldValue<Source?>(DatItem.SourceKey);
+
                     // We want to get the key most appropriate for the given sorting type
-                    string newkey = item.GetKey(bucketBy, lower, norename);
+                    string newkey = item.GetKey(bucketBy, machine, source, lower, norename);
 
                     // If the key is different, move the item to the new key
                     if (newkey != key)

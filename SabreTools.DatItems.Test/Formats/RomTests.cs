@@ -567,79 +567,8 @@ namespace SabreTools.DatItems.Test.Formats
 
         #endregion
 
-        #region GetKey
-
-        [Theory]
-        [InlineData(ItemKey.NULL, false, false, "")]
-        [InlineData(ItemKey.NULL, false, true, "")]
-        [InlineData(ItemKey.NULL, true, false, "")]
-        [InlineData(ItemKey.NULL, true, true, "")]
-        [InlineData(ItemKey.Machine, false, false, "0000000000-Machine")]
-        [InlineData(ItemKey.Machine, false, true, "Machine")]
-        [InlineData(ItemKey.Machine, true, false, "0000000000-machine")]
-        [InlineData(ItemKey.Machine, true, true, "machine")]
-        [InlineData(ItemKey.CRC, false, false, "DEADBEEF")]
-        [InlineData(ItemKey.CRC, false, true, "DEADBEEF")]
-        [InlineData(ItemKey.CRC, true, false, "deadbeef")]
-        [InlineData(ItemKey.CRC, true, true, "deadbeef")]
-        [InlineData(ItemKey.MD2, false, false, "DEADBEEF")]
-        [InlineData(ItemKey.MD2, false, true, "DEADBEEF")]
-        [InlineData(ItemKey.MD2, true, false, "deadbeef")]
-        [InlineData(ItemKey.MD2, true, true, "deadbeef")]
-        [InlineData(ItemKey.MD4, false, false, "DEADBEEF")]
-        [InlineData(ItemKey.MD4, false, true, "DEADBEEF")]
-        [InlineData(ItemKey.MD4, true, false, "deadbeef")]
-        [InlineData(ItemKey.MD4, true, true, "deadbeef")]
-        [InlineData(ItemKey.MD5, false, false, "DEADBEEF")]
-        [InlineData(ItemKey.MD5, false, true, "DEADBEEF")]
-        [InlineData(ItemKey.MD5, true, false, "deadbeef")]
-        [InlineData(ItemKey.MD5, true, true, "deadbeef")]
-        [InlineData(ItemKey.SHA1, false, false, "DEADBEEF")]
-        [InlineData(ItemKey.SHA1, false, true, "DEADBEEF")]
-        [InlineData(ItemKey.SHA1, true, false, "deadbeef")]
-        [InlineData(ItemKey.SHA1, true, true, "deadbeef")]
-        [InlineData(ItemKey.SHA256, false, false, "DEADBEEF")]
-        [InlineData(ItemKey.SHA256, false, true, "DEADBEEF")]
-        [InlineData(ItemKey.SHA256, true, false, "deadbeef")]
-        [InlineData(ItemKey.SHA256, true, true, "deadbeef")]
-        [InlineData(ItemKey.SHA384, false, false, "DEADBEEF")]
-        [InlineData(ItemKey.SHA384, false, true, "DEADBEEF")]
-        [InlineData(ItemKey.SHA384, true, false, "deadbeef")]
-        [InlineData(ItemKey.SHA384, true, true, "deadbeef")]
-        [InlineData(ItemKey.SHA512, false, false, "DEADBEEF")]
-        [InlineData(ItemKey.SHA512, false, true, "DEADBEEF")]
-        [InlineData(ItemKey.SHA512, true, false, "deadbeef")]
-        [InlineData(ItemKey.SHA512, true, true, "deadbeef")]
-        [InlineData(ItemKey.SpamSum, false, false, "DEADBEEF")]
-        [InlineData(ItemKey.SpamSum, false, true, "DEADBEEF")]
-        [InlineData(ItemKey.SpamSum, true, false, "deadbeef")]
-        [InlineData(ItemKey.SpamSum, true, true, "deadbeef")]
-        public void GetKeyTest(ItemKey bucketedBy, bool lower, bool norename, string expected)
-        {
-            Machine machine = new Machine();
-            machine.SetFieldValue(Models.Metadata.Machine.NameKey, "Machine");
-
-            DatItem datItem = new Rom();
-            datItem.SetFieldValue(Models.Metadata.Rom.CRCKey, "DEADBEEF");
-            datItem.SetFieldValue(Models.Metadata.Rom.MD2Key, "DEADBEEF");
-            datItem.SetFieldValue(Models.Metadata.Rom.MD4Key, "DEADBEEF");
-            datItem.SetFieldValue(Models.Metadata.Rom.MD5Key, "DEADBEEF");
-            datItem.SetFieldValue(Models.Metadata.Rom.SHA1Key, "DEADBEEF");
-            datItem.SetFieldValue(Models.Metadata.Rom.SHA256Key, "DEADBEEF");
-            datItem.SetFieldValue(Models.Metadata.Rom.SHA384Key, "DEADBEEF");
-            datItem.SetFieldValue(Models.Metadata.Rom.SHA512Key, "DEADBEEF");
-            datItem.SetFieldValue(Models.Metadata.Rom.SpamSumKey, "DEADBEEF");
-            datItem.SetFieldValue(DatItem.SourceKey, new Source(0));
-            datItem.SetFieldValue(DatItem.MachineKey, machine);
-
-            string actual = datItem.GetKey(bucketedBy, lower, norename);
-            Assert.Equal(expected, actual);
-        }
-
-        #endregion
-
         // TODO: Change when Machine retrieval gets fixed
-        #region GetKeyDB
+        #region GetKey
 
         [Theory]
         [InlineData(ItemKey.NULL, false, false, "")]
@@ -704,7 +633,7 @@ namespace SabreTools.DatItems.Test.Formats
             datItem.SetFieldValue(Models.Metadata.Rom.SHA512Key, "DEADBEEF");
             datItem.SetFieldValue(Models.Metadata.Rom.SpamSumKey, "DEADBEEF");
 
-            string actual = datItem.GetKeyDB(bucketedBy, machine, source, lower, norename);
+            string actual = datItem.GetKey(bucketedBy, machine, source, lower, norename);
             Assert.Equal(expected, actual);
         }
 
