@@ -246,9 +246,9 @@ namespace SabreTools.DatItems
 
             // Get the machines for comparison
             var selfMachine = GetFieldValue<Machine>(DatItem.MachineKey);
-            string? selfMachineName = selfMachine?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+            string? selfMachineName = selfMachine?.GetName();
             var lastMachine = lastItem.GetFieldValue<Machine>(DatItem.MachineKey);
-            string? lastMachineName = lastMachine?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+            string? lastMachineName = lastMachine?.GetName();
 
             // If the duplicate is external already
 #if NET20 || NET35
@@ -295,9 +295,9 @@ namespace SabreTools.DatItems
             // TODO: Fix this since machines are determined in a different way
             // Get the machines for comparison
             var selfMachine = GetFieldValue<Machine>(DatItem.MachineKey);
-            string? selfMachineName = selfMachine?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+            string? selfMachineName = selfMachine?.GetName();
             var lastMachine = lastItem.GetFieldValue<Machine>(DatItem.MachineKey);
-            string? lastMachineName = lastMachine?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+            string? lastMachineName = lastMachine?.GetName();
 
             // If the duplicate is external already
 #if NET20 || NET35
@@ -394,7 +394,7 @@ namespace SabreTools.DatItems
                     var machine = GetFieldValue<Machine>(DatItem.MachineKey);
                     if (machine != null)
                     {
-                        var machineName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                        var machineName = machine.GetName();
                         if (!string.IsNullOrEmpty(machineName))
                             machineString = machineName!;
                     }
@@ -458,7 +458,7 @@ namespace SabreTools.DatItems
             string key = string.Empty;
 
             string sourceKeyPadded = source?.Index.ToString().PadLeft(10, '0') + '-';
-            string machineName = machine?.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? "Default";
+            string machineName = machine?.GetName() ?? "Default";
 
             // Now determine what the key should be based on the bucketedBy value
             switch (bucketedBy)

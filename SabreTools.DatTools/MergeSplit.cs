@@ -149,11 +149,11 @@ namespace SabreTools.DatTools
                         + Path.DirectorySeparatorChar
                         + Path.GetFileNameWithoutExtension(filename)
                         + Path.DirectorySeparatorChar
-                        + machine.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                        + machine.GetName();
                     if (machineName.Length == 0)
                         machineName = "Default";
 
-                    machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineName);
+                    machine.SetName(machineName);
 
                     newItems.Add(newItem);
                 }
@@ -222,11 +222,11 @@ namespace SabreTools.DatTools
                         + Path.DirectorySeparatorChar
                         + Path.GetFileNameWithoutExtension(filename)
                         + Path.DirectorySeparatorChar
-                        + machine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                        + machine.Value.GetName();
                     if (machineName.Length == 0)
                         machineName = "Default";
 
-                    machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineName);
+                    machine.Value.SetName(machineName);
                 }
 #if NET40_OR_GREATER || NETCOREAPP
             });

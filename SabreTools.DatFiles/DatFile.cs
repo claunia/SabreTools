@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
+using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -487,7 +488,7 @@ namespace SabreTools.DatFiles
             // Get the name to update
             string? name = (useRomName
                 ? item.GetName()
-                : machine?.GetStringFieldValue(Models.Metadata.Machine.NameKey)) ?? string.Empty;
+                : machine?.GetName()) ?? string.Empty;
 
             // If we're in Depot mode, take care of that instead
             if (Modifiers.OutputDepot?.IsActive == true)
@@ -553,14 +554,14 @@ namespace SabreTools.DatFiles
                 name += Modifiers.AddExtension;
 
             if (useRomName && Modifiers.GameName)
-                name = Path.Combine(machine?.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty, name);
+                name = Path.Combine(machine?.GetName() ?? string.Empty, name);
 
             // Now assign back the formatted name
             name = $"{pre}{name}{post}";
             if (useRomName)
                 item.SetName(name);
             else
-                machine?.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, name);
+                machine?.SetName(name);
         }
 
         /// <summary>
@@ -575,7 +576,7 @@ namespace SabreTools.DatFiles
             // Initialize strings
             string? type = item.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
             string
-                game = machine?.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty,
+                game = machine?.GetName() ?? string.Empty,
                 manufacturer = machine?.GetStringFieldValue(Models.Metadata.Machine.ManufacturerKey) ?? string.Empty,
                 publisher = machine?.GetStringFieldValue(Models.Metadata.Machine.PublisherKey) ?? string.Empty,
                 category = machine?.GetStringFieldValue(Models.Metadata.Machine.CategoryKey) ?? string.Empty,
@@ -1000,8 +1001,8 @@ namespace SabreTools.DatFiles
                     var nc = new NaturalComparer();
 
                     // If machine names don't match
-                    string? xMachineName = x.GetFieldValue<Machine>(DatItem.MachineKey)?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
-                    string? yMachineName = y.GetFieldValue<Machine>(DatItem.MachineKey)?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    string? xMachineName = x.GetFieldValue<Machine>(DatItem.MachineKey)?.GetName();
+                    string? yMachineName = y.GetFieldValue<Machine>(DatItem.MachineKey)?.GetName();
                     if (xMachineName != yMachineName)
                         return nc.Compare(xMachineName, yMachineName);
 
@@ -1055,8 +1056,8 @@ namespace SabreTools.DatFiles
                     // TODO: Fix this since DB uses an external map for machines
 
                     // If machine names don't match
-                    string? xMachineName = x.Value.GetFieldValue<Machine>(DatItem.MachineKey)?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
-                    string? yMachineName = y.Value.GetFieldValue<Machine>(DatItem.MachineKey)?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    string? xMachineName = x.Value.GetFieldValue<Machine>(DatItem.MachineKey)?.GetName();
+                    string? yMachineName = y.Value.GetFieldValue<Machine>(DatItem.MachineKey)?.GetName();
                     if (xMachineName != yMachineName)
                         return nc.Compare(xMachineName, yMachineName);
 

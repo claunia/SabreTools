@@ -125,7 +125,7 @@ namespace SabreTools.DatFiles
                         continue;
 
                     // Get the values to check against
-                    string? machineName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    string? machineName = machine.GetName();
                     string? machineDesc = machine.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey);
                     if (machineName == null || machineDesc == null)
                         continue;
@@ -166,7 +166,7 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // Get the values to check against
-                string? machineName = machine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                string? machineName = machine.Value.GetName();
                 string? machineDesc = machine.Value.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey);
                 if (machineName == null || machineDesc == null)
                     continue;
@@ -332,7 +332,7 @@ namespace SabreTools.DatFiles
 
                 // Get machine information
                 Machine? machine = item.GetFieldValue<Machine>(DatItem.MachineKey);
-                string? machineName = machine?.GetStringFieldValue(Models.Metadata.Machine.NameKey)?.ToLowerInvariant();
+                string? machineName = machine?.GetName()?.ToLowerInvariant();
                 if (machine == null || machineName == null)
                     continue;
 
@@ -411,7 +411,7 @@ namespace SabreTools.DatFiles
 
                 // Get machine information
                 Machine? machineObj = machine.Value;
-                string? machineName = machineObj?.GetStringFieldValue(Models.Metadata.Machine.NameKey)?.ToLowerInvariant();
+                string? machineName = machineObj?.GetName()?.ToLowerInvariant();
                 if (machineObj == null || machineName == null)
                     continue;
 
@@ -535,19 +535,19 @@ namespace SabreTools.DatFiles
             if (datItem is DatItems.Formats.File || datItem is Rom)
             {
                 string[] splitname = itemName.Split('.');
-                itemName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey)
+                itemName = machine.GetName()
                     + $"/{string.Join(".", splitname, 0, splitname.Length > 1 ? splitname.Length - 1 : 1)}";
             }
             else
             {
-                itemName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $"/{itemName}";
+                itemName = machine.GetName() + $"/{itemName}";
             }
 
             // Strip off "Default" prefix only for ORPG
             if (itemName.StartsWith("Default"))
                 itemName = itemName.Substring("Default".Length + 1);
 
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, itemName);
+            machine.SetName(itemName);
             datItem.SetName(Path.GetFileName(datItem.GetName()));
         }
 
@@ -615,19 +615,19 @@ namespace SabreTools.DatFiles
             if (datItem.Value is DatItems.Formats.File || datItem.Value is Rom)
             {
                 string[] splitname = itemName.Split('.');
-                itemName = machine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey)
+                itemName = machine.Value.GetName()
                     + $"/{string.Join(".", splitname, 0, splitname.Length > 1 ? splitname.Length - 1 : 1)}";
             }
             else
             {
-                itemName = machine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $"/{itemName}";
+                itemName = machine.Value.GetName() + $"/{itemName}";
             }
 
             // Strip off "Default" prefix only for ORPG
             if (itemName.StartsWith("Default"))
                 itemName = itemName.Substring("Default".Length + 1);
 
-            machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, itemName);
+            machine.Value.SetName(itemName);
             datItem.Value.SetName(Path.GetFileName(datItem.Value.GetName()));
         }
 
@@ -662,11 +662,11 @@ namespace SabreTools.DatFiles
                         continue;
 
                     // Get the values to check against
-                    string? machineName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    string? machineName = machine.GetName();
                     string? machineDesc = machine.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey);
 
                     if (machineName != null && Regex.IsMatch(machineName, SceneNamePattern))
-                        item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Regex.Replace(machineName, SceneNamePattern, "$2"));
+                        item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetName(Regex.Replace(machineName, SceneNamePattern, "$2"));
 
                     if (machineDesc != null && Regex.IsMatch(machineDesc, SceneNamePattern))
                         item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, Regex.Replace(machineDesc, SceneNamePattern, "$2"));
@@ -702,11 +702,11 @@ namespace SabreTools.DatFiles
 #endif
 
                 // Get the values to check against
-                string? machineName = machine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                string? machineName = machine.Value.GetName();
                 string? machineDesc = machine.Value.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey);
 
                 if (machineName != null && Regex.IsMatch(machineName, SceneNamePattern))
-                    machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Regex.Replace(machineName, SceneNamePattern, "$2"));
+                    machine.Value.SetName(Regex.Replace(machineName, SceneNamePattern, "$2"));
 
                 if (machineDesc != null && Regex.IsMatch(machineDesc, SceneNamePattern))
                     machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, Regex.Replace(machineDesc, SceneNamePattern, "$2"));
@@ -747,14 +747,14 @@ namespace SabreTools.DatFiles
                         continue;
 
                     // Get the values to check against
-                    string? machineName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    string? machineName = machine.GetName();
                     string? cloneOf = machine.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey);
                     string? romOf = machine.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
                     string? sampleOf = machine.GetStringFieldValue(Models.Metadata.Machine.SampleOfKey);
 
                     // Update machine name
                     if (machineName != null && mapping.ContainsKey(machineName))
-                        machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, mapping[machineName]);
+                        machine.SetName(mapping[machineName]);
 
                     // Update cloneof
                     if (cloneOf != null && mapping.ContainsKey(cloneOf))
@@ -788,14 +788,14 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // Get the values to check against
-                string? machineName = machine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                string? machineName = machine.Value.GetName();
                 string? cloneOf = machine.Value.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey);
                 string? romOf = machine.Value.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
                 string? sampleOf = machine.Value.GetStringFieldValue(Models.Metadata.Machine.SampleOfKey);
 
                 // Update machine name
                 if (machineName != null && mapping.ContainsKey(machineName))
-                    machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, mapping[machineName]);
+                    machine.Value.SetName(mapping[machineName]);
 
                 // Update cloneof
                 if (cloneOf != null && mapping.ContainsKey(cloneOf))

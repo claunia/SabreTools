@@ -220,7 +220,7 @@ namespace SabreTools.DatTools
         internal void CleanDatItem(DatItem datItem, Machine machine)
         {
             // Get the fields for processing
-            string? machineName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+            string? machineName = machine.GetName();
             string? machineDesc = machine.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey);
             string? datItemName = datItem.GetName();
 
@@ -259,7 +259,7 @@ namespace SabreTools.DatTools
             }
 
             // Set the fields back, if necessary
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineName);
+            machine.SetName(machineName);
             machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, machineDesc);
             datItem.SetName(datItemName);
         }

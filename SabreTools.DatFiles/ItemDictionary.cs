@@ -533,8 +533,8 @@ namespace SabreTools.DatFiles
                 }
 
                 // If the saved machine is a child of the current machine, use the current machine instead
-                if (savedMachine?.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey) == itemMachine?.GetStringFieldValue(Models.Metadata.Machine.NameKey)
-                    || savedMachine?.GetStringFieldValue(Models.Metadata.Machine.RomOfKey) == itemMachine?.GetStringFieldValue(Models.Metadata.Machine.NameKey))
+                if (savedMachine?.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey) == itemMachine?.GetName()
+                    || savedMachine?.GetStringFieldValue(Models.Metadata.Machine.RomOfKey) == itemMachine?.GetName())
                 {
                     savedItem.CopyMachineInformation(datItem);
                     savedItem.SetName(datItem.GetName());
@@ -799,8 +799,8 @@ namespace SabreTools.DatFiles
                     Machine? yMachine = y.GetFieldValue<Machine>(DatItem.MachineKey);
 
                     // If machine names don't match
-                    string? xMachineName = xMachine?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
-                    string? yMachineName = yMachine?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    string? xMachineName = xMachine?.GetName();
+                    string? yMachineName = yMachine?.GetName();
                     if (xMachineName != yMachineName)
                         return nc.Compare(xMachineName, yMachineName);
 

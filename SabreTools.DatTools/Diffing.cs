@@ -488,7 +488,7 @@ namespace SabreTools.DatTools
                             continue;
 
                         if (item.GetFieldValue<Source?>(DatItem.SourceKey) != null)
-                            newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $" ({Path.GetFileNameWithoutExtension(inputs[item.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].CurrentPath)})");
+                            newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.SetName(newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetName() + $" ({Path.GetFileNameWithoutExtension(inputs[item.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].CurrentPath)})");
 
                         dupeData.AddItem(newrom, statsOnly: false);
                     }
@@ -558,7 +558,7 @@ namespace SabreTools.DatTools
 
                 // Get the current source and machine
                 var currentSource = sources[sourceIndex];
-                string? currentMachineName = machines[machineIndex].GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                string? currentMachineName = machines[machineIndex].GetName();
                 var currentMachine = datFile.ItemsDB.GetMachine(currentMachineName);
                 if (currentMachine.Value == null)
 #if NET40_OR_GREATER || NETCOREAPP
@@ -573,7 +573,7 @@ namespace SabreTools.DatTools
                 if (renamedMachine.Value == null)
                 {
                     var newMachine = currentMachine.Value.Clone() as Machine;
-                    newMachine!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, renamedMachineName);
+                    newMachine!.SetName(renamedMachineName);
                     long newMachineIndex = dupeData.AddMachineDB(newMachine!);
                     renamedMachine = new KeyValuePair<long, Machine?>(newMachineIndex, newMachine);
                 }
@@ -887,7 +887,7 @@ namespace SabreTools.DatTools
                         if (item.Clone() is not DatItem newrom || newrom.GetFieldValue<Source?>(DatItem.SourceKey) == null)
                             continue;
 
-                        newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey) + $" ({Path.GetFileNameWithoutExtension(inputs[newrom.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].CurrentPath)})");
+                        newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.SetName(newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetName() + $" ({Path.GetFileNameWithoutExtension(inputs[newrom.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].CurrentPath)})");
                         outerDiffData.AddItem(newrom, statsOnly: false);
                     }
                 }
@@ -956,7 +956,7 @@ namespace SabreTools.DatTools
 
                 // Get the current source and machine
                 var currentSource = sources[sourceIndex];
-                string? currentMachineName = machines[machineIndex].GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                string? currentMachineName = machines[machineIndex].GetName();
                 var currentMachine = datFile.ItemsDB.GetMachine(currentMachineName);
                 if (currentMachine.Value == null)
 #if NET40_OR_GREATER || NETCOREAPP
@@ -971,7 +971,7 @@ namespace SabreTools.DatTools
                 if (renamedMachine.Value == null)
                 {
                     var newMachine = currentMachine.Value.Clone() as Machine;
-                    newMachine!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, renamedMachineName);
+                    newMachine!.SetName(renamedMachineName);
                     long newMachineIndex = outerDiffData.AddMachineDB(newMachine);
                     renamedMachine = new KeyValuePair<long, Machine?>(newMachineIndex, newMachine);
                 }

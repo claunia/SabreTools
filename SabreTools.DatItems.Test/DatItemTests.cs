@@ -47,7 +47,7 @@ namespace SabreTools.DatItems.Test
         public void CopyMachineInformation_NewItem_Overwrite()
         {
             Machine? machineA = new Machine();
-            machineA.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "machineA");
+            machineA.SetName("machineA");
 
             var romA = new Rom();
 
@@ -57,14 +57,14 @@ namespace SabreTools.DatItems.Test
             romA.CopyMachineInformation(romB);
             var actualMachineA = romA.GetFieldValue<Machine>(DatItem.MachineKey);
             Assert.NotNull(actualMachineA);
-            Assert.Null(actualMachineA.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Null(actualMachineA.GetName());
         }
 
         [Fact]
         public void CopyMachineInformation_EmptyItem_NoChange()
         {
             Machine? machineA = new Machine();
-            machineA.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "machineA");
+            machineA.SetName("machineA");
 
             var romA = new Rom();
             romA.SetFieldValue(DatItem.MachineKey, machineA);
@@ -75,14 +75,14 @@ namespace SabreTools.DatItems.Test
             romA.CopyMachineInformation(romB);
             var actualMachineA = romA.GetFieldValue<Machine>(DatItem.MachineKey);
             Assert.NotNull(actualMachineA);
-            Assert.Equal("machineA", actualMachineA.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("machineA", actualMachineA.GetName());
         }
 
         [Fact]
         public void CopyMachineInformation_NullMachine_NoChange()
         {
             Machine? machineA = new Machine();
-            machineA.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "machineA");
+            machineA.SetName("machineA");
 
             Machine? machineB = null;
 
@@ -95,14 +95,14 @@ namespace SabreTools.DatItems.Test
             romA.CopyMachineInformation(romB);
             var actualMachineA = romA.GetFieldValue<Machine>(DatItem.MachineKey);
             Assert.NotNull(actualMachineA);
-            Assert.Equal("machineA", actualMachineA.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("machineA", actualMachineA.GetName());
         }
 
         [Fact]
         public void CopyMachineInformation_EmptyMachine_Overwrite()
         {
             Machine? machineA = new Machine();
-            machineA.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "machineA");
+            machineA.SetName("machineA");
 
             Machine? machineB = new Machine();
 
@@ -115,17 +115,17 @@ namespace SabreTools.DatItems.Test
             romA.CopyMachineInformation(romB);
             var actualMachineA = romA.GetFieldValue<Machine>(DatItem.MachineKey);
             Assert.NotNull(actualMachineA);
-            Assert.Null(actualMachineA.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Null(actualMachineA.GetName());
         }
 
         [Fact]
         public void CopyMachineInformation_FilledMachine_Overwrite()
         {
             Machine? machineA = new Machine();
-            machineA.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "machineA");
+            machineA.SetName("machineA");
 
             Machine? machineB = new Machine();
-            machineB.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "machineB");
+            machineB.SetName("machineB");
 
             var romA = new Rom();
             romA.SetFieldValue(DatItem.MachineKey, machineA);
@@ -136,17 +136,17 @@ namespace SabreTools.DatItems.Test
             romA.CopyMachineInformation(romB);
             var actualMachineA = romA.GetFieldValue<Machine>(DatItem.MachineKey);
             Assert.NotNull(actualMachineA);
-            Assert.Equal("machineB", actualMachineA.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("machineB", actualMachineA.GetName());
         }
 
         [Fact]
         public void CopyMachineInformation_MismatchedType_Overwrite()
         {
             Machine? machineA = new Machine();
-            machineA.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "machineA");
+            machineA.SetName("machineA");
 
             Machine? machineB = new Machine();
-            machineB.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "machineB");
+            machineB.SetName("machineB");
 
             var romA = new Rom();
             romA.SetFieldValue(DatItem.MachineKey, machineA);
@@ -157,7 +157,7 @@ namespace SabreTools.DatItems.Test
             romA.CopyMachineInformation(diskB);
             var actualMachineA = romA.GetFieldValue<Machine>(DatItem.MachineKey);
             Assert.NotNull(actualMachineA);
-            Assert.Equal("machineB", actualMachineA.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("machineB", actualMachineA.GetName());
         }
 
         #endregion
@@ -304,10 +304,10 @@ namespace SabreTools.DatItems.Test
         public void GetDuplicateStatus_MismatchedHashes_NoDupe()
         {
             Machine? machineA = new Machine();
-            machineA.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
+            machineA.SetName("name-same");
 
             Machine? machineB = new Machine();
-            machineB.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
+            machineB.SetName("name-same");
 
             var romA = new Rom();
             romA.SetName("same-name");
@@ -329,10 +329,10 @@ namespace SabreTools.DatItems.Test
         public void GetDuplicateStatus_DifferentSource_NameMatch_ExternalAll()
         {
             Machine? machineA = new Machine();
-            machineA.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
+            machineA.SetName("name-same");
 
             Machine? machineB = new Machine();
-            machineB.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
+            machineB.SetName("name-same");
 
             var romA = new Rom();
             romA.SetName("same-name");
@@ -354,10 +354,10 @@ namespace SabreTools.DatItems.Test
         public void GetDuplicateStatus_DifferentSource_NoNameMatch_ExternalHash()
         {
             Machine? machineA = new Machine();
-            machineA.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
+            machineA.SetName("name-same");
 
             Machine? machineB = new Machine();
-            machineB.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "not-name-same");
+            machineB.SetName("not-name-same");
 
             var romA = new Rom();
             romA.SetName("same-name");
@@ -379,10 +379,10 @@ namespace SabreTools.DatItems.Test
         public void GetDuplicateStatus_SameSource_NameMatch_InternalAll()
         {
             Machine? machineA = new Machine();
-            machineA.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
+            machineA.SetName("name-same");
 
             Machine? machineB = new Machine();
-            machineB.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
+            machineB.SetName("name-same");
 
             var romA = new Rom();
             romA.SetName("same-name");
@@ -404,10 +404,10 @@ namespace SabreTools.DatItems.Test
         public void GetDuplicateStatus_SameSource_NoNameMatch_InternalHash()
         {
             Machine? machineA = new Machine();
-            machineA.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
+            machineA.SetName("name-same");
 
             Machine? machineB = new Machine();
-            machineB.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "not-name-same");
+            machineB.SetName("not-name-same");
 
             var romA = new Rom();
             romA.SetName("same-name");
@@ -461,10 +461,10 @@ namespace SabreTools.DatItems.Test
             Source? sourceB = new Source(1);
 
             Machine? machineA = new Machine();
-            machineA.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
+            machineA.SetName("name-same");
 
             Machine? machineB = new Machine();
-            machineB.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
+            machineB.SetName("name-same");
 
             var romA = new Rom();
             romA.SetName("same-name");
@@ -487,10 +487,10 @@ namespace SabreTools.DatItems.Test
             Source? sourceB = new Source(1);
 
             Machine? machineA = new Machine();
-            machineA.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
+            machineA.SetName("name-same");
 
             Machine? machineB = new Machine();
-            machineB.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
+            machineB.SetName("name-same");
 
             var romA = new Rom();
             romA.SetName("same-name");
@@ -513,10 +513,10 @@ namespace SabreTools.DatItems.Test
             Source? sourceB = new Source(1);
 
             Machine? machineA = new Machine();
-            machineA.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
+            machineA.SetName("name-same");
 
             Machine? machineB = new Machine();
-            machineB.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "not-name-same");
+            machineB.SetName("not-name-same");
 
             var romA = new Rom();
             romA.SetName("same-name");
@@ -539,10 +539,10 @@ namespace SabreTools.DatItems.Test
             Source? sourceB = new Source(0);
 
             Machine? machineA = new Machine();
-            machineA.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
+            machineA.SetName("name-same");
 
             Machine? machineB = new Machine();
-            machineB.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
+            machineB.SetName("name-same");
 
             var romA = new Rom();
             romA.SetName("same-name");
@@ -565,10 +565,10 @@ namespace SabreTools.DatItems.Test
             Source? sourceB = new Source(0);
 
             Machine? machineA = new Machine();
-            machineA.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "name-same");
+            machineA.SetName("name-same");
 
             Machine? machineB = new Machine();
-            machineB.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "not-name-same");
+            machineB.SetName("not-name-same");
 
             var romA = new Rom();
             romA.SetName("same-name");

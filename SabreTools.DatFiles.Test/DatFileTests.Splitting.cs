@@ -15,10 +15,10 @@ namespace SabreTools.DatFiles.Test
             Source source = new Source(0, source: null);
 
             Machine parentMachine = new Machine();
-            parentMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "parent");
+            parentMachine.SetName("parent");
 
             Machine childMachine = new Machine();
-            childMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "child");
+            childMachine.SetName("child");
             childMachine.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, "parent");
             childMachine.SetFieldValue<bool>(Models.Metadata.Machine.IsBiosKey, true);
 
@@ -60,10 +60,10 @@ namespace SabreTools.DatFiles.Test
             Source source = new Source(0, source: null);
 
             Machine parentMachine = new Machine();
-            parentMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "parent");
+            parentMachine.SetName("parent");
 
             Machine childMachine = new Machine();
-            childMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "child");
+            childMachine.SetName("child");
             childMachine.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, "parent");
             childMachine.SetFieldValue<bool>(Models.Metadata.Machine.IsBiosKey, true);
 
@@ -105,10 +105,10 @@ namespace SabreTools.DatFiles.Test
             Source source = new Source(0, source: null);
 
             Machine parentMachine = new Machine();
-            parentMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "parent");
+            parentMachine.SetName("parent");
 
             Machine childMachine = new Machine();
-            childMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "child");
+            childMachine.SetName("child");
             childMachine.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, "parent");
             childMachine.SetFieldValue<bool>(Models.Metadata.Machine.IsBiosKey, true);
 
@@ -153,10 +153,10 @@ namespace SabreTools.DatFiles.Test
             Source source = new Source(0, source: null);
 
             Machine parentMachine = new Machine();
-            parentMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "parent");
+            parentMachine.SetName("parent");
 
             Machine childMachine = new Machine();
-            childMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "child");
+            childMachine.SetName("child");
             childMachine.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, "parent");
             childMachine.SetFieldValue<bool>(Models.Metadata.Machine.IsBiosKey, true);
 
@@ -205,10 +205,10 @@ namespace SabreTools.DatFiles.Test
             Source source = new Source(0, source: null);
 
             Machine parentMachine = new Machine();
-            parentMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "parent");
+            parentMachine.SetName("parent");
 
             Machine childMachine = new Machine();
-            childMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "child");
+            childMachine.SetName("child");
             childMachine.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, "parent");
             childMachine.SetFieldValue<bool>(Models.Metadata.Machine.IsBiosKey, true);
 
@@ -250,10 +250,10 @@ namespace SabreTools.DatFiles.Test
             Source source = new Source(0, source: null);
 
             Machine parentMachine = new Machine();
-            parentMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "parent");
+            parentMachine.SetName("parent");
 
             Machine childMachine = new Machine();
-            childMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "child");
+            childMachine.SetName("child");
             childMachine.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, "parent");
             childMachine.SetFieldValue<bool>(Models.Metadata.Machine.IsBiosKey, true);
 
@@ -306,14 +306,14 @@ namespace SabreTools.DatFiles.Test
             Source source = new Source(0, source: null);
 
             Machine deviceMachine = new Machine();
-            deviceMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "device");
+            deviceMachine.SetName("device");
             deviceMachine.SetFieldValue<bool>(Models.Metadata.Machine.IsDeviceKey, true);
 
             Machine slotOptionMachine = new Machine();
-            slotOptionMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "slotoption");
+            slotOptionMachine.SetName("slotoption");
 
             Machine itemMachine = new Machine();
-            itemMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "machine");
+            itemMachine.SetName("machine");
 
             DatItem deviceItem = new Sample();
             deviceItem.SetName("device_item");
@@ -365,14 +365,14 @@ namespace SabreTools.DatFiles.Test
             Source source = new Source(0, source: null);
 
             Machine deviceMachine = new Machine();
-            deviceMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "device");
+            deviceMachine.SetName("device");
             deviceMachine.SetFieldValue<bool>(Models.Metadata.Machine.IsDeviceKey, true);
 
             Machine slotOptionMachine = new Machine();
-            slotOptionMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "slotoption");
+            slotOptionMachine.SetName("slotoption");
 
             Machine itemMachine = new Machine();
-            itemMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "machine");
+            itemMachine.SetName("machine");
 
             DatItem deviceItem = new Sample();
             deviceItem.SetName("device_item");
@@ -418,10 +418,10 @@ namespace SabreTools.DatFiles.Test
             Source source = new Source(0, source: null);
 
             Machine parentMachine = new Machine();
-            parentMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "parent");
+            parentMachine.SetName("parent");
 
             Machine childMachine = new Machine();
-            childMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "child");
+            childMachine.SetName("child");
             childMachine.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, "parent");
             childMachine.SetFieldValue<bool>(Models.Metadata.Machine.IsBiosKey, true);
 
@@ -463,10 +463,10 @@ namespace SabreTools.DatFiles.Test
             Source source = new Source(0, source: null);
 
             Machine parentMachine = new Machine();
-            parentMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "parent");
+            parentMachine.SetName("parent");
 
             Machine childMachine = new Machine();
-            childMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "child");
+            childMachine.SetName("child");
             childMachine.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, "parent");
             childMachine.SetFieldValue<bool>(Models.Metadata.Machine.IsBiosKey, true);
 
@@ -515,11 +515,11 @@ namespace SabreTools.DatFiles.Test
             Source source = new Source(0, source: null);
 
             Machine biosMachine = new Machine();
-            biosMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "bios");
+            biosMachine.SetName("bios");
             biosMachine.SetFieldValue<bool>(Models.Metadata.Machine.IsBiosKey, true);
 
             Machine deviceMachine = new Machine();
-            deviceMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "device");
+            deviceMachine.SetName("device");
             deviceMachine.SetFieldValue<bool>(Models.Metadata.Machine.IsDeviceKey, true);
 
             DatItem biosItem = new Rom();
@@ -547,11 +547,11 @@ namespace SabreTools.DatFiles.Test
             Source source = new Source(0, source: null);
 
             Machine biosMachine = new Machine();
-            biosMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "bios");
+            biosMachine.SetName("bios");
             biosMachine.SetFieldValue<bool>(Models.Metadata.Machine.IsBiosKey, true);
 
             Machine deviceMachine = new Machine();
-            deviceMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "device");
+            deviceMachine.SetName("device");
             deviceMachine.SetFieldValue<bool>(Models.Metadata.Machine.IsDeviceKey, true);
 
             DatItem biosItem = new Rom();
@@ -580,11 +580,11 @@ namespace SabreTools.DatFiles.Test
             Source source = new Source(0, source: null);
 
             Machine parentMachine = new Machine();
-            parentMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "parent");
+            parentMachine.SetName("parent");
             parentMachine.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, "romof");
 
             Machine childMachine = new Machine();
-            childMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "child");
+            childMachine.SetName("child");
             childMachine.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, "parent");
 
             DatItem parentItem = new Rom();
@@ -620,7 +620,7 @@ namespace SabreTools.DatFiles.Test
             DatItem actual = Assert.Single(datFile.GetItemsForBucket("child"));
             Machine? actualMachine = actual.GetFieldValue<Machine>(DatItem.MachineKey);
             Assert.NotNull(actualMachine);
-            Assert.Equal("child", actualMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("child", actualMachine.GetName());
             Assert.Equal("romof", actualMachine.GetStringFieldValue(Models.Metadata.Machine.RomOfKey));
         }
 
@@ -630,11 +630,11 @@ namespace SabreTools.DatFiles.Test
             Source source = new Source(0, source: null);
 
             Machine parentMachine = new Machine();
-            parentMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "parent");
+            parentMachine.SetName("parent");
             parentMachine.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, "romof");
 
             Machine childMachine = new Machine();
-            childMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "child");
+            childMachine.SetName("child");
             childMachine.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, "parent");
 
             DatItem parentItem = new Rom();
@@ -673,7 +673,7 @@ namespace SabreTools.DatFiles.Test
             long actual = Assert.Single(datFile.GetItemsForBucketDB("child")).Key;
             Machine? actualMachine = datFile.GetMachineForItemDB(actual).Value;
             Assert.NotNull(actualMachine);
-            Assert.Equal("child", actualMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("child", actualMachine.GetName());
             Assert.Equal("romof", actualMachine.GetStringFieldValue(Models.Metadata.Machine.RomOfKey));
         }
 
@@ -687,10 +687,10 @@ namespace SabreTools.DatFiles.Test
             Source source = new Source(0, source: null);
 
             Machine parentMachine = new Machine();
-            parentMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "parent");
+            parentMachine.SetName("parent");
 
             Machine childMachine = new Machine();
-            childMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "child");
+            childMachine.SetName("child");
             childMachine.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, "parent");
             childMachine.SetFieldValue<bool>(Models.Metadata.Machine.IsBiosKey, true);
 
@@ -727,7 +727,7 @@ namespace SabreTools.DatFiles.Test
             DatItem actual = Assert.Single(datFile.GetItemsForBucket("child"));
             Machine? actualMachine = actual.GetFieldValue<Machine>(DatItem.MachineKey);
             Assert.NotNull(actualMachine);
-            Assert.Equal("child", actualMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("child", actualMachine.GetName());
         }
 
         [Fact]
@@ -736,10 +736,10 @@ namespace SabreTools.DatFiles.Test
             Source source = new Source(0, source: null);
 
             Machine parentMachine = new Machine();
-            parentMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "parent");
+            parentMachine.SetName("parent");
 
             Machine childMachine = new Machine();
-            childMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "child");
+            childMachine.SetName("child");
             childMachine.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, "parent");
             childMachine.SetFieldValue<bool>(Models.Metadata.Machine.IsBiosKey, true);
 
@@ -779,7 +779,7 @@ namespace SabreTools.DatFiles.Test
             long actual = Assert.Single(datFile.GetItemsForBucketDB("child")).Key;
             Machine? actualMachine = datFile.GetMachineForItemDB(actual).Value;
             Assert.NotNull(actualMachine);
-            Assert.Equal("child", actualMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("child", actualMachine.GetName());
         }
 
         #endregion
@@ -792,7 +792,7 @@ namespace SabreTools.DatFiles.Test
             Source source = new Source(0, source: null);
 
             Machine machine = new Machine();
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "machine");
+            machine.SetName("machine");
             machine.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, "XXXXXX");
             machine.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, "XXXXXX");
             machine.SetFieldValue<string?>(Models.Metadata.Machine.SampleOfKey, "XXXXXX");
@@ -821,7 +821,7 @@ namespace SabreTools.DatFiles.Test
             Source source = new Source(0, source: null);
 
             Machine machine = new Machine();
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "machine");
+            machine.SetName("machine");
             machine.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, "XXXXXX");
             machine.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, "XXXXXX");
             machine.SetFieldValue<string?>(Models.Metadata.Machine.SampleOfKey, "XXXXXX");

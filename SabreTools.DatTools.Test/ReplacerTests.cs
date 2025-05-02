@@ -17,18 +17,18 @@ namespace SabreTools.DatTools.Test
         public void ReplaceFields_Machine()
         {
             var machine = new Machine();
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "bar");
+            machine.SetName("bar");
             machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, "bar");
 
             var repMachine = new Machine();
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "foo");
+            machine.SetName("foo");
             machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, "bar");
 
             List<string> fields = [Models.Metadata.Machine.NameKey];
 
             Replacer.ReplaceFields(machine, repMachine, fields, false);
 
-            Assert.Equal("foo", machine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("foo", machine.GetName());
         }
 
         [Fact]

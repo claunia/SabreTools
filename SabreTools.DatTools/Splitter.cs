@@ -526,7 +526,7 @@ namespace SabreTools.DatTools
 #else
                     continue;
 #endif
-                items.ForEach(item => item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, Path.GetFileName(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey))));
+                items.ForEach(item => item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetName(Path.GetFileName(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetName())));
                 items.ForEach(item => item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, Path.GetFileName(item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey))));
 
                 // Now add the game to the output DAT

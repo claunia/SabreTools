@@ -82,7 +82,7 @@ namespace SabreTools.DatFiles.Formats
                             WriteDatItem(sw, datItem, lastgame);
 
                         // Set the new data to compare against
-                        lastgame = datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                        lastgame = datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetName();
                     }
                 }
 
@@ -143,7 +143,7 @@ namespace SabreTools.DatFiles.Formats
                             WriteDatItemDB(sw, datItem, lastgame);
 
                         // Set the new data to compare against
-                        lastgame = machine.Value!.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                        lastgame = machine.Value!.GetName();
                     }
                 }
 
@@ -199,8 +199,8 @@ namespace SabreTools.DatFiles.Formats
             // Romba mode automatically uses item name
             if (Modifiers.OutputDepot?.IsActive == true || Modifiers.UseRomName)
                 sw.Write($"{datItem.GetName() ?? string.Empty}\n");
-            else if (!Modifiers.UseRomName && machine!.GetStringFieldValue(Models.Metadata.Machine.NameKey) != lastgame)
-                sw.Write($"{machine!.GetStringFieldValue(Models.Metadata.Machine.NameKey) ?? string.Empty}\n");
+            else if (!Modifiers.UseRomName && machine!.GetName() != lastgame)
+                sw.Write($"{machine!.GetName() ?? string.Empty}\n");
 
             sw.Flush();
         }

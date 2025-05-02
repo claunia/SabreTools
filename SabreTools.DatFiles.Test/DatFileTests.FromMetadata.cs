@@ -1004,7 +1004,7 @@ namespace SabreTools.DatFiles.Test
             Assert.Equal("language", machine.GetStringFieldValue(Models.Metadata.Machine.LanguageKey));
             Assert.Equal("location", machine.GetStringFieldValue(Models.Metadata.Machine.LocationKey));
             Assert.Equal("manufacturer", machine.GetStringFieldValue(Models.Metadata.Machine.ManufacturerKey));
-            Assert.Equal("name", machine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("name", machine.GetName());
             Assert.Equal("notes", machine.GetStringFieldValue(Models.Metadata.Machine.NotesKey));
             Assert.Equal("playedcount", machine.GetStringFieldValue(Models.Metadata.Machine.PlayedCountKey));
             Assert.Equal("playedtime", machine.GetStringFieldValue(Models.Metadata.Machine.PlayedTimeKey));

@@ -263,7 +263,7 @@ namespace SabreTools.DatFiles
                 if (parentItems.Count == 0)
                 {
                     copyFrom = new Rom();
-                    copyFrom.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, cloneOf);
+                    copyFrom.GetFieldValue<Machine>(DatItem.MachineKey)!.SetName(cloneOf);
                     copyFrom.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, cloneOf);
                 }
                 else
@@ -325,7 +325,7 @@ namespace SabreTools.DatFiles
                             .Contains(rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey)))
                         {
                             if (subfolder)
-                                rom.SetName($"{rom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)}\\{rom.GetName()}");
+                                rom.SetName($"{rom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetName()}\\{rom.GetName()}");
 
                             rom.CopyMachineInformation(copyFrom);
                             AddItem(rom, statsOnly: false);
@@ -335,7 +335,7 @@ namespace SabreTools.DatFiles
                         else if (!GetItemsForBucket(cloneOf).Contains(item) || skipDedup)
                         {
                             if (subfolder)
-                                rom.SetName($"{item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)}\\{rom.GetName()}");
+                                rom.SetName($"{item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetName()}\\{rom.GetName()}");
 
                             rom.CopyMachineInformation(copyFrom);
                             AddItem(rom, statsOnly: false);
@@ -346,7 +346,7 @@ namespace SabreTools.DatFiles
                     else if (!GetItemsForBucket(cloneOf).Contains(item))
                     {
                         if (subfolder)
-                            item.SetName($"{item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.NameKey)}\\{item.GetName()}");
+                            item.SetName($"{item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetName()}\\{item.GetName()}");
 
                         item.CopyMachineInformation(copyFrom);
                         AddItem(item, statsOnly: false);
@@ -404,7 +404,7 @@ namespace SabreTools.DatFiles
                         continue;
 
                     string? machineName = GetMachineForItemDB(item.Key).Value?
-                        .GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                        .GetName();
 
                     // Special disk handling
                     if (item.Value is Disk disk)

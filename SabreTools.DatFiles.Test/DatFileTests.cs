@@ -31,7 +31,7 @@ namespace SabreTools.DatFiles.Test
             Source source = new Source(0, source: null);
 
             Machine machine = new Machine();
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "key");
+            machine.SetName("key");
 
             DatItem rom = new Rom();
             rom.SetName("rom");
@@ -73,7 +73,7 @@ namespace SabreTools.DatFiles.Test
             Source source = new Source(0, source: null);
 
             Machine machine = new Machine();
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "game-1");
+            machine.SetName("game-1");
 
             DatItem datItem = new Rom();
             datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
@@ -92,7 +92,7 @@ namespace SabreTools.DatFiles.Test
             Source source = new Source(0, source: null);
 
             Machine machine = new Machine();
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "game-1");
+            machine.SetName("game-1");
 
             DatItem datItem = new Rom();
 

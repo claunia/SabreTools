@@ -164,7 +164,7 @@ namespace SabreTools.DatTools
             string? machineName = null;
             var machine = disk.GetFieldValue<Machine>(DatItem.MachineKey);
             if (machine != null)
-                machineName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                machineName = machine.GetName();
 
             return new CHDFile()
             {
@@ -187,7 +187,7 @@ namespace SabreTools.DatTools
             string? machineName = null;
             var machine = file.GetFieldValue<Machine>(DatItem.MachineKey);
             if (machine != null)
-                machineName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                machineName = machine.GetName();
 
             return new BaseFile()
             {
@@ -209,7 +209,7 @@ namespace SabreTools.DatTools
             string? machineName = null;
             var machine = media.GetFieldValue<Machine>(DatItem.MachineKey);
             if (machine != null)
-                machineName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                machineName = machine.GetName();
 
             return new AaruFormat()
             {
@@ -236,7 +236,7 @@ namespace SabreTools.DatTools
             string? machineName = null;
             var machine = rom.GetFieldValue<Machine>(DatItem.MachineKey);
             if (machine != null)
-                machineName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                machineName = machine.GetName();
 
             string? spamSum = rom.GetStringFieldValue(Models.Metadata.Rom.SpamSumKey);
             return new BaseFile()

@@ -121,14 +121,14 @@ namespace SabreTools.DatTools.Test
         public void RemoveFields_Machine()
         {
             var machine = new Machine();
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "bar");
+            machine.SetName("bar");
             machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, "bar");
 
             var remover = new Remover();
             remover.PopulateExclusions("Machine.Name");
             remover.RemoveFields(machine);
 
-            Assert.Null(machine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Null(machine.GetName());
         }
     
         #endregion

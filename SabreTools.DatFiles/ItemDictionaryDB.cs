@@ -407,7 +407,7 @@ namespace SabreTools.DatFiles
             if (string.IsNullOrEmpty(name))
                 return new KeyValuePair<long, Machine?>(-1, null);
 
-            var machine = _machines.FirstOrDefault(m => m.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey) == name);
+            var machine = _machines.FirstOrDefault(m => m.Value.GetName() == name);
             return new KeyValuePair<long, Machine?>(machine.Key, machine.Value);
         }
 
@@ -612,7 +612,7 @@ namespace SabreTools.DatFiles
             if (string.IsNullOrEmpty(machineName))
                 return false;
 
-            var machine = _machines.FirstOrDefault(m => m.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey) == machineName);
+            var machine = _machines.FirstOrDefault(m => m.Value.GetName() == machineName);
             return RemoveMachine(machine.Key);
         }
 
@@ -874,8 +874,8 @@ namespace SabreTools.DatFiles
                 }
 
                 // If the saved machine is a child of the current machine, use the current machine instead
-                if (savedMachine.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey) == itemMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey)
-                    || savedMachine.GetStringFieldValue(Models.Metadata.Machine.RomOfKey) == itemMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey))
+                if (savedMachine.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey) == itemMachine.GetName()
+                    || savedMachine.GetStringFieldValue(Models.Metadata.Machine.RomOfKey) == itemMachine.GetName())
                 {
                     _machines[_itemToMachineMapping[savedIndex]] = (itemMachine.Clone() as Machine)!;
                     savedItem.SetName(datItem.GetName());
@@ -1101,8 +1101,8 @@ namespace SabreTools.DatFiles
                     Machine? yMachine = _machines[_itemToMachineMapping[y.Key]];
 
                     // If machine names don't match
-                    string? xMachineName = xMachine?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
-                    string? yMachineName = yMachine?.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                    string? xMachineName = xMachine?.GetName();
+                    string? yMachineName = yMachine?.GetName();
                     if (xMachineName != yMachineName)
                         return nc.Compare(xMachineName, yMachineName);
 

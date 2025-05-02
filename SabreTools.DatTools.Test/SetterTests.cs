@@ -28,14 +28,14 @@ namespace SabreTools.DatTools.Test
         public void SetFields_Machine()
         {
             var machine = new Machine();
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "bar");
+            machine.SetName("bar");
             machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, "bar");
 
             var setter = new Setter();
             setter.PopulateSetters(new FilterKey("machine", "name"), "foo");
             setter.SetFields(machine);
 
-            Assert.Equal("foo", machine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("foo", machine.GetName());
         }
 
         #endregion

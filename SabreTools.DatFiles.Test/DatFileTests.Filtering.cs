@@ -95,7 +95,7 @@ namespace SabreTools.DatFiles.Test
             DatItem actual = Assert.Single(datFile.GetItemsForBucket("machine"));
             Machine? actualMachine = actual.GetFieldValue<Machine?>(DatItem.MachineKey);
             Assert.NotNull(actualMachine);
-            Assert.Equal("description", actualMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("description", actualMachine.GetName());
             Assert.Equal("description", actualMachine.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey));
         }
 
@@ -112,7 +112,7 @@ namespace SabreTools.DatFiles.Test
             datFile.MachineDescriptionToName();
 
             Machine actualMachine = Assert.Single(datFile.GetMachinesDB()).Value;
-            Assert.Equal("description", actualMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("description", actualMachine.GetName());
             Assert.Equal("description", actualMachine.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey));
         }
 
@@ -151,12 +151,12 @@ namespace SabreTools.DatFiles.Test
             DatItem actualRom = Assert.Single(actualDatItems.FindAll(i => i is Rom));
             Machine? actualRomMachine = actualRom.GetFieldValue<Machine>(DatItem.MachineKey);
             Assert.NotNull(actualRomMachine);
-            Assert.Equal("machine/rom", actualRomMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("machine/rom", actualRomMachine.GetName());
 
             DatItem actualDisk = Assert.Single(actualDatItems.FindAll(i => i is Disk));
             Machine? actualDiskMachine = actualDisk.GetFieldValue<Machine>(DatItem.MachineKey);
             Assert.NotNull(actualDiskMachine);
-            Assert.Equal("machine/disk", actualDiskMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("machine/disk", actualDiskMachine.GetName());
         }
 
         [Fact]
@@ -188,12 +188,12 @@ namespace SabreTools.DatFiles.Test
             var actualRom = Assert.Single(actualDatItems, i => i.Value is Rom);
             var actualRomMachine = datFile.GetMachineForItemDB(actualRom.Key);
             Assert.NotNull(actualRomMachine.Value);
-            Assert.Equal("machine/rom", actualRomMachine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("machine/rom", actualRomMachine.Value.GetName());
 
             var actualDisk = Assert.Single(actualDatItems, i => i.Value is Disk);
             var actualDiskMachine = datFile.GetMachineForItemDB(actualDisk.Key);
             Assert.NotNull(actualDiskMachine.Value);
-            Assert.Equal("machine/disk", actualDiskMachine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("machine/disk", actualDiskMachine.Value.GetName());
         }
 
         #endregion
@@ -231,7 +231,7 @@ namespace SabreTools.DatFiles.Test
             DatItem actualWorldRom = Assert.Single(actualDatItems);
             Machine? actualWorldMachine = actualWorldRom.GetFieldValue<Machine>(DatItem.MachineKey);
             Assert.NotNull(actualWorldMachine);
-            Assert.Equal("machine (World)", actualWorldMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("machine (World)", actualWorldMachine.GetName());
         }
 
         [Fact]
@@ -253,7 +253,7 @@ namespace SabreTools.DatFiles.Test
 
             var actualWorldMachine = Assert.Single(datFile.GetMachinesDB());
             Assert.NotNull(actualWorldMachine.Value);
-            Assert.Equal("machine (World)", actualWorldMachine.Value.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("machine (World)", actualWorldMachine.Value.GetName());
         }
 
         #endregion
@@ -281,7 +281,7 @@ namespace SabreTools.DatFiles.Test
             DatItem actual = Assert.Single(datFile.GetItemsForBucket("10.10.10-machine-name"));
             Machine? actualMachine = actual.GetFieldValue<Machine?>(DatItem.MachineKey);
             Assert.NotNull(actualMachine);
-            Assert.Equal("machine-name", actualMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("machine-name", actualMachine.GetName());
         }
 
         [Fact]
@@ -296,7 +296,7 @@ namespace SabreTools.DatFiles.Test
             datFile.StripSceneDatesFromItems();
 
             Machine actualMachine = Assert.Single(datFile.GetMachinesDB()).Value;
-            Assert.Equal("machine-name", actualMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("machine-name", actualMachine.GetName());
         }
 
         #endregion

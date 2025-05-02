@@ -264,7 +264,7 @@ namespace SabreTools.DatFiles
             if (item.ContainsKey(Models.Metadata.Machine.DumpKey))
             {
                 var items = item.ReadItemArray<Models.Metadata.Dump>(Models.Metadata.Machine.DumpKey);
-                string? machineName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey);
+                string? machineName = machine.GetName();
                 ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly, machineName);
             }
             if (item.ContainsKey(Models.Metadata.Machine.FeatureKey))

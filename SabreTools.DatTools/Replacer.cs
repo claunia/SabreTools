@@ -300,7 +300,7 @@ namespace SabreTools.DatTools
                 // Special case for description
                 if (machineFieldNames.Contains(Models.Metadata.Machine.DescriptionKey))
                 {
-                    if (!onlySame || (onlySame && machine.GetStringFieldValue(Models.Metadata.Machine.NameKey) == machine.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)))
+                    if (!onlySame || (onlySame && machine.GetName() == machine.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey)))
                         machine.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, repMachine.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey));
 
                     continue;

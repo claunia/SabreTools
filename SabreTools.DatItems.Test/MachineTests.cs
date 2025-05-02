@@ -15,7 +15,7 @@ namespace SabreTools.DatItems.Test
             object clone = item.Clone();
             Machine? actual = clone as Machine;
             Assert.NotNull(actual);
-            Assert.Equal("name", actual.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("name", actual.GetName());
         }
 
         #endregion

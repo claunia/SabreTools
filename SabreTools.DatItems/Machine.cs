@@ -60,6 +60,22 @@ namespace SabreTools.DatItems
 
         #endregion
 
+        #region Accessors
+
+        /// <summary>
+        /// Gets the name to use for a Machine
+        /// </summary>
+        /// <returns>Name if available, null otherwise</returns>
+        public string? GetName() => _internal.GetName();
+
+        /// <summary>
+        /// Sets the name to use for a Machine
+        /// </summary>
+        /// <param name="name">Name to set for the item</param>
+        public void SetName(string? name) => _internal.SetName(name);
+
+        #endregion
+
         #region Cloning methods
 
         /// <summary>

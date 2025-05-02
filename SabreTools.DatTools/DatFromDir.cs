@@ -302,7 +302,7 @@ namespace SabreTools.DatTools
 #endif
             {
                 var emptyMachine = new Machine();
-                emptyMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, item);
+                emptyMachine.SetName(item);
 
                 var emptyRom = new Rom();
                 emptyRom.SetName(Path.Combine(empty, "_"));
@@ -376,7 +376,7 @@ namespace SabreTools.DatTools
                 _staticLogger.Verbose($"Adding blank empty folder: {gamename}");
 
                 var blankMachine = new Machine();
-                blankMachine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, gamename);
+                blankMachine.SetName(gamename);
 
                 var blankRom = new Blank();
                 blankRom.SetName(romname);
@@ -510,7 +510,7 @@ namespace SabreTools.DatTools
 
             // Update machine information
             datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, machineName);
-            datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, machineName);
+            datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.SetName(machineName);
 
             // If we have a Disk, then the ".chd" extension needs to be removed
             if (datItem is Disk && itemName!.EndsWith(".chd"))

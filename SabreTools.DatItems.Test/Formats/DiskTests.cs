@@ -54,7 +54,7 @@ namespace SabreTools.DatItems.Test.Formats
 
             Machine? actualMachine = actual.GetFieldValue<Machine?>(DatItem.MachineKey);
             Assert.NotNull(actualMachine);
-            Assert.Equal("XXXXXX", actualMachine.GetStringFieldValue(Models.Metadata.Machine.NameKey));
+            Assert.Equal("XXXXXX", actualMachine.GetName());
 
             Assert.Equal(false, actual.GetBoolFieldValue(DatItem.RemoveKey));
 

@@ -258,7 +258,7 @@ namespace SabreTools.DatFiles.Test
         {
             // Setup the items
             Machine machine = new Machine();
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "game-1");
+            machine.SetName("game-1");
 
             DatItem rom1 = new Rom();
             rom1.SetName("rom-1");
@@ -296,7 +296,7 @@ namespace SabreTools.DatFiles.Test
             Source source = new Source(0, source: null);
 
             Machine machine = new Machine();
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "machine");
+            machine.SetName("machine");
 
             DatItem item = new Rom();
             item.SetFieldValue<Source?>(DatItem.SourceKey, source);
@@ -316,7 +316,7 @@ namespace SabreTools.DatFiles.Test
             Source source = new Source(0, source: null);
 
             Machine machine = new Machine();
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "machine");
+            machine.SetName("machine");
 
             DatItem item = new Rom();
             item.SetFieldValue<Source?>(DatItem.SourceKey, source);
@@ -336,7 +336,7 @@ namespace SabreTools.DatFiles.Test
             Source source = new Source(0, source: null);
 
             Machine machine = new Machine();
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "machine");
+            machine.SetName("machine");
 
             DatItem item = new Rom();
             item.SetFieldValue<bool?>(DatItem.RemoveKey, true);
@@ -357,7 +357,7 @@ namespace SabreTools.DatFiles.Test
             Source source = new Source(0, source: null);
 
             Machine machine = new Machine();
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "machine");
+            machine.SetName("machine");
 
             DatItem item = new Rom();
             item.SetFieldValue<bool?>(DatItem.RemoveKey, true);
@@ -378,7 +378,7 @@ namespace SabreTools.DatFiles.Test
             Source source = new Source(0, source: null);
 
             Machine machine = new Machine();
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "machine");
+            machine.SetName("machine");
 
             DatItem item = new Rom();
             item.SetFieldValue<Source?>(DatItem.SourceKey, source);
@@ -400,7 +400,7 @@ namespace SabreTools.DatFiles.Test
         public void RemoveBucketTest()
         {
             Machine machine = new Machine();
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "game-1");
+            machine.SetName("game-1");
 
             DatItem datItem = new Rom();
             datItem.SetName("rom-1");
@@ -426,7 +426,7 @@ namespace SabreTools.DatFiles.Test
         public void RemoveItemTest()
         {
             Machine machine = new Machine();
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "game-1");
+            machine.SetName("game-1");
 
             DatItem datItem = new Rom();
             datItem.SetName("rom-1");
@@ -457,10 +457,10 @@ namespace SabreTools.DatFiles.Test
         {
             // Setup the items
             Machine machine1 = new Machine();
-            machine1.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "game-1");
+            machine1.SetName("game-1");
 
             Machine machine2 = new Machine();
-            machine2.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "game-2");
+            machine2.SetName("game-2");
 
             DatItem rom1 = new Rom();
             rom1.SetName("rom-1");
@@ -510,7 +510,7 @@ namespace SabreTools.DatFiles.Test
         {
             // Setup the items
             Machine machine = new Machine();
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "game-1");
+            machine.SetName("game-1");
 
             DatItem rom1 = new Rom();
             rom1.SetName("rom-1");
@@ -544,7 +544,7 @@ namespace SabreTools.DatFiles.Test
         {
             // Setup the items
             Machine machine = new Machine();
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "game-1");
+            machine.SetName("game-1");
 
             DatItem rom1 = new Rom();
             rom1.SetName("rom-1");
@@ -585,7 +585,7 @@ namespace SabreTools.DatFiles.Test
         {
             // Setup the items
             Machine machine = new Machine();
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "game-1");
+            machine.SetName("game-1");
 
             DatItem rom1 = new Rom();
             rom1.SetName("rom-1");
@@ -625,7 +625,7 @@ namespace SabreTools.DatFiles.Test
             Source source = new Source(0, source: null);
 
             Machine machine = new Machine();
-            machine.SetFieldValue<string?>(Models.Metadata.Machine.NameKey, "machine");
+            machine.SetName("machine");
 
             DatItem item = new Rom();
             item.SetName("rom");
