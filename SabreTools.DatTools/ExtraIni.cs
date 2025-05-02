@@ -119,7 +119,7 @@ namespace SabreTools.DatTools
                     // Loop through and set the fields accordingly
                     foreach (var datItem in datItems)
                     {
-                        setter.SetFields(datItem.GetFieldValue<Machine>(DatItem.MachineKey));
+                        setter.SetFields(datItem.GetMachine());
                         setter.SetFields(datItem);
                     }
                 }

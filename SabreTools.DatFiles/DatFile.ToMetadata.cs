@@ -75,7 +75,7 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // Create a machine to hold everything
-                var machine = items[0].GetFieldValue<DatItems.Machine>(DatItems.DatItem.MachineKey)!.GetInternalClone();
+                var machine = items[0].GetMachine()!.GetInternalClone();
 
                 // Handle Trurip object, if it exists
                 if (machine.ContainsKey(Models.Metadata.Machine.TruripKey))

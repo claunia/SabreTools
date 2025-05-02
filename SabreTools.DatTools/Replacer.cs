@@ -209,7 +209,7 @@ namespace SabreTools.DatTools
 
                     var list = datFile.GetItemsForBucket(key);
                     if (list.Count > 0)
-                        ReplaceFields(newDatItem.GetFieldValue<Machine>(DatItem.MachineKey)!, list[index: 0].GetFieldValue<Machine>(DatItem.MachineKey)!, machineFieldNames, onlySame);
+                        ReplaceFields(newDatItem.GetMachine()!, list[index: 0].GetMachine()!, machineFieldNames, onlySame);
 
                     newDatItems.Add(newDatItem);
                 }

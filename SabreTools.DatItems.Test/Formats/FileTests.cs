@@ -40,7 +40,7 @@ namespace SabreTools.DatItems.Test.Formats
             Assert.Equal("00000000000000000000000000000000000000000000000000000000deadbeef", actual.GetStringFieldValue(Models.Metadata.Rom.SHA256Key));
             Assert.Equal(DupeType.All | DupeType.External, actual.GetFieldValue<DupeType>(DatItem.DupeTypeKey));
 
-            Machine? actualMachine = actual.GetFieldValue<Machine?>(DatItem.MachineKey);
+            Machine? actualMachine = actual.GetMachine();
             Assert.NotNull(actualMachine);
             Assert.Equal("XXXXXX", actualMachine.GetName());
 

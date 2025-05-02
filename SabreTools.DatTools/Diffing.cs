@@ -488,7 +488,7 @@ namespace SabreTools.DatTools
                             continue;
 
                         if (item.GetFieldValue<Source?>(DatItem.SourceKey) != null)
-                            newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.SetName(newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetName() + $" ({Path.GetFileNameWithoutExtension(inputs[item.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].CurrentPath)})");
+                            newrom.GetMachine()!.SetName(newrom.GetMachine()!.GetName() + $" ({Path.GetFileNameWithoutExtension(inputs[item.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].CurrentPath)})");
 
                         dupeData.AddItem(newrom, statsOnly: false);
                     }
@@ -887,7 +887,7 @@ namespace SabreTools.DatTools
                         if (item.Clone() is not DatItem newrom || newrom.GetFieldValue<Source?>(DatItem.SourceKey) == null)
                             continue;
 
-                        newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.SetName(newrom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetName() + $" ({Path.GetFileNameWithoutExtension(inputs[newrom.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].CurrentPath)})");
+                        newrom.GetMachine()!.SetName(newrom.GetMachine()!.GetName() + $" ({Path.GetFileNameWithoutExtension(inputs[newrom.GetFieldValue<Source?>(DatItem.SourceKey)!.Index].CurrentPath)})");
                         outerDiffData.AddItem(newrom, statsOnly: false);
                     }
                 }

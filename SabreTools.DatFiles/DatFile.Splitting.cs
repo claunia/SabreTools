@@ -248,7 +248,7 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // Get the machine
-                var machine = items[0].GetFieldValue<Machine>(DatItem.MachineKey);
+                var machine = items[0].GetMachine();
                 if (machine == null)
                     continue;
 
@@ -263,8 +263,8 @@ namespace SabreTools.DatFiles
                 if (parentItems.Count == 0)
                 {
                     copyFrom = new Rom();
-                    copyFrom.GetFieldValue<Machine>(DatItem.MachineKey)!.SetName(cloneOf);
-                    copyFrom.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, cloneOf);
+                    copyFrom.GetMachine()!.SetName(cloneOf);
+                    copyFrom.GetMachine()!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, cloneOf);
                 }
                 else
                 {
@@ -325,7 +325,7 @@ namespace SabreTools.DatFiles
                             .Contains(rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey)))
                         {
                             if (subfolder)
-                                rom.SetName($"{rom.GetFieldValue<Machine>(DatItem.MachineKey)!.GetName()}\\{rom.GetName()}");
+                                rom.SetName($"{rom.GetMachine()!.GetName()}\\{rom.GetName()}");
 
                             rom.CopyMachineInformation(copyFrom);
                             AddItem(rom, statsOnly: false);
@@ -335,7 +335,7 @@ namespace SabreTools.DatFiles
                         else if (!GetItemsForBucket(cloneOf).Contains(item) || skipDedup)
                         {
                             if (subfolder)
-                                rom.SetName($"{item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetName()}\\{rom.GetName()}");
+                                rom.SetName($"{item.GetMachine()!.GetName()}\\{rom.GetName()}");
 
                             rom.CopyMachineInformation(copyFrom);
                             AddItem(rom, statsOnly: false);
@@ -346,7 +346,7 @@ namespace SabreTools.DatFiles
                     else if (!GetItemsForBucket(cloneOf).Contains(item))
                     {
                         if (subfolder)
-                            item.SetName($"{item.GetFieldValue<Machine>(DatItem.MachineKey)!.GetName()}\\{item.GetName()}");
+                            item.SetName($"{item.GetMachine()!.GetName()}\\{item.GetName()}");
 
                         item.CopyMachineInformation(copyFrom);
                         AddItem(item, statsOnly: false);
@@ -507,7 +507,7 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // Get the machine
-                var machine = items[0].GetFieldValue<Machine>(DatItem.MachineKey);
+                var machine = items[0].GetMachine();
                 if (machine == null)
                     continue;
 
@@ -532,10 +532,10 @@ namespace SabreTools.DatFiles
 
                 // Now we want to get the parent romof tag and put it in each of the items
                 items = GetItemsForBucket(bucket);
-                string? romof = GetItemsForBucket(cloneOf)[0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
+                string? romof = GetItemsForBucket(cloneOf)[0].GetMachine()!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
                 foreach (DatItem item in items)
                 {
-                    item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, romof);
+                    item.GetMachine()!.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, romof);
                 }
             }
         }
@@ -626,7 +626,7 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // If the machine (is/is not) a device, we want to continue
-                if (deviceOnly ^ (datItems[0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetBoolFieldValue(Models.Metadata.Machine.IsDeviceKey) == true))
+                if (deviceOnly ^ (datItems[0].GetMachine()!.GetBoolFieldValue(Models.Metadata.Machine.IsDeviceKey) == true))
                     continue;
 
                 // Get all device reference names from the current machine
@@ -935,7 +935,7 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // Get the machine
-                var machine = items[0].GetFieldValue<Machine>(DatItem.MachineKey);
+                var machine = items[0].GetMachine();
                 if (machine == null)
                     continue;
 
@@ -1018,7 +1018,7 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // Get the machine
-                var machine = items[0].GetFieldValue<Machine>(DatItem.MachineKey);
+                var machine = items[0].GetMachine();
                 if (machine == null)
                     continue;
 
@@ -1085,7 +1085,7 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // Get the machine
-                var machine = items[0].GetFieldValue<Machine>(DatItem.MachineKey);
+                var machine = items[0].GetMachine();
                 if (machine == null)
                     continue;
 
@@ -1107,10 +1107,10 @@ namespace SabreTools.DatFiles
 
                 // Now we want to get the parent romof tag and put it in each of the remaining items
                 items = GetItemsForBucket(bucket);
-                string? romof = GetItemsForBucket(cloneOf)[0].GetFieldValue<Machine>(DatItem.MachineKey)!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
+                string? romof = GetItemsForBucket(cloneOf)[0].GetMachine()!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
                 foreach (DatItem item in items)
                 {
-                    item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, romof);
+                    item.GetMachine()!.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, romof);
                 }
             }
         }
@@ -1189,7 +1189,7 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // Get the machine
-                var machine = items[0].GetFieldValue<Machine>(DatItem.MachineKey);
+                var machine = items[0].GetMachine();
                 if (machine == null)
                     continue;
 
@@ -1269,7 +1269,7 @@ namespace SabreTools.DatFiles
                 foreach (DatItem item in items)
                 {
                     // Get the machine
-                    var machine = item.GetFieldValue<Machine>(DatItem.MachineKey);
+                    var machine = item.GetMachine();
                     if (machine == null)
                         continue;
 

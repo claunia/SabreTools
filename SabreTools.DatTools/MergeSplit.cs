@@ -141,7 +141,7 @@ namespace SabreTools.DatTools
 
                     filename = filename.Remove(0, rootpath.Length);
 
-                    var machine = newItem.GetFieldValue<Machine>(DatItem.MachineKey);
+                    var machine = newItem.GetMachine();
                     if (machine == null)
                         continue;
 

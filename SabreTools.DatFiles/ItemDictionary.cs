@@ -521,8 +521,8 @@ namespace SabreTools.DatFiles
                 var itemSource = datItem.GetFieldValue<Source?>(DatItem.SourceKey);
 
                 // Get the machines associated with the items
-                var savedMachine = savedItem.GetFieldValue<Machine>(DatItem.MachineKey);
-                var itemMachine = datItem.GetFieldValue<Machine>(DatItem.MachineKey);
+                var savedMachine = savedItem.GetMachine();
+                var itemMachine = datItem.GetMachine();
 
                 // If the current source has a lower ID than the saved, use the saved source
                 if (itemSource?.Index < savedSource?.Index)
@@ -690,7 +690,7 @@ namespace SabreTools.DatFiles
                 bucketBy = ItemKey.Machine;
 
             // Get the machine and source
-            var machine = datItem.GetFieldValue<Machine>(DatItem.MachineKey);
+            var machine = datItem.GetMachine();
             var source = datItem.GetFieldValue<Source?>(DatItem.SourceKey);
 
             // Get the bucket key
@@ -731,7 +731,7 @@ namespace SabreTools.DatFiles
                         continue;
 
                     // Get the machine and source
-                    var machine = item.GetFieldValue<Machine>(DatItem.MachineKey);
+                    var machine = item.GetMachine();
                     var source = item.GetFieldValue<Source?>(DatItem.SourceKey);
 
                     // We want to get the key most appropriate for the given sorting type
@@ -803,8 +803,8 @@ namespace SabreTools.DatFiles
                     var nc = new NaturalComparer();
 
                     // Get the machines
-                    Machine? xMachine = x.GetFieldValue<Machine>(DatItem.MachineKey);
-                    Machine? yMachine = y.GetFieldValue<Machine>(DatItem.MachineKey);
+                    Machine? xMachine = x.GetMachine();
+                    Machine? yMachine = y.GetMachine();
 
                     // If machine names don't match
                     string? xMachineName = xMachine?.GetName();

@@ -36,7 +36,7 @@ namespace SabreTools.DatItems.Formats
         public override object Clone()
         {
             var blank = new Blank();
-            blank.SetFieldValue<Machine>(DatItem.MachineKey, GetFieldValue<Machine>(DatItem.MachineKey));
+            blank.SetFieldValue<Machine>(DatItem.MachineKey, GetMachine());
             blank.SetFieldValue<bool?>(DatItem.RemoveKey, GetBoolFieldValue(DatItem.RemoveKey));
             blank.SetFieldValue<Source?>(DatItem.SourceKey, GetFieldValue<Source?>(DatItem.SourceKey));
             blank.SetFieldValue<string?>(Models.Metadata.DatItem.TypeKey, GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue());
@@ -89,7 +89,7 @@ namespace SabreTools.DatItems.Formats
             Blank? newOther = other as Blank;
 
             // If the machine information matches
-            return GetFieldValue<Machine>(DatItem.MachineKey) == newOther!.GetFieldValue<Machine>(DatItem.MachineKey);
+            return GetMachine() == newOther!.GetMachine();
         }
 
         #endregion

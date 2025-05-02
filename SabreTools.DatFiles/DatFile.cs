@@ -1000,8 +1000,8 @@ namespace SabreTools.DatFiles
                     var nc = new NaturalComparer();
 
                     // If machine names don't match
-                    string? xMachineName = x.GetFieldValue<Machine>(DatItem.MachineKey)?.GetName();
-                    string? yMachineName = y.GetFieldValue<Machine>(DatItem.MachineKey)?.GetName();
+                    string? xMachineName = x.GetMachine()?.GetName();
+                    string? yMachineName = y.GetMachine()?.GetName();
                     if (xMachineName != yMachineName)
                         return nc.Compare(xMachineName, yMachineName);
 
@@ -1055,8 +1055,8 @@ namespace SabreTools.DatFiles
                     // TODO: Fix this since DB uses an external map for machines
 
                     // If machine names don't match
-                    string? xMachineName = x.Value.GetFieldValue<Machine>(DatItem.MachineKey)?.GetName();
-                    string? yMachineName = y.Value.GetFieldValue<Machine>(DatItem.MachineKey)?.GetName();
+                    string? xMachineName = x.Value.GetMachine()?.GetName();
+                    string? yMachineName = y.Value.GetMachine()?.GetName();
                     if (xMachineName != yMachineName)
                         return nc.Compare(xMachineName, yMachineName);
 

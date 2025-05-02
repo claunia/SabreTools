@@ -55,7 +55,7 @@ namespace SabreTools.DatItems.Test
             romB.RemoveField(DatItem.MachineKey);
 
             romA.CopyMachineInformation(romB);
-            var actualMachineA = romA.GetFieldValue<Machine>(DatItem.MachineKey);
+            var actualMachineA = romA.GetMachine();
             Assert.NotNull(actualMachineA);
             Assert.Null(actualMachineA.GetName());
         }
@@ -73,7 +73,7 @@ namespace SabreTools.DatItems.Test
             romB.RemoveField(DatItem.MachineKey);
 
             romA.CopyMachineInformation(romB);
-            var actualMachineA = romA.GetFieldValue<Machine>(DatItem.MachineKey);
+            var actualMachineA = romA.GetMachine();
             Assert.NotNull(actualMachineA);
             Assert.Equal("machineA", actualMachineA.GetName());
         }
@@ -93,7 +93,7 @@ namespace SabreTools.DatItems.Test
             romB.SetFieldValue(DatItem.MachineKey, machineB);
 
             romA.CopyMachineInformation(romB);
-            var actualMachineA = romA.GetFieldValue<Machine>(DatItem.MachineKey);
+            var actualMachineA = romA.GetMachine();
             Assert.NotNull(actualMachineA);
             Assert.Equal("machineA", actualMachineA.GetName());
         }
@@ -113,7 +113,7 @@ namespace SabreTools.DatItems.Test
             romB.SetFieldValue(DatItem.MachineKey, machineB);
 
             romA.CopyMachineInformation(romB);
-            var actualMachineA = romA.GetFieldValue<Machine>(DatItem.MachineKey);
+            var actualMachineA = romA.GetMachine();
             Assert.NotNull(actualMachineA);
             Assert.Null(actualMachineA.GetName());
         }
@@ -134,7 +134,7 @@ namespace SabreTools.DatItems.Test
             romB.SetFieldValue(DatItem.MachineKey, machineB);
 
             romA.CopyMachineInformation(romB);
-            var actualMachineA = romA.GetFieldValue<Machine>(DatItem.MachineKey);
+            var actualMachineA = romA.GetMachine();
             Assert.NotNull(actualMachineA);
             Assert.Equal("machineB", actualMachineA.GetName());
         }
@@ -155,7 +155,7 @@ namespace SabreTools.DatItems.Test
             diskB.SetFieldValue(DatItem.MachineKey, machineB);
 
             romA.CopyMachineInformation(diskB);
-            var actualMachineA = romA.GetFieldValue<Machine>(DatItem.MachineKey);
+            var actualMachineA = romA.GetMachine();
             Assert.NotNull(actualMachineA);
             Assert.Equal("machineB", actualMachineA.GetName());
         }

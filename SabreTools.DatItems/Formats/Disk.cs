@@ -106,7 +106,7 @@ namespace SabreTools.DatItems.Formats
             }
 
             rom.SetFieldValue<DupeType>(DatItem.DupeTypeKey, GetFieldValue<DupeType>(DatItem.DupeTypeKey));
-            rom.SetFieldValue<Machine>(DatItem.MachineKey, GetFieldValue<Machine>(DatItem.MachineKey)?.Clone() as Machine);
+            rom.SetFieldValue<Machine>(DatItem.MachineKey, GetMachine()?.Clone() as Machine);
             rom.SetFieldValue<Part>(Rom.PartKey, GetFieldValue<Part>(Disk.PartKey)?.Clone() as Part);
             rom.SetFieldValue<bool?>(DatItem.RemoveKey, GetBoolFieldValue(DatItem.RemoveKey));
             rom.SetFieldValue<Source?>(DatItem.SourceKey, GetFieldValue<Source?>(DatItem.SourceKey)?.Clone() as Source);

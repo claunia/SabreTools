@@ -82,7 +82,7 @@ namespace SabreTools.DatFiles.Formats
                             WriteDatItem(sw, datItem, lastgame);
 
                         // Set the new data to compare against
-                        lastgame = datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetName();
+                        lastgame = datItem.GetMachine()!.GetName();
                     }
                 }
 
@@ -168,7 +168,7 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="lastgame">The name of the last game to be output</param>
         private void WriteDatItem(StreamWriter sw, DatItem datItem, string? lastgame)
         {
-            var machine = datItem.GetFieldValue<Machine>(DatItem.MachineKey);
+            var machine = datItem.GetMachine();
             WriteDatItemImpl(sw, datItem, machine!, lastgame);
         }
 

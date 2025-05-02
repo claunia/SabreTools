@@ -102,6 +102,13 @@ namespace SabreTools.DatItems
         #region Accessors
 
         /// <summary>
+        /// Get the machine for a DatItem
+        /// </summary>
+        /// <returns>Machine if available, null otherwise</returns>
+        /// <remarks>Relies on <see cref="MachineKey"/></remarks> 
+        public virtual Machine? GetMachine() => null;
+
+        /// <summary>
         /// Gets the name to use for a DatItem
         /// </summary>
         /// <returns>Name if available, null otherwise</returns>
@@ -130,10 +137,10 @@ namespace SabreTools.DatItems
         public void CopyMachineInformation(DatItem item)
         {
             // If there is no machine
-            if (!item._internal.ContainsKey(DatItem.MachineKey))
+            if (!item._internal.ContainsKey(MachineKey))
                 return;
 
-            var machine = item.GetFieldValue<Machine?>(DatItem.MachineKey);
+            var machine = item.GetMachine();
             CopyMachineInformation(machine);
         }
 
@@ -147,7 +154,7 @@ namespace SabreTools.DatItems
                 return;
 
             if (machine.Clone() is Machine cloned)
-                SetFieldValue<Machine>(DatItem.MachineKey, cloned);
+                SetFieldValue<Machine>(MachineKey, cloned);
         }
 
         #endregion
@@ -241,20 +248,20 @@ namespace SabreTools.DatItems
                 return output;
 
             // Get the sources for comparison
-            var selfSource = GetFieldValue<Source?>(DatItem.SourceKey);
-            var lastSource = lastItem.GetFieldValue<Source?>(DatItem.SourceKey);
+            var selfSource = GetFieldValue<Source?>(SourceKey);
+            var lastSource = lastItem.GetFieldValue<Source?>(SourceKey);
 
             // Get the machines for comparison
-            var selfMachine = GetFieldValue<Machine>(DatItem.MachineKey);
+            var selfMachine = GetMachine();
             string? selfMachineName = selfMachine?.GetName();
-            var lastMachine = lastItem.GetFieldValue<Machine>(DatItem.MachineKey);
+            var lastMachine = lastItem.GetMachine();
             string? lastMachineName = lastMachine?.GetName();
 
             // If the duplicate is external already
 #if NET20 || NET35
-            if ((lastItem.GetFieldValue<DupeType>(DatItem.DupeTypeKey) & DupeType.External) != 0)
+            if ((lastItem.GetFieldValue<DupeType>(DupeTypeKey) & DupeType.External) != 0)
 #else
-            if (lastItem.GetFieldValue<DupeType>(DatItem.DupeTypeKey).HasFlag(DupeType.External))
+            if (lastItem.GetFieldValue<DupeType>(DupeTypeKey).HasFlag(DupeType.External))
 #endif
                 output |= DupeType.External;
 
@@ -294,16 +301,16 @@ namespace SabreTools.DatItems
 
             // TODO: Fix this since machines are determined in a different way
             // Get the machines for comparison
-            var selfMachine = GetFieldValue<Machine>(DatItem.MachineKey);
+            var selfMachine = GetMachine();
             string? selfMachineName = selfMachine?.GetName();
-            var lastMachine = lastItem.GetFieldValue<Machine>(DatItem.MachineKey);
+            var lastMachine = lastItem.GetMachine();
             string? lastMachineName = lastMachine?.GetName();
 
             // If the duplicate is external already
 #if NET20 || NET35
-            if ((lastItem.GetFieldValue<DupeType>(DatItem.DupeTypeKey) & DupeType.External) != 0)
+            if ((lastItem.GetFieldValue<DupeType>(DupeTypeKey) & DupeType.External) != 0)
 #else
-            if (lastItem.GetFieldValue<DupeType>(DatItem.DupeTypeKey).HasFlag(DupeType.External))
+            if (lastItem.GetFieldValue<DupeType>(DupeTypeKey).HasFlag(DupeType.External))
 #endif
                 output |= DupeType.External;
 
@@ -337,7 +344,7 @@ namespace SabreTools.DatItems
         /// <returns>True if the item and its machine passes the filter, false otherwise</returns>
         public bool PassesFilter(FilterRunner filterRunner)
         {
-            var machine = GetFieldValue<Machine>(DatItem.MachineKey);
+            var machine = GetMachine();
             if (machine != null && !machine.PassesFilter(filterRunner))
                 return false;
 
@@ -450,7 +457,7 @@ namespace SabreTools.DatItems
 
             SetName(string.Empty);
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
+            SetFieldValue<Machine>(MachineKey, new Machine());
         }
 
         /// <summary>
@@ -461,12 +468,15 @@ namespace SabreTools.DatItems
             _internal = item;
 
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType);
-            SetFieldValue<Machine>(DatItem.MachineKey, new Machine());
+            SetFieldValue<Machine>(MachineKey, new Machine());
         }
 
         #endregion
 
         #region Accessors
+
+        /// <inheritdoc/>
+        public override Machine? GetMachine() => _internal.Read<Machine>(MachineKey);
 
         /// <inheritdoc/>
         public override string? GetName() => _internal.GetName();

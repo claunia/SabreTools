@@ -175,7 +175,7 @@ namespace SabreTools.DatTools
                 for (int j = 0; j < items.Count; j++)
                 {
                     // Handle machine removals
-                    var machine = items[j].GetFieldValue<Machine>(DatItem.MachineKey);
+                    var machine = items[j].GetMachine();
                     RemoveFields(machine);
 
                     // Handle item removals

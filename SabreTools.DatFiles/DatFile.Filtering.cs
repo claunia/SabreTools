@@ -120,7 +120,7 @@ namespace SabreTools.DatFiles
                 foreach (DatItem item in items)
                 {
                     // Get the current machine
-                    var machine = item.GetFieldValue<Machine>(DatItem.MachineKey);
+                    var machine = item.GetMachine();
                     if (machine == null)
                         continue;
 
@@ -331,7 +331,7 @@ namespace SabreTools.DatFiles
                 DatItem item = GetItemsForBucket(key)[0];
 
                 // Get machine information
-                Machine? machine = item.GetFieldValue<Machine>(DatItem.MachineKey);
+                Machine? machine = item.GetMachine();
                 string? machineName = machine?.GetName()?.ToLowerInvariant();
                 if (machine == null || machineName == null)
                     continue;
@@ -521,7 +521,7 @@ namespace SabreTools.DatFiles
                 return;
 
             // Get the current machine
-            var machine = datItem.GetFieldValue<Machine>(DatItem.MachineKey);
+            var machine = datItem.GetMachine();
             if (machine == null)
                 return;
 
@@ -657,7 +657,7 @@ namespace SabreTools.DatFiles
                 foreach (DatItem item in items)
                 {
                     // Get the current machine
-                    var machine = item.GetFieldValue<Machine>(DatItem.MachineKey);
+                    var machine = item.GetMachine();
                     if (machine == null)
                         continue;
 
@@ -666,10 +666,10 @@ namespace SabreTools.DatFiles
                     string? machineDesc = machine.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey);
 
                     if (machineName != null && Regex.IsMatch(machineName, SceneNamePattern))
-                        item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetName(Regex.Replace(machineName, SceneNamePattern, "$2"));
+                        item.GetMachine()!.SetName(Regex.Replace(machineName, SceneNamePattern, "$2"));
 
                     if (machineDesc != null && Regex.IsMatch(machineDesc, SceneNamePattern))
-                        item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, Regex.Replace(machineDesc, SceneNamePattern, "$2"));
+                        item.GetMachine()!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, Regex.Replace(machineDesc, SceneNamePattern, "$2"));
                 }
 #if NET40_OR_GREATER || NETCOREAPP
             });
@@ -742,7 +742,7 @@ namespace SabreTools.DatFiles
                 foreach (DatItem item in items)
                 {
                     // Get the current machine
-                    var machine = item.GetFieldValue<Machine>(DatItem.MachineKey);
+                    var machine = item.GetMachine();
                     if (machine == null)
                         continue;
 

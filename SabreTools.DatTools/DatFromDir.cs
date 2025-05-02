@@ -509,8 +509,8 @@ namespace SabreTools.DatTools
             }
 
             // Update machine information
-            datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, machineName);
-            datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.SetName(machineName);
+            datItem.GetMachine()!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, machineName);
+            datItem.GetMachine()!.SetName(machineName);
 
             // If we have a Disk, then the ".chd" extension needs to be removed
             if (datItem is Disk && itemName!.EndsWith(".chd"))

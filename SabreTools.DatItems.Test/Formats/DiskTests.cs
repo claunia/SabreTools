@@ -52,7 +52,7 @@ namespace SabreTools.DatItems.Test.Formats
             Assert.NotNull(actualDataArea);
             Assert.Equal("XXXXXX", actualDataArea.GetStringFieldValue(Models.Metadata.DataArea.NameKey));
 
-            Machine? actualMachine = actual.GetFieldValue<Machine?>(DatItem.MachineKey);
+            Machine? actualMachine = actual.GetMachine();
             Assert.NotNull(actualMachine);
             Assert.Equal("XXXXXX", actualMachine.GetName());
 

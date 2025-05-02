@@ -172,8 +172,8 @@ namespace SabreTools.DatTools
             #region Common
 
             // Handle Machine fields
-            if (MachineFieldMappings.Count > 0 && datItem.GetFieldValue<Machine>(DatItem.MachineKey) != null)
-                SetFields(datItem.GetFieldValue<Machine>(DatItem.MachineKey)!);
+            if (MachineFieldMappings.Count > 0 && datItem.GetMachine() != null)
+                SetFields(datItem.GetMachine()!);
 
             // If there are no field names, return
             if (ItemFieldMappings == null || ItemFieldMappings.Count == 0)

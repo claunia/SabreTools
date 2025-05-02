@@ -240,11 +240,11 @@ namespace SabreTools.DatFiles.Formats
                         DatItem datItem = datItems[index];
 
                         // If we have a different game and we're not at the start of the list, output the end of last item
-                        if (lastgame != null && !string.Equals(lastgame, datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetName(), StringComparison.OrdinalIgnoreCase))
+                        if (lastgame != null && !string.Equals(lastgame, datItem.GetMachine()!.GetName(), StringComparison.OrdinalIgnoreCase))
                             WriteEndGame(xtw);
 
                         // If we have a new game, output the beginning of the new item
-                        if (lastgame == null || !string.Equals(lastgame, datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetName(), StringComparison.OrdinalIgnoreCase))
+                        if (lastgame == null || !string.Equals(lastgame, datItem.GetMachine()!.GetName(), StringComparison.OrdinalIgnoreCase))
                             WriteStartGame(xtw, datItem);
 
                         // Check for a "null" item
@@ -255,7 +255,7 @@ namespace SabreTools.DatFiles.Formats
                             WriteDatItem(xtw, datItem);
 
                         // Set the new data to compare against
-                        lastgame = datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetName();
+                        lastgame = datItem.GetMachine()!.GetName();
                     }
                 }
 
@@ -387,14 +387,14 @@ namespace SabreTools.DatFiles.Formats
         private static void WriteStartGame(XmlTextWriter xtw, DatItem datItem)
         {
             // No game should start with a path separator
-            datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.SetName(datItem.GetFieldValue<Machine>(DatItem.MachineKey)!.GetName()?.TrimStart(Path.DirectorySeparatorChar) ?? string.Empty);
+            datItem.GetMachine()!.SetName(datItem.GetMachine()!.GetName()?.TrimStart(Path.DirectorySeparatorChar) ?? string.Empty);
 
             // Write the machine
             xtw.WriteStartElement("directory");
             XmlSerializer xs = new(typeof(Machine));
             XmlSerializerNamespaces ns = new();
             ns.Add("", "");
-            xs.Serialize(xtw, datItem.GetFieldValue<Machine>(DatItem.MachineKey), ns);
+            xs.Serialize(xtw, datItem.GetMachine(), ns);
 
             xtw.WriteStartElement("files");
 
@@ -424,7 +424,7 @@ namespace SabreTools.DatFiles.Formats
         private void WriteDatItem(XmlTextWriter xtw, DatItem datItem)
         {
             // Get the machine for the item
-            var machine = datItem.GetFieldValue<Machine>(DatItem.MachineKey);
+            var machine = datItem.GetMachine();
 
             // Pre-process the item name
             ProcessItemName(datItem, machine, forceRemoveQuotes: true, forceRomName: false);

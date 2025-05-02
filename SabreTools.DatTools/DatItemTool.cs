@@ -162,7 +162,7 @@ namespace SabreTools.DatTools
         public static BaseFile ConvertToBaseFile(this Disk disk)
         {
             string? machineName = null;
-            var machine = disk.GetFieldValue<Machine>(DatItem.MachineKey);
+            var machine = disk.GetMachine();
             if (machine != null)
                 machineName = machine.GetName();
 
@@ -185,7 +185,7 @@ namespace SabreTools.DatTools
         public static BaseFile ConvertToBaseFile(this DatItems.Formats.File file)
         {
             string? machineName = null;
-            var machine = file.GetFieldValue<Machine>(DatItem.MachineKey);
+            var machine = file.GetMachine();
             if (machine != null)
                 machineName = machine.GetName();
 
@@ -207,7 +207,7 @@ namespace SabreTools.DatTools
         public static BaseFile ConvertToBaseFile(this Media media)
         {
             string? machineName = null;
-            var machine = media.GetFieldValue<Machine>(DatItem.MachineKey);
+            var machine = media.GetMachine();
             if (machine != null)
                 machineName = machine.GetName();
 
@@ -234,7 +234,7 @@ namespace SabreTools.DatTools
         public static BaseFile ConvertToBaseFile(this Rom rom)
         {
             string? machineName = null;
-            var machine = rom.GetFieldValue<Machine>(DatItem.MachineKey);
+            var machine = rom.GetMachine();
             if (machine != null)
                 machineName = machine.GetName();
 

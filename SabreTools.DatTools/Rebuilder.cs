@@ -457,7 +457,7 @@ namespace SabreTools.DatTools
                 foreach (DatItem item in dupes)
                 {
                     // If we don't have a proper machine
-                    var machine = item.GetFieldValue<Machine>(DatItem.MachineKey);
+                    var machine = item.GetMachine();
                     if (machine?.GetName() == null)
                         continue;
 
@@ -575,14 +575,14 @@ namespace SabreTools.DatTools
                 // Get the item from the current file
                 HashType[] hashes = [HashType.CRC32, HashType.MD5, HashType.SHA1];
                 Rom item = FileTypeTool.GetInfo(stream, hashes).ConvertToRom();
-                item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, Path.GetFileNameWithoutExtension(item.GetName()));
-                item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetName(Path.GetFileNameWithoutExtension(item.GetName()));
+                item.GetMachine()!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, Path.GetFileNameWithoutExtension(item.GetName()));
+                item.GetMachine()!.SetName(Path.GetFileNameWithoutExtension(item.GetName()));
 
                 // If we are coming from an archive, set the correct machine name
                 if (machinename != null)
                 {
-                    item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, machinename);
-                    item.GetFieldValue<Machine>(DatItem.MachineKey)!.SetName(machinename);
+                    item.GetMachine()!.SetFieldValue<string?>(Models.Metadata.Machine.DescriptionKey, machinename);
+                    item.GetMachine()!.SetName(machinename);
                 }
 
                 dupes.Add(item);

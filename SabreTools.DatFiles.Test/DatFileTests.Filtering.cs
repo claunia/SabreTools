@@ -93,7 +93,7 @@ namespace SabreTools.DatFiles.Test
 
             // The name of the bucket is not expected to change
             DatItem actual = Assert.Single(datFile.GetItemsForBucket("machine"));
-            Machine? actualMachine = actual.GetFieldValue<Machine?>(DatItem.MachineKey);
+            Machine? actualMachine = actual.GetMachine();
             Assert.NotNull(actualMachine);
             Assert.Equal("description", actualMachine.GetName());
             Assert.Equal("description", actualMachine.GetStringFieldValue(Models.Metadata.Machine.DescriptionKey));
@@ -149,12 +149,12 @@ namespace SabreTools.DatFiles.Test
             Assert.Equal(2, actualDatItems.Count);
 
             DatItem actualRom = Assert.Single(actualDatItems.FindAll(i => i is Rom));
-            Machine? actualRomMachine = actualRom.GetFieldValue<Machine>(DatItem.MachineKey);
+            Machine? actualRomMachine = actualRom.GetMachine();
             Assert.NotNull(actualRomMachine);
             Assert.Equal("machine/rom", actualRomMachine.GetName());
 
             DatItem actualDisk = Assert.Single(actualDatItems.FindAll(i => i is Disk));
-            Machine? actualDiskMachine = actualDisk.GetFieldValue<Machine>(DatItem.MachineKey);
+            Machine? actualDiskMachine = actualDisk.GetMachine();
             Assert.NotNull(actualDiskMachine);
             Assert.Equal("machine/disk", actualDiskMachine.GetName());
         }
@@ -229,7 +229,7 @@ namespace SabreTools.DatFiles.Test
 
             var actualDatItems = datFile.GetItemsForBucket("machine (world)");
             DatItem actualWorldRom = Assert.Single(actualDatItems);
-            Machine? actualWorldMachine = actualWorldRom.GetFieldValue<Machine>(DatItem.MachineKey);
+            Machine? actualWorldMachine = actualWorldRom.GetMachine();
             Assert.NotNull(actualWorldMachine);
             Assert.Equal("machine (World)", actualWorldMachine.GetName());
         }
@@ -279,7 +279,7 @@ namespace SabreTools.DatFiles.Test
 
             // The name of the bucket is not expected to change
             DatItem actual = Assert.Single(datFile.GetItemsForBucket("10.10.10-machine-name"));
-            Machine? actualMachine = actual.GetFieldValue<Machine?>(DatItem.MachineKey);
+            Machine? actualMachine = actual.GetMachine();
             Assert.NotNull(actualMachine);
             Assert.Equal("machine-name", actualMachine.GetName());
         }

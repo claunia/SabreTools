@@ -618,7 +618,7 @@ namespace SabreTools.DatFiles.Test
 
             Assert.Single(datFile.GetItemsForBucket("parent"));
             DatItem actual = Assert.Single(datFile.GetItemsForBucket("child"));
-            Machine? actualMachine = actual.GetFieldValue<Machine>(DatItem.MachineKey);
+            Machine? actualMachine = actual.GetMachine();
             Assert.NotNull(actualMachine);
             Assert.Equal("child", actualMachine.GetName());
             Assert.Equal("romof", actualMachine.GetStringFieldValue(Models.Metadata.Machine.RomOfKey));
@@ -725,7 +725,7 @@ namespace SabreTools.DatFiles.Test
 
             Assert.Single(datFile.GetItemsForBucket("parent"));
             DatItem actual = Assert.Single(datFile.GetItemsForBucket("child"));
-            Machine? actualMachine = actual.GetFieldValue<Machine>(DatItem.MachineKey);
+            Machine? actualMachine = actual.GetMachine();
             Assert.NotNull(actualMachine);
             Assert.Equal("child", actualMachine.GetName());
         }
@@ -808,7 +808,7 @@ namespace SabreTools.DatFiles.Test
             datFile.RemoveMachineRelationshipTags();
 
             DatItem actualItem = Assert.Single(datFile.GetItemsForBucket("machine"));
-            Machine? actual = actualItem.GetFieldValue<Machine>(DatItem.MachineKey);
+            Machine? actual = actualItem.GetMachine();
             Assert.NotNull(actual);
             Assert.Null(actual.GetStringFieldValue(Models.Metadata.Machine.CloneOfKey));
             Assert.Null(actual.GetStringFieldValue(Models.Metadata.Machine.RomOfKey));
