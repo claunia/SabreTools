@@ -39,7 +39,7 @@ namespace SabreTools.DatFiles.Formats
             var sr = new StreamReader(fs, new UTF8Encoding(false));
             var jtr = new JsonTextReader(sr);
             var source = new Source(indexId, filename);
-            long sourceIndex = AddSourceDB(source);
+            // long sourceIndex = AddSourceDB(source);
 
             // If we got a null reader, just return
             if (jtr == null)
@@ -68,7 +68,7 @@ namespace SabreTools.DatFiles.Formats
 
                         // Machine array
                         case "machines":
-                            ReadMachines(jtr, statsOnly, source, sourceIndex);
+                            ReadMachines(jtr, statsOnly, source, sourceIndex: 0);
                             jtr.Read();
                             break;
 
@@ -149,13 +149,13 @@ namespace SabreTools.DatFiles.Formats
                 machine = machineObj["machine"]?.ToObject<Machine>();
 
             // Add the machine to the dictionary
-            long machineIndex = -1;
-            if (machine != null)
-                machineIndex = AddMachineDB(machine);
+            // long machineIndex = -1;
+            // if (machine != null)
+            //     machineIndex = AddMachineDB(machine);
 
             // Read items, if possible
             if (machineObj.ContainsKey("items"))
-                ReadItems(machineObj["items"] as JArray, statsOnly, source, sourceIndex, machine, machineIndex);
+                ReadItems(machineObj["items"] as JArray, statsOnly, source, sourceIndex, machine, machineIndex: 0);
         }
 
         /// <summary>

@@ -25,7 +25,7 @@ namespace SabreTools.DatFiles
 
             // Create an internal source and add to the dictionary
             var source = new Source(indexId, filename);
-            long sourceIndex = AddSourceDB(source);
+            // long sourceIndex = AddSourceDB(source);
 
             // Get the header from the metadata
             var header = item.Read<Models.Metadata.Header>(Models.Metadata.MetadataFile.HeaderKey);
@@ -35,7 +35,7 @@ namespace SabreTools.DatFiles
             // Get the machines from the metadata
             var machines = item.ReadItemArray<Models.Metadata.Machine>(Models.Metadata.MetadataFile.MachineKey);
             if (machines != null)
-                ConvertMachines(machines, source, sourceIndex, statsOnly);
+                ConvertMachines(machines, source, sourceIndex: 0, statsOnly);
         }
 
         /// <summary>
@@ -203,144 +203,144 @@ namespace SabreTools.DatFiles
 
             // Create an internal machine and add to the dictionary
             var machine = new Machine(item);
-            long machineIndex = AddMachineDB(machine);
+            // long machineIndex = AddMachineDB(machine);
 
             // Convert items in the machine
             if (item.ContainsKey(Models.Metadata.Machine.AdjusterKey))
             {
                 var items = item.ReadItemArray<Models.Metadata.Adjuster>(Models.Metadata.Machine.AdjusterKey);
-                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
+                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.ArchiveKey))
             {
                 var items = item.ReadItemArray<Models.Metadata.Archive>(Models.Metadata.Machine.ArchiveKey);
-                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
+                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.BiosSetKey))
             {
                 var items = item.ReadItemArray<Models.Metadata.BiosSet>(Models.Metadata.Machine.BiosSetKey);
-                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
+                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.ChipKey))
             {
                 var items = item.ReadItemArray<Models.Metadata.Chip>(Models.Metadata.Machine.ChipKey);
-                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
+                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.ConfigurationKey))
             {
                 var items = item.ReadItemArray<Models.Metadata.Configuration>(Models.Metadata.Machine.ConfigurationKey);
-                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
+                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.DeviceKey))
             {
                 var items = item.ReadItemArray<Models.Metadata.Device>(Models.Metadata.Machine.DeviceKey);
-                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
+                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.DeviceRefKey))
             {
                 var items = item.ReadItemArray<Models.Metadata.DeviceRef>(Models.Metadata.Machine.DeviceRefKey);
-                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
+                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.DipSwitchKey))
             {
                 var items = item.ReadItemArray<Models.Metadata.DipSwitch>(Models.Metadata.Machine.DipSwitchKey);
-                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
+                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.DiskKey))
             {
                 var items = item.ReadItemArray<Models.Metadata.Disk>(Models.Metadata.Machine.DiskKey);
-                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
+                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.DisplayKey))
             {
                 var items = item.ReadItemArray<Models.Metadata.Display>(Models.Metadata.Machine.DisplayKey);
-                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
+                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.DriverKey))
             {
                 var items = item.ReadItemArray<Models.Metadata.Driver>(Models.Metadata.Machine.DriverKey);
-                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
+                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.DumpKey))
             {
                 var items = item.ReadItemArray<Models.Metadata.Dump>(Models.Metadata.Machine.DumpKey);
                 string? machineName = machine.GetStringFieldValue(Models.Metadata.Machine.NameKey);
-                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly, machineName);
+                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly, machineName);
             }
             if (item.ContainsKey(Models.Metadata.Machine.FeatureKey))
             {
                 var items = item.ReadItemArray<Models.Metadata.Feature>(Models.Metadata.Machine.FeatureKey);
-                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
+                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.InfoKey))
             {
                 var items = item.ReadItemArray<Models.Metadata.Info>(Models.Metadata.Machine.InfoKey);
-                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
+                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.InputKey))
             {
                 var items = item.ReadItemArray<Models.Metadata.Input>(Models.Metadata.Machine.InputKey);
-                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
+                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.MediaKey))
             {
                 var items = item.ReadItemArray<Models.Metadata.Media>(Models.Metadata.Machine.MediaKey);
-                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
+                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.PartKey))
             {
                 var items = item.ReadItemArray<Models.Metadata.Part>(Models.Metadata.Machine.PartKey);
-                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
+                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.PortKey))
             {
                 var items = item.ReadItemArray<Models.Metadata.Port>(Models.Metadata.Machine.PortKey);
-                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
+                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.RamOptionKey))
             {
                 var items = item.ReadItemArray<Models.Metadata.RamOption>(Models.Metadata.Machine.RamOptionKey);
-                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
+                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.ReleaseKey))
             {
                 var items = item.ReadItemArray<Models.Metadata.Release>(Models.Metadata.Machine.ReleaseKey);
-                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
+                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.RomKey))
             {
                 var items = item.ReadItemArray<Models.Metadata.Rom>(Models.Metadata.Machine.RomKey);
-                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
+                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.SampleKey))
             {
                 var items = item.ReadItemArray<Models.Metadata.Sample>(Models.Metadata.Machine.SampleKey);
-                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
+                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.SharedFeatKey))
             {
                 var items = item.ReadItemArray<Models.Metadata.SharedFeat>(Models.Metadata.Machine.SharedFeatKey);
-                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
+                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.SlotKey))
             {
                 var items = item.ReadItemArray<Models.Metadata.Slot>(Models.Metadata.Machine.SlotKey);
-                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
+                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.SoftwareListKey))
             {
                 var items = item.ReadItemArray<Models.Metadata.SoftwareList>(Models.Metadata.Machine.SoftwareListKey);
-                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
+                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.SoundKey))
             {
                 var items = item.ReadItemArray<Models.Metadata.Sound>(Models.Metadata.Machine.SoundKey);
-                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
+                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.VideoKey))
             {
                 var items = item.ReadItemArray<Models.Metadata.Video>(Models.Metadata.Machine.VideoKey);
-                ProcessItems(items, machine, machineIndex, source, sourceIndex, statsOnly);
+                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly);
             }
         }
 
@@ -367,7 +367,7 @@ namespace SabreTools.DatFiles
                 datItem.CopyMachineInformation(machine);
 
                 AddItem(datItem, statsOnly);
-                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
+                //AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -394,7 +394,7 @@ namespace SabreTools.DatFiles
                 datItem.CopyMachineInformation(machine);
 
                 AddItem(datItem, statsOnly);
-                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
+                // AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -421,7 +421,7 @@ namespace SabreTools.DatFiles
                 datItem.CopyMachineInformation(machine);
 
                 AddItem(datItem, statsOnly);
-                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
+                // AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -448,7 +448,7 @@ namespace SabreTools.DatFiles
                 datItem.CopyMachineInformation(machine);
 
                 AddItem(datItem, statsOnly);
-                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
+                // AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -475,7 +475,7 @@ namespace SabreTools.DatFiles
                 datItem.CopyMachineInformation(machine);
 
                 AddItem(datItem, statsOnly);
-                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
+                // AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -502,7 +502,7 @@ namespace SabreTools.DatFiles
                 datItem.CopyMachineInformation(machine);
 
                 AddItem(datItem, statsOnly);
-                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
+                // AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -529,7 +529,7 @@ namespace SabreTools.DatFiles
                 datItem.CopyMachineInformation(machine);
 
                 AddItem(datItem, statsOnly);
-                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
+                // AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -556,7 +556,7 @@ namespace SabreTools.DatFiles
                 datItem.CopyMachineInformation(machine);
 
                 AddItem(datItem, statsOnly);
-                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
+                // AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -583,7 +583,7 @@ namespace SabreTools.DatFiles
                 datItem.CopyMachineInformation(machine);
 
                 AddItem(datItem, statsOnly);
-                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
+                // AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -610,7 +610,7 @@ namespace SabreTools.DatFiles
                 datItem.CopyMachineInformation(machine);
 
                 AddItem(datItem, statsOnly);
-                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
+                // AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -637,7 +637,7 @@ namespace SabreTools.DatFiles
                 datItem.CopyMachineInformation(machine);
 
                 AddItem(datItem, statsOnly);
-                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
+                // AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -730,7 +730,7 @@ namespace SabreTools.DatFiles
                     datItem.SetFieldValue<string?>(Models.Metadata.Rom.SHA512Key, TextHelper.NormalizeSHA512(datItem.GetStringFieldValue(Models.Metadata.Rom.SHA512Key)));
 
                 AddItem(datItem, statsOnly);
-                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
+                // AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -757,7 +757,7 @@ namespace SabreTools.DatFiles
                 datItem.CopyMachineInformation(machine);
 
                 AddItem(datItem, statsOnly);
-                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
+                // AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -784,7 +784,7 @@ namespace SabreTools.DatFiles
                 datItem.CopyMachineInformation(machine);
 
                 AddItem(datItem, statsOnly);
-                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
+                // AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -811,7 +811,7 @@ namespace SabreTools.DatFiles
                 datItem.CopyMachineInformation(machine);
 
                 AddItem(datItem, statsOnly);
-                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
+                // AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -838,7 +838,7 @@ namespace SabreTools.DatFiles
                 datItem.CopyMachineInformation(machine);
 
                 AddItem(datItem, statsOnly);
-                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
+                // AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -882,7 +882,7 @@ namespace SabreTools.DatFiles
                             romItem.CopyMachineInformation(machine);
 
                             AddItem(romItem, statsOnly);
-                            AddItemDB(romItem, machineIndex, sourceIndex, statsOnly);
+                            // AddItemDB(romItem, machineIndex, sourceIndex, statsOnly);
                         }
                     }
                 }
@@ -906,7 +906,7 @@ namespace SabreTools.DatFiles
                             diskItem.CopyMachineInformation(machine);
 
                             AddItem(diskItem, statsOnly);
-                            AddItemDB(diskItem, machineIndex, sourceIndex, statsOnly);
+                            // AddItemDB(diskItem, machineIndex, sourceIndex, statsOnly);
                         }
                     }
                 }
@@ -922,7 +922,7 @@ namespace SabreTools.DatFiles
                         dipSwitchItem.CopyMachineInformation(machine);
 
                         AddItem(dipSwitchItem, statsOnly);
-                        AddItemDB(dipSwitchItem, machineIndex, sourceIndex, statsOnly);
+                        // AddItemDB(dipSwitchItem, machineIndex, sourceIndex, statsOnly);
                     }
                 }
 
@@ -937,7 +937,7 @@ namespace SabreTools.DatFiles
                         partFeatureItem.CopyMachineInformation(machine);
 
                         AddItem(partFeatureItem, statsOnly);
-                        AddItemDB(partFeatureItem, machineIndex, sourceIndex, statsOnly);
+                        // AddItemDB(partFeatureItem, machineIndex, sourceIndex, statsOnly);
                     }
                 }
             }
@@ -966,7 +966,7 @@ namespace SabreTools.DatFiles
                 datItem.CopyMachineInformation(machine);
 
                 AddItem(datItem, statsOnly);
-                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
+                // AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -993,7 +993,7 @@ namespace SabreTools.DatFiles
                 datItem.CopyMachineInformation(machine);
 
                 AddItem(datItem, statsOnly);
-                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
+                // AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1020,7 +1020,7 @@ namespace SabreTools.DatFiles
                 datItem.CopyMachineInformation(machine);
 
                 AddItem(datItem, statsOnly);
-                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
+                // AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1047,7 +1047,7 @@ namespace SabreTools.DatFiles
                 datItem.CopyMachineInformation(machine);
 
                 AddItem(datItem, statsOnly);
-                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
+                // AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1074,7 +1074,7 @@ namespace SabreTools.DatFiles
                 datItem.CopyMachineInformation(machine);
 
                 AddItem(datItem, statsOnly);
-                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
+                // AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1101,7 +1101,7 @@ namespace SabreTools.DatFiles
                 datItem.CopyMachineInformation(machine);
 
                 AddItem(datItem, statsOnly);
-                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
+                // AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1128,7 +1128,7 @@ namespace SabreTools.DatFiles
                 datItem.CopyMachineInformation(machine);
 
                 AddItem(datItem, statsOnly);
-                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
+                // AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1155,7 +1155,7 @@ namespace SabreTools.DatFiles
                 datItem.CopyMachineInformation(machine);
 
                 AddItem(datItem, statsOnly);
-                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
+                // AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1182,7 +1182,7 @@ namespace SabreTools.DatFiles
                 datItem.CopyMachineInformation(machine);
 
                 AddItem(datItem, statsOnly);
-                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
+                // AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 
@@ -1209,7 +1209,7 @@ namespace SabreTools.DatFiles
                 datItem.CopyMachineInformation(machine);
 
                 AddItem(datItem, statsOnly);
-                AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
+                // AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
             }
         }
 

@@ -188,7 +188,7 @@ namespace SabreTools.DatTools.Test
             Parser.ParseInto(datFile, filename, throwOnError: true);
             Assert.Equal(datFormat, datFile.Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey));
             Assert.Equal(totalCount, datFile.Items.DatStatistics.TotalCount);
-            Assert.Equal(totalCount, datFile.ItemsDB.DatStatistics.TotalCount);
+            //Assert.Equal(totalCount, datFile.ItemsDB.DatStatistics.TotalCount);
         }
 
         [Theory]
@@ -230,7 +230,7 @@ namespace SabreTools.DatTools.Test
             var datFile = Parser.ParseStatistics(filename, throwOnError: true);
             Assert.Equal(datFormat, datFile.Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey));
             Assert.Equal(totalCount, datFile.Items.DatStatistics.TotalCount);
-            Assert.Equal(totalCount, datFile.ItemsDB.DatStatistics.TotalCount);
+            //Assert.Equal(totalCount, datFile.ItemsDB.DatStatistics.TotalCount);
         }
 
         [Theory]
