@@ -580,7 +580,6 @@ namespace SabreTools.DatItems
         /// <summary>
         /// Get a clone of the current internal model
         /// </summary>
-        /// TODO: Make virtual so individuals can handle conversion
         public virtual T GetInternalClone() => (_internal.Clone() as T)!;
 
         #endregion
