@@ -14,9 +14,6 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc>/>
         protected override ItemType ItemType => ItemType.Archive;
 
-        /// <inheritdoc>/>
-        protected override string? NameKey => Models.Metadata.Archive.NameKey;
-
         // TODO: None of the following are used or checked
 
         /// <summary>

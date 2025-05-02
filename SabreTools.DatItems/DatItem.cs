@@ -520,15 +520,6 @@ namespace SabreTools.DatItems
     /// </summary>
     public abstract class DatItem<T> : DatItem, IEquatable<DatItem<T>>, IComparable<DatItem<T>>, ICloneable where T : Models.Metadata.DatItem
     {
-        #region Fields
-
-        /// <summary>
-        /// Key for accessing the item name, if it exists
-        /// </summary>
-        protected abstract string? NameKey { get; }
-
-        #endregion
-
         #region Constructors
 
         /// <summary>
@@ -559,20 +550,10 @@ namespace SabreTools.DatItems
         #region Accessors
 
         /// <inheritdoc/>
-        public override string? GetName()
-        {
-            if (!string.IsNullOrEmpty(NameKey))
-                return GetStringFieldValue(NameKey);
-
-            return null;
-        }
+        public override string? GetName() => _internal.GetName();
 
         /// <inheritdoc/>
-        public override void SetName(string? name)
-        {
-            if (!string.IsNullOrEmpty(NameKey))
-                SetFieldValue(NameKey, name);
-        }
+        public override void SetName(string? name) => _internal.SetName(name);
 
         #endregion
 

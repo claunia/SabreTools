@@ -15,9 +15,6 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc>/>
         protected override ItemType ItemType => ItemType.ConfLocation;
 
-        /// <inheritdoc>/>
-        protected override string? NameKey => Models.Metadata.ConfLocation.NameKey;
-
         #endregion
 
         #region Constructors

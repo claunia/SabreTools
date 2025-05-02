@@ -26,9 +26,6 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc>/>
         protected override ItemType ItemType => ItemType.DipSwitch;
 
-        /// <inheritdoc>/>
-        protected override string? NameKey => Models.Metadata.DipSwitch.NameKey;
-
         [JsonIgnore]
         public bool ConditionsSpecified
         {

@@ -15,9 +15,6 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc>/>
         protected override ItemType ItemType => ItemType.SlotOption;
 
-        /// <inheritdoc>/>
-        protected override string? NameKey => Models.Metadata.SlotOption.NameKey;
-
         #endregion
 
         #region Constructors

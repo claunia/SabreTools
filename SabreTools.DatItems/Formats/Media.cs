@@ -16,9 +16,6 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc>/>
         protected override ItemType ItemType => ItemType.Media;
 
-        /// <inheritdoc>/>
-        protected override string? NameKey => Models.Metadata.Media.NameKey;
-
         #endregion
 
         #region Constructors

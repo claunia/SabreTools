@@ -16,9 +16,6 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc>/>
         protected override ItemType ItemType => ItemType.Slot;
 
-        /// <inheritdoc>/>
-        protected override string? NameKey => Models.Metadata.Slot.NameKey;
-
         [JsonIgnore]
         public bool SlotOptionsSpecified
         {

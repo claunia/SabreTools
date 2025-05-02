@@ -8,21 +8,131 @@ namespace SabreTools.Core
 {
     public static class DictionaryBaseExtensions
     {
+        #region Accessors
+
+        /// <summary>
+        /// Gets the name to use for a DictionaryBase or null
+        /// </summary>
+        public static string? GetName(this DictionaryBase self)
+        {
+            if (self == null)
+                return null;
+
+            return self switch
+            {
+                Machine => self.ReadString(Machine.NameKey),
+
+                Adjuster => self.ReadString(Adjuster.NameKey),
+                Analog => null,
+                Archive => self.ReadString(Archive.NameKey),
+                BiosSet => self.ReadString(BiosSet.NameKey),
+                Chip => self.ReadString(Chip.NameKey),
+                Condition => null,
+                ConfLocation => self.ReadString(ConfLocation.NameKey),
+                ConfSetting => self.ReadString(ConfSetting.NameKey),
+                Configuration => self.ReadString(Configuration.NameKey),
+                Control => null,
+                DataArea => self.ReadString(DataArea.NameKey),
+                Device => null,
+                DeviceRef => self.ReadString(DeviceRef.NameKey),
+                DipLocation => self.ReadString(DipLocation.NameKey),
+                DipSwitch => self.ReadString(DipSwitch.NameKey),
+                DipValue => self.ReadString(DipValue.NameKey),
+                Disk => self.ReadString(Disk.NameKey),
+                DiskArea => self.ReadString(DiskArea.NameKey),
+                Display => null,
+                Driver => null,
+                Extension => self.ReadString(Extension.NameKey),
+                Feature => self.ReadString(Feature.NameKey),
+                Info => self.ReadString(Info.NameKey),
+                Input => null,
+                Instance => self.ReadString(Instance.NameKey),
+                Media => self.ReadString(Media.NameKey),
+                Part => self.ReadString(Part.NameKey),
+                Port => null,
+                RamOption => self.ReadString(RamOption.NameKey),
+                Release => self.ReadString(Release.NameKey),
+                Rom => self.ReadString(Rom.NameKey),
+                Sample => self.ReadString(Sample.NameKey),
+                SharedFeat => self.ReadString(SharedFeat.NameKey),
+                Slot => self.ReadString(Slot.NameKey),
+                SlotOption => self.ReadString(SlotOption.NameKey),
+                SoftwareList => self.ReadString(SoftwareList.NameKey),
+                Sound => null,
+
+                _ => null,
+            };
+        }
+
+        /// <summary>
+        /// Gets the name to use for a DictionaryBase or null
+        /// </summary>
+        public static void SetName(this DictionaryBase self, string? name)
+        {
+            if (self == null || string.IsNullOrEmpty(name))
+                return;
+
+            switch (self)
+            {
+                case Machine: self[Machine.NameKey] = name; break;
+
+                case Adjuster: self[Adjuster.NameKey] = name; break;
+                case Analog: break;
+                case Archive: self[Archive.NameKey] = name; break;
+                case BiosSet: self[BiosSet.NameKey] = name; break;
+                case Chip: self[Chip.NameKey] = name; break;
+                case Condition: break;
+                case ConfLocation: self[ConfLocation.NameKey] = name; break;
+                case ConfSetting: self[ConfSetting.NameKey] = name; break;
+                case Configuration: self[Configuration.NameKey] = name; break;
+                case Control: break;
+                case DataArea: self[DataArea.NameKey] = name; break;
+                case Device: break;
+                case DeviceRef: self[DeviceRef.NameKey] = name; break;
+                case DipLocation: self[DipLocation.NameKey] = name; break;
+                case DipSwitch: self[DipSwitch.NameKey] = name; break;
+                case DipValue: self[DipValue.NameKey] = name; break;
+                case Disk: self[Disk.NameKey] = name; break;
+                case DiskArea: self[DiskArea.NameKey] = name; break;
+                case Display: break;
+                case Driver: break;
+                case Extension: self[Extension.NameKey] = name; break;
+                case Feature: self[Feature.NameKey] = name; break;
+                case Info: self[Info.NameKey] = name; break;
+                case Input: break;
+                case Instance: self[Instance.NameKey] = name; break;
+                case Media: self[Media.NameKey] = name; break;
+                case Part: self[Part.NameKey] = name; break;
+                case Port: break;
+                case RamOption: self[RamOption.NameKey] = name; break;
+                case Release: self[Release.NameKey] = name; break;
+                case Rom: self[Rom.NameKey] = name; break;
+                case Sample: self[Sample.NameKey] = name; break;
+                case SharedFeat: self[SharedFeat.NameKey] = name; break;
+                case Slot: self[Slot.NameKey] = name; break;
+                case SlotOption: self[SlotOption.NameKey] = name; break;
+                case SoftwareList: self[SoftwareList.NameKey] = name; break;
+                case Sound: break;
+            }
+        }
+
+        #endregion
+
         #region Cloning
 
         /// <summary>
         /// Deep clone a DictionaryBase object
         /// </summary>
-        public static DictionaryBase? Clone(this DictionaryBase dictionaryBase)
+        public static DictionaryBase? Clone(this DictionaryBase self)
         {
             // If construction failed, we can't do anything
-            if (Activator.CreateInstance(dictionaryBase.GetType()) is not DictionaryBase clone)
+            if (Activator.CreateInstance(self.GetType()) is not DictionaryBase clone)
                 return null;
 
             // Loop through and clone per type
-            foreach (string key in dictionaryBase.Keys)
+            foreach (string key in self.Keys)
             {
-                object? value = dictionaryBase[key];
+                object? value = self[key];
                 clone[key] = value switch
                 {
                     // Primative types

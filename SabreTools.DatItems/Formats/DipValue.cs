@@ -15,9 +15,6 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc>/>
         protected override ItemType ItemType => ItemType.DipValue;
 
-        /// <inheritdoc>/>
-        protected override string? NameKey => Models.Metadata.DipValue.NameKey;
-
         [JsonIgnore]
         public bool ConditionsSpecified
         {

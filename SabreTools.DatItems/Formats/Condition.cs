@@ -15,9 +15,6 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc>/>
         protected override ItemType ItemType => ItemType.Condition;
 
-        /// <inheritdoc>/>
-        protected override string? NameKey => null;
-
         #endregion
 
         #region Constructors

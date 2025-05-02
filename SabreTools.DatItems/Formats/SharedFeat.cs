@@ -14,9 +14,6 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc>/>
         protected override ItemType ItemType => ItemType.SharedFeat;
 
-        /// <inheritdoc>/>
-        protected override string? NameKey => Models.Metadata.SharedFeat.NameKey;
-
         #endregion
 
         #region Constructors

@@ -30,9 +30,6 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc>/>
         protected override ItemType ItemType => ItemType.Rom;
 
-        /// <inheritdoc>/>
-        protected override string? NameKey => Models.Metadata.Rom.NameKey;
-
         [JsonIgnore]
         public bool ItemStatusSpecified
         {

@@ -15,9 +15,6 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc>/>
         protected override ItemType ItemType => ItemType.RamOption;
 
-        /// <inheritdoc>/>
-        protected override string? NameKey => Models.Metadata.RamOption.NameKey;
-
         #endregion
 
         #region Constructors

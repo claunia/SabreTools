@@ -14,9 +14,6 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc>/>
         protected override ItemType ItemType => ItemType.DeviceRef;
 
-        /// <inheritdoc>/>
-        protected override string? NameKey => Models.Metadata.DeviceRef.NameKey;
-
         #endregion
 
         #region Constructors

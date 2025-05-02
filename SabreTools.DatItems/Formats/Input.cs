@@ -17,9 +17,6 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc>/>
         protected override ItemType ItemType => ItemType.Input;
 
-        /// <inheritdoc>/>
-        protected override string? NameKey => null;
-
         [JsonIgnore]
         public bool ControlsSpecified
         {

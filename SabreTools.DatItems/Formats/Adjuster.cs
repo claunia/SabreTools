@@ -15,9 +15,6 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc>/>
         protected override ItemType ItemType => ItemType.Adjuster;
 
-        /// <inheritdoc>/>
-        protected override string? NameKey => Models.Metadata.Adjuster.NameKey;
-
         [JsonIgnore]
         public bool ConditionsSpecified
         {

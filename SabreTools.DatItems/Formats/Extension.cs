@@ -14,9 +14,6 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc>/>
         protected override ItemType ItemType => ItemType.Extension;
 
-        /// <inheritdoc>/>
-        protected override string? NameKey => Models.Metadata.Extension.NameKey;
-
         #endregion
 
         #region Constructors

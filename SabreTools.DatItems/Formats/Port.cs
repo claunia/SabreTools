@@ -16,9 +16,6 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc>/>
         protected override ItemType ItemType => ItemType.Port;
 
-        /// <inheritdoc>/>
-        protected override string? NameKey => null;
-
         [JsonIgnore]
         public bool AnalogsSpecified
         {

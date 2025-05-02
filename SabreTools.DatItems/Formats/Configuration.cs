@@ -16,9 +16,6 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc>/>
         protected override ItemType ItemType => ItemType.Configuration;
 
-        /// <inheritdoc>/>
-        protected override string? NameKey => Models.Metadata.Configuration.NameKey;
-
         [JsonIgnore]
         public bool ConditionsSpecified
         {

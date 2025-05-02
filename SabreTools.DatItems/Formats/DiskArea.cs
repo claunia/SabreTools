@@ -15,9 +15,6 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc>/>
         protected override ItemType ItemType => ItemType.DiskArea;
 
-        /// <inheritdoc>/>
-        protected override string? NameKey => Models.Metadata.DiskArea.NameKey;
-
         #endregion
 
         #region Constructors

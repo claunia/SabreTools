@@ -15,9 +15,6 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc>/>
         protected override ItemType ItemType => ItemType.Chip;
 
-        /// <inheritdoc>/>
-        protected override string? NameKey => Models.Metadata.Chip.NameKey;
-
         #endregion
 
         #region Constructors

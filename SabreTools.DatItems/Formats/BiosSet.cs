@@ -15,9 +15,6 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc>/>
         protected override ItemType ItemType => ItemType.BiosSet;
 
-        /// <inheritdoc>/>
-        protected override string? NameKey => Models.Metadata.BiosSet.NameKey;
-
         #endregion
 
         #region Constructors

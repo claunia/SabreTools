@@ -30,9 +30,6 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc>/>
         protected override ItemType ItemType => ItemType.Disk;
 
-        /// <inheritdoc>/>
-        protected override string? NameKey => Models.Metadata.Disk.NameKey;
-
         [JsonIgnore]
         public bool DiskAreaSpecified
         {

@@ -15,9 +15,6 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc>/>
         protected override ItemType ItemType => ItemType.Release;
 
-        /// <inheritdoc>/>
-        protected override string? NameKey => Models.Metadata.Release.NameKey;
-
         #endregion
 
         #region Constructors
