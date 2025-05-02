@@ -49,17 +49,36 @@ namespace SabreTools.Core.Filter
                 _ => null,
             };
 
-            // Loop through and run each filter in order
+            // Group filters by key
+            var filterDictionary = new Dictionary<string, List<FilterObject>>();
             foreach (var filter in Filters)
             {
-                // If the filter isn't for this object type, skip
+                // Skip filters not applicable to the item
                 if (filter.Key.ItemName == "item" && Array.IndexOf(TypeHelper.GetDatItemTypeNames(), itemName) == -1)
                     continue;
                 else if (filter.Key.ItemName != "item" && filter.Key.ItemName != itemName)
                     continue;
 
+                // Ensure the key exists
+                string key = filter.Key.ToString();
+                if (!filterDictionary.ContainsKey(filter.Key.ToString()))
+                    filterDictionary[key] = [];
+
+                // Add the filter to the set
+                filterDictionary[key].Add(filter);
+            }
+
+            // Loop through and run each filter in order
+            foreach (var filterKey in filterDictionary.Keys)
+            {
+                bool matchOne = false;
+                foreach (var filter in filterDictionary[filterKey])
+                {
+                    matchOne |= filter.Matches(dictionaryBase);
+                }
+
                 // If we don't get a match, it's a failure
-                if (!filter.Matches(dictionaryBase))
+                if (!matchOne)
                     return false;
             }
 

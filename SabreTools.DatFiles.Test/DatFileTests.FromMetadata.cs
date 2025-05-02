@@ -66,8 +66,9 @@ namespace SabreTools.DatFiles.Test
             DatFile datFile = new Formats.Logiqx(null, useGame: false);
             datFile.ConvertFromMetadata(item, "filename", indexId: 0, keep: true, statsOnly: false);
 
-            DatItems.Machine actualMachine = Assert.Single(datFile.ItemsDB.GetMachines()).Value;
-            ValidateMachine(actualMachine);
+            // TODO: Reenable when ItemsDB is used again
+            // DatItems.Machine actualMachine = Assert.Single(datFile.ItemsDB.GetMachines()).Value;
+            // ValidateMachine(actualMachine);
 
             // Aggregate for easier validation
             DatItems.DatItem[] datItems = datFile.Items.SortedKeys
