@@ -139,6 +139,40 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Add to the statistics for a given DatItem
+        /// </summary>
+        /// <param name="item">Item to add info from</param>
+        public void AddItemStatistics(Models.Metadata.DatItem item)
+        {
+            lock (statsLock)
+            {
+                // No matter what the item is, we increment the count
+                TotalCount++;
+
+                // Increment removal count
+                if (item.ReadBool(DatItem.RemoveKey) == true)
+                    RemovedCount++;
+
+                // Increment the item count for the type
+                AddItemCount(item.ReadString(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>());
+
+                // Some item types require special processing
+                switch (item)
+                {
+                    case Models.Metadata.Disk disk:
+                        AddItemStatistics(disk);
+                        break;
+                    case Models.Metadata.Media media:
+                        AddItemStatistics(media);
+                        break;
+                    case Models.Metadata.Rom rom:
+                        AddItemStatistics(rom);
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
         /// Add statistics from another DatStatistics object
         /// </summary>
         /// <param name="stats">DatStatistics object to add from</param>
@@ -261,6 +295,44 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Remove from the statistics given a DatItem
+        /// </summary>
+        /// <param name="item">Item to remove info for</param>
+        public void RemoveItemStatistics(Models.Metadata.DatItem item)
+        {
+            // If we have a null item, we can't do anything
+            if (item == null)
+                return;
+
+            lock (statsLock)
+            {
+                // No matter what the item is, we decrease the count
+                TotalCount--;
+
+                // Decrement removal count
+                if (item.ReadBool(DatItem.RemoveKey) == true)
+                    RemovedCount--;
+
+                // Decrement the item count for the type
+                RemoveItemCount(item.ReadString(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>());
+
+                // Some item types require special processing
+                switch (item)
+                {
+                    case Models.Metadata.Disk disk:
+                        RemoveItemStatistics(disk);
+                        break;
+                    case Models.Metadata.Media media:
+                        RemoveItemStatistics(media);
+                        break;
+                    case Models.Metadata.Rom rom:
+                        RemoveItemStatistics(rom);
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
         /// Reset all statistics
         /// </summary>
         public void ResetStatistics()
@@ -330,6 +402,24 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Add to the statistics for a given Disk
+        /// </summary>
+        /// <param name="disk">Item to add info from</param>
+        private void AddItemStatistics(Models.Metadata.Disk disk)
+        {
+            if (disk.ReadString(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() != ItemStatus.Nodump)
+            {
+                AddHashCount(HashType.MD5, string.IsNullOrEmpty(disk.ReadString(Models.Metadata.Disk.MD5Key)) ? 0 : 1);
+                AddHashCount(HashType.SHA1, string.IsNullOrEmpty(disk.ReadString(Models.Metadata.Disk.SHA1Key)) ? 0 : 1);
+            }
+
+            AddStatusCount(ItemStatus.BadDump, disk.ReadString(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.BadDump ? 1 : 0);
+            AddStatusCount(ItemStatus.Good, disk.ReadString(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Good ? 1 : 0);
+            AddStatusCount(ItemStatus.Nodump, disk.ReadString(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump ? 1 : 0);
+            AddStatusCount(ItemStatus.Verified, disk.ReadString(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Verified ? 1 : 0);
+        }
+
+        /// <summary>
         /// Add to the statistics for a given File
         /// </summary>
         /// <param name="file">Item to add info from</param>
@@ -352,6 +442,18 @@ namespace SabreTools.DatFiles
             AddHashCount(HashType.SHA1, string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA1Key)) ? 0 : 1);
             AddHashCount(HashType.SHA256, string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA256Key)) ? 0 : 1);
             AddHashCount(HashType.SpamSum, string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SpamSumKey)) ? 0 : 1);
+        }
+
+        /// <summary>
+        /// Add to the statistics for a given Media
+        /// </summary>
+        /// <param name="media">Item to add info from</param>
+        private void AddItemStatistics(Models.Metadata.Media media)
+        {
+            AddHashCount(HashType.MD5, string.IsNullOrEmpty(media.ReadString(Models.Metadata.Media.MD5Key)) ? 0 : 1);
+            AddHashCount(HashType.SHA1, string.IsNullOrEmpty(media.ReadString(Models.Metadata.Media.SHA1Key)) ? 0 : 1);
+            AddHashCount(HashType.SHA256, string.IsNullOrEmpty(media.ReadString(Models.Metadata.Media.SHA256Key)) ? 0 : 1);
+            AddHashCount(HashType.SpamSum, string.IsNullOrEmpty(media.ReadString(Models.Metadata.Media.SpamSumKey)) ? 0 : 1);
         }
 
         /// <summary>
@@ -378,6 +480,32 @@ namespace SabreTools.DatFiles
             AddStatusCount(ItemStatus.Good, rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Good ? 1 : 0);
             AddStatusCount(ItemStatus.Nodump, rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump ? 1 : 0);
             AddStatusCount(ItemStatus.Verified, rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Verified ? 1 : 0);
+        }
+
+        /// <summary>
+        /// Add to the statistics for a given Rom
+        /// </summary>
+        /// <param name="rom">Item to add info from</param>
+        private void AddItemStatistics(Models.Metadata.Rom rom)
+        {
+            if (rom.ReadString(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() != ItemStatus.Nodump)
+            {
+                TotalSize += rom.ReadLong(Models.Metadata.Rom.SizeKey) ?? 0;
+                AddHashCount(HashType.CRC32, string.IsNullOrEmpty(rom.ReadString(Models.Metadata.Rom.CRCKey)) ? 0 : 1);
+                AddHashCount(HashType.MD2, string.IsNullOrEmpty(rom.ReadString(Models.Metadata.Rom.MD2Key)) ? 0 : 1);
+                AddHashCount(HashType.MD4, string.IsNullOrEmpty(rom.ReadString(Models.Metadata.Rom.MD4Key)) ? 0 : 1);
+                AddHashCount(HashType.MD5, string.IsNullOrEmpty(rom.ReadString(Models.Metadata.Rom.MD5Key)) ? 0 : 1);
+                AddHashCount(HashType.SHA1, string.IsNullOrEmpty(rom.ReadString(Models.Metadata.Rom.SHA1Key)) ? 0 : 1);
+                AddHashCount(HashType.SHA256, string.IsNullOrEmpty(rom.ReadString(Models.Metadata.Rom.SHA256Key)) ? 0 : 1);
+                AddHashCount(HashType.SHA384, string.IsNullOrEmpty(rom.ReadString(Models.Metadata.Rom.SHA384Key)) ? 0 : 1);
+                AddHashCount(HashType.SHA512, string.IsNullOrEmpty(rom.ReadString(Models.Metadata.Rom.SHA512Key)) ? 0 : 1);
+                AddHashCount(HashType.SpamSum, string.IsNullOrEmpty(rom.ReadString(Models.Metadata.Rom.SpamSumKey)) ? 0 : 1);
+            }
+
+            AddStatusCount(ItemStatus.BadDump, rom.ReadString(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.BadDump ? 1 : 0);
+            AddStatusCount(ItemStatus.Good, rom.ReadString(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Good ? 1 : 0);
+            AddStatusCount(ItemStatus.Nodump, rom.ReadString(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump ? 1 : 0);
+            AddStatusCount(ItemStatus.Verified, rom.ReadString(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Verified ? 1 : 0);
         }
 
         /// <summary>
@@ -453,6 +581,24 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Remove from the statistics given a Disk
+        /// </summary>
+        /// <param name="disk">Item to remove info for</param>
+        private void RemoveItemStatistics(Models.Metadata.Disk disk)
+        {
+            if (disk.ReadString(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() != ItemStatus.Nodump)
+            {
+                RemoveHashCount(HashType.MD5, string.IsNullOrEmpty(disk.ReadString(Models.Metadata.Disk.MD5Key)) ? 0 : 1);
+                RemoveHashCount(HashType.SHA1, string.IsNullOrEmpty(disk.ReadString(Models.Metadata.Disk.SHA1Key)) ? 0 : 1);
+            }
+
+            RemoveStatusCount(ItemStatus.BadDump, disk.ReadString(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.BadDump ? 1 : 0);
+            RemoveStatusCount(ItemStatus.Good, disk.ReadString(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Good ? 1 : 0);
+            RemoveStatusCount(ItemStatus.Nodump, disk.ReadString(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump ? 1 : 0);
+            RemoveStatusCount(ItemStatus.Verified, disk.ReadString(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Verified ? 1 : 0);
+        }
+
+        /// <summary>
         /// Remove from the statistics given a File
         /// </summary>
         /// <param name="file">Item to remove info for</param>
@@ -475,6 +621,18 @@ namespace SabreTools.DatFiles
             RemoveHashCount(HashType.SHA1, string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA1Key)) ? 0 : 1);
             RemoveHashCount(HashType.SHA256, string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SHA256Key)) ? 0 : 1);
             RemoveHashCount(HashType.SpamSum, string.IsNullOrEmpty(media.GetStringFieldValue(Models.Metadata.Media.SpamSumKey)) ? 0 : 1);
+        }
+
+        /// <summary>
+        /// Remove from the statistics given a Media
+        /// </summary>
+        /// <param name="media">Item to remove info for</param>
+        private void RemoveItemStatistics(Models.Metadata.Media media)
+        {
+            RemoveHashCount(HashType.MD5, string.IsNullOrEmpty(media.ReadString(Models.Metadata.Media.MD5Key)) ? 0 : 1);
+            RemoveHashCount(HashType.SHA1, string.IsNullOrEmpty(media.ReadString(Models.Metadata.Media.SHA1Key)) ? 0 : 1);
+            RemoveHashCount(HashType.SHA256, string.IsNullOrEmpty(media.ReadString(Models.Metadata.Media.SHA256Key)) ? 0 : 1);
+            RemoveHashCount(HashType.SpamSum, string.IsNullOrEmpty(media.ReadString(Models.Metadata.Media.SpamSumKey)) ? 0 : 1);
         }
 
         /// <summary>
@@ -501,6 +659,32 @@ namespace SabreTools.DatFiles
             RemoveStatusCount(ItemStatus.Good, rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Good ? 1 : 0);
             RemoveStatusCount(ItemStatus.Nodump, rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump ? 1 : 0);
             RemoveStatusCount(ItemStatus.Verified, rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Verified ? 1 : 0);
+        }
+
+        /// <summary>
+        /// Remove from the statistics given a Rom
+        /// </summary>
+        /// <param name="rom">Item to remove info for</param>
+        private void RemoveItemStatistics(Models.Metadata.Rom rom)
+        {
+            if (rom.ReadString(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() != ItemStatus.Nodump)
+            {
+                TotalSize -= rom.ReadLong(Models.Metadata.Rom.SizeKey) ?? 0;
+                RemoveHashCount(HashType.CRC32, string.IsNullOrEmpty(rom.ReadString(Models.Metadata.Rom.CRCKey)) ? 0 : 1);
+                RemoveHashCount(HashType.MD2, string.IsNullOrEmpty(rom.ReadString(Models.Metadata.Rom.MD2Key)) ? 0 : 1);
+                RemoveHashCount(HashType.MD4, string.IsNullOrEmpty(rom.ReadString(Models.Metadata.Rom.MD4Key)) ? 0 : 1);
+                RemoveHashCount(HashType.MD5, string.IsNullOrEmpty(rom.ReadString(Models.Metadata.Rom.MD5Key)) ? 0 : 1);
+                RemoveHashCount(HashType.SHA1, string.IsNullOrEmpty(rom.ReadString(Models.Metadata.Rom.SHA1Key)) ? 0 : 1);
+                RemoveHashCount(HashType.SHA256, string.IsNullOrEmpty(rom.ReadString(Models.Metadata.Rom.SHA256Key)) ? 0 : 1);
+                RemoveHashCount(HashType.SHA384, string.IsNullOrEmpty(rom.ReadString(Models.Metadata.Rom.SHA384Key)) ? 0 : 1);
+                RemoveHashCount(HashType.SHA512, string.IsNullOrEmpty(rom.ReadString(Models.Metadata.Rom.SHA512Key)) ? 0 : 1);
+                RemoveHashCount(HashType.SpamSum, string.IsNullOrEmpty(rom.ReadString(Models.Metadata.Rom.SpamSumKey)) ? 0 : 1);
+            }
+
+            RemoveStatusCount(ItemStatus.BadDump, rom.ReadString(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.BadDump ? 1 : 0);
+            RemoveStatusCount(ItemStatus.Good, rom.ReadString(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Good ? 1 : 0);
+            RemoveStatusCount(ItemStatus.Nodump, rom.ReadString(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump ? 1 : 0);
+            RemoveStatusCount(ItemStatus.Verified, rom.ReadString(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Verified ? 1 : 0);
         }
 
         /// <summary>
