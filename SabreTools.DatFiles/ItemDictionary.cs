@@ -305,12 +305,48 @@ namespace SabreTools.DatFiles
                 // If the value doesn't exist in the key, assume it has been removed
                 int removeIndex = list.FindIndex(i => i.Equals(value));
                 if (removeIndex < 0)
-                    return true;
+                    return false;
 
                 // Remove the statistics first
                 DatStatistics.RemoveItemStatistics(value);
 
                 list.RemoveAt(removeIndex);
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Remove the first instance of a value from the file dictionary if it exists
+        /// </summary>
+        /// <param name="key">Key in the dictionary to remove from</param>
+        /// <param name="value">Value to remove from the dictionary</param>
+        /// <param name="index">Index of the item to be removed</param>
+        public bool RemoveItem(string key, DatItem value, int index)
+        {
+            // Explicit lock for some weird corner cases
+            lock (key)
+            {
+                // If the key doesn't exist, return
+#if NET40_OR_GREATER || NETCOREAPP
+                if (!_items.TryGetValue(key, out var list) || list == null)
+                    return false;
+#else
+                if (!_items.ContainsKey(key))
+                    return false;
+
+                var list = _items[key];
+                if (list == null)
+                    return false;
+#endif
+
+                // If the value doesn't exist in the key, assume it has been removed
+                if (index < 0)
+                    return false;
+
+                // Remove the statistics first
+                DatStatistics.RemoveItemStatistics(value);
+
+                list.RemoveAt(index);
                 return true;
             }
         }
@@ -676,13 +712,13 @@ namespace SabreTools.DatFiles
 #endif
             {
                 string key = oldkeys[k];
-                if (GetItemsForBucket(key).Count == 0)
+                if (GetItemsForBucket(key, filter: true).Count == 0)
                     RemoveBucket(key);
 
                 // Now add each of the roms to their respective keys
-                for (int i = 0; i < GetItemsForBucket(key).Count; i++)
+                for (int i = 0; i < GetItemsForBucket(key, filter: true).Count; i++)
                 {
-                    DatItem item = GetItemsForBucket(key)[i];
+                    DatItem item = GetItemsForBucket(key, filter: true)[i];
                     if (item == null)
                         continue;
 
@@ -693,16 +729,16 @@ namespace SabreTools.DatFiles
                     if (newkey != key)
                     {
                         AddItem(newkey, item);
-                        bool removed = RemoveItem(key, item);
+                        bool removed = RemoveItem(key, item, i);
                         if (!removed)
-                            break;
+                            continue;
 
                         i--; // This make sure that the pointer stays on the correct since one was removed
                     }
                 }
 
                 // If the key is now empty, remove it
-                if (GetItemsForBucket(key).Count == 0)
+                if (GetItemsForBucket(key, filter: true).Count == 0)
                     RemoveBucket(key);
 #if NET40_OR_GREATER || NETCOREAPP
             });
