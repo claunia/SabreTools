@@ -302,10 +302,10 @@ namespace SabreTools.DatFiles
                     return false;
 #endif
 
-                // If the value doesn't exist in the key, return
+                // If the value doesn't exist in the key, assume it has been removed
                 int removeIndex = list.FindIndex(i => i.Equals(value));
                 if (removeIndex < 0)
-                    return false;
+                    return true;
 
                 // Remove the statistics first
                 DatStatistics.RemoveItemStatistics(value);
