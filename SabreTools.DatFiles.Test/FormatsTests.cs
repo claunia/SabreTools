@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using SabreTools.Core.Filter;
 using SabreTools.DatFiles.Formats;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;

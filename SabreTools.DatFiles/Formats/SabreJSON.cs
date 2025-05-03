@@ -6,6 +6,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using SabreTools.Core.Filter;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -32,7 +33,12 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <inheritdoc/>
-        public override void ParseFile(string filename, int indexId, bool keep, bool statsOnly = false, bool throwOnError = false)
+        public override void ParseFile(string filename,
+            int indexId,
+            bool keep,
+            bool statsOnly = false,
+            FilterRunner? filterRunner = null,
+            bool throwOnError = false)
         {
             // Prepare all internal variables
             var fs = System.IO.File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
@@ -68,7 +74,7 @@ namespace SabreTools.DatFiles.Formats
 
                         // Machine array
                         case "machines":
-                            ReadMachines(jtr, statsOnly, source, sourceIndex: 0);
+                            ReadMachines(jtr, statsOnly, source, sourceIndex: 0, filterRunner);
                             jtr.Read();
                             break;
 
@@ -110,7 +116,8 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <param name="source">Source representing the DAT</param>
         /// <param name="sourceIndex">Index of the Source representing the DAT</param>
-        private void ReadMachines(JsonTextReader jtr, bool statsOnly, Source source, long sourceIndex)
+        /// <param name="filterRunner">Optional FilterRunner to filter items on parse</param>
+        private void ReadMachines(JsonTextReader jtr, bool statsOnly, Source source, long sourceIndex, FilterRunner? filterRunner)
         {
             // If the reader is invalid, skip
             if (jtr == null)
@@ -124,7 +131,7 @@ namespace SabreTools.DatFiles.Formats
             // Loop through each machine object and process
             foreach (JObject machineObj in machineArray)
             {
-                ReadMachine(machineObj, statsOnly, source, sourceIndex);
+                ReadMachine(machineObj, statsOnly, source, sourceIndex, filterRunner);
             }
         }
 
@@ -135,7 +142,8 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <param name="source">Source representing the DAT</param>
         /// <param name="sourceIndex">Index of the Source representing the DAT</param>
-        private void ReadMachine(JObject machineObj, bool statsOnly, Source source, long sourceIndex)
+        /// <param name="filterRunner">Optional FilterRunner to filter items on parse</param>
+        private void ReadMachine(JObject machineObj, bool statsOnly, Source source, long sourceIndex, FilterRunner? filterRunner)
         {
             // If object is invalid, skip it
             if (machineObj == null)
@@ -148,6 +156,10 @@ namespace SabreTools.DatFiles.Formats
             if (machineObj.ContainsKey("machine"))
                 machine = machineObj["machine"]?.ToObject<Machine>();
 
+            // If the machine doesn't pass the filter
+            if (machine != null && filterRunner != null && !machine.PassesFilter(filterRunner))
+                return;
+
             // Add the machine to the dictionary
             // long machineIndex = -1;
             // if (machine != null)
@@ -155,7 +167,15 @@ namespace SabreTools.DatFiles.Formats
 
             // Read items, if possible
             if (machineObj.ContainsKey("items"))
-                ReadItems(machineObj["items"] as JArray, statsOnly, source, sourceIndex, machine, machineIndex: 0);
+            {
+                ReadItems(machineObj["items"] as JArray,
+                    statsOnly,
+                    source,
+                    sourceIndex,
+                    machine,
+                    machineIndex: 0,
+                    filterRunner);
+            }
         }
 
         /// <summary>
@@ -167,6 +187,7 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="sourceIndex">Index of the Source representing the DAT</param>
         /// <param name="machine">Machine information to add to the parsed items</param>
         /// <param name="machineIndex">Index of the Machine to add to the parsed items</param>
+        /// <param name="filterRunner">Optional FilterRunner to filter items on parse</param>
         private void ReadItems(
             JArray? itemsArr,
             bool statsOnly,
@@ -177,7 +198,8 @@ namespace SabreTools.DatFiles.Formats
 
             // Miscellaneous
             Machine? machine,
-            long machineIndex)
+            long machineIndex,
+            FilterRunner? filterRunner)
         {
             // If the array is invalid, skip
             if (itemsArr == null)
@@ -186,7 +208,7 @@ namespace SabreTools.DatFiles.Formats
             // Loop through each datitem object and process
             foreach (JObject itemObj in itemsArr)
             {
-                ReadItem(itemObj, statsOnly, source, sourceIndex, machine, machineIndex);
+                ReadItem(itemObj, statsOnly, source, sourceIndex, machine, machineIndex, filterRunner);
             }
         }
 
@@ -199,6 +221,7 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="sourceIndex">Index of the Source representing the DAT</param>
         /// <param name="machine">Machine information to add to the parsed items</param>
         /// <param name="machineIndex">Index of the Machine to add to the parsed items</param>
+        /// <param name="filterRunner">Optional FilterRunner to filter items on parse</param>
         private void ReadItem(
             JObject itemObj,
             bool statsOnly,
@@ -209,7 +232,8 @@ namespace SabreTools.DatFiles.Formats
 
             // Miscellaneous
             Machine? machine,
-            long machineIndex)
+            long machineIndex,
+            FilterRunner? filterRunner)
         {
             // If we have an empty item, skip it
             if (itemObj == null)
@@ -359,6 +383,10 @@ namespace SabreTools.DatFiles.Formats
             // If we got a valid datitem, copy machine info and add
             if (datItem != null)
             {
+                // If the item doesn't pass the filter
+                if (filterRunner != null && !datItem.PassesFilter(filterRunner))
+                    return;
+
                 datItem.CopyMachineInformation(machine);
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                 AddItem(datItem, statsOnly);

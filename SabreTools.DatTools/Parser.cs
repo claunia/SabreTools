@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
 #endif
+using SabreTools.Core.Filter;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatFiles.Formats;
@@ -105,6 +106,7 @@ namespace SabreTools.DatTools
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
         /// <param name="keepext">True if original extension should be kept, false otherwise (default)</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        /// <param name="filterRunner">Optional FilterRunner to filter items on parse</param>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         public static void ParseInto(
             DatFile datFile,
@@ -113,6 +115,7 @@ namespace SabreTools.DatTools
             bool keep = false,
             bool keepext = false,
             bool statsOnly = false,
+            FilterRunner? filterRunner = null,
             bool throwOnError = false)
         {
             // Check the file extension first as a safeguard
@@ -140,7 +143,12 @@ namespace SabreTools.DatTools
             try
             {
                 DatFile parsingDatFile = CreateDatFile(datFormat, datFile);
-                parsingDatFile.ParseFile(filename, indexId, keep, statsOnly: statsOnly, throwOnError: throwOnError);
+                parsingDatFile.ParseFile(filename,
+                    indexId,
+                    keep,
+                    statsOnly: statsOnly,
+                    filterRunner: filterRunner,
+                    throwOnError: throwOnError);
             }
             catch (Exception ex) when (!throwOnError)
             {
@@ -155,12 +163,13 @@ namespace SabreTools.DatTools
         /// </summary>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        /// <param name="filterRunner">Optional FilterRunner to filter items on parse</param>
         /// <remarks>
         /// Code must remove the existing format in order to ensure the format is derived
         /// from the input file instead. This should be addressed later by either always
         /// deriving the format, or by setting a flag for this to be done automatically.
         // </remarks>
-        public static DatFile ParseStatistics(string? filename, bool throwOnError = false)
+        public static DatFile ParseStatistics(string? filename, FilterRunner? filterRunner = null, bool throwOnError = false)
         {
             // Null filenames are invalid
             if (filename == null)
@@ -172,7 +181,7 @@ namespace SabreTools.DatTools
 
             DatFile datFile = CreateDatFile();
             datFile.Header.RemoveField(DatHeader.DatFormatKey);
-            ParseInto(datFile, filename, statsOnly: true, throwOnError: throwOnError);
+            ParseInto(datFile, filename, statsOnly: true, filterRunner: filterRunner, throwOnError: throwOnError);
             return datFile;
         }
 
@@ -181,11 +190,12 @@ namespace SabreTools.DatTools
         /// </summary>
         /// <param name="datFile">Current DatFile object to use for updating</param>
         /// <param name="inputs">Paths to DATs to parse</param>
+        /// <param name="filterRunner">Optional FilterRunner to filter items on parse</param>
         /// <returns>List of DatHeader objects representing headers</returns>
-        public static List<DatHeader> PopulateUserData(DatFile datFile, List<string> inputs)
+        public static List<DatHeader> PopulateUserData(DatFile datFile, List<string> inputs, FilterRunner? filterRunner = null)
         {
             List<ParentablePath> paths = inputs.ConvertAll(i => new ParentablePath(i));
-            return PopulateUserData(datFile, paths);
+            return PopulateUserData(datFile, paths, filterRunner);
         }
 
         /// <summary>
@@ -193,8 +203,9 @@ namespace SabreTools.DatTools
         /// </summary>
         /// <param name="datFile">Current DatFile object to use for updating</param>
         /// <param name="inputs">Paths to DATs to parse</param>
+        /// <param name="filterRunner">Optional FilterRunner to filter items on parse</param>
         /// <returns>List of DatHeader objects representing headers</returns>
-        public static List<DatHeader> PopulateUserData(DatFile datFile, List<ParentablePath> inputs)
+        public static List<DatHeader> PopulateUserData(DatFile datFile, List<ParentablePath> inputs, FilterRunner? filterRunner = null)
         {
             DatFile[] datFiles = new DatFile[inputs.Count];
             InternalStopwatch watch = new("Processing individual DATs");
@@ -211,7 +222,7 @@ namespace SabreTools.DatTools
                 var input = inputs[i];
                 _staticLogger.User($"Adding DAT: {input.CurrentPath}");
                 datFiles[i] = CreateDatFile(datFile.Header.CloneFormat(), datFile.Modifiers);
-                ParseInto(datFiles[i], input.CurrentPath, i, keep: true);
+                ParseInto(datFiles[i], input.CurrentPath, indexId: i, keep: true, filterRunner: filterRunner);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else

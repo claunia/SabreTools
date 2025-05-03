@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using SabreTools.Core.Filter;
 using SabreTools.DatItems;
 
 namespace SabreTools.DatFiles.Formats
@@ -26,7 +27,12 @@ namespace SabreTools.DatFiles.Formats
 
         /// <inheritdoc/>
         /// <remarks>There is no consistent way to parse a missfile</remarks>
-        public override void ParseFile(string filename, int indexId, bool keep, bool statsOnly = false, bool throwOnError = false)
+        public override void ParseFile(string filename,
+            int indexId,
+            bool keep,
+            bool statsOnly = false,
+            FilterRunner? filterRunner = null,
+            bool throwOnError = false)
         {
             throw new NotImplementedException();
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using SabreTools.Core.Filter;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -220,7 +221,12 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <inheritdoc/>
-        public override void ParseFile(string filename, int indexId, bool keep, bool statsOnly = false, bool throwOnError = false)
+        public override void ParseFile(string filename,
+            int indexId,
+            bool keep,
+            bool statsOnly = false,
+            FilterRunner? filterRunner = null,
+            bool throwOnError = false)
         {
             try
             {
@@ -238,7 +244,7 @@ namespace SabreTools.DatFiles.Formats
                 }
 
                 // Convert to the internal format
-                ConvertFromMetadata(metadata, filename, indexId, keep, statsOnly);
+                ConvertFromMetadata(metadata, filename, indexId, keep, statsOnly, filterRunner);
             }
             catch (Exception ex) when (!throwOnError)
             {

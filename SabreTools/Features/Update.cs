@@ -300,7 +300,11 @@ namespace SabreTools.Features
                 {
                     // Parse the path to a new DatFile
                     DatFile repDat = Parser.CreateDatFile(Header!, Modifiers);
-                    Parser.ParseInto(repDat, inputPath.CurrentPath, indexId: 1, keep: true);
+                    Parser.ParseInto(repDat,
+                        inputPath.CurrentPath,
+                        indexId: 1,
+                        keep: true,
+                        filterRunner: FilterRunner);
 
                     // Perform additional processing steps
                     AdditionalProcessing(repDat);
@@ -336,7 +340,11 @@ namespace SabreTools.Features
                 {
                     // Parse the path to a new DatFile
                     DatFile repDat = Parser.CreateDatFile(Header!, Modifiers);
-                    Parser.ParseInto(repDat, inputPath.CurrentPath, indexId: 1, keep: true);
+                    Parser.ParseInto(repDat,
+                        inputPath.CurrentPath,
+                        indexId: 1,
+                        keep: true,
+                        filterRunner: FilterRunner);
 
                     // Perform additional processing steps
                     AdditionalProcessing(repDat);
@@ -474,7 +482,11 @@ namespace SabreTools.Features
 
                 // Clear format and parse
                 datFile.Header.RemoveField(DatHeader.DatFormatKey);
-                Parser.ParseInto(datFile, inputPath.CurrentPath, keep: true, keepext: isSeparatedFile);
+                Parser.ParseInto(datFile,
+                    inputPath.CurrentPath,
+                    keep: true,
+                    keepext: isSeparatedFile,
+                    filterRunner: FilterRunner);
                 datFile.Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, currentFormat);
 
                 // Perform additional processing steps
@@ -500,16 +512,16 @@ namespace SabreTools.Features
         /// <param name="basePaths">Set of base paths</param>
         /// <param name="userInputDat">DatFile to parse into</param>
         /// <returns>List of DatHeader values representing the parsed files</returns>
-        private static List<DatHeader> GetDatHeaders(UpdateMode updateMode, List<ParentablePath> inputPaths, List<ParentablePath> basePaths, DatFile userInputDat)
+        private List<DatHeader> GetDatHeaders(UpdateMode updateMode, List<ParentablePath> inputPaths, List<ParentablePath> basePaths, DatFile userInputDat)
         {
 #if NET20 || NET35
             if ((updateMode & UpdateMode.DiffAgainst) != 0 || (updateMode & UpdateMode.BaseReplace) != 0)
 #else
             if (updateMode.HasFlag(UpdateMode.DiffAgainst) || updateMode.HasFlag(UpdateMode.BaseReplace))
 #endif
-                return Parser.PopulateUserData(userInputDat, basePaths);
+                return Parser.PopulateUserData(userInputDat, basePaths, FilterRunner!);
             else
-                return Parser.PopulateUserData(userInputDat, inputPaths);
+                return Parser.PopulateUserData(userInputDat, inputPaths, FilterRunner!);
         }
 
         /// <summary>

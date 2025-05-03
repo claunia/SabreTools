@@ -6,6 +6,7 @@ using System.Net;
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
 #endif
+using SabreTools.Core.Filter;
 using SabreTools.DatFiles;
 using SabreTools.IO;
 using SabreTools.IO.Extensions;
@@ -75,8 +76,8 @@ namespace SabreTools.DatTools
 
                 InternalStopwatch watch = new($"Collecting statistics for '{file.CurrentPath}'");
 
-                List<string> machines = [];
-                DatFile datdata = Parser.ParseStatistics(file.CurrentPath, throwOnError: throwOnError);
+                FilterRunner filterRunner = new FilterRunner(new string[0]);
+                DatFile datdata = Parser.ParseStatistics(file.CurrentPath, filterRunner, throwOnError);
 
                 // Add single DAT stats (if asked)
                 if (single)

@@ -1,4 +1,5 @@
 ﻿using System;
+using SabreTools.Core.Filter;
 using SabreTools.Models.Metadata;
 using SabreTools.Serialization.Interfaces;
 
@@ -20,7 +21,12 @@ namespace SabreTools.DatFiles.Formats
         protected SerializableDatFile(DatFile? datFile) : base(datFile) { }
 
         /// <inheritdoc/>
-        public override void ParseFile(string filename, int indexId, bool keep, bool statsOnly = false, bool throwOnError = false)
+        public override void ParseFile(string filename,
+            int indexId,
+            bool keep,
+            bool statsOnly = false,
+            FilterRunner? filterRunner = null,
+            bool throwOnError = false)
         {
             try
             {
@@ -29,7 +35,7 @@ namespace SabreTools.DatFiles.Formats
                 var internalFormat = Activator.CreateInstance<TModelSerializer>().Serialize(specificFormat);
 
                 // Convert to the internal format
-                ConvertFromMetadata(internalFormat, filename, indexId, keep, statsOnly);
+                ConvertFromMetadata(internalFormat, filename, indexId, keep, statsOnly, filterRunner);
             }
             catch (Exception ex) when (!throwOnError)
             {

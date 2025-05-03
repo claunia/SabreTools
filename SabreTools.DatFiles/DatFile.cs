@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
+using SabreTools.Core.Filter;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -427,10 +428,16 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
-        /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
+        /// <param name="keep">True if full pathnames are to be kept, false otherwise</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        /// <param name="filterRunner">Optional FilterRunner to filter items on parse</param>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
-        public abstract void ParseFile(string filename, int indexId, bool keep, bool statsOnly = false, bool throwOnError = false);
+        public abstract void ParseFile(string filename,
+            int indexId,
+            bool keep,
+            bool statsOnly = false,
+            FilterRunner? filterRunner = null,
+            bool throwOnError = false);
 
         #endregion
 

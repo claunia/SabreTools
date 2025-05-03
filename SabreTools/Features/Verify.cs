@@ -63,7 +63,11 @@ namespace SabreTools.Features
                 {
                     // Parse in from the file
                     DatFile datdata = Parser.CreateDatFile();
-                    Parser.ParseInto(datdata, datfile.CurrentPath, int.MaxValue, keep: true);
+                    Parser.ParseInto(datdata,
+                        datfile.CurrentPath,
+                        indexId: int.MaxValue,
+                        keep: true,
+                        filterRunner: FilterRunner!);
 
                     // Perform additional processing steps
                     Extras!.ApplyExtras(datdata);
@@ -114,7 +118,11 @@ namespace SabreTools.Features
                 DatFile datdata = Parser.CreateDatFile();
                 foreach (ParentablePath datfile in datfilePaths)
                 {
-                    Parser.ParseInto(datdata, datfile.CurrentPath, int.MaxValue, keep: true);
+                    Parser.ParseInto(datdata,
+                        datfile.CurrentPath,
+                        int.MaxValue,
+                        keep: true,
+                        filterRunner: FilterRunner);
                 }
 
                 // Perform additional processing steps

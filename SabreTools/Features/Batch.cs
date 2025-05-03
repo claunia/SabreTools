@@ -526,7 +526,9 @@ Reset the internal state:           reset();";
                 // Assume there could be multiple
                 foreach (ParentablePath datFilePath in datFilePaths)
                 {
-                    Parser.ParseInto(batchState.DatFile, datFilePath.CurrentPath, batchState.Index++);
+                    Parser.ParseInto(batchState.DatFile,
+                        datFilePath.CurrentPath,
+                        indexId: batchState.Index++);
                 }
             }
         }

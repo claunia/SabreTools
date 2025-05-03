@@ -94,7 +94,11 @@ namespace SabreTools.Features
                 foreach (ParentablePath datfile in datfilePaths)
                 {
                     DatFile datdata = Parser.CreateDatFile();
-                    Parser.ParseInto(datdata, datfile.CurrentPath, int.MaxValue, keep: true);
+                    Parser.ParseInto(datdata,
+                        datfile.CurrentPath,
+                        indexId: int.MaxValue,
+                        keep: true,
+                        filterRunner: FilterRunner);
 
                     // Skip if nothing was parsed
                     if (datdata.DatStatistics.TotalCount == 0) // datdata.ItemsDB.SortedKeys.Length == 0
@@ -136,7 +140,11 @@ namespace SabreTools.Features
                 DatFile datdata = Parser.CreateDatFile();
                 foreach (ParentablePath datfile in datfilePaths)
                 {
-                    Parser.ParseInto(datdata, datfile.CurrentPath, int.MaxValue, keep: true);
+                    Parser.ParseInto(datdata,
+                        datfile.CurrentPath,
+                        indexId: int.MaxValue,
+                        keep: true,
+                        filterRunner: FilterRunner);
                 }
 
                 // Set depot information

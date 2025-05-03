@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using SabreTools.Core.Filter;
 using SabreTools.DatItems;
 
 namespace SabreTools.DatFiles.Formats
@@ -29,7 +30,12 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <inheritdoc/>
-        public override void ParseFile(string filename, int indexId, bool keep, bool statsOnly = false, bool throwOnError = false)
+        public override void ParseFile(string filename,
+            int indexId,
+            bool keep,
+            bool statsOnly = false,
+            FilterRunner? filterRunner = null,
+            bool throwOnError = false)
         {
             // Prepare all internal variables
             XmlReader? xtr = XmlReader.Create(filename, new XmlReaderSettings
@@ -73,7 +79,7 @@ namespace SabreTools.DatFiles.Formats
                             break;
 
                         case "directory":
-                            ReadDirectory(xtr.ReadSubtree(), statsOnly, source, sourceIndex);
+                            ReadDirectory(xtr.ReadSubtree(), statsOnly, source, sourceIndex, filterRunner);
 
                             // Skip the directory node now that we've processed it
                             xtr.Read();
@@ -104,7 +110,12 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <param name="source">Source representing the DAT</param>
         /// <param name="sourceIndex">Index of the Source representing the DAT</param>
-        private void ReadDirectory(XmlReader xtr, bool statsOnly, Source source, long sourceIndex)
+        /// <param name="filterRunner">Optional FilterRunner to filter items on parse</param>
+        private void ReadDirectory(XmlReader xtr,
+            bool statsOnly,
+            Source source,
+            long sourceIndex,
+            FilterRunner? filterRunner)
         {
             // If the reader is invalid, skip
             if (xtr == null)
@@ -130,6 +141,11 @@ namespace SabreTools.DatFiles.Formats
                     case "machine":
                         XmlSerializer xs = new(typeof(Machine));
                         machine = xs?.Deserialize(xtr.ReadSubtree()) as Machine;
+
+                        // If the machine doesn't pass the filter
+                        if (machine != null && filterRunner != null && !machine.PassesFilter(filterRunner))
+                            machine = null;
+
                         if (machine != null)
                             machineIndex = AddMachineDB(machine);
 
@@ -137,7 +153,13 @@ namespace SabreTools.DatFiles.Formats
                         break;
 
                     case "files":
-                        ReadFiles(xtr.ReadSubtree(), machine, machineIndex, statsOnly, source, sourceIndex);
+                        ReadFiles(xtr.ReadSubtree(),
+                            machine,
+                            machineIndex,
+                            statsOnly,
+                            source,
+                            sourceIndex,
+                            filterRunner);
 
                         // Skip the directory node now that we've processed it
                         xtr.Read();
@@ -158,7 +180,14 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <param name="source">Source representing the DAT</param>
         /// <param name="sourceIndex">Index of the Source representing the DAT</param>
-        private void ReadFiles(XmlReader xtr, Machine? machine, long machineIndex, bool statsOnly, Source source, long sourceIndex)
+        /// <param name="filterRunner">Optional FilterRunner to filter items on parse</param>
+        private void ReadFiles(XmlReader xtr,
+            Machine? machine,
+            long machineIndex,
+            bool statsOnly,
+            Source source,
+            long sourceIndex,
+            FilterRunner? filterRunner)
         {
             // If the reader is invalid, skip
             if (xtr == null)
@@ -181,6 +210,13 @@ namespace SabreTools.DatFiles.Formats
                         XmlSerializer xs = new(typeof(DatItem));
                         if (xs.Deserialize(xtr.ReadSubtree()) is DatItem item)
                         {
+                            // If the item doesn't pass the filter
+                            if (filterRunner != null && !item.PassesFilter(filterRunner))
+                            {
+                                xtr.Skip();
+                                break;
+                            }
+
                             item.CopyMachineInformation(machine);
                             item.SetFieldValue<Source?>(DatItem.SourceKey, source);
                             AddItem(item, statsOnly);
