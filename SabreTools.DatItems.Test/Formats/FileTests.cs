@@ -29,6 +29,8 @@ namespace SabreTools.DatItems.Test.Formats
             file.SetFieldValue(DatItem.MachineKey, machine);
             file.SetFieldValue(DatItem.RemoveKey, (bool?)false);
             file.SetFieldValue(DatItem.SourceKey, source);
+            file.SetFieldValue<Machine>(DatItem.MachineKey, machine);
+            file.SetFieldValue<Source>(DatItem.SourceKey, source);
 
             Rom actual = file.ConvertToRom();
 

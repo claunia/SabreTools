@@ -106,19 +106,19 @@ namespace SabreTools.DatItems
         /// </summary>
         /// <returns>Machine if available, null otherwise</returns>
         /// <remarks>Relies on <see cref="MachineKey"/></remarks> 
-        public virtual Machine? GetMachine() => null;
+        public Machine? GetMachine() => _internal.Read<Machine>(MachineKey);
 
         /// <summary>
         /// Gets the name to use for a DatItem
         /// </summary>
         /// <returns>Name if available, null otherwise</returns>
-        public virtual string? GetName() => null;
+        public virtual string? GetName() => _internal.GetName();
 
         /// <summary>
         /// Sets the name to use for a DatItem
         /// </summary>
         /// <param name="name">Name to set for the item</param>
-        public virtual void SetName(string? name) { }
+        public virtual void SetName(string? name) => _internal.SetName(name);
 
         #endregion
 
@@ -365,19 +365,6 @@ namespace SabreTools.DatItems
             SetFieldValue<ItemType>(Models.Metadata.DatItem.TypeKey, ItemType);
             SetFieldValue<Machine>(MachineKey, new Machine());
         }
-
-        #endregion
-
-        #region Accessors
-
-        /// <inheritdoc/>
-        public override Machine? GetMachine() => _internal.Read<Machine>(MachineKey);
-
-        /// <inheritdoc/>
-        public override string? GetName() => _internal.GetName();
-
-        /// <inheritdoc/>
-        public override void SetName(string? name) => _internal.SetName(name);
 
         #endregion
 
