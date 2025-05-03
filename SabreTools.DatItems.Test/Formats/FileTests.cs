@@ -96,58 +96,6 @@ namespace SabreTools.DatItems.Test.Formats
 
         #endregion
 
-        #region GetDuplicateSuffix
-
-        [Fact]
-        public void GetDuplicateSuffix_NoHash_Generic()
-        {
-            File self = new File();
-            string actual = self.GetDuplicateSuffix();
-            Assert.Equal("_1", actual);
-        }
-
-        [Fact]
-        public void GetDuplicateSuffix_CRC()
-        {
-            string hash = "deadbeef";
-            File self = new File { CRC = hash };
-
-            string actual = self.GetDuplicateSuffix();
-            Assert.Equal($"_{hash}", actual);
-        }
-
-        [Fact]
-        public void GetDuplicateSuffix_MD5()
-        {
-            string hash = "000000000000000000000000deadbeef";
-            File self = new File { MD5 = hash };
-
-            string actual = self.GetDuplicateSuffix();
-            Assert.Equal($"_{hash}", actual);
-        }
-
-        [Fact]
-        public void GetDuplicateSuffix_SHA1()
-        {
-            string hash = "00000000000000000000000000000000deadbeef";
-            File self = new File { SHA1 = hash };
-
-            string actual = self.GetDuplicateSuffix();
-            Assert.Equal($"_{hash}", actual);
-        }
-
-        [Fact]
-        public void GetDuplicateSuffix_SHA256()
-        {
-            string hash = "00000000000000000000000000000000000000000000000000000000deadbeef";
-            File self = new File { SHA256 = hash };
-
-            string actual = self.GetDuplicateSuffix();
-            Assert.Equal($"_{hash}", actual);
-        }
-
-        #endregion
-
         #region HasHashes
 
         [Fact]

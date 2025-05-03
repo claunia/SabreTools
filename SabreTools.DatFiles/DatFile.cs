@@ -722,6 +722,22 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Get unique duplicate suffix on name collision
+        /// </summary>
+        /// <returns>String representing the suffix</returns>
+        protected static internal string GetDuplicateSuffix(DatItem datItem)
+        {
+            return datItem switch
+            {
+                Disk diskItem => GetDuplicateSuffix(diskItem),
+                DatItems.Formats.File fileItem => GetDuplicateSuffix(fileItem),
+                Media mediaItem => GetDuplicateSuffix(mediaItem),
+                Rom romItem => GetDuplicateSuffix(romItem),
+                _ => "_1",
+            };
+        }
+
+        /// <summary>
         /// Resolve name duplicates in an arbitrary set of DatItems based on the supplied information
         /// </summary>
         /// <param name="datItems">List of DatItem objects representing the items to be merged</param>
@@ -781,7 +797,7 @@ namespace SabreTools.DatFiles
                     _logger.Verbose($"Name duplicate found for '{datItemName}'");
 
                     // Get the duplicate suffix
-                    datItemName += datItem.GetDuplicateSuffix();
+                    datItemName += GetDuplicateSuffix(datItem);
                     lastrenamed ??= datItemName;
 
                     // If we have a conflict with the last renamed item, do the right thing
@@ -882,7 +898,7 @@ namespace SabreTools.DatFiles
                     _logger.Verbose($"Name duplicate found for '{datItemName}'");
 
                     // Get the duplicate suffix
-                    datItemName += datItem.Value.GetDuplicateSuffix();
+                    datItemName += GetDuplicateSuffix(datItem.Value);
                     lastrenamed ??= datItemName;
 
                     // If we have a conflict with the last renamed item, do the right thing
@@ -987,6 +1003,108 @@ namespace SabreTools.DatFiles
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Get unique duplicate suffix on name collision
+        /// </summary>
+        private static string GetDuplicateSuffix(Disk datItem)
+        {
+            string? md5 = datItem.GetStringFieldValue(Models.Metadata.Disk.MD5Key);
+            if (!string.IsNullOrEmpty(md5))
+                return $"_{md5}";
+
+            string? sha1 = datItem.GetStringFieldValue(Models.Metadata.Disk.SHA1Key);
+            if (!string.IsNullOrEmpty(sha1))
+                return $"_{sha1}";
+
+            return "_1";
+        }
+
+        /// <summary>
+        /// Get unique duplicate suffix on name collision
+        /// </summary>
+        /// <returns>String representing the suffix</returns>
+        private static string GetDuplicateSuffix(DatItems.Formats.File datItem)
+        {
+            if (!string.IsNullOrEmpty(datItem.CRC))
+                return $"_{datItem.CRC}";
+            else if (!string.IsNullOrEmpty(datItem.MD5))
+                return $"_{datItem.MD5}";
+            else if (!string.IsNullOrEmpty(datItem.SHA1))
+                return $"_{datItem.SHA1}";
+            else if (!string.IsNullOrEmpty(datItem.SHA256))
+                return $"_{datItem.SHA256}";
+            else
+                return "_1";
+        }
+
+        /// <summary>
+        /// Get unique duplicate suffix on name collision
+        /// </summary>
+        private static string GetDuplicateSuffix(Media datItem)
+        {
+            string? md5 = datItem.GetStringFieldValue(Models.Metadata.Media.MD5Key);
+            if (!string.IsNullOrEmpty(md5))
+                return $"_{md5}";
+
+            string? sha1 = datItem.GetStringFieldValue(Models.Metadata.Media.SHA1Key);
+            if (!string.IsNullOrEmpty(sha1))
+                return $"_{sha1}";
+
+            string? sha256 = datItem.GetStringFieldValue(Models.Metadata.Media.SHA256Key);
+            if (!string.IsNullOrEmpty(sha256))
+                return $"_{sha256}";
+
+            string? spamSum = datItem.GetStringFieldValue(Models.Metadata.Media.SpamSumKey);
+            if (!string.IsNullOrEmpty(spamSum))
+                return $"_{spamSum}";
+
+            return "_1";
+        }
+
+        /// <summary>
+        /// Get unique duplicate suffix on name collision
+        /// </summary>
+        private static string GetDuplicateSuffix(Rom datItem)
+        {
+            string? crc = datItem.GetStringFieldValue(Models.Metadata.Rom.CRCKey);
+            if (!string.IsNullOrEmpty(crc))
+                return $"_{crc}";
+
+            string? md2 = datItem.GetStringFieldValue(Models.Metadata.Rom.MD2Key);
+            if (!string.IsNullOrEmpty(md2))
+                return $"_{md2}";
+
+            string? md4 = datItem.GetStringFieldValue(Models.Metadata.Rom.MD4Key);
+            if (!string.IsNullOrEmpty(md4))
+                return $"_{md4}";
+
+            string? md5 = datItem.GetStringFieldValue(Models.Metadata.Rom.MD5Key);
+            if (!string.IsNullOrEmpty(md5))
+                return $"_{md5}";
+
+            string? sha1 = datItem.GetStringFieldValue(Models.Metadata.Rom.SHA1Key);
+            if (!string.IsNullOrEmpty(sha1))
+                return $"_{sha1}";
+
+            string? sha256 = datItem.GetStringFieldValue(Models.Metadata.Rom.SHA256Key);
+            if (!string.IsNullOrEmpty(sha256))
+                return $"_{sha256}";
+
+            string? sha384 = datItem.GetStringFieldValue(Models.Metadata.Rom.SHA384Key);
+            if (!string.IsNullOrEmpty(sha384))
+                return $"_{sha384}";
+
+            string? sha512 = datItem.GetStringFieldValue(Models.Metadata.Rom.SHA512Key);
+            if (!string.IsNullOrEmpty(sha512))
+                return $"_{sha512}";
+
+            string? spamSum = datItem.GetStringFieldValue(Models.Metadata.Rom.SpamSumKey);
+            if (!string.IsNullOrEmpty(spamSum))
+                return $"_{spamSum}";
+
+            return "_1";
         }
 
         /// <summary>

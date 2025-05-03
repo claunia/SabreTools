@@ -1616,6 +1616,255 @@ namespace SabreTools.DatFiles.Test
 
         #endregion
 
+        #region GetDuplicateSuffix
+
+        [Fact]
+        public void GetDuplicateSuffix_Disk_NoHash_Generic()
+        {
+            DatItem datItem = new Disk();
+            string actual = DatFile.GetDuplicateSuffix(datItem);
+            Assert.Equal("_1", actual);
+        }
+
+        [Fact]
+        public void GetDuplicateSuffix_Disk_MD5()
+        {
+            string hash = "XXXXXX";
+            DatItem datItem = new Disk();
+            datItem.SetFieldValue(Models.Metadata.Disk.MD5Key, hash);
+
+            string actual = DatFile.GetDuplicateSuffix(datItem);
+            Assert.Equal($"_{hash}", actual);
+        }
+
+        [Fact]
+        public void GetDuplicateSuffix_Disk_SHA1()
+        {
+            string hash = "XXXXXX";
+            DatItem datItem = new Disk();
+            datItem.SetFieldValue(Models.Metadata.Disk.SHA1Key, hash);
+
+            string actual = DatFile.GetDuplicateSuffix(datItem);
+            Assert.Equal($"_{hash}", actual);
+        }
+
+        [Fact]
+        public void GetDuplicateSuffix_File_NoHash_Generic()
+        {
+            DatItem datItem = new DatItems.Formats.File();
+            string actual = DatFile.GetDuplicateSuffix(datItem);
+            Assert.Equal("_1", actual);
+        }
+
+        [Fact]
+        public void GetDuplicateSuffix_File_CRC()
+        {
+            string hash = "deadbeef";
+            DatItems.Formats.File datItem = new DatItems.Formats.File { CRC = hash };
+
+            string actual = DatFile.GetDuplicateSuffix(datItem);
+            Assert.Equal($"_{hash}", actual);
+        }
+
+        [Fact]
+        public void GetDuplicateSuffix_File_MD5()
+        {
+            string hash = "000000000000000000000000deadbeef";
+            DatItem datItem = new DatItems.Formats.File { MD5 = hash };
+
+            string actual = DatFile.GetDuplicateSuffix(datItem);
+            Assert.Equal($"_{hash}", actual);
+        }
+
+        [Fact]
+        public void GetDuplicateSuffix_File_SHA1()
+        {
+            string hash = "00000000000000000000000000000000deadbeef";
+            DatItem datItem = new DatItems.Formats.File { SHA1 = hash };
+
+            string actual = DatFile.GetDuplicateSuffix(datItem);
+            Assert.Equal($"_{hash}", actual);
+        }
+
+        [Fact]
+        public void GetDuplicateSuffix_File_SHA256()
+        {
+            string hash = "00000000000000000000000000000000000000000000000000000000deadbeef";
+            DatItem datItem = new DatItems.Formats.File { SHA256 = hash };
+
+            string actual = DatFile.GetDuplicateSuffix(datItem);
+            Assert.Equal($"_{hash}", actual);
+        }
+
+        [Fact]
+        public void GetDuplicateSuffix_Media_NoHash_Generic()
+        {
+            DatItem datItem = new Media();
+            string actual = DatFile.GetDuplicateSuffix(datItem);
+            Assert.Equal("_1", actual);
+        }
+
+        [Fact]
+        public void GetDuplicateSuffix_Media_MD5()
+        {
+            string hash = "XXXXXX";
+            DatItem datItem = new Media();
+            datItem.SetFieldValue(Models.Metadata.Media.MD5Key, hash);
+
+            string actual = DatFile.GetDuplicateSuffix(datItem);
+            Assert.Equal($"_{hash}", actual);
+        }
+
+        [Fact]
+        public void GetDuplicateSuffix_Media_SHA1()
+        {
+            string hash = "XXXXXX";
+            DatItem datItem = new Media();
+            datItem.SetFieldValue(Models.Metadata.Media.SHA1Key, hash);
+
+            string actual = DatFile.GetDuplicateSuffix(datItem);
+            Assert.Equal($"_{hash}", actual);
+        }
+
+        [Fact]
+        public void GetDuplicateSuffix_Media_SHA256()
+        {
+            string hash = "XXXXXX";
+            DatItem datItem = new Media();
+            datItem.SetFieldValue(Models.Metadata.Media.SHA256Key, hash);
+
+            string actual = DatFile.GetDuplicateSuffix(datItem);
+            Assert.Equal($"_{hash}", actual);
+        }
+
+        [Fact]
+        public void GetDuplicateSuffix_Media_SpamSum()
+        {
+            string hash = "XXXXXX";
+            DatItem datItem = new Media();
+            datItem.SetFieldValue(Models.Metadata.Media.SpamSumKey, hash);
+
+            string actual = DatFile.GetDuplicateSuffix(datItem);
+            Assert.Equal($"_{hash}", actual);
+        }
+
+        [Fact]
+        public void GetDuplicateSuffix_Rom_NoHash_Generic()
+        {
+            DatItem datItem = new Rom();
+            string actual = DatFile.GetDuplicateSuffix(datItem);
+            Assert.Equal("_1", actual);
+        }
+
+        [Fact]
+        public void GetDuplicateSuffix_Rom_CRC()
+        {
+            string hash = "XXXXXX";
+            DatItem datItem = new Rom();
+            datItem.SetFieldValue(Models.Metadata.Rom.CRCKey, hash);
+
+            string actual = DatFile.GetDuplicateSuffix(datItem);
+            Assert.Equal($"_{hash}", actual);
+        }
+
+        [Fact]
+        public void GetDuplicateSuffix_Rom_MD2()
+        {
+            string hash = "XXXXXX";
+            DatItem datItem = new Rom();
+            datItem.SetFieldValue(Models.Metadata.Rom.MD2Key, hash);
+
+            string actual = DatFile.GetDuplicateSuffix(datItem);
+            Assert.Equal($"_{hash}", actual);
+        }
+        
+        [Fact]
+        public void GetDuplicateSuffix_Rom_MD4()
+        {
+            string hash = "XXXXXX";
+            DatItem datItem = new Rom();
+            datItem.SetFieldValue(Models.Metadata.Rom.MD4Key, hash);
+
+            string actual = DatFile.GetDuplicateSuffix(datItem);
+            Assert.Equal($"_{hash}", actual);
+        }
+
+        [Fact]
+        public void GetDuplicateSuffix_Rom_MD5()
+        {
+            string hash = "XXXXXX";
+            DatItem datItem = new Rom();
+            datItem.SetFieldValue(Models.Metadata.Rom.MD5Key, hash);
+
+            string actual = DatFile.GetDuplicateSuffix(datItem);
+            Assert.Equal($"_{hash}", actual);
+        }
+
+        [Fact]
+        public void GetDuplicateSuffix_Rom_SHA1()
+        {
+            string hash = "XXXXXX";
+            DatItem datItem = new Rom();
+            datItem.SetFieldValue(Models.Metadata.Rom.SHA1Key, hash);
+
+            string actual = DatFile.GetDuplicateSuffix(datItem);
+            Assert.Equal($"_{hash}", actual);
+        }
+
+        [Fact]
+        public void GetDuplicateSuffix_Rom_SHA256()
+        {
+            string hash = "XXXXXX";
+            DatItem datItem = new Rom();
+            datItem.SetFieldValue(Models.Metadata.Rom.SHA256Key, hash);
+
+            string actual = DatFile.GetDuplicateSuffix(datItem);
+            Assert.Equal($"_{hash}", actual);
+        }
+
+        [Fact]
+        public void GetDuplicateSuffix_Rom_SHA384()
+        {
+            string hash = "XXXXXX";
+            DatItem datItem = new Rom();
+            datItem.SetFieldValue(Models.Metadata.Rom.SHA384Key, hash);
+
+            string actual = DatFile.GetDuplicateSuffix(datItem);
+            Assert.Equal($"_{hash}", actual);
+        }
+
+        [Fact]
+        public void GetDuplicateSuffix_Rom_SHA512()
+        {
+            string hash = "XXXXXX";
+            DatItem datItem = new Rom();
+            datItem.SetFieldValue(Models.Metadata.Rom.SHA512Key, hash);
+
+            string actual = DatFile.GetDuplicateSuffix(datItem);
+            Assert.Equal($"_{hash}", actual);
+        }
+
+        [Fact]
+        public void GetDuplicateSuffix_Rom_SpamSum()
+        {
+            string hash = "XXXXXX";
+            DatItem datItem = new Rom();
+            datItem.SetFieldValue(Models.Metadata.Rom.SpamSumKey, hash);
+
+            string actual = DatFile.GetDuplicateSuffix(datItem);
+            Assert.Equal($"_{hash}", actual);
+        }
+
+        [Fact]
+        public void GetDuplicateSuffix_Other_Generic()
+        {
+            DatItem datItem = new Sample();
+            string actual = DatFile.GetDuplicateSuffix(datItem);
+            Assert.Equal("_1", actual);
+        }
+
+        #endregion
+
         #region ResolveNames
 
         [Fact]

@@ -87,62 +87,6 @@ namespace SabreTools.DatItems.Test.Formats
 
         #endregion
 
-        #region GetDuplicateSuffix
-
-        [Fact]
-        public void GetDuplicateSuffix_NoHash_Generic()
-        {
-            Media self = new Media();
-            string actual = self.GetDuplicateSuffix();
-            Assert.Equal("_1", actual);
-        }
-
-        [Fact]
-        public void GetDuplicateSuffix_MD5()
-        {
-            string hash = "XXXXXX";
-            Media self = new Media();
-            self.SetFieldValue(Models.Metadata.Media.MD5Key, hash);
-
-            string actual = self.GetDuplicateSuffix();
-            Assert.Equal($"_{hash}", actual);
-        }
-
-        [Fact]
-        public void GetDuplicateSuffix_SHA1()
-        {
-            string hash = "XXXXXX";
-            Media self = new Media();
-            self.SetFieldValue(Models.Metadata.Media.SHA1Key, hash);
-
-            string actual = self.GetDuplicateSuffix();
-            Assert.Equal($"_{hash}", actual);
-        }
-
-        [Fact]
-        public void GetDuplicateSuffix_SHA256()
-        {
-            string hash = "XXXXXX";
-            Media self = new Media();
-            self.SetFieldValue(Models.Metadata.Media.SHA256Key, hash);
-
-            string actual = self.GetDuplicateSuffix();
-            Assert.Equal($"_{hash}", actual);
-        }
-
-        [Fact]
-        public void GetDuplicateSuffix_SpamSum()
-        {
-            string hash = "XXXXXX";
-            Media self = new Media();
-            self.SetFieldValue(Models.Metadata.Media.SpamSumKey, hash);
-
-            string actual = self.GetDuplicateSuffix();
-            Assert.Equal($"_{hash}", actual);
-        }
-
-        #endregion
-
         #region HasHashes
 
         [Fact]

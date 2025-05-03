@@ -213,24 +213,6 @@ namespace SabreTools.DatItems.Formats
         }
 
         /// <summary>
-        /// Get unique duplicate suffix on name collision
-        /// </summary>
-        /// <returns>String representing the suffix</returns>
-        public override string GetDuplicateSuffix()
-        {
-            if (!_crc.IsNullOrEmpty())
-                return $"_{CRC}";
-            else if (!_md5.IsNullOrEmpty())
-                return $"_{MD5}";
-            else if (!_sha1.IsNullOrEmpty())
-                return $"_{SHA1}";
-            else if (!_sha256.IsNullOrEmpty())
-                return $"_{SHA256}";
-            else
-                return "_1";
-        }
-
-        /// <summary>
         /// Returns if the File contains any hashes
         /// </summary>
         /// <returns>True if any hash exists, false otherwise</returns>

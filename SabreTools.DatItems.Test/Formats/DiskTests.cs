@@ -101,40 +101,6 @@ namespace SabreTools.DatItems.Test.Formats
 
         #endregion
 
-        #region GetDuplicateSuffix
-
-        [Fact]
-        public void GetDuplicateSuffix_Disk_NoHash_Generic()
-        {
-            Disk self = new Disk();
-            string actual = self.GetDuplicateSuffix();
-            Assert.Equal("_1", actual);
-        }
-
-        [Fact]
-        public void GetDuplicateSuffix_Disk_MD5()
-        {
-            string hash = "XXXXXX";
-            Disk self = new Disk();
-            self.SetFieldValue(Models.Metadata.Disk.MD5Key, hash);
-
-            string actual = self.GetDuplicateSuffix();
-            Assert.Equal($"_{hash}", actual);
-        }
-
-        [Fact]
-        public void GetDuplicateSuffix_Disk_SHA1()
-        {
-            string hash = "XXXXXX";
-            Disk self = new Disk();
-            self.SetFieldValue(Models.Metadata.Disk.SHA1Key, hash);
-
-            string actual = self.GetDuplicateSuffix();
-            Assert.Equal($"_{hash}", actual);
-        }
-
-        #endregion
-
         #region HasHashes
 
         [Fact]
