@@ -240,7 +240,8 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void AddItemsFromChildrenImpl(bool subfolder, bool skipDedup)
         {
-            foreach (string bucket in Items.SortedKeys)
+            string[] buckets = [.. Items.SortedKeys];
+            foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
                 List<DatItem> items = GetItemsForBucket(bucket);
@@ -499,7 +500,8 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void AddItemsFromCloneOfParentImpl()
         {
-            foreach (string bucket in Items.SortedKeys)
+            List<string> buckets = [.. ItemsDB.SortedKeys];
+            foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
                 List<DatItem> items = GetItemsForBucket(bucket);
@@ -618,7 +620,9 @@ namespace SabreTools.DatFiles
         private bool AddItemsFromDevicesImpl(bool deviceOnly, bool useSlotOptions)
         {
             bool foundnew = false;
-            foreach (string bucket in Items.SortedKeys)
+
+            List<string> buckets = [.. ItemsDB.SortedKeys];
+            foreach (string bucket in buckets)
             {
                 // If the bucket doesn't have items
                 List<DatItem> datItems = GetItemsForBucket(bucket);
@@ -762,6 +766,7 @@ namespace SabreTools.DatFiles
         private bool AddItemsFromDevicesImplDB(bool deviceOnly, bool useSlotOptions)
         {
             bool foundnew = false;
+
             List<string> buckets = [.. ItemsDB.SortedKeys];
             foreach (string bucket in buckets)
             {
@@ -927,7 +932,8 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void AddItemsFromRomOfParentImpl()
         {
-            foreach (string bucket in Items.SortedKeys)
+            List<string> buckets = [.. ItemsDB.SortedKeys];
+            foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
                 List<DatItem> items = GetItemsForBucket(bucket);
@@ -1010,7 +1016,8 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void RemoveBiosAndDeviceSetsImpl()
         {
-            foreach (string bucket in Items.SortedKeys)
+            List<string> buckets = [.. ItemsDB.SortedKeys];
+            foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
                 List<DatItem> items = GetItemsForBucket(bucket);
@@ -1077,7 +1084,8 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void RemoveItemsFromCloneOfChildImpl()
         {
-            foreach (string bucket in Items.SortedKeys)
+            List<string> buckets = [.. ItemsDB.SortedKeys];
+            foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
                 List<DatItem> items = GetItemsForBucket(bucket);
@@ -1187,8 +1195,8 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void RemoveItemsFromRomOfChildImpl()
         {
-            // Loop through the romof tags
-            foreach (string bucket in Items.SortedKeys)
+            List<string> buckets = [.. ItemsDB.SortedKeys];
+            foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
                 List<DatItem> items = GetItemsForBucket(bucket);
@@ -1235,7 +1243,6 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void RemoveItemsFromRomOfChildImplDB()
         {
-            // Loop through the romof tags
             List<string> buckets = [.. ItemsDB.SortedKeys];
             foreach (string bucket in buckets)
             {
@@ -1273,7 +1280,8 @@ namespace SabreTools.DatFiles
         /// <remarks>Applies to <see cref="Items"/></remarks>
         private void RemoveMachineRelationshipTagsImpl()
         {
-            foreach (string bucket in Items.SortedKeys)
+            List<string> buckets = [.. ItemsDB.SortedKeys];
+            foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
                 var items = GetItemsForBucket(bucket);
