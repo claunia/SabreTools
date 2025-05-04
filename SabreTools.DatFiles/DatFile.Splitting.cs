@@ -370,7 +370,7 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void AddItemsFromChildrenImplDB(bool subfolder, bool skipDedup)
         {
-            List<string> buckets = [.. ItemsDB.SortedKeys];
+            string[] buckets = [.. ItemsDB.SortedKeys];
             foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
@@ -500,7 +500,7 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void AddItemsFromCloneOfParentImpl()
         {
-            List<string> buckets = [.. ItemsDB.SortedKeys];
+            string[] buckets = [.. Items.SortedKeys];
             foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
@@ -551,7 +551,7 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void AddItemsFromCloneOfParentImplDB()
         {
-            List<string> buckets = [.. ItemsDB.SortedKeys];
+            string[] buckets = [.. ItemsDB.SortedKeys];
             foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
@@ -621,7 +621,7 @@ namespace SabreTools.DatFiles
         {
             bool foundnew = false;
 
-            List<string> buckets = [.. ItemsDB.SortedKeys];
+            string[] buckets = [.. Items.SortedKeys];
             foreach (string bucket in buckets)
             {
                 // If the bucket doesn't have items
@@ -767,7 +767,7 @@ namespace SabreTools.DatFiles
         {
             bool foundnew = false;
 
-            List<string> buckets = [.. ItemsDB.SortedKeys];
+            string[] buckets = [.. ItemsDB.SortedKeys];
             foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
@@ -932,7 +932,7 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void AddItemsFromRomOfParentImpl()
         {
-            List<string> buckets = [.. ItemsDB.SortedKeys];
+            string[] buckets = [.. Items.SortedKeys];
             foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
@@ -972,7 +972,7 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void AddItemsFromRomOfParentImplDB()
         {
-            List<string> buckets = [.. ItemsDB.SortedKeys];
+            string[] buckets = [.. ItemsDB.SortedKeys];
             foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
@@ -1016,7 +1016,7 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void RemoveBiosAndDeviceSetsImpl()
         {
-            List<string> buckets = [.. ItemsDB.SortedKeys];
+            string[] buckets = [.. Items.SortedKeys];
             foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
@@ -1047,7 +1047,7 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void RemoveBiosAndDeviceSetsImplDB()
         {
-            List<string> buckets = [.. ItemsDB.SortedKeys];
+            string[] buckets = [.. ItemsDB.SortedKeys];
             foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
@@ -1084,7 +1084,7 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void RemoveItemsFromCloneOfChildImpl()
         {
-            List<string> buckets = [.. ItemsDB.SortedKeys];
+            string[] buckets = [.. Items.SortedKeys];
             foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
@@ -1139,7 +1139,7 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void RemoveItemsFromCloneOfChildImplDB()
         {
-            List<string> buckets = [.. ItemsDB.SortedKeys];
+            string[] buckets = [.. ItemsDB.SortedKeys];
             foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
@@ -1195,7 +1195,7 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void RemoveItemsFromRomOfChildImpl()
         {
-            List<string> buckets = [.. ItemsDB.SortedKeys];
+            string[] buckets = [.. Items.SortedKeys];
             foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
@@ -1243,7 +1243,7 @@ namespace SabreTools.DatFiles
         /// </remarks>
         private void RemoveItemsFromRomOfChildImplDB()
         {
-            List<string> buckets = [.. ItemsDB.SortedKeys];
+            string[] buckets = [.. ItemsDB.SortedKeys];
             foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
@@ -1280,7 +1280,7 @@ namespace SabreTools.DatFiles
         /// <remarks>Applies to <see cref="Items"/></remarks>
         private void RemoveMachineRelationshipTagsImpl()
         {
-            List<string> buckets = [.. ItemsDB.SortedKeys];
+            string[] buckets = [.. Items.SortedKeys];
             foreach (string bucket in buckets)
             {
                 // If the bucket has no items in it
