@@ -438,7 +438,7 @@ namespace SabreTools.DatFiles.Test
             var dict = new ItemDictionary();
             dict.AddItem(datItem, statsOnly: false);
 
-            dict.RemoveItem("game-1", (Rom)datItem.Clone());
+            dict.RemoveItem("game-1", (Rom)datItem.Clone(), 0);
 
             Assert.Empty(dict.GetItemsForBucket("default"));
             Assert.Empty(dict.GetItemsForBucket("game-1"));

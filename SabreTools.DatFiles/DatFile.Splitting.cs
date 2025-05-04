@@ -1098,10 +1098,17 @@ namespace SabreTools.DatFiles
                 // If the parent exists and has items, we remove the parent items from the current game
                 foreach (DatItem item in parentItems)
                 {
-                    var matchedItems = items.FindAll(i => i.Equals(item));
-                    foreach (var match in matchedItems)
+                    while (true)
                     {
-                        RemoveItem(bucket, match);
+                        // Reset the items list each time an item is removed so the index is accurate
+                        items = GetItemsForBucket(bucket);
+
+                        // Find the next index that matches the item
+                        int index = items.FindIndex(i => i.Equals(item));
+                        if (index < 0)
+                            break;
+
+                        RemoveItem(bucket, items[index], index);
                     }
                 }
 
@@ -1199,13 +1206,20 @@ namespace SabreTools.DatFiles
                 if (parentItems.Count == 0)
                     continue;
 
-                // If the parent exists and has items, we remove the items that are in the parent from the current game
+                // If the parent exists and has items, we remove the parent items from the current game
                 foreach (DatItem item in parentItems)
                 {
-                    var matchedItems = items.FindAll(i => i.Equals(item));
-                    foreach (var match in matchedItems)
+                    while (true)
                     {
-                        RemoveItem(bucket, match);
+                        // Reset the items list each time an item is removed so the index is accurate
+                        items = GetItemsForBucket(bucket);
+
+                        // Find the next index that matches the item
+                        int index = items.FindIndex(i => i.Equals(item));
+                        if (index < 0)
+                            break;
+
+                        RemoveItem(bucket, items[index], index);
                     }
                 }
             }

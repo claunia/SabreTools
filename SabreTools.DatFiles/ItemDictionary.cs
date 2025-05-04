@@ -284,43 +284,7 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Remove the first instance of a value from the file dictionary if it exists
-        /// </summary>
-        /// <param name="key">Key in the dictionary to remove from</param>
-        /// <param name="value">Value to remove from the dictionary</param>
-        public bool RemoveItem(string key, DatItem value)
-        {
-            // Explicit lock for some weird corner cases
-            lock (key)
-            {
-                // If the key doesn't exist, return
-#if NET40_OR_GREATER || NETCOREAPP
-                if (!_items.TryGetValue(key, out var list) || list == null)
-                    return false;
-#else
-                if (!_items.ContainsKey(key))
-                    return false;
-
-                var list = _items[key];
-                if (list == null)
-                    return false;
-#endif
-
-                // If the value doesn't exist in the key, assume it has been removed
-                int removeIndex = list.FindIndex(i => i.Equals(value));
-                if (removeIndex < 0)
-                    return false;
-
-                // Remove the statistics first
-                DatStatistics.RemoveItemStatistics(value);
-
-                list.RemoveAt(removeIndex);
-                return true;
-            }
-        }
-
-        /// <summary>
-        /// Remove the first instance of a value from the file dictionary if it exists
+        /// Remove the indexed instance of a value from the file dictionary if it exists
         /// </summary>
         /// <param name="key">Key in the dictionary to remove from</param>
         /// <param name="value">Value to remove from the dictionary</param>

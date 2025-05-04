@@ -303,13 +303,14 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Remove the first instance of a value from the file dictionary if it exists
+        /// Remove the indexed instance of a value from the file dictionary if it exists
         /// </summary>
         /// <param name="key">Key in the dictionary to remove from</param>
         /// <param name="value">Value to remove from the dictionary</param>
-        public bool RemoveItem(string key, DatItem value)
+        /// <param name="index">Index of the item to be removed</param>
+        public bool RemoveItem(string key, DatItem value, int index)
         {
-            return Items.RemoveItem(key, value);
+            return Items.RemoveItem(key, value, index);
         }
 
         /// <summary>
