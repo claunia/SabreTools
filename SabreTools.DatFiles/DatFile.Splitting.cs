@@ -1,6 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+#if NET40_OR_GREATER || NETCOREAPP
+using System.Threading.Tasks;
+using SabreTools.Core;
+#endif
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 
@@ -1281,12 +1285,23 @@ namespace SabreTools.DatFiles
         private void RemoveMachineRelationshipTagsImpl()
         {
             string[] buckets = [.. Items.SortedKeys];
+
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(buckets, Globals.ParallelOptions, bucket =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(buckets, bucket =>
+#else
             foreach (string bucket in buckets)
+#endif
             {
                 // If the bucket has no items in it
                 var items = GetItemsForBucket(bucket);
                 if (items == null || items.Count == 0)
+#if NET40_OR_GREATER || NETCOREAPP
+                    return;
+#else
                     continue;
+#endif
 
                 foreach (DatItem item in items)
                 {
@@ -1299,7 +1314,11 @@ namespace SabreTools.DatFiles
                     machine.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, null);
                     machine.SetFieldValue<string?>(Models.Metadata.Machine.SampleOfKey, null);
                 }
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
             }
+#endif
         }
 
         /// <summary>
@@ -1309,16 +1328,31 @@ namespace SabreTools.DatFiles
         private void RemoveMachineRelationshipTagsImplDB()
         {
             var machines = GetMachinesDB();
+
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(machines, Globals.ParallelOptions, machine =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(machines, machine =>
+#else
             foreach (var machine in machines)
+#endif
             {
                 // Get the machine
                 if (machine.Value == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                    return;
+#else
                     continue;
+#endif
 
                 machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.CloneOfKey, null);
                 machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, null);
                 machine.Value.SetFieldValue<string?>(Models.Metadata.Machine.SampleOfKey, null);
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
             }
+#endif
         }
 
         #endregion
