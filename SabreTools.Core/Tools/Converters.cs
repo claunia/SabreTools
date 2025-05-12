@@ -27,7 +27,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <typeparam name="T">Enum type that is expected</typeparam>
         /// <returns>Dictionary of string to enum values</returns>
-        public static Dictionary<string, T> GenerateToEnum<T>() where T : notnull
+        public static Dictionary<string, T> GenerateToEnum<T>()
         {
             try
             {
@@ -85,32 +85,12 @@ namespace SabreTools.Core.Tools
         }
 
         /// <summary>
-        /// Get the string value for an input enum, if possible
-        /// </summary>
-        /// <param name="value">Enum value to parse/param>
-        /// <param name="useSecond">True to use the second mapping option, if it exists</param>
-        /// <typeparam name="T">Enum type that is expected</typeparam>
-        /// <returns>String value representing the input, default on error</returns>
-        public static string? AsStringValue<T>(this T value, bool useSecond = false) where T : notnull
-        {
-            // Get the mapping dictionary
-            var mappings = GenerateToString<T>(useSecond);
-
-            // Try to get the value from the mappings
-            if (mappings.ContainsKey(value))
-                return mappings[value];
-
-            // Otherwise, return null
-            return null;
-        }
-
-        /// <summary>
         /// Get a set of mappings from enum values to string
         /// </summary>
         /// <param name="useSecond">True to use the second mapping option, if it exists</param>
         /// <typeparam name="T">Enum type that is expected</typeparam>
         /// <returns>Dictionary of enum to string values</returns>
-        internal static Dictionary<T, string> GenerateToString<T>(bool useSecond) where T : notnull
+        public static Dictionary<T, string> GenerateToString<T>(bool useSecond) where T : notnull
         {
             try
             {
