@@ -551,6 +551,7 @@ namespace SabreTools.DatFiles
                 string? romof = GetItemsForBucket(cloneOf)[0].GetMachine()!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
                 foreach (DatItem item in items)
                 {
+                    item.RemoveField(Models.Metadata.Rom.MergeKey);
                     item.GetMachine()!.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, romof);
                 }
             }
@@ -616,6 +617,7 @@ namespace SabreTools.DatFiles
                     if (itemMachine.Value == null)
                         continue;
 
+                    // TODO: Remove merge tags here
                     itemMachine.Value.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, romof);
                 }
             }
