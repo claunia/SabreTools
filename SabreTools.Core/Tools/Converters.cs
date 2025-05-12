@@ -28,7 +28,7 @@ namespace SabreTools.Core.Tools
         /// <param name="value">String value to parse/param>
         /// <typeparam name="T">Enum type that is expected</typeparam>
         /// <returns>Enum value representing the input, default on error</returns>
-        public static T? AsEnumValue<T>(this string? value)
+        public static T? AsEnumValue<T>(this string? value) where T : notnull
         {
             // Get the mapping dictionary
             var mappings = GenerateToEnum<T>();
@@ -51,7 +51,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         /// <typeparam name="T">Enum type that is expected</typeparam>
         /// <returns>Dictionary of string to enum values</returns>
-        public static Dictionary<string, T> GenerateToEnum<T>()
+        public static Dictionary<string, T> GenerateToEnum<T>() where T : notnull
         {
             try
             {
