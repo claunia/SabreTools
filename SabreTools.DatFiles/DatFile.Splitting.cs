@@ -303,7 +303,7 @@ namespace SabreTools.DatFiles
                         }
 
                         // If there is no merge tag, add to parent
-                        else if (mergeTag == null)
+                        else if (mergeTag == null && !GetItemsForBucket(cloneOf).Contains(item))
                         {
                             disk.CopyMachineInformation(copyFrom);
                             AddItem(disk, statsOnly: false);
