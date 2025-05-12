@@ -359,7 +359,7 @@ namespace SabreTools.DatFiles
         public void BucketBy(ItemKey bucketBy, bool lower = true, bool norename = true)
         {
             Items.BucketBy(bucketBy, lower, norename);
-            ItemsDB.BucketBy(bucketBy, lower, norename);
+            //ItemsDB.BucketBy(bucketBy, lower, norename);
         }
 
         /// <summary>
