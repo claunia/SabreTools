@@ -1021,17 +1021,32 @@ namespace SabreTools.DatFiles
         private void RemoveBiosAndDeviceSetsImpl()
         {
             string[] buckets = [.. Items.SortedKeys];
+
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(buckets, Globals.ParallelOptions, bucket =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(buckets, bucket =>
+#else
             foreach (string bucket in buckets)
+#endif
             {
                 // If the bucket has no items in it
                 List<DatItem> items = GetItemsForBucket(bucket);
                 if (items.Count == 0)
+#if NET40_OR_GREATER || NETCOREAPP
+                    return;
+#else
                     continue;
+#endif
 
                 // Get the machine
                 var machine = items[0].GetMachine();
                 if (machine == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                    return;
+#else
                     continue;
+#endif
 
                 // Remove flagged items
                 if ((machine.GetBoolFieldValue(Models.Metadata.Machine.IsBiosKey) == true)
@@ -1039,7 +1054,11 @@ namespace SabreTools.DatFiles
                 {
                     RemoveBucket(bucket);
                 }
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
             }
+#endif
         }
 
         /// <summary>
@@ -1052,17 +1071,32 @@ namespace SabreTools.DatFiles
         private void RemoveBiosAndDeviceSetsImplDB()
         {
             string[] buckets = [.. ItemsDB.SortedKeys];
+
+#if NET452_OR_GREATER || NETCOREAPP
+            Parallel.ForEach(buckets, Globals.ParallelOptions, bucket =>
+#elif NET40_OR_GREATER
+            Parallel.ForEach(buckets, bucket =>
+#else
             foreach (string bucket in buckets)
+#endif
             {
                 // If the bucket has no items in it
                 Dictionary<long, DatItem> items = GetItemsForBucketDB(bucket);
                 if (items.Count == 0)
+#if NET40_OR_GREATER || NETCOREAPP
+                    return;
+#else
                     continue;
+#endif
 
                 // Get the machine
                 var machine = GetMachineForItemDB(items.First().Key);
                 if (machine.Value == null)
+#if NET40_OR_GREATER || NETCOREAPP
+                    return;
+#else
                     continue;
+#endif
 
                 // Remove flagged items
                 if ((machine.Value.GetBoolFieldValue(Models.Metadata.Machine.IsBiosKey) == true)
@@ -1076,7 +1110,11 @@ namespace SabreTools.DatFiles
 
                 // Remove the machine
                 RemoveMachineDB(machine.Key);
+#if NET40_OR_GREATER || NETCOREAPP
+            });
+#else
             }
+#endif
         }
 
         /// <summary>
