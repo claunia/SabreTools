@@ -313,20 +313,22 @@ namespace SabreTools.DatFiles
                     // Special rom handling
                     else if (item is Rom rom)
                     {
+                        string? mergeTag = rom.GetStringFieldValue(Models.Metadata.Disk.MergeKey);
+
                         // If the merge tag exists and the parent already contains it, skip
-                        if (rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey) != null && GetItemsForBucket(cloneOf)
+                        if (mergeTag != null && GetItemsForBucket(cloneOf)
                             .FindAll(i => i is Rom)
                             .ConvertAll(i => (i as Rom)!.GetName())
-                            .Contains(rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey)))
+                            .Contains(mergeTag))
                         {
                             continue;
                         }
 
                         // If the merge tag exists but the parent doesn't contain it, add to subfolder of parent
-                        else if (rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey) != null && !GetItemsForBucket(cloneOf)
+                        else if (mergeTag != null && !GetItemsForBucket(cloneOf)
                             .FindAll(i => i is Rom)
                             .ConvertAll(i => (i as Rom)!.GetName())
-                            .Contains(rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey)))
+                            .Contains(mergeTag))
                         {
                             if (subfolder)
                                 rom.SetName($"{rom.GetMachine()!.GetName()}\\{rom.GetName()}");
@@ -444,20 +446,22 @@ namespace SabreTools.DatFiles
                     // Special rom handling
                     else if (item.Value is Rom rom)
                     {
+                        string? mergeTag = rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey);
+
                         // If the merge tag exists and the parent already contains it, skip
-                        if (rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey) != null && GetItemsForBucketDB(cloneOf).Values
+                        if (mergeTag != null && GetItemsForBucketDB(cloneOf).Values
                             .Where(i => i is Rom)
                             .Select(i => (i as Rom)!.GetName())
-                            .Contains(rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey)))
+                            .Contains(mergeTag))
                         {
                             continue;
                         }
 
                         // If the merge tag exists but the parent doesn't contain it, add to subfolder of parent
-                        else if (rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey) != null && !GetItemsForBucketDB(cloneOf).Values
+                        else if (mergeTag != null && !GetItemsForBucketDB(cloneOf).Values
                             .Where(i => i is Rom)
                             .Select(i => (i as Rom)!.GetName())
-                            .Contains(rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey)))
+                            .Contains(mergeTag))
                         {
                             if (subfolder)
                                 rom.SetName($"{machineName}\\{rom.GetName()}");
