@@ -276,7 +276,6 @@ namespace SabreTools.DatFiles
                     copyFrom = parentItems[0];
                 }
 
-                items = GetItemsForBucket(bucket);
                 foreach (DatItem item in items)
                 {
                     // Special disk handling
@@ -397,7 +396,6 @@ namespace SabreTools.DatFiles
                 if (cloneOfMachine.Value == null)
                     continue;
 
-                items = GetItemsForBucketDB(bucket);
                 foreach (var item in items)
                 {
                     // Get the source for the current item
