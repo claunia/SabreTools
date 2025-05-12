@@ -243,13 +243,13 @@ namespace SabreTools.DatFiles
             var items = _items[bucketName];
 #endif
 
-            if (items == null)
-                return [];
+            if (items == null || !filter)
+                return [.. items ?? []];
 
             var datItems = new List<DatItem>();
             foreach (DatItem item in items)
             {
-                if (!filter || item.GetBoolFieldValue(DatItem.RemoveKey) != true)
+                if (item.GetBoolFieldValue(DatItem.RemoveKey) != true)
                     datItems.Add(item);
             }
 
