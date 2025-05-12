@@ -434,7 +434,7 @@ namespace SabreTools.DatFiles
                         }
 
                         // If there is no merge tag, add to parent
-                        else if (mergeTag == null)
+                        else if (mergeTag == null && !GetItemsForBucketDB(cloneOf).Values.Contains(item.Value))
                         {
                             ItemsDB.RemapDatItemToMachine(item.Key, cloneOfMachine.Key);
                             ItemsDB.AddItem(item.Value, cloneOfMachine.Key, source.Key);
