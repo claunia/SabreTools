@@ -1156,8 +1156,8 @@ namespace SabreTools.DatFiles
                             break;
 
                         // Remove the item from the local and internal lists
-                        items.RemoveAt(index);
                         RemoveItem(bucket, items[index], index);
+                        items.RemoveAt(index);
                     }
                 }
 
@@ -1266,8 +1266,8 @@ namespace SabreTools.DatFiles
                             break;
 
                         // Remove the item from the local and internal lists
-                        items.RemoveAt(index);
                         RemoveItem(bucket, items[index], index);
+                        items.RemoveAt(index);
                     }
                 }
             }
