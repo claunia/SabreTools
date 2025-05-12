@@ -1112,14 +1112,13 @@ namespace SabreTools.DatFiles
                 {
                     while (true)
                     {
-                        // Reset the items list each time an item is removed so the index is accurate
-                        items = GetItemsForBucket(bucket);
-
                         // Find the next index that matches the item
                         int index = items.FindIndex(i => i.Equals(item));
                         if (index < 0)
                             break;
 
+                        // Remove the item from the local and internal lists
+                        items.RemoveAt(index);
                         RemoveItem(bucket, items[index], index);
                     }
                 }
