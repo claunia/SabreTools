@@ -1374,9 +1374,9 @@ Some special strings that can be used:
             datHeader.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, GetString(features, DescriptionStringValue));
             datHeader.SetFieldValue<string?>(Models.Metadata.Header.EmailKey, GetString(features, EmailStringValue));
             datHeader.SetFieldValue<string?>(DatHeader.FileNameKey, GetString(features, FilenameStringValue));
-            datHeader.SetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey, GetString(features, ForceMergingStringValue).AsEnumValue<MergingFlag>());
-            datHeader.SetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey, GetString(features, ForceNodumpStringValue).AsEnumValue<NodumpFlag>());
-            datHeader.SetFieldValue<PackingFlag>(Models.Metadata.Header.ForceNodumpKey, GetString(features, ForcePackingStringValue).AsEnumValue<PackingFlag>());
+            datHeader.SetFieldValue<MergingFlag>(Models.Metadata.Header.ForceMergingKey, GetString(features, ForceMergingStringValue).AsMergingFlag());
+            datHeader.SetFieldValue<NodumpFlag>(Models.Metadata.Header.ForceNodumpKey, GetString(features, ForceNodumpStringValue).AsNodumpFlag());
+            datHeader.SetFieldValue<PackingFlag>(Models.Metadata.Header.ForceNodumpKey, GetString(features, ForcePackingStringValue).AsPackingFlag());
             datHeader.SetFieldValue<string?>(Models.Metadata.Header.HeaderKey, GetString(features, HeaderStringValue));
             datHeader.SetFieldValue<string?>(Models.Metadata.Header.HomepageKey, GetString(features, HomepageStringValue));
             datHeader.SetFieldValue<string?>(Models.Metadata.Header.NameKey, GetString(features, NameStringValue));

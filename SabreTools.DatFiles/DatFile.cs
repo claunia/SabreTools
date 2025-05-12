@@ -587,7 +587,7 @@ namespace SabreTools.DatFiles
                 manufacturer = machine?.GetStringFieldValue(Models.Metadata.Machine.ManufacturerKey) ?? string.Empty,
                 publisher = machine?.GetStringFieldValue(Models.Metadata.Machine.PublisherKey) ?? string.Empty,
                 category = machine?.GetStringFieldValue(Models.Metadata.Machine.CategoryKey) ?? string.Empty,
-                name = item.GetName() ?? type.AsEnumValue<ItemType>().AsStringValue() ?? string.Empty,
+                name = item.GetName() ?? type.AsItemType().AsStringValue() ?? string.Empty,
                 crc = string.Empty,
                 md2 = string.Empty,
                 md4 = string.Empty,
@@ -721,7 +721,7 @@ namespace SabreTools.DatFiles
 
             foreach (DatItem datItem in datItems)
             {
-                ItemType itemType = datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>();
+                ItemType itemType = datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsItemType();
                 if (Array.Exists(SupportedTypes, t => t == itemType))
                     return true;
             }
@@ -780,12 +780,12 @@ namespace SabreTools.DatFiles
 
                 // Get the last item name, if applicable
                 string lastItemName = lastItem.GetName()
-                    ?? lastItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue()
+                    ?? lastItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsItemType().AsStringValue()
                     ?? string.Empty;
 
                 // Get the current item name, if applicable
                 string datItemName = datItem.GetName()
-                    ?? datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue()
+                    ?? datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsItemType().AsStringValue()
                     ?? string.Empty;
 
                 // If the current item exactly matches the last item, then we don't add it
@@ -877,12 +877,12 @@ namespace SabreTools.DatFiles
 
                 // Get the last item name, if applicable
                 string lastItemName = lastItem.Value.Value.GetName()
-                    ?? lastItem.Value.Value.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue()
+                    ?? lastItem.Value.Value.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsItemType().AsStringValue()
                     ?? string.Empty;
 
                 // Get the current item name, if applicable
                 string datItemName = datItem.Value.GetName()
-                    ?? datItem.Value.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue()
+                    ?? datItem.Value.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsItemType().AsStringValue()
                     ?? string.Empty;
 
                 // Get sources for both items
@@ -989,7 +989,7 @@ namespace SabreTools.DatFiles
             }
 
             // If we have an item type not in the list of supported values
-            ItemType itemType = datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>();
+            ItemType itemType = datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsItemType();
             if (!Array.Exists(SupportedTypes, t => t == itemType))
             {
                 string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
@@ -1139,7 +1139,7 @@ namespace SabreTools.DatFiles
                     string? xType = x.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
                     string? yType = y.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
                     if (xType != yType)
-                        return xType.AsEnumValue<ItemType>() - yType.AsEnumValue<ItemType>();
+                        return xType.AsItemType() - yType.AsItemType();
 
                     // If directory names don't match
                     string? xDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty));
@@ -1194,7 +1194,7 @@ namespace SabreTools.DatFiles
                     string? xType = x.Value.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
                     string? yType = y.Value.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
                     if (xType != yType)
-                        return xType.AsEnumValue<ItemType>() - yType.AsEnumValue<ItemType>();
+                        return xType.AsItemType() - yType.AsItemType();
 
                     // If directory names don't match
                     string? xDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(x.Value.GetName() ?? string.Empty));

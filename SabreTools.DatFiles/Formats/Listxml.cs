@@ -301,12 +301,12 @@ namespace SabreTools.DatFiles.Formats
                 case Chip chip:
                     if (string.IsNullOrEmpty(chip.GetName()))
                         missingFields.Add(Models.Metadata.Chip.NameKey);
-                    if (chip.GetStringFieldValue(Models.Metadata.Chip.ChipTypeKey).AsEnumValue<ChipType>() == ChipType.NULL)
+                    if (chip.GetStringFieldValue(Models.Metadata.Chip.ChipTypeKey).AsChipType() == ChipType.NULL)
                         missingFields.Add(Models.Metadata.Chip.ChipTypeKey);
                     break;
 
                 case Display display:
-                    if (display.GetStringFieldValue(Models.Metadata.Display.DisplayTypeKey).AsEnumValue<DisplayType>() == DisplayType.NULL)
+                    if (display.GetStringFieldValue(Models.Metadata.Display.DisplayTypeKey).AsDisplayType() == DisplayType.NULL)
                         missingFields.Add(Models.Metadata.Display.DisplayTypeKey);
                     if (display.GetDoubleFieldValue(Models.Metadata.Display.RefreshKey) == null)
                         missingFields.Add(Models.Metadata.Display.RefreshKey);
@@ -347,23 +347,23 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case Driver driver:
-                    if (driver.GetStringFieldValue(Models.Metadata.Driver.StatusKey).AsEnumValue<SupportStatus>() == SupportStatus.NULL)
+                    if (driver.GetStringFieldValue(Models.Metadata.Driver.StatusKey).AsSupportStatus() == SupportStatus.NULL)
                         missingFields.Add(Models.Metadata.Driver.StatusKey);
-                    if (driver.GetStringFieldValue(Models.Metadata.Driver.EmulationKey).AsEnumValue<SupportStatus>() == SupportStatus.NULL)
+                    if (driver.GetStringFieldValue(Models.Metadata.Driver.EmulationKey).AsSupportStatus() == SupportStatus.NULL)
                         missingFields.Add(Models.Metadata.Driver.EmulationKey);
-                    if (driver.GetStringFieldValue(Models.Metadata.Driver.CocktailKey).AsEnumValue<SupportStatus>() == SupportStatus.NULL)
+                    if (driver.GetStringFieldValue(Models.Metadata.Driver.CocktailKey).AsSupportStatus() == SupportStatus.NULL)
                         missingFields.Add(Models.Metadata.Driver.CocktailKey);
-                    if (driver.GetStringFieldValue(Models.Metadata.Driver.SaveStateKey).AsEnumValue<SupportStatus>() == SupportStatus.NULL)
+                    if (driver.GetStringFieldValue(Models.Metadata.Driver.SaveStateKey).AsSupportStatus() == SupportStatus.NULL)
                         missingFields.Add(Models.Metadata.Driver.SaveStateKey);
                     break;
 
                 case Feature feature:
-                    if (feature.GetStringFieldValue(Models.Metadata.Feature.FeatureTypeKey).AsEnumValue<FeatureType>() == FeatureType.NULL)
+                    if (feature.GetStringFieldValue(Models.Metadata.Feature.FeatureTypeKey).AsFeatureType() == FeatureType.NULL)
                         missingFields.Add(Models.Metadata.Feature.FeatureTypeKey);
                     break;
 
                 case Device device:
-                    if (device.GetStringFieldValue(Models.Metadata.Device.DeviceTypeKey).AsEnumValue<DeviceType>() == DeviceType.NULL)
+                    if (device.GetStringFieldValue(Models.Metadata.Device.DeviceTypeKey).AsDeviceType() == DeviceType.NULL)
                         missingFields.Add(Models.Metadata.Device.DeviceTypeKey);
                     break;
 
@@ -377,7 +377,7 @@ namespace SabreTools.DatFiles.Formats
                         missingFields.Add(Models.Metadata.SoftwareList.TagKey);
                     if (string.IsNullOrEmpty(softwarelist.GetName()))
                         missingFields.Add(Models.Metadata.SoftwareList.NameKey);
-                    if (softwarelist.GetStringFieldValue(Models.Metadata.SoftwareList.StatusKey).AsEnumValue<SoftwareListStatus>() == SoftwareListStatus.None)
+                    if (softwarelist.GetStringFieldValue(Models.Metadata.SoftwareList.StatusKey).AsSoftwareListStatus() == SoftwareListStatus.None)
                         missingFields.Add(Models.Metadata.SoftwareList.StatusKey);
                     break;
 

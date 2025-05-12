@@ -153,11 +153,11 @@ namespace SabreTools.DatFiles
             var header = (_internal.Clone() as Models.Metadata.Header)!;
 
             // Remove fields with default values
-            if (header.ReadString(Models.Metadata.Header.ForceMergingKey).AsEnumValue<MergingFlag>() == MergingFlag.None)
+            if (header.ReadString(Models.Metadata.Header.ForceMergingKey).AsMergingFlag() == MergingFlag.None)
                 header.Remove(Models.Metadata.Header.ForceMergingKey);
-            if (header.ReadString(Models.Metadata.Header.ForceNodumpKey).AsEnumValue<NodumpFlag>() == NodumpFlag.None)
+            if (header.ReadString(Models.Metadata.Header.ForceNodumpKey).AsNodumpFlag() == NodumpFlag.None)
                 header.Remove(Models.Metadata.Header.ForceNodumpKey);
-            if (header.ReadString(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>() == PackingFlag.None)
+            if (header.ReadString(Models.Metadata.Header.ForcePackingKey).AsPackingFlag() == PackingFlag.None)
                 header.Remove(Models.Metadata.Header.ForcePackingKey);
 
             // Convert subheader values

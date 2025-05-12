@@ -419,7 +419,7 @@ namespace SabreTools.DatTools
         {
             // If we didn't get an accepted parsed type somehow, cancel out
             List<ItemType> parsed = [ItemType.Disk, ItemType.File, ItemType.Media, ItemType.Rom];
-            if (!parsed.Contains(datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>()))
+            if (!parsed.Contains(datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsItemType()))
                 return;
 
             try

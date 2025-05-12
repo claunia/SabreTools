@@ -292,7 +292,7 @@ namespace SabreTools.DatTools
                     switch (item)
                     {
                         case Disk disk:
-                            if (disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump)
+                            if (disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsItemStatus() == ItemStatus.Nodump)
                                 fieldDats[Models.Metadata.Disk.StatusKey].AddItem(item, statsOnly: false);
                             else if (!string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)))
                                 fieldDats[Models.Metadata.Disk.SHA1Key].AddItem(item, statsOnly: false);
@@ -316,7 +316,7 @@ namespace SabreTools.DatTools
                             break;
 
                         case Rom rom:
-                            if (rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump)
+                            if (rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsItemStatus() == ItemStatus.Nodump)
                                 fieldDats[Models.Metadata.Rom.StatusKey].AddItem(item, statsOnly: false);
                             else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA512Key)))
                                 fieldDats[Models.Metadata.Rom.SHA512Key].AddItem(item, statsOnly: false);
@@ -414,7 +414,7 @@ namespace SabreTools.DatTools
                 switch (item.Value)
                 {
                     case Disk disk:
-                        if (disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump)
+                        if (disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsItemStatus() == ItemStatus.Nodump)
                             fieldDats[Models.Metadata.Disk.StatusKey].AddItemDB(item.Value, machineRemapping[machineIndex], sourceRemapping[sourceIndex], statsOnly: false);
                         else if (!string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)))
                             fieldDats[Models.Metadata.Disk.SHA1Key].AddItemDB(item.Value, machineRemapping[machineIndex], sourceRemapping[sourceIndex], statsOnly: false);
@@ -438,7 +438,7 @@ namespace SabreTools.DatTools
                         break;
 
                     case Rom rom:
-                        if (rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump)
+                        if (rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsItemStatus() == ItemStatus.Nodump)
                             fieldDats[Models.Metadata.Rom.StatusKey].AddItemDB(item.Value, machineRemapping[machineIndex], sourceRemapping[sourceIndex], statsOnly: false);
                         else if (!string.IsNullOrEmpty(rom.GetStringFieldValue(Models.Metadata.Rom.SHA512Key)))
                             fieldDats[Models.Metadata.Rom.SHA512Key].AddItemDB(item.Value, machineRemapping[machineIndex], sourceRemapping[sourceIndex], statsOnly: false);
@@ -951,7 +951,7 @@ namespace SabreTools.DatTools
 
                 foreach (DatItem item in items)
                 {
-                    if (item.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>() == itemType)
+                    if (item.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsItemType() == itemType)
                         indexDat.AddItem(item, statsOnly: false);
                 }
 #if NET40_OR_GREATER || NETCOREAPP
@@ -1006,7 +1006,7 @@ namespace SabreTools.DatTools
                 long machineIndex = datFile.GetMachineForItemDB(item.Key).Key;
                 long sourceIndex = datFile.GetSourceForItemDB(item.Key).Key;
 
-                if (item.Value.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>() == itemType)
+                if (item.Value.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsItemType() == itemType)
                     indexDat.AddItemDB(item.Value, machineRemapping[machineIndex], sourceRemapping[sourceIndex], statsOnly: false);
 #if NET40_OR_GREATER || NETCOREAPP
             });

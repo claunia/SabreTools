@@ -34,11 +34,11 @@ namespace SabreTools.DatItems.Formats
         {
             // Process flag values
             if (GetStringFieldValue(Models.Metadata.Feature.OverallKey) != null)
-                SetFieldValue<string?>(Models.Metadata.Feature.OverallKey, GetStringFieldValue(Models.Metadata.Feature.OverallKey).AsEnumValue<FeatureStatus>().AsStringValue());
+                SetFieldValue<string?>(Models.Metadata.Feature.OverallKey, GetStringFieldValue(Models.Metadata.Feature.OverallKey).AsFeatureStatus().AsStringValue());
             if (GetStringFieldValue(Models.Metadata.Feature.StatusKey) != null)
-                SetFieldValue<string?>(Models.Metadata.Feature.StatusKey, GetStringFieldValue(Models.Metadata.Feature.StatusKey).AsEnumValue<FeatureStatus>().AsStringValue());
+                SetFieldValue<string?>(Models.Metadata.Feature.StatusKey, GetStringFieldValue(Models.Metadata.Feature.StatusKey).AsFeatureStatus().AsStringValue());
             if (GetStringFieldValue(Models.Metadata.Feature.FeatureTypeKey) != null)
-                SetFieldValue<string?>(Models.Metadata.Feature.FeatureTypeKey, GetStringFieldValue(Models.Metadata.Feature.FeatureTypeKey).AsEnumValue<FeatureType>().AsStringValue());
+                SetFieldValue<string?>(Models.Metadata.Feature.FeatureTypeKey, GetStringFieldValue(Models.Metadata.Feature.FeatureTypeKey).AsFeatureType().AsStringValue());
         }
 
         #endregion

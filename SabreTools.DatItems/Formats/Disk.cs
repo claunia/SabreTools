@@ -70,7 +70,7 @@ namespace SabreTools.DatItems.Formats
             if (GetBoolFieldValue(Models.Metadata.Disk.OptionalKey) != null)
                 SetFieldValue<string?>(Models.Metadata.Disk.OptionalKey, GetBoolFieldValue(Models.Metadata.Disk.OptionalKey).FromYesNo());
             if (GetStringFieldValue(Models.Metadata.Disk.StatusKey) != null)
-                SetFieldValue<string?>(Models.Metadata.Disk.StatusKey, GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>().AsStringValue());
+                SetFieldValue<string?>(Models.Metadata.Disk.StatusKey, GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsItemStatus().AsStringValue());
             if (GetBoolFieldValue(Models.Metadata.Disk.WritableKey) != null)
                 SetFieldValue<string?>(Models.Metadata.Disk.WritableKey, GetBoolFieldValue(Models.Metadata.Disk.WritableKey).FromYesNo());
 

@@ -180,7 +180,7 @@ namespace SabreTools.DatTools
                 return;
 
             // If there are no field names for this type or generic, return
-            string? itemType = datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue();
+            string? itemType = datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsItemType().AsStringValue();
             if (itemType == null || (!ItemFieldMappings.Keys.Any(kvp => kvp.ItemName == itemType) && !ItemFieldMappings.Keys.Any(kvp => kvp.ItemName == "item")))
                 return;
 

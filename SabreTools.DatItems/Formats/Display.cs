@@ -41,7 +41,7 @@ namespace SabreTools.DatItems.Formats
             if (GetInt64FieldValue(Models.Metadata.Display.RotateKey) != null)
                 SetFieldValue<string?>(Models.Metadata.Display.RotateKey, GetInt64FieldValue(Models.Metadata.Display.RotateKey).ToString());
             if (GetStringFieldValue(Models.Metadata.Display.DisplayTypeKey) != null)
-                SetFieldValue<string?>(Models.Metadata.Display.DisplayTypeKey, GetStringFieldValue(Models.Metadata.Display.DisplayTypeKey).AsEnumValue<DisplayType>().AsStringValue());
+                SetFieldValue<string?>(Models.Metadata.Display.DisplayTypeKey, GetStringFieldValue(Models.Metadata.Display.DisplayTypeKey).AsDisplayType().AsStringValue());
             if (GetInt64FieldValue(Models.Metadata.Display.VBEndKey) != null)
                 SetFieldValue<string?>(Models.Metadata.Display.VBEndKey, GetInt64FieldValue(Models.Metadata.Display.VBEndKey).ToString());
             if (GetInt64FieldValue(Models.Metadata.Display.VBStartKey) != null)
@@ -56,7 +56,7 @@ namespace SabreTools.DatItems.Formats
         {
             SetFieldValue<long?>(Models.Metadata.Video.AspectXKey, NumberHelper.ConvertToInt64(item.ReadString(Models.Metadata.Video.AspectXKey)));
             SetFieldValue<long?>(Models.Metadata.Video.AspectYKey, NumberHelper.ConvertToInt64(item.ReadString(Models.Metadata.Video.AspectYKey)));
-            SetFieldValue<string?>(Models.Metadata.Display.DisplayTypeKey, item.ReadString(Models.Metadata.Video.ScreenKey).AsEnumValue<DisplayType>().AsStringValue());
+            SetFieldValue<string?>(Models.Metadata.Display.DisplayTypeKey, item.ReadString(Models.Metadata.Video.ScreenKey).AsDisplayType().AsStringValue());
             SetFieldValue<long?>(Models.Metadata.Display.HeightKey, NumberHelper.ConvertToInt64(item.ReadString(Models.Metadata.Video.HeightKey)));
             SetFieldValue<double?>(Models.Metadata.Display.RefreshKey, NumberHelper.ConvertToDouble(item.ReadString(Models.Metadata.Video.RefreshKey)));
             SetFieldValue<long?>(Models.Metadata.Display.WidthKey, NumberHelper.ConvertToInt64(item.ReadString(Models.Metadata.Video.WidthKey)));
@@ -81,7 +81,7 @@ namespace SabreTools.DatItems.Formats
             if (GetDoubleFieldValue(Models.Metadata.Video.RefreshKey) != null)
                 SetFieldValue<string?>(Models.Metadata.Display.RefreshKey, GetDoubleFieldValue(Models.Metadata.Video.RefreshKey).ToString());
             if (GetStringFieldValue(Models.Metadata.Video.ScreenKey) != null)
-                SetFieldValue<string?>(Models.Metadata.Display.DisplayTypeKey, GetStringFieldValue(Models.Metadata.Video.ScreenKey).AsEnumValue<DisplayType>().AsStringValue());
+                SetFieldValue<string?>(Models.Metadata.Display.DisplayTypeKey, GetStringFieldValue(Models.Metadata.Video.ScreenKey).AsDisplayType().AsStringValue());
             if (GetInt64FieldValue(Models.Metadata.Video.WidthKey) != null)
                 SetFieldValue<string?>(Models.Metadata.Display.WidthKey, GetInt64FieldValue(Models.Metadata.Video.WidthKey).ToString());
         }

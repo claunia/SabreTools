@@ -25,11 +25,11 @@ namespace SabreTools.DatItems.Formats
         {
             // Process flag values
             if (GetStringFieldValue(Models.Metadata.Driver.CocktailKey) != null)
-                SetFieldValue<string?>(Models.Metadata.Driver.CocktailKey, GetStringFieldValue(Models.Metadata.Driver.CocktailKey).AsEnumValue<SupportStatus>().AsStringValue());
+                SetFieldValue<string?>(Models.Metadata.Driver.CocktailKey, GetStringFieldValue(Models.Metadata.Driver.CocktailKey).AsSupportStatus().AsStringValue());
             if (GetStringFieldValue(Models.Metadata.Driver.ColorKey) != null)
-                SetFieldValue<string?>(Models.Metadata.Driver.ColorKey, GetStringFieldValue(Models.Metadata.Driver.ColorKey).AsEnumValue<SupportStatus>().AsStringValue());
+                SetFieldValue<string?>(Models.Metadata.Driver.ColorKey, GetStringFieldValue(Models.Metadata.Driver.ColorKey).AsSupportStatus().AsStringValue());
             if (GetStringFieldValue(Models.Metadata.Driver.EmulationKey) != null)
-                SetFieldValue<string?>(Models.Metadata.Driver.EmulationKey, GetStringFieldValue(Models.Metadata.Driver.EmulationKey).AsEnumValue<SupportStatus>().AsStringValue());
+                SetFieldValue<string?>(Models.Metadata.Driver.EmulationKey, GetStringFieldValue(Models.Metadata.Driver.EmulationKey).AsSupportStatus().AsStringValue());
             if (GetBoolFieldValue(Models.Metadata.Driver.IncompleteKey) != null)
                 SetFieldValue<string?>(Models.Metadata.Driver.IncompleteKey, GetBoolFieldValue(Models.Metadata.Driver.IncompleteKey).FromYesNo());
             if (GetBoolFieldValue(Models.Metadata.Driver.NoSoundHardwareKey) != null)
@@ -39,11 +39,11 @@ namespace SabreTools.DatItems.Formats
             if (GetBoolFieldValue(Models.Metadata.Driver.RequiresArtworkKey) != null)
                 SetFieldValue<string?>(Models.Metadata.Driver.RequiresArtworkKey, GetBoolFieldValue(Models.Metadata.Driver.RequiresArtworkKey).FromYesNo());
             if (GetStringFieldValue(Models.Metadata.Driver.SaveStateKey) != null)
-                SetFieldValue<string?>(Models.Metadata.Driver.SaveStateKey, GetStringFieldValue(Models.Metadata.Driver.SaveStateKey).AsEnumValue<Supported>().AsStringValue(useSecond: true));
+                SetFieldValue<string?>(Models.Metadata.Driver.SaveStateKey, GetStringFieldValue(Models.Metadata.Driver.SaveStateKey).AsSupported().AsStringValue(useSecond: true));
             if (GetStringFieldValue(Models.Metadata.Driver.SoundKey) != null)
-                SetFieldValue<string?>(Models.Metadata.Driver.SoundKey, GetStringFieldValue(Models.Metadata.Driver.SoundKey).AsEnumValue<SupportStatus>().AsStringValue());
+                SetFieldValue<string?>(Models.Metadata.Driver.SoundKey, GetStringFieldValue(Models.Metadata.Driver.SoundKey).AsSupportStatus().AsStringValue());
             if (GetStringFieldValue(Models.Metadata.Driver.StatusKey) != null)
-                SetFieldValue<string?>(Models.Metadata.Driver.StatusKey, GetStringFieldValue(Models.Metadata.Driver.StatusKey).AsEnumValue<SupportStatus>().AsStringValue());
+                SetFieldValue<string?>(Models.Metadata.Driver.StatusKey, GetStringFieldValue(Models.Metadata.Driver.StatusKey).AsSupportStatus().AsStringValue());
             if (GetBoolFieldValue(Models.Metadata.Driver.UnofficialKey) != null)
                 SetFieldValue<string?>(Models.Metadata.Driver.UnofficialKey, GetBoolFieldValue(Models.Metadata.Driver.UnofficialKey).FromYesNo());
         }

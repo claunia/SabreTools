@@ -557,7 +557,7 @@ Reset the internal state:           reset();";
                 }
 
                 // Read in the individual arguments
-                MergingFlag mergingFlag = Arguments[0].AsEnumValue<MergingFlag>();
+                MergingFlag mergingFlag = Arguments[0].AsMergingFlag();
 
                 // If we had an invalid input, log and continue
                 if (mergingFlag == MergingFlag.None)
@@ -573,7 +573,7 @@ Reset the internal state:           reset();";
             public override void Process(BatchState batchState)
             {
                 // Read in the individual arguments
-                MergingFlag mergingFlag = Arguments[0].AsEnumValue<MergingFlag>();
+                MergingFlag mergingFlag = Arguments[0].AsMergingFlag();
 
                 // Apply the merging flag
                 MergeSplit splitter = new() { SplitType = mergingFlag };

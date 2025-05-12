@@ -23,30 +23,6 @@ namespace SabreTools.Core.Tools
         }
 
         /// <summary>
-        /// Get the enum value for an input string, if possible
-        /// </summary>
-        /// <param name="value">String value to parse/param>
-        /// <typeparam name="T">Enum type that is expected</typeparam>
-        /// <returns>Enum value representing the input, default on error</returns>
-        public static T? AsEnumValue<T>(this string? value) where T : notnull
-        {
-            // Get the mapping dictionary
-            var mappings = GenerateToEnum<T>();
-
-            // Normalize the input value
-            value = value?.ToLowerInvariant();
-            if (value == null)
-                return default;
-
-            // Try to get the value from the mappings
-            if (mappings.ContainsKey(value))
-                return mappings[value];
-
-            // Otherwise, return the default value for the enum
-            return default;
-        }
-
-        /// <summary>
         /// Get a set of mappings from strings to enum values
         /// </summary>
         /// <typeparam name="T">Enum type that is expected</typeparam>

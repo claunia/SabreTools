@@ -49,7 +49,7 @@ namespace SabreTools.DatItems.Formats
             if (GetBoolFieldValue(Models.Metadata.Device.MandatoryKey) != null)
                 SetFieldValue<string?>(Models.Metadata.Device.MandatoryKey, GetBoolFieldValue(Models.Metadata.Device.MandatoryKey).FromYesNo());
             if (GetStringFieldValue(Models.Metadata.Device.DeviceTypeKey) != null)
-                SetFieldValue<string?>(Models.Metadata.Device.DeviceTypeKey, GetStringFieldValue(Models.Metadata.Device.DeviceTypeKey).AsEnumValue<DeviceType>().AsStringValue());
+                SetFieldValue<string?>(Models.Metadata.Device.DeviceTypeKey, GetStringFieldValue(Models.Metadata.Device.DeviceTypeKey).AsDeviceType().AsStringValue());
 
             // Handle subitems
             var instance = item.Read<Models.Metadata.Instance>(Models.Metadata.Device.InstanceKey);

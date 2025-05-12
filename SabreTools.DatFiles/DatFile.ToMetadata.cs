@@ -923,7 +923,7 @@ namespace SabreTools.DatFiles
                 videoItem[Models.Metadata.Video.AspectYKey] = displayItem.ReadLong(Models.Metadata.Video.AspectYKey).ToString();
                 videoItem[Models.Metadata.Video.HeightKey] = displayItem.ReadLong(Models.Metadata.Display.HeightKey).ToString();
                 videoItem[Models.Metadata.Video.RefreshKey] = displayItem.ReadDouble(Models.Metadata.Display.RefreshKey).ToString();
-                videoItem[Models.Metadata.Video.ScreenKey] = displayItem.ReadString(Models.Metadata.Display.DisplayTypeKey).AsEnumValue<DisplayType>().AsStringValue();
+                videoItem[Models.Metadata.Video.ScreenKey] = displayItem.ReadString(Models.Metadata.Display.DisplayTypeKey).AsDisplayType().AsStringValue();
                 videoItem[Models.Metadata.Video.WidthKey] = displayItem.ReadLong(Models.Metadata.Display.WidthKey).ToString();
 
                 switch (displayItem.ReadLong(Models.Metadata.Display.RotateKey))
@@ -959,7 +959,7 @@ namespace SabreTools.DatFiles
             var romItem = item.GetInternalClone();
 
             // Create a Dump for every Rom that has a subtype
-            switch (romItem.ReadString(Models.Metadata.Rom.OpenMSXMediaType).AsEnumValue<OpenMSXSubType>())
+            switch (romItem.ReadString(Models.Metadata.Rom.OpenMSXMediaType).AsOpenMSXSubType())
             {
                 case OpenMSXSubType.Rom:
                     var dumpRom = new Models.Metadata.Dump();

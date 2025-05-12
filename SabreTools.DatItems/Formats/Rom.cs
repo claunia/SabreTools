@@ -35,7 +35,7 @@ namespace SabreTools.DatItems.Formats
         {
             get
             {
-                var status = GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>();
+                var status = GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsItemStatus();
                 return status != ItemStatus.NULL && status != ItemStatus.None;
             }
         }
@@ -60,7 +60,7 @@ namespace SabreTools.DatItems.Formats
                     && (!string.IsNullOrEmpty(dataArea.GetName())
                         || dataArea.GetInt64FieldValue(Models.Metadata.DataArea.SizeKey) != null
                         || dataArea.GetInt64FieldValue(Models.Metadata.DataArea.WidthKey) != null
-                        || dataArea.GetStringFieldValue(Models.Metadata.DataArea.EndiannessKey).AsEnumValue<Endianness>() != Endianness.NULL);
+                        || dataArea.GetStringFieldValue(Models.Metadata.DataArea.EndiannessKey).AsEndianness() != Endianness.NULL);
             }
         }
 
@@ -96,9 +96,9 @@ namespace SabreTools.DatItems.Formats
             if (GetBoolFieldValue(Models.Metadata.Rom.InvertedKey) != null)
                 SetFieldValue<string?>(Models.Metadata.Rom.InvertedKey, GetBoolFieldValue(Models.Metadata.Rom.InvertedKey).FromYesNo());
             if (GetStringFieldValue(Models.Metadata.Rom.LoadFlagKey) != null)
-                SetFieldValue<string?>(Models.Metadata.Rom.LoadFlagKey, GetStringFieldValue(Models.Metadata.Rom.LoadFlagKey).AsEnumValue<LoadFlag>().AsStringValue());
+                SetFieldValue<string?>(Models.Metadata.Rom.LoadFlagKey, GetStringFieldValue(Models.Metadata.Rom.LoadFlagKey).AsLoadFlag().AsStringValue());
             if (GetStringFieldValue(Models.Metadata.Rom.OpenMSXMediaType) != null)
-                SetFieldValue<string?>(Models.Metadata.Rom.OpenMSXMediaType, GetStringFieldValue(Models.Metadata.Rom.OpenMSXMediaType).AsEnumValue<OpenMSXSubType>().AsStringValue());
+                SetFieldValue<string?>(Models.Metadata.Rom.OpenMSXMediaType, GetStringFieldValue(Models.Metadata.Rom.OpenMSXMediaType).AsOpenMSXSubType().AsStringValue());
             if (GetBoolFieldValue(Models.Metadata.Rom.MIAKey) != null)
                 SetFieldValue<string?>(Models.Metadata.Rom.MIAKey, GetBoolFieldValue(Models.Metadata.Rom.MIAKey).FromYesNo());
             if (GetBoolFieldValue(Models.Metadata.Rom.OptionalKey) != null)
@@ -106,7 +106,7 @@ namespace SabreTools.DatItems.Formats
             if (GetBoolFieldValue(Models.Metadata.Rom.SoundOnlyKey) != null)
                 SetFieldValue<string?>(Models.Metadata.Rom.SoundOnlyKey, GetBoolFieldValue(Models.Metadata.Rom.SoundOnlyKey).FromYesNo());
             if (GetStringFieldValue(Models.Metadata.Rom.StatusKey) != null)
-                SetFieldValue<string?>(Models.Metadata.Rom.StatusKey, GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>().AsStringValue());
+                SetFieldValue<string?>(Models.Metadata.Rom.StatusKey, GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsItemStatus().AsStringValue());
 
             // Process hash values
             if (GetInt64FieldValue(Models.Metadata.Rom.SizeKey) != null)

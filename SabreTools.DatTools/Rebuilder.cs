@@ -63,7 +63,7 @@ namespace SabreTools.DatTools
             outDir = outDir.Ensure(create: true);
 
             // Now we want to get forcepack flag if it's not overridden
-            PackingFlag forcePacking = datFile.Header.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>();
+            PackingFlag forcePacking = datFile.Header.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsPackingFlag();
             if (outputFormat == OutputFormat.Folder && forcePacking != PackingFlag.None)
                 outputFormat = GetOutputFormat(forcePacking);
 
@@ -155,11 +155,11 @@ namespace SabreTools.DatTools
 
                 // Otherwise, we rebuild that file to all locations that we need to
                 bool usedInternally;
-                if (items[0].GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>() == ItemType.Disk)
+                if (items[0].GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsItemType() == ItemType.Disk)
                     usedInternally = RebuildIndividualFile(datFile, fileinfo.ConvertToDisk(), foundpath, outDir, date, inverse, outputFormat, isZip: false);
-                else if (items[0].GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>() == ItemType.File)
+                else if (items[0].GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsItemType() == ItemType.File)
                     usedInternally = RebuildIndividualFile(datFile, fileinfo.ConvertToFile(), foundpath, outDir, date, inverse, outputFormat, isZip: false);
-                else if (items[0].GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>() == ItemType.Media)
+                else if (items[0].GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsItemType() == ItemType.Media)
                     usedInternally = RebuildIndividualFile(datFile, fileinfo.ConvertToMedia(), foundpath, outDir, date, inverse, outputFormat, isZip: false);
                 else
                     usedInternally = RebuildIndividualFile(datFile, fileinfo.ConvertToRom(), foundpath, outDir, date, inverse, outputFormat, isZip: false);
@@ -217,7 +217,7 @@ namespace SabreTools.DatTools
             }
 
             // Now we want to get forcepack flag if it's not overridden
-            PackingFlag forcePacking = datFile.Header.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>();
+            PackingFlag forcePacking = datFile.Header.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsPackingFlag();
             if (outputFormat == OutputFormat.Folder && forcePacking != PackingFlag.None)
                 outputFormat = GetOutputFormat(forcePacking);
 
@@ -442,12 +442,12 @@ namespace SabreTools.DatTools
                     fileStream.Seek(0, SeekOrigin.Begin);
                 }
 
-                _staticLogger.User($"{(inverse ? "No matches" : $"{dupes.Count} Matches")} found for '{Path.GetFileName(datItem.GetName() ?? datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue())}', rebuilding accordingly...");
+                _staticLogger.User($"{(inverse ? "No matches" : $"{dupes.Count} Matches")} found for '{Path.GetFileName(datItem.GetName() ?? datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsItemType().AsStringValue())}', rebuilding accordingly...");
                 rebuilt = true;
 
                 // Special case for partial packing mode
                 bool shouldCheck = false;
-                if (outputFormat == OutputFormat.Folder && datFile.Header.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsEnumValue<PackingFlag>() == PackingFlag.Partial)
+                if (outputFormat == OutputFormat.Folder && datFile.Header.GetStringFieldValue(Models.Metadata.Header.ForcePackingKey).AsPackingFlag() == PackingFlag.Partial)
                 {
                     shouldCheck = true;
                     datFile.BucketBy(ItemKey.Machine, lower: false);
@@ -505,7 +505,7 @@ namespace SabreTools.DatTools
                         if (ShouldRebuild(datFile, headerless, transformStream, false, out dupes))
                         //if (ShouldRebuildDB(datFile, headerless, transformStream, false, out dupes))
                         {
-                            _staticLogger.User($"Headerless matches found for '{Path.GetFileName(datItem.GetName() ?? datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue())}', rebuilding accordingly...");
+                            _staticLogger.User($"Headerless matches found for '{Path.GetFileName(datItem.GetName() ?? datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsItemType().AsStringValue())}', rebuilding accordingly...");
                             rebuilt = true;
 
                             // Now loop through the list and rebuild accordingly
@@ -773,7 +773,7 @@ namespace SabreTools.DatTools
 
                 try
                 {
-                    ItemType itemType = datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>();
+                    ItemType itemType = datItem.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsItemType();
                     (stream, _) = archive.GetEntryStream(datItem.GetName() ?? itemType.AsStringValue() ?? string.Empty);
                 }
                 catch

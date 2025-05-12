@@ -13,7 +13,7 @@ namespace SabreTools.DatItems.Test
         [InlineData("audio", ChipType.Audio)]
         public void AsChipTypeTest(string? field, ChipType expected)
         {
-            ChipType actual = field.AsEnumValue<ChipType>();
+            ChipType actual = field.AsChipType();
             Assert.Equal(expected, actual);
         }
 
@@ -36,7 +36,7 @@ namespace SabreTools.DatItems.Test
         [InlineData("gambling", ControlType.Gambling)]
         public void AsControlTypeTest(string? field, ControlType expected)
         {
-            ControlType actual = field.AsEnumValue<ControlType>();
+            ControlType actual = field.AsControlType();
             Assert.Equal(expected, actual);
         }
 
@@ -65,7 +65,7 @@ namespace SabreTools.DatItems.Test
         [InlineData("vidfile", DeviceType.VidFile)]
         public void AsDeviceTypeTest(string? field, DeviceType expected)
         {
-            DeviceType actual = field.AsEnumValue<DeviceType>();
+            DeviceType actual = field.AsDeviceType();
             Assert.Equal(expected, actual);
         }
 
@@ -78,7 +78,7 @@ namespace SabreTools.DatItems.Test
         [InlineData("unknown", DisplayType.Unknown)]
         public void AsDisplayTypeTest(string? field, DisplayType expected)
         {
-            DisplayType actual = field.AsEnumValue<DisplayType>();
+            DisplayType actual = field.AsDisplayType();
             Assert.Equal(expected, actual);
         }
 
@@ -88,7 +88,7 @@ namespace SabreTools.DatItems.Test
         [InlineData("little", Endianness.Little)]
         public void AsEndiannessTest(string? field, Endianness expected)
         {
-            Endianness actual = field.AsEnumValue<Endianness>();
+            Endianness actual = field.AsEndianness();
             Assert.Equal(expected, actual);
         }
 
@@ -98,7 +98,7 @@ namespace SabreTools.DatItems.Test
         [InlineData("imperfect", FeatureStatus.Imperfect)]
         public void AsFeatureStatusTest(string? field, FeatureStatus expected)
         {
-            FeatureStatus actual = field.AsEnumValue<FeatureStatus>();
+            FeatureStatus actual = field.AsFeatureStatus();
             Assert.Equal(expected, actual);
         }
 
@@ -120,7 +120,7 @@ namespace SabreTools.DatItems.Test
         [InlineData("timing", FeatureType.Timing)]
         public void AsFeatureTypeTest(string? field, FeatureType expected)
         {
-            FeatureType actual = field.AsEnumValue<FeatureType>();
+            FeatureType actual = field.AsFeatureType();
             Assert.Equal(expected, actual);
         }
 
@@ -135,7 +135,7 @@ namespace SabreTools.DatItems.Test
         [InlineData("verified", ItemStatus.Verified)]
         public void AsItemStatusTest(string? field, ItemStatus expected)
         {
-            ItemStatus actual = field.AsEnumValue<ItemStatus>();
+            ItemStatus actual = field.AsItemStatus();
             Assert.Equal(expected, actual);
         }
 
@@ -196,7 +196,7 @@ namespace SabreTools.DatItems.Test
         [InlineData("source_details", ItemType.SourceDetails)]
         public void AsItemTypeTest(string? field, ItemType expected)
         {
-            ItemType actual = field.AsEnumValue<ItemType>();
+            ItemType actual = field.AsItemType();
             Assert.Equal(expected, actual);
         }
 
@@ -218,7 +218,7 @@ namespace SabreTools.DatItems.Test
         [InlineData("ignore", LoadFlag.Ignore)]
         public void AsLoadFlagTest(string? field, LoadFlag expected)
         {
-            LoadFlag actual = field.AsEnumValue<LoadFlag>();
+            LoadFlag actual = field.AsLoadFlag();
             Assert.Equal(expected, actual);
         }
 
@@ -232,7 +232,7 @@ namespace SabreTools.DatItems.Test
         [InlineData("mechanical", MachineType.Mechanical)]
         public void AsMachineTypeTest(string? field, MachineType expected)
         {
-            MachineType actual = field.AsEnumValue<MachineType>();
+            MachineType actual = field.AsMachineType();
             Assert.Equal(expected, actual);
         }
 
@@ -243,7 +243,7 @@ namespace SabreTools.DatItems.Test
         [InlineData("sccpluscart", OpenMSXSubType.SCCPlusCart)]
         public void AsOpenMSXSubTypeTest(string? field, OpenMSXSubType expected)
         {
-            OpenMSXSubType actual = field.AsEnumValue<OpenMSXSubType>();
+            OpenMSXSubType actual = field.AsOpenMSXSubType();
             Assert.Equal(expected, actual);
         }
 
@@ -257,7 +257,7 @@ namespace SabreTools.DatItems.Test
         [InlineData("ge", Relation.GreaterThanOrEqual)]
         public void AsRelationTest(string? field, Relation expected)
         {
-            Relation actual = field.AsEnumValue<Relation>();
+            Relation actual = field.AsRelation();
             Assert.Equal(expected, actual);
         }
 
@@ -268,7 +268,7 @@ namespace SabreTools.DatItems.Test
         [InlineData("yes", Runnable.Yes)]
         public void AsRunnableTest(string? field, Runnable expected)
         {
-            Runnable actual = field.AsEnumValue<Runnable>();
+            Runnable actual = field.AsRunnable();
             Assert.Equal(expected, actual);
         }
 
@@ -279,7 +279,7 @@ namespace SabreTools.DatItems.Test
         [InlineData("compatible", SoftwareListStatus.Compatible)]
         public void AsSoftwareListStatusTest(string? field, SoftwareListStatus expected)
         {
-            SoftwareListStatus actual = field.AsEnumValue<SoftwareListStatus>();
+            SoftwareListStatus actual = field.AsSoftwareListStatus();
             Assert.Equal(expected, actual);
         }
 
@@ -292,7 +292,7 @@ namespace SabreTools.DatItems.Test
         [InlineData("supported", Supported.Yes)]
         public void AsSupportedTest(string? field, Supported expected)
         {
-            Supported actual = field.AsEnumValue<Supported>();
+            Supported actual = field.AsSupported();
             Assert.Equal(expected, actual);
         }
 
@@ -303,7 +303,7 @@ namespace SabreTools.DatItems.Test
         [InlineData("preliminary", SupportStatus.Preliminary)]
         public void AsSupportStatusTest(string? field, SupportStatus expected)
         {
-            SupportStatus actual = field.AsEnumValue<SupportStatus>();
+            SupportStatus actual = field.AsSupportStatus();
             Assert.Equal(expected, actual);
         }
 

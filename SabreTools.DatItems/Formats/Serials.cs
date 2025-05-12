@@ -140,7 +140,7 @@ namespace SabreTools.DatItems.Formats
             serials.SetFieldValue<Machine>(DatItem.MachineKey, GetMachine());
             serials.SetFieldValue<bool?>(DatItem.RemoveKey, GetBoolFieldValue(DatItem.RemoveKey));
             serials.SetFieldValue<Source?>(DatItem.SourceKey, GetFieldValue<Source?>(DatItem.SourceKey));
-            serials.SetFieldValue<string?>(Models.Metadata.DatItem.TypeKey, GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue());
+            serials.SetFieldValue<string?>(Models.Metadata.DatItem.TypeKey, GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsItemType().AsStringValue());
 
             return serials;
         }

@@ -334,13 +334,13 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case Driver driver:
-                    if (driver.GetStringFieldValue(Models.Metadata.Driver.StatusKey).AsEnumValue<SupportStatus>() == SupportStatus.NULL)
+                    if (driver.GetStringFieldValue(Models.Metadata.Driver.StatusKey).AsSupportStatus() == SupportStatus.NULL)
                         missingFields.Add(Models.Metadata.Driver.StatusKey);
-                    if (driver.GetStringFieldValue(Models.Metadata.Driver.EmulationKey).AsEnumValue<SupportStatus>() == SupportStatus.NULL)
+                    if (driver.GetStringFieldValue(Models.Metadata.Driver.EmulationKey).AsSupportStatus() == SupportStatus.NULL)
                         missingFields.Add(Models.Metadata.Driver.EmulationKey);
-                    if (driver.GetStringFieldValue(Models.Metadata.Driver.CocktailKey).AsEnumValue<SupportStatus>() == SupportStatus.NULL)
+                    if (driver.GetStringFieldValue(Models.Metadata.Driver.CocktailKey).AsSupportStatus() == SupportStatus.NULL)
                         missingFields.Add(Models.Metadata.Driver.CocktailKey);
-                    if (driver.GetStringFieldValue(Models.Metadata.Driver.SaveStateKey).AsEnumValue<SupportStatus>() == SupportStatus.NULL)
+                    if (driver.GetStringFieldValue(Models.Metadata.Driver.SaveStateKey).AsSupportStatus() == SupportStatus.NULL)
                         missingFields.Add(Models.Metadata.Driver.SaveStateKey);
                     break;
 
@@ -349,7 +349,7 @@ namespace SabreTools.DatFiles.Formats
                         missingFields.Add(Models.Metadata.SoftwareList.TagKey);
                     if (string.IsNullOrEmpty(softwarelist.GetName()))
                         missingFields.Add(Models.Metadata.SoftwareList.NameKey);
-                    if (softwarelist.GetStringFieldValue(Models.Metadata.SoftwareList.StatusKey).AsEnumValue<SoftwareListStatus>() == SoftwareListStatus.None)
+                    if (softwarelist.GetStringFieldValue(Models.Metadata.SoftwareList.StatusKey).AsSoftwareListStatus() == SoftwareListStatus.None)
                         missingFields.Add(Models.Metadata.SoftwareList.StatusKey);
                     break;
             }

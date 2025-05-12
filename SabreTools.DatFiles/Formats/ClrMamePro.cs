@@ -125,14 +125,14 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case Chip chip:
-                    if (chip.GetStringFieldValue(Models.Metadata.Chip.ChipTypeKey).AsEnumValue<ChipType>() == ChipType.NULL)
+                    if (chip.GetStringFieldValue(Models.Metadata.Chip.ChipTypeKey).AsChipType() == ChipType.NULL)
                         missingFields.Add(Models.Metadata.Chip.ChipTypeKey);
                     if (string.IsNullOrEmpty(chip.GetName()))
                         missingFields.Add(Models.Metadata.Chip.NameKey);
                     break;
 
                 case Display display:
-                    if (display.GetStringFieldValue(Models.Metadata.Display.DisplayTypeKey).AsEnumValue<DisplayType>() == DisplayType.NULL)
+                    if (display.GetStringFieldValue(Models.Metadata.Display.DisplayTypeKey).AsDisplayType() == DisplayType.NULL)
                         missingFields.Add(Models.Metadata.Display.DisplayTypeKey);
                     if (display.GetInt64FieldValue(Models.Metadata.Display.RotateKey) == null)
                         missingFields.Add(Models.Metadata.Display.RotateKey);
@@ -156,9 +156,9 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case Driver driver:
-                    if (driver.GetStringFieldValue(Models.Metadata.Driver.StatusKey).AsEnumValue<SupportStatus>() == SupportStatus.NULL)
+                    if (driver.GetStringFieldValue(Models.Metadata.Driver.StatusKey).AsSupportStatus() == SupportStatus.NULL)
                         missingFields.Add(Models.Metadata.Driver.StatusKey);
-                    if (driver.GetStringFieldValue(Models.Metadata.Driver.EmulationKey).AsEnumValue<SupportStatus>() == SupportStatus.NULL)
+                    if (driver.GetStringFieldValue(Models.Metadata.Driver.EmulationKey).AsSupportStatus() == SupportStatus.NULL)
                         missingFields.Add(Models.Metadata.Driver.EmulationKey);
                     break;
             }

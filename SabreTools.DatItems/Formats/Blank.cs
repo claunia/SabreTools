@@ -39,7 +39,7 @@ namespace SabreTools.DatItems.Formats
             blank.SetFieldValue<Machine>(DatItem.MachineKey, GetMachine());
             blank.SetFieldValue<bool?>(DatItem.RemoveKey, GetBoolFieldValue(DatItem.RemoveKey));
             blank.SetFieldValue<Source?>(DatItem.SourceKey, GetFieldValue<Source?>(DatItem.SourceKey));
-            blank.SetFieldValue<string?>(Models.Metadata.DatItem.TypeKey, GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>().AsStringValue());
+            blank.SetFieldValue<string?>(Models.Metadata.DatItem.TypeKey, GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsItemType().AsStringValue());
 
             return blank;
         }

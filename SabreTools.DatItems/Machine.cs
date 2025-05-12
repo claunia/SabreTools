@@ -47,7 +47,7 @@ namespace SabreTools.DatItems
             if (GetBoolFieldValue(Models.Metadata.Machine.IsMechanicalKey) != null)
                 SetFieldValue<string?>(Models.Metadata.Machine.IsMechanicalKey, GetBoolFieldValue(Models.Metadata.Machine.IsMechanicalKey).FromYesNo());
             if (GetStringFieldValue(Models.Metadata.Machine.SupportedKey) != null)
-                SetFieldValue<string?>(Models.Metadata.Machine.SupportedKey, GetStringFieldValue(Models.Metadata.Machine.SupportedKey).AsEnumValue<Supported>().AsStringValue());
+                SetFieldValue<string?>(Models.Metadata.Machine.SupportedKey, GetStringFieldValue(Models.Metadata.Machine.SupportedKey).AsSupported().AsStringValue());
 
             // Handle Trurip object, if it exists
             if (machine.ContainsKey(Models.Metadata.Machine.TruripKey))

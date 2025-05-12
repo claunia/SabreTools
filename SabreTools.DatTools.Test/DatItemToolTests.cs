@@ -48,7 +48,7 @@ namespace SabreTools.DatTools.Test
         {
             var baseFile = CreateBaseFile(fileType);
             var actual = DatItemTool.CreateDatItem(baseFile, asFile);
-            Assert.Equal(expected, actual?.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>());
+            Assert.Equal(expected, actual?.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsItemType());
         }
 
         #endregion

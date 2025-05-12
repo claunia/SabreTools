@@ -25,7 +25,7 @@ namespace SabreTools.DatItems.Formats
         {
             // Process flag values
             if (GetStringFieldValue(Models.Metadata.Condition.RelationKey) != null)
-                SetFieldValue<string?>(Models.Metadata.Condition.RelationKey, GetStringFieldValue(Models.Metadata.Condition.RelationKey).AsEnumValue<Relation>().AsStringValue());
+                SetFieldValue<string?>(Models.Metadata.Condition.RelationKey, GetStringFieldValue(Models.Metadata.Condition.RelationKey).AsRelation().AsStringValue());
         }
 
         #endregion

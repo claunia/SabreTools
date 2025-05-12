@@ -186,7 +186,7 @@ namespace SabreTools.DatFiles
             if (item is Disk disk)
             {
                 // If the file has aboslutely no hashes, skip and log
-                if (disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() != ItemStatus.Nodump
+                if (disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsItemStatus() != ItemStatus.Nodump
                     && string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.MD5Key))
                     && string.IsNullOrEmpty(disk.GetStringFieldValue(Models.Metadata.Disk.SHA1Key)))
                 {
@@ -250,14 +250,14 @@ namespace SabreTools.DatFiles
                 }
 
                 // If the file has no size and it's not the above case, skip and log
-                else if (rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() != ItemStatus.Nodump && (size == 0 || size == null))
+                else if (rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsItemStatus() != ItemStatus.Nodump && (size == 0 || size == null))
                 {
                     //logger.Verbose($"{Header.GetStringFieldValue(DatHeader.FileNameKey)}: Incomplete entry for '{rom.GetName()}' will be output as nodump");
                     rom.SetFieldValue<string?>(Models.Metadata.Rom.StatusKey, ItemStatus.Nodump.AsStringValue());
                 }
 
                 // If the file has a size but aboslutely no hashes, skip and log
-                else if (rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() != ItemStatus.Nodump
+                else if (rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsItemStatus() != ItemStatus.Nodump
                     && size != null && size > 0
                     && !rom.HasHashes())
                 {
@@ -869,13 +869,13 @@ namespace SabreTools.DatFiles
                     continue;
 
                 // If it's a nodump, add and skip
-                if (datItem is Rom rom && rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump)
+                if (datItem is Rom rom && rom.GetStringFieldValue(Models.Metadata.Rom.StatusKey).AsItemStatus() == ItemStatus.Nodump)
                 {
                     output.Add(new KeyValuePair<long, DatItem>(itemIndex, datItem));
                     nodumpCount++;
                     continue;
                 }
-                else if (datItem is Disk disk && disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsEnumValue<ItemStatus>() == ItemStatus.Nodump)
+                else if (datItem is Disk disk && disk.GetStringFieldValue(Models.Metadata.Disk.StatusKey).AsItemStatus() == ItemStatus.Nodump)
                 {
                     output.Add(new KeyValuePair<long, DatItem>(itemIndex, datItem));
                     nodumpCount++;
@@ -1173,7 +1173,7 @@ namespace SabreTools.DatFiles
                     string? xType = x.Value.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
                     string? yType = y.Value.GetStringFieldValue(Models.Metadata.DatItem.TypeKey);
                     if (xType != yType)
-                        return xType.AsEnumValue<ItemType>() - yType.AsEnumValue<ItemType>();
+                        return xType.AsItemType() - yType.AsItemType();
 
                     // If directory names don't match
                     string? xDirectoryName = Path.GetDirectoryName(TextHelper.RemovePathUnsafeCharacters(x.Value.GetName()));

@@ -223,8 +223,8 @@ namespace SabreTools.DatItems
                 return false;
 
             // Get the types for comparison
-            ItemType selfType = GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>();
-            ItemType otherType = other.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>();
+            ItemType selfType = GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsItemType();
+            ItemType otherType = other.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsItemType();
 
             // If we don't have a matched type, return false
             if (selfType != otherType)
@@ -429,8 +429,8 @@ namespace SabreTools.DatItems
                 return false;
 
             // Get the types for comparison
-            ItemType selfType = GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>();
-            ItemType otherType = other.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsEnumValue<ItemType>();
+            ItemType selfType = GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsItemType();
+            ItemType otherType = other.GetStringFieldValue(Models.Metadata.DatItem.TypeKey).AsItemType();
 
             // If we don't have a matched type, return false
             if (selfType != otherType)

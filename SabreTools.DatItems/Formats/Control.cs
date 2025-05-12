@@ -41,7 +41,7 @@ namespace SabreTools.DatItems.Formats
             if (GetInt64FieldValue(Models.Metadata.Control.SensitivityKey) != null)
                 SetFieldValue<string?>(Models.Metadata.Control.SensitivityKey, GetInt64FieldValue(Models.Metadata.Control.SensitivityKey).ToString());
             if (GetStringFieldValue(Models.Metadata.Control.ControlTypeKey) != null)
-                SetFieldValue<string?>(Models.Metadata.Control.ControlTypeKey, GetStringFieldValue(Models.Metadata.Control.ControlTypeKey).AsEnumValue<ControlType>().AsStringValue());
+                SetFieldValue<string?>(Models.Metadata.Control.ControlTypeKey, GetStringFieldValue(Models.Metadata.Control.ControlTypeKey).AsControlType().AsStringValue());
         }
 
         #endregion
