@@ -65,21 +65,23 @@ namespace SabreTools.Core.Tools
             // Normalize the string for easier comparison
             numeric = numeric!.ToLowerInvariant();
 
-            // Get the multiplication modifier and trim characters
-            long multiplier = DetermineMultiplier(numeric);
-            numeric = numeric.TrimEnd(['k', 'm', 'g', 't', 'p', 'e', 'z', 'y', 'i', 'b', ' ']);
-
             // Parse the numeric string, if possible
-            long value;
             if (numeric.StartsWith("0x"))
-                value = Convert.ToInt64(numeric, 16);
-            else if (long.TryParse(numeric, out long longValue))
-                value = longValue;
+            {
+                return Convert.ToInt64(numeric.Substring(2), 16);
+            }
             else
-                return null;
+            {
+                // Get the multiplication modifier and trim characters
+                long multiplier = DetermineMultiplier(numeric);
+                numeric = numeric.TrimEnd(['k', 'm', 'g', 't', 'p', 'e', 'z', 'y', 'i', 'b', ' ']);
 
-            // Apply the multiplier and return
-            return value * multiplier;
+                // Apply the multiplier and return
+                if (!long.TryParse(numeric, out long longValue))
+                    return null;
+
+                return longValue * multiplier;
+            }
         }
 
         /// <summary>
