@@ -200,7 +200,7 @@ namespace SabreTools.DatFiles
                 return;
 
             // Loop through the machines and add
-    #if NET452_OR_GREATER || NETCOREAPP
+#if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(items, Core.Globals.ParallelOptions, machine =>
 #elif NET40_OR_GREATER
             Parallel.ForEach(items, machine =>
@@ -991,20 +991,27 @@ namespace SabreTools.DatFiles
                         if (roms == null)
                             continue;
 
-                        // Handle "offset" roms by keeping a list before adding
+                        // Handle "offset" roms
                         List<Rom> addRoms = [];
+                        long runningSize = 0;
+
                         foreach (var rom in roms)
                         {
                             // If the item doesn't pass the filter
                             if (filterRunner != null && !filterRunner.Run(rom))
                                 continue;
 
+                            // Convert the item
+                            var romItem = new Rom(rom);
+                            long? size = romItem.GetInt64FieldValue(Models.Metadata.Rom.SizeKey);
+                            if (size != null)
+                                runningSize += size.Value;
+
                             // If the rom is a continue
                             string? loadFlag = rom.ReadString(Models.Metadata.Rom.LoadFlagKey);
                             if (loadFlag != null && loadFlag.Equals("continue", StringComparison.OrdinalIgnoreCase))
                                 continue;
 
-                            var romItem = new Rom(rom);
                             romItem.SetFieldValue<DataArea?>(Rom.DataAreaKey, dataAreaItem);
                             romItem.SetFieldValue<Part?>(Rom.PartKey, partItem);
                             romItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
@@ -1015,12 +1022,7 @@ namespace SabreTools.DatFiles
 
                         // If there is only one item left, check sizes
                         if (roms.Length > 1 && addRoms.Count == 1)
-                        {
-                            long? dataAreaSize = dataAreaItem.GetInt64FieldValue(Models.Metadata.DataArea.SizeKey);
-                            long? romSize = addRoms[0].GetInt64FieldValue(Models.Metadata.Rom.SizeKey);
-                            if (dataAreaSize != null && romSize != dataAreaSize)
-                                addRoms[0].SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, dataAreaSize);
-                        }
+                            addRoms[0].SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, runningSize);
 
                         // Add all of the adjusted roms
                         foreach (var romItem in addRoms)
