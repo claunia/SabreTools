@@ -649,6 +649,9 @@ namespace SabreTools.DatFiles
                 if (deviceOnly ^ (datItems[0].GetMachine()!.GetBoolFieldValue(Models.Metadata.Machine.IsDeviceKey) == true))
                     continue;
 
+                // Get the first item for the machine
+                DatItem copyFrom = datItems[0];
+
                 // Get all device reference names from the current machine
                 List<string?> deviceReferences = datItems
                     .FindAll(i => i is DeviceRef)
@@ -684,7 +687,6 @@ namespace SabreTools.DatFiles
                             .ConvertAll(i => (i as DeviceRef)!.GetName()!));
 
                         // Set new machine information and add to the current machine
-                        DatItem copyFrom = datItems[0];
                         foreach (DatItem item in devItems)
                         {
                             // If the parent machine doesn't already contain this item, add it
@@ -708,7 +710,8 @@ namespace SabreTools.DatFiles
                         {
                             var deviceRef = new DeviceRef();
                             deviceRef.SetName(deviceReference);
-                            datItems.Add(deviceRef);
+                            deviceRef.CopyMachineInformation(copyFrom);
+                            Items.AddItem(deviceRef, statsOnly: false);
                         }
                     }
                 }
@@ -732,7 +735,6 @@ namespace SabreTools.DatFiles
                             .Select(o => o.GetStringFieldValue(Models.Metadata.SlotOption.DevNameKey)!));
 
                         // Set new machine information and add to the current machine
-                        DatItem copyFrom = datItems[0];
                         foreach (DatItem item in slotItems)
                         {
                             // If the parent machine doesn't already contain this item, add it
@@ -744,6 +746,7 @@ namespace SabreTools.DatFiles
                                 // Clone the item and then add it
                                 DatItem datItem = (DatItem)item.Clone();
                                 datItem.CopyMachineInformation(copyFrom);
+                                datItem.RemoveField(Models.Metadata.Rom.MergeKey);
                                 AddItem(datItem, statsOnly: false);
                             }
                         }
@@ -759,8 +762,9 @@ namespace SabreTools.DatFiles
 
                             var slotItem = new Slot();
                             slotItem.SetFieldValue<SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey, [slotOptionItem]);
+                            slotItem.CopyMachineInformation(copyFrom);
 
-                            datItems.Add(slotItem);
+                            Items.AddItem(slotItem, statsOnly: false);
                         }
                     }
                 }
@@ -858,6 +862,7 @@ namespace SabreTools.DatFiles
 
                                 // Clone the item and then add it
                                 DatItem datItem = (DatItem)item.Clone();
+                                datItem.RemoveField(Models.Metadata.Rom.MergeKey);
                                 ItemsDB.AddItem(datItem, machine.Key, source.Key);
                             }
                         }
@@ -914,6 +919,7 @@ namespace SabreTools.DatFiles
 
                                 // Clone the item and then add it
                                 DatItem datItem = (DatItem)item.Clone();
+                                datItem.RemoveField(Models.Metadata.Rom.MergeKey);
                                 ItemsDB.AddItem(datItem, machine.Key, source.Key);
                             }
                         }
