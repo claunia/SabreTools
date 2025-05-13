@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
 #endif
