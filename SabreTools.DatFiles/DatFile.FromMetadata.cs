@@ -1013,8 +1013,8 @@ namespace SabreTools.DatFiles
                             addRoms.Add(romItem);
                         }
 
-                        // If there is only one item and the sizes don't match
-                        if (addRoms.Count == 1)
+                        // If there is only one item left, check sizes
+                        if (roms.Length > 1 && addRoms.Count == 1)
                         {
                             long? dataAreaSize = dataAreaItem.GetInt64FieldValue(Models.Metadata.DataArea.SizeKey);
                             long? romSize = addRoms[0].GetInt64FieldValue(Models.Metadata.Rom.SizeKey);
@@ -1420,34 +1420,6 @@ namespace SabreTools.DatFiles
 
                 AddItem(datItem, statsOnly);
                 // AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
-            }
-        }
-
-        /// <summary>
-        /// Get a numeric value from a string that's possibly hex
-        /// </summary>
-        private static long? ParseAsPossibleHex(string? numeric)
-        {
-            // If the value is null
-            if (string.IsNullOrEmpty(numeric))
-                return null;
-
-            try
-            {
-                // Get the value from the string
-                if (!long.TryParse(numeric, out long value))
-                {
-                    if (!numeric!.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
-                        return null;
-
-                    value = long.Parse(numeric.Substring(2), NumberStyles.HexNumber);
-                }
-
-                return value;
-            }
-            catch
-            {
-                return null;
             }
         }
 
