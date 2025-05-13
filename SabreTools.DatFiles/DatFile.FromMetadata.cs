@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
 #endif
@@ -988,10 +991,17 @@ namespace SabreTools.DatFiles
                         if (roms == null)
                             continue;
 
+                        // Handle "offset" roms by keeping a list before adding
+                        List<Rom> addRoms = [];
                         foreach (var rom in roms)
                         {
                             // If the item doesn't pass the filter
                             if (filterRunner != null && !filterRunner.Run(rom))
+                                continue;
+
+                            // If the rom is a continue
+                            string? loadFlag = rom.ReadString(Models.Metadata.Rom.LoadFlagKey);
+                            if (loadFlag != null && loadFlag.Equals("continue", StringComparison.OrdinalIgnoreCase))
                                 continue;
 
                             var romItem = new Rom(rom);
@@ -1000,6 +1010,21 @@ namespace SabreTools.DatFiles
                             romItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                             romItem.CopyMachineInformation(machine);
 
+                            addRoms.Add(romItem);
+                        }
+
+                        // If there is only one item and the sizes don't match
+                        if (addRoms.Count == 1)
+                        {
+                            long? dataAreaSize = dataAreaItem.GetInt64FieldValue(Models.Metadata.DataArea.SizeKey);
+                            long? romSize = addRoms[0].GetInt64FieldValue(Models.Metadata.Rom.SizeKey);
+                            if (dataAreaSize != null && romSize != dataAreaSize)
+                                addRoms[0].SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, dataAreaSize);
+                        }
+
+                        // Add all of the adjusted roms
+                        foreach (var romItem in addRoms)
+                        {
                             AddItem(romItem, statsOnly);
                             // AddItemDB(romItem, machineIndex, sourceIndex, statsOnly);
                         }
@@ -1395,6 +1420,34 @@ namespace SabreTools.DatFiles
 
                 AddItem(datItem, statsOnly);
                 // AddItemDB(datItem, machineIndex, sourceIndex, statsOnly);
+            }
+        }
+
+        /// <summary>
+        /// Get a numeric value from a string that's possibly hex
+        /// </summary>
+        private static long? ParseAsPossibleHex(string? numeric)
+        {
+            // If the value is null
+            if (string.IsNullOrEmpty(numeric))
+                return null;
+
+            try
+            {
+                // Get the value from the string
+                if (!long.TryParse(numeric, out long value))
+                {
+                    if (!numeric!.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
+                        return null;
+
+                    value = long.Parse(numeric.Substring(2), NumberStyles.HexNumber);
+                }
+
+                return value;
+            }
+            catch
+            {
+                return null;
             }
         }
 
