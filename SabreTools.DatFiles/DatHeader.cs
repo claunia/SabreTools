@@ -159,6 +159,12 @@ namespace SabreTools.DatFiles
                 header.Remove(Models.Metadata.Header.ForceNodumpKey);
             if (header.ReadString(Models.Metadata.Header.ForcePackingKey).AsPackingFlag() == PackingFlag.None)
                 header.Remove(Models.Metadata.Header.ForcePackingKey);
+            if (header.ReadString(Models.Metadata.Header.BiosModeKey).AsMergingFlag() == MergingFlag.None)
+                header.Remove(Models.Metadata.Header.BiosModeKey);
+            if (header.ReadString(Models.Metadata.Header.RomModeKey).AsMergingFlag() == MergingFlag.None)
+                header.Remove(Models.Metadata.Header.RomModeKey);
+            if (header.ReadString(Models.Metadata.Header.SampleModeKey).AsMergingFlag() == MergingFlag.None)
+                header.Remove(Models.Metadata.Header.SampleModeKey);
 
             // Convert subheader values
             if (CanOpenSpecified)

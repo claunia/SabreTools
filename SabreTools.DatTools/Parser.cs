@@ -149,6 +149,9 @@ namespace SabreTools.DatTools
                     statsOnly: statsOnly,
                     filterRunner: filterRunner,
                     throwOnError: throwOnError);
+
+                // Copy the header values back
+                datFile.SetHeader(parsingDatFile.Header);
             }
             catch (Exception ex) when (!throwOnError)
             {

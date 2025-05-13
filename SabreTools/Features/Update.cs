@@ -103,9 +103,6 @@ namespace SabreTools.Features
                 ? Modifiers.ReplaceExtension
                 : $".{Modifiers.ReplaceExtension}";
 
-            // If we're in a non-replacement special update mode and the names aren't set, set defaults
-            SetDefaultHeaderValues(updateMode, GetBoolean(features, NoAutomaticDateValue));
-
             // If no update fields are set, default to Names
             if (updateItemFieldNames == null || updateItemFieldNames.Count == 0)
             {
@@ -123,7 +120,7 @@ namespace SabreTools.Features
             // If we're in standard update mode, run through all of the inputs
             if (updateMode == UpdateMode.None)
             {
-                StandardUpdate(inputPaths, GetBoolean(features, InplaceValue));
+                StandardUpdate(inputPaths, GetBoolean(features, InplaceValue), GetBoolean(features, NoAutomaticDateValue));
                 return true;
             }
 
@@ -149,6 +146,9 @@ namespace SabreTools.Features
 
             // Create a DAT to capture inputs
             DatFile userInputDat = Parser.CreateDatFile(Header!, Modifiers);
+
+            // If we're in a non-replacement special update mode and the names aren't set, set defaults
+            SetDefaultHeaderValues(userInputDat, updateMode, GetBoolean(features, NoAutomaticDateValue));
 
             // Populate using the correct set
             List<DatHeader> datHeaders = GetDatHeaders(updateMode, inputPaths, basePaths, userInputDat);
@@ -391,12 +391,13 @@ namespace SabreTools.Features
         /// <summary>
         /// Set default header values for non-specialized update types
         /// </summary>
+        /// <param name="datFile">DatFile to update the header for</param>
         /// <param name="updateMode">Update mode that is currently being run</param>
         /// <param name="noAutomaticDate">True if date should be omitted from the description, false otherwise</param>
-        private void SetDefaultHeaderValues(UpdateMode updateMode, bool noAutomaticDate)
+        private void SetDefaultHeaderValues(DatFile datFile, UpdateMode updateMode, bool noAutomaticDate)
         {
-            // Skip running if a required object is null
-            if (Header == null || Cleaner == null)
+            // Skip running if a required objects are null
+            if (datFile.Header == null || Cleaner == null)
                 return;
 
             // Skip running for diff against and base replacement
@@ -413,39 +414,39 @@ namespace SabreTools.Features
 #endif
 
             // Date
-            if (string.IsNullOrEmpty(Header.GetStringFieldValue(Models.Metadata.Header.DateKey)))
-                Header.SetFieldValue<string?>(Models.Metadata.Header.DateKey, DateTime.Now.ToString("yyyy-MM-dd"));
+            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.DateKey)))
+                datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DateKey, DateTime.Now.ToString("yyyy-MM-dd"));
 
             // Name
-            if (string.IsNullOrEmpty(Header.GetStringFieldValue(Models.Metadata.Header.NameKey)))
+            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.NameKey)))
             {
-                Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, (updateMode != 0 ? "DiffDAT" : "MergeDAT")
-                    + (Header.GetStringFieldValue(Models.Metadata.Header.TypeKey) == "SuperDAT" ? "-SuperDAT" : string.Empty)
+                datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.NameKey, (updateMode != 0 ? "DiffDAT" : "MergeDAT")
+                    + (datFile.Header.GetStringFieldValue(Models.Metadata.Header.TypeKey) == "SuperDAT" ? "-SuperDAT" : string.Empty)
                     + (Cleaner.DedupeRoms != DedupeType.None ? "-deduped" : string.Empty));
             }
 
             // Description
-            if (string.IsNullOrEmpty(Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)))
+            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)))
             {
-                Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, (updateMode != 0 ? "DiffDAT" : "MergeDAT")
-                    + (Header.GetStringFieldValue(Models.Metadata.Header.TypeKey) == "SuperDAT" ? "-SuperDAT" : string.Empty)
+                datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, (updateMode != 0 ? "DiffDAT" : "MergeDAT")
+                    + (datFile.Header.GetStringFieldValue(Models.Metadata.Header.TypeKey) == "SuperDAT" ? "-SuperDAT" : string.Empty)
                     + (Cleaner!.DedupeRoms != DedupeType.None ? " - deduped" : string.Empty));
 
                 if (!noAutomaticDate)
-                    Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, $"{Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)} ({Header.GetStringFieldValue(Models.Metadata.Header.DateKey)})");
+                    datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.DescriptionKey, $"{datFile.Header.GetStringFieldValue(Models.Metadata.Header.DescriptionKey)} ({datFile.Header.GetStringFieldValue(Models.Metadata.Header.DateKey)})");
             }
 
             // Category
-            if (string.IsNullOrEmpty(Header.GetStringFieldValue(Models.Metadata.Header.CategoryKey)) && updateMode != 0)
-                Header.SetFieldValue<string?>(Models.Metadata.Header.CategoryKey, "DiffDAT");
+            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.CategoryKey)) && updateMode != 0)
+                datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.CategoryKey, "DiffDAT");
 
             // Author
-            if (string.IsNullOrEmpty(Header.GetStringFieldValue(Models.Metadata.Header.AuthorKey)))
-                Header.SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, $"SabreTools {Globals.Version}");
+            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.AuthorKey)))
+                datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.AuthorKey, $"SabreTools {Globals.Version}");
 
             // Comment
-            if (string.IsNullOrEmpty(Header.GetStringFieldValue(Models.Metadata.Header.CommentKey)))
-                Header.SetFieldValue<string?>(Models.Metadata.Header.CommentKey, $"Generated by SabreTools {Globals.Version}");
+            if (string.IsNullOrEmpty(datFile.Header.GetStringFieldValue(Models.Metadata.Header.CommentKey)))
+                datFile.Header.SetFieldValue<string?>(Models.Metadata.Header.CommentKey, $"Generated by SabreTools {Globals.Version}");
         }
 
         /// <summary>
@@ -453,7 +454,8 @@ namespace SabreTools.Features
         /// </summary>
         /// <param name="inputPaths">Set of input paths to process</param>
         /// <param name="inplace">True to output to the input folder, false otherwise</param>
-        private void StandardUpdate(List<ParentablePath> inputPaths, bool inplace)
+        /// <param name="noAutomaticDate">True if date should be omitted from the description, false otherwise</param>
+        private void StandardUpdate(List<ParentablePath> inputPaths, bool inplace, bool noAutomaticDate)
         {
             // Loop through each input and update
 #if NET452_OR_GREATER || NETCOREAPP
@@ -488,6 +490,9 @@ namespace SabreTools.Features
                     keepext: isSeparatedFile,
                     filterRunner: FilterRunner);
                 datFile.Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, currentFormat);
+
+                // Set any missing header values
+                SetDefaultHeaderValues(datFile, updateMode: UpdateMode.None, noAutomaticDate: noAutomaticDate);
 
                 // Perform additional processing steps
                 AdditionalProcessing(datFile);
