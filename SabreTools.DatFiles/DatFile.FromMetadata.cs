@@ -993,8 +993,6 @@ namespace SabreTools.DatFiles
 
                         // Handle "offset" roms
                         List<Rom> addRoms = [];
-                        long runningSize = 0;
-
                         foreach (var rom in roms)
                         {
                             // If the item doesn't pass the filter
@@ -1004,13 +1002,16 @@ namespace SabreTools.DatFiles
                             // Convert the item
                             var romItem = new Rom(rom);
                             long? size = romItem.GetInt64FieldValue(Models.Metadata.Rom.SizeKey);
-                            if (size != null)
-                                runningSize += size.Value;
 
                             // If the rom is a continue
                             string? loadFlag = rom.ReadString(Models.Metadata.Rom.LoadFlagKey);
                             if (loadFlag != null && loadFlag.Equals("continue", StringComparison.OrdinalIgnoreCase))
+                            {
+                                var lastRom = addRoms[addRoms.Count - 1];
+                                long? lastSize = lastRom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey);
+                                lastRom.SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, lastSize + size);
                                 continue;
+                            }
 
                             romItem.SetFieldValue<DataArea?>(Rom.DataAreaKey, dataAreaItem);
                             romItem.SetFieldValue<Part?>(Rom.PartKey, partItem);
@@ -1019,10 +1020,6 @@ namespace SabreTools.DatFiles
 
                             addRoms.Add(romItem);
                         }
-
-                        // If there is only one item left, check sizes
-                        if (roms.Length > 1 && addRoms.Count == 1)
-                            addRoms[0].SetFieldValue<long?>(Models.Metadata.Rom.SizeKey, runningSize);
 
                         // Add all of the adjusted roms
                         foreach (var romItem in addRoms)
