@@ -599,6 +599,7 @@ namespace SabreTools.DatFiles
                     if (items.Values.Any(i => i.GetName()?.ToLowerInvariant() == datItem.GetName()?.ToLowerInvariant())
                         && items.Values.Any(i => i == datItem))
                     {
+                        datItem.RemoveField(Models.Metadata.Rom.MergeKey);
                         ItemsDB.AddItem(datItem, machine.Key, source.Key);
                     }
                 }
@@ -698,6 +699,7 @@ namespace SabreTools.DatFiles
                                 // Clone the item and then add it
                                 DatItem datItem = (DatItem)item.Clone();
                                 datItem.CopyMachineInformation(copyFrom);
+                                datItem.RemoveField(Models.Metadata.Rom.MergeKey);
                                 AddItem(datItem, statsOnly: false);
                             }
                         }
@@ -979,6 +981,7 @@ namespace SabreTools.DatFiles
                 {
                     DatItem datItem = (DatItem)item.Clone();
                     datItem.CopyMachineInformation(copyFrom);
+                    datItem.RemoveField(Models.Metadata.Rom.MergeKey);
                     if (!items.Exists(i => i.GetName() == datItem.GetName()) && !items.Contains(datItem))
                         AddItem(datItem, statsOnly: false);
                 }
@@ -1020,6 +1023,7 @@ namespace SabreTools.DatFiles
                 foreach (var item in parentItems)
                 {
                     DatItem datItem = (DatItem)item.Value.Clone();
+                    datItem.RemoveField(Models.Metadata.Rom.MergeKey);
                     if (items.Any(i => i.Value.GetName() == datItem.GetName())
                         && items.Any(i => i.Value == datItem))
                     {
