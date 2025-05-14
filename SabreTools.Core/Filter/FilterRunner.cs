@@ -13,7 +13,7 @@ namespace SabreTools.Core.Filter
         /// <summary>
         /// Set of filters to be run against an object
         /// </summary>
-        public readonly Dictionary<string, List<FilterObject>> Filters = [];
+        public readonly Dictionary<string, FilterGroup> Filters = [];
 
         /// <summary>
         /// Cached item type names for filter selection
@@ -23,7 +23,7 @@ namespace SabreTools.Core.Filter
         /// <summary>
         /// Set of machine type keys that are logically grouped
         /// </summary>
-        /// TODO: REMOVE THISWHEN A PROPER IMPLEMENTATION IS FOUND
+        /// TODO: REMOVE THIS WHEN A PROPER IMPLEMENTATION IS FOUND
         private readonly string[] _machineTypeKeys =
         [
             $"{MetadataFile.MachineKey}.{Machine.IsBiosKey}",
@@ -38,10 +38,10 @@ namespace SabreTools.Core.Filter
                 // Ensure the key exists
                 string key = filter.Key.ToString();
                 if (!Filters.ContainsKey(filter.Key.ToString()))
-                    Filters[key] = [];
+                    Filters[key] = new FilterGroup(GroupType.OR);
 
                 // Add the filter to the set
-                Filters[key].Add(filter);
+                Filters[key].AddFilter(filter);
             }
         }
 
@@ -56,10 +56,10 @@ namespace SabreTools.Core.Filter
                     // Ensure the key exists
                     string key = filter.Key.ToString();
                     if (!Filters.ContainsKey(filter.Key.ToString()))
-                        Filters[key] = [];
+                        Filters[key] = new FilterGroup(GroupType.OR);
 
                     // Add the filter to the set
-                    Filters[key].Add(filter);
+                    Filters[key].AddFilter(filter);
                 }
                 catch { }
             }
@@ -104,10 +104,8 @@ namespace SabreTools.Core.Filter
                         if (!Filters.ContainsKey(filterKey))
                             continue;
 
-                        foreach (var filter in Filters[filterKey])
-                        {
-                            matchAny |= filter.Matches(dictionaryBase);
-                        }
+                        // Check for a match like normal
+                        matchAny |= Filters[filterKey].Matches(dictionaryBase);
                     }
 
                     // If we don't get a match, it's a failure
@@ -129,13 +127,8 @@ namespace SabreTools.Core.Filter
                 if (Array.Exists(_machineTypeKeys, key => key == filterKey))
                     continue;
 
-                bool matchOne = false;
-                foreach (var filter in Filters[filterKey])
-                {
-                    matchOne |= filter.Matches(dictionaryBase);
-                }
-
                 // If we don't get a match, it's a failure
+                bool matchOne = Filters[filterKey].Matches(dictionaryBase);
                 if (!matchOne)
                     return false;
             }

@@ -9,19 +9,19 @@ namespace SabreTools.Core.Filter
     public class FilterGroup
     {
         /// <summary>
+        /// How to apply the group filters
+        /// </summary>
+        public readonly GroupType GroupType;
+
+        /// <summary>
         /// All standalone filters in the group
         /// </summary>
-        public readonly List<FilterObject> Subfilters = [];
+        private readonly List<FilterObject> _subfilters = [];
 
         /// <summary>
         /// All filter groups contained in the group
         /// </summary>
-        public readonly List<FilterGroup> Subgroups = [];
-
-        /// <summary>
-        /// How to apply the group filters
-        /// </summary>
-        public readonly GroupType GroupType;
+        private readonly List<FilterGroup> _subgroups = [];
 
         public FilterGroup(GroupType groupType)
         {
@@ -30,22 +30,36 @@ namespace SabreTools.Core.Filter
 
         public FilterGroup(FilterObject[] filters, GroupType groupType)
         {
-            Subfilters.AddRange(filters);
+            _subfilters.AddRange(filters);
             GroupType = groupType;
         }
 
         public FilterGroup(FilterGroup[] groups, GroupType groupType)
         {
-            Subgroups.AddRange(groups);
+            _subgroups.AddRange(groups);
             GroupType = groupType;
         }
 
         public FilterGroup(FilterObject[] filters, FilterGroup[] groups, GroupType groupType)
         {
-            Subfilters.AddRange(filters);
-            Subgroups.AddRange(groups);
+            _subfilters.AddRange(filters);
+            _subgroups.AddRange(groups);
             GroupType = groupType;
         }
+
+        #region Accessors
+
+        /// <summary>
+        /// Add a FilterObject to the set
+        /// </summary>
+        public void AddFilter(FilterObject filter) => _subfilters.Add(filter);
+
+        /// <summary>
+        /// Add a FilterGroup to the set
+        /// </summary>
+        public void AddGroup(FilterGroup group) => _subgroups.Add(group);
+
+        #endregion
 
         #region Matching
 
@@ -68,7 +82,7 @@ namespace SabreTools.Core.Filter
         private bool MatchesAnd(DictionaryBase dictionaryBase)
         {
             // Run standalone filters
-            foreach (var filter in Subfilters)
+            foreach (var filter in _subfilters)
             {
                 // One failed match fails the group
                 if (!filter.Matches(dictionaryBase))
@@ -76,7 +90,7 @@ namespace SabreTools.Core.Filter
             }
 
             // Run filter subgroups
-            foreach (var group in Subgroups)
+            foreach (var group in _subgroups)
             {
                 // One failed match fails the group
                 if (!group.Matches(dictionaryBase))
@@ -92,7 +106,7 @@ namespace SabreTools.Core.Filter
         private bool MatchesOr(DictionaryBase dictionaryBase)
         {
             // Run standalone filters
-            foreach (var filter in Subfilters)
+            foreach (var filter in _subfilters)
             {
                 // One successful match passes the group
                 if (filter.Matches(dictionaryBase))
@@ -100,7 +114,7 @@ namespace SabreTools.Core.Filter
             }
 
             // Run filter subgroups
-            foreach (var group in Subgroups)
+            foreach (var group in _subgroups)
             {
                 // One successful match passes the group
                 if (group.Matches(dictionaryBase))
