@@ -135,7 +135,7 @@ namespace SabreTools.DatTools
             // Set values back to the header and set bucketing
             datFile.Header.SetFieldValue<string?>(DatHeader.FileNameKey, outputFilename);
             datFile.Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, datFormat);
-            datFile.Items.SetBucketedBy(ItemKey.CRC); // Setting this because it can reduce issues later
+            datFile.Items.SetBucketedBy(ItemKey.Machine); // Setting this because it can reduce issues later
 
             var watch = new InternalStopwatch($"Parsing '{filename}' into internal DAT");
 
