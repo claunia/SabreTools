@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using SabreTools.Models.Metadata;
 
 namespace SabreTools.Core.Filter
@@ -143,6 +144,19 @@ namespace SabreTools.Core.Filter
 
                 _ => GroupType.NONE,
             };
+        }
+
+        /// <summary>
+        /// Tokenize an input string to parse into a filter group
+        /// </summary>
+        private static string[] Tokenize(string? input)
+        {
+            // Null inputs are ignored
+            if (input == null)
+                return [];
+
+            // Split the string into parseable pieces
+            return Regex.Split(input, @"(\(|[a-zA-Z._:!&|""]+|\))");
         }
 
         #endregion
