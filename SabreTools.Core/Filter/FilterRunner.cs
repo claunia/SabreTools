@@ -22,23 +22,12 @@ namespace SabreTools.Core.Filter
 
         public FilterRunner(FilterObject[] filters)
         {
-            foreach (var filter in filters)
-            {
-                AddFilter(filter);
-            }
+            Array.ForEach(filters, AddFilter);
         }
 
         public FilterRunner(string[] filterStrings)
         {
-            foreach (string filterString in filterStrings)
-            {
-                try
-                {
-                    var filter = new FilterObject(filterString);
-                    AddFilter(filter);
-                }
-                catch { }
-            }
+            Array.ForEach(filterStrings, AddFilter);
         }
 
         /// <summary>
@@ -74,6 +63,19 @@ namespace SabreTools.Core.Filter
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Add a single filter to the runner in a group by key
+        /// </summary>
+        private void AddFilter(string filterString)
+        {
+            try
+            {
+                var filter = new FilterObject(filterString);
+                AddFilter(filter);
+            }
+            catch { }
         }
 
         /// <summary>
