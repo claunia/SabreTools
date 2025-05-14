@@ -1002,9 +1002,11 @@ namespace SabreTools.DatFiles
                             var romItem = new Rom(rom);
                             long? size = romItem.GetInt64FieldValue(Models.Metadata.Rom.SizeKey);
 
-                            // If the rom is a continue
+                            // If the rom is a continue or ignore
                             string? loadFlag = rom.ReadString(Models.Metadata.Rom.LoadFlagKey);
-                            if (loadFlag != null && loadFlag.Equals("continue", StringComparison.OrdinalIgnoreCase))
+                            if (loadFlag != null
+                                && (loadFlag.Equals("continue", StringComparison.OrdinalIgnoreCase)
+                                    ||  loadFlag.Equals("ignore", StringComparison.OrdinalIgnoreCase)))
                             {
                                 var lastRom = addRoms[addRoms.Count - 1];
                                 long? lastSize = lastRom.GetInt64FieldValue(Models.Metadata.Rom.SizeKey);
