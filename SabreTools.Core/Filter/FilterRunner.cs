@@ -13,7 +13,7 @@ namespace SabreTools.Core.Filter
         /// <summary>
         /// Set of filters to be run against an object
         /// </summary>
-        public readonly FilterObject[] Filters;
+        public readonly Dictionary<string, List<FilterObject>> Filters = [];
 
         /// <summary>
         /// Cached item type names for filter selection
@@ -33,23 +33,36 @@ namespace SabreTools.Core.Filter
 
         public FilterRunner(FilterObject[] filters)
         {
-            Filters = filters;
+            foreach (var filter in filters)
+            {
+                // Ensure the key exists
+                string key = filter.Key.ToString();
+                if (!Filters.ContainsKey(filter.Key.ToString()))
+                    Filters[key] = [];
+
+                // Add the filter to the set
+                Filters[key].Add(filter);
+            }
         }
 
         public FilterRunner(string[] filterStrings)
         {
-            List<FilterObject> filters = [];
             foreach (string filterString in filterStrings)
             {
                 try
                 {
                     var filter = new FilterObject(filterString);
-                    filters.Add(filter);
+
+                    // Ensure the key exists
+                    string key = filter.Key.ToString();
+                    if (!Filters.ContainsKey(filter.Key.ToString()))
+                        Filters[key] = [];
+
+                    // Add the filter to the set
+                    Filters[key].Add(filter);
                 }
                 catch { }
             }
-
-            Filters = [.. filters];
         }
 
         /// <summary>
@@ -65,24 +78,9 @@ namespace SabreTools.Core.Filter
                 _ => null,
             };
 
-            // Group filters by key
-            var filterDictionary = new Dictionary<string, List<FilterObject>>();
-            foreach (var filter in Filters)
-            {
-                // Skip filters not applicable to the item
-                if (filter.Key.ItemName == "item" && Array.IndexOf(_datItemTypeNames, itemName) == -1)
-                    continue;
-                else if (filter.Key.ItemName != "item" && filter.Key.ItemName != itemName)
-                    continue;
-
-                // Ensure the key exists
-                string key = filter.Key.ToString();
-                if (!filterDictionary.ContainsKey(filter.Key.ToString()))
-                    filterDictionary[key] = [];
-
-                // Add the filter to the set
-                filterDictionary[key].Add(filter);
-            }
+            // Null is invalid
+            if (itemName == null)
+                return false;
 
             // TODO: REMOVE THIS ENTIRE BLOCK WHEN A PROPER IMPLEMENTATION IS FOUND
             // Handle special keys that work in tandem
@@ -92,7 +90,7 @@ namespace SabreTools.Core.Filter
                 bool containsKey = false;
                 foreach (string key in _machineTypeKeys)
                 {
-                    if (filterDictionary.ContainsKey(key))
+                    if (Filters.ContainsKey(key))
                         containsKey = true;
                 }
 
@@ -103,10 +101,10 @@ namespace SabreTools.Core.Filter
                     foreach (string filterKey in _machineTypeKeys)
                     {
                         // Skip missing keys
-                        if (!filterDictionary.ContainsKey(filterKey))
+                        if (!Filters.ContainsKey(filterKey))
                             continue;
 
-                        foreach (var filter in filterDictionary[filterKey])
+                        foreach (var filter in Filters[filterKey])
                         {
                             matchAny |= filter.Matches(dictionaryBase);
                         }
@@ -115,20 +113,24 @@ namespace SabreTools.Core.Filter
                     // If we don't get a match, it's a failure
                     if (!matchAny)
                         return false;
-
-                    // Remove the keys from the dictionary
-                    foreach (string key in _machineTypeKeys)
-                    {
-                        filterDictionary.Remove(key);
-                    }
                 }
             }
 
             // Loop through and run each filter in order
-            foreach (var filterKey in filterDictionary.Keys)
+            foreach (var filterKey in Filters.Keys)
             {
+                // Skip filters not applicable to the item
+                if (filterKey.StartsWith("item.") && Array.IndexOf(_datItemTypeNames, itemName) == -1)
+                    continue;
+                else if (!filterKey.StartsWith("item.") && !filterKey.StartsWith(itemName))
+                    continue;
+
+                // TODO: REMOVE THIS ENTIRE BLOCK WHEN A PROPER IMPLEMENTATION IS FOUND
+                if (Array.Exists(_machineTypeKeys, key => key == filterKey))
+                    continue;
+
                 bool matchOne = false;
-                foreach (var filter in filterDictionary[filterKey])
+                foreach (var filter in Filters[filterKey])
                 {
                     matchOne |= filter.Matches(dictionaryBase);
                 }
