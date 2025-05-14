@@ -24,23 +24,7 @@ namespace SabreTools.Core.Filter
         {
             foreach (var filter in filters)
             {
-                // Get the key as a string
-                string key = filter.Key.ToString();
-
-                // Special case for machine types
-                if (filter.Key.ItemName == MetadataFile.MachineKey && filter.Key.FieldName == Machine.IsBiosKey)
-                    key = $"{MetadataFile.MachineKey}.COMBINEDTYPE";
-                else if (filter.Key.ItemName == MetadataFile.MachineKey && filter.Key.FieldName == Machine.IsDeviceKey)
-                    key = $"{MetadataFile.MachineKey}.COMBINEDTYPE";
-                else if (filter.Key.ItemName == MetadataFile.MachineKey && filter.Key.FieldName == Machine.IsMechanicalKey)
-                    key = $"{MetadataFile.MachineKey}.COMBINEDTYPE";
-
-                // Ensure the key exists
-                if (!Filters.ContainsKey(key))
-                    Filters[key] = new FilterGroup(GroupType.OR);
-
-                // Add the filter to the set
-                Filters[key].AddFilter(filter);
+                AddFilter(filter);
             }
         }
 
@@ -51,24 +35,7 @@ namespace SabreTools.Core.Filter
                 try
                 {
                     var filter = new FilterObject(filterString);
-
-                    // Get the key as a string
-                    string key = filter.Key.ToString();
-
-                    // Special case for machine types
-                    if (filter.Key.ItemName == MetadataFile.MachineKey && filter.Key.FieldName == Machine.IsBiosKey)
-                        key = $"{MetadataFile.MachineKey}.COMBINEDTYPE";
-                    else if (filter.Key.ItemName == MetadataFile.MachineKey && filter.Key.FieldName == Machine.IsDeviceKey)
-                        key = $"{MetadataFile.MachineKey}.COMBINEDTYPE";
-                    else if (filter.Key.ItemName == MetadataFile.MachineKey && filter.Key.FieldName == Machine.IsMechanicalKey)
-                        key = $"{MetadataFile.MachineKey}.COMBINEDTYPE";
-
-                    // Ensure the key exists
-                    if (!Filters.ContainsKey(key))
-                        Filters[key] = new FilterGroup(GroupType.OR);
-
-                    // Add the filter to the set
-                    Filters[key].AddFilter(filter);
+                    AddFilter(filter);
                 }
                 catch { }
             }
@@ -107,6 +74,30 @@ namespace SabreTools.Core.Filter
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Add a single filter to the runner in a group by key
+        /// </summary>
+        private void AddFilter(FilterObject filter)
+        {
+            // Get the key as a string
+            string key = filter.Key.ToString();
+
+            // Special case for machine types
+            if (filter.Key.ItemName == MetadataFile.MachineKey && filter.Key.FieldName == Machine.IsBiosKey)
+                key = $"{MetadataFile.MachineKey}.COMBINEDTYPE";
+            else if (filter.Key.ItemName == MetadataFile.MachineKey && filter.Key.FieldName == Machine.IsDeviceKey)
+                key = $"{MetadataFile.MachineKey}.COMBINEDTYPE";
+            else if (filter.Key.ItemName == MetadataFile.MachineKey && filter.Key.FieldName == Machine.IsMechanicalKey)
+                key = $"{MetadataFile.MachineKey}.COMBINEDTYPE";
+
+            // Ensure the key exists
+            if (!Filters.ContainsKey(key))
+                Filters[key] = new FilterGroup(GroupType.OR);
+
+            // Add the filter to the set
+            Filters[key].AddFilter(filter);
         }
     }
 }
