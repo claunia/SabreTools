@@ -276,6 +276,7 @@ namespace SabreTools.DatFiles
                     copyFrom = parentItems[0];
                 }
 
+                items = GetItemsForBucket(bucket);
                 foreach (DatItem item in items)
                 {
                     // Special disk handling
@@ -398,6 +399,7 @@ namespace SabreTools.DatFiles
                 if (cloneOfMachine.Value == null)
                     continue;
 
+                items = GetItemsForBucketDB(bucket);
                 foreach (var item in items)
                 {
                     // Get the source for the current item
@@ -640,26 +642,24 @@ namespace SabreTools.DatFiles
                 if (deviceOnly ^ (datItems[0].GetMachine()!.GetBoolFieldValue(Models.Metadata.Machine.IsDeviceKey) == true))
                     continue;
 
-                // Get the first item for the machine
+                // Get the first item from the bucket
                 DatItem copyFrom = datItems[0];
 
                 // Get all device reference names from the current machine
-                List<string?> deviceReferences = datItems
+                HashSet<string?> deviceReferences = [];
+                deviceReferences.UnionWith(datItems
                     .FindAll(i => i is DeviceRef)
                     .ConvertAll(i => i as DeviceRef)
-                    .ConvertAll(dr => dr!.GetName())
-                    .Distinct()
-                    .ToList();
+                    .ConvertAll(dr => dr!.GetName()));
 
                 // Get all slot option names from the current machine
-                List<string?> slotOptions = datItems
-                    .FindAll(i => i is Slot)
-                    .ConvertAll(i => i as Slot)
-                    .FindAll(s => s!.SlotOptionsSpecified)
-                    .SelectMany(s => s!.GetFieldValue<SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey)!)
-                    .Select(so => so.GetStringFieldValue(Models.Metadata.SlotOption.DevNameKey))
-                    .Distinct()
-                    .ToList();
+                HashSet<string?> slotOptions = [];
+                slotOptions.UnionWith(datItems
+                   .FindAll(i => i is Slot)
+                   .ConvertAll(i => i as Slot)
+                   .FindAll(s => s!.SlotOptionsSpecified)
+                   .SelectMany(s => s!.GetFieldValue<SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey)!)
+                   .Select(so => so.GetStringFieldValue(Models.Metadata.SlotOption.DevNameKey)));
 
                 // If we're checking device references
                 if (deviceReferences.Count > 0)
@@ -689,6 +689,7 @@ namespace SabreTools.DatFiles
                                 // Clone the item and then add it
                                 DatItem datItem = (DatItem)item.Clone();
                                 datItem.CopyMachineInformation(copyFrom);
+                                datItems.Add(datItem);
                                 AddItem(datItem, statsOnly: false);
                             }
                         }
@@ -699,6 +700,7 @@ namespace SabreTools.DatFiles
                     {
                         if (!deviceReferences.Contains(deviceReference))
                         {
+                            deviceReferences.Add(deviceReference);
                             var deviceRef = new DeviceRef();
                             deviceRef.SetName(deviceReference);
                             deviceRef.CopyMachineInformation(copyFrom);
@@ -737,6 +739,7 @@ namespace SabreTools.DatFiles
                                 // Clone the item and then add it
                                 DatItem datItem = (DatItem)item.Clone();
                                 datItem.CopyMachineInformation(copyFrom);
+                                datItems.Add(datItem);
                                 AddItem(datItem, statsOnly: false);
                             }
                         }
@@ -747,8 +750,10 @@ namespace SabreTools.DatFiles
                     {
                         if (!slotOptions.Contains(slotOption))
                         {
+                            slotOptions.Add(slotOption);
                             var slotOptionItem = new SlotOption();
                             slotOptionItem.SetFieldValue<string?>(Models.Metadata.SlotOption.DevNameKey, slotOption);
+                            slotOptionItem.CopyMachineInformation(copyFrom);
 
                             var slotItem = new Slot();
                             slotItem.SetFieldValue<SlotOption[]?>(Models.Metadata.Slot.SlotOptionKey, [slotOptionItem]);

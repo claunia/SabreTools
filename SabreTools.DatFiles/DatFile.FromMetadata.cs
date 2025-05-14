@@ -275,7 +275,7 @@ namespace SabreTools.DatFiles
             if (item.ContainsKey(Models.Metadata.Machine.DeviceRefKey))
             {
                 var items = item.ReadItemArray<Models.Metadata.DeviceRef>(Models.Metadata.Machine.DeviceRefKey);
-                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly, filterRunner);
+                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.DipSwitchKey))
             {
@@ -361,7 +361,7 @@ namespace SabreTools.DatFiles
             if (item.ContainsKey(Models.Metadata.Machine.SlotKey))
             {
                 var items = item.ReadItemArray<Models.Metadata.Slot>(Models.Metadata.Machine.SlotKey);
-                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly, filterRunner);
+                ProcessItems(items, machine, machineIndex: 0, source, sourceIndex, statsOnly);
             }
             if (item.ContainsKey(Models.Metadata.Machine.SoftwareListKey))
             {
@@ -581,8 +581,8 @@ namespace SabreTools.DatFiles
         /// <param name="source">Source to use with the converted items</param>
         /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        /// <param name="filterRunner">Optional FilterRunner to filter items on parse</param>
-        private void ProcessItems(Models.Metadata.DeviceRef[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly, FilterRunner? filterRunner)
+        /// <remarks>Does not get filtered here just in case merging or splitting is done</remarks>
+        private void ProcessItems(Models.Metadata.DeviceRef[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -591,10 +591,6 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                // If the item doesn't pass the filter
-                if (filterRunner != null && !filterRunner.Run(item))
-                    continue;
-
                 var datItem = new DeviceRef(item);
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
@@ -1300,8 +1296,8 @@ namespace SabreTools.DatFiles
         /// <param name="source">Source to use with the converted items</param>
         /// <param name="sourceIndex">Index of the Source to use with the converted items</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        /// <param name="filterRunner">Optional FilterRunner to filter items on parse</param>
-        private void ProcessItems(Models.Metadata.Slot[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly, FilterRunner? filterRunner)
+        /// <remarks>Does not get filtered here just in case merging or splitting is done</remarks>
+        private void ProcessItems(Models.Metadata.Slot[]? items, Machine machine, long machineIndex, Source source, long sourceIndex, bool statsOnly)
         {
             // If the array is null or empty, return without processing
             if (items == null || items.Length == 0)
@@ -1310,10 +1306,6 @@ namespace SabreTools.DatFiles
             // Loop through the items and add
             foreach (var item in items)
             {
-                // If the item doesn't pass the filter
-                if (filterRunner != null && !filterRunner.Run(item))
-                    continue;
-
                 var datItem = new Slot(item);
                 datItem.SetFieldValue<Source?>(DatItem.SourceKey, source);
                 datItem.CopyMachineInformation(machine);
