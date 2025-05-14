@@ -210,6 +210,5 @@ namespace SabreTools.Core.Filter
             string? constantMatch = Array.Find(constants, c => string.Equals(c, localFieldName, StringComparison.OrdinalIgnoreCase));
             return constantMatch;
         }
-
     }
 }
