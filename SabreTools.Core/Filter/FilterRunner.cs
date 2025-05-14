@@ -68,19 +68,6 @@ namespace SabreTools.Core.Filter
         /// <summary>
         /// Add a single filter to the runner in a group by key
         /// </summary>
-        private void AddFilter(string filterString)
-        {
-            try
-            {
-                var filter = new FilterObject(filterString);
-                AddFilter(filter);
-            }
-            catch { }
-        }
-
-        /// <summary>
-        /// Add a single filter to the runner in a group by key
-        /// </summary>
         private void AddFilter(FilterObject filter)
         {
             // Get the key as a string
@@ -100,6 +87,19 @@ namespace SabreTools.Core.Filter
 
             // Add the filter to the set
             Filters[key].AddFilter(filter);
+        }
+
+        /// <summary>
+        /// Add a single filter to the runner in a group by key
+        /// </summary>
+        private void AddFilter(string filterString)
+        {
+            try
+            {
+                var filter = new FilterObject(filterString);
+                AddFilter(filter);
+            }
+            catch { }
         }
     }
 }
