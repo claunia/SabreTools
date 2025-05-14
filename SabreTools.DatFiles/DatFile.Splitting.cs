@@ -298,7 +298,6 @@ namespace SabreTools.DatFiles
                             .ConvertAll(i => (i as Disk)!.GetName())
                             .Contains(mergeTag))
                         {
-                            item.RemoveField(Models.Metadata.Disk.MergeKey);
                             disk.CopyMachineInformation(copyFrom);
                             AddItem(disk, statsOnly: false);
                         }
@@ -306,7 +305,6 @@ namespace SabreTools.DatFiles
                         // If there is no merge tag, add to parent
                         else if (mergeTag == null && !GetItemsForBucket(cloneOf).Contains(item))
                         {
-                            item.RemoveField(Models.Metadata.Disk.MergeKey);
                             disk.CopyMachineInformation(copyFrom);
                             AddItem(disk, statsOnly: false);
                         }
@@ -315,7 +313,7 @@ namespace SabreTools.DatFiles
                     // Special rom handling
                     else if (item is Rom rom)
                     {
-                        string? mergeTag = rom.GetStringFieldValue(Models.Metadata.Disk.MergeKey);
+                        string? mergeTag = rom.GetStringFieldValue(Models.Metadata.Rom.MergeKey);
 
                         // If the merge tag exists and the parent already contains it, skip
                         if (mergeTag != null && GetItemsForBucket(cloneOf)
@@ -335,7 +333,6 @@ namespace SabreTools.DatFiles
                             if (subfolder)
                                 rom.SetName($"{rom.GetMachine()!.GetName()}\\{rom.GetName()}");
 
-                            item.RemoveField(Models.Metadata.Rom.MergeKey);
                             rom.CopyMachineInformation(copyFrom);
                             AddItem(rom, statsOnly: false);
                         }
@@ -346,7 +343,6 @@ namespace SabreTools.DatFiles
                             if (subfolder)
                                 rom.SetName($"{item.GetMachine()!.GetName()}\\{rom.GetName()}");
 
-                            item.RemoveField(Models.Metadata.Rom.MergeKey);
                             rom.CopyMachineInformation(copyFrom);
                             AddItem(rom, statsOnly: false);
                         }
@@ -435,7 +431,6 @@ namespace SabreTools.DatFiles
                             .Select(i => (i as Disk)!.GetName())
                             .Contains(mergeTag))
                         {
-                            item.Value.RemoveField(Models.Metadata.Disk.MergeKey);
                             ItemsDB.RemapDatItemToMachine(item.Key, cloneOfMachine.Key);
                             ItemsDB.AddItem(item.Value, cloneOfMachine.Key, source.Key);
                         }
@@ -443,7 +438,6 @@ namespace SabreTools.DatFiles
                         // If there is no merge tag, add to parent
                         else if (mergeTag == null && !GetItemsForBucketDB(cloneOf).Values.Contains(item.Value))
                         {
-                            item.Value.RemoveField(Models.Metadata.Disk.MergeKey);
                             ItemsDB.RemapDatItemToMachine(item.Key, cloneOfMachine.Key);
                             ItemsDB.AddItem(item.Value, cloneOfMachine.Key, source.Key);
                         }
@@ -472,7 +466,6 @@ namespace SabreTools.DatFiles
                             if (subfolder)
                                 rom.SetName($"{machineName}\\{rom.GetName()}");
 
-                            item.Value.RemoveField(Models.Metadata.Rom.MergeKey);
                             ItemsDB.RemapDatItemToMachine(item.Key, machineIndex: cloneOfMachine.Key);
                             ItemsDB.AddItem(item.Value, cloneOfMachine.Key, source.Key);
                         }
@@ -483,7 +476,6 @@ namespace SabreTools.DatFiles
                             if (subfolder)
                                 rom.SetName($"{machineName}\\{rom.GetName()}");
 
-                            item.Value.RemoveField(Models.Metadata.Rom.MergeKey);
                             ItemsDB.RemapDatItemToMachine(item.Key, cloneOfMachine.Key);
                             ItemsDB.AddItem(item.Value, cloneOfMachine.Key, source.Key);
                         }
@@ -551,7 +543,6 @@ namespace SabreTools.DatFiles
                 string? romof = GetItemsForBucket(cloneOf)[0].GetMachine()!.GetStringFieldValue(Models.Metadata.Machine.RomOfKey);
                 foreach (DatItem item in items)
                 {
-                    item.RemoveField(Models.Metadata.Rom.MergeKey);
                     item.GetMachine()!.SetFieldValue<string?>(Models.Metadata.Machine.RomOfKey, romof);
                 }
             }
@@ -599,7 +590,6 @@ namespace SabreTools.DatFiles
                     if (items.Values.Any(i => i.GetName()?.ToLowerInvariant() == datItem.GetName()?.ToLowerInvariant())
                         && items.Values.Any(i => i == datItem))
                     {
-                        datItem.RemoveField(Models.Metadata.Rom.MergeKey);
                         ItemsDB.AddItem(datItem, machine.Key, source.Key);
                     }
                 }
@@ -699,7 +689,6 @@ namespace SabreTools.DatFiles
                                 // Clone the item and then add it
                                 DatItem datItem = (DatItem)item.Clone();
                                 datItem.CopyMachineInformation(copyFrom);
-                                datItem.RemoveField(Models.Metadata.Rom.MergeKey);
                                 AddItem(datItem, statsOnly: false);
                             }
                         }
@@ -748,7 +737,6 @@ namespace SabreTools.DatFiles
                                 // Clone the item and then add it
                                 DatItem datItem = (DatItem)item.Clone();
                                 datItem.CopyMachineInformation(copyFrom);
-                                datItem.RemoveField(Models.Metadata.Rom.MergeKey);
                                 AddItem(datItem, statsOnly: false);
                             }
                         }
@@ -864,7 +852,6 @@ namespace SabreTools.DatFiles
 
                                 // Clone the item and then add it
                                 DatItem datItem = (DatItem)item.Clone();
-                                datItem.RemoveField(Models.Metadata.Rom.MergeKey);
                                 ItemsDB.AddItem(datItem, machine.Key, source.Key);
                             }
                         }
@@ -921,7 +908,6 @@ namespace SabreTools.DatFiles
 
                                 // Clone the item and then add it
                                 DatItem datItem = (DatItem)item.Clone();
-                                datItem.RemoveField(Models.Metadata.Rom.MergeKey);
                                 ItemsDB.AddItem(datItem, machine.Key, source.Key);
                             }
                         }
@@ -981,7 +967,6 @@ namespace SabreTools.DatFiles
                 {
                     DatItem datItem = (DatItem)item.Clone();
                     datItem.CopyMachineInformation(copyFrom);
-                    datItem.RemoveField(Models.Metadata.Rom.MergeKey);
                     if (!items.Exists(i => i.GetName() == datItem.GetName()) && !items.Contains(datItem))
                         AddItem(datItem, statsOnly: false);
                 }
@@ -1023,7 +1008,6 @@ namespace SabreTools.DatFiles
                 foreach (var item in parentItems)
                 {
                     DatItem datItem = (DatItem)item.Value.Clone();
-                    datItem.RemoveField(Models.Metadata.Rom.MergeKey);
                     if (items.Any(i => i.Value.GetName() == datItem.GetName())
                         && items.Any(i => i.Value == datItem))
                     {
@@ -1363,6 +1347,9 @@ namespace SabreTools.DatFiles
 
                 foreach (DatItem item in items)
                 {
+                    // Remove the merge tag
+                    item.RemoveField(Models.Metadata.Rom.MergeKey);
+
                     // Get the machine
                     var machine = item.GetMachine();
                     if (machine == null)
@@ -1395,6 +1382,7 @@ namespace SabreTools.DatFiles
             foreach (var machine in machines)
 #endif
             {
+                // TODO: Remove merge tags here
                 // Get the machine
                 if (machine.Value == null)
 #if NET40_OR_GREATER || NETCOREAPP
