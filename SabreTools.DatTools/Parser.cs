@@ -225,7 +225,12 @@ namespace SabreTools.DatTools
                 var input = inputs[i];
                 _staticLogger.User($"Adding DAT: {input.CurrentPath}");
                 datFiles[i] = CreateDatFile(datFile.Header.CloneFormat(), datFile.Modifiers);
+
+                // Ensure the format is reset after parsing
+                DatFormat currentFormat = datFiles[i].Header.GetFieldValue<DatFormat>(DatHeader.DatFormatKey);
+                datFiles[i].Header.RemoveField(DatHeader.DatFormatKey);
                 ParseInto(datFiles[i], input.CurrentPath, indexId: i, keep: true, filterRunner: filterRunner);
+                datFiles[i].Header.SetFieldValue<DatFormat>(DatHeader.DatFormatKey, currentFormat);
 #if NET40_OR_GREATER || NETCOREAPP
             });
 #else
