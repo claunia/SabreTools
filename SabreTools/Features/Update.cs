@@ -537,7 +537,7 @@ namespace SabreTools.Features
         {
             Extras!.ApplyExtras(datFile);
             Extras!.ApplyExtrasDB(datFile);
-            Splitter!.ApplySplitting(datFile, useTags: false);
+            Splitter!.ApplySplitting(datFile, useTags: false, filterRunner: FilterRunner);
             datFile.ExecuteFilters(FilterRunner!);
             Cleaner!.ApplyCleaning(datFile);
             Remover!.ApplyRemovals(datFile);

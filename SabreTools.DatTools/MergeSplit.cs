@@ -4,7 +4,7 @@ using System.IO;
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Threading.Tasks;
 #endif
-using SabreTools.Core.Tools;
+using SabreTools.Core.Filter;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.IO;
@@ -39,9 +39,10 @@ namespace SabreTools.DatTools
         /// </summary>
         /// <param name="datFile">Current DatFile object to run operations on</param>
         /// <param name="useTags">True if DatFile tags override splitting, false otherwise</param>
+        /// <param name="filterRunner">Optional FilterRunner to filter items on parse</param>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         /// <returns>True if the DatFile was split, false on error</returns>
-        public bool ApplySplitting(DatFile datFile, bool useTags, bool throwOnError = false)
+        public bool ApplySplitting(DatFile datFile, bool useTags, FilterRunner? filterRunner = null, bool throwOnError = false)
         {
             InternalStopwatch watch = new("Applying splitting to DAT");
 
@@ -59,17 +60,29 @@ namespace SabreTools.DatTools
                         // No-op
                         break;
                     case MergingFlag.Split:
+                        if (filterRunner != null)
+                            datFile.ExecuteFilters(filterRunner);
+
                         datFile.ApplySplit();
                         break;
                     case MergingFlag.Merged:
+                        if (filterRunner != null)
+                            datFile.ExecuteFilters(filterRunner);
+
                         datFile.ApplyMerged();
                         break;
                     case MergingFlag.NonMerged:
+                        if (filterRunner != null)
+                            datFile.ExecuteFilters(filterRunner);
+
                         datFile.ApplyNonMerged();
                         break;
 
                     // Nonstandard
                     case MergingFlag.FullMerged:
+                        if (filterRunner != null)
+                            datFile.ExecuteFilters(filterRunner);
+
                         datFile.ApplyFullyMerged();
                         break;
                     case MergingFlag.DeviceNonMerged:
