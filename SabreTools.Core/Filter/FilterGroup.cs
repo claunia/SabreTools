@@ -147,7 +147,30 @@ namespace SabreTools.Core.Filter
         }
 
         /// <summary>
-        /// Tokenize an input string to parse into a filter group
+        /// Parse an input string into a filter group
+        /// </summary>
+        private static void Parse(string? input)
+        {
+            // Tokenize the string
+            string[] tokens = Tokenize(input);
+            if (tokens.Length == 0)
+                return;
+
+            // Loop through the tokens and parse
+            for (int i = 0; i < tokens.Length; i++)
+            {
+                // TODO: Implement parsing
+                // - Opening parenthesis means a new group
+                // - Closing parenthesis means finalize group and return it
+                // - Current starting and ending with a parenthesis strips them off
+                // - Unbalanced parenthesis can only be found on parse
+                // - Failed parsing of FilterObjects(?)
+                // - Invalid FilterObjects(?)
+            }
+        }
+
+        /// <summary>
+        /// Tokenize an input string for parsing
         /// </summary>
         private static string[] Tokenize(string? input)
         {
@@ -156,7 +179,7 @@ namespace SabreTools.Core.Filter
                 return [];
 
             // Split the string into parseable pieces
-            return Regex.Split(input, @"(\(|[a-zA-Z._:!&|""]+|\))");
+            return Regex.Split(input, @"(\(|\S+|\))");
         }
 
         #endregion
