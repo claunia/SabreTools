@@ -61,19 +61,28 @@ namespace SabreTools.DatTools
                         break;
                     case MergingFlag.Split:
                         if (filterRunner != null)
+                        {
                             datFile.ExecuteFilters(filterRunner);
+                            datFile.ClearMarked();
+                        }
 
                         datFile.ApplySplit();
                         break;
                     case MergingFlag.Merged:
                         if (filterRunner != null)
+                        {
                             datFile.ExecuteFilters(filterRunner);
+                            datFile.ClearMarked();
+                        }
 
                         datFile.ApplyMerged();
                         break;
                     case MergingFlag.NonMerged:
                         if (filterRunner != null)
+                        {
                             datFile.ExecuteFilters(filterRunner);
+                            datFile.ClearMarked();
+                        }
 
                         datFile.ApplyNonMerged();
                         break;
@@ -81,7 +90,10 @@ namespace SabreTools.DatTools
                     // Nonstandard
                     case MergingFlag.FullMerged:
                         if (filterRunner != null)
+                        {
                             datFile.ExecuteFilters(filterRunner);
+                            datFile.ClearMarked();
+                        }
 
                         datFile.ApplyFullyMerged();
                         break;
