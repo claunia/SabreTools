@@ -180,8 +180,11 @@ namespace SabreTools.Core.Filter
 
             // Split the string into parseable pieces
             // - Left and right parenthesis are separate
-            // - All non-whitespace characters match
-            return Regex.Split(input, @"(\(|\)|[^\s()]+)");
+            // - Operators & and | are separate
+            // - Key-value pairs are enforced for statements
+            // - Numbers can be a value without quotes
+            // - All other values require quotes
+            return Regex.Split(input, @"(\(|\)|[&|]{1,2}|[^\s()""]+[:!=]\d+|[^\s()""]+[:!=]{1,2}""[^""]*"")");
         }
 
         #endregion
