@@ -179,7 +179,9 @@ namespace SabreTools.Core.Filter
                 return [];
 
             // Split the string into parseable pieces
-            return Regex.Split(input, @"(\(|\S+|\))");
+            // - Left and right parenthesis are separate
+            // - All non-whitespace characters match
+            return Regex.Split(input, @"(\(|\)|[^\s()]+)");
         }
 
         #endregion
