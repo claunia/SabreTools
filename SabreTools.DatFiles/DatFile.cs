@@ -1130,6 +1130,15 @@ namespace SabreTools.DatFiles
             {
                 try
                 {
+                    // Compare on source if renaming
+                    if (!norename)
+                    {
+                        int xSourceIndex = x.GetFieldValue<Source?>(DatItem.SourceKey)?.Index ?? 0;
+                        int ySourceIndex = y.GetFieldValue<Source?>(DatItem.SourceKey)?.Index ?? 0;
+                        if (xSourceIndex != ySourceIndex)
+                            return xSourceIndex - ySourceIndex;
+                    }
+
                     // If machine names don't match
                     string? xMachineName = x.GetMachine()?.GetName();
                     string? yMachineName = y.GetMachine()?.GetName();
@@ -1151,13 +1160,7 @@ namespace SabreTools.DatFiles
                     // If item names don't match
                     string? xName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty));
                     string? yName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty));
-                    if (xName != yName)
-                        return nc.Compare(xName, yName);
-
-                    // Otherwise, compare on machine or source, depending on the flag
-                    int? xSourceIndex = x.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
-                    int? ySourceIndex = y.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
-                    return (norename ? nc.Compare(xMachineName, yMachineName) : (xSourceIndex - ySourceIndex) ?? 0);
+                    return nc.Compare(xName, yName);
                 }
                 catch
                 {
@@ -1184,7 +1187,16 @@ namespace SabreTools.DatFiles
             {
                 try
                 {
-                    // TODO: Fix this since DB uses an external map for machines
+                    // TODO: Fix this since DB uses an external map for machines and sources
+
+                    // Compare on source if renaming
+                    if (!norename)
+                    {
+                        int xSourceIndex = x.Value.GetFieldValue<Source?>(DatItem.SourceKey)?.Index ?? 0;
+                        int ySourceIndex = y.Value.GetFieldValue<Source?>(DatItem.SourceKey)?.Index ?? 0;
+                        if (xSourceIndex != ySourceIndex)
+                            return xSourceIndex - ySourceIndex;
+                    }
 
                     // If machine names don't match
                     string? xMachineName = x.Value.GetMachine()?.GetName();
@@ -1207,13 +1219,7 @@ namespace SabreTools.DatFiles
                     // If item names don't match
                     string? xName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(x.Value.GetName() ?? string.Empty));
                     string? yName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(y.Value.GetName() ?? string.Empty));
-                    if (xName != yName)
-                        return nc.Compare(xName, yName);
-
-                    // Otherwise, compare on machine or source, depending on the flag
-                    int? xSourceIndex = x.Value.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
-                    int? ySourceIndex = y.Value.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
-                    return (norename ? nc.Compare(xMachineName, yMachineName) : (xSourceIndex - ySourceIndex) ?? 0);
+                    return nc.Compare(xName, yName);
                 }
                 catch
                 {

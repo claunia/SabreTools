@@ -378,7 +378,7 @@ namespace SabreTools.DatFiles
 
             // Sort the dictionary to be consistent
             _logger.User($"Sorting roms by {bucketBy}");
-            PerformSorting();
+            PerformSorting(norename);
         }
 
         /// <summary>
@@ -398,7 +398,7 @@ namespace SabreTools.DatFiles
                 List<DatItem> sortedList = GetItemsForBucket(key);
 
                 // Sort and merge the list
-                Sort(ref sortedList);
+                Sort(ref sortedList, norename: false);
                 sortedList = Merge(sortedList);
 
                 // Add the list back to the dictionary
@@ -784,7 +784,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Perform inplace sorting of the dictionary
         /// </summary>
-        private void PerformSorting()
+        private void PerformSorting(bool norename)
         {
 #if NET452_OR_GREATER || NETCOREAPP
             Parallel.ForEach(SortedKeys, Core.Globals.ParallelOptions, key =>
@@ -798,7 +798,7 @@ namespace SabreTools.DatFiles
                 List<DatItem> sortedList = GetItemsForBucket(key);
 
                 // Sort the list of items to be consistent
-                Sort(ref sortedList);
+                Sort(ref sortedList, norename);
 
                 // Add the list back to the dictionary
                 RemoveBucket(key);
@@ -814,22 +814,26 @@ namespace SabreTools.DatFiles
         /// Sort a list of DatItem objects by SourceID, Game, and Name (in order)
         /// </summary>
         /// <param name="items">List of DatItem objects representing the items to be sorted</param>
+        /// <param name="norename">True if files are not renamed, false otherwise</param>
         /// <returns>True if it sorted correctly, false otherwise</returns>
-        private bool Sort(ref List<DatItem> items)
+        private bool Sort(ref List<DatItem> items, bool norename)
         {
             // Create the comparer extenal to the delegate
             var nc = new NaturalComparer();
-            
+
             // Sort by machine, type, item name, and source
             items.Sort(delegate (DatItem x, DatItem y)
             {
                 try
                 {
-                    // Compare on source
-                    int xSourceIndex = x.GetFieldValue<Source?>(DatItem.SourceKey)?.Index ?? 0;
-                    int ySourceIndex = y.GetFieldValue<Source?>(DatItem.SourceKey)?.Index ?? 0;
-                    if (xSourceIndex != ySourceIndex)
-                        return xSourceIndex - ySourceIndex;
+                    // Compare on source if renaming
+                    if (!norename)
+                    {
+                        int xSourceIndex = x.GetFieldValue<Source?>(DatItem.SourceKey)?.Index ?? 0;
+                        int ySourceIndex = y.GetFieldValue<Source?>(DatItem.SourceKey)?.Index ?? 0;
+                        if (xSourceIndex != ySourceIndex)
+                            return xSourceIndex - ySourceIndex;
+                    }
 
                     // Get the machines
                     Machine? xMachine = x.GetMachine();

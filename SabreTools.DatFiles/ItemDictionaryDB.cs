@@ -1155,11 +1155,20 @@ namespace SabreTools.DatFiles
         {
             // Create the comparer extenal to the delegate
             var nc = new NaturalComparer();
-            
+
             itemMappings.Sort(delegate (KeyValuePair<long, DatItem> x, KeyValuePair<long, DatItem> y)
             {
                 try
                 {
+                    // Compare on source if renaming
+                    if (!norename)
+                    {
+                        int xSourceIndex = GetSourceForItem(x.Key).Value?.Index ?? 0;
+                        int ySourceIndex = GetSourceForItem(y.Key).Value?.Index ?? 0;
+                        if (xSourceIndex != ySourceIndex)
+                            return xSourceIndex - ySourceIndex;
+                    }
+
                     // Get the machines
                     Machine? xMachine = _machines[_itemToMachineMapping[x.Key]];
                     Machine? yMachine = _machines[_itemToMachineMapping[y.Key]];
@@ -1185,13 +1194,7 @@ namespace SabreTools.DatFiles
                     // If item names don't match
                     string? xName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(x.Value.GetName()));
                     string? yName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(y.Value.GetName()));
-                    if (xName != yName)
-                        return nc.Compare(xName, yName);
-
-                    // Otherwise, compare on machine or source, depending on the flag
-                    int? xSourceIndex = GetSourceForItem(x.Key).Value?.Index;
-                    int? ySourceIndex = GetSourceForItem(y.Key).Value?.Index;
-                    return (norename ? nc.Compare(xMachineName, yMachineName) : (xSourceIndex - ySourceIndex) ?? 0);
+                    return nc.Compare(xName, yName);
                 }
                 catch
                 {
