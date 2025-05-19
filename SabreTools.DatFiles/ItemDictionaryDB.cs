@@ -1153,12 +1153,13 @@ namespace SabreTools.DatFiles
         /// <returns>True if it sorted correctly, false otherwise</returns>
         private bool Sort(ref List<KeyValuePair<long, DatItem>> itemMappings, bool norename)
         {
+            // Create the comparer extenal to the delegate
+            var nc = new NaturalComparer();
+            
             itemMappings.Sort(delegate (KeyValuePair<long, DatItem> x, KeyValuePair<long, DatItem> y)
             {
                 try
                 {
-                    var nc = new NaturalComparer();
-
                     // Get the machines
                     Machine? xMachine = _machines[_itemToMachineMapping[x.Key]];
                     Machine? yMachine = _machines[_itemToMachineMapping[y.Key]];

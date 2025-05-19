@@ -1123,12 +1123,13 @@ namespace SabreTools.DatFiles
         /// <returns>True if it sorted correctly, false otherwise</returns>
         private static bool Sort(ref List<DatItem> items, bool norename)
         {
+            // Create the comparer extenal to the delegate
+            var nc = new NaturalComparer();
+            
             items.Sort(delegate (DatItem x, DatItem y)
             {
                 try
                 {
-                    var nc = new NaturalComparer();
-
                     // If machine names don't match
                     string? xMachineName = x.GetMachine()?.GetName();
                     string? yMachineName = y.GetMachine()?.GetName();
@@ -1176,12 +1177,13 @@ namespace SabreTools.DatFiles
         /// <returns>True if it sorted correctly, false otherwise</returns>
         private static bool SortDB(ref List<KeyValuePair<long, DatItem>> mappings, bool norename)
         {
+            // Create the comparer extenal to the delegate
+            var nc = new NaturalComparer();
+            
             mappings.Sort(delegate (KeyValuePair<long, DatItem> x, KeyValuePair<long, DatItem> y)
             {
                 try
                 {
-                    var nc = new NaturalComparer();
-
                     // TODO: Fix this since DB uses an external map for machines
 
                     // If machine names don't match

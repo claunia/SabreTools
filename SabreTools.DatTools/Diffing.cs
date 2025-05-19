@@ -256,7 +256,8 @@ namespace SabreTools.DatTools
             List<DatFile> outDats = [];
 
             // Ensure the current DatFile is sorted optimally
-            datFile.BucketBy(ItemKey.CRC);
+            datFile.BucketBy(ItemKey.CRC, norename: false);
+            datFile.Deduplicate();
 
             // Loop through each of the inputs and get or create a new DatData object
             InternalStopwatch watch = new("Initializing and filling all output DATs");
@@ -306,7 +307,7 @@ namespace SabreTools.DatTools
             foreach (var key in datFile.Items.SortedKeys)
 #endif
             {
-                List<DatItem> items = ItemDictionary.Merge(datFile.GetItemsForBucket(key));
+                List<DatItem> items = datFile.GetItemsForBucket(key);
 
                 // If the rom list is empty or null, just skip it
                 if (items == null || items.Count == 0)

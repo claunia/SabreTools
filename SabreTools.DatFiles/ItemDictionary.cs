@@ -398,7 +398,7 @@ namespace SabreTools.DatFiles
                 List<DatItem> sortedList = GetItemsForBucket(key);
 
                 // Sort and merge the list
-                Sort(ref sortedList, false);
+                Sort(ref sortedList);
                 sortedList = Merge(sortedList);
 
                 // Add the list back to the dictionary
@@ -798,7 +798,7 @@ namespace SabreTools.DatFiles
                 List<DatItem> sortedList = GetItemsForBucket(key);
 
                 // Sort the list of items to be consistent
-                Sort(ref sortedList, false);
+                Sort(ref sortedList);
 
                 // Add the list back to the dictionary
                 RemoveBucket(key);
@@ -814,15 +814,22 @@ namespace SabreTools.DatFiles
         /// Sort a list of DatItem objects by SourceID, Game, and Name (in order)
         /// </summary>
         /// <param name="items">List of DatItem objects representing the items to be sorted</param>
-        /// <param name="norename">True if files are not renamed, false otherwise</param>
         /// <returns>True if it sorted correctly, false otherwise</returns>
-        private bool Sort(ref List<DatItem> items, bool norename)
+        private bool Sort(ref List<DatItem> items)
         {
+            // Create the comparer extenal to the delegate
+            var nc = new NaturalComparer();
+            
+            // Sort by machine, type, item name, and source
             items.Sort(delegate (DatItem x, DatItem y)
             {
                 try
                 {
-                    var nc = new NaturalComparer();
+                    // Compare on source
+                    int xSourceIndex = x.GetFieldValue<Source?>(DatItem.SourceKey)?.Index ?? 0;
+                    int ySourceIndex = y.GetFieldValue<Source?>(DatItem.SourceKey)?.Index ?? 0;
+                    if (xSourceIndex != ySourceIndex)
+                        return xSourceIndex - ySourceIndex;
 
                     // Get the machines
                     Machine? xMachine = x.GetMachine();
@@ -849,13 +856,7 @@ namespace SabreTools.DatFiles
                     // If item names don't match
                     string? xName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty));
                     string? yName = Path.GetFileName(TextHelper.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty));
-                    if (xName != yName)
-                        return nc.Compare(xName, yName);
-
-                    // Otherwise, compare on machine or source, depending on the flag
-                    int? xSourceIndex = x.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
-                    int? ySourceIndex = y.GetFieldValue<Source?>(DatItem.SourceKey)?.Index;
-                    return (norename ? nc.Compare(xMachineName, yMachineName) : (xSourceIndex - ySourceIndex) ?? 0);
+                    return nc.Compare(xName, yName);
                 }
                 catch
                 {

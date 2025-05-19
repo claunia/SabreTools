@@ -552,7 +552,7 @@ namespace SabreTools.DatTools
         /// <returns>-1 for a coming before b, 0 for a == b, 1 for a coming after b</returns>
         private static int SplitByLevelSort(string a, string b)
         {
-            NaturalComparer nc = new();
+            var nc = new NaturalComparer();
             int adeep = a.Count(c => c == '/' || c == '\\');
             int bdeep = b.Count(c => c == '/' || c == '\\');
 
