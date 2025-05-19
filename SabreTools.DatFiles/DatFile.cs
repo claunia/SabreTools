@@ -1178,7 +1178,7 @@ namespace SabreTools.DatFiles
         /// <param name="mappings">List of item ID to DatItem mappings representing the items to be sorted</param>
         /// <param name="norename">True if files are not renamed, false otherwise</param>
         /// <returns>True if it sorted correctly, false otherwise</returns>
-        private static bool SortDB(ref List<KeyValuePair<long, DatItem>> mappings, bool norename)
+        private bool SortDB(ref List<KeyValuePair<long, DatItem>> mappings, bool norename)
         {
             // Create the comparer extenal to the delegate
             var nc = new NaturalComparer();
@@ -1187,20 +1187,18 @@ namespace SabreTools.DatFiles
             {
                 try
                 {
-                    // TODO: Fix this since DB uses an external map for machines and sources
-
                     // Compare on source if renaming
                     if (!norename)
                     {
-                        int xSourceIndex = x.Value.GetFieldValue<Source?>(DatItem.SourceKey)?.Index ?? 0;
-                        int ySourceIndex = y.Value.GetFieldValue<Source?>(DatItem.SourceKey)?.Index ?? 0;
+                        int xSourceIndex = ItemsDB.GetSourceForItem(x.Key).Value?.Index ?? 0;
+                        int ySourceIndex = ItemsDB.GetSourceForItem(y.Key).Value?.Index ?? 0;
                         if (xSourceIndex != ySourceIndex)
                             return xSourceIndex - ySourceIndex;
                     }
 
                     // If machine names don't match
-                    string? xMachineName = x.Value.GetMachine()?.GetName();
-                    string? yMachineName = y.Value.GetMachine()?.GetName();
+                    string? xMachineName = ItemsDB.GetMachineForItem(x.Key).Value?.GetName();
+                    string? yMachineName = ItemsDB.GetMachineForItem(y.Key).Value?.GetName();
                     if (xMachineName != yMachineName)
                         return nc.Compare(xMachineName, yMachineName);
 
