@@ -38,7 +38,7 @@
         <PackageReference Include="SabreTools.IO" Version="1.6.3" />
         <PackageReference Include="SabreTools.Matching" Version="1.5.2" />
         <PackageReference Include="SabreTools.Models" Version="1.5.8" />
-        <PackageReference Include="SabreTools.Serialization" Version="1.8.6" />
+        <PackageReference Include="SabreTools.Serialization" Version="1.8.7" />
         <PackageReference Include="System.ValueTuple" Version="4.5.0" Condition="$(TargetFramework.StartsWith(`net4`))" />
     </ItemGroup>
 
