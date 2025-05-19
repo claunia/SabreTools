@@ -304,7 +304,10 @@ namespace SabreTools.DatFiles
                         }
 
                         // If there is no merge tag, add to parent
-                        else if (mergeTag == null && !GetItemsForBucket(cloneOf).Contains(item))
+                        else if (mergeTag == null && !GetItemsForBucket(cloneOf)
+                            .FindAll(i => i is Disk)
+                            .ConvertAll(i => (i as Disk)!.GetName())
+                            .Contains(disk.GetName()))
                         {
                             disk.CopyMachineInformation(copyFrom);
                             AddItem(disk, statsOnly: false);
@@ -438,7 +441,10 @@ namespace SabreTools.DatFiles
                         }
 
                         // If there is no merge tag, add to parent
-                        else if (mergeTag == null && !GetItemsForBucketDB(cloneOf).Values.Contains(item.Value))
+                        else if (mergeTag == null && !GetItemsForBucketDB(cloneOf).Values
+                            .Where(i => i is Disk)
+                            .Select(i => (i as Disk)!.GetName())
+                            .Contains(disk.GetName()))
                         {
                             ItemsDB.RemapDatItemToMachine(item.Key, cloneOfMachine.Key);
                             ItemsDB.AddItem(item.Value, cloneOfMachine.Key, source.Key);
