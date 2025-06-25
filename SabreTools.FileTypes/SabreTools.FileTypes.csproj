@@ -13,7 +13,8 @@
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <Version>1.2.1</Version>
-        <WarningsNotAsErrors>CA2200;CA2022;CS0168;CS0618;CS8600;CS8602;CS8603;CS8604;CS8618;CS8625</WarningsNotAsErrors>
+        <WarningsNotAsErrors>CA2200;CA2022;CS0168;CS0618;CS8600;CS8602;CS8603;CS8604;CS8618;CS8625;NU1506;NU1604</WarningsNotAsErrors>
+        <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
 
         <!-- Package Properties -->
         <Authors>Matt Nadareski</Authors>
