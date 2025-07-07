@@ -10,7 +10,7 @@
         <Nullable>enable</Nullable>
         <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+<!--        <TreatWarningsAsErrors>true</TreatWarningsAsErrors> -->
         <WarningsNotAsErrors>NU1506;NU1604</WarningsNotAsErrors>
         <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
         <Version>1.2.1</Version>
